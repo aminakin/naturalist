@@ -1,0 +1,22 @@
+<?
+$arResult = array(
+    "arFilterValues" => $arParams['arFilterValues'],
+    "dateFrom" => $arParams['dateFrom'],
+    "dateTo" => $arParams['dateTo'],
+    "arDates" => $arParams['arDates'],
+    "currMonthName" => $arParams['currMonthName'],
+    "currYear" => $arParams['currYear'],
+    "nextYear" => $arParams['nextYear'],
+    "guests" => $arParams['guests'],
+    "children" => $arParams['children'],
+    "guestsDeclension" => $arParams['guestsDeclension'],
+    "arChildrenAge" => $arParams['arChildrenAge'],
+    "arHLTypes" => $arParams['arHLTypes'],
+    "arFilterTypes" => $arParams['arFilterTypes'],
+    "arServices" => $arParams['arServices'],
+    "arHLFood" => $arParams['arHLFood'],
+    "arFilterFood" => $arParams['arFilterFood'],
+    "arHLFeatures" => $arParams['arHLFeatures'],
+    "arFilterFeatures" => $arParams['arFilterFeatures'],
+    "arFilterServices" => $arParams['arFilterServices'],
+);

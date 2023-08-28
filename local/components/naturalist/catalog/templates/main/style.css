@@ -1,0 +1,11 @@
+.reservation-penalty {
+    display: none;
+}
+.pb-20 {
+    padding-bottom: 20px;
+}
+@media (max-width: 767px) {
+    .wrapper_title_catalog_page h1.page_title {
+        display: none;
+    }
+}

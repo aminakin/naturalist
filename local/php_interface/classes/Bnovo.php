@@ -1,0 +1,1654 @@
+<?
+
+namespace Naturalist;
+
+use Bitrix\Highloadblock\HighloadBlockTable;
+use Bitrix\Main\Application;
+use Bitrix\Main\Context;
+use Bitrix\Main\Loader;
+use Bitrix\Sale\Order;
+use CIBlockSection;
+use CIBlockElement;
+use DatePeriod;
+use DateTime;
+use DateInterval;
+use http\Params;
+
+Loader::IncludeModule("iblock");
+Loader::IncludeModule("catalog");
+
+defined("B_PROLOG_INCLUDED") && B_PROLOG_INCLUDED === true || die();
+
+/**
+ * @global CMain $APPLICATION
+ * @global CUser $USER
+ */
+class Bnovo
+{
+    private $hlDataMonthCount = 6;
+    private $catalogIBlockID = CATALOG_IBLOCK_ID;
+    private $tariffsIBlockID = TARIFFS_IBLOCK_ID;
+    private $roomTypesIBlockID = CATEGORIES_IBLOCK_ID;
+    private $occupanciesIBlockID = OCCUPANCIES_IBLOCK_ID;
+    // HL ID Особенности номера
+    private static $roomsFeaturesHLId = 8;
+    // HL ID возраста
+    private static $childrenAgesHLId = CHILDREN_HL_ID;
+
+    private $bnovoSectionPropEnumId = '2';
+
+    /*
+    private $bnovoApiURL = 'https://api.sandbox.reservationsteps.ru/v1/api';
+    private $bnovoApiUser = 'naturalist-tech@yandex.ru';
+    private $bnovoApiPassword = 'oj52t5j9Nv9h0sqJ2db6TNEjniiosQW3';
+    */
+
+    private $bnovoApiURL = 'https://api.reservationsteps.ru/v1/api';
+    private $bnovoApiPublicURL = 'https://public-api.reservationsteps.ru/v1/api';
+    private $bnovoApiUser = 'lubov@naturalist.travel';
+    private $bnovoApiPassword = 'hDlKqnWeTUZtfG7Hr1nlGebIqH0vePnx';
+
+    private $token;
+
+    public function __construct()
+    {
+        $url = $this->bnovoApiURL . '/auth';
+        $headers = array(
+            "Content-Type: application/json"
+        );
+        $data = array(
+            "username" => $this->bnovoApiUser,
+            "password" => $this->bnovoApiPassword
+        );
+
+        $ch = curl_init();
+        curl_setopt_array($ch, array(
+            CURLOPT_URL => $url,
+            CURLOPT_RETURNTRANSFER => 1,
+            CURLOPT_POST => 1,
+            CURLOPT_HTTPHEADER => $headers,
+            CURLOPT_POSTFIELDS => json_encode($data)
+        ));
+        $response = curl_exec($ch);
+        $arResponse = json_decode($response, true);
+        curl_close($ch);
+
+        $token = $arResponse['token'];
+        $this->token = $token;
+    }
+
+    /* Получение списка свободных объектов в выбранный промежуток */
+    public function search($guests, $arChildrenAge, $dateFrom, $dateTo)
+    {
+        $arDates = array();
+        $period = new DatePeriod(new DateTime($dateFrom), new DateInterval('P1D'),
+            new DateTime(date('d.m.Y', strtotime($dateTo . '+1 day'))));
+        foreach ($period as $value) {
+            $arDates[] = $value->format('d.m.Y');
+        }
+        $daysCount = count($arDates) - 1;
+
+        //Проверка на детей без мест и размещения без детей
+        $arHotel = CIBlockSection::GetList(false, array("IBLOCK_ID" => CATALOG_IBLOCK_ID, "ID" => $sectionId), false, array("ID", "UF_EXTERNAL_ID", "UF_MIN_AGE", "UF_NO_CHILDREN_PLACE"), false)->Fetch();
+        if(!empty($arHotel['UF_MIN_AGE'])) {
+            $arChildrenAges = $arChildrenAge;
+            foreach ($arChildrenAges as $key => $age) {
+                if ($age <= $arHotel['UF_MIN_AGE']) {
+                    unset($arChildrenAge[$key]);
+                }
+            }
+        }
+        if($arHotel['UF_NO_CHILDREN_PLACE'] == 1) {
+            $guests += count($arChildrenAge);
+            $children = 0;
+        } else {
+            $children = count($arChildrenAge);
+        }
+
+        $entityClass = $this->getEntityClass();
+        $rsData = $entityClass::getList([
+            "select" => ["*"],
+            "filter" => [
+                "UF_DATE" => $arDates,
+                "UF_RESERVED" => 0,
+                "!UF_CLOSED" => "1",
+                [
+                    "LOGIC" => "OR",
+                    ["<=UF_MIN_STAY" => $daysCount],
+                    ["=UF_MIN_STAY" => 0]
+                ],
+                [
+                    "LOGIC" => "OR",
+                    [">=UF_MAX_STAY" => $daysCount],
+                    ["=UF_MAX_STAY" => 0],
+                ],
+                "=UF_CLOSED_ARRIVAL" => "0",
+                "=UF_CLOSED_DEPARTURE" => "0"
+                /*[
+                    "LOGIC" => "OR",
+                    ["!UF_CLOSED_ARRIVAL" => $dateFrom],
+                    ["UF_CLOSED_ARRIVAL" => "0"],
+                ],
+                [
+                    "LOGIC" => "OR",
+                    ["!UF_CLOSED_DEPARTURE" => $dateTo],
+                    ["UF_CLOSED_DEPARTURE" => "0"],
+                ]*/
+            ],
+            "order" => ["UF_PRICE" => "ASC"],
+        ]);
+        $arData = $rsData->FetchAll();
+
+        // Категории номеров
+        $rsRoomTypes = CIBlockElement::GetList(
+            array("ID" => "ASC"),
+            array(
+                "IBLOCK_ID" => $this->roomTypesIBlockID,
+                "ACTIVE" => "Y",
+                "!PROPERTY_EXTERNAL_ID" => false,
+            ),
+            false,
+            false,
+            array("ID", "NAME", "PROPERTY_EXTERNAL_ID")
+        );
+        $arRoomTypesIDs = array();
+        while ($arRoomType = $rsRoomTypes->Fetch()) {
+            $arRoomTypesIDs[$arRoomType["PROPERTY_EXTERNAL_ID_VALUE"]] = $arRoomType["ID"];
+        }
+
+        $arHotelsIDs = array();
+        $arCategoriesIDs = array();
+
+        $arDataGrouped = array();
+        foreach ($arData as $arItem) {
+            $arDataGrouped[$arItem["UF_TARIFF_ID"] . "-" . $arItem["UF_CATEGORY_ID"]][] = $arItem;
+        }
+        foreach ($arDataGrouped as $key => $arItems) {
+            if (count($arItems) < count($arDates)) {
+                unset($arDataGrouped[$key]);
+            }
+        }
+
+        foreach ($arDataGrouped as $arData) {
+            foreach ($arData as $arEntity) {
+                $categoryId = $arRoomTypesIDs[$arEntity['UF_CATEGORY_ID']];
+                if (isset($categoryId) && !in_array($categoryId, $arCategoriesIDs)) {
+                    $arCategoriesIDs[] = $categoryId;
+
+                    if (empty($arHotelsIDs[$categoryId][$arEntity['UF_HOTEL_ID']]) || $arEntity['UF_PRICE'] < intval($arHotelsIDs[$categoryId][$arEntity['UF_HOTEL_ID']])) {
+                        $arHotelsIDs[$categoryId][$arEntity['UF_HOTEL_ID']] = intval($arEntity['UF_PRICE']);
+                    }
+                }
+            }
+        }
+
+        // Размещение номеро
+        $rsOccupancies = CIBlockElement::GetList(
+            array("ID" => "ASC"),
+            array(
+                "IBLOCK_ID" => $this->occupanciesIBlockID,
+                "ACTIVE" => "Y",
+                "PROPERTY_CATEGORY_ID" => $arCategoriesIDs
+            ),
+            false,
+            false,
+            array("ID", "NAME", "PROPERTY_CATEGORY_ID", "PROPERTY_GUESTS_COUNT", "PROPERTY_CHILDREN_COUNT", "PROPERTY_CHILDREN_AGES")
+        );
+        $arCategoriesFilterredIDs = array();
+
+        /*while ($arOccupancy = $rsOccupancies->Fetch()) {
+            if ($arOccupancy["PROPERTY_GUESTS_COUNT_VALUE"] == $guests && $arOccupancy["PROPERTY_CHILDREN_COUNT_VALUE"] >= $children) {
+                $arCategoriesFilterredIDs[] = $arOccupancy["PROPERTY_CATEGORY_ID_VALUE"];
+            }
+        }*/
+
+        // HL Возрастные интервалы
+        $arAges = self::getAges();
+        $backOccupancies = [];
+        while ($arOccupancy = $rsOccupancies->Fetch()) {
+            $backOccupancies[] = $arOccupancy;
+            if ($arOccupancy["PROPERTY_GUESTS_COUNT_VALUE"] >= $guests) {
+                if (!empty($children)) {
+                    $childrenStatus = false;
+                    foreach ($arOccupancy["PROPERTY_CHILDREN_AGES_VALUE"] as $key => $idAge) {
+                        foreach ($arChildrenAge as $age) {
+                            if ($arAges[$idAge]['UF_MIN_AGE'] <= $age && $arAges[$idAge]['UF_MAX_AGE'] >= $age && $arOccupancy["PROPERTY_CHILDREN_AGES_DESCRIPTION"][$key] == $children) {
+                                $childrenStatus = true;
+                                //xprint($arOccupancy);
+                            }
+                        }
+
+                        if ($childrenStatus == true) {
+                            break;
+                        }
+                    }
+                } elseif(!empty($arOccupancy["PROPERTY_CHILDREN_AGES_VALUE"])) {
+                    continue;
+                }
+
+                if (!isset($childrenStatus) || $childrenStatus != false) {
+                    $arCategoriesFilterredIDs[] = $arOccupancy["PROPERTY_CATEGORY_ID_VALUE"];
+                }
+            }
+        }
+
+        if(empty($arCategoriesFilterredIDs)) {
+            $guests += count($arChildrenAge);
+            foreach ($backOccupancies as $arOccupancy) {
+                if ($arOccupancy["PROPERTY_GUESTS_COUNT_VALUE"] >= $guests) {
+                    $arCategoriesFilterredIDs[] = $arOccupancy["PROPERTY_CATEGORY_ID_VALUE"];
+                }
+            }
+        }
+
+        $arHotelsIDsOutput = array();
+
+        foreach ($arHotelsIDs as $categoryId => $arHotelData) {
+            if (in_array($categoryId, $arCategoriesFilterredIDs)) {
+                $idHotel = array_key_first($arHotelData);
+                $price = array_shift($arHotelData);
+                if (!isset($arHotelsIDsOutput[$idHotel]) || $price < $arHotelsIDsOutput[$idHotel]) {
+                    $arHotelsIDsOutput[$idHotel] = $price;
+                }
+            }
+        }
+
+        return $arHotelsIDsOutput ?? [];
+    }
+
+    /* Получение списка свободных номеров объекта в выбранный промежуток */
+    public function searchRooms($sectionId, $externalId, $guests, $arChildrenAge, $dateFrom, $dateTo)
+    {
+        $arDates = array();
+        $period = new DatePeriod(new DateTime($dateFrom), new DateInterval('P1D'),
+            new DateTime(date('d.m.Y', strtotime($dateTo . '+1 day'))));
+        foreach ($period as $value) {
+            $arDates[] = $value->format('d.m.Y');
+        }
+        $daysCount = count($arDates) - 1;
+        //Проверка на детей без мест и размещения без детей
+        $arHotel = CIBlockSection::GetList(false, array("IBLOCK_ID" => CATALOG_IBLOCK_ID, "ID" => $sectionId), false, array("ID", "UF_EXTERNAL_ID", "UF_MIN_AGE", "UF_NO_CHILDREN_PLACE"), false)->Fetch();
+        if(!empty($arHotel['UF_MIN_AGE'])) {
+            $arChildrenAges = $arChildrenAge;
+            foreach ($arChildrenAges as $key => $age) {
+                if ($age <= $arHotel['UF_MIN_AGE']) {
+                    unset($arChildrenAge[$key]);
+                }
+            }
+        }
+        if($arHotel['UF_NO_CHILDREN_PLACE'] == 1) {
+            $guests += count($arChildrenAge);
+            $children = 0;
+        } else {
+            $children = count($arChildrenAge);
+        }
+
+        // Запрос по выбранным датам в HL
+        $entityClass = $this->getEntityClass();
+        $rsData = $entityClass::getList([
+            "select" => ["*"],
+            "filter" => [
+                "UF_HOTEL_ID" => $externalId,
+                "UF_DATE" => $arDates,
+                "UF_RESERVED" => 0,
+                "!UF_CLOSED" => "1",
+                [
+                    "LOGIC" => "OR",
+                    ["<=UF_MIN_STAY" => $daysCount],
+                    ["=UF_MIN_STAY" => 0]
+                ],
+                [
+                    "LOGIC" => "OR",
+                    [">=UF_MAX_STAY" => $daysCount],
+                    ["=UF_MAX_STAY" => 0],
+                ],
+                "=UF_CLOSED_ARRIVAL" => "0",
+                "=UF_CLOSED_DEPARTURE" => "0"
+            ],
+            "order" => ["ID" => "ASC"],
+        ]);
+        $arData = $rsData->FetchAll();
+
+        $arDataGrouped = array();
+        foreach ($arData as $arItem) {
+            $arDataGrouped[$arItem["UF_TARIFF_ID"] . "-" . $arItem["UF_CATEGORY_ID"]][] = $arItem;
+        }
+        foreach ($arDataGrouped as $key => $arItems) {
+            if (count($arItems) < count($arDates)) {
+                unset($arDataGrouped[$key]);
+            }
+        }
+
+        $arDataGroupedValues = array_reduce($arDataGrouped, 'array_merge', array());
+        $arExternalTariffIDs = array_unique(array_column($arDataGroupedValues, 'UF_TARIFF_ID'));
+        $arExternalCategoryIDs = array_unique(array_column($arDataGroupedValues, 'UF_CATEGORY_ID'));
+
+        // Категории номеров
+        $rsRoomTypes = CIBlockElement::GetList(
+            array("ID" => "ASC"),
+            array(
+                "IBLOCK_ID" => $this->roomTypesIBlockID,
+                "ACTIVE" => "Y",
+                "!PROPERTY_EXTERNAL_ID" => false,
+            ),
+            false,
+            false,
+            array("ID", "NAME", "PROPERTY_EXTERNAL_ID")
+        );
+        $arRoomTypesIDs = array();
+        while ($arRoomType = $rsRoomTypes->Fetch()) {
+            $arRoomTypesIDs[$arRoomType["PROPERTY_EXTERNAL_ID_VALUE"]] = $arRoomType["ID"];
+        }
+
+        $arCategoriesIDs = array();
+        foreach ($arExternalCategoryIDs as $externalId) {
+            $arCategoriesIDs[] = $arRoomTypesIDs[$externalId];
+        }
+
+        // Тарифы
+        $rsTariffs = CIBlockElement::GetList(
+            false,
+            array(
+                "IBLOCK_ID" => $this->tariffsIBlockID,
+                "ACTIVE" => "Y",
+                //"!PROPERTY_EXTERNAL_ID" => false,
+                "PROPERTY_EXTERNAL_ID" => $arExternalTariffIDs,
+            ),
+            false,
+            false,
+            array("IBLOCK_ID", "ID", "NAME", "PROPERTY_EXTERNAL_ID", "PROPERTY_CANCELLATION_RULES", "PROPERTY_CANCELLATION_DEADLINE", "PROPERTY_CANCELLATION_FINE_TYPE", "PROPERTY_CANCELLATION_FINE_AMOUNT", "PROPERTY_NAME_DETAIL")
+        );
+        $arTariffsExternalIDs = array();
+        while ($arTariff = $rsTariffs->Fetch()) {
+            $arTariffsExternalIDs[$arTariff["PROPERTY_EXTERNAL_ID_VALUE"]] = $arTariff["ID"];
+            $arTariffsValue[$arTariff["ID"]] = $arTariff;
+        }
+        //xprint($arExternalTariffIDs);
+        $arTariffsIDs = array();
+        foreach ($arExternalTariffIDs as $externalId) {
+            $arTariffsIDs[] = $arTariffsExternalIDs[$externalId];
+        }
+
+        // Размещение номеров
+        // HL Возрастные интервалы
+        $arAges = self::getAges($sectionId);
+
+        $rsOccupancies = CIBlockElement::GetList(
+            ["PROPERTY_GUESTS_COUNT" => "ASC"],
+            array(
+                "IBLOCK_ID" => $this->occupanciesIBlockID,
+                "ACTIVE" => "Y",
+                "PROPERTY_CATEGORY_ID" => $arCategoriesIDs
+            ),
+            false,
+            false,
+            array(
+                "ID",
+                "NAME",
+                "PROPERTY_CATEGORY_ID",
+                "PROPERTY_GUESTS_COUNT",
+                "PROPERTY_CHILDREN_COUNT",
+                "PROPERTY_CHILDREN_AGES",
+                "PROPERTY_CHILDREN_MIN_AGE",
+                "PROPERTY_CHILDREN_MAX_AGE"
+            )
+        );
+        $arCategoriesFilterredIDs = array();
+        $backOccupancies = [];
+        while ($arOccupancy = $rsOccupancies->Fetch()) {
+            $backOccupancies[] = $arOccupancy;
+            if ($arOccupancy["PROPERTY_GUESTS_COUNT_VALUE"] >= $guests) {
+                if (!empty($children)) {
+                    $childrenStatus = false;
+                    foreach ($arOccupancy["PROPERTY_CHILDREN_AGES_VALUE"] as $key => $idAge) {
+                        foreach ($arChildrenAge as $age) {
+                            if ($arAges[$idAge]['UF_MIN_AGE'] <= $age && $arAges[$idAge]['UF_MAX_AGE'] >= $age && $arOccupancy["PROPERTY_CHILDREN_AGES_DESCRIPTION"][$key] == $children) {
+                                $childrenStatus = true;
+                                //xprint($arOccupancy);
+                            }
+                        }
+
+                        if ($childrenStatus == true) {
+                            break;
+                        }
+                    }
+                } elseif(!empty($arOccupancy["PROPERTY_CHILDREN_AGES_VALUE"])) {
+                    continue;
+                }
+
+                if (!isset($childrenStatus) || $childrenStatus != false) {
+                    $arCategoriesFilterredIDs[] = $arOccupancy["PROPERTY_CATEGORY_ID_VALUE"];
+                }
+            }
+        }
+
+        if(empty($arCategoriesFilterredIDs)) {
+            $guests += count($arChildrenAge);
+            foreach ($backOccupancies as $arOccupancy) {
+                if ($arOccupancy["PROPERTY_GUESTS_COUNT_VALUE"] >= $guests) {
+                    $arCategoriesFilterredIDs[] = $arOccupancy["PROPERTY_CATEGORY_ID_VALUE"];
+                }
+            }
+        }
+
+        /*xprint($arCategoriesFilterredIDs);
+        die();*/
+        $arCategoriesFilterredIDs = array_unique($arCategoriesFilterredIDs);
+
+        // Номера
+        //xprint($arCategoriesFilterredIDs);
+        /*xprint($arTariffsIDs); die();*/
+        if ($arCategoriesFilterredIDs && $arTariffsIDs) {
+            $rsElements = CIBlockElement::GetList(
+                false,
+                array(
+                    "IBLOCK_ID" => $this->catalogIBlockID,
+                    "ACTIVE" => "Y",
+                    "PROPERTY_CATEGORY" => $arCategoriesFilterredIDs,
+                    "PROPERTY_TARIFF" => $arTariffsIDs,
+                ),
+                false,
+                false,
+                array("IBLOCK_ID", "ID", "NAME", "PROPERTY_CATEGORY", "PROPERTY_TARIFF", "PROPERTY_EXTERNAL_ID")
+            );
+            $arElementsFilterred = array();
+            while ($arElement = $rsElements->Fetch()) {
+                foreach ($arElement["PROPERTY_CATEGORY_VALUE"] as $categoryId) {
+                    foreach ($arElement["PROPERTY_TARIFF_VALUE"] as $tariffId) {
+                        $arElementsFilterred[$tariffId][$categoryId][] = $arElement["ID"];
+                    }
+                }
+            }
+
+            array_pop($arDates);
+            $arItems = array();
+            foreach ($arElementsFilterred as $tariffId => $arCategories) {
+                foreach ($arCategories as $categoryId => $arRooms) {
+                    foreach ($arRooms as $elementId) {
+                        $arPrices = array();
+                        foreach ($arDates as $date) {
+                            foreach ($arData as $arEntity) {
+                                if ($arEntity["UF_DATE"]->format('d.m.Y') == $date && $arTariffsExternalIDs[$arEntity["UF_TARIFF_ID"]] == $tariffId && $arRoomTypesIDs[$arEntity["UF_CATEGORY_ID"]] == $categoryId) {
+                                    $arPrices[$arEntity["UF_DATE"]->format('Y-m-d')] = (float)$arEntity["UF_PRICE"];
+                                    break;
+                                }
+                            }
+                        }
+
+                        if (!empty($arPrices)){
+                            $arItems[$elementId][] = array(
+                                'tariffId' => array_search($tariffId, $arTariffsExternalIDs),
+                                'categoryId' => array_search($categoryId, $arRoomTypesIDs),
+                                'prices' => $arPrices,
+                                'price' => array_sum($arPrices),
+                                'value' => $arTariffsValue[$tariffId]
+                            );
+
+                            if (empty($arItems[$elementId]['minPrice']) || array_sum($arPrices) < $arItems[$elementId]['minPrice']) {
+                                $arItems[$elementId]['minPrice'] = array_sum($arPrices);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        //xprint($arItems);
+        // Сортировка номеров по убыванию цены
+        if (!empty($arItems)) {
+            uasort($arItems, function ($a, $b) {
+                return ($a['minPrice'] - $b['minPrice']);
+            });
+        }
+        
+//xprint($arItems); die();
+        return $arItems ?? [];
+    }
+
+    // HL Возрастные интервалы
+    public static function getAges($sectionId = '') {
+        $childrenAgesEntityClass = self::getEntityClass(self::$childrenAgesHLId);
+
+        if($sectionId) {
+            $arFilter = [
+                "select" => ["*"],
+                "filter" => [
+                    "UF_HOTEL_ID" => $sectionId
+                ]
+            ];
+        } else{
+            $arFilter = [
+                "select" => ["*"],
+            ];
+        }
+
+        $rsData = $childrenAgesEntityClass::getList($arFilter);
+
+        while ($arEntity = $rsData->Fetch()){
+            $arAges[$arEntity['ID']] = $arEntity;
+        }
+
+        return $arAges;
+    }
+
+    /* Установка минимальных цен для объектов Bnovo */
+    public function setMinPrices() {
+        $rsSections = CIBlockSection::GetList(false, array("IBLOCK_ID" => CATALOG_IBLOCK_ID, "ACTIVE" => "Y", "!UF_EXTERNAL_ID" => false, "UF_EXTERNAL_SERVICE" => $this->bnovoSectionPropEnumId), false, array("ID", "UF_EXTERNAL_ID"), false);
+        $arSectionExternalIDs = array();
+        while($arSection = $rsSections->Fetch()) {
+            $arSectionExternalIDs[] = (string)$arSection["UF_EXTERNAL_ID"];
+        }
+
+        $entityClass = $this->getEntityClass();
+        $rsData = $entityClass::getList([
+            "select" => ["*"],
+            "filter" => [
+                "UF_DATE" => [date('d.m.Y'), date('d.m.Y', strtotime('+1 day'))],
+                "UF_RESERVED" => 0,
+                [
+                    "LOGIC" => "OR",
+                    ["<=UF_MIN_STAY" => 1],
+                    ["UF_MIN_STAY" => "0"]
+                ],
+                [
+                    "LOGIC" => "OR",
+                    [">=UF_MAX_STAY" => 1],
+                    ["UF_MAX_STAY" => "0"],
+                ],
+                [
+                    "LOGIC" => "OR",
+                    ["!UF_CLOSED_ARRIVAL" => date('d.m.Y')],
+                    ["UF_CLOSED_ARRIVAL" => "0"],
+                ],
+                [
+                    "LOGIC" => "OR",
+                    ["!UF_CLOSED_DEPARTURE" => date('d.m.Y', strtotime('+1 day'))],
+                    ["UF_CLOSED_DEPARTURE" => "0"],
+                ]
+            ],
+            "order" => ["UF_PRICE" => "ASC"],
+        ]);
+        $arData = $rsData->FetchAll();
+
+        $arMinPrices = array();
+        foreach($arData as $arItem) {
+            if(empty($arMinPrices[$arItem["UF_HOTEL_ID"]]) || $arItem["UF_PRICE"] < $arMinPrices[$arItem["UF_HOTEL_ID"]])
+                $arMinPrices[$arItem["UF_HOTEL_ID"]] = $arItem["UF_PRICE"];
+        }
+
+        $iS = new CIBlockSection();
+        foreach($arMinPrices as $externalSectionId => $price) {
+            $arExistSection = CIBlockSection::GetList(array(), array("IBLOCK_ID" => CATALOG_IBLOCK_ID, "UF_EXTERNAL_ID" => $externalSectionId))->Fetch();
+            if($arExistSection) {
+                $sectionId = $arExistSection["ID"];
+                $iS->Update($sectionId, array(
+                    "UF_MIN_PRICE" => $price,
+                ));
+            }
+        }
+    }
+
+    /* Выгрузка цен и броней */
+    public function update()
+    {
+        // Отели
+        $rsSections = CIBlockSection::GetList(
+            array("ID" => "ASC"),
+            array(
+                "IBLOCK_ID" => $this->catalogIBlockID,
+                "ACTIVE" => "Y",
+                "UF_EXTERNAL_SERVICE" => $this->bnovoSectionPropEnumId,
+                "!UF_EXTERNAL_ID" => false
+            ),
+            false,
+            array("IBLOCK_ID", "ID", "NAME", "CODE", "SORT", "UF_*"),
+            false
+        );
+        $arSectionIDs = array();
+        while ($arSection = $rsSections->Fetch()) {
+            $arSectionIDs[$arSection["ID"]] = $arSection["UF_EXTERNAL_ID"];
+        }
+
+        // Тарифы
+        $rsTariffs = CIBlockElement::GetList(
+            array("ID" => "ASC"),
+            array(
+                "IBLOCK_ID" => $this->tariffsIBlockID,
+                "ACTIVE" => "Y",
+                "!PROPERTY_EXTERNAL_ID" => false,
+            ),
+            false,
+            false,
+            array("IBLOCK_ID", "ID", "NAME", "PROPERTY_EXTERNAL_ID")
+        );
+        $arTariffsExternalIDs = array();
+        while ($arTariff = $rsTariffs->Fetch()) {
+            $arTariffsExternalIDs[$arTariff["ID"]] = $arTariff["PROPERTY_EXTERNAL_ID_VALUE"];
+        }
+
+        // Категории номеров
+        $rsRoomTypes = CIBlockElement::GetList(
+            array("ID" => "ASC"),
+            array(
+                "IBLOCK_ID" => $this->roomTypesIBlockID,
+                "ACTIVE" => "Y",
+                "!PROPERTY_EXTERNAL_ID" => false,
+            ),
+            false,
+            false,
+            array("ID", "NAME", "PROPERTY_EXTERNAL_ID", "PROPERTY_GUESTS_COUNT", "PROPERTY_CHILDREN_COUNT")
+        );
+        $arRoomTypesExternalIDs = array();
+        while ($arRoomType = $rsRoomTypes->Fetch()) {
+            $arRoomTypesExternalIDs[$arRoomType["ID"]] = $arRoomType["PROPERTY_EXTERNAL_ID_VALUE"];
+        }
+
+        // Размещение номеров
+        $rsOccupancies = CIBlockElement::GetList(
+            array("ID" => "ASC"),
+            array(
+                "IBLOCK_ID" => $this->occupanciesIBlockID,
+                "ACTIVE" => "Y",
+            ),
+            false,
+            false,
+            array("ID", "NAME", "PROPERTY_CATEGORY_ID", "PROPERTY_GUESTS_COUNT", "PROPERTY_CHILDREN_COUNT")
+        );
+        $arOccupancies = array();
+        while ($arOccupancy = $rsOccupancies->Fetch()) {
+            $arOccupancies[$arOccupancy["PROPERTY_CATEGORY_ID_VALUE"]][$arOccupancy["ID"]] = array(
+                'guests' => $arOccupancy["PROPERTY_GUESTS_COUNT_VALUE"],
+                'children' => $arOccupancy["PROPERTY_CHILDREN_COUNT_VALUE"]
+            );
+        }
+
+        // Номера
+        $rsElements = CIBlockElement::GetList(
+            array("ID" => "ASC"),
+            array(
+                "IBLOCK_ID" => $this->catalogIBlockID,
+                "ACTIVE" => "Y",
+                "!PROPERTY_CATEGORY_ID" => false,
+                "!PROPERTY_TARIFF_ID" => false,
+            ),
+            false,
+            false,
+            array("IBLOCK_ID", "ID", "NAME", "PROPERTY_CATEGORY", "PROPERTY_TARIFF")
+        );
+        $arElements = array();
+        while ($arElement = $rsElements->Fetch()) {
+            foreach ($arElement["PROPERTY_CATEGORY_VALUE"] as $categoryId) {
+                if (!empty($arTariffsExternalIDs[$arElement["PROPERTY_TARIFF_VALUE"]]) && !empty($arRoomTypesExternalIDs[$categoryId])) {
+                    $arElements[$arTariffsExternalIDs[$arElement["PROPERTY_TARIFF_VALUE"]]][$arRoomTypesExternalIDs[$categoryId]] = $arElement["ID"];
+                }
+            }
+        }
+
+        $url = $this->bnovoApiURL . '/plans_data';
+        $headers = array(
+            "Content-Type: application/json"
+        );
+
+        $dateFrom = date('Y-m-d');
+        $dateTo = date('Y-m-d', strtotime('+' . $this->hlDataMonthCount . ' months'));
+
+        $entityClass = $this->getEntityClass();
+        foreach ($arSectionIDs as $hotelId) {
+            $data = array(
+                "token" => $this->token,
+                "account_id" => $hotelId,
+                "dfrom" => $dateFrom,
+                "dto" => $dateTo
+            );
+
+            $ch = curl_init();
+            curl_setopt_array($ch, array(
+                CURLOPT_URL => $url . '?' . http_build_query($data),
+                CURLOPT_RETURNTRANSFER => 1,
+                CURLOPT_HTTPHEADER => $headers
+            ));
+            $response = curl_exec($ch);
+            $arData = json_decode($response, true);
+            curl_close($ch);
+
+            foreach ($arData["plans_data"] as $tariffId => $arCategories) {
+                foreach ($arCategories as $categoryId => $arCategoryDates) {
+                    foreach ($arCategoryDates as $date => $arDate) {
+                        $price = $arDate['price'];
+                        $isReserved = ($arDate['closed']) ? 1 : 0;
+                        $minStay = $arDate['min_stay'];
+                        $maxStay = $arDate['max_stay'];
+                        $closedArrival = $arDate['closed_arrival'];
+                        $closedDeparture = $arDate['closed_departure'];
+
+                        $rsData = $entityClass::getList([
+                            "select" => ["*"],
+                            "filter" => [
+                                "UF_HOTEL_ID" => $hotelId,
+                                "UF_TARIFF_ID" => $tariffId,
+                                "UF_CATEGORY_ID" => $categoryId,
+                                "UF_DATE" => date('d.m.Y', strtotime($date))
+                            ],
+                            "order" => ["ID" => "ASC"],
+                        ]);
+                        $arEntity = $rsData->Fetch();
+                        if ($arEntity) {
+                            $entityId = $arEntity['ID'];
+                            $arFields = array(
+                                "UF_PRICE" => $price,
+                                "UF_CLOSED" => $isReserved,
+                                //"UF_RESERVED" => $isReserved,
+                                "UF_MIN_STAY" => $minStay,
+                                "UF_MAX_STAY" => $maxStay,
+                                "UF_CLOSED_ARRIVAL" => $closedArrival,
+                                "UF_CLOSED_DEPARTURE" => $closedDeparture,
+                            );
+                            $entityClass::update($entityId, $arFields);
+
+                        } else {
+                            $arFields = array(
+                                "UF_HOTEL_ID" => $hotelId,
+                                "UF_TARIFF_ID" => $tariffId,
+                                "UF_CATEGORY_ID" => $categoryId,
+                                "UF_DATE" => date('d.m.Y', strtotime($date)),
+                                "UF_CLOSED" => $isReserved,
+                                "UF_PRICE" => $price,
+                                //"UF_RESERVED" => $isReserved,
+                                "UF_MIN_STAY" => $minStay,
+                                "UF_MAX_STAY" => $maxStay,
+                                "UF_CLOSED_ARRIVAL" => $closedArrival,
+                                "UF_CLOSED_DEPARTURE" => $closedDeparture,
+                            );
+                            $entityClass::add($arFields);
+                        }
+                    }
+                }
+            }
+        }
+
+        // Удаление старых записей
+        $rsData = $entityClass::getList([
+            "select" => ["*"],
+            "filter" => [
+                "<UF_DATE" => date('d.m.Y')
+            ],
+            "order" => ["ID" => "DESC"],
+        ]);
+        $arEntity = $rsData->Fetch();
+        if ($arEntity) {
+            $entityId = $arEntity['ID'];
+            $entityClass::Delete($entityId);
+        }
+    }
+
+    /* Получение объекта по UID и дальнейшее получение данных */
+    public function updatePublicObject($uid)
+    {
+        $arSection = [];
+        // Отели
+        $arSection = CIBlockSection::GetList(
+            array("ID" => "ASC"),
+            array(
+                "IBLOCK_ID" => $this->catalogIBlockID,
+                "ACTIVE" => "Y",
+                "UF_EXTERNAL_SERVICE" => $this->bnovoSectionPropEnumId,
+                "UF_EXTERNAL_UID" => $uid
+            ),
+            false,
+            array("IBLOCK_ID", "ID", "NAME", "CODE", "SORT", "UF_*"),
+            false
+        )->Fetch();
+
+        $arResult = [];
+        $arResult["MESSAGE"]["ERRORS"] = '';
+        $arResult["MESSAGE"]["SUCCESS"] = '';
+
+        $url = $this->bnovoApiPublicURL . '/accounts';
+        $headers = array(
+            "Content-Type: application/json"
+        );
+
+        $data = array(
+            "uid" => $uid,
+        );
+
+        $ch = curl_init();
+        curl_setopt_array($ch, array(
+            CURLOPT_URL => $url . '?' . http_build_query($data),
+            CURLOPT_RETURNTRANSFER => 1,
+            CURLOPT_HTTPHEADER => $headers
+        ));
+        $response = curl_exec($ch);
+        $arData = json_decode($response, true);
+        curl_close($ch);
+
+        if (empty($arSection)) {
+            $arSection = $arData['account'];
+
+            $iS = new CIBlockSection();
+            $sectionName = $arSection["name"];
+            $sectionCode = \CUtil::translit($sectionName, "ru");
+            $arImages = array();
+
+            // Поля раздела
+            $arFields = array(
+                "IBLOCK_ID" => CATALOG_IBLOCK_ID,
+                "ACTIVE" => "Y",
+                "NAME" => $sectionName,
+                "CODE" => $sectionCode,
+                "UF_EXTERNAL_ID" => $arSection["id"],
+                "UF_EXTERNAL_SERVICE" => $this->bnovoSectionPropEnumId,
+                "UF_ADDRESS" => $arSection['address'],
+                "UF_EMAIL" => $arSection['email'],
+                "UF_PHONE" => $arSection['phone'],
+                "UF_TIME_FROM" => $arSection['checkin'],
+                "UF_TIME_TO" => $arSection['checkout'],
+                "UF_COORDS" => str_replace(['(', ')'], '', $arSection['geo_data']),
+                "UF_EXTERNAL_UID" => $arSection['uid'],
+            );
+
+            $sectionId = $iS->Add($arFields);
+
+            if ($sectionId) {
+                //echo "Добавлен раздел (" . $sectionId . ") \"" . $sectionName . "\"<br>\r\n";
+                $arSection['UF_EXTERNAL_ID'] = $arSection["id"];
+                $arSection['ID'] = $sectionId;
+
+                $arResult["MESSAGE"]["SUCCESS"] = 'Добавлен объект с ID ' . $uid . ': ' . $sectionName;
+            }
+        } else {
+            $arSection = array_merge($arData['account'], $arSection);
+            $arResult["MESSAGE"]["ERRORS"] = 'Объект с указанным ID уже существует. Данные по объекту были обновлены.';
+        }
+
+        if (!empty($arSection['UF_EXTERNAL_ID'])) {
+            $childrenAgesId = self::updatePublicChildrenAges($arSection);
+            $tariffsId = self::updatePublicTariffs($arSection);
+            self::updatePublicRoomtypes($arSection, $tariffsId, $childrenAgesId);
+        }
+
+        return $arResult;
+    }
+
+    /* Возрастные интервалы отеля */
+    public function updatePublicChildrenAges($arSection)
+    {
+        // HL Возрастные интервалы
+        $childrenAgesId = array();
+        $childrenAgesEntityClass   = self::getEntityClass(self::$childrenAgesHLId);
+        foreach($arSection["children_ages"] as $arElement) {
+            if(!empty($arElement)) {
+                $rsData = $childrenAgesEntityClass::getList([
+                    "select" => ["*"],
+                    "filter" => [
+                        'UF_HOTEL_ID' => $arSection['ID'],
+                        "UF_XML_ID" => $arElement['id']
+                    ]
+                ]);
+                $arEntity = $rsData->Fetch();
+
+                if (!$arEntity) {
+                    $arValues = array(
+                        'UF_HOTEL_ID' => $arSection['ID'],
+                        'UF_XML_ID' => $arElement['id'],
+                        'UF_MIN_AGE' => $arElement['min_age'],
+                        'UF_MAX_AGE' => $arElement['max_age'],
+                    );
+                    $result = $childrenAgesEntityClass::add($arValues);
+                    $entityId = $result->getId();
+
+                    $childrenAgesId[$arElement['id']] = $entityId;
+                } else {
+                    $arValues = array(
+                        'UF_HOTEL_ID' => $arSection['ID'],
+                        'UF_MIN_AGE' => $arElement['min_age'],
+                        'UF_MAX_AGE' => $arElement['max_age'],
+                    );
+                    $entityId = $arEntity["ID"];
+                    $childrenAgesEntityClass::update($entityId, $arValues);
+
+                    $childrenAgesId[$arElement['id']] = $entityId;
+                }
+            }
+        }
+
+        return $childrenAgesId;
+    }
+
+    /* Тарифы отеля */
+    public function updatePublicTariffs($arSection)
+    {
+        //xprint($arSection);
+        // Тарифы
+        $url = $this->bnovoApiPublicURL . '/plans';
+        $headers = array(
+            "Content-Type: application/json"
+        );
+
+        $data = array(
+            "account_id" => $arSection['UF_EXTERNAL_ID'],
+        );
+
+        $ch = curl_init();
+        curl_setopt_array($ch, array(
+            CURLOPT_URL => $url . '?' . http_build_query($data),
+            CURLOPT_RETURNTRANSFER => 1,
+            CURLOPT_HTTPHEADER => $headers
+        ));
+        $response = curl_exec($ch);
+        $arData = json_decode($response, true);
+        curl_close($ch);
+        $arTarrifs = $arData['plans'];
+
+        $iE = new CIBlockElement();
+
+        //Секция объекта для тарифов
+        $arSectionTarriffs = CIBlockSection::GetList(
+            false,
+            array(
+                "IBLOCK_ID" => TARIFFS_IBLOCK_ID,
+                "ACTIVE" => "Y",
+                "UF_EXTERNAL_ID" => $arSection['UF_EXTERNAL_ID']
+            ),
+            false,
+            array("IBLOCK_ID", "ID", "NAME", "CODE", "SORT", "UF_*"),
+            false
+        )->Fetch();
+
+        if (empty($arSectionTarriffs)) {
+            $iS = new CIBlockSection();
+            $sectionName = $arSection["NAME"] ?? $arSection["name"];
+            $sectionCode = \CUtil::translit($sectionName, "ru");
+
+            // Поля раздела
+            $arFields = array(
+                "IBLOCK_ID" => TARIFFS_IBLOCK_ID,
+                "ACTIVE" => "Y",
+                "NAME" => $sectionName,
+                "CODE" => $sectionCode,
+                "UF_EXTERNAL_ID" => $arSection["UF_EXTERNAL_ID"],
+            );
+
+            $sectionId = $iS->Add($arFields);
+
+            if ($sectionId) {
+                //echo "Добавлен раздел тарифов (" . $sectionId . ") \"" . $sectionName . "\"<br>\r\n";
+            }
+        } else{
+            $sectionId = $arSectionTarriffs['ID'];
+        }
+
+        $tariffsIds = [];
+        foreach ($arTarrifs as $arTarrif) {
+            if ($arTarrif['enabled_ota'] != 1) {
+                continue;
+            }
+            $elementName = $arTarrif["name"];
+            $elementCode = \CUtil::translit($elementName, "ru");
+
+            // Поля элемента
+            $arElementTariff = CIBlockElement::GetList(false, array(
+                "IBLOCK_ID" => TARIFFS_IBLOCK_ID,
+                "PROPERTY_EXTERNAL_ID" => $arTarrif['id'],
+            ))->Fetch();
+
+            if (!$arElementTariff && empty($arSectionTarriffs)) {
+                $arFields = array(
+                    "ACTIVE" => "Y",
+                    "IBLOCK_ID" => TARIFFS_IBLOCK_ID,
+                    "IBLOCK_SECTION_ID" => $sectionId,
+                    "NAME" => $elementName,
+                    "CODE" => $elementCode,
+                    "PROPERTY_VALUES" => array(
+                        "EXTERNAL_ID" => $arTarrif['id'],
+                        "CANCELLATION_RULES" => nl2br($arTarrif['cancellation_rules']),
+                        "CANCELLATION_DEADLINE" => nl2br($arTarrif['cancellation_deadline']),
+                        "CANCELLATION_FINE_TYPE" => $arTarrif['cancellation_fine_type'],
+                        "CANCELLATION_FINE_AMOUNT" => $arTarrif['cancellation_fine_amount'],
+                    )
+                );
+                $elementId = $iE->Add($arFields);
+
+                if ($elementId) {
+                    //echo "Добавлен тариф (" . $elementId . ") \"" . $elementName . "\" в отель (" . $sectionId . ") \"" . $sectionName . "\"<br>\r\n";
+                }
+            } elseif (isset($arElementTariff)) {
+                $elementId = $arElementTariff['ID'];
+
+                $res = CIBlockElement::SetPropertyValuesEx($elementId, TARIFFS_IBLOCK_ID, array(
+                    "CANCELLATION_RULES" => nl2br($arTarrif['cancellation_rules']),
+                    "CANCELLATION_DEADLINE" => nl2br($arTarrif['cancellation_deadline']),
+                    "CANCELLATION_FINE_TYPE" => $arTarrif['cancellation_fine_type'],
+                    "CANCELLATION_FINE_AMOUNT" => $arTarrif['cancellation_fine_amount'],
+                ));
+
+                if($res){
+                    //echo "Обновлен тариф (".$elementId.") \"".$elementName."\" в отеле (".$sectionId.") \"".$sectionName."\"<br>\r\n";
+                }
+            } else {
+                continue;
+            }
+
+            $tariffsIds[] = $elementId;
+        }
+
+        return $tariffsIds;
+    }
+
+    /* Категории отеля */
+    public function updatePublicRoomtypes($arSection, $tariffsIds, $childrenAgesId)
+    {
+        // Номера
+        $url = $this->bnovoApiPublicURL . '/roomtypes';
+        $headers = array(
+            "Content-Type: application/json"
+        );
+
+        $data = array(
+            "account_id" => $arSection['UF_EXTERNAL_ID'],
+        );
+
+        $ch = curl_init();
+        curl_setopt_array($ch, array(
+            CURLOPT_URL => $url . '?' . http_build_query($data),
+            CURLOPT_RETURNTRANSFER => 1,
+            CURLOPT_HTTPHEADER => $headers
+        ));
+        $response = curl_exec($ch);
+        $arData = json_decode($response, true);
+        curl_close($ch);
+        $arRooms = $arData['rooms'];
+
+        $iE = new CIBlockElement();
+
+        //Секция объекта для номеров
+        $arSectionCategory = CIBlockSection::GetList(
+            false,
+            array(
+                "IBLOCK_ID" => CATEGORIES_IBLOCK_ID,
+                "ACTIVE" => "Y",
+                "UF_EXTERNAL_ID" => $arSection['UF_EXTERNAL_ID']
+            ),
+            false,
+            array("IBLOCK_ID", "ID", "NAME", "CODE", "SORT", "UF_*"),
+            false
+        )->Fetch();
+
+        if (empty($arSectionCategory)) {
+            $iS = new CIBlockSection();
+            $sectionName = $arSection["NAME"] ?? $arSection["name"];
+            $sectionCode = \CUtil::translit($sectionName, "ru");
+
+            // Поля раздела
+            $arFields = array(
+                "IBLOCK_ID" => CATEGORIES_IBLOCK_ID,
+                "ACTIVE" => "Y",
+                "NAME" => $sectionName,
+                "CODE" => $sectionCode,
+                "UF_EXTERNAL_ID" => $arSection["UF_EXTERNAL_ID"],
+            );
+
+            $sectionId = $iS->Add($arFields);
+
+            if ($sectionId) {
+                //echo "Добавлен раздел (" . $sectionId . ") \"" . $sectionName . "\"<br>\r\n";
+            }
+        } else{
+            $sectionId = $arSectionCategory['ID'];
+        }
+
+        //Секция объекта для размещения
+        $arSectionOccupancies = CIBlockSection::GetList(
+            false,
+            array(
+                "IBLOCK_ID" => OCCUPANCIES_IBLOCK_ID,
+                "ACTIVE" => "Y",
+                "UF_EXTERNAL_ID" => $arSection['UF_EXTERNAL_ID']
+            ),
+            false,
+            array("IBLOCK_ID", "ID", "NAME", "CODE", "SORT", "UF_*"),
+            false
+        )->Fetch();
+
+        if (empty($arSectionOccupancies)) {
+            $iS = new CIBlockSection();
+            $sectionName = $arSection["NAME"] ?? $arSection["name"];
+            $sectionCode = \CUtil::translit($sectionName, "ru");
+
+            // Поля раздела
+            $arFields = array(
+                "IBLOCK_ID" => OCCUPANCIES_IBLOCK_ID,
+                "ACTIVE" => "Y",
+                "NAME" => $sectionName,
+                "CODE" => $sectionCode,
+                "UF_EXTERNAL_ID" => $arSection["UF_EXTERNAL_ID"],
+            );
+
+            //xprint($arFields);
+            $sectionIdOccupancies = $iS->Add($arFields);
+
+            if ($sectionIdOccupancies) {
+                //echo "Добавлен раздел размещения (" . $sectionIdOccupancies . ") \"" . $sectionName . "\"<br>\r\n";
+            }
+        } else{
+            $sectionIdOccupancies = $arSectionOccupancies['ID'];
+        }
+
+        foreach ($arRooms as $arRoom) {
+            if ($arRoom["accommodation_type"] == 4) {
+                continue;
+            }
+            $elementName = $arRoom["name"];
+            $elementCode = \CUtil::translit($elementName, "ru");
+
+            // Поля элемента
+            $arCategory = CIBlockElement::GetList(false, array(
+                "IBLOCK_ID" => CATEGORIES_IBLOCK_ID,
+                "PROPERTY_EXTERNAL_ID" => $arRoom['id'],
+            ))->Fetch();
+
+            if (!$arCategory) {
+                $arFields = array(
+                    "ACTIVE" => "Y",
+                    "IBLOCK_ID" => CATEGORIES_IBLOCK_ID,
+                    "IBLOCK_SECTION_ID" => $sectionId,
+                    "NAME" => $elementName,
+                    "CODE" => $elementCode,
+                    "PROPERTY_VALUES" => array(
+                        "EXTERNAL_ID" => $arRoom['id'],
+                    )
+                );
+                $elementIdCat = $iE->Add($arFields);
+
+                if ($elementIdCat) {
+                    //echo "Добавлен номер (" . $elementIdCat . ") \"" . $elementName . "\" в отель (" . $sectionId . ") \"" . $sectionName . "\"<br>\r\n";
+                }
+            } else {
+                $elementIdCat = $arCategory['ID'];
+            }
+
+            //Элемент размещения
+            $elementName = $arRoom['adults'].' Взросл.';
+            $elementCode = 'a.'.$arRoom['adults'];
+            if(!empty($arRoom['children']) && $arRoom['children'] > 0){
+                $elementName .= '+ '. $arRoom['children'].' детей с местом';
+            }
+
+            $arAgesValues = []; //Возрастные интервалы
+            if(isset($arRoom['extra_array']['children_ages']) && !empty($arRoom['extra_array']['children_ages'])) {
+                foreach ($arRoom['extra_array']['children_ages'] as $key => $arAge) {
+                    $arAgesValues[] = ["VALUE" => $childrenAgesId[$key], "DESCRIPTION" => $arAge];
+                    $elementCode .= '_c.'.$arRoom['children'].'.'.$childrenAgesId[$key];
+                }
+            }
+
+            // Поля элемента
+            $arOccupancies = CIBlockElement::GetList(false, array(
+                "IBLOCK_ID" => OCCUPANCIES_IBLOCK_ID,
+                "PROPERTY_CATEGORY_ID" => $elementIdCat,
+            ))->Fetch();
+
+            if (!$arOccupancies) {
+                $arFields = array(
+                    "ACTIVE" => "Y",
+                    "IBLOCK_ID" => OCCUPANCIES_IBLOCK_ID,
+                    "IBLOCK_SECTION_ID" => $sectionIdOccupancies,
+                    "NAME" => $elementName,
+                    "CODE" => $elementCode,
+                    "PROPERTY_VALUES" => array(
+                        "CATEGORY_ID" => $elementIdCat,
+                        "GUESTS_COUNT" => $arRoom['adults'],
+                        "CHILDREN_COUNT" => $arRoom['children'],
+                        "CHILDREN_AGES" => $arAgesValues,
+                        "CHILDREN_MIN_AGE" => $arRoom['children'] > 0 ? 3 : '',
+                        "CHILDREN_MAX_AGE" => $arRoom['children'] > 0 ? 17 : '',
+                    )
+                );
+                $elementIdOccupancies = $iE->Add($arFields);
+
+                if ($elementIdOccupancies) {
+                    //echo "Добавлено размещение (" . $elementIdOccupancies . ") \"" . $elementName . "\" в отель (" . $sectionId . ") \"" . $sectionName . "\"<br>\r\n";
+                }
+            } else {
+                $elementId = $arOccupancies["ID"];
+                $arFields = array(
+                    "CODE" => $elementCode,
+                );
+
+                $res = $iE->Update($elementId, $arFields);
+                CIBlockElement::SetPropertyValuesEx($elementId, OCCUPANCIES_IBLOCK_ID, array(
+                    "CHILDREN_AGES" => $arAgesValues,
+                    "CHILDREN_MIN_AGE" => $arRoom['children'] > 0 ? 3 : '',
+                    "CHILDREN_MAX_AGE" => $arRoom['children'] > 0 ? 17 : '',
+                ));
+
+                $elementIdOccupancies = $arOccupancies['ID'];
+            }
+
+            //Товары объекта - номера
+            $elementName = empty($arRoom["name_ru"]) ? $arRoom["name"] : $arRoom["name_ru"];
+            $elementCode = \CUtil::translit($elementName, "ru");
+
+            // Amenities
+            $arAmenities = array();
+            $roomsFeaturesEntityClass   = self::getEntityClass(self::$roomsFeaturesHLId);
+            foreach($arRoom["amenities"] as $key => $arItem) {
+                if ($key == "1") {
+                    continue;
+                }
+                $rsData = $roomsFeaturesEntityClass::getList([
+                    "select" => ["*"],
+                    "filter" => [
+                        "UF_XML_ID" => "bn_".$key
+                    ],
+                    "order" => ["UF_SORT" => "ASC"],
+                ]);
+                $arEntity = $rsData->Fetch();
+                if($arEntity) {
+                    $arAmenities[] = $arEntity["UF_XML_ID"];
+                }
+            }
+
+            // Поля элемента
+            $arExistElement = CIBlockElement::GetList(false, array("IBLOCK_ID" => CATALOG_IBLOCK_ID, "PROPERTY_EXTERNAL_ID" => $arRoom['id']))->Fetch();
+            if ($arExistElement) {
+                $elementId = $arExistElement["ID"];
+                $arFields = array(
+                    //"NAME" => $elementName,
+                    "CODE" => $elementCode,
+                    //"DETAIL_TEXT" => empty($arRoom["description"]) ? nl2br($arRoom["description_ru"]) : nl2br($arRoom["description"]),
+                    //"DETAIL_TEXT_TYPE" => 'html'
+                );
+
+                $res = $iE->Update($elementId, $arFields);
+                CIBlockElement::SetPropertyValuesEx($elementId, CATALOG_IBLOCK_ID, array(
+                    //"PHOTOS" => $arElementImages,
+                    "CATEGORY" => $elementIdCat,
+                    "TARIFF" => $tariffsIds,
+                    "FEATURES" => $arAmenities,
+                    "PARENT_ID" => $arRoom["parent_id"],
+                    "SQUARE" => $arRoom["amenities"]["1"]["value"],
+                ));
+
+                if ($res) {
+                    //echo "Обновлен номер (".$elementId.") \"".$elementName."\" в отеле (".$sectionId.") \"".$sectionName."\"<br>\r\n";
+                }
+            } else {
+                $arElementImages = array();
+                $arElementImages = self::getImages($arRoom["photos"]);
+
+                $arFields = array(
+                    "ACTIVE" => "Y",
+                    "IBLOCK_ID" => CATALOG_IBLOCK_ID,
+                    "IBLOCK_SECTION_ID" => $arSection['ID'],
+                    "NAME" => $elementName,
+                    "CODE" => $elementCode,
+                    "DETAIL_TEXT" => empty($arRoom["description"]) ? nl2br($arRoom["description_ru"]) : nl2br($arRoom["description"]),
+                    "DETAIL_TEXT_TYPE" => 'html',
+                    "PROPERTY_VALUES" => array(
+                        "PHOTOS" => $arElementImages,
+                        "EXTERNAL_ID" => $arRoom["id"],
+                        "CATEGORY" => $elementIdCat,
+                        "TARIFF" => $tariffsIds,
+                        "EXTERNAL_SERVICE" => 6,
+                        "FEATURES" => $arAmenities,
+                        "PARENT_ID" => $arRoom["parent_id"],
+                        "SQUARE" => $arRoom["amenities"]["1"]["value"],
+                    )
+                );
+                $elementId = $iE->Add($arFields);
+
+                if ($elementId) {
+                    //echo "Добавлен номер (".$elementId.") \"".$elementName."\" в отель (".$sectionId.") \"".$sectionName."\"<br>\r\n";
+                }
+
+            }
+        }
+        //die();
+    }
+
+    public static function getImages($arImagesUrl) {
+        $arImages = array();
+        foreach ($arImagesUrl as $key => $arImage) {
+            $arFile = \CFile::MakeFileArray($arImage["url"]);
+
+            if ($arFile) {
+                $arImages[] = $arFile;
+            }
+        }
+
+        return $arImages;
+    }
+
+    /* Обновление цен и броней */
+    public function updateReservationData($hotelId, $arTariffs, $arCategories, $arDates)
+    {
+        $url = $this->bnovoApiURL . '/plans_data';
+        $headers = array(
+            "Content-Type: application/json"
+        );
+
+        sort($arDates);
+        $dateFrom = $arDates[0];
+        $dateTo = $arDates[count($arDates) - 1];
+
+        $data = array(
+            "token" => $this->token,
+            "account_id" => $hotelId,
+            "dfrom" => $dateFrom,
+            "dto" => $dateTo,
+            "plans" => (array)$arTariffs,
+            "roomtypes" => (array)$arCategories
+        );
+
+        $ch = curl_init();
+        curl_setopt_array($ch, array(
+            CURLOPT_URL => $url . '?' . http_build_query($data),
+            CURLOPT_RETURNTRANSFER => 1,
+            CURLOPT_HTTPHEADER => $headers
+        ));
+        $response = curl_exec($ch);
+        $arData = json_decode($response, true);
+        curl_close($ch);
+
+        $entityClass = $this->getEntityClass();
+        $arResultRooms = [];
+
+        $rsData = $entityClass::getList([
+            "select" => ["*"],
+            "filter" => [
+                "UF_HOTEL_ID" => $hotelId,
+                //"UF_TARIFF_ID" => $tariffId,
+                //"UF_CATEGORY_ID" => $categoryId,
+            ],
+            "order" => ["ID" => "ASC"],
+        ]);
+        while ($arEntity = $rsData->Fetch()){
+            $arResultRooms[$arEntity['UF_TARIFF_ID']][$arEntity['UF_CATEGORY_ID']][$arEntity['UF_DATE']->format("Y-m-d")] = $arEntity;
+        }
+
+        foreach ($arData["plans_data"] as $tariffId => $arCategories) {
+            foreach ($arCategories as $categoryId => $arCategoryDates) {
+                foreach ($arCategoryDates as $date => $arDate) {
+                    $price = $arDate['price'];
+                    $isReserved = ($arDate['closed']) ? 1 : 0;
+                    $minStay = $arDate['min_stay'];
+                    $maxStay = $arDate['max_stay'];
+                    $closedArrival = $arDate['closed_arrival'];
+                    $closedDeparture = $arDate['closed_departure'];
+
+                    if (isset($arResultRooms[$tariffId][$categoryId][$date])) {
+                        $entityId = $arResultRooms[$tariffId][$categoryId][$date]['ID'];
+                        $arFields = array(
+                            "UF_PRICE" => $price,
+                            "UF_CLOSED" => $isReserved,
+                            //"UF_RESERVED" => $isReserved,
+                            "UF_MIN_STAY" => $minStay,
+                            "UF_MAX_STAY" => $maxStay,
+                            "UF_CLOSED_ARRIVAL" => $closedArrival,
+                            "UF_CLOSED_DEPARTURE" => $closedDeparture,
+                        );
+                        $entityClass::update($entityId, $arFields);
+
+                    } else {
+                        $arFields = array(
+                            "UF_HOTEL_ID" => $hotelId,
+                            "UF_TARIFF_ID" => $tariffId,
+                            "UF_CATEGORY_ID" => $categoryId,
+                            "UF_DATE" => date('d.m.Y', strtotime($date)),
+
+                            "UF_PRICE" => $price,
+                            "UF_CLOSED" => $isReserved,
+                            //"UF_RESERVED" => $isReserved,
+                            "UF_MIN_STAY" => $minStay,
+                            "UF_MAX_STAY" => $maxStay,
+                            "UF_CLOSED_ARRIVAL" => $closedArrival,
+                            "UF_CLOSED_DEPARTURE" => $closedDeparture,
+                        );
+                        $entityClass::add($arFields);
+                    }
+                }
+            }
+        }
+    }
+
+    /* Обновление наличия */
+    public function updateAvailabilityData($hotelId, $arCategories, $arDates)
+    {
+        $url = $this->bnovoApiURL . '/availability';
+        $headers = array(
+            "Content-Type: application/json"
+        );
+
+        sort($arDates);
+        $dateFrom = $arDates[0];
+        $dateTo = $arDates[count($arDates) - 1];
+
+        $data = array(
+            "token" => $this->token,
+            "account_id" => $hotelId,
+            "dfrom" => $dateFrom,
+            "dto" => $dateTo,
+            //"roomtypes" => (array)$arCategories
+        );
+
+        $ch = curl_init();
+        curl_setopt_array($ch, array(
+            CURLOPT_URL => $url . '?' . http_build_query($data),
+            CURLOPT_RETURNTRANSFER => 1,
+            CURLOPT_HTTPHEADER => $headers
+        ));
+        $response = curl_exec($ch);
+        $arData = json_decode($response, true);
+        curl_close($ch);
+
+        $entityClass = $this->getEntityClass();
+        $arResultRooms = [];
+        foreach ($arData["availability"] as $categoryId => $arCategoryDates) {
+            $arResultRooms = [];
+            $rsData = $entityClass::getList([
+                "select" => ["*"],
+                "filter" => [
+                    "UF_HOTEL_ID" => $hotelId,
+                    "=UF_CATEGORY_ID" => $categoryId,
+                ],
+                "order" => ["ID" => "ASC"],
+            ]);
+            while ($arEntity = $rsData->Fetch()){
+                $arResultRooms[$arEntity['UF_DATE']->format("Y-m-d")][] = $arEntity['ID'];
+            }
+
+            foreach ($arCategoryDates as $date => $isAvailable) {
+                $arFields = [];
+                if (isset($arResultRooms[$date])) {
+                    //$entityId = $arResultRooms[$date]['ID'];
+                    $arFields = array(
+                        'UF_RESERVED' => !empty($isAvailable) ? '0' : '1'
+                    );
+                    foreach ($arResultRooms[$date] as $id) {
+                        $entityClass::update($id, $arFields);
+                    }
+                }
+            }
+        }
+    }
+
+    /* Бронирование объекта из заказа */
+    public function makeReservation($orderId, $arOrder, $arUser, $reservationPropId)
+    {
+        $externalSectionId = $arOrder['ITEMS'][0]['ITEM']['SECTION']['UF_EXTERNAL_ID'];
+        $sectionId = $arOrder['ITEMS'][0]['ITEM']['SECTION']['ID'];
+        $sectionName = $arOrder['ITEMS'][0]['ITEM']['SECTION']['NAME'];
+        $dateFrom = $arOrder['PROPS']['DATE_FROM'];
+        $dateTo = $arOrder['PROPS']['DATE_TO'];
+        $guests = $arOrder['PROPS']['GUESTS_COUNT'];
+        $children = !empty($arOrder['PROPS']['CHILDREN_AGE']) ? count($arOrder['PROPS']['CHILDREN_AGE']) : 0;
+
+        $url = $this->bnovoApiURL . '/channel_manager_bookings';
+        $headers = array(
+            "Content-Type: application/json"
+        );
+        $data = array(
+            "token" => $this->token,
+            "account_id" => $externalSectionId,
+            "booking_data" => [
+                //"ota_id" => $sectionId,
+                "ota_id" => "naturalist",
+                "ota_booking_id" => time(),
+                "status_id" => 1,
+                "name" => $arOrder['PROPS']["NAME"],
+                "surname" => $arOrder['PROPS']["LAST_NAME"],
+                "email" => $arOrder['PROPS']["EMAIL"],
+                "phone" => $arOrder['PROPS']["PHONE"],
+                "comment" => $arOrder['FIELDS']["USER_DESCRIPTION"],
+                "room_types" => [
+                    0 => [
+                        "arrival" => date('Y-m-d', strtotime($dateFrom)),
+                        "departure" => date('Y-m-d', strtotime($dateTo)),
+                        "room_type_id" => $arOrder['PROPS']['CATEGORY_ID'],
+                        "plan_id" => $arOrder['PROPS']['TARIFF_ID'],
+                        "count" => 1,
+                        "adults" => $guests,
+                        "children" => $children,
+                        "amount" => $arOrder['FIELDS']['PRICE'],
+                        "prices" => unserialize($arOrder['PROPS']["PRICES"]),
+                        "extra" => [
+                            "Guests" => [
+                                "List" => $arOrder['PROPS']['GUEST_LIST'],
+                                "Number" => $guests
+                            ],
+                            "Ota info" => [
+                                "info" => "Hotel info",
+                                "Hotel id" => $sectionId,
+                                "Hotel name" => $sectionName
+                            ]
+                        ]
+                    ]
+                ]
+            ]
+        );
+        file_put_contents($_SERVER["DOCUMENT_ROOT"] . '/log_bnovo.txt', json_encode($data) . PHP_EOL, FILE_APPEND);
+        file_put_contents($_SERVER["DOCUMENT_ROOT"] . '/log_bnovo_order.txt', json_encode($arOrder) . PHP_EOL,
+            FILE_APPEND);
+
+        $ch = curl_init();
+        curl_setopt_array($ch, array(
+            CURLOPT_URL => $url,
+            CURLOPT_RETURNTRANSFER => 1,
+            CURLOPT_POST => 1,
+            CURLOPT_HTTPHEADER => $headers,
+            CURLOPT_POSTFIELDS => json_encode($data)
+        ));
+        $response = curl_exec($ch);
+        $arResponse = json_decode($response, true);
+        curl_close($ch);
+        //file_put_contents($_SERVER["DOCUMENT_ROOT"] . '/log_bnovo.txt', $response . PHP_EOL, FILE_APPEND);
+
+        if ($arResponse['created_bookings'][0]['ota_booking_id']) {
+            // Сохраняем ID бронирования в заказе
+            $reservationId = $arResponse['created_bookings'][0]['ota_booking_id'];
+
+            $order = Order::load($orderId);
+            $propertyCollection = $order->getPropertyCollection();
+            $propertyValue = $propertyCollection->getItemByOrderPropertyId($reservationPropId);
+            $propertyValue->setValue($reservationId);
+            $res = $order->save();
+
+            if ($res->isSuccess()) {
+                return $reservationId;
+
+            } else {
+                return [
+                    "ERROR" => "Ошибка сохранения ID бронирования."
+                ];
+            }
+
+        } else {
+            return [
+                "ERROR" => "Ошибка запроса бронирования."
+            ];
+        }
+    }
+
+    /* Отмена бронирования объекта из заказа  */
+    public function cancelReservation($arOrder)
+    {
+        $reservationId = $arOrder['PROPS']['RESERVATION_ID'];
+        $externalSectionId = $arOrder['ITEMS'][0]['ITEM']['SECTION']['UF_EXTERNAL_ID'];
+        $sectionId = $arOrder['ITEMS'][0]['ITEM']['SECTION']['ID'];
+        $sectionName = $arOrder['ITEMS'][0]['ITEM']['SECTION']['NAME'];
+        $dateFrom = $arOrder['PROPS']['DATE_FROM'];
+        $dateTo = $arOrder['PROPS']['DATE_TO'];
+        $guests = $arOrder['PROPS']['GUESTS_COUNT'];
+        $children = !empty($arOrder['PROPS']['CHILDREN_AGE']) ? count($arOrder['PROPS']['CHILDREN_AGE']) : 0;
+
+        $url = $this->bnovoApiURL . '/channel_manager_bookings';
+        $headers = array(
+            "Content-Type: application/json"
+        );
+        $data = array(
+            "token" => $this->token,
+            "account_id" => $externalSectionId,
+            "booking_data" => [
+                "ota_id" => "naturalist",
+                "ota_booking_id" => $reservationId,
+                "status_id" => 2,
+                "name" => $arOrder['PROPS']["NAME"],
+                "surname" => $arOrder['PROPS']["LAST_NAME"],
+                "email" => $arOrder['PROPS']["EMAIL"],
+                "phone" => $arOrder['PROPS']["PHONE"],
+                "comment" => $arOrder['FIELDS']["USER_DESCRIPTION"],
+                "room_types" => [
+                    0 => [
+                        "arrival" => date('Y-m-d', strtotime($dateFrom)),
+                        "departure" => date('Y-m-d', strtotime($dateTo)),
+                        "room_type_id" => $arOrder['PROPS']["CATEGORY_ID"],
+                        "plan_id" => $arOrder['PROPS']["TARIFF_ID"],
+                        "count" => 1,
+                        "adults" => $guests,
+                        "children" => $children,
+                        "amount" => $arOrder['FIELDS']['PRICE'],
+                        "prices" => unserialize($arOrder['PROPS']["PRICES"]),
+                        "extra" => [
+                            "Guests" => [
+                                "List" => $arOrder['PROPS']['GUEST_LIST'],
+                                "Number" => $guests
+                            ],
+                            "Ota info" => [
+                                "info" => "Hotel info",
+                                "Hotel id" => $sectionId,
+                                "Hotel name" => $sectionName
+                            ]
+                        ]
+                    ]
+                ]
+            ]
+        );
+
+        $ch = curl_init();
+        curl_setopt_array($ch, array(
+            CURLOPT_URL => $url,
+            CURLOPT_RETURNTRANSFER => 1,
+            CURLOPT_CUSTOMREQUEST => "PUT",
+            CURLOPT_HTTPHEADER => $headers,
+            CURLOPT_POSTFIELDS => json_encode($data)
+        ));
+        $response = curl_exec($ch);
+        $arResponse = json_decode($response, true);
+        curl_close($ch);
+        file_put_contents($_SERVER["DOCUMENT_ROOT"] . '/log_bnovo.txt', $response . PHP_EOL, FILE_APPEND);
+
+        if ($arResponse['canceled_bookings'][0]['ota_booking_id'] == $reservationId) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    private static function getEntityClass($hlId = 11)
+    {
+        Loader::IncludeModule('highloadblock');
+        $hlblock = HighloadBlockTable::getById($hlId)->fetch();
+        $entity = HighloadBlockTable::compileEntity($hlblock);
+        return $entity->getDataClass();
+    }
+}

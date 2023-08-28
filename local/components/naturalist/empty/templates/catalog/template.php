@@ -1,0 +1,192 @@
+<?
+use Bitrix\Main\Localization\Loc;
+Loc::loadMessages(__FILE__);
+
+foreach($arResult as $key => $value) {
+    ${$key} = $value;
+}
+?>
+<div class="catalog">
+    <div class="catalog__objects" data-catalog-container>
+        <div class="sort">
+            <span>Сортировать по:</span>
+            <ul class="list">
+                <li class="list__item">
+                    <?if($sortBy == "sort"):?>
+                        <span class="list__link" data-sort="sort" data-type="<?=$orderReverse?>"><span>По</span> <span>Наитию</span></span>
+                    <?else:?>
+                        <a class="list__link" href="#" data-sort="sort" data-type="asc"><span>По</span> <span>Наитию</span></a>
+                    <?endif;?>
+                </li>
+                <!--<li class="list__item">
+                    <?/*if($sortBy == "popular"):*/?>
+                        <span class="list__link" data-sort="popular" data-type="<?/*=$orderReverse*/?>"><span>По</span> <span>Популярности</span></span>
+                    <?/*else:*/?>
+                        <a class="list__link" href="#" data-sort="popular" data-type="<?/*=$orderReverse*/?>"><span>По</span> <span>Популярности</span></a>
+                    <?/*endif;*/?>
+                </li>-->
+                <li class="list__item">
+                    <?if($sortBy == "price"):?>
+                        <span class="list__link" data-sort="price" data-type="<?=$orderReverse?>"><span>По</span> <span>Цене</span></span>
+                    <?else:?>
+                        <a class="list__link" href="#" data-sort="price" data-type="asc"><span>По</span> <span>Цене</span></a>
+                    <?endif;?>
+                </li>
+                <li class="list__item">
+                    <?if($sortBy == "rating"):?>
+                        <span class="list__link" data-sort="rating" data-type="<?=$orderReverse?>"><span>По</span> <span>Рейтингу</span></span>
+                    <?else:?>
+                        <a class="list__link" href="#" data-sort="rating" data-type="desc"><span>По</span> <span>Рейтингу</span></a>
+                    <?endif;?>
+                </li>
+            </ul>
+        </div>
+        <div class="catalog__count">Доступно <?= $allCount ?> <?= $countDeclension->get($allCount) ?></div>
+
+        <div class="catalog__list">
+            <? foreach ($arPageSections as $arSection) : ?>
+                <?
+                $this->AddEditAction($arSection['ID'], $arSection['EDIT_LINK'], CIBlock::GetArrayByID($arSection["IBLOCK_ID"], "ELEMENT_EDIT"));
+                $this->AddDeleteAction($arSection['ID'], $arSection['DELETE_LINK'], CIBlock::GetArrayByID($arSection["IBLOCK_ID"], "ELEMENT_DELETE"), array("CONFIRM" => Loc::GetMessage('CT_BNL_ELEMENT_DELETE_CONFIRM')));
+                ?>
+                <div class="object-row" data-map-id="<?= $arSection["ID"] ?>" id="<?=$this->GetEditAreaId($arSection['ID'])?>">
+                    <div class="object-row__images">
+                        <div class="swiper slider-gallery" data-slider-object="data-slider-object" data-fullgallery="[<?= $arSection["FULL_GALLERY"];?>]">
+                            <div class="swiper-wrapper">
+
+                                <? $keyPhoto = 1; ?>
+								<? $keyPhotoFullGallery = 0; ?>
+                                <? foreach ($arSection["PICTURES"] as $arPhoto) : ?>
+                                    <? if (count($arSection["PICTURES"]) > 1): ?>
+                                        <?
+                                        $alt = $arHLTypes[$arSection["UF_TYPE"]]["UF_NAME"] . " " . $arSection["NAME"] . " рис." . $keyPhoto;;
+                                        $title = "Фото - " . $arSection["NAME"] . " рис." . $keyPhoto;
+                                        ?>
+                                    <? else: ?>
+                                        <?
+                                        $alt = $arHLTypes[$arSection["UF_TYPE"]]["UF_NAME"] . " " . $arSection["NAME"];
+                                        $title = "Фото - " . $arSection["NAME"];
+                                        ?>
+
+                                    <? endif; ?>
+                                    <div class="swiper-slide" data-fullgallery-item="<?= $keyPhotoFullGallery; ?>">
+                                        <img class="swiper-lazy" alt="<?= $alt ?>" title="<?= $title ?>"
+                                             data-src="<?= $arPhoto["src"] ?>">
+                                    </div>
+                                    <? $keyPhoto++; ?>
+									<? $keyPhotoFullGallery++; ?>
+                                <? endforeach; ?>
+
+                            </div>
+
+                            <?if ($arSection["PICTURES"] && sizeof($arSection["PICTURES"]) > 1) : ?>
+                                <div class="swiper-button-prev">
+                                    <svg class="icon icon_arrow-small" viewbox="0 0 16 16" style="width: 1.6rem; height: 1.6rem;">
+                                        <use xlink:href="#arrow-small" />
+                                    </svg>
+                                </div>
+                                <div class="swiper-button-next">
+                                    <svg class="icon icon_arrow-small" viewbox="0 0 16 16" style="width: 1.6rem; height: 1.6rem;">
+                                        <use xlink:href="#arrow-small" />
+                                    </svg>
+                                </div>
+                                <div class="swiper-pagination"></div>
+                            <? endif;?>
+                        </div>
+
+                        <button class="favorite" <? if ($arFavourites && in_array($arSection["ID"], $arFavourites)) : ?>data-favourite-remove<?else:?>data-favourite-add<?endif;?> data-id="<?= $arSection["ID"] ?>">
+                            <? if ($arFavourites && in_array($arSection["ID"], $arFavourites)) : ?>
+                                <img src="<?= SITE_TEMPLATE_PATH ?>/assets/img/favorite-active.svg" alt>
+                            <? else : ?>
+                                <img src="<?= SITE_TEMPLATE_PATH ?>/assets/img/favorite.svg" alt>
+                            <? endif; ?>
+                        </button>
+
+                        <? if (!empty($arSection["UF_ACTION"])) : ?>
+                            <div class="tag"><?= $arSection["UF_ACTION"] ?></div>
+                        <? endif; ?>
+                    </div>
+
+                    <div class="object-row__content">
+                        <div class="object-row__description">
+                            <a class="object-row__title h3" href="<?=$arSection["URL"]?>"><?= $arSection["NAME"] ?></a>
+
+                            <div class="area-info">
+                                <img src="<?= SITE_TEMPLATE_PATH ?>/assets/img/marker.svg" alt>
+                                <div>
+                                    <? if (isset($arHLTypes[$arSection["UF_TYPE"]])) : ?><span><?= $arHLTypes[$arSection["UF_TYPE"]]["UF_NAME"] ?></span><? endif; ?>
+                                    <? if (!empty($arSection["UF_DISTANCE"])) : ?><span><?= $arSection["UF_DISTANCE"] ?></span><? endif; ?>
+                                    <? if (!empty($arSection["UF_ADDRESS"])) : ?><span><?= $arSection["UF_ADDRESS"] ?></span><? endif; ?>
+                                </div>
+                            </div>
+                            <div class="object-row__reviews">
+                                <a href="<?=$arSection["URL"]?>#reviews-anchor" style="display: flex;font-size: 1.3rem;margin-left: 0;" class="score" data-score="[{&quot;label&quot;:&quot;Удобство расположения&quot;,&quot;value&quot;:<?= $arReviewsAvg[$arSection["ID"]]["criterials"][1][0] ?? '0.0'?>},{&quot;label&quot;:&quot;Питание&quot;,&quot;value&quot;:<?= $arReviewsAvg[$arSection["ID"]]["criterials"][2][0] ?? '0.0'?>},{&quot;label&quot;:&quot;Уют&quot;,&quot;value&quot;:<?= $arReviewsAvg[$arSection["ID"]]["criterials"][3][0] ?? '0.0'?>},{&quot;label&quot;:&quot;Сервис&quot;,&quot;value&quot;:<?= $arReviewsAvg[$arSection["ID"]]["criterials"][4][0] ?? '0.0'?>},{&quot;label&quot;:&quot;Чистота&quot;,&quot;value&quot;:<?= $arReviewsAvg[$arSection["ID"]]["criterials"][5][0] ?? '0.0'?>},{&quot;label&quot;:&quot;Эстетика окружения&quot;,&quot;value&quot;:<?= $arReviewsAvg[$arSection["ID"]]["criterials"][6][0] ?? '0.0'?>},{&quot;label&quot;:&quot;Разнообразие досуга&quot;,&quot;value&quot;:<?= $arReviewsAvg[$arSection["ID"]]["criterials"][7][0] ?? '0.0'?>},{&quot;label&quot;:&quot;Соотношение цена/качество&quot;,&quot;value&quot;:<?= $arReviewsAvg[$arSection["ID"]]["criterials"][8][0] ?? '0.0'?>}]">
+                                    <img src="<?= SITE_TEMPLATE_PATH ?>/assets/img/score.svg" alt>
+                                    <span><?= $arReviewsAvg[$arSection["ID"]]["avg"] ?? 0  ?></span>
+                                </a>
+                                <a href="<?=$arSection["URL"]?>#reviews-anchor"><?= $arReviewsAvg[$arSection["ID"]]["count"] ?> <?= $reviewsDeclension->get($arReviewsAvg[$arSection["ID"]]["count"]) ?></a>
+                            </div>
+
+                            <?if($arSection["UF_FEATURES"]):?>
+                                <div class="object-row__features">
+                                    <? foreach ($arSection["UF_FEATURES"] as $featureId) :
+                                        if (empty($arHLFeatures[$featureId]["UF_NAME"])) {
+                                            continue;
+                                        }
+                                        ?>
+                                        <span><?= $arHLFeatures[$featureId]["UF_NAME"] ?></span>
+                                    <? endforeach; ?>
+                                </div>
+                            <?endif;?>
+                        </div>
+
+                        <div class="object-row__order">
+                            <div class="object-row__price">
+                                <?if($arSection["PRICE"] > 0):?>
+                                    <div><?= number_format($arSection["PRICE"], 0, '.', ' ') ?> ₽</div>
+                                    <span>Цена за одну ночь</span>
+                                <?endif;?>
+                            </div>
+
+                            <a class="button button_primary" onclick="VK.Goal('customize_product')" href="<?=$arSection["URL"]?>">Выбрать</a>
+                        </div>
+                    </div>
+                </div>
+            <? endforeach; ?>
+        </div>
+
+        <? if ($page < $pageCount) : ?>
+            <div class="catalog__more">
+                <a href="#" data-catalog-showmore data-page="<?= $page + 1 ?>">Показать ещё</a>
+            </div>
+        <? endif; ?>
+    </div>
+
+    <div class="catalog__map <? if(CSite::InDir('/map')): ?>catalog__on_map<? endif; ?>" data-map-overlay>
+        <div class="catalog__map-sticky">
+            <div id="map"></div>
+
+            <button class="catalog__map-fullscreen" data-map-full type="button">
+                <svg class="icon icon_fullscreen" viewbox="0 0 20 20" style="width: 2rem; height: 2rem;">
+                    <use xlink:href="#fullscreen" />
+                </svg>
+            </button>
+            <? if(CSite::InDir('/map')): ?>
+                <a href="/catalog/" class="button button_primary catalog__map-halfscreen link__to_catalog">
+                    <svg class="icon icon_arrow-text" viewbox="0 0 12 8" style="width: 1.2rem; height: 0.8rem;">
+                        <use xlink:href="#arrow-text" />
+                    </svg>
+                    <span>Перейти к списку</span>
+                </a>
+            <? else: ?>
+                <button class="button button_primary catalog__map-halfscreen" data-map-half type="button">
+                    <svg class="icon icon_arrow-text" viewbox="0 0 12 8" style="width: 1.2rem; height: 0.8rem;">
+                        <use xlink:href="#arrow-text" />
+                    </svg>
+                    <span>Перейти к списку</span>
+                </button>
+            <? endif; ?>
+            <div class="catalog__map-more" data-map-more-wrapper></div>
+        </div>
+    </div>
+</div>

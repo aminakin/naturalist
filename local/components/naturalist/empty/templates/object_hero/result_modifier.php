@@ -1,0 +1,21 @@
+<?
+$arResult = array(
+    "arSection" => $arParams['arSection'],
+    "arFavourites" => $arParams['arFavourites'],
+    "currentURL" => $arParams['currentURL'],
+    "arHLTypes" => $arParams['arHLTypes'],
+    "dateFrom" => $arParams['dateFrom'],
+    "dateTo" => $arParams['dateTo'],
+    "arDates" => $arParams['arDates'],
+    "currMonthName" => $arParams['currMonthName'],
+    "currYear" => $arParams['currYear'],
+    "nextYear" => $arParams['nextYear'],
+    "guests" => $arParams['guests'],
+    "children" => $arParams['children'],
+    "guestsDeclension" => $arParams['guestsDeclension'],
+    "arChildrenAge" => $arParams['arChildrenAge'],
+    "reviewsDeclension" => $arParams['reviewsDeclension'],
+    "reviewsCount" => $arParams['reviewsCount'],
+    "avgRating" => $arParams['avgRating'],
+    "arAvgCriterias" => $arParams['arAvgCriterias'],
+);

@@ -1,0 +1,6 @@
+<?
+$sSectionName = "Впечатления";
+$arDirProperties = Array(
+
+);
+?>
