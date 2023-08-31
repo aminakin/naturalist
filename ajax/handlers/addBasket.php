@@ -59,6 +59,10 @@ $arProps = array(
 	[
 		'CODE' => 'EXTERNAL_SERVICE',
 		'VALUE' => $externalService
+	],
+	[
+		'CODE' => 'REAL_PRICE',
+		'VALUE' => $price
 	]
 );
 if($externalService == 'bnovo') {
@@ -82,13 +86,10 @@ if($externalService == 'bnovo') {
 		[
 			'CODE' => 'CHECKSUM',
 			'VALUE' => $checksum
-		],
+		]		
 	));
 }
 
 $basket = new Baskets();
-//$res = $basket->deleteAll();
-
 $res = $basket->add($productId, $count, $price, $arProps);
-//xprint($res); die();
 echo $res;
