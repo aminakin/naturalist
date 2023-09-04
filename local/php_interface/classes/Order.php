@@ -8,6 +8,7 @@ use Bitrix\Main\Loader;
 use Bitrix\Sale\Order;
 use Bitrix\Sale\Basket;
 use Bitrix\Sale\PaySystem;
+use Bitrix\Sale\Fuser;
 use Bitrix\Main\Mail\Event;
 
 use CIBlockSection;
@@ -225,19 +226,8 @@ class Orders
 
         // Создание корзины
         $siteId = Context::getCurrent()->getSite();
-        $basket = Basket::create($siteId);
-        foreach($arBasketItems["ITEMS"] as $arItem) {
-            $item = $basket->createItem("catalog", $arItem["PRODUCT_ID"]);
-            $item->setFields(array(
-                "NAME"     => $arItem["NAME"],
-                "CURRENCY" => "RUB",
-                "QUANTITY" => $arItem["QUANTITY"],
-                "PRICE"    => $arItem["PRICE"],
-                "CUSTOM_PRICE" => "Y",
-            ));
-        }
-        $basket->refresh();
-
+        $basket = Basket::loadItemsForFUser(Fuser::getId(), $siteId);
+        
         // Создание нового заказа
         $order = Order::create($siteId, $userId);
         // Выбор типа плательщика

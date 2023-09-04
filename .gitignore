@@ -31,3 +31,4 @@ vendor/
 *.sql
 log*.txt
 *.log
+test.php
