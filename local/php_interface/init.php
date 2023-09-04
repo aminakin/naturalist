@@ -1,5 +1,11 @@
-<?
+<?php
+
 use Bitrix\Main\Loader;
+
+//composer autoload
+if (file_exists($_SERVER['DOCUMENT_ROOT'] . '/local/php_interface/vendor/autoload.php')) {
+    require_once($_SERVER['DOCUMENT_ROOT'] . '/local/php_interface/vendor/autoload.php');
+}
 
 // Автозагрузка классов
 Loader::registerAutoLoadClasses(null, array(

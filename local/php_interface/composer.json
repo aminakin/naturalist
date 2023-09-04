@@ -1,0 +1,21 @@
+{
+    "require": {
+        "andreyryabin/sprint.migration": "dev-master"
+    },
+    "autoload": {
+        "psr-4": {"Local\\" : "local/php_interface/lib/"}
+    },
+    "extra": {
+        "installer-paths": {
+            "../modules/{$name}/": ["type:bitrix-d7-module", "type:bitrix-module"],
+            "../components/{$name}/": ["type:bitrix-d7-component", "type:bitrix-component"],
+            "../templates/{$name}/": ["type:bitrix-d7-template", "type:bitrix-theme"]
+        }
+    },
+    "config": {
+        "allow-plugins": {
+            "composer/installers": true,
+            "kylekatarnls/update-helper": true
+        }
+    }
+}
