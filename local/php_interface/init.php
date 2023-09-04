@@ -19,6 +19,7 @@ Loader::registerAutoLoadClasses(null, array(
     'Naturalist\Traveline' => '/local/php_interface/classes/Traveline.php',
     'Naturalist\Bnovo'     => '/local/php_interface/classes/Bnovo.php',
     'Naturalist\Rest'      => '/local/php_interface/classes/Rest.php',
+    'Naturalist\Regions'      => '/local/php_interface/classes/Regions.php',
 ));
 
 // Константы
