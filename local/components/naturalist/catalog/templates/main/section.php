@@ -16,6 +16,7 @@ use Bitrix\Main\Application;
 use Bitrix\Main\Grid\Declension;
 use Bitrix\Highloadblock\HighloadBlockTable;
 use Bitrix\Main\Web\Uri;
+use Naturalist\Regions;
 use Naturalist\Users;
 use Naturalist\Products;
 use Naturalist\Reviews;
@@ -66,7 +67,25 @@ if (!empty($_GET['name']) && isset($_GET['name'])) {
     if($decodeSearch['type']){
         switch ($decodeSearch['type']) {
             case 'area':
-                $arFilter["%UF_REGION_NAME"] = $decodeSearch['item'];
+//                $arFilter["%UF_REGION_NAME"] = $decodeSearch['item'];
+                $searchName = $decodeSearch['item'];
+                $arRegions = Regions::getRegionByName($searchName);
+                $arCityRegions = Regions::getRegionByCity($searchName);
+
+                $arRegionIds = [];
+                if (is_array($arRegions) && !empty($arRegions)) {
+                    foreach ($arRegions as $arRegion) {
+                        $arRegionIds[] = $arRegion['ID'];
+                    }
+                }
+                if (is_array($arCityRegions) && !empty($arCityRegions)) {
+                    foreach ($arCityRegions as $arCityRegion) {
+                        $arRegionIds[] = $arCityRegion['ID'];
+                    }
+                }
+
+                $arFilter["UF_REGION"] = $arRegionIds;
+
                 break;
             case 'id':
                 $arFilter["ID"] = $decodeSearch['item'];
