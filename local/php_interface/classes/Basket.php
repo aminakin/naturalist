@@ -32,9 +32,7 @@ class Baskets
             $fUserId = CSaleUser::GetList(array("USER_ID" => (int)$userIdF))["ID"];
         } else {
             $fUserId = (intval($userId) > 0) ? CSaleUser::getFUserCode() : CSaleBasket::GetBasketUserID();
-        }
-        //xprint($fUserId);
-        //$fUserId = $userIdF;
+        }        
         $arBasketItems = array();
         $rsBasketItems = CSaleBasket::GetList(
             array(
@@ -92,27 +90,26 @@ class Baskets
 
     public function add($productId, $count, $price, $arProps)
     {
-        global $arUser, $userId;
-
-        //$fUserId = (intval($userId) > 0) ? CSaleUser::getFUserCode() : CSaleBasket::GetBasketUserID();
+        global $arUser, $userId;        
         $fUserId = (intval($userId) > 0) ? CSaleUser::getFUserCode() : false;
         $products = new Products();
         $arProduct = $products->get($productId);
         self::deleteAll();
+        self::manageHL($fUserId, $productId, $price);
 
         $arFields = array(
             'PRODUCT_ID' => $productId,
             'PRODUCT_PRICE_ID' => 1,
-            'PRICE' => $price,
-            'CUSTOM_PRICE' => 'Y',
+            'PRICE' => $price,            
             'CURRENCY' => 'RUB',
             'QUANTITY' => $count,
             'LID' => SITE_ID,
-            'MODULE' => 'sale',
-            'NAME' => $arProduct['NAME'],
-            //'FUSER_ID' => $fUserId,
-            'PROPS' => $arProps
+            'MODULE' => 'catalog',
+            'NAME' => $arProduct['NAME'],            
+            'PROPS' => $arProps,
+            'PRODUCT_PROVIDER_CLASS' => CatalogProvider::class
         );
+
         if(!empty($fUserId)){
             $arFields["FUSER_ID"] = $fUserId;
         }
@@ -187,5 +184,41 @@ class Baskets
                 "ERROR" => "Произошла ошибка при очищении корзины."
             ]);
         }
+    }
+
+    /**
+     * Удаляет старые записи и добавляет новые в highload блок
+     *
+     * @param mixed $fUserId ID пользователя корзины
+     * @param mixed $productId ID товара
+     * @param mixed $price Цена товара
+     * 
+     */
+    public static function manageHL($fUserId, $productId, $price) 
+    {
+        $hlEntity = new HighLoadBlockHelper('SuitPrices');
+
+        $hlEntity->prepareParamsQuery(
+            ['*'],
+            ["ID" => "ASC"],
+            [
+                "UF_FUSERID" => $fUserId, 
+                "UF_PROD_ID" => $productId
+            ]
+        );
+
+        $rsProducts = $hlEntity->getDataAll();
+    
+        if (!empty($rsProducts)) {
+            foreach ($rsProducts as $product) {
+                $hlEntity->delete($product['ID']);
+            }            
+        }
+            
+        $hlEntity->add([
+            "UF_FUSERID" => $fUserId,
+            "UF_PROD_ID" => $productId,
+            "UF_PRICE" => $price
+        ]);        
     }
 }
