@@ -209,6 +209,45 @@ var Order = function () {
             }
         });
     }
+
+    this.sendCoupon = function () {
+        let data = {
+            coupon: $('.coupon__input').val(),
+            action: 'couponAdd'
+        }        
+        jQuery.ajax({
+            type: 'POST',
+            url: '/ajax/handlers/addOrder.php',
+            data: data,
+            dataType: 'json',            
+            success: function (data) {
+                location.reload();
+            },
+            error: function (data) {
+                location.reload();
+            },
+        });
+    }
+
+    this.removeCoupon = function (coupon) {
+        let data = {
+            coupon: coupon,
+            action: 'couponDelete'
+        }
+        console.log(data);
+        jQuery.ajax({
+            type: 'POST',
+            url: '/ajax/handlers/addOrder.php',
+            data: data,
+            dataType: 'json',            
+            success: function (data) {
+                location.reload();
+            },
+            error: function (data) {
+                location.reload();
+            },
+        });
+    }
 }
 var order = new Order();
 
