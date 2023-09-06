@@ -20,6 +20,8 @@ Loader::registerAutoLoadClasses(null, array(
     'Naturalist\Bnovo'     => '/local/php_interface/classes/Bnovo.php',
     'Naturalist\Rest'      => '/local/php_interface/classes/Rest.php',
     'Naturalist\Regions'      => '/local/php_interface/classes/Regions.php',
+    'Naturalist\CatalogProvider'      => '/local/php_interface/classes/CatalogProvider.php',
+    'Naturalist\HighLoadBlockHelper'      => '/local/php_interface/classes/HighLoadBlockHelper.php',
 ));
 
 // Константы

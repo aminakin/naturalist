@@ -7,6 +7,8 @@ use CIBlockElement;
 use CIBlockSection;
 use CUser;
 use CFile;
+use CCatalogDiscount;
+use CCatalogProduct;
 
 defined("B_PROLOG_INCLUDED") && B_PROLOG_INCLUDED === true || die();
 /**
@@ -122,5 +124,34 @@ class Products
         }
 
         return $arRooms;
+    }
+    
+    /**
+     * Возвращает данные по скидке
+     *
+     * @param int $prodId ID товара.
+     * 
+     * @return array Массив данных о скидке на товар
+     * 
+     */
+    public static function getDiscount ($prodId, $price) {
+        global $USER;
+
+        $arDiscounts = CCatalogDiscount::GetDiscountByProduct($prodId, $USER->GetUserGroupArray(), "N");        
+        
+        if (count($arDiscounts)) {
+            $discountPrice = CCatalogProduct::CountPriceWithDiscount(
+                $price,
+                'RUB',
+                $arDiscounts
+            );
+            $percent = intval($discountPrice) / intval($price) * 100;
+            return [
+                'DISCOUNT_PRICE' => $discountPrice,
+                'DISCOUNT_PERCENT' => $percent,
+            ];
+        }
+
+        return [];
     }
 }

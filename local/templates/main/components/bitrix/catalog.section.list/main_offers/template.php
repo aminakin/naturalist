@@ -159,10 +159,9 @@ $arReviewsAvg = Reviews::getCampingRating($arCampingIDs);
             <span class="news-preview__title">Нет предложений</span>
         <? endif; ?>
     </div>
-
-    <? if ($page < $pageCount): ?>
+    <?if ($arParams['SHOW_MORE_LINK']):?>
         <div class="objects__more">
-            <a href="#" data-main-offers-showmore data-page="<?= $page + 1 ?>">Показать ещё</a>
-        </div>
-    <? endif; ?>
+            <a href="<?=$arParams['SHOW_MORE_LINK']?>">Показать ещё</a>
+        </div>  
+    <?endif;?>  
 </div>
