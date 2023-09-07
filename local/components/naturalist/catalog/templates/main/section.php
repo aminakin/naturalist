@@ -136,6 +136,7 @@ if (!empty($_GET['name']) && isset($_GET['name'])) {
         $arFilterValues["SEARCH_TEXT"] = strip_tags($search);
     }
 }
+
 // Заезд, выезд, кол-во гостей
 $dateFrom = $_GET['dateFrom'];
 $dateTo = $_GET['dateTo'];
@@ -154,6 +155,7 @@ if (!empty($dateFrom) && !empty($dateTo) && !empty($_GET['guests'])) {
         $arFilter["UF_EXTERNAL_ID"] = false;
     }
 }
+
 // Тип
 if (!empty($_GET['types']) && isset($_GET['types'])) {
     $arFilterTypes = explode(',', $_GET['types']);
@@ -164,21 +166,25 @@ if (!empty($_GET['types']) && isset($_GET['types'])) {
         array("UF_TYPE_EXTRA" => explode(',', $_GET['types']))
     );
 }
+
 // Услуги
 if (!empty($_GET['services']) && isset($_GET['services'])) {
     $arFilterServices = explode(',', $_GET['services']);
     $arFilter["UF_SERVICES"] = $arFilterServices;
 }
+
 // Питание
 if (!empty($_GET['food']) && isset($_GET['food'])) {
     $arFilterFood = explode(',', $_GET['food']);
     $arFilter["UF_FOOD"] = $arFilterFood;
 }
+
 // Особенности
 if (!empty($_GET['features']) && isset($_GET['features'])) {
     $arFilterFeatures = explode(',', $_GET['features']);
     $arFilter["UF_FEATURES"] = $arFilterFeatures;
 }
+
 // Впечатления
 if (!empty($_GET['impressions']) && isset($_GET['impressions'])) {
     $arRequestImpressions = explode(',', $_GET['impressions']);
@@ -340,6 +346,7 @@ $arHLFood = array();
 while ($arEntity = $rsData->Fetch()) {
     $arHLFood[$arEntity["ID"]] = $arEntity;
 }
+
 // Особенности объекта
 $hlId = 5;
 $hlblock = HighloadBlockTable::getById($hlId)->fetch();
@@ -353,6 +360,7 @@ $arHLFeatures = array();
 while ($arEntity = $rsData->Fetch()) {
     $arHLFeatures[$arEntity["ID"]] = $arEntity;
 }
+
 // Услуги
 $rsServices = CIBlockElement::GetList(array("SORT" => "ASC"), array("IBLOCK_ID" => SERVICES_IBLOCK_ID, "ACTIVE" => "Y", "PROPERTY_SHOW_FILTER_VALUE" => "Y"), false, false, array("IBLOCK_ID", "ID", "CODE", "NAME"));
 $arServices = array();
@@ -463,6 +471,7 @@ $APPLICATION->AddHeadString('<meta name="description" content="' . $descriptionS
                         "arHLTypes" => $arHLTypes,
                         "arHLFeatures" => $arHLFeatures,
                         "arServices" => $arServices,
+                        "arSearchedRegions" => $arRegionIds,
                     )
                 );
                 ?>
