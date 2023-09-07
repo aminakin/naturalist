@@ -107,8 +107,26 @@ class Regions
             ->addSelect('ID')
             ->addSelect('UF_NAME')
             ->addSelect('UF_SORT')
-            ->addSelect('UF_COORD')
+            ->addSelect('UF_COORDS')
             ->where('ID', $regionID)
             ->fetch();
+    }
+
+    /**
+     * Список регионов
+     * @return mixed
+     * @throws \Bitrix\Main\SystemException
+     */
+    public static function getRegionList($ignoredIds = [])
+    {
+        $regionesDataClass = HighloadBlockTable::compileEntity(self::$regionsHL)->getDataClass();
+
+        return $regionesDataClass::query()
+            ->addSelect('ID')
+            ->addSelect('UF_NAME')
+            ->addSelect('UF_SORT')
+            ->addSelect('UF_COORDS')
+            ->whereNotIn('ID', $ignoredIds)
+            ->fetchAll();
     }
 }
