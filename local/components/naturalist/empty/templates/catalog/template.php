@@ -110,7 +110,7 @@ foreach($arResult as $key => $value) {
 
                     <div class="object-row__content">
                         <div class="object-row__description">
-                            <a class="object-row__title h3" href="<?=$arSection["URL"]?>"><?= $arSection["NAME"] ?></a>
+                            <a class="object-row__title h3" onclick="setLocalStorageCatalog(event, 2, 20);" href="<?=$arSection["URL"]?>"><?= $arSection["NAME"] ?></a>
 
                             <div class="area-info">
                                 <img src="<?= SITE_TEMPLATE_PATH ?>/assets/img/marker.svg" alt>

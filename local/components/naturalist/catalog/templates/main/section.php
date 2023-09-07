@@ -452,7 +452,11 @@ $APPLICATION->AddHeadString('<meta name="description" content="' . $descriptionS
         <!-- section-->
 
         <section class="section section_catalog">
-            <div class="container">
+            <div class="container">                
+                <?xprint($page);?>
+                <?xprint($pageCount);?>
+                <?xprint($allCount);?>
+                <?xprint(count($arPageSections));?>
                 <?
                 $APPLICATION->IncludeComponent(
                     "naturalist:empty",
