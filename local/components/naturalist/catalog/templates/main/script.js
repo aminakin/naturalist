@@ -18,6 +18,7 @@ $(function() {
             url: url,
             dataType: 'html',
             success: function(html) {
+                showenElements += $(html).find(ajaxContainer + ' > div').length;
                 //sendDataToLocalStorage(page, showenElements);
                 var updContentHtml = $(html).find(ajaxContainer).html();
                 $(ajaxContainer).append(updContentHtml);

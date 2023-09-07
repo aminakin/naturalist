@@ -110,7 +110,7 @@ foreach($arResult as $key => $value) {
 
                     <div class="object-row__content">
                         <div class="object-row__description">
-                            <a class="object-row__title h3" onclick="setLocalStorageCatalog(event, 2, 20);" href="<?=$arSection["URL"]?>"><?= $arSection["NAME"] ?></a>
+                            <a class="object-row__title h3" onclick="setLocalStorageCatalog(event);" href="<?=$arSection["URL"]?>"><?= $arSection["NAME"] ?></a>
 
                             <div class="area-info">
                                 <img src="<?= SITE_TEMPLATE_PATH ?>/assets/img/marker.svg" alt>
@@ -149,7 +149,7 @@ foreach($arResult as $key => $value) {
                                 <?endif;?>
                             </div>
 
-                            <a class="button button_primary" onclick="VK.Goal('customize_product')" href="<?=$arSection["URL"]?>">Выбрать</a>
+                            <a class="button button_primary" onclick="VK.Goal('customize_product');setLocalStorageCatalog(event);" href="<?=$arSection["URL"]?>">Выбрать</a>
                         </div>
                     </div>
                 </div>
@@ -302,7 +302,7 @@ foreach($arResult as $key => $value) {
                                 </div>
 
                                 <div class="object__heading">
-                                    <a class="object__title"
+                                    <a class="object__title" onclick="setLocalStorageCatalog(event);"
                                        href="<?= $arItem["URL"] ?>"><?= $arItem["NAME"] ?></a>
                                     <a href="<?=$arItem["URL"]?>#reviews-anchor" style="display: flex;font-size: 1.3rem;margin-left: 0;" class="score">
                                         <img src="<?= SITE_TEMPLATE_PATH ?>/assets/img/score.svg" alt>
@@ -332,7 +332,7 @@ foreach($arResult as $key => $value) {
                                 }
                                 $arItem["PRICE"] = $sectionPrice;?>
 
-                                <a class="button button_transparent" onclick="VK.Goal('customize_product')"
+                                <a class="button button_transparent" onclick="VK.Goal('customize_product');setLocalStorageCatalog(event);"
                                    href="<?= $arItem["URL"] ?>"><?= number_format($arItem["PRICE"], 0, '.', ' ') ?>
                                     ₽</a>
                             </div>

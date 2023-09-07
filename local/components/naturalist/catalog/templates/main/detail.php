@@ -268,11 +268,9 @@ if (!empty($arSection) && !empty($dateFrom) && !empty($dateTo) && !empty($_GET['
 
         if(isset($parentExternalIds) && !empty($parentExternalIds)){
             unset($arFilter["ID"]);
-            $arFilter["?PROPERTY_EXTERNAL_ID"] = implode('|', $parentExternalIds);
-            //xprint($arFilter["PROPERTY_EXTERNAL_ID"]);
+            $arFilter["?PROPERTY_EXTERNAL_ID"] = implode('|', $parentExternalIds);            
             $rsElements = CIBlockElement::GetList(false, $arFilter, false, false, array("IBLOCK_ID", "ID", "IBLOCK_SECTION_ID", "NAME", "DETAIL_TEXT", "PROPERTY_PHOTOS", "PROPERTY_FEATURES", "PROPERTY_EXTERNAL_ID", "PROPERTY_EXTERNAL_CATEGORY_ID", "PROPERTY_SQUARE", "PROPERTY_PARENT_ID"));
-            while($arElement = $rsElements->Fetch()) {
-                //xprint($arElement);
+            while($arElement = $rsElements->Fetch()) {                
                 if($arElement["PROPERTY_PHOTOS_VALUE"]) {
                     $arDataFullGalleryRoom = [];
                     foreach($arElement["PROPERTY_PHOTOS_VALUE"] as $photoId) {
