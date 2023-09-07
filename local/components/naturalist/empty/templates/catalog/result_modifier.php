@@ -101,6 +101,18 @@ if ($arResult['arSearchedRegions']) {
             }
             $arSort = array($sort => $sortOrder);
 
+
+            /* Отзывы */
+            $rsReviews = CIBlockElement::GetList(array("SORT" => "ASC"), array("IBLOCK_ID" => REVIEWS_IBLOCK_ID, "ACTIVE" => "Y"), false, false, array("ID", "PROPERTY_CAMPING_ID", "PROPERTY_RATING"));
+            $arReviews = array();
+            while ($arReview = $rsReviews->Fetch()) {
+                $arReviews[$arReview["PROPERTY_CAMPING_ID_VALUE"]][$arReview["ID"]] = $arReview["PROPERTY_RATING_VALUE"];
+            }
+            $arReviewsAvg = array_map(function ($a) {
+                return round(array_sum($a) / count($a), 1);
+            }, $arReviews);
+
+
             //фильр по региону
             $arFilter = array(
                 "IBLOCK_ID" => CATALOG_IBLOCK_ID,
