@@ -482,6 +482,17 @@ $APPLICATION->AddHeadString('<meta name="description" content="' . $descriptionS
                         "arHLFeatures" => $arHLFeatures,
                         "arServices" => $arServices,
                         "arSearchedRegions" => $arRegionIds,
+                        "arFilterValues" => $arFilterValues,
+                        "dateFrom" => $dateFrom,
+                        "dateTo" => $dateTo,
+                        "arDates" => $arDates,
+                        "currMonthName" => $currMonthName,
+                        "currYear" => $currYear,
+                        "nextYear" => $nextYear,
+                        "guests" => $guests,
+                        "children" => $children,
+                        "guestsDeclension" => $guestsDeclension,
+                        "arChildrenAge" => $arChildrenAge,
                     )
                 );
                 ?>

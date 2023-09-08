@@ -18,6 +18,17 @@ $arResult = array(
     "arHLTypes" => $arParams['arHLTypes'],
     "arHLFeatures" => $arParams['arHLFeatures'],
     "arSearchedRegions" => $arParams['arSearchedRegions'] ?? false,
+    "arFilterValues" => $arParams['arFilterValues'],
+    "dateFrom" => $arParams['dateFrom'],
+    "dateTo" => $arParams['dateTo'],
+    "arDates" => $arParams['arDates'],
+    "currMonthName" => $arParams['currMonthName'],
+    "currYear" => $arParams['currYear'],
+    "nextYear" => $arParams['nextYear'],
+    "guests" => $arParams['guests'],
+    "children" => $arParams['children'],
+    "guestsDeclension" => $arParams['guestsDeclension'],
+    "arChildrenAge" => $arParams['arChildrenAge'],
 );
 
 
