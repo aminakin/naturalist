@@ -310,10 +310,20 @@ if ($sortBy == 'price') {
 }
 
 /* Пагинация */
-$page = $_REQUEST['page'] ?? 1;
+// Данные из сессии по предыдущему просмотру каталога
+$session = \Bitrix\Main\Application::getInstance()->getSession();
+$previousShowenItems = $session['catalog_showen_items'];
+$nextPage = $session['current_catalog_page'];
+
+if ($nextPage) {
+    $page = intval($nextPage) - 1;
+} else {
+    $page = $_REQUEST['page'] ?? 1;
+}
+
 $pageCount = ceil($allCount / $arParams["ITEMS_COUNT"]);
 if ($pageCount > 1) {
-    $arPageSections = array_slice($arSections, ($page - 1) * $arParams["ITEMS_COUNT"], $arParams["ITEMS_COUNT"]);
+    $arPageSections = array_slice($arSections, $previousShowenItems ? 0 : ($page - 1) * $arParams["ITEMS_COUNT"], $previousShowenItems ? $previousShowenItems : $arParams["ITEMS_COUNT"]);
 } else {
     $arPageSections = $arSections;
 }
@@ -452,7 +462,7 @@ $APPLICATION->AddHeadString('<meta name="description" content="' . $descriptionS
         <!-- section-->
 
         <section class="section section_catalog">
-            <div class="container">
+            <div class="container">                                
                 <?
                 $APPLICATION->IncludeComponent(
                     "naturalist:empty",
@@ -460,7 +470,7 @@ $APPLICATION->AddHeadString('<meta name="description" content="' . $descriptionS
                     array(
                         "sortBy" => $sortBy,
                         "orderReverse" => $orderReverse,
-                        "page" => $page,
+                        "page" => $arParams["REAL_PAGE"] ? $arParams["REAL_PAGE"] : $page,
                         "pageCount" => $pageCount,
                         "allCount" => $allCount,
                         "countDeclension" => $countDeclension,
@@ -523,4 +533,10 @@ $APPLICATION->IncludeComponent(
         "map" => $arParams["MAP"]
     )
 );
+?>
+
+<?
+$session = Application::getInstance()->getSession();
+$session->remove('current_catalog_page');
+$session->remove('catalog_showen_items');
 ?>
