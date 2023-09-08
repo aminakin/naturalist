@@ -123,7 +123,8 @@ if ($requestName) {
     foreach ($arCities as $arCity) {
         $arAreas['list'][] = [
             'id' => $arCity['UF_NAME'],
-            'title' => $arCity['UF_NAME']
+            'title' => $arCity['UF_NAME'],
+            'footnote' => $arCity['REGION_UF_NAME']
         ];
     }
 

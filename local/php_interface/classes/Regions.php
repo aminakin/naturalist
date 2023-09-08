@@ -29,10 +29,19 @@ class Regions
         }
 
         $citiesDataClass = HighloadBlockTable::compileEntity(self::$citiesHL)->getDataClass();
+        $regionesDataClass = HighloadBlockTable::compileEntity(self::$regionsHL)->getDataClass();
 
         return $citiesDataClass::query()
             ->addSelect('ID')
             ->addSelect('UF_NAME')
+            ->addSelect('UF_REGION')
+            ->addSelect('REGION', 'REGION_')
+            ->registerRuntimeField('REGION', [
+                'data_type' => $regionesDataClass,
+                'reference' => [
+                    'this.UF_REGION' => 'ref.ID'
+                ]
+            ])
             ->whereLike('UF_NAME', '%' . $cityName . '%')
             ->fetchAll();
     }
