@@ -16,6 +16,7 @@ use Bitrix\Main\Application;
 use Bitrix\Main\Grid\Declension;
 use Bitrix\Highloadblock\HighloadBlockTable;
 use Bitrix\Main\Web\Uri;
+use Naturalist\Regions;
 use Naturalist\Users;
 use Naturalist\Products;
 use Naturalist\Reviews;
@@ -66,7 +67,25 @@ if (!empty($_GET['name']) && isset($_GET['name'])) {
     if($decodeSearch['type']){
         switch ($decodeSearch['type']) {
             case 'area':
-                $arFilter["%UF_REGION_NAME"] = $decodeSearch['item'];
+//                $arFilter["%UF_REGION_NAME"] = $decodeSearch['item'];
+                $searchName = $decodeSearch['item'];
+                $arRegions = Regions::getRegionByName($searchName);
+                $arCityRegions = Regions::getRegionByCity($searchName);
+
+                $arRegionIds = [];
+                if (is_array($arRegions) && !empty($arRegions)) {
+                    foreach ($arRegions as $arRegion) {
+                        $arRegionIds[] = $arRegion['ID'];
+                    }
+                }
+                if (is_array($arCityRegions) && !empty($arCityRegions)) {
+                    foreach ($arCityRegions as $arCityRegion) {
+                        $arRegionIds[] = $arCityRegion['ID'];
+                    }
+                }
+
+                $arFilter["UF_REGION"] = $arRegionIds;
+
                 break;
             case 'id':
                 $arFilter["ID"] = $decodeSearch['item'];
@@ -117,6 +136,7 @@ if (!empty($_GET['name']) && isset($_GET['name'])) {
         $arFilterValues["SEARCH_TEXT"] = strip_tags($search);
     }
 }
+
 // Заезд, выезд, кол-во гостей
 $dateFrom = $_GET['dateFrom'];
 $dateTo = $_GET['dateTo'];
@@ -135,6 +155,7 @@ if (!empty($dateFrom) && !empty($dateTo) && !empty($_GET['guests'])) {
         $arFilter["UF_EXTERNAL_ID"] = false;
     }
 }
+
 // Тип
 if (!empty($_GET['types']) && isset($_GET['types'])) {
     $arFilterTypes = explode(',', $_GET['types']);
@@ -145,21 +166,25 @@ if (!empty($_GET['types']) && isset($_GET['types'])) {
         array("UF_TYPE_EXTRA" => explode(',', $_GET['types']))
     );
 }
+
 // Услуги
 if (!empty($_GET['services']) && isset($_GET['services'])) {
     $arFilterServices = explode(',', $_GET['services']);
     $arFilter["UF_SERVICES"] = $arFilterServices;
 }
+
 // Питание
 if (!empty($_GET['food']) && isset($_GET['food'])) {
     $arFilterFood = explode(',', $_GET['food']);
     $arFilter["UF_FOOD"] = $arFilterFood;
 }
+
 // Особенности
 if (!empty($_GET['features']) && isset($_GET['features'])) {
     $arFilterFeatures = explode(',', $_GET['features']);
     $arFilter["UF_FEATURES"] = $arFilterFeatures;
 }
+
 // Впечатления
 if (!empty($_GET['impressions']) && isset($_GET['impressions'])) {
     $arRequestImpressions = explode(',', $_GET['impressions']);
@@ -285,10 +310,20 @@ if ($sortBy == 'price') {
 }
 
 /* Пагинация */
-$page = $_REQUEST['page'] ?? 1;
+// Данные из сессии по предыдущему просмотру каталога
+$session = \Bitrix\Main\Application::getInstance()->getSession();
+$previousShowenItems = $session['catalog_showen_items'];
+$nextPage = $session['current_catalog_page'];
+
+if ($nextPage) {
+    $page = intval($nextPage) - 1;
+} else {
+    $page = $_REQUEST['page'] ?? 1;
+}
+
 $pageCount = ceil($allCount / $arParams["ITEMS_COUNT"]);
 if ($pageCount > 1) {
-    $arPageSections = array_slice($arSections, ($page - 1) * $arParams["ITEMS_COUNT"], $arParams["ITEMS_COUNT"]);
+    $arPageSections = array_slice($arSections, $previousShowenItems ? 0 : ($page - 1) * $arParams["ITEMS_COUNT"], $previousShowenItems ? $previousShowenItems : $arParams["ITEMS_COUNT"]);
 } else {
     $arPageSections = $arSections;
 }
@@ -321,6 +356,7 @@ $arHLFood = array();
 while ($arEntity = $rsData->Fetch()) {
     $arHLFood[$arEntity["ID"]] = $arEntity;
 }
+
 // Особенности объекта
 $hlId = 5;
 $hlblock = HighloadBlockTable::getById($hlId)->fetch();
@@ -334,6 +370,7 @@ $arHLFeatures = array();
 while ($arEntity = $rsData->Fetch()) {
     $arHLFeatures[$arEntity["ID"]] = $arEntity;
 }
+
 // Услуги
 $rsServices = CIBlockElement::GetList(array("SORT" => "ASC"), array("IBLOCK_ID" => SERVICES_IBLOCK_ID, "ACTIVE" => "Y", "PROPERTY_SHOW_FILTER_VALUE" => "Y"), false, false, array("IBLOCK_ID", "ID", "CODE", "NAME"));
 $arServices = array();
@@ -425,7 +462,7 @@ $APPLICATION->AddHeadString('<meta name="description" content="' . $descriptionS
         <!-- section-->
 
         <section class="section section_catalog">
-            <div class="container">
+            <div class="container">                                
                 <?
                 $APPLICATION->IncludeComponent(
                     "naturalist:empty",
@@ -433,7 +470,7 @@ $APPLICATION->AddHeadString('<meta name="description" content="' . $descriptionS
                     array(
                         "sortBy" => $sortBy,
                         "orderReverse" => $orderReverse,
-                        "page" => $page,
+                        "page" => $arParams["REAL_PAGE"] ? $arParams["REAL_PAGE"] : $page,
                         "pageCount" => $pageCount,
                         "allCount" => $allCount,
                         "countDeclension" => $countDeclension,
@@ -444,6 +481,7 @@ $APPLICATION->AddHeadString('<meta name="description" content="' . $descriptionS
                         "arHLTypes" => $arHLTypes,
                         "arHLFeatures" => $arHLFeatures,
                         "arServices" => $arServices,
+                        "arSearchedRegions" => $arRegionIds,
                     )
                 );
                 ?>
@@ -495,4 +533,10 @@ $APPLICATION->IncludeComponent(
         "map" => $arParams["MAP"]
     )
 );
+?>
+
+<?
+$session = Application::getInstance()->getSession();
+$session->remove('current_catalog_page');
+$session->remove('catalog_showen_items');
 ?>

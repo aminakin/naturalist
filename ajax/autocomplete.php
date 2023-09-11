@@ -1,10 +1,12 @@
-<?
+<?php
+
 require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_before.php");
 
 use Bitrix\Main;
 use Bitrix\Main\Application;
-use Bitrix\Highloadblock as HL;
+use Bitrix\Highloadblock;
 use Bitrix\Main\Entity;
+use Naturalist\Regions;
 
 
 CModule::IncludeModule('iblock');
@@ -15,15 +17,15 @@ if (!Main\Loader::includeModule('highloadblock')) {
 
 $request = Application::getInstance()->getContext()->getRequest();
 
-
 /**
  * Sorting item flats
  */
 if ($request->get('text') != null) {
-    $text = urldecode($request->get('text'));
+    $requestName = urldecode($request->get('text'));
 }
 
-if ($text) {
+if ($requestName) {
+
     function array_unique_key($array, $key)
     {
         $tmp = $key_array = array();
@@ -54,12 +56,22 @@ if ($text) {
         "ACTIVE" => "Y"
     ];
 
-    if ($text != null) {
-        $reqText = (is_array($text)) ? $text : explode(',', $text);
-        if (count($reqText) > 0) {
-            $arFilterArea["%UF_REGION_NAME"] = $reqText;
-            $arFilterStreet["%UF_ADDRESS"] = $reqText;
-            $arFilterObject["%NAME"] = $reqText;
+    $arCities = $arRegions = [];
+    if ($requestName != null) {
+        $requestSearchName = (is_array($requestName)) ? $requestName : explode(',', $requestName);
+
+        if (is_array($requestSearchName) && count($requestSearchName) > 0) {
+
+            $arCities = Regions::getCityByName($requestSearchName);
+            $arRegions = Regions::getRegionByName($requestSearchName);
+            $arCityRegions =  Regions::getRegionByCity($requestSearchName); /* регионы этого города */
+
+//            $arFilterArea["%UF_REGION_NAME"] = $requestSearchName;
+            $arFilterStreet["%UF_ADDRESS"] = $requestSearchName;
+            $arFilterObject["%NAME"] = $requestSearchName;
+
+
+
         }
     }
 
@@ -81,33 +93,50 @@ if ($text) {
         'list' => [],
     ];*/
 
-    $resAreas = CIBlockSection::GetList(
-        array(),
-        $arFilterArea,
-        false,
-        array(
-            "ID",
-            "IBLOCK_ID",
-            "CODE",
-            "NAME",
-            "PICTURE",
-            "UF_*"
-        ),
-        false
-    );
+//    $resAreas = CIBlockSection::GetList(
+//        array(),
+//        $arFilterArea,
+//        false,
+//        array(
+//            "ID",
+//            "IBLOCK_ID",
+//            "CODE",
+//            "NAME",
+//            "PICTURE",
+//            "UF_*"
+//        ),
+//        false
+//    );
+//
+//    while ($arArea = $resAreas->GetNext()) {
+//        $area = $arArea['UF_REGION_NAME'];
+//        if (in_array($area, $arAreas['list'])) {
+//            continue;
+//        }
+//        $arAreas['list'][] = [
+//            'id' => $area,
+//            'title' => $area
+//        ];
+//    }
+//    $arAreas['list'] = array_unique($arAreas['list']);
 
-    while ($arArea = $resAreas->GetNext()) {
-        $area = $arArea['UF_REGION_NAME'];
-        if (in_array($area, $arAreas['list'])) {
-            continue;
-        }
+    foreach ($arCities as $arCity) {
         $arAreas['list'][] = [
-            'id' => $area,
-            'title' => $area
+            'id' => $arCity['UF_NAME'],
+            'title' => $arCity['UF_NAME'],
+            'footnote' => $arCity['REGION_UF_NAME']
         ];
     }
-    $arAreas['list'] = array_unique($arAreas['list']);
 
+    foreach ($arRegions as $arRegion) {
+        $arAreas['list'][] = [
+            'id' => $arRegion['UF_NAME'],
+            'title' => $arRegion['UF_NAME']
+        ];
+    }
+
+
+    /* поиск по адресу */
     $resStreets = CIBlockSection::GetList(
         false,
         $arFilterStreet,
@@ -124,11 +153,6 @@ if ($text) {
     );
 
     while ($arStreet = $resStreets->GetNext()) {
-        /*$street = $arStreet['NAME']." ".$arStreet['UF_ADDRESS'];
-        $streetText = "<strong>".$arStreet['NAME']."</strong><br>".$arStreet['UF_ADDRESS'];
-        if (in_array($streetText, $arStreets['list'])) {
-            continue;
-        }*/
         $arStreets['list'][] = [
             'id' => $arStreet['ID'],
             'title' => $arStreet['NAME'],
@@ -137,7 +161,6 @@ if ($text) {
     }
 
     //находим объекты
-
     $resObjects = CIBlockSection::GetList(
         false,
         $arFilterObject,
@@ -154,11 +177,6 @@ if ($text) {
     );
 
     while ($arObject = $resObjects->GetNext()) {
-        /*$street = $arObject['NAME']." ".$arObject['UF_ADDRESS'];
-        $streetText = "<strong>".$arObject['NAME']."</strong><br>".$arObject['UF_ADDRESS'];
-        if (in_array($streetText, $arStreets['list'])) {
-            continue;
-        }*/
         $arStreets['list'][] = [
             'id' => $arObject['ID'],
             'title' => $arObject['NAME'],
@@ -178,8 +196,6 @@ if ($text) {
         $arReturn[] = $arObjects;
     }*/
 
-    ?>
-    <?
     if(isset($arReturn) && !empty($arReturn)){
         echo $encode = json_encode($arReturn, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
     }else {
@@ -188,4 +204,3 @@ if ($text) {
 } else {
     echo "Повторите запрос";
 }
-?>

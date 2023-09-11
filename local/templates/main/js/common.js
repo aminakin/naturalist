@@ -34,6 +34,26 @@ window.deleteUrlParams = function(arParams, arDeleting) {
     }
 }
 
+window.setLocalStorageCatalog = function(event) {
+    event.preventDefault();
+    let page = $('[data-catalog-container] [data-catalog-showmore]').data('page');
+    let showenElements = $('.catalog__list > div').length;    
+    let data = {
+        page: page,
+        items: showenElements,
+    }    
+    jQuery.ajax({
+        type: 'POST',
+        url: '/ajax/handlers/setLocalStorage.php',
+        data: data,
+        dataType: 'json',
+        success: function(data) {
+            // console.log(data);
+        }
+    });
+    location.href = event.target.getAttribute('href');
+}
+
 var getTimeDate = function(editDate){
     let parseDate = editDate.split('.');
     let newDate = new Date(parseDate[2],parseDate[1],parseDate[0]);

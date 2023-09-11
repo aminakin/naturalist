@@ -8,14 +8,18 @@ $(function() {
         var page = $(this).data('page');
         params["page"] = page;
         var url = setUrlParams(params);
+        var showenElements = $('.catalog__list > div').length;
 
         var ajaxContainer = '[data-catalog-container] .catalog__list';
-        var ajaxPagerContainer = '[data-catalog-container] .catalog__more';
+        var ajaxPagerContainer = '[data-catalog-container] .catalog__more';        
+        
         jQuery.ajax({
             type: 'POST',
             url: url,
             dataType: 'html',
             success: function(html) {
+                showenElements += $(html).find(ajaxContainer + ' > div').length;
+                //sendDataToLocalStorage(page, showenElements);
                 var updContentHtml = $(html).find(ajaxContainer).html();
                 $(ajaxContainer).append(updContentHtml);
 
@@ -25,8 +29,25 @@ $(function() {
                 window.objectsGallery();
                 window.map.handleItemHover();
             }
-        });
+        });        
     });
+
+    function sendDataToLocalStorage(page, items) {
+        let data = {
+            page: page,
+            items: items,
+        }
+        console.log(data);
+        jQuery.ajax({
+            type: 'POST',
+            url: '/ajax/handlers/setLocalStorage.php',
+            data: data,
+            dataType: 'json',
+            success: function(data) {
+                console.log(data);
+            }
+        });
+    }
 
     // Сортировка
     $(document).on('click', '[data-catalog-container] [data-sort]', function(event) {
