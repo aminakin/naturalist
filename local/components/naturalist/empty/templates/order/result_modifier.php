@@ -2,6 +2,7 @@
 use Bitrix\Main\Application;
 use Bitrix\Main\Grid\Declension;
 use Bitrix\Highloadblock\HighloadBlockTable;
+use Bitrix\Sale;
 use Naturalist\Users;
 use Naturalist\Baskets;
 use Naturalist\Orders;
@@ -110,6 +111,18 @@ $arGuestsNamesData = [1 => 'Основной', 'Второй', 'Третий', '
 $orders = new Orders();
 $coupons = $orders->getActivatedCoupons();
 
+/* Считаем скидки */
+$basket = Sale\Basket::loadItemsForFUser(Sale\Fuser::getId(), Bitrix\Main\Context::getCurrent()->getSite());
+$registry = Sale\Registry::getInstance(Sale\Registry::REGISTRY_TYPE_ORDER);
+$orderClass = $registry->getOrderClassName();
+$order = $orderClass::create(Bitrix\Main\Context::getCurrent()->getSite(), $USER->getId());
+$result = $order->appendBasket($basket);
+$discounts = $order->getDiscount();
+$showPrices = $discounts->getShowPrices();
+foreach ($showPrices['BASKET'] as $finalprices) {
+    $finalBaskePrices = $finalprices;
+}
+
 $arResult = array(
     "elementId" => $elementId,
     "sectionId" => $sectionId,
@@ -137,6 +150,7 @@ $arResult = array(
     "arHLFeatures" => $arHLFeatures,
     "arGuestsNamesData" => $arGuestsNamesData,
     "coupons" => $coupons,
+    "finalPrice" => $finalBaskePrices
 );
 if(!empty($prices)) {
     $arResult["priceOneNight"] = array_shift(unserialize($prices));

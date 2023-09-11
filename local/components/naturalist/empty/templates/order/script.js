@@ -221,9 +221,15 @@ var Order = function () {
             data: data,
             dataType: 'json',            
             success: function (data) {
-                location.reload();
+                if (data.STATUS == 'SUCCESS') {
+                    location.reload();
+                } else {
+                    let elem = '<span class="coupon__error-message">'+data.MESSAGE+'</span>';
+                    $('#form__coupons').after($(elem));
+                    $('#form__coupons input').addClass('error');
+                }                
             },
-            error: function (data) {
+            error: function (data) {                
                 location.reload();
             },
         });
@@ -233,8 +239,7 @@ var Order = function () {
         let data = {
             coupon: coupon,
             action: 'couponDelete'
-        }
-        console.log(data);
+        }        
         jQuery.ajax({
             type: 'POST',
             url: '/ajax/handlers/addOrder.php',
@@ -284,4 +289,12 @@ $(function () {
         //$('[data-order]').removeAttr('disabled');
         //}, 100);
     //});
+
+    $('#coupon_toggler').on('change', function(){
+        if ($(this).is(':checked')) {
+            $('#form__coupons').show();
+        } else {
+            $('#form__coupons').hide();
+        }        
+    })
 });
