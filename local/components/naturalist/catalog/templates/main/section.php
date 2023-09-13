@@ -328,6 +328,34 @@ if ($pageCount > 1) {
     $arPageSections = $arSections;
 }
 
+// Добавляем свойство Скидка, если есть хотя бы 1 элемент со вкидкой
+foreach ($arPageSections as $section) {
+    $arSectionIds[] = $section['ID'];
+}
+unset($section);
+
+$elements = \Bitrix\Iblock\Elements\ElementGlampingsTable::getList([
+    'select' => ['ID', 'NAME', 'IBLOCK_SECTION_ID'],
+    'filter' => ['IBLOCK_SECTION_ID' => $arSectionIds],
+])->fetchAll();
+
+foreach ($elements as $element) {    
+    //xprint($element);    
+    $arElementsBySection[$element['IBLOCK_SECTION_ID']][] = $element;    
+}
+unset($element);
+
+foreach ($arPageSections as &$section) {
+    foreach ($arElementsBySection[$section['ID']] as $element) {
+        $arPrice = CCatalogProduct::GetOptimalPrice($element['ID'], 1, $USER->GetUserGroupArray(), 'N');        
+        if (count($arPrice['DISCOUNT'])) {
+            $section['IS_DISCOUNT'] = 'Y';            
+            break;
+        }
+    }    
+}
+unset($section);
+
 /* HL Blocks */
 // Тип объекта
 $hlId = 2;

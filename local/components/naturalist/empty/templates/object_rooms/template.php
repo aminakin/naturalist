@@ -133,10 +133,23 @@ foreach ($arParams['VARS'] as $key => $value) {
                         </div>
 
                         <?if($arTariff['price']):?>
+                            <?if ($arElement['DISCOUNT_DATA']) {
+                                if ($arElement['DISCOUNT_DATA']['VALUE_TYPE'] == 'P') {
+                                    $elementPrice = $arTariff['price'] * $arElement['DISCOUNT_DATA']['VALUE'] / 100;
+                                } else {
+                                    $elementPrice = $arTariff['price'] - $arElement['DISCOUNT_DATA']['VALUE'];
+                                }                                        
+                                $elementOldPrice = $arTariff['price'];
+                            } else {
+                                $elementPrice = $arTariff['price'];
+                            }?>
                             <div class="room__order">
                                 <div class="room__price">
-                                    <span><?= number_format($arTariff['price'], 0, '.', ' ') ?> ₽</span>
-                                    <span>за <?=$daysCount?> <?=$daysDeclension->get($daysCount)?></span>
+                                    <?if ($elementOldPrice) {?>
+                                        <span class="room__old-price"><?= number_format($elementOldPrice, 0, '.', ' ') ?> ₽</span>
+                                    <?}?>
+                                    <span class="room__final-price"><?= number_format($elementPrice, 0, '.', ' ') ?> ₽</span>
+                                    <span class="room__nights">за <?=$daysCount?> <?=$daysDeclension->get($daysCount)?></span>
                                 </div>
 
                                 <a class="button button_primary"
@@ -163,9 +176,10 @@ foreach ($arParams['VARS'] as $key => $value) {
             <?endforeach;?>
             <?endforeach;?>
         <?else:?>
-            <?foreach($arElements as $arElement):?>
+            <?foreach($arElements as $arElement):?>                
+                <?xprint($arElement['DISCOUNT_DATA']);?>
                 <?if($arExternalInfo[$arElement["ID"]]):?>
-                    <?foreach($arExternalInfo[$arElement["ID"]] as $checksum => $arExternalItem):?>
+                    <?foreach($arExternalInfo[$arElement["ID"]] as $checksum => $arExternalItem):?>                        
                         <div class="room">
                             <?if($arElement["PICTURES"]):?>
                                 <div class="room__images">
@@ -240,10 +254,23 @@ foreach ($arParams['VARS'] as $key => $value) {
                                 </div>
 
                                 <?if($arExternalItem['price']):?>
+                                    <?if ($arElement['DISCOUNT_DATA']) {
+                                        if ($arElement['DISCOUNT_DATA']['VALUE_TYPE'] == 'P') {
+                                            $elementPrice = $arExternalItem['price'] * $arElement['DISCOUNT_DATA']['VALUE'] / 100;
+                                        } else {
+                                            $elementPrice = $arExternalItem['price'] - $arElement['DISCOUNT_DATA']['VALUE'];
+                                        }                                        
+                                        $elementOldPrice = $arExternalItem['price'];
+                                    } else {
+                                        $elementPrice = $arExternalItem['price'];
+                                    }?>
                                     <div class="room__order">
                                         <div class="room__price">
-                                            <span><?= number_format($arExternalItem['price'], 0, '.', ' ') ?> ₽</span>
-                                            <span>за <?=$daysCount?> <?=$daysDeclension->get($daysCount)?></span>
+                                            <?if ($elementOldPrice) {?>
+                                                <span class="room__old-price"><?= number_format($elementOldPrice, 0, '.', ' ') ?> ₽</span>
+                                            <?}?>
+                                            <span class="room__final-price"><?= number_format($elementPrice, 0, '.', ' ') ?> ₽</span>
+                                            <span class="room__nights">за <?=$daysCount?> <?=$daysDeclension->get($daysCount)?></span>
                                         </div>
 
                                         <a class="button button_primary"

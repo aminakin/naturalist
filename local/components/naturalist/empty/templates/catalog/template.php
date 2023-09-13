@@ -112,6 +112,10 @@ foreach($arResult as $key => $value) {
                             <? endif; ?>
                         </button>
 
+                        <? if ($arSection["IS_DISCOUNT"] == 'Y'): ?>
+                            <div class="tag">Скидка</div>
+                        <? endif; ?>
+
                         <? if (!empty($arSection["UF_ACTION"])) : ?>
                             <div class="tag"><?= $arSection["UF_ACTION"] ?></div>
                         <? endif; ?>

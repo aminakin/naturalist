@@ -20,3 +20,39 @@ while ($arEntity = $rsData->Fetch()) {
 }
 
 $arResult["HL_TYPES"] = $arHLTypes;
+
+$allCount = count($arResult["SECTIONS"]);
+$page = $_REQUEST['page'] ?? 1;
+$pageCount = ceil($allCount / $arParams["ITEMS_COUNT"]);
+if ($pageCount > 1) {
+    $arResult["SECTIONS"] = array_slice($arResult["SECTIONS"], ($page - 1) * $arParams["ITEMS_COUNT"],
+        $arParams["ITEMS_COUNT"]);
+}
+
+// Добавляем свойство Скидка, если есть хотя бы 1 элемент со вкидкой
+foreach ($arResult["SECTIONS"] as $section) {
+    $arSectionIds[] = $section['ID'];
+}
+unset($section);
+
+$elements = \Bitrix\Iblock\Elements\ElementGlampingsTable::getList([
+    'select' => ['ID', 'NAME', 'IBLOCK_SECTION_ID'],
+    'filter' => ['IBLOCK_SECTION_ID' => $arSectionIds],
+])->fetchAll();
+
+foreach ($elements as $element) {    
+    //xprint($element);    
+    $arElementsBySection[$element['IBLOCK_SECTION_ID']][] = $element;    
+}
+unset($element);
+
+foreach ($arResult["SECTIONS"] as &$section) {
+    foreach ($arElementsBySection[$section['ID']] as $element) {
+        $arPrice = CCatalogProduct::GetOptimalPrice($element['ID'], 1, $USER->GetUserGroupArray(), 'N');        
+        if (count($arPrice['DISCOUNT'])) {
+            $section['IS_DISCOUNT'] = 'Y';            
+            break;
+        }
+    }    
+}
+unset($section);
