@@ -62,7 +62,7 @@ foreach($arResult as $key => $value) {
                 }
             ],
             price: '<?= number_format($arSection["PRICE"], 0, '.', ' ') ?> ₽',
-            tag: <? if (!empty($arSection["UF_ACTION"])) : ?>'<?= $arSection["UF_ACTION"] ?>'<? else : ?>false<? endif; ?>,
+            tag: <?if ($arSection["IS_DISCOUNT"] == 'Y') : ?>'Скидка'<? elseif (!empty($arSection["UF_ACTION"])) : ?>'<?= $arSection["UF_ACTION"] ?>'<? else : ?>false<? endif; ?>,            
             favorite: <? if ($arFavourites && in_array($arSection["ID"], $arFavourites)) : ?>true<? else : ?>false<? endif; ?>,
             mapHref: '<?= $arSection["URL"] ?>',
             href: '<?= $arSection["URL"] ?>',
