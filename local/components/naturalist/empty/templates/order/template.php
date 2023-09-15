@@ -76,87 +76,85 @@ foreach($arResult as $key => $value) {
     </div>
 </div>
 
-<form class="form reservation-form form_validation" id="form-order">
+<form class="form reservation-form form_validation" id="form-order" is_auth="<?=$isAuthorized ? 'true' : 'false'?>">
     <div class="reservation-form__form">
         <div class="reservation-form__form-holder">
-            <?if(!$isAuthorized):?>
+            <?/*
                 <div class="h3">Для продолжения бронирования, пожалуйста, авторизируйтесь</div>
                 <div class="reservation-form__control">
                     <a class="button button_transparent" href="#login-email" data-modal>Авторизация</a>
                 </div>
-            <?else:?>
-            <?//xprint($arResult);?>
-                <div class="reservation-form__fields">
-                    <div class="reservation-form__fields-item">
-                        <div class="form__row">
-                            <div class="field">
-                                <input class="field__input" name="email" type="email" placeholder="user@mail.ru" value="<?=$arUser["EMAIL"]?>">
-                            </div>
-
-                            <div class="field">
-                                <input class="field__input" name="phone" type="text" placeholder="+7 (999) 999-99-99" value="<?=$arUser["PERSONAL_PHONE"]?>">
-                            </div>
-
-                            <input type="hidden" name="date_from" value="<?=$dateFrom?>" />
-                            <input type="hidden" name="date_to" value="<?=$dateTo?>" />
-                            <input type="hidden" name="guests" value="<?=$guests?>" />
-                            <input type="hidden" name="childrenAge" value="<?=$childrenAge?>" />
-                            <input type="hidden" name="service" value="<?=$arSection["UF_EXTERNAL_SERVICE"]?>" />
-                            <input type="hidden" name="sectionId" value="<?=$arSection["ID"]?>" />
-                            <input type="hidden" name="elementId" value="<?=$arElement["ID"]?>" />
-                            <input type="hidden" name="externalId" value="<?=$arSection["UF_EXTERNAL_ID"]?>" />
-                            <input type="hidden" name="externalElementId" value="<?=$arElement["PROPERTY_EXTERNAL_ID_VALUE"]?>" />
-                            <input type="hidden" name="price" value="<?=$totalPrice?>" />
-                            <?if($arSection["UF_EXTERNAL_SERVICE"] == 1):?>
-                                <input type="hidden" name="travelineCategoryId" value="<?=$arElement["PROPERTY_EXTERNAL_CATEGORY_ID_VALUE"]?>" />
-                                <input type="hidden" name="travelineChecksum" value="<?=$checksum?>" />
-                            <?else:?>
-                                <input type="hidden" name="tariffId" value="<?=$tariffValue?>" />
-                                <input type="hidden" name="priceOneNight" value="<?=$priceOneNight?>" />
-                                <input type="hidden" name="categoryId" value="<?=$categoryId?>" />
-                            <?endif;?>
-                        </div>
-                        <span class="form__footnote">На этот адрес и телефон мы отправим подтверждение о бронировании</span>
-                    </div>
-
-                    <?for($i = 1; $i <= $guests; $i++):?>
-                        <div class="reservation-form__fields-item" data-guest-row="<?=$i?>" data-check-disabled>
-                            <div class="reservation-form__fields-label"><?=($i <= 5) ? $arGuestsNamesData[$i] : 'Дополнительный'?> гость</div>
-
-                            <div class="form__row form__row_3" data-autocomplete>
-                                <div class="field">
-                                    <input class="field__input" type="text" name="surname" value="<?=$arUser["UF_GUESTS_DATA"][$i]["surname"] ?? ''?>" data-autocomplete-field="last" placeholder="Фамилия">
-                                </div>
-                                <div class="field">
-                                    <input class="field__input" type="text" name="name" value="<?=$arUser["UF_GUESTS_DATA"][$i]["name"] ?? ''?>" data-autocomplete-field="first" placeholder="Имя">
-                                </div>
-                                <div class="field">
-                                    <input class="field__input" type="text" name="lastname" value="<?=$arUser["UF_GUESTS_DATA"][$i]["lastname"] ?? ''?>" data-autocomplete-field="middle" placeholder="Отчество">
-                                </div>
-
-                                <ul class="list list_autocomplete" data-autocomplete-list></ul>
-                            </div>
-
-                            <label class="checkbox">
-                                <input type="checkbox" name="save"
-                                       <?if($arUser["UF_GUESTS_DATA"][$i]):?>checked<?endif;?>
-                                       value
-                                       <?if(!$arUser["UF_GUESTS_DATA"][$i]):?>disabled<?endif;?>
-                                       data-check-disabled-control
-                                >
-                                <span>Сохранить данные гостя для будущих бронирований</span>
-                            </label>
-                        </div>
-                    <?endfor;?>
-
-                    <div class="reservation-form__fields-item">
-                        <div class="reservation-form__fields-label">Комментарий к заказу</div>
+            */?>
+            <div class="reservation-form__fields">
+                <div class="reservation-form__fields-item">
+                    <div class="form__row">
                         <div class="field">
-                            <textarea class="field__input" name="comment" placeholder="Введите дополнительную информацию или пожелания к заказу"></textarea>
+                            <input class="field__input" name="email" type="email" placeholder="user@mail.ru" value="<?=$arUser["EMAIL"]?>">
                         </div>
+
+                        <div class="field">
+                            <input class="field__input" name="phone" type="tel" placeholder="+7 (999) 999-99-99" value="<?=$arUser["PERSONAL_PHONE"]?>">
+                        </div>
+
+                        <input type="hidden" name="date_from" value="<?=$dateFrom?>" />
+                        <input type="hidden" name="date_to" value="<?=$dateTo?>" />
+                        <input type="hidden" name="guests" value="<?=$guests?>" />
+                        <input type="hidden" name="childrenAge" value="<?=$childrenAge?>" />
+                        <input type="hidden" name="service" value="<?=$arSection["UF_EXTERNAL_SERVICE"]?>" />
+                        <input type="hidden" name="sectionId" value="<?=$arSection["ID"]?>" />
+                        <input type="hidden" name="elementId" value="<?=$arElement["ID"]?>" />
+                        <input type="hidden" name="externalId" value="<?=$arSection["UF_EXTERNAL_ID"]?>" />
+                        <input type="hidden" name="externalElementId" value="<?=$arElement["PROPERTY_EXTERNAL_ID_VALUE"]?>" />
+                        <input type="hidden" name="price" value="<?=$totalPrice?>" />
+                        <?if($arSection["UF_EXTERNAL_SERVICE"] == 1):?>
+                            <input type="hidden" name="travelineCategoryId" value="<?=$arElement["PROPERTY_EXTERNAL_CATEGORY_ID_VALUE"]?>" />
+                            <input type="hidden" name="travelineChecksum" value="<?=$checksum?>" />
+                        <?else:?>
+                            <input type="hidden" name="tariffId" value="<?=$tariffValue?>" />
+                            <input type="hidden" name="priceOneNight" value="<?=$priceOneNight?>" />
+                            <input type="hidden" name="categoryId" value="<?=$categoryId?>" />
+                        <?endif;?>
+                    </div>
+                    <span class="form__footnote">На этот адрес и телефон мы отправим подтверждение о бронировании</span>
+                </div>
+
+                <?for($i = 1; $i <= $guests; $i++):?>
+                    <div class="reservation-form__fields-item" data-guest-row="<?=$i?>" data-check-disabled>
+                        <div class="reservation-form__fields-label"><?=($i <= 5) ? $arGuestsNamesData[$i] : 'Дополнительный'?> гость</div>
+
+                        <div class="form__row form__row_3" data-autocomplete>
+                            <div class="field">
+                                <input class="field__input" type="text" name="surname" value="<?=$arUser["UF_GUESTS_DATA"][$i]["surname"] ?? ''?>" data-autocomplete-field="last" placeholder="Фамилия">
+                            </div>
+                            <div class="field">
+                                <input class="field__input" type="text" name="name" value="<?=$arUser["UF_GUESTS_DATA"][$i]["name"] ?? ''?>" data-autocomplete-field="first" placeholder="Имя">
+                            </div>
+                            <div class="field">
+                                <input class="field__input" type="text" name="lastname" value="<?=$arUser["UF_GUESTS_DATA"][$i]["lastname"] ?? ''?>" data-autocomplete-field="middle" placeholder="Отчество">
+                            </div>
+
+                            <ul class="list list_autocomplete" data-autocomplete-list></ul>
+                        </div>
+
+                        <label class="checkbox">
+                            <input type="checkbox" name="save"
+                                    <?if($arUser["UF_GUESTS_DATA"][$i]):?>checked<?endif;?>
+                                    value
+                                    <?if(!$arUser["UF_GUESTS_DATA"][$i]):?>disabled<?endif;?>
+                                    data-check-disabled-control
+                            >
+                            <span>Сохранить данные гостя для будущих бронирований</span>
+                        </label>
+                    </div>
+                <?endfor;?>
+
+                <div class="reservation-form__fields-item">
+                    <div class="reservation-form__fields-label">Комментарий к заказу</div>
+                    <div class="field">
+                        <textarea class="field__input" name="comment" placeholder="Введите дополнительную информацию или пожелания к заказу"></textarea>
                     </div>
                 </div>
-            <?endif;?>
+            </div>            
         </div>
     </div>
 
@@ -180,7 +178,10 @@ foreach($arResult as $key => $value) {
                 <div class="h1"><?= number_format($totalPrice, 0, '.', ' ') ?> ₽</div>
             </div>
             <? if ($isAuthorized): ?>
-            <button class="button button_primary" type="button" data-form-submit <?if($isAuthorized):?>data-order<?endif;?>>Оплатить банковской картой</button>
+                <button class="button button_primary" type="button" data-form-submit data-order>Оплатить банковской картой</button>
+            <? else: ?>
+                <button class="button button_primary" id="order__confirm-data" type="button" data-form-submit data-order>Подтвердить данные</button>
+            <? endif; ?>
             <div class="reservation-form__footnote">
                 <div class="field">
                     <label class="checkbox">
@@ -204,8 +205,7 @@ foreach($arResult as $key => $value) {
                     </div>
                 <?endif;?>
                 <div>Передача информации защищена сертификатом SSL, оплата осуществляется через интернет-эквайринг СБЕР.</div>
-            </div>
-            <? endif; ?>
+            </div>           
         </div>
     </div>
 </form>

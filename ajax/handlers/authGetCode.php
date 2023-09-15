@@ -14,7 +14,8 @@ if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) {
 
 $params = array(
 	'login' => $_REQUEST["login"],
-	'type' => $_REQUEST["type"]
+	'type' => $_REQUEST["type"],
+	'email' => $_REQUEST["email"]
 );
 
 $users = new Users();

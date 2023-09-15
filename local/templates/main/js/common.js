@@ -62,17 +62,18 @@ var getTimeDate = function(editDate){
 }
 
 var Auth = function() {
-    this.getCode = function(type) {
-        if(type == 'email') {
+    this.getCode = function(type, phone = '', email = '', authFromOrder = false) {
+        if(type == 'email' && email == '') {
             var login = jQuery('#form-auth-email input[name="email"]').val();
 
-        } else if(type == 'phone') {
+        } else if(type == 'phone' && phone == '') {
             var login = jQuery('#form-auth-phone input[name="phone"]').val()
         }
 
         var data = {
-            login: login,
-            type: type
+            login: phone != '' ? phone : login,
+            type: type,
+            email: email,            
         }
 
         jQuery.ajax({
@@ -82,11 +83,11 @@ var Auth = function() {
             dataType: 'json',
             success: function(a) {
                 if(!a.ERROR) {
-                    $('#code input[name="login"]').val(login);
+                    $('#code input[name="login"]').val(phone != '' ? phone : login);
                     $('#code input[name="type"]').val(type);
-
-                    //window.infoModal(SUCCESS_TITLE, a.MESSAGE);
-
+                    if (authFromOrder) {
+                        $('#code input[name="auth_from_order"]').val('Y');
+                    }
                     window.modal.close('login-'+type);
                     window.modal.open('code');
 
@@ -97,12 +98,14 @@ var Auth = function() {
         });
     }
     this.login = function() {
+        var _this = this;
         var data = {
             type: jQuery('#form-login input[name="type"]').val(),
             code: jQuery('#form-login input[name="code"]').val(),
             login: jQuery('#form-login input[name="login"]').val(),
-            page: jQuery('#form-login input[name="page"]').val()
-        }
+            page: jQuery('#form-login input[name="page"]').val(),
+            auth_from_order: jQuery('#form-login input[name="auth_from_order"]').val(),
+        }        
 
         jQuery.ajax({
             type: 'POST',
@@ -110,17 +113,21 @@ var Auth = function() {
             data: data,
             dataType: 'json',
             success: function(a) {
-                if(!a.ERROR) {
-                    //window.infoModal(SUCCESS_TITLE, a.MESSAGE);
+                if(!a.ERROR) {                    
                     window.modal.close('code');
                     ym(91071014, 'reachGoal', 'authorization');
                     VK.Goal('complete_registration');
-                    if(a.RELOAD) {
-                        location.reload();
+                    if (a.NO_RELOAD != 'Y') {
+                        if(a.RELOAD) {
+                            location.reload();
+                        }
+                        if(a.REDIRECT_URL) {
+                            location.href = a.REDIRECT_URL;
+                        }
+                    } else {
+                        _this.orderPageAuthHandler();
                     }
-                    if(a.REDIRECT_URL) {
-                        location.href = a.REDIRECT_URL;
-                    }
+                    
 
                     $('#form-login .field_error > span.field__error').remove();
                     $('#form-login input[name="code"]').parent().removeClass('field_error');
@@ -133,6 +140,10 @@ var Auth = function() {
                 }
             }
         });
+    }
+    this.orderPageAuthHandler = function() {
+        $('#form-order').attr('is_auth', 'true');
+        $('#form-order').find('#order__confirm-data').text('Оплатить банковской картой');
     }
     this.authSocnets = function(params) {
         var data = {
@@ -174,18 +185,8 @@ $(function() {
         if(event.detail.form == 'form-login') {
             auth.login();
         }
-    })
-    /*$(document).on('click', '[data-get-code]', function(e) {
-        e.preventDefault();
-        var type = $(this).data('type');
-        auth.getCode(type);
-    });
-    $(document).on('click', '[data-login]', function(e) {
-        e.preventDefault();
-        auth.login();
-    });*/
-    $(document).on('click', '[data-auth-socnets]', function(e) {
-        //e.preventDefault();
+    });    
+    $(document).on('click', '[data-auth-socnets]', function(e) {        
         var type = $(this).data('type');
 
         if(type == 'vk') {

@@ -222,7 +222,7 @@
             <div class="form__item">
                 <div class="field">
                     <input class="field__input" type="text" name="code" placeholder="Введите полученный код">
-
+                    <input type="hidden" name="auth_from_order">
                     <input type="hidden" name="login" />
                     <input type="hidden" name="type" />
                     <input type="hidden" name="page" value="<?= $APPLICATION->GetCurDir(); ?>"/>

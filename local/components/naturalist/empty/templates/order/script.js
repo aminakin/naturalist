@@ -1,119 +1,81 @@
 var Order = function () {
-    this.add = function () {
+    this.add = function () {        
         var arGuests = {};
         var error = 0;
-        $('#form-order [data-guest-row]').each(function (indx, element) {
-            var key = $(element).data('guest-row');
-            if ($(element).find('input[name="surname"]').val() !== '') {
-                var surname = $(element).find('input[name="surname"]').val();
-            } /*else {
-                if (!$(element).find('input[name="surname"]').closest('.field').hasClass('field_error')) {
-                    $(element).find('input[name="surname"]').closest('.field').addClass('field_error');
-                    $(element).find('input[name="surname"]').closest('.field').append('<span class="field__error">Незаполненное поле</span>');
-                    error = true;
+        let orderForm = $('#form-order');
+        let isAuth = orderForm.attr('is_auth');
+        if (isAuth === 'true') {
+            $('#form-order [data-guest-row]').each(function (indx, element) {
+                var key = $(element).data('guest-row');
+                if ($(element).find('input[name="surname"]').val() !== '') {
+                    var surname = $(element).find('input[name="surname"]').val();
                 }
-            }*/
-            if ($(element).find('input[name="name"]').val() !== '') {
-                var name = $(element).find('input[name="name"]').val();
-            } /*else {
-                if (!$(element).find('input[name="name"]').closest('.field').hasClass('field_error')) {
-                    $(element).find('input[name="name"]').closest('.field').addClass('field_error');
-                    $(element).find('input[name="name"]').closest('.field').append('<span class="field__error">Незаполненное поле</span>');
-                    error = true;
+
+                if ($(element).find('input[name="name"]').val() !== '') {
+                    var name = $(element).find('input[name="name"]').val();
                 }
-            }*/
 
-            var lastname = $(element).find('input[name="lastname"]').val() ?? '';
-            var save = $(element).find('input[name="save"]').prop('checked') ? 1 : 0;
+                var lastname = $(element).find('input[name="lastname"]').val() ?? '';
+                var save = $(element).find('input[name="save"]').prop('checked') ? 1 : 0;
 
-            arGuests[key] = {
-                surname: surname,
-                name: name,
-                lastname: lastname,
-                save: save
+                arGuests[key] = {
+                    surname: surname,
+                    name: name,
+                    lastname: lastname,
+                    save: save
+                }
+            });
+
+            if ($('#form-order input[name="phone"]').val() !== '') {
+                var phone = $('#form-order input[name="phone"]').val();
             }
-        });
 
-        if ($('#form-order input[name="phone"]').val() !== '') {
-            var phone = $('#form-order input[name="phone"]').val();
-        } /*else {
-            if (!$('#form-order input[name="phone"]').closest('.field').hasClass('field_error')) {
-                $('#form-order input[name="phone"]').closest('.field').addClass('field_error');
-                $('#form-order input[name="phone"]').closest('.field').append('<span class="field__error">Незаполненное поле</span>');
-                error = true;
+            if ($('#form-order input[name="email"]').val() !== '') {
+                var email = $('#form-order input[name="email"]').val();
             }
-        }*/
 
-        if ($('#form-order input[name="email"]').val() !== '') {
-            var email = $('#form-order input[name="email"]').val();
-        } /*else {
-            if (!$('#form-order input[name="email"]').closest('.field').hasClass('field_error')) {
-                $('#form-order input[name="email"]').closest('.field').addClass('field_error');
-                $('#form-order input[name="email"]').closest('.field').append('<span class="field__error">Незаполненное поле</span>');
-                error = true;
+            var params = {
+                phone: phone,
+                email: email,
+                guests: arGuests,
+                childrenAge: $('#form-order input[name="childrenAge"]').val(),
+                comment: $('#form-order textarea[name="comment"]').val(),
+                dateFrom: $('#form-order input[name="date_from"]').val(),
+                dateTo: $('#form-order input[name="date_to"]').val(),
+                checksum: $('#form-order input[name="travelineChecksum"]').val() ?? false,
             }
-        }*/
-
-        /*if (!$('#form-order input[name="personal_data"]').prop('checked')) {
-            if (!$('#form-order input[name="personal_data"]').closest('.field').hasClass('field_error')) {
-                $('#form-order input[name="personal_data"]').closest('.field').addClass('field_error');
-                $('#form-order input[name="personal_data"]').closest('.field').append('<span class="field__error">Необходимо Ваше согласие на обработку персональных данных</span>');
-                error = true;
+            var data = {
+                params: params
             }
-        }
 
-        if (!$('#form-order input[name="cancel_policy"]').prop('checked')) {
-            if (!$('#form-order input[name="cancel_policy"]').closest('.field').hasClass('field_error')) {
-                $('#form-order input[name="cancel_policy"]').closest('.field').addClass('field_error');
-                $('#form-order input[name="cancel_policy"]').closest('.field').append('<span class="field__error">Необходимо Ваше согласие c условиями отмены бронирования</span>');
-                error = true;
-            }
-        }*/
+            jQuery.ajax({
+                type: 'POST',
+                url: '/ajax/handlers/addOrder.php',
+                data: data,
+                dataType: 'json',
+                beforeSend: function () {
+                    $('[data-order]').attr('disabled', 'disabled');
+                },
+                success: function (a) {
+                    if (!a.ERROR) {                    
+                        if (a.REDIRECT_URL) {
+                            location.href = a.REDIRECT_URL;
+                        }
 
-        /*if (error == true) {
-            $('[data-order]').attr('disabled', 'disabled');
-            return;
-        }*/
-
-        var params = {
-            phone: phone,
-            email: email,
-            guests: arGuests,
-            childrenAge: $('#form-order input[name="childrenAge"]').val(),
-            comment: $('#form-order textarea[name="comment"]').val(),
-            dateFrom: $('#form-order input[name="date_from"]').val(),
-            dateTo: $('#form-order input[name="date_to"]').val(),
-            checksum: $('#form-order input[name="travelineChecksum"]').val() ?? false,
-        }
-        var data = {
-            params: params
-        }
-
-        jQuery.ajax({
-            type: 'POST',
-            url: '/ajax/handlers/addOrder.php',
-            data: data,
-            dataType: 'json',
-            beforeSend: function () {
-                $('[data-order]').attr('disabled', 'disabled');
-            },
-            success: function (a) {
-                if (!a.ERROR) {
-                    //window.infoModal(SUCCESS_TITLE, a.MESSAGE);
-                    if (a.REDIRECT_URL) {
-                        location.href = a.REDIRECT_URL;
+                    } else {
+                        window.infoModal(ERROR_TITLE, a.ERROR);
+                        $('[data-order]').removeAttr('disabled');
+                        $(document).on('click', '#info-modal [data-modal-close]', function (e) {
+                            e.preventDefault();
+                            history.back(1);
+                        });
                     }
-
-                } else {
-                    window.infoModal(ERROR_TITLE, a.ERROR);
-                    $('[data-order]').removeAttr('disabled');
-                    $(document).on('click', '#info-modal [data-modal-close]', function (e) {
-                        e.preventDefault();
-                        history.back(1);
-                    });
                 }
-            }
-        });
+            });
+        } else {
+            var auth = new Auth();
+            auth.getCode('phone', orderForm.find('[name="phone"]').val(), orderForm.find('[name="email"]').val(), true);
+        }        
     }
     this.getCancellationAmount = function () {
         var params = {
@@ -212,23 +174,12 @@ var Order = function () {
 }
 var order = new Order();
 
-$(function () {
-    /*$(document).on('click', '.order_cancel_button', function (e) {
-        $('#form-order input[name="cancel_policy"]').prop('checked', true);
-        $('#form-order input[name="cancel_policy"]').closest('.field').removeClass('field_error');
-        $('#form-order input[name="cancel_policy"]').closest('.field').children('.field__error').remove();
-        $('[data-order]').removeAttr('disabled');
-    });*/
+$(function () {    
     window.addEventListener('sendForm', event => {
         if(event.detail.form == 'form-order') {
             order.add();
         }
-    })
-
-    /*$(document).on('click', '[data-order]', function (e) {
-        e.preventDefault();
-        order.add();
-    });*/
+    });
 
     $(document).on('click', '[data-get-cancellation-amount]', function (e) {
         e.preventDefault();
@@ -238,11 +189,5 @@ $(function () {
     $(document).on('click', '[data-get-cancellation-amount-bnovo]', function (e) {
         e.preventDefault();
         order.getCancellationAmountBnovo();
-    });
-
-    //$(document).on('change', '.reservation-form__footnote input', function (e) {
-        //setTimeout(function(){
-        //$('[data-order]').removeAttr('disabled');
-        //}, 100);
-    //});
+    });    
 });
