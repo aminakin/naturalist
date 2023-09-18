@@ -142,7 +142,7 @@ foreach($arResult as $key => $value) {
 
                                         <div class="guests__item">
                                             <div class="guests__label">
-                                                <div>Дети</div>
+                                                <div>Дети</div><span>от 0 до 17 лет</span>
                                             </div>
                                             <div class="counter">
                                                 <button class="counter__minus" type="button"></button>
