@@ -1,19 +1,21 @@
 <?require($_SERVER["DOCUMENT_ROOT"]."/bitrix/modules/main/include/prolog_before.php");
 global $USER;
 
-if (CModule::IncludeModule('subscribe') && !empty($_POST['sf_EMAIL'])) {
+$request = \Bitrix\Main\Application::getInstance()->getContext()->getRequest();
 
-	$email = $_POST['sf_EMAIL'];
+if (\Bitrix\Main\Loader::includeModule('subscribe') && !empty($request->getPost('sf_EMAIL'))) {
 
-	$subscribeFields = array(
+	$email = $request->getPost('sf_EMAIL');
+
+	$subscribeFields = [
 		"USER_ID" => ($USER->IsAuthorized()? $USER->GetID():false),
 		"FORMAT" => "html",
 		"EMAIL" => $email,
 		"ACTIVE" => "Y",
 		"CONFIRMED" => "Y",
 		"SEND_CONFIRM" => "N",
-		"RUB_ID" => array(1)
-	);
+		"RUB_ID" => [1]
+	];
 
 	$subscr = new CSubscription;
 	$ID = $subscr->Add($subscribeFields);
