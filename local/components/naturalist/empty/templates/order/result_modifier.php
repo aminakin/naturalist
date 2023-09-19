@@ -4,23 +4,12 @@ use Bitrix\Main\Grid\Declension;
 use Bitrix\Highloadblock\HighloadBlockTable;
 use Naturalist\Users;
 use Naturalist\Baskets;
+use Naturalist\Orders;
 
 global $arUser, $userId, $isAuthorized;
 
 $baskets = new Baskets();
 $arBasket = $baskets->get();
-/*if(count($arBasket["ITEMS"]) > 1) {
-    for ($i = 0; $i < count($arBasket["ITEMS"])-1; $i++) {
-        $baskets->delete($arBasket["ITEMS"][$i]["ID"]);
-    }
-
-    $arBasket = $baskets->get();
-}
-if ($arBasket["ITEMS"][0]["QUANTITY"] > $arBasket["ITEMS"][0]["PROPS"]["DAYS_COUNT"]) {
-    $baskets->update($arBasket["ITEMS"][0]["ID"], $arBasket["ITEMS"][0]["PROPS"]["DAYS_COUNT"]);
-    $arBasket = $baskets->get();
-}*/
-//xprint($arBasket); die();
 
 $elementId = $arBasket["ITEMS"][0]["PRODUCT_ID"];
 $sectionId = $arBasket["ITEMS"][0]["ITEM"]["IBLOCK_SECTION_ID"];
@@ -68,11 +57,7 @@ if ($arSection["UF_EXTERNAL_SERVICE"] == 2) {
         }
     }
 }
-/*xprint($arSection);
-xprint($arElement);
-xprint($dateFrom);
-xprint($dateTo);
-xprint($guests); die();*/
+
 if (!$arSection || !$arElement || !$dateFrom || !$dateTo || !$guests) {
     LocalRedirect('/');
 }
@@ -121,6 +106,10 @@ while ($arEntity = $rsData->Fetch()) {
 
 $arGuestsNamesData = [1 => 'Основной', 'Второй', 'Третий', 'Четвертый', 'Пятый'];
 
+/* Получаем активные купоны */
+$orders = new Orders();
+$coupons = $orders->getActivatedCoupons();
+
 $arResult = array(
     "elementId" => $elementId,
     "sectionId" => $sectionId,
@@ -147,6 +136,7 @@ $arResult = array(
     "arHLTypes" => $arHLTypes,
     "arHLFeatures" => $arHLFeatures,
     "arGuestsNamesData" => $arGuestsNamesData,
+    "coupons" => $coupons,
 );
 if(!empty($prices)) {
     $arResult["priceOneNight"] = array_shift(unserialize($prices));
