@@ -1,5 +1,8 @@
-<?
-foreach($arResult as $key => $value) {
+<?php
+use Bitrix\Main\Localization\Loc;
+?>
+
+<?foreach($arResult as $key => $value) {
     ${$key} = $value;
 }
 ?>
@@ -84,10 +87,26 @@ foreach($arResult as $key => $value) {
                 <div class="reservation-form__control">
                     <a class="button button_transparent" href="#login-email" data-modal>Авторизация</a>
                 </div>
-            <?else:?>
-            <?//xprint($arResult);?>
+            <?else:?>            
                 <div class="reservation-form__fields">
                     <div class="reservation-form__fields-item">
+                        <div class="form__row form__coupons">
+                            <span><?=Loc::getMessage('COUPON_INVITE')?></span><br>
+                            <input type="text" class="coupon__input">
+                            <button type="button" onclick="order.sendCoupon();" class="coupon__enter"><?=Loc::getMessage('COUPON_ENTER')?></button>
+                        </div>
+                        <br>
+                        <?if (count($arResult['coupons'])):?>                            
+                            <div class="form__row form__coupons">
+                                <?foreach ($arResult['coupons'] as $coupon) {?>
+                                    <div class="coupon__item">
+                                        <?=Loc::getMessage('COUPON')?> <?=$coupon['COUPON']?> <?=Loc::getMessage('COUPON_'.$coupon['JS_STATUS'])?><br>
+                                        <button type="button" onclick="order.removeCoupon('<?=$coupon['COUPON']?>');" class="coupon__delete"><?=Loc::getMessage('COUPON_DELETE')?></button>
+                                    </div>
+                                <?}?>  
+                            </div>
+                            <br>
+                        <?endif;?>
                         <div class="form__row">
                             <div class="field">
                                 <input class="field__input" name="email" type="email" placeholder="user@mail.ru" value="<?=$arUser["EMAIL"]?>">
