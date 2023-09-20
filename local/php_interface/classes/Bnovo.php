@@ -1509,7 +1509,7 @@ class Bnovo
                         "count" => 1,
                         "adults" => $guests,
                         "children" => $children,
-                        "amount" => $arOrder['FIELDS']['PRICE'],
+                        "amount" => $arOrder['FIELDS']['BASE_PRICE'],
                         "prices" => unserialize($arOrder['PROPS']["PRICES"]),
                         "extra" => [
                             "Guests" => [

@@ -108,6 +108,7 @@ class Orders
 
         // Список товаров
         $basket = $order->getBasket();
+        $arFields["BASE_PRICE"] = $basket->getBasePrice();        
         $arBasketItems = $basket->getBasketItems();
 
         $totalPrice = 0;
@@ -569,7 +570,7 @@ class Orders
 
         } elseif($service == $this->travelineSectionPropEnumId) {
             $reservationRes = Traveline::makeReservation($orderId, $arOrder, $arUser, $reservationPropId);
-        }        
+        }
 
         if($reservationRes) {
             /* Устанавливаем свойства заказа (пользовательские) */
