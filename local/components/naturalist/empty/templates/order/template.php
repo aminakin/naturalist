@@ -19,7 +19,7 @@ use Bitrix\Main\Localization\Loc;
                         <? if (!empty($arSection["UF_DISTANCE"])) : ?><span><?= $arSection["UF_DISTANCE"] ?></span><? endif; ?>
                         <? if (!empty($arSection["UF_ADDRESS"])) : ?><span><?= $arSection["UF_ADDRESS"] ?></span><? endif; ?>
                     </div>
-                </div>
+                </div>                
             </div>
 
             <div class="reservation__heading-score">
@@ -31,12 +31,16 @@ use Bitrix\Main\Localization\Loc;
             </div>
         </div>
 
-        <ul class="list list_time">
-            <li class="list__item"><span>Заезд</span>
-                <div>с <?=$arSection["UF_TIME_FROM"]?></div>
+        <ul class="list list_summary_time">
+            <li class="list__item">
+                <div class="h3"><?=Loc::getMessage('ORDER_CHECKIN')?></div>
+                <span><?=FormatDate("d F Y, D", strtotime($dateFrom))?></span>
+                <span>с <?=$arSection["UF_TIME_FROM"]?></span>
             </li>
-            <li class="list__item"><span>Выезд</span>
-                <div>до <?=$arSection["UF_TIME_TO"]?></div>
+            <li class="list__item">
+                <div class="h3"><?=Loc::getMessage('ORDER_CHECKOUT')?></div>
+                <span><?=FormatDate("d F Y, D", strtotime($dateTo))?></span>
+                <span>до <?=$arSection["UF_TIME_TO"]?></span>
             </li>
         </ul>
 
@@ -89,24 +93,7 @@ use Bitrix\Main\Localization\Loc;
                 </div>
             <?else:?>            
                 <div class="reservation-form__fields">
-                    <div class="reservation-form__fields-item">
-                        <div class="form__row form__coupons">
-                            <span><?=Loc::getMessage('COUPON_INVITE')?></span><br>
-                            <input type="text" class="coupon__input">
-                            <button type="button" onclick="order.sendCoupon();" class="coupon__enter"><?=Loc::getMessage('COUPON_ENTER')?></button>
-                        </div>
-                        <br>
-                        <?if (count($arResult['coupons'])):?>                            
-                            <div class="form__row form__coupons">
-                                <?foreach ($arResult['coupons'] as $coupon) {?>
-                                    <div class="coupon__item">
-                                        <?=Loc::getMessage('COUPON')?> <?=$coupon['COUPON']?> <?=Loc::getMessage('COUPON_'.$coupon['JS_STATUS'])?><br>
-                                        <button type="button" onclick="order.removeCoupon('<?=$coupon['COUPON']?>');" class="coupon__delete"><?=Loc::getMessage('COUPON_DELETE')?></button>
-                                    </div>
-                                <?}?>  
-                            </div>
-                            <br>
-                        <?endif;?>
+                    <div class="reservation-form__fields-item">                        
                         <div class="form__row">
                             <div class="field">
                                 <input class="field__input" name="email" type="email" placeholder="user@mail.ru" value="<?=$arUser["EMAIL"]?>">
@@ -135,7 +122,7 @@ use Bitrix\Main\Localization\Loc;
                                 <input type="hidden" name="categoryId" value="<?=$categoryId?>" />
                             <?endif;?>
                         </div>
-                        <span class="form__footnote">На этот адрес и телефон мы отправим подтверждение о бронировании</span>
+                        <span class="form__footnote"><?=Loc::getMessage('ORDER_CONFIRM_DATA')?></span>
                     </div>
 
                     <?for($i = 1; $i <= $guests; $i++):?>
@@ -169,60 +156,78 @@ use Bitrix\Main\Localization\Loc;
                     <?endfor;?>
 
                     <div class="reservation-form__fields-item">
-                        <div class="reservation-form__fields-label">Комментарий к заказу</div>
+                        <div class="reservation-form__fields-label"><?=Loc::getMessage('ORDER_COMMENT')?></div>
                         <div class="field">
-                            <textarea class="field__input" name="comment" placeholder="Введите дополнительную информацию или пожелания к заказу"></textarea>
+                            <textarea class="field__input" name="comment" placeholder="<?=Loc::getMessage('ORDER_COMMENT_PLACEHOLDER')?>"></textarea>
                         </div>
                     </div>
                 </div>
             <?endif;?>
         </div>
-    </div>
-
+    </div>    
     <div class="reservation-form__summary">
         <div class="reservation-form__summary-holder">
-            <ul class="list list_summary_time">
-                <li class="list__item">
-                    <div class="h3">Заезд</div>
-                    <span><?=FormatDate("d F Y, D", strtotime($dateFrom))?></span>
-                    <span>с <?=$arSection["UF_TIME_FROM"]?></span>
-                </li>
-                <li class="list__item">
-                    <div class="h3">Выезд</div>
-                    <span><?=FormatDate("d F Y, D", strtotime($dateTo))?></span>
-                    <span>до <?=$arSection["UF_TIME_TO"]?></span>
-                </li>
-            </ul>
-
+            <p class="reservation-form__right-title"><?=Loc::getMessage('FORM_RIGHT_TITLE')?></p>
+            <div class="reservation-form__pre-final">
+                <div class="reservation-form__nights">
+                    <?= $daysCount ?> <?= $daysDeclension->get($daysCount) ?>
+                </div>
+                <div class="reservation-form__pre-total <?=$arResult['finalPrice']['REAL_DISCOUNT'] != 0 ? 'discount' : ''?>">
+                    <?= number_format($totalPrice, 0, '.', ' ') ?> <?=Loc::getMessage('ORDER_RUBLE')?>
+                </div>
+            </div>
+            <label class="form__coupons-toggler checkbox">
+                <input id="coupon_toggler" type="checkbox" value="" <?=$arResult['coupons'][0] ? 'checked' : ''?>>
+                <span><?=Loc::getMessage('COUPON_HAS')?></span>
+            </label>            
+            <?if (count($arResult['coupons'])):?>                            
+                <div id="form__coupons" class="form__coupons coupon__entered">                
+                    <input type="text" class="field__input coupon__input" value="<?=$arResult['coupons'][0]['COUPON']?>">
+                    <svg class="coupon__success-icon" xmlns="http://www.w3.org/2000/svg" width="15" height="14" viewBox="0 0 18 17" fill="none">
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M17.6574 2.53062L5.39302 16.8907L0.24707 7.42242L2.84543 5.8302L5.93478 11.5145L15.4351 0.390717L17.6574 2.53062Z" fill="#34A453"/>
+                    </svg>
+                    <button type="button" onclick="order.removeCoupon('<?=$arResult['coupons'][0]['COUPON']?>');" class="coupon__delete">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 16 16" fill="none">
+                            <path fill-rule="evenodd" clip-rule="evenodd" d="M6.2449 7.98458L1.46104 13.3204L3.49136 15.1407L8.27522 9.80487L13.8369 14.7912L15.6572 12.7609L10.0955 7.77455L15.3077 1.961L13.2773 0.140717L8.06519 5.95426L2.47751 0.944625L0.657227 2.97494L6.2449 7.98458Z" fill="#E63623"/>
+                        </svg>
+                    </button>
+                    <span class="reservation-form__discount-price"><?= number_format($arResult['finalPrice']['REAL_PRICE'], 0, '.', ' ') ?> <?=Loc::getMessage('ORDER_RUBLE')?></span>
+                </div>                
+            <?else:?>   
+                <div id="form__coupons" class="form__coupons" style="display: none">                
+                    <input placeholder="<?=Loc::getMessage('COUPON_INVITE')?>" type="text" class="field__input coupon__input">
+                    <button type="button" onclick="order.sendCoupon();" class="coupon__enter button button_primary"><?=Loc::getMessage('COUPON_ENTER')?></button>
+                </div>                
+            <?endif;?>
             <div class="reservation-form__price">
-                <span>Стоимость</span>
-                <div class="h1"><?= number_format($totalPrice, 0, '.', ' ') ?> ₽</div>
+                <span>Итого</span>
+                <div class="h1"><?= number_format($arResult['finalPrice']['REAL_PRICE'], 0, '.', ' ') ?> <?=Loc::getMessage('ORDER_RUBLE')?></div>
             </div>
             <? if ($isAuthorized): ?>
-            <button class="button button_primary" type="button" data-form-submit <?if($isAuthorized):?>data-order<?endif;?>>Оплатить банковской картой</button>
+            <button class="button button_primary" type="button" data-form-submit <?if($isAuthorized):?>data-order<?endif;?>><?=Loc::getMessage('ORDER_PAY')?></button>
             <div class="reservation-form__footnote">
                 <div class="field">
                     <label class="checkbox">
                         <input type="checkbox" name="personal_data" value="1">
-                        <span>Согласен с условиями <a href="/agreement/">пользовательского соглашения</a>.</span>
+                        <span><?=Loc::getMessage("ORDER_POLITICS", Array ("#LINK#" => "/agreement/"))?></span>
                     </label>
                 </div>
                 <?if($arSection["UF_EXTERNAL_SERVICE"] == 1):?>
                     <div class="field">
                         <label class="checkbox">
                             <input type="checkbox" name="cancel_policy" value="1">
-                            <span>Ознакомлен с <a href="#" data-get-cancellation-amount>условиями отмены бронирования</a>.</span>
+                            <span><?=Loc::getMessage("ORDER_CANCELLATION_LINK", Array ("#LINK#" => "#", "#DATA_ATTR#" => "data-get-cancellation-amount"))?></span>
                         </label>
                     </div>
                 <?else:?>
                     <div class="field">
                         <label class="checkbox">
                             <input type="checkbox" name="cancel_policy" value="1">
-                            <span>Ознакомлен с <a href="#" data-get-cancellation-amount-bnovo>условиями отмены бронирования</a>.</span>
+                            <span><?=Loc::getMessage("ORDER_CANCELLATION_LINK", Array ("#LINK#" => "#", "#DATA_ATTR#" => "data-get-cancellation-amount-bnovo"))?></span>
                         </label>
                     </div>
                 <?endif;?>
-                <div>Передача информации защищена сертификатом SSL, оплата осуществляется через интернет-эквайринг СБЕР.</div>
+                <div><?=Loc::getMessage('ORDER_SSL')?></div>
             </div>
             <? endif; ?>
         </div>
@@ -236,23 +241,19 @@ use Bitrix\Main\Localization\Loc;
                 <use xlink:href="#cross" />
             </svg>
         </button>
-        <div class="h3">Условия отмены бронирования</div>
+        <div class="h3"><?=Loc::getMessage('ORDER_POPUP_TITLE')?></div>
 
         <div class="modal__content">
             <ul class="list" data-resevation-list-free style="display: none;">
-                <li class="list__item reservation-date">Бесплатная отмена до <span></span> (Московское время).</li>
-                <li class="list__item reservation-penalty">Далее штраф за отмену бронирования - <span></span>.</li>
+                <li class="list__item reservation-date"><?=Loc::getMessage('ORDER_FREE_CANCELLATION_TIME')?></li>
+                <li class="list__item reservation-penalty"><?=Loc::getMessage('ORDER_CANCELLATION_FEE_FROM')?><span></span> <?=Loc::getMessage('ORDER_RUBLE')?></li>
             </ul>
             <ul class="list" data-resevation-list style="display: none;">
-                <li class="list__item reservation-penalty">Штраф за отмену бронирования - <span></span>.</li>
+                <li class="list__item reservation-penalty"><?=Loc::getMessage('ORDER_CANCELLATION_FEE')?><span></span> <?=Loc::getMessage('ORDER_RUBLE')?></li>
             </ul>
 
-            <!--<div class="modal__content-control">
-                <a target="_blank" href="/cancel/">Подробнее</a>
-            </div>-->
-
             <div class="modal__content-control">
-                <button class="button button_primary order_cancel_button" data-modal-close>Принять</button>
+                <button class="button button_primary order_cancel_button" data-modal-close><?=Loc::getMessage('ORDER_MODAL_CLOSE')?></button>
             </div>
         </div>
     </div>
@@ -265,19 +266,19 @@ use Bitrix\Main\Localization\Loc;
                 <use xlink:href="#cross" />
             </svg>
         </button>
-        <div class="h3">Условия отмены бронирования</div>
+        <div class="h3"><?=Loc::getMessage('ORDER_POPUP_TITLE')?></div>
 
         <div class="modal__content">
             <ul class="list" data-resevation-list-free style="display: none;">
-                <li class="list__item reservation-date">Бесплатная отмена до <span></span> (Московское время).</li>
-                <li class="list__item reservation-penalty">Штраф за отмену бронирования - <span></span> ₽.</li>
+                <li class="list__item reservation-date"><?=Loc::getMessage('ORDER_FREE_CANCELLATION_TIME')?></li>
+                <li class="list__item reservation-penalty"><?=Loc::getMessage('ORDER_CANCELLATION_FEE_FROM')?><span></span> <?=Loc::getMessage('ORDER_RUBLE')?></li>
             </ul>
             <ul class="list" data-resevation-list style="display: none;">
-                <li class="list__item reservation-penalty">Штраф за отмену бронирования - <span></span> ₽.</li>
+                <li class="list__item reservation-penalty"><?=Loc::getMessage('ORDER_CANCELLATION_FEE')?><span></span> <?=Loc::getMessage('ORDER_RUBLE')?></li>
             </ul>
 
             <div class="modal__content-control">
-                <button class="button button_primary order_cancel_button" data-modal-close>Принять</button>
+                <button class="button button_primary order_cancel_button" data-modal-close><?=Loc::getMessage('ORDER_MODAL_CLOSE')?></button>
             </div>
         </div>
     </div>
