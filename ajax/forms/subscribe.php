@@ -1,9 +1,15 @@
-<?require($_SERVER["DOCUMENT_ROOT"]."/bitrix/modules/main/include/prolog_before.php");
+<?php
+
+require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_before.php");
+
+use Bitrix\Main\Loader;
+use Bitrix\Main\Application;
+
 global $USER;
 
-$request = \Bitrix\Main\Application::getInstance()->getContext()->getRequest();
+$request = Application::getInstance()->getContext()->getRequest();
 
-if (\Bitrix\Main\Loader::includeModule('subscribe') && !empty($request->getPost('sf_EMAIL'))) {
+if (Loader::includeModule('subscribe') && !empty($request->getPost('sf_EMAIL'))) {
 
 	$email = $request->getPost('sf_EMAIL');
 
