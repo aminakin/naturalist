@@ -6,22 +6,10 @@ var Order = function () {
             var key = $(element).data('guest-row');
             if ($(element).find('input[name="surname"]').val() !== '') {
                 var surname = $(element).find('input[name="surname"]').val();
-            } /*else {
-                if (!$(element).find('input[name="surname"]').closest('.field').hasClass('field_error')) {
-                    $(element).find('input[name="surname"]').closest('.field').addClass('field_error');
-                    $(element).find('input[name="surname"]').closest('.field').append('<span class="field__error">Незаполненное поле</span>');
-                    error = true;
-                }
-            }*/
+            }
             if ($(element).find('input[name="name"]').val() !== '') {
                 var name = $(element).find('input[name="name"]').val();
-            } /*else {
-                if (!$(element).find('input[name="name"]').closest('.field').hasClass('field_error')) {
-                    $(element).find('input[name="name"]').closest('.field').addClass('field_error');
-                    $(element).find('input[name="name"]').closest('.field').append('<span class="field__error">Незаполненное поле</span>');
-                    error = true;
-                }
-            }*/
+            }
 
             var lastname = $(element).find('input[name="lastname"]').val() ?? '';
             var save = $(element).find('input[name="save"]').prop('checked') ? 1 : 0;
@@ -36,44 +24,11 @@ var Order = function () {
 
         if ($('#form-order input[name="phone"]').val() !== '') {
             var phone = $('#form-order input[name="phone"]').val();
-        } /*else {
-            if (!$('#form-order input[name="phone"]').closest('.field').hasClass('field_error')) {
-                $('#form-order input[name="phone"]').closest('.field').addClass('field_error');
-                $('#form-order input[name="phone"]').closest('.field').append('<span class="field__error">Незаполненное поле</span>');
-                error = true;
-            }
-        }*/
+        }
 
         if ($('#form-order input[name="email"]').val() !== '') {
             var email = $('#form-order input[name="email"]').val();
-        } /*else {
-            if (!$('#form-order input[name="email"]').closest('.field').hasClass('field_error')) {
-                $('#form-order input[name="email"]').closest('.field').addClass('field_error');
-                $('#form-order input[name="email"]').closest('.field').append('<span class="field__error">Незаполненное поле</span>');
-                error = true;
-            }
-        }*/
-
-        /*if (!$('#form-order input[name="personal_data"]').prop('checked')) {
-            if (!$('#form-order input[name="personal_data"]').closest('.field').hasClass('field_error')) {
-                $('#form-order input[name="personal_data"]').closest('.field').addClass('field_error');
-                $('#form-order input[name="personal_data"]').closest('.field').append('<span class="field__error">Необходимо Ваше согласие на обработку персональных данных</span>');
-                error = true;
-            }
         }
-
-        if (!$('#form-order input[name="cancel_policy"]').prop('checked')) {
-            if (!$('#form-order input[name="cancel_policy"]').closest('.field').hasClass('field_error')) {
-                $('#form-order input[name="cancel_policy"]').closest('.field').addClass('field_error');
-                $('#form-order input[name="cancel_policy"]').closest('.field').append('<span class="field__error">Необходимо Ваше согласие c условиями отмены бронирования</span>');
-                error = true;
-            }
-        }*/
-
-        /*if (error == true) {
-            $('[data-order]').attr('disabled', 'disabled');
-            return;
-        }*/
 
         var params = {
             phone: phone,
@@ -98,8 +53,7 @@ var Order = function () {
                 $('[data-order]').attr('disabled', 'disabled');
             },
             success: function (a) {
-                if (!a.ERROR) {
-                    //window.infoModal(SUCCESS_TITLE, a.MESSAGE);
+                if (!a.ERROR) {                    
                     if (a.REDIRECT_URL) {
                         location.href = a.REDIRECT_URL;
                     }
@@ -221,9 +175,15 @@ var Order = function () {
             data: data,
             dataType: 'json',            
             success: function (data) {
-                location.reload();
+                if (data.STATUS == 'SUCCESS') {
+                    location.reload();
+                } else {
+                    let elem = '<span class="coupon__error-message">'+data.MESSAGE+'</span>';
+                    $('#form__coupons').after($(elem));
+                    $('#form__coupons input').addClass('error');
+                }                
             },
-            error: function (data) {
+            error: function (data) {                
                 location.reload();
             },
         });
@@ -233,8 +193,7 @@ var Order = function () {
         let data = {
             coupon: coupon,
             action: 'couponDelete'
-        }
-        console.log(data);
+        }        
         jQuery.ajax({
             type: 'POST',
             url: '/ajax/handlers/addOrder.php',
@@ -251,23 +210,12 @@ var Order = function () {
 }
 var order = new Order();
 
-$(function () {
-    /*$(document).on('click', '.order_cancel_button', function (e) {
-        $('#form-order input[name="cancel_policy"]').prop('checked', true);
-        $('#form-order input[name="cancel_policy"]').closest('.field').removeClass('field_error');
-        $('#form-order input[name="cancel_policy"]').closest('.field').children('.field__error').remove();
-        $('[data-order]').removeAttr('disabled');
-    });*/
+$(function () {    
     window.addEventListener('sendForm', event => {
         if(event.detail.form == 'form-order') {
             order.add();
         }
-    })
-
-    /*$(document).on('click', '[data-order]', function (e) {
-        e.preventDefault();
-        order.add();
-    });*/
+    });
 
     $(document).on('click', '[data-get-cancellation-amount]', function (e) {
         e.preventDefault();
@@ -279,9 +227,11 @@ $(function () {
         order.getCancellationAmountBnovo();
     });
 
-    //$(document).on('change', '.reservation-form__footnote input', function (e) {
-        //setTimeout(function(){
-        //$('[data-order]').removeAttr('disabled');
-        //}, 100);
-    //});
+    $('#coupon_toggler').on('change', function(){
+        if ($(this).is(':checked')) {
+            $('#form__coupons').show();
+        } else {
+            $('#form__coupons').hide();
+        }        
+    })
 });

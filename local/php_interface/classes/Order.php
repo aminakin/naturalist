@@ -717,14 +717,26 @@ class Orders
     public function enterCoupon($coupon) {
         $coupon = htmlspecialchars_decode(trim($coupon));
 		if (!empty($coupon)) {
-			return DiscountCouponsManager::add($coupon);
+            $getCoupon = DiscountCouponsManager::getData($coupon);
+            if ($getCoupon['ACTIVE'] === 'Y') {
+                DiscountCouponsManager::add($coupon);
+                return json_encode([
+                    "MESSAGE" => "Купон применён",
+                    "STATUS" => "SUCCESS"
+                ]);
+            } else {
+                return json_encode([
+                    "MESSAGE" => "Такого промокода не существует или его срок действия истёк. Пожалуйста воспользуйтесь другим промокодом.",
+                    "STATUS" => "ERROR"
+                ]);
+            }            
 		}
 	}
 
     /* Удаляет купон из заказа */
 	public function removeCoupon($coupon) {
         $coupon = htmlspecialchars_decode(trim($coupon));
-		if (!empty($coupon)) {			
+		if (!empty($coupon)) {           
 			return DiscountCouponsManager::delete($coupon);
 		}
 	}
