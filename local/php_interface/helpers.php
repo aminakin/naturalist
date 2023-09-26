@@ -109,3 +109,51 @@ function plural_form($number, $after) { // Склонение слов
 	$cases = array (2, 0, 1, 1, 1, 2);
 	return $number.' '.$after[ ($number%100>4 && $number%100<20)? 2: $cases[min($number%10, 5)] ];
 }
+
+// Возвращает порядковый номер ребёнка прописью
+function getChildrenOrderTitle($order) {
+    switch ($order) {
+        case 1:
+            return 'первого';
+        case 2:
+            return 'второго';
+        case 3:
+            return 'третьего';
+        case 4:
+            return 'четвертого';
+        case 5:
+            return 'пятого';
+        case 6:
+            return 'шестого';
+        case 7:
+            return 'седьмого';
+        case 8:
+            return 'восьмого';
+        case 9:
+            return 'девятого';
+        case 10:
+            return 'десятого';
+        case 11:
+            return 'одиннадцатого';
+        case 12:
+            return 'двенадцатого';
+        case 13:
+            return 'тринадцатого';
+        case 14:
+            return 'четырнадцатого';
+        case 15:
+            return 'пятнадцатого';
+        case 16:
+            return 'шестнадцатого';
+        case 17:
+            return 'семнадцатого';
+        case 18:
+            return 'восемнадцатого';
+        case 19:
+            return 'девятнадцатого';
+        case 20:
+            return 'двадцатого';    
+        default:
+            return $order.'-го';
+    }
+}

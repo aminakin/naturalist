@@ -2,7 +2,10 @@
 use Bitrix\Main\Application;
 use Bitrix\Main\Grid\Declension;
 use Bitrix\Highloadblock\HighloadBlockTable;
-use Bitrix\Sale;
+use Bitrix\Sale\Basket;
+use Bitrix\Sale\Fuser;
+use Bitrix\Sale\Registry;
+use Bitrix\Main\Context;
 use Naturalist\Users;
 use Naturalist\Baskets;
 use Naturalist\Orders;
@@ -112,10 +115,10 @@ $orders = new Orders();
 $coupons = $orders->getActivatedCoupons();
 
 /* Считаем скидки */
-$basket = Sale\Basket::loadItemsForFUser(Sale\Fuser::getId(), Bitrix\Main\Context::getCurrent()->getSite());
-$registry = Sale\Registry::getInstance(Sale\Registry::REGISTRY_TYPE_ORDER);
+$basket = Basket::loadItemsForFUser(Fuser::getId(),Context::getCurrent()->getSite());
+$registry = Registry::getInstance(Registry::REGISTRY_TYPE_ORDER);
 $orderClass = $registry->getOrderClassName();
-$order = $orderClass::create(Bitrix\Main\Context::getCurrent()->getSite(), $USER->getId());
+$order = $orderClass::create(Context::getCurrent()->getSite(), $USER->getId());
 $result = $order->appendBasket($basket);
 $discounts = $order->getDiscount();
 $showPrices = $discounts->getShowPrices();
