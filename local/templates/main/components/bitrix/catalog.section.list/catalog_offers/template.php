@@ -212,7 +212,7 @@ Loc::loadMessages(__FILE__);
                                 </button>
 
                                 <? if ($arItem["IS_DISCOUNT"] == 'Y'): ?>
-                                    <div class="tag">Скидка</div>
+                                    <div class="tag"><?=Loc::GetMessage('CATALOG_DISCOUNT')?></div>
                                 <? endif; ?>
 
                                 <? if (!empty($arItem["UF_ACTION"])): ?>

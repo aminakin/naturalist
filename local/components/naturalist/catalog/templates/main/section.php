@@ -20,6 +20,7 @@ use Naturalist\Regions;
 use Naturalist\Users;
 use Naturalist\Products;
 use Naturalist\Reviews;
+use Bitrix\Iblock\Elements\ElementGlampingsTable;
 
 global $arUser, $userId, $isAuthorized;
 
@@ -327,13 +328,12 @@ foreach ($arSections as $section) {
 }
 unset($section);
 
-$elements = \Bitrix\Iblock\Elements\ElementGlampingsTable::getList([
+$elements = ElementGlampingsTable::getList([
     'select' => ['ID', 'NAME', 'IBLOCK_SECTION_ID'],
     'filter' => ['IBLOCK_SECTION_ID' => $arSectionIds],
 ])->fetchAll();
 
 foreach ($elements as $element) {    
-    //xprint($element);    
     $arElementsBySection[$element['IBLOCK_SECTION_ID']][] = $element;    
 }
 unset($element);

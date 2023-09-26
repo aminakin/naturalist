@@ -1,5 +1,6 @@
 <?
 use Bitrix\Highloadblock\HighloadBlockTable;
+use Bitrix\Iblock\Elements\ElementGlampingsTable;
 
 // Избранное
 global $arFavourites;
@@ -35,13 +36,12 @@ foreach ($arResult["SECTIONS"] as $section) {
 }
 unset($section);
 
-$elements = \Bitrix\Iblock\Elements\ElementGlampingsTable::getList([
+$elements = ElementGlampingsTable::getList([
     'select' => ['ID', 'NAME', 'IBLOCK_SECTION_ID'],
     'filter' => ['IBLOCK_SECTION_ID' => $arSectionIds],
 ])->fetchAll();
 
-foreach ($elements as $element) {    
-    //xprint($element);    
+foreach ($elements as $element) {        
     $arElementsBySection[$element['IBLOCK_SECTION_ID']][] = $element;    
 }
 unset($element);

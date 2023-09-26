@@ -113,7 +113,7 @@ foreach($arResult as $key => $value) {
                         </button>
 
                         <? if ($arSection["IS_DISCOUNT"] == 'Y'): ?>
-                            <div class="tag">Скидка</div>
+                            <div class="tag"><?=Loc::GetMessage('CATALOG_DISCOUNT')?></div>
                         <? endif; ?>
 
                         <? if (!empty($arSection["UF_ACTION"])) : ?>
