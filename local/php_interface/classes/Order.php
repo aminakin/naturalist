@@ -10,6 +10,7 @@ use Bitrix\Sale\Basket;
 use Bitrix\Sale\PaySystem;
 use Bitrix\Sale\Fuser;
 use Bitrix\Main\Mail\Event;
+use Bitrix\Sale\DiscountCouponsManager;
 
 use CIBlockSection;
 use CSaleOrder;
@@ -710,5 +711,72 @@ class Orders
                 "ERROR" => "Произошла ошибка при получении информации о штрафе."
             ]);
         }
+    }
+
+    /* Добавляет купон к заказу */
+    public function enterCoupon($coupon) {
+        $coupon = htmlspecialchars_decode(trim($coupon));
+		if (!empty($coupon)) {
+            $getCoupon = DiscountCouponsManager::getData($coupon);
+            if ($getCoupon['ACTIVE'] === 'Y') {
+                DiscountCouponsManager::add($coupon);
+                return json_encode([
+                    "MESSAGE" => "Купон применён",
+                    "STATUS" => "SUCCESS"
+                ]);
+            } else {
+                return json_encode([
+                    "MESSAGE" => "Такого промокода не существует или его срок действия истёк. Пожалуйста воспользуйтесь другим промокодом.",
+                    "STATUS" => "ERROR"
+                ]);
+            }            
+		}
+	}
+
+    /* Удаляет купон из заказа */
+	public function removeCoupon($coupon) {
+        $coupon = htmlspecialchars_decode(trim($coupon));
+		if (!empty($coupon)) {           
+			return DiscountCouponsManager::delete($coupon);
+		}
+	}
+    
+    /* Получает информацию по всем применённым в заказе купонам */
+    public function getActivatedCoupons() {
+        $result = [];
+        $arCoupons = DiscountCouponsManager::get(true, [], true, true);
+        if (!empty($arCoupons))
+        {
+            foreach ($arCoupons as &$oneCoupon)
+            {
+                if ($oneCoupon['STATUS'] == DiscountCouponsManager::STATUS_NOT_FOUND || $oneCoupon['STATUS'] == DiscountCouponsManager::STATUS_FREEZE)
+                {
+                    $oneCoupon['JS_STATUS'] = 'BAD';
+                }
+                elseif ($oneCoupon['STATUS'] == DiscountCouponsManager::STATUS_NOT_APPLYED || $oneCoupon['STATUS'] == DiscountCouponsManager::STATUS_ENTERED)
+                {
+                    $oneCoupon['JS_STATUS'] = 'ENTERED';
+                }
+                else
+                {
+                    $oneCoupon['JS_STATUS'] = 'APPLIED';
+                }
+
+                $oneCoupon['JS_CHECK_CODE'] = '';
+                if (isset($oneCoupon['CHECK_CODE_TEXT']))
+                {
+                    $oneCoupon['JS_CHECK_CODE'] = is_array($oneCoupon['CHECK_CODE_TEXT'])
+                        ? implode(', ', $oneCoupon['CHECK_CODE_TEXT'])
+                        : $oneCoupon['CHECK_CODE_TEXT'];
+                }
+
+                $result[] = $oneCoupon;
+            }
+
+            unset($oneCoupon);
+            $result = array_values($arCoupons);
+        }
+        unset($arCoupons);
+        return $result;
     }
 }
