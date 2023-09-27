@@ -43,6 +43,8 @@ class Users
         $type = $params['type'];
         $login = $params['login'];
         $email = $params['email'];
+        $name = $params['name'];
+        $last_name = $params['last_name'];
 
         if ($type == 'phone') {
             $filter = array("PERSONAL_PHONE" => $login);
@@ -61,6 +63,8 @@ class Users
                 "PERSONAL_PHONE" => ($type == 'phone') ? $login : "",
                 "PASSWORD" => $code.$code,
                 "CONFIRM_PASSWORD" => $code.$code,
+                "NAME" => $name,
+                "LAST_NAME" => $last_name,
                 "UF_AUTH_CODE" => $code,
                 "UF_AUTH_TYPE" => $type,
                 "UF_SUBSCRIBE_EMAIL_1" => 1
@@ -81,11 +85,11 @@ class Users
         }
 
         if ($userId > 0) {
-            // if ($type == 'phone') {
-            //     $res = $this->sendCodeBySMS($login, $code);
-            // } elseif ($type == 'email') {
-            //     $res = $this->sendCodeByEmail($login, $code, $userId, $arUser);
-            // }
+            if ($type == 'phone') {
+                $res = $this->sendCodeBySMS($login, $code);
+            } elseif ($type == 'email') {
+                $res = $this->sendCodeByEmail($login, $code, $userId, $arUser);
+            }
 
             $res = true;
 

@@ -13,15 +13,17 @@ if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) {
 }
 
 $orders = new Orders();
+$context = Application::getInstance()->getContext();
+$request = $context->getRequest();
 
-if ($_REQUEST["params"]) {
-	$params = $_REQUEST["params"];
+if ($request->get("params")) {
+	$params = $request->get("params");
 	$res = $orders->add($params);
 	echo $res;
-} else if ($_REQUEST['action'] == 'couponAdd') {
-	$res = $orders->enterCoupon($_REQUEST['coupon']);
+} else if ($request->get('action') == 'couponAdd') {
+	$res = $orders->enterCoupon($request->get('coupon'));
 	echo $res;
-} else if ($_REQUEST['action'] == 'couponDelete') {
-	$res = $orders->removeCoupon($_REQUEST['coupon']);
+} else if ($request->get('action') == 'couponDelete') {
+	$res = $orders->removeCoupon($request->get('coupon'));
 	echo $res;
 }

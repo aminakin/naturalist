@@ -270,14 +270,22 @@
   letter-spacing: -0.01em;
   margin-bottom: 1.6rem;
 }
+.reservation-form__title {
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 21px;
+  font-family: var(--header-text-font-family);
+  margin: 0;
+}
 .reservation-form__fields-item .form__row {
   grid-column-gap: 1.6rem;
+  row-gap: 3.2rem;
 }
 .reservation-form__fields-item * + .checkbox {
   margin-top: 1.6rem;
 }
-.reservation-form__fields-item + .reservation-form__fields-item {
-  margin-top: 3.2rem;
+.reservation-form__fields-item {
+  margin-top: 4rem;
 }
 .reservation-form__summary {
   -webkit-box-flex: 0;
@@ -378,7 +386,7 @@
   align-items: center;
 }
 .reservation-form__right-title {
-  font-size: 20px;  
+  font-size: 20px;
   font-weight: 600;
   line-height: 21px;
   font-family: var(--header-text-font-family);
@@ -433,6 +441,14 @@
   border: none;
   padding: 5px;
   display: flex;
+}
+.form__row-item .form__footnote {
+  margin-top: 8px;
+  font-family: "Montserrat";
+  font-size: 12px;
+  font-weight: 500;
+  line-height: normal;
+  color: var(--color-dark-grey-2);
 }
 @media (max-width: 1023px) {
   .reservation {
@@ -529,7 +545,7 @@
   }
   .reservation .list_icon,
   .reservation-form__fields-item .form__row {
-    grid-row-gap: 0.8rem;
+    grid-row-gap: 22px;
     grid-template-columns: 1fr;
   }
   .reservation-form__fields-item * + .checkbox {
@@ -537,6 +553,9 @@
   }
   .reservation-form__summary {
     margin-top: 3.2rem;
+  }
+  .reservation-form__fields-item {
+    margin-top: 2rem;
   }
   .list_summary_time {
     -webkit-box-pack: justify;
@@ -549,11 +568,12 @@
     gap: 5px;
   }
 
-  .list_summary_time .list__item span, .list_summary_time .list__item span + span {
+  .list_summary_time .list__item span,
+  .list_summary_time .list__item span + span {
     margin-top: 0;
   }
 
-  .list>.list__item {
+  .list > .list__item {
     display: flex;
     align-items: center;
     gap: 15px;
@@ -590,5 +610,14 @@
   }
   .coupon__entered .field__input.coupon__input {
     width: 91%;
+  }
+
+  .reservation-form__title {
+    font-size: 1.5rem;
+  }
+
+  .form__row-item .form__footnote {
+    margin-top: 5px;
+    font-size: 10px;
   }
 }

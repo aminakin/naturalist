@@ -85,22 +85,29 @@ use Bitrix\Main\Localization\Loc;
 
 <form class="form reservation-form form_validation" id="form-order" is_auth="<?=$isAuthorized ? 'true' : 'false'?>">
     <div class="reservation-form__form">
-        <div class="reservation-form__form-holder">
-            <?/*
-                <div class="h3">Для продолжения бронирования, пожалуйста, авторизируйтесь</div>
-                <div class="reservation-form__control">
-                    <a class="button button_transparent" href="#login-email" data-modal>Авторизация</a>
-                </div>
-            */?>
+        <div class="reservation-form__form-holder">            
+            <p class="reservation-form__title"><?=Loc::getMessage('ORDER_FORM_TITLE')?></p>
             <div class="reservation-form__fields">
                 <div class="reservation-form__fields-item">
                     <div class="form__row">
-                        <div class="field">
-                            <input class="field__input" name="email" type="email" placeholder="user@mail.ru" value="<?=$arUser["EMAIL"]?>">
+                        <div class="form__row-item">
+                            <div class="field">
+                                <input class="field__input" name="email" type="email" placeholder="<?=Loc::getMessage('ORDER_EMAIL_PLACEHOLDER')?>" value="<?=$arUser["EMAIL"]?>">                                
+                            </div>
+                            <span class="form__footnote"><?=Loc::getMessage('ORDER_CONFIRM_DATA_MAIL')?></span>
+                        </div>
+                        <div class="form__row-item">
+                            <div class="field">
+                                <input class="field__input" name="phone" type="tel" placeholder="<?=Loc::getMessage('ORDER_PHONE_PLACEHOLDER')?>" value="<?=$arUser["PERSONAL_PHONE"]?>">                                
+                            </div>
+                            <span class="form__footnote"><?=Loc::getMessage('ORDER_CONFIRM_DATA_PHONE')?></span>
                         </div>
 
                         <div class="field">
-                            <input class="field__input" name="phone" type="tel" placeholder="+7 (999) 999-99-99" value="<?=$arUser["PERSONAL_PHONE"]?>">
+                            <input class="field__input" name="name" type="text" placeholder="<?=Loc::getMessage('ORDER_NAME_PLACEHOLDER')?>" value="<?=$arUser["NAME"]?>">
+                        </div>
+                        <div class="field">
+                            <input class="field__input" name="surname" type="text" placeholder="<?=Loc::getMessage('ORDER_LAST_NAME_PLACEHOLDER')?>" value="<?=$arUser["LAST_NAME"]?>">
                         </div>
 
                         <input type="hidden" name="date_from" value="<?=$dateFrom?>" />
@@ -121,11 +128,10 @@ use Bitrix\Main\Localization\Loc;
                             <input type="hidden" name="priceOneNight" value="<?=$priceOneNight?>" />
                             <input type="hidden" name="categoryId" value="<?=$categoryId?>" />
                         <?endif;?>
-                    </div>
-                    <span class="form__footnote">На этот адрес и телефон мы отправим подтверждение о бронировании</span>
+                    </div>                    
                 </div>
 
-                <?for($i = 1; $i <= $guests; $i++):?>
+                <?/*for($i = 1; $i <= $guests; $i++):?>
                     <div class="reservation-form__fields-item" data-guest-row="<?=$i?>" data-check-disabled>
                         <div class="reservation-form__fields-label"><?=($i <= 5) ? $arGuestsNamesData[$i] : 'Дополнительный'?> гость</div>
 
@@ -153,10 +159,10 @@ use Bitrix\Main\Localization\Loc;
                             <span>Сохранить данные гостя для будущих бронирований</span>
                         </label>
                     </div>
-                <?endfor;?>
+                <?endfor;*/?>
 
                 <div class="reservation-form__fields-item">
-                    <div class="reservation-form__fields-label">Комментарий к заказу</div>
+                    <div class="reservation-form__fields-label"><?=Loc::getMessage('ORDER_COMMENT')?></div>
                     <div class="field">
                         <textarea class="field__input" name="comment" placeholder="Введите дополнительную информацию или пожелания к заказу"></textarea>
                     </div>
@@ -203,9 +209,9 @@ use Bitrix\Main\Localization\Loc;
                 <div class="h1"><?= number_format($arResult['finalPrice']['REAL_PRICE'], 0, '.', ' ') ?> <?=Loc::getMessage('ORDER_RUBLE')?></div>
             </div>
             <? if ($isAuthorized): ?>
-                <button class="button button_primary" type="button" data-form-submit data-order>Оплатить банковской картой</button>
+                <button class="button button_primary" type="button" data-form-submit data-order><?=Loc::getMessage('ORDER_PAY')?></button>
             <? else: ?>
-                <button class="button button_primary" id="order__confirm-data" type="button" data-form-submit data-order>Подтвердить данные</button>
+                <button class="button button_primary" id="order__confirm-data" type="button" data-form-submit data-order><?=Loc::getMessage('ORDER_CONFIRM_ACTION')?></button>
             <? endif; ?>
             <div class="reservation-form__footnote">
                 <div class="field">
@@ -229,7 +235,7 @@ use Bitrix\Main\Localization\Loc;
                         </label>
                     </div>
                 <?endif;?>
-                <div>Передача информации защищена сертификатом SSL, оплата осуществляется через интернет-эквайринг СБЕР.</div>
+                <div><?=Loc::getMessage('ORDER_SSL')?></div>
             </div>           
         </div>
     </div>
