@@ -42,6 +42,9 @@ class Users
 
         $type = $params['type'];
         $login = $params['login'];
+        $email = $params['email'];
+        $name = $params['name'];
+        $last_name = $params['last_name'];
 
         if ($type == 'phone') {
             $filter = array("PERSONAL_PHONE" => $login);
@@ -56,10 +59,12 @@ class Users
             $arFields = array(
                 "ACTIVE" => "N",
                 "LOGIN" => $login,
-                "EMAIL" => ($type == 'email') ? $login : "",
+                "EMAIL" => ($type == 'email') ? $login : $email,
                 "PERSONAL_PHONE" => ($type == 'phone') ? $login : "",
                 "PASSWORD" => $code.$code,
                 "CONFIRM_PASSWORD" => $code.$code,
+                "NAME" => $name,
+                "LAST_NAME" => $last_name,
                 "UF_AUTH_CODE" => $code,
                 "UF_AUTH_TYPE" => $type,
                 "UF_SUBSCRIBE_EMAIL_1" => 1
@@ -86,6 +91,8 @@ class Users
                 $res = $this->sendCodeByEmail($login, $code, $userId, $arUser);
             }
 
+            $res = true;
+
             if ($res) {
                 return json_encode([
                     "MESSAGE" => "Код успешно отправлен."
@@ -111,6 +118,7 @@ class Users
         $page = $params['page'];
         $code = $params['code'];
         $login = $params['login'];
+        $auth_from_order = $params['auth_from_order'];
 
         if ($type == 'phone') {
             $filter = array("PERSONAL_PHONE" => $login);
@@ -129,6 +137,7 @@ class Users
 
                 return json_encode([
                     "MESSAGE" => "Вы успешно вошли",
+                    "NO_RELOAD" => $auth_from_order,
                     "USER_ID" => $userId,
                     "REDIRECT_URL" => ($page == "/order/") ? "/order/" : "/personal/"
                 ]);

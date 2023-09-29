@@ -5,7 +5,8 @@ namespace Naturalist;
 use Bitrix\Main\Application,
     Bitrix\Main\Context,
     Bitrix\Main\Loader,
-    Bitrix\Main\Mail\Event;
+    Bitrix\Main\Mail\Event,
+    Bitrix\Sale\Fuser;
 
 use CSaleBasket;
 use CSaleUser;
@@ -92,10 +93,11 @@ class Baskets
     {
         global $arUser, $userId;        
         $fUserId = (intval($userId) > 0) ? CSaleUser::getFUserCode() : false;
+        $fBasketUserId = Fuser::getId();
         $products = new Products();
         $arProduct = $products->get($productId);
         self::deleteAll();
-        self::manageHL($fUserId, $productId, $price);
+        self::manageHL($fBasketUserId, $productId, $price);
 
         $arFields = array(
             'PRODUCT_ID' => $productId,

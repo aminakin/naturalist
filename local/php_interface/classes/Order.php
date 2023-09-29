@@ -177,8 +177,9 @@ class Orders
         }
 
         // Список гостей
-        $arSaveGuests = array();
-        $arGuestList = array();
+        $arSaveGuests = [];
+        $arGuestList = [];
+        $arGuestList[] = trim($params["last_name"])." ".trim($params["name"]);
         foreach($params["guests"] as $key => $arItem) {
             $arGuestList[] = trim($arItem["surname"])." ".trim($arItem["name"])." ".trim($arItem["lastname"]);
 
@@ -258,11 +259,11 @@ class Orders
         $propertyValue = $propertyCollection->getItemByOrderPropertyId($this->arPropsIDs['EMAIL']);
         $propertyValue->setValue($params["email"]);
         // Имя
-        $arUser["NAME"] = !empty($arUser["NAME"]) ? $arUser["NAME"] : $params["guests"][0]["firstName"];
+        $arUser["NAME"] = !empty($arUser["NAME"]) ? $arUser["NAME"] : $params["name"];
         $propertyValue = $propertyCollection->getItemByOrderPropertyId($this->arPropsIDs['NAME']);
         $propertyValue->setValue($arUser["NAME"]);
         // Фамилия
-        $arUser["LAST_NAME"] = !empty($arUser["LAST_NAME"]) ? $arUser["LAST_NAME"] : $params["guests"][0]["lastName"];
+        $arUser["LAST_NAME"] = !empty($arUser["LAST_NAME"]) ? $arUser["LAST_NAME"] : $params["last_name"];
         $propertyValue = $propertyCollection->getItemByOrderPropertyId($this->arPropsIDs['LAST_NAME']);
         $propertyValue->setValue($arUser["LAST_NAME"]);
         // Дата заезда
@@ -324,6 +325,21 @@ class Orders
                     $user = new CUser();
                     $user->Update($userId, array(
                         "UF_GUESTS_DATA" => json_encode($arSaveGuests)
+                    ));
+                }
+
+                // Обновление Имени и Фамилии пользователя
+                if ($arUser["NAME"] == '' && $params["name"] != '') {
+                    $user = new CUser();
+                    $user->Update($userId, array(
+                        "NAME" => json_encode($arSaveGuests)
+                    ));
+                }
+
+                if ($arUser["LAST_NAME"] == '' && $params["last_name"] != '') {
+                    $user = new CUser();
+                    $user->Update($userId, array(
+                        "LAST_NAME" => json_encode($arSaveGuests)
                     ));
                 }
 
