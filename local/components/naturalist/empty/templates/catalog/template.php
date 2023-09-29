@@ -131,6 +131,7 @@ foreach($arResult as $key => $value) {
                                     <? if (isset($arHLTypes[$arSection["UF_TYPE"]])) : ?><span><?= $arHLTypes[$arSection["UF_TYPE"]]["UF_NAME"] ?></span><? endif; ?>
                                     <? if (!empty($arSection["UF_DISTANCE"])) : ?><span><?= $arSection["UF_DISTANCE"] ?></span><? endif; ?>
                                     <? if (!empty($arSection["UF_ADDRESS"])) : ?><span><?= $arSection["UF_ADDRESS"] ?></span><? endif; ?>
+                                    <? if (!empty($arSection["DISCTANCE"])) : ?><span><?= $arSection["DISCTANCE"] ?> км от <?=$arSection['DISCTANCE_TO_REGION']?></span><? endif; ?>
                                 </div>
                             </div>
                             <div class="object-row__reviews">

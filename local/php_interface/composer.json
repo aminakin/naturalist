@@ -17,5 +17,7 @@
             "composer/installers": true,
             "kylekatarnls/update-helper": true
         }
-    }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
 }

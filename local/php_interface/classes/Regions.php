@@ -110,6 +110,10 @@ class Regions
      */
     public static function getRegionById($regionID)
     {
+        if ($regionID == false) {
+            return false;
+        }
+
         $regionesDataClass = HighloadBlockTable::compileEntity(self::$regionsHL)->getDataClass();
 
         return $regionesDataClass::query()

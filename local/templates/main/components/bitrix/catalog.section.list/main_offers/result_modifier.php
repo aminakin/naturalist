@@ -49,7 +49,7 @@ unset($element);
 foreach ($arResult["SECTIONS"] as &$section) {
     foreach ($arElementsBySection[$section['ID']] as $element) {
         $arPrice = CCatalogProduct::GetOptimalPrice($element['ID'], 1, $USER->GetUserGroupArray(), 'N');        
-        if (count($arPrice['DISCOUNT'])) {
+        if (is_array($arPrice['DISCOUNT']) && count($arPrice['DISCOUNT'])) {
             $section['IS_DISCOUNT'] = 'Y';            
             break;
         }

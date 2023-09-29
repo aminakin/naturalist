@@ -22,6 +22,8 @@ Loader::registerAutoLoadClasses(null, array(
     'Naturalist\Regions'      => '/local/php_interface/classes/Regions.php',
     'Naturalist\CatalogProvider'      => '/local/php_interface/classes/CatalogProvider.php',
     'Naturalist\HighLoadBlockHelper'      => '/local/php_interface/classes/HighLoadBlockHelper.php',
+    'Naturalist\Utils'      => '/local/php_interface/classes/Utils.php',
+    'Naturalist\Morpher'      => '/local/php_interface/classes/Morpher.php',
 ));
 
 // Константы

@@ -16,11 +16,13 @@ use Bitrix\Main\Application;
 use Bitrix\Main\Grid\Declension;
 use Bitrix\Highloadblock\HighloadBlockTable;
 use Bitrix\Main\Web\Uri;
+use Naturalist\Morpher;
 use Naturalist\Regions;
 use Naturalist\Users;
 use Naturalist\Products;
 use Naturalist\Reviews;
 use Bitrix\Iblock\Elements\ElementGlampingsTable;
+use Naturalist\Utils;
 
 global $arUser, $userId, $isAuthorized;
 
@@ -218,6 +220,9 @@ $arSort = array($sort => $sortOrder);
 /* Получение разделов */
 $rsSections = CIBlockSection::GetList($arSort, $arFilter, false, array("IBLOCK_ID", "ID", "NAME", "CODE", "SECTION_PAGE_URL", "UF_*"), false);
 $arSections = array();
+
+$searchedRegionData = Regions::getRegionById($arRegionIds[0] ?? false);
+
 while ($arSection = $rsSections->GetNext()) {
     $arDataFullGallery = [];
     if($arSection["UF_PHOTOS"]) {
@@ -239,6 +244,17 @@ while ($arSection = $rsSections->GetNext()) {
     if ($arSection["UF_COORDS"]) {
         $arSection["COORDS"] = explode(',', $arSection["UF_COORDS"]);
     }
+
+    /* Растояние до поискового запроса */
+    if ($searchedRegionData) {
+
+        $searchedRegionData['COORDS'] = explode(',', $searchedRegionData['UF_COORDS']);
+
+        $arSection['DISCTANCE'] = Utils::calculateTheDistance($searchedRegionData['COORDS'][0], $searchedRegionData['COORDS'][1], $arSection['COORDS'][0], $arSection['COORDS'][1]);
+        $arSection['DISCTANCE_TO_REGION'] = Utils::morpher($searchName, Morpher::CASE_GENITIVE);
+    }
+
+    /* -- */
 
     if($arExternalInfo) {
         $sectionPrice = $arExternalInfo[$arSection["UF_EXTERNAL_ID"]];
@@ -341,7 +357,7 @@ unset($element);
 foreach ($arSections as &$section) {
     foreach ($arElementsBySection[$section['ID']] as $element) {
         $arPrice = CCatalogProduct::GetOptimalPrice($element['ID'], 1, $USER->GetUserGroupArray(), 'N');        
-        if (count($arPrice['DISCOUNT'])) {
+        if (is_array($arPrice['DISCOUNT']) && count($arPrice['DISCOUNT'])) {
             $section['IS_DISCOUNT'] = 'Y';            
             break;
         }
