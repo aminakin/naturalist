@@ -120,52 +120,6 @@
 </div>
 <!-- wrapper-->
 
-<div class="modal modal_form" id="login-email">
-    <div class="modal__container">
-        <button class="modal__close" data-modal-close>
-            <svg class="icon icon_cross" viewbox="0 0 18 18" style="width: 1.8rem; height: 1.8rem;">
-                <use xlink:href="#cross" />
-            </svg>
-        </button>
-        <div class="h3">Авторизация</div>
-
-        <form class="form form_validation" id="form-auth-email">
-            <div class="form__item">
-                <div class="field">
-                    <input class="field__input" type="text" name="email" placeholder="E-mail">
-                </div>
-            </div>
-
-            <div class="form__controls">
-                <button class="button button_primary" data-get-code data-type="email" data-form-submit>Продолжить</button>
-                <a class="button button_transparent" href="#login-phone" data-modal-close data-modal>Войти по номеру телефона</a>
-            </div>
-
-            <div class="form__item">
-                <span class="form__item-headnote">Войдите с помощью социальной сети</span>
-                <ul class="list list_social">
-                    <li class="list__item">
-                        <a class="list__link" href="#" data-auth-socnets data-type="telegram">
-                            <svg class="icon icon_telegram" viewbox="0 0 16 16" style="width: 1.6rem; height: 1.6rem;">
-                                <use xlink:href="#telegram" />
-                            </svg>
-                        </a>
-                    </li>
-                    <li class="list__item">
-                        <a class="list__link" href="#" data-auth-socnets data-type="vk">
-                            <svg class="icon icon_vk" viewbox="0 0 22 12" style="width: 2.2rem; height: 1.2rem;">
-                                <use xlink:href="#vk" />
-                            </svg>
-                        </a>
-                    </li>
-                </ul>
-            </div>
-
-            <div class="form__policy">Нажимая кнопку «Войти», я соглашаюсь c&nbsp;<a href="/agreement/">политикой конфиденциальности и&nbsp;обработки персональных данных</a>.</div>
-        </form>
-    </div>
-</div>
-
 <div class="modal modal_form" id="login-phone">
     <div class="modal__container">
         <button class="modal__close" data-modal-close>
@@ -182,8 +136,7 @@
                 </div>
             </div>
             <div class="form__controls">
-                <button class="button button_primary" data-get-code data-type="phone" data-form-submit>Продолжить</button>
-                <a class="button button_transparent" href="#login-email" data-modal-close data-modal>Войти по е-mail</a>
+                <button class="button button_primary" data-get-code data-type="phone" data-form-submit>Продолжить</button>                
             </div>
             <div class="form__item">
                 <span class="form__item-headnote">Войдите с помощью социальной сети</span>
@@ -222,7 +175,7 @@
             <div class="form__item">
                 <div class="field">
                     <input class="field__input" type="text" name="code" placeholder="Введите полученный код">
-
+                    <input type="hidden" name="auth_from_order">
                     <input type="hidden" name="login" />
                     <input type="hidden" name="type" />
                     <input type="hidden" name="page" value="<?= $APPLICATION->GetCurDir(); ?>"/>

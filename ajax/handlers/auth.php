@@ -16,7 +16,8 @@ $params = array(
 	'code' => $_REQUEST["code"],
 	'login' => $_REQUEST["login"],
 	'type' => $_REQUEST["type"],
-	'page' => $_REQUEST["page"],
+	'page' => $_REQUEST["page"],	
+	'auth_from_order' => $_REQUEST["auth_from_order"]
 );
 
 $users = new Users();

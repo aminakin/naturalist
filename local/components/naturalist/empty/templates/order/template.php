@@ -83,86 +83,91 @@ use Bitrix\Main\Localization\Loc;
     </div>
 </div>
 
-<form class="form reservation-form form_validation" id="form-order">
+<form class="form reservation-form form_validation" id="form-order" is_auth="<?=$isAuthorized ? 'true' : 'false'?>">
     <div class="reservation-form__form">
-        <div class="reservation-form__form-holder">
-            <?if(!$isAuthorized):?>
-                <div class="h3">Для продолжения бронирования, пожалуйста, авторизируйтесь</div>
-                <div class="reservation-form__control">
-                    <a class="button button_transparent" href="#login-email" data-modal>Авторизация</a>
-                </div>
-            <?else:?>            
-                <div class="reservation-form__fields">
-                    <div class="reservation-form__fields-item">                        
-                        <div class="form__row">
+        <div class="reservation-form__form-holder">            
+            <p class="reservation-form__title"><?=Loc::getMessage('ORDER_FORM_TITLE')?></p>
+            <div class="reservation-form__fields">
+                <div class="reservation-form__fields-item">
+                    <div class="form__row">
+                        <div class="form__row-item">
                             <div class="field">
-                                <input class="field__input" name="email" type="email" placeholder="user@mail.ru" value="<?=$arUser["EMAIL"]?>">
+                                <input class="field__input" name="email" type="email" placeholder="<?=Loc::getMessage('ORDER_EMAIL_PLACEHOLDER')?>" value="<?=$arUser["EMAIL"]?>">                                
                             </div>
-
+                            <span class="form__footnote"><?=Loc::getMessage('ORDER_CONFIRM_DATA_MAIL')?></span>
+                        </div>
+                        <div class="form__row-item">
                             <div class="field">
-                                <input class="field__input" name="phone" type="text" placeholder="+7 (999) 999-99-99" value="<?=$arUser["PERSONAL_PHONE"]?>">
+                                <input class="field__input" name="phone" type="tel" placeholder="<?=Loc::getMessage('ORDER_PHONE_PLACEHOLDER')?>" value="<?=$arUser["PERSONAL_PHONE"]?>">                                
                             </div>
-
-                            <input type="hidden" name="date_from" value="<?=$dateFrom?>" />
-                            <input type="hidden" name="date_to" value="<?=$dateTo?>" />
-                            <input type="hidden" name="guests" value="<?=$guests?>" />
-                            <input type="hidden" name="childrenAge" value="<?=$childrenAge?>" />
-                            <input type="hidden" name="service" value="<?=$arSection["UF_EXTERNAL_SERVICE"]?>" />
-                            <input type="hidden" name="sectionId" value="<?=$arSection["ID"]?>" />
-                            <input type="hidden" name="elementId" value="<?=$arElement["ID"]?>" />
-                            <input type="hidden" name="externalId" value="<?=$arSection["UF_EXTERNAL_ID"]?>" />
-                            <input type="hidden" name="externalElementId" value="<?=$arElement["PROPERTY_EXTERNAL_ID_VALUE"]?>" />
-                            <input type="hidden" name="price" value="<?=$totalPrice?>" />
-                            <?if($arSection["UF_EXTERNAL_SERVICE"] == 1):?>
-                                <input type="hidden" name="travelineCategoryId" value="<?=$arElement["PROPERTY_EXTERNAL_CATEGORY_ID_VALUE"]?>" />
-                                <input type="hidden" name="travelineChecksum" value="<?=$checksum?>" />
-                            <?else:?>
-                                <input type="hidden" name="tariffId" value="<?=$tariffValue?>" />
-                                <input type="hidden" name="priceOneNight" value="<?=$priceOneNight?>" />
-                                <input type="hidden" name="categoryId" value="<?=$categoryId?>" />
-                            <?endif;?>
+                            <span class="form__footnote"><?=Loc::getMessage('ORDER_CONFIRM_DATA_PHONE')?></span>
                         </div>
-                        <span class="form__footnote"><?=Loc::getMessage('ORDER_CONFIRM_DATA')?></span>
-                    </div>
 
-                    <?for($i = 1; $i <= $guests; $i++):?>
-                        <div class="reservation-form__fields-item" data-guest-row="<?=$i?>" data-check-disabled>
-                            <div class="reservation-form__fields-label"><?=($i <= 5) ? $arGuestsNamesData[$i] : 'Дополнительный'?> гость</div>
-
-                            <div class="form__row form__row_3" data-autocomplete>
-                                <div class="field">
-                                    <input class="field__input" type="text" name="surname" value="<?=$arUser["UF_GUESTS_DATA"][$i]["surname"] ?? ''?>" data-autocomplete-field="last" placeholder="Фамилия">
-                                </div>
-                                <div class="field">
-                                    <input class="field__input" type="text" name="name" value="<?=$arUser["UF_GUESTS_DATA"][$i]["name"] ?? ''?>" data-autocomplete-field="first" placeholder="Имя">
-                                </div>
-                                <div class="field">
-                                    <input class="field__input" type="text" name="lastname" value="<?=$arUser["UF_GUESTS_DATA"][$i]["lastname"] ?? ''?>" data-autocomplete-field="middle" placeholder="Отчество">
-                                </div>
-
-                                <ul class="list list_autocomplete" data-autocomplete-list></ul>
-                            </div>
-
-                            <label class="checkbox">
-                                <input type="checkbox" name="save"
-                                       <?if($arUser["UF_GUESTS_DATA"][$i]):?>checked<?endif;?>
-                                       value
-                                       <?if(!$arUser["UF_GUESTS_DATA"][$i]):?>disabled<?endif;?>
-                                       data-check-disabled-control
-                                >
-                                <span>Сохранить данные гостя для будущих бронирований</span>
-                            </label>
-                        </div>
-                    <?endfor;?>
-
-                    <div class="reservation-form__fields-item">
-                        <div class="reservation-form__fields-label"><?=Loc::getMessage('ORDER_COMMENT')?></div>
                         <div class="field">
-                            <textarea class="field__input" name="comment" placeholder="<?=Loc::getMessage('ORDER_COMMENT_PLACEHOLDER')?>"></textarea>
+                            <input class="field__input" name="name" type="text" placeholder="<?=Loc::getMessage('ORDER_NAME_PLACEHOLDER')?>" value="<?=$arUser["NAME"]?>">
                         </div>
+                        <div class="field">
+                            <input class="field__input" name="surname" type="text" placeholder="<?=Loc::getMessage('ORDER_LAST_NAME_PLACEHOLDER')?>" value="<?=$arUser["LAST_NAME"]?>">
+                        </div>
+
+                        <input type="hidden" name="date_from" value="<?=$dateFrom?>" />
+                        <input type="hidden" name="date_to" value="<?=$dateTo?>" />
+                        <input type="hidden" name="guests" value="<?=$guests?>" />
+                        <input type="hidden" name="childrenAge" value="<?=$childrenAge?>" />
+                        <input type="hidden" name="service" value="<?=$arSection["UF_EXTERNAL_SERVICE"]?>" />
+                        <input type="hidden" name="sectionId" value="<?=$arSection["ID"]?>" />
+                        <input type="hidden" name="elementId" value="<?=$arElement["ID"]?>" />
+                        <input type="hidden" name="externalId" value="<?=$arSection["UF_EXTERNAL_ID"]?>" />
+                        <input type="hidden" name="externalElementId" value="<?=$arElement["PROPERTY_EXTERNAL_ID_VALUE"]?>" />
+                        <input type="hidden" name="price" value="<?=$totalPrice?>" />
+                        <?if($arSection["UF_EXTERNAL_SERVICE"] == 1):?>
+                            <input type="hidden" name="travelineCategoryId" value="<?=$arElement["PROPERTY_EXTERNAL_CATEGORY_ID_VALUE"]?>" />
+                            <input type="hidden" name="travelineChecksum" value="<?=$checksum?>" />
+                        <?else:?>
+                            <input type="hidden" name="tariffId" value="<?=$tariffValue?>" />
+                            <input type="hidden" name="priceOneNight" value="<?=$priceOneNight?>" />
+                            <input type="hidden" name="categoryId" value="<?=$categoryId?>" />
+                        <?endif;?>
+                    </div>                    
+                </div>
+
+                <?/*for($i = 1; $i <= $guests; $i++):?>
+                    <div class="reservation-form__fields-item" data-guest-row="<?=$i?>" data-check-disabled>
+                        <div class="reservation-form__fields-label"><?=($i <= 5) ? $arGuestsNamesData[$i] : 'Дополнительный'?> гость</div>
+
+                        <div class="form__row form__row_3" data-autocomplete>
+                            <div class="field">
+                                <input class="field__input" type="text" name="surname" value="<?=$arUser["UF_GUESTS_DATA"][$i]["surname"] ?? ''?>" data-autocomplete-field="last" placeholder="Фамилия">
+                            </div>
+                            <div class="field">
+                                <input class="field__input" type="text" name="name" value="<?=$arUser["UF_GUESTS_DATA"][$i]["name"] ?? ''?>" data-autocomplete-field="first" placeholder="Имя">
+                            </div>
+                            <div class="field">
+                                <input class="field__input" type="text" name="lastname" value="<?=$arUser["UF_GUESTS_DATA"][$i]["lastname"] ?? ''?>" data-autocomplete-field="middle" placeholder="Отчество">
+                            </div>
+
+                            <ul class="list list_autocomplete" data-autocomplete-list></ul>
+                        </div>
+
+                        <label class="checkbox">
+                            <input type="checkbox" name="save"
+                                    <?if($arUser["UF_GUESTS_DATA"][$i]):?>checked<?endif;?>
+                                    value
+                                    <?if(!$arUser["UF_GUESTS_DATA"][$i]):?>disabled<?endif;?>
+                                    data-check-disabled-control
+                            >
+                            <span>Сохранить данные гостя для будущих бронирований</span>
+                        </label>
+                    </div>
+                <?endfor;*/?>
+
+                <div class="reservation-form__fields-item">
+                    <div class="reservation-form__fields-label"><?=Loc::getMessage('ORDER_COMMENT')?></div>
+                    <div class="field">
+                        <textarea class="field__input" name="comment" placeholder="Введите дополнительную информацию или пожелания к заказу"></textarea>
                     </div>
                 </div>
-            <?endif;?>
+            </div>            
         </div>
     </div>    
     <div class="reservation-form__summary">
@@ -204,7 +209,10 @@ use Bitrix\Main\Localization\Loc;
                 <div class="h1"><?= number_format($arResult['finalPrice']['REAL_PRICE'], 0, '.', ' ') ?> <?=Loc::getMessage('ORDER_RUBLE')?></div>
             </div>
             <? if ($isAuthorized): ?>
-            <button class="button button_primary" type="button" data-form-submit <?if($isAuthorized):?>data-order<?endif;?>><?=Loc::getMessage('ORDER_PAY')?></button>
+                <button class="button button_primary" type="button" data-form-submit data-order><?=Loc::getMessage('ORDER_PAY')?></button>
+            <? else: ?>
+                <button class="button button_primary" id="order__confirm-data" type="button" data-form-submit data-order><?=Loc::getMessage('ORDER_CONFIRM_ACTION')?></button>
+            <? endif; ?>
             <div class="reservation-form__footnote">
                 <div class="field">
                     <label class="checkbox">
@@ -228,8 +236,7 @@ use Bitrix\Main\Localization\Loc;
                     </div>
                 <?endif;?>
                 <div><?=Loc::getMessage('ORDER_SSL')?></div>
-            </div>
-            <? endif; ?>
+            </div>           
         </div>
     </div>
 </form>
