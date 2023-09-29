@@ -108,6 +108,7 @@ class Orders
 
         // Список товаров
         $basket = $order->getBasket();
+        $arFields["BASE_PRICE"] = $basket->getBasePrice();        
         $arBasketItems = $basket->getBasketItems();
 
         $totalPrice = 0;
@@ -196,35 +197,35 @@ class Orders
         $externalService = $arBasketItems["ITEMS"][0]["ITEM"]["SECTION"]["UF_EXTERNAL_SERVICE"];
 
         // Проверка возможности бронирования перед созданием заказа и отмена создания заказа в случае невозможности бронирования (только для Traveline)
-        if($externalService == $this->travelineSectionPropEnumId) {
-            $externalSectionId = $arBasketItems['ITEMS'][0]['ITEM']['SECTION']['UF_EXTERNAL_ID'];
-            $sectionName = $arBasketItems['ITEMS'][0]['ITEM']['SECTION']['NAME'];
-            $sectionCommission = $arBasketItems['ITEMS'][0]['ITEM']['SECTION']['UF_AGENT'];
-            $externalElementId = $arBasketItems['ITEMS'][0]['ITEM']['PROPERTIES']['EXTERNAL_ID']['VALUE'];
-            $externalCategoryId = $arBasketItems['ITEMS'][0]['ITEM']['PROPERTIES']['EXTERNAL_CATEGORY_ID']['VALUE'];
-            $dateFrom = $params['dateFrom'];
-            $dateTo = $params['dateTo'];
-            $guests = count($arGuestList);
-            $price = $arBasketItems['ITEMS'][0]["PRICE"];
-            $checksum = $params['checksum'];
-            $arChildrenAge = ($params['childrenAge']) ? explode(',', $params['childrenAge']) : [];
+        // if($externalService == $this->travelineSectionPropEnumId) {
+        //     $externalSectionId = $arBasketItems['ITEMS'][0]['ITEM']['SECTION']['UF_EXTERNAL_ID'];
+        //     $sectionName = $arBasketItems['ITEMS'][0]['ITEM']['SECTION']['NAME'];
+        //     $sectionCommission = $arBasketItems['ITEMS'][0]['ITEM']['SECTION']['UF_AGENT'];
+        //     $externalElementId = $arBasketItems['ITEMS'][0]['ITEM']['PROPERTIES']['EXTERNAL_ID']['VALUE'];
+        //     $externalCategoryId = $arBasketItems['ITEMS'][0]['ITEM']['PROPERTIES']['EXTERNAL_CATEGORY_ID']['VALUE'];
+        //     $dateFrom = $params['dateFrom'];
+        //     $dateTo = $params['dateTo'];
+        //     $guests = count($arGuestList);
+        //     $price = $arBasketItems['ITEMS'][0]["PRICE"];
+        //     $checksum = $params['checksum'];
+        //     $arChildrenAge = ($params['childrenAge']) ? explode(',', $params['childrenAge']) : [];
 
-            if(empty($arUser["EMAIL"])) {
-                $arUser["EMAIL"] = $params["email"];
-            }
-            if(empty($arUser["PERSONAL_PHONE"])) {
-                $arUser["PERSONAL_PHONE"] = $params["phone"];
-            }
+        //     if(empty($arUser["EMAIL"])) {
+        //         $arUser["EMAIL"] = $params["email"];
+        //     }
+        //     if(empty($arUser["PERSONAL_PHONE"])) {
+        //         $arUser["PERSONAL_PHONE"] = $params["phone"];
+        //     }
 
-            $arVerifyResponse = Traveline::verifyReservation($externalSectionId, $externalElementId, $externalCategoryId, $guests, $arChildrenAge, $dateFrom, $dateTo, $price, $checksum, $arGuestList, $arUser);
+        //     $arVerifyResponse = Traveline::verifyReservation($externalSectionId, $externalElementId, $externalCategoryId, $guests, $arChildrenAge, $dateFrom, $dateTo, $price, $checksum, $arGuestList, $arUser);
 
-            if (!empty($arVerifyResponse['warnings'][0]['code']) || empty($arVerifyResponse["booking"])) {
-                $errorText = $arVerifyResponse['warnings'][0]['code'] ?? $arVerifyResponse['errors'][0]['message'];
-                return json_encode([
-                    "ERROR" => "Невозможно бронирование на выбранные даты. " . $this->arErrors[$errorText]
-                ]);
-            }
-        }
+        //     if (!empty($arVerifyResponse['warnings'][0]['code']) || empty($arVerifyResponse["booking"])) {
+        //         $errorText = $arVerifyResponse['warnings'][0]['code'] ?? $arVerifyResponse['errors'][0]['message'];
+        //         return json_encode([
+        //             "ERROR" => "Невозможно бронирование на выбранные даты. " . $this->arErrors[$errorText]
+        //         ]);
+        //     }
+        // }
 
         // Создание корзины
         $siteId = Context::getCurrent()->getSite();
@@ -586,7 +587,6 @@ class Orders
         } elseif($service == $this->travelineSectionPropEnumId) {
             $reservationRes = Traveline::makeReservation($orderId, $arOrder, $arUser, $reservationPropId);
         }
-        //file_put_contents($_SERVER["DOCUMENT_ROOT"] . '/log.txt', serialize($arOrder) . PHP_EOL, FILE_APPEND);
 
         if($reservationRes) {
             /* Устанавливаем свойства заказа (пользовательские) */

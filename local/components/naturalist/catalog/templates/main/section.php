@@ -20,6 +20,7 @@ use Naturalist\Regions;
 use Naturalist\Users;
 use Naturalist\Products;
 use Naturalist\Reviews;
+use Bitrix\Iblock\Elements\ElementGlampingsTable;
 
 global $arUser, $userId, $isAuthorized;
 
@@ -320,6 +321,33 @@ if ($nextPage) {
 } else {
     $page = $_REQUEST['page'] ?? 1;
 }
+
+// Добавляем свойство Скидка, если есть хотя бы 1 элемент со скидкой
+foreach ($arSections as $section) {
+    $arSectionIds[] = $section['ID'];
+}
+unset($section);
+
+$elements = ElementGlampingsTable::getList([
+    'select' => ['ID', 'NAME', 'IBLOCK_SECTION_ID'],
+    'filter' => ['IBLOCK_SECTION_ID' => $arSectionIds],
+])->fetchAll();
+
+foreach ($elements as $element) {    
+    $arElementsBySection[$element['IBLOCK_SECTION_ID']][] = $element;    
+}
+unset($element);
+
+foreach ($arSections as &$section) {
+    foreach ($arElementsBySection[$section['ID']] as $element) {
+        $arPrice = CCatalogProduct::GetOptimalPrice($element['ID'], 1, $USER->GetUserGroupArray(), 'N');        
+        if (count($arPrice['DISCOUNT'])) {
+            $section['IS_DISCOUNT'] = 'Y';            
+            break;
+        }
+    }    
+}
+unset($section);
 
 $pageCount = ceil($allCount / $arParams["ITEMS_COUNT"]);
 if ($pageCount > 1) {

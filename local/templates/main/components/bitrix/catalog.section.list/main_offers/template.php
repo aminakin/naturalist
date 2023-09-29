@@ -7,14 +7,6 @@ Loc::loadMessages(__FILE__);
 
 global $arFavourites;
 
-$allCount = count($arResult["SECTIONS"]);
-$page = $_REQUEST['page'] ?? 1;
-$pageCount = ceil($allCount / $arParams["ITEMS_COUNT"]);
-if ($pageCount > 1) {
-    $arResult["SECTIONS"] = array_slice($arResult["SECTIONS"], ($page - 1) * $arParams["ITEMS_COUNT"],
-        $arParams["ITEMS_COUNT"]);
-}
-
 // Отзывы
 $arCampingIDs = array_map(function ($a) {
     return $a["ID"];
@@ -124,6 +116,10 @@ $arReviewsAvg = Reviews::getCampingRating($arCampingIDs);
                                 <img src="<?= SITE_TEMPLATE_PATH ?>/assets/img/favorite.svg" alt="Добавить в избранное">
                             <? endif; ?>
                         </button>
+
+                        <? if ($arItem["IS_DISCOUNT"] == 'Y'): ?>
+                            <div class="tag"><?=Loc::GetMessage('CATALOG_DISCOUNT')?></div>
+                        <? endif; ?>
 
                         <? if (!empty($arItem["UF_ACTION"])): ?>
                             <div class="tag"><?= $arItem["UF_ACTION"] ?></div>

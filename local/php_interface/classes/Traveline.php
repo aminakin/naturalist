@@ -609,7 +609,7 @@ class Traveline
         $dateTo = $arOrder['PROPS']['DATE_TO'];
         $guests = $arOrder['PROPS']['GUESTS_COUNT'];
         $arChildrenAge = $arOrder['PROPS']['CHILDREN_AGE'];
-        $price = $arOrder['FIELDS']['PRICE'];
+        $price = $arOrder['FIELDS']['BASE_PRICE'];
         $checksum = $arOrder['PROPS']['CHECKSUM'];
         $arGuestList = $arOrder['PROPS']['GUEST_LIST'];
 
