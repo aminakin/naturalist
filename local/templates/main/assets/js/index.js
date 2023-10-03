@@ -15037,9 +15037,13 @@ var SearchAutocomplete = /*#__PURE__*/function () {
         }).then(function (response) {
           if (response.length) {
             _this.elements.$dropdown.innerHTML = "\n\t\t\t\t\t\t\t".concat(response.map(function (type) {
-              return "\n\t\t\t\t\t\t\t\t\t\t<div class=\"autocomplete-dropdown__item\">\n\t\t\t\t\t\t\t\t\t\t\t<div class=\"autocomplete-dropdown__title\">".concat(type.type, "</div>\n\t\t\t\t\t\t\t\t\t\t\t<ul class=\"list autocomplete-dropdown__list\">\n\t\t\t\t\t\t\t\t\t\t\t\t").concat(type.list.map(function (item) {
-                return "<li class=\"list__item\" data-autocomplete-type=\"".concat(type.id, "\" data-autocomplete-item=\"").concat(item.id, "\">").concat(item.title, "</li>");
-              }).join(''), "\n\t\t\t\t\t\t\t\t\t\t\t</ul>\n\t\t\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t\t");
+              return "<div class=\"autocomplete-dropdown__item\">" +
+                  "<div class=\"autocomplete-dropdown__title\">".concat(type.type,
+                      "</div><ul class=\"list autocomplete-dropdown__list\">").concat(type.list.map(function (item) {
+                        return '<li class="list__item" data-autocomplete-type="'.concat(type.id,  '"data-autocomplete-item="').concat(item.id, '">' +
+                                '<div class="list__item-title">'.concat(item.title, '</div>')
+                                  .concat(item.footnote ? '<div class="list__item-footnote">'.concat(item.footnote, '</div>') : '', "</li>"));
+              }).join(''), "</ul></div>");
             }).join(''), "\n\t\t\t\t\t\t\t");
 
             _this.elements.$root.classList.add(_this.classes.show);
