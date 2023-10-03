@@ -27,7 +27,7 @@ mix.js.map
 _dev.*
 
 vendor/
-
-*.sql
-log*.txt
-*.log
+/import/bnovo/
+/log.txt
+/log_bnovo.txt
+/log_bnovo_order.txt

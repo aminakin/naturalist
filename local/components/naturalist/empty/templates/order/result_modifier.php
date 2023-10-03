@@ -14,6 +14,18 @@ global $arUser, $userId, $isAuthorized;
 
 $baskets = new Baskets();
 $arBasket = $baskets->get();
+/*if(count($arBasket["ITEMS"]) > 1) {
+    for ($i = 0; $i < count($arBasket["ITEMS"])-1; $i++) {
+        $baskets->delete($arBasket["ITEMS"][$i]["ID"]);
+    }
+
+    $arBasket = $baskets->get();
+}
+if ($arBasket["ITEMS"][0]["QUANTITY"] > $arBasket["ITEMS"][0]["PROPS"]["DAYS_COUNT"]) {
+    $baskets->update($arBasket["ITEMS"][0]["ID"], $arBasket["ITEMS"][0]["PROPS"]["DAYS_COUNT"]);
+    $arBasket = $baskets->get();
+}*/
+//xprint($arBasket); die();
 
 $elementId = $arBasket["ITEMS"][0]["PRODUCT_ID"];
 $sectionId = $arBasket["ITEMS"][0]["ITEM"]["IBLOCK_SECTION_ID"];

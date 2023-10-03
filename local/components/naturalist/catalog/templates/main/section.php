@@ -577,10 +577,7 @@ $APPLICATION->IncludeComponent(
         "map" => $arParams["MAP"]
     )
 );
-?>
 
-<?
 $session = Application::getInstance()->getSession();
 $session->remove('current_catalog_page');
 $session->remove('catalog_showen_items');
-?>
