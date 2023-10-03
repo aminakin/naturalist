@@ -48,9 +48,11 @@ foreach($arResult as $key => $value) {
                 <div class="catalog__count">Доступно <?= $allCount ?> <?= $countDeclension->get($allCount) ?></div>
             <?
         } else {
-            ?>
-            <div class="catalog__count">К сожалению по вашему запросу ничего не найдено, попробуйте изменить параметры запроса.</div>
-            <?
+            if (isset($_GET['name'])) {?>
+                <div class="catalog__count catalog__count--not-found"><?=Loc::GetMessage('NOT_FOUND_REGION')?></div>
+            <?} else {?>
+                <div class="catalog__count catalog__count--not-found"><?=Loc::GetMessage('NOT_FOUND')?></div>
+            <?}            
         }?>
 
         <div class="catalog__list">
