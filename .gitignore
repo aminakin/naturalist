@@ -27,7 +27,3 @@ mix.js.map
 _dev.*
 
 vendor/
-
-*.sql
-log*.txt
-*.log

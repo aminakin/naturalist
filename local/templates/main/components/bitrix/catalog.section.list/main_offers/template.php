@@ -7,6 +7,14 @@ Loc::loadMessages(__FILE__);
 
 global $arFavourites;
 
+$allCount = count($arResult["SECTIONS"]);
+$page = $_REQUEST['page'] ?? 1;
+$pageCount = ceil($allCount / $arParams["ITEMS_COUNT"]);
+if ($pageCount > 1) {
+    $arResult["SECTIONS"] = array_slice($arResult["SECTIONS"], ($page - 1) * $arParams["ITEMS_COUNT"],
+        $arParams["ITEMS_COUNT"]);
+}
+
 // Отзывы
 $arCampingIDs = array_map(function ($a) {
     return $a["ID"];
@@ -158,6 +166,6 @@ $arReviewsAvg = Reviews::getCampingRating($arCampingIDs);
     <?if ($arParams['SHOW_MORE_LINK']):?>
         <div class="objects__more">
             <a href="<?=$arParams['SHOW_MORE_LINK']?>">Показать ещё</a>
-        </div>  
-    <?endif;?>  
+        </div>
+    <?endif;?>
 </div>

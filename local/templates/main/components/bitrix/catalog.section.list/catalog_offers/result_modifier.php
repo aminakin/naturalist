@@ -4,7 +4,6 @@ use Naturalist\Reviews;
 use Naturalist\Products;
 use Bitrix\Main\Web\Uri;
 use Bitrix\Highloadblock\HighloadBlockTable;
-use Bitrix\Iblock\Elements\ElementGlampingsTable;
 
 // Избранное
 global $arFavourites;
@@ -121,30 +120,3 @@ $arResult["SECTIONS"] = $arSortedSections;
 $arResult["DAYS_COUNT"] = $daysCount;
 $arResult["SECTIONS_EXTERNAL"] = $arExternalInfo;
 $arResult["HL_TYPES"] = $arHLTypes;
-
-// Добавляем свойство Скидка, если есть хотя бы 1 элемент со вкидкой
-foreach ($arResult["SECTIONS"] as $section) {
-    $arSectionIds[] = $section['ID'];
-}
-unset($section);
-
-$elements = ElementGlampingsTable::getList([
-    'select' => ['ID', 'NAME', 'IBLOCK_SECTION_ID'],
-    'filter' => ['IBLOCK_SECTION_ID' => $arSectionIds],
-])->fetchAll();
-
-foreach ($elements as $element) {    
-    $arElementsBySection[$element['IBLOCK_SECTION_ID']][] = $element;    
-}
-unset($element);
-
-foreach ($arResult["SECTIONS"] as &$section) {
-    foreach ($arElementsBySection[$section['ID']] as $element) {
-        $arPrice = CCatalogProduct::GetOptimalPrice($element['ID'], 1, $USER->GetUserGroupArray(), 'N');        
-        if (is_array($arPrice['DISCOUNT']) && count($arPrice['DISCOUNT'])) {
-            $section['IS_DISCOUNT'] = 'Y';            
-            break;
-        }
-    }    
-}
-unset($section);

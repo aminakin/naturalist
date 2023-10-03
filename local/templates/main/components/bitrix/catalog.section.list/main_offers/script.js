@@ -2,7 +2,7 @@ $(function() {
     // Показать ещё
     $(document).on('click', '[data-offers-container] [data-main-offers-showmore]', function(event) {
         event.preventDefault();
-
+        $(this).css('visibility', 'hidden');
         var params = getUrlParams();
         var page = $(this).data('page');
         var tab = $('[data-offers-container] .list__item_active .list__link').data('offers-tab-switch');
