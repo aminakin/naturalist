@@ -1,6 +1,7 @@
 <?
 require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/header.php");
 ?>
+
 <?
 $APPLICATION->IncludeComponent(
 	"naturalist:catalog",
@@ -20,7 +21,7 @@ $APPLICATION->IncludeComponent(
 		),
 		"ITEMS_COUNT" => 10,
 		"DETAIL_ITEMS_COUNT" => 8,
-		"DETAIL_REVIEWS_COUNT" => 3		
+		"DETAIL_REVIEWS_COUNT" => 3
 	)
 );
 ?>

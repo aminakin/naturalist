@@ -131,7 +131,7 @@ foreach($arResult as $key => $value) {
                                     <div class="guests__guests">
                                         <div class="guests__item">
                                             <div class="guests__label">
-                                                <div><?=GetMessage('FILTER_ADULTS')?></div><span><?=GetMessage('FILTER_ADULTS_AGE')?></span>
+                                                <div>Взрослые</div><span>от 18 лет</span>
                                             </div>
                                             <div class="counter">
                                                 <button class="counter__minus" type="button"></button>
@@ -142,7 +142,7 @@ foreach($arResult as $key => $value) {
 
                                         <div class="guests__item">
                                             <div class="guests__label">
-                                                <div><?=GetMessage('FILTER_CHILDREN')?></div><span><?=GetMessage('FILTER_CHILDREN_AGE')?></span>
+                                                <div>Дети</div>
                                             </div>
                                             <div class="counter">
                                                 <button class="counter__minus" type="button"></button>
@@ -261,7 +261,6 @@ foreach($arResult as $key => $value) {
                     "CACHE_GROUPS" => "N",
                     "ITEMS_COUNT" => 12,
                     "TABS" => $arTabs,
-                    "SHOW_MORE_LINK" => "/catalog/"
                 )
             );
             ?>

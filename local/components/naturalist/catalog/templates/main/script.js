@@ -3,7 +3,7 @@ $(function() {
     // Показать ещё
     $(document).on('click', '[data-catalog-container] [data-catalog-showmore]', function(event) {
         event.preventDefault();
-
+        $(this).css('visibility', 'hidden');
         var params = getUrlParams();
         var page = $(this).data('page');
         params["page"] = page;
@@ -11,8 +11,8 @@ $(function() {
         var showenElements = $('.catalog__list > div').length;
 
         var ajaxContainer = '[data-catalog-container] .catalog__list';
-        var ajaxPagerContainer = '[data-catalog-container] .catalog__more';        
-        
+        var ajaxPagerContainer = '[data-catalog-container] .catalog__more';
+
         jQuery.ajax({
             type: 'POST',
             url: url,
@@ -29,7 +29,7 @@ $(function() {
                 window.objectsGallery();
                 window.map.handleItemHover();
             }
-        });        
+        });
     });
 
     function sendDataToLocalStorage(page, items) {
@@ -196,7 +196,7 @@ $(function() {
     // Показать ещё (номера)
     $(document).on('click', '[data-object-container] [data-object-showmore]', function(event) {
         event.preventDefault();
-
+        $(this).css('visibility', 'hidden');
         var params = getUrlParams();
         var page = $(this).data('page');
         params["page"] = page;

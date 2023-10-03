@@ -167,8 +167,8 @@ h1.page_title {
     width: 100%;
 }
 .object-row .area-info div {
-    /*overflow: hidden;*/
-    /*-o-text-overflow: ellipsis;*/
-    /*text-overflow: ellipsis;*/
-    /*white-space: nowrap;*/
+    overflow: hidden;
+    -o-text-overflow: ellipsis;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
