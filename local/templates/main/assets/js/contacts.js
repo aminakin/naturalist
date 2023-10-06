@@ -1,7 +1,7 @@
 /******/ (function() { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
-/***/ 6449:
+/***/ 8485:
 /***/ (function() {
 
 var $navigationControl = document.querySelector('[data-navigation-control]');
@@ -83,7 +83,7 @@ var __webpack_exports__ = {};
 // This entry need to be wrapped in an IIFE because it need to be in strict mode.
 !function() {
 "use strict";
-/* harmony import */ var _components_navigation_dropdown__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(6449);
+/* harmony import */ var _components_navigation_dropdown__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(8485);
 /* harmony import */ var _components_navigation_dropdown__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_components_navigation_dropdown__WEBPACK_IMPORTED_MODULE_0__);
 
 }();

@@ -5093,6 +5093,66 @@ module : 0, __webpack_require__.amdD);
   }(En, window.lazyLoadOptions), En;
 });
 
+/***/ }),
+
+/***/ 5769:
+/***/ (function() {
+
+window.scoreCreate = function () {
+  document.querySelectorAll('.score:not(.score_init)').forEach(function ($score) {
+    var $scoreDropdown = null;
+    $score.addEventListener('mouseenter', function () {
+      if (window.innerWidth < 1024 || window.innerHeight < 768) return false;
+      var data = $score.dataset.score;
+
+      if (data) {
+        document.body.insertAdjacentHTML('beforeend', "\n\t\t\t\t\t\t<div class=\"score-dropdown\">\n\t\t\t\t\t\t\t<ul class=\"list list_score\">\n\t\t\t\t\t\t\t\t".concat(JSON.parse(data).map(function (item) {
+          return "\n\t\t\t\t\t\t\t\t\t\t<li class=\"list__item\">\n\t\t\t\t\t\t\t\t\t\t\t<div class=\"list__item-label\">".concat(item.label, "</div>\n\t\t\t\t\t\t\t\t\t\t\t<div class=\"list__item-progress\">\n\t\t\t\t\t\t\t\t\t\t\t\t<div style=\"width: ").concat(100 / 5 * item.value, "%\"></div>\n\t\t\t\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t\t\t\t<div class=\"list__item-number\">").concat(item.value.toFixed(1), "</div>\n\t\t\t\t\t\t\t\t\t\t</li>\n\t\t\t\t\t\t\t\t\t");
+        }).join(''), "\n\t\t\t\t\t\t\t</ul>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t"));
+        $scoreDropdown = document.querySelector('.score-dropdown');
+        var scoreSizes = $score.getBoundingClientRect();
+        var scoreDropdownSizes = $scoreDropdown.getBoundingClientRect();
+        var footerSizes = document.querySelector('.footer').getBoundingClientRect();
+        var left = scoreSizes.left + scoreSizes.width / 2 - scoreDropdownSizes.width / 2;
+        var offsetSize = window.innerWidth >= 1024 ? 20 : 16;
+        if (left < offsetSize) left = offsetSize;
+
+        if (left + scoreDropdownSizes.width > window.innerWidth - offsetSize) {
+          var negativeLeft = left + scoreDropdownSizes.width - window.innerWidth + offsetSize;
+          left -= negativeLeft;
+        }
+
+        $scoreDropdown.style.top = "".concat(scoreSizes.top + scoreSizes.height + window.scrollY, "px");
+        $scoreDropdown.style.left = "".concat(left, "px");
+        var scoreDropdownTop = setTimeout(function () {
+          if ($scoreDropdown.getBoundingClientRect().bottom > footerSizes.bottom) $scoreDropdown.classList.add('score-dropdown_top');
+          clearTimeout(scoreDropdownTop);
+        }, 0);
+        var scoreDropdownShow = setTimeout(function () {
+          $scoreDropdown.classList.add('score-dropdown_show');
+          clearTimeout(scoreDropdownShow);
+        }, 100);
+      }
+
+      return true;
+    });
+    $score.addEventListener('mouseleave', function () {
+      if ($scoreDropdown) {
+        $scoreDropdown.remove();
+      }
+    });
+  });
+};
+
+window.scoreCreate();
+document.addEventListener('resize', function () {
+  var $scoreDropdown = document.querySelector('.score-dropdown');
+
+  if ($scoreDropdown) {
+    $scoreDropdown.remove();
+  }
+});
+
 /***/ })
 
 /******/ 	});
@@ -5188,6 +5248,16 @@ var __webpack_exports__ = {};
 !function() {
 "use strict";
 
+;// CONCATENATED MODULE: ./node_modules/@babel/runtime/helpers/esm/typeof.js
+function _typeof(obj) {
+  "@babel/helpers - typeof";
+
+  return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) {
+    return typeof obj;
+  } : function (obj) {
+    return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
+  }, _typeof(obj);
+}
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es.symbol.iterator.js
 var es_symbol_iterator = __webpack_require__(8288);
 // EXTERNAL MODULE: ./node_modules/core-js/modules/es.array.iterator.js
@@ -5231,6 +5301,9 @@ NodeList.prototype.remove = HTMLCollection.prototype.remove = function () {
     }
   }
 };
+// EXTERNAL MODULE: ./node_modules/vanilla-lazyload/dist/lazyload.min.js
+var lazyload_min = __webpack_require__(9585);
+var lazyload_min_default = /*#__PURE__*/__webpack_require__.n(lazyload_min);
 ;// CONCATENATED MODULE: ./src/js/common/device.js
 var isTouch = function isTouch() {
   /* global DocumentTouch */
@@ -5268,9 +5341,6 @@ var Device = {
   isIPad: isIPad
 };
 /* harmony default export */ var device = (Device);
-// EXTERNAL MODULE: ./node_modules/vanilla-lazyload/dist/lazyload.min.js
-var lazyload_min = __webpack_require__(9585);
-var lazyload_min_default = /*#__PURE__*/__webpack_require__.n(lazyload_min);
 ;// CONCATENATED MODULE: ./node_modules/@babel/runtime/helpers/esm/defineProperty.js
 function _defineProperty(obj, key, value) {
   if (key in obj) {
@@ -5285,16 +5355,6 @@ function _defineProperty(obj, key, value) {
   }
 
   return obj;
-}
-;// CONCATENATED MODULE: ./node_modules/@babel/runtime/helpers/esm/typeof.js
-function _typeof(obj) {
-  "@babel/helpers - typeof";
-
-  return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) {
-    return typeof obj;
-  } : function (obj) {
-    return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
-  }, _typeof(obj);
 }
 ;// CONCATENATED MODULE: ./node_modules/@babel/runtime/helpers/esm/classCallCheck.js
 function _classCallCheck(instance, Constructor) {
@@ -5321,7 +5381,7 @@ function _createClass(Constructor, protoProps, staticProps) {
   });
   return Constructor;
 }
-;// CONCATENATED MODULE: ./src/js/components/scroll_lock.js
+;// CONCATENATED MODULE: ./src/js/components/scroll-lock.js
 var scrollPosition = 0;
 window.scrollLocked = 0;
 var $body = document.querySelector('body');
@@ -5423,12 +5483,13 @@ var Modal = /*#__PURE__*/function () {
 
         _this.close(e.target.closest('.modal').getAttribute('id'));
       } // close by overlay click
-      // if (e.target.matches('.modal') && this.options.closeByOverlayClick) {
-      // 	e.preventDefault()
-      //
-      // 	this.close(e.target.getAttribute('id'))
-      // }
 
+
+      if (e.target.matches('.modal') && _this.options.closeByOverlayClick) {
+        e.preventDefault();
+        var id = e.target.getAttribute('id');
+        if (id !== 'code' && id !== 'cancel') _this.close(id);
+      }
     }); // close by Esc
 
     document.addEventListener('keydown', function (e) {
@@ -10316,6 +10377,8 @@ document.addEventListener('click', function (e) {
     });
   }
 });
+// EXTERNAL MODULE: ./src/js/common/score.js
+var score = __webpack_require__(5769);
 ;// CONCATENATED MODULE: ./src/js/common/dropdown.js
 
 
@@ -10503,6 +10566,7 @@ var Validation = /*#__PURE__*/function () {
   function Validation() {
     _classCallCheck(this, Validation);
 
+    // eslint-disable-next-line no-undef
     this.schema = formsValidate;
     this.selectors = {
       formError: 'field__error',
@@ -10514,65 +10578,33 @@ var Validation = /*#__PURE__*/function () {
   }
 
   _createClass(Validation, [{
-    key: "checkFields",
-    value: function checkFields($form, schema) {
-      var _$form$querySelectorA,
-          _this = this,
-          _$form$querySelectorA2;
+    key: "checkInputGroup",
+    value: function checkInputGroup($form, schema) {
+      var _this = this;
 
       var checkDisabled = $form.querySelectorAll('[data-check-disabled]');
-      var disabled = false;
-      (_$form$querySelectorA = $form.querySelectorAll('.field__input')) === null || _$form$querySelectorA === void 0 ? void 0 : _$form$querySelectorA.forEach(function ($item) {
-        if (_this.schema !== undefined && schema.schema[$item.name]) {
-          var values = validate_default().collectFormValues($form);
-
-          var errors = validate_default().single(values[$item.name], schema.schema[$item.name]);
-
-          if (errors) disabled = true;
-        }
-      });
-      (_$form$querySelectorA2 = $form.querySelectorAll('input[type="checkbox"]')) === null || _$form$querySelectorA2 === void 0 ? void 0 : _$form$querySelectorA2.forEach(function ($item) {
-        if (_this.schema !== undefined && schema.schema[$item.name]) {
-          var values = validate_default().collectFormValues($form);
-
-          var errors = validate_default().single(values[$item.name], schema.schema[$item.name]);
-
-          if (errors) disabled = true;
-        }
-      });
-      $form.querySelector('[data-form-submit]').disabled = disabled;
 
       if (checkDisabled.length) {
         checkDisabled.forEach(function ($item) {
           var _$item$querySelectorA;
 
-          var checkDisabled = false;
+          var checkDisabledStatus = false;
           (_$item$querySelectorA = $item.querySelectorAll('.field__input')) === null || _$item$querySelectorA === void 0 ? void 0 : _$item$querySelectorA.forEach(function ($field) {
             if (_this.schema !== undefined && schema.schema[$field.name]) {
               var values = validate_default().collectFormValues($form);
 
               var errors = validate_default().single(values[$field.name], schema.schema[$field.name]);
 
-              if (errors) checkDisabled = true;
+              if (errors) checkDisabledStatus = true;
             }
           });
-          $item.querySelector('[data-check-disabled-control]').disabled = checkDisabled;
+          $item.querySelector('[data-check-disabled-control]').disabled = checkDisabledStatus;
         });
       }
     }
   }, {
-    key: "validate",
-    value: function validate($el) {
-      var $form = $el.closest('form');
-      var objectItem = this.schema.filter(function (item) {
-        return item.form === $form.id;
-      })[0];
-      if (this.schema === undefined && !(objectItem !== null && objectItem !== void 0 && objectItem.schema[$el.name])) return;
-
-      var values = validate_default().collectFormValues($form);
-
-      var errors = validate_default().single(values[$el.name], objectItem.schema[$el.name]);
-
+    key: "fieldAddError",
+    value: function fieldAddError($el, errors) {
       var $fieldContainer = $el.closest(".".concat(this.selectors.fieldElement));
       var $errorMessage = $fieldContainer.querySelector(".".concat(this.selectors.formError));
 
@@ -10591,35 +10623,100 @@ var Validation = /*#__PURE__*/function () {
         if ($errorMessage) $errorMessage.remove();
         $fieldContainer === null || $fieldContainer === void 0 ? void 0 : $fieldContainer.classList.remove(this.modifiers.fieldError);
       }
+    }
+  }, {
+    key: "validate",
+    value: function validate($el) {
+      var $form = $el.closest('form');
+      var objectItem = this.schema.filter(function (item) {
+        return item.form === $form.id;
+      })[0];
+      if (this.schema === undefined && !(objectItem !== null && objectItem !== void 0 && objectItem.schema[$el.name])) return;
+      var value = $el.value;
+      if ($el.type === 'checkbox' && !$el.checked) value = null;
 
-      this.checkFields($form, objectItem);
+      var errors = validate_default().single(value, objectItem.schema[$el.name]);
+
+      this.fieldAddError($el, errors);
+      this.checkInputGroup($form, objectItem);
+    }
+  }, {
+    key: "checkAll",
+    value: function checkAll($form) {
+      var _$form$querySelectorA,
+          _this2 = this,
+          _$form$querySelectorA2;
+
+      var disabled = false;
+      var schema = this.schema.filter(function (item) {
+        return item.form === $form.id;
+      })[0];
+      if (this.schema === undefined || !schema) return;
+      (_$form$querySelectorA = $form.querySelectorAll('.field__input')) === null || _$form$querySelectorA === void 0 ? void 0 : _$form$querySelectorA.forEach(function ($item) {
+        if (schema.schema[$item.name]) {
+          var errors = validate_default().single($item.value, schema.schema[$item.name]);
+
+          _this2.fieldAddError($item, errors);
+
+          if (errors) disabled = true;
+        }
+      });
+      (_$form$querySelectorA2 = $form.querySelectorAll('input[type="checkbox"]')) === null || _$form$querySelectorA2 === void 0 ? void 0 : _$form$querySelectorA2.forEach(function ($item) {
+        if (schema.schema[$item.name]) {
+          var errors = validate_default().single($item.checked ? $item.value : null, schema.schema[$item.name]);
+
+          _this2.fieldAddError($item, errors);
+
+          if (errors) disabled = true;
+        }
+      });
+
+      if (!disabled) {
+        window.dispatchEvent(new CustomEvent('sendForm', {
+          detail: {
+            form: $form.id
+          }
+        }));
+      }
     }
   }, {
     key: "init",
     value: function init() {
-      var _this2 = this;
+      var _this3 = this;
 
       if (this.schema) {
         var _document$querySelect;
 
         (_document$querySelect = document.querySelectorAll('.form_validation')) === null || _document$querySelect === void 0 ? void 0 : _document$querySelect.forEach(function ($form) {
-          $form.querySelectorAll('.field__input').forEach(function ($field) {
+          var $fields = $form.querySelectorAll('.field__input');
+          var $checkboxes = $form.querySelectorAll('input[type="checkbox"]');
+          $fields === null || $fields === void 0 ? void 0 : $fields.forEach(function ($field) {
             $field.addEventListener('input', function () {
               setTimeout(function () {
-                _this2.validate($field);
+                _this3.validate($field);
               }, 100);
             });
             $field.addEventListener('blur', function () {
               setTimeout(function () {
-                _this2.validate($field);
+                _this3.validate($field);
               }, 100);
             });
           });
-          $form.querySelectorAll('input[type="checkbox"]').forEach(function ($field) {
-            $field.addEventListener('change', function () {
-              return _this2.validate($field);
+          $checkboxes === null || $checkboxes === void 0 ? void 0 : $checkboxes.forEach(function ($checkbox) {
+            $checkbox.addEventListener('change', function () {
+              return _this3.validate($checkbox);
             });
           });
+        });
+        document.addEventListener('click', function (event) {
+          var target = event.target;
+
+          if (target.matches('[data-form-submit]') && target.closest('.form_validation')) {
+            event.preventDefault();
+            var $form = target.closest('.form_validation');
+
+            _this3.checkAll($form);
+          }
         });
       }
     }
@@ -10630,6 +10727,8 @@ var Validation = /*#__PURE__*/function () {
 
 /* harmony default export */ var validation = (Validation);
 ;// CONCATENATED MODULE: ./src/js/app.js
+
+
 var _document$documentEle;
 
 /*
@@ -10641,6 +10740,7 @@ var _document$documentEle;
  */
 // Vendors
  // Common
+
 
 
 
@@ -10679,10 +10779,15 @@ app_dropdown.init();
 /* VALIDATION
  * -------------------------------------------------- */
 
-window.validation = new validation();
-window.validation.init();
+var validateSchema = typeof formsValidate === "undefined" ? "undefined" : _typeof(formsValidate);
+
+if (validateSchema !== 'undefined') {
+  window.validation = new validation();
+  window.validation.init();
+}
 /* INFO MODAL
  * -------------------------------------------------- */
+
 
 window.infoModal = function (title, text, closeButtonTitle) {
   document.body.insertAdjacentHTML('beforeend', "\n\t\t\t<div class=\"modal modal_form\" id=\"info-modal\">\n\t\t\t\t<div class=\"modal__container\">\n\t\t\t\t\t<button class=\"modal__close\" data-modal-close>\n\t\t\t\t\t\t<svg class=\"icon icon_cross\" viewBox=\"0 0 18 18\" style=\"width: 1.8rem; height: 1.8rem;\">\n\t\t\t\t\t\t\t<use xlink:href=\"#cross\"></use>\n\t\t\t\t\t\t</svg>\n\t\t\t\t\t</button>\n\t\t\t\t\t".concat(title ? "<div class=\"h3\">".concat(title, "</div>") : '', "\n\t\t\t\t\t").concat(text ? "<div class=\"modal__footnote\">".concat(text, "</div>") : '', "\n\t\t\t\t\t").concat(closeButtonTitle ? "\n\t\t\t\t\t\t\t\t<div class=\"form\">\n\t\t\t\t\t\t\t\t\t<div class=\"form__controls\"><a class=\"button button_transparent\" href=\"#\" data-modal-close>".concat(closeButtonTitle, "</a></div>\n\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t") : '', "\n\t\t\t\t</div>\n\t\t\t</div>\n\t\t"));
