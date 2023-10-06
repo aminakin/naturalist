@@ -3661,7 +3661,7 @@
 
 /***/ }),
 
-/***/ 6449:
+/***/ 8485:
 /***/ (function() {
 
 var $navigationControl = document.querySelector('[data-navigation-control]');
@@ -3744,8 +3744,8 @@ var __webpack_exports__ = {};
 !function() {
 "use strict";
 
-// EXTERNAL MODULE: ./src/js/components/navigation-dropdown.js
-var navigation_dropdown = __webpack_require__(6449);
+// EXTERNAL MODULE: ./src/js/components/navigation_dropdown.js
+var navigation_dropdown = __webpack_require__(8485);
 ;// CONCATENATED MODULE: ./node_modules/@babel/runtime/helpers/esm/defineProperty.js
 function _defineProperty(obj, key, value) {
   if (key in obj) {
@@ -3851,17 +3851,25 @@ var Avatar = /*#__PURE__*/function () {
 
       this.$elements.dropzoneField.addEventListener('change', function () {
         var file = _this2.$elements.dropzoneField.files[0];
-        var reader = new FileReader();
 
-        reader.onloadend = function (response) {
-          _this2.crop.replace(response.target.result);
+        var $error = _this2.$elements.avatar.querySelector('.avatar__error');
 
-          _this2.$elements.avatar.classList.add('avatar_crop');
+        if (file.size <= 5 * 1024 * 1024) {
+          if ($error) $error.remove();
+          var reader = new FileReader();
 
-          _this2.$elements.save.disabled = false;
-        };
+          reader.onloadend = function (response) {
+            _this2.crop.replace(response.target.result);
 
-        if (file) reader.readAsDataURL(file);
+            _this2.$elements.avatar.classList.add('avatar_crop');
+
+            _this2.$elements.save.disabled = false;
+          };
+
+          if (file) reader.readAsDataURL(file);
+        } else if (!$error) {
+          _this2.$elements.avatar.insertAdjacentHTML('beforeend', '<div class="avatar__error">Файл больше 5 мб</div>');
+        }
       });
     }
   }, {
@@ -3900,7 +3908,8 @@ var Avatar = /*#__PURE__*/function () {
       }, cropOptions), {}, {
         autoCropArea: 0.1,
         minCropBoxWidth: 276,
-        background: false
+        background: false,
+        checkOrientation: false
       }));
       this.handleDropzoneDrag();
       this.handleDropzoneDrop();
@@ -3917,7 +3926,6 @@ var Avatar = /*#__PURE__*/function () {
 
 /* harmony default export */ var avatar = (Avatar);
 ;// CONCATENATED MODULE: ./src/js/pages/lk_person.js
-
 
 
 var lk_person_avatar = new avatar();

@@ -695,78 +695,6 @@ module.exports = toNumber;
 
 /***/ }),
 
-/***/ 8184:
-/***/ (function() {
-
-var clipSVG = document.getElementById('clip-circles');
-var delimiter = document.querySelector('[data-bg-delimiter]');
-var form = document.querySelector('[data-bg-form]');
-
-var clipPosition = function clipPosition() {
-  var clipOptions = {
-    radius: 18,
-    centerY: 19.6,
-    offset: 3.1,
-    offsetHalf: 1.6
-  };
-
-  if (window.innerWidth < 1024) {
-    clipOptions.radius = 17.7;
-    clipOptions.centerY = 17.7;
-  }
-
-  if (window.innerWidth < 767) {
-    clipOptions.radius = (document.body.clientWidth - 32) / 2 / 10;
-    clipOptions.centerY = clipOptions.radius;
-  }
-
-  var clipItems = [];
-
-  var _form$getBoundingClie = form.getBoundingClientRect(),
-      left = _form$getBoundingClie.left,
-      width = _form$getBoundingClie.width;
-
-  var startPosition = clipOptions.radius + clipOptions.offsetHalf;
-  var leftCirclesPosition = left / 10 - startPosition;
-  var rightCirclesPosition = (left + width) / 10 + startPosition + 0.1;
-
-  if (window.innerWidth >= 1024) {
-    for (var i = 0; i < 10; i++) {
-      if (i !== 0) {
-        leftCirclesPosition += (clipOptions.radius * 2 + clipOptions.offset) * -1;
-        rightCirclesPosition += clipOptions.radius * 2 + clipOptions.offset;
-      }
-
-      clipItems.push(leftCirclesPosition.toFixed(1));
-      clipItems.push(rightCirclesPosition.toFixed(1));
-    }
-  }
-
-  if (window.innerWidth < 1024) {
-    clipItems.push(clipOptions.radius + 1.6);
-  }
-
-  delimiter.innerHTML = '';
-
-  if (window.innerWidth >= 1024) {
-    delimiter.insertAdjacentHTML('afterbegin', clipItems.map(function (item) {
-      return "\n\t\t\t\t<span class=\"clip__delimiter-item\" style=\"left: ".concat(item, "rem\"></span>\n\t\t\t");
-    }).join(''));
-  }
-
-  clipSVG.innerHTML = '';
-  clipSVG.insertAdjacentHTML('afterbegin', clipItems.map(function (item) {
-    return "\n\t\t\t\t<circle cx=\"".concat(item, "rem\" cy=\"").concat(clipOptions.centerY, "rem\" r=\"").concat(clipOptions.radius, "rem\" />\n\t\t\t");
-  }).join(''));
-};
-
-if (clipSVG) {
-  clipPosition();
-  window.addEventListener('resize', clipPosition);
-}
-
-/***/ }),
-
 /***/ 156:
 /***/ (function() {
 
@@ -11937,14 +11865,15 @@ window.objectsGallery = function () {
 
   if ($object.length) {
     $object.forEach(function ($item) {
+      // eslint-disable-next-line no-unused-vars
       var objectSlider = new core($item, {
         slidesPerView: 1,
         spaceBetween: 0,
         speed: 250,
         effect: 'slide',
-        loop: false,
+        loop: $item.querySelectorAll('.swiper-slide').length > 1,
+        watchOverflow: true,
         watchSlidesProgress: true,
-        // init: false,
         preloadImages: false,
         lazy: {
           loadPrevNext: true,
@@ -11969,34 +11898,37 @@ window.addEventListener('load', function () {
 /* RELATED
  -------------------------------------------------- */
 
-var $headingRelated = document.querySelector('[data-slider-related]');
-
-if ($headingRelated) {
-  var headingRelatedSlider = new core($headingRelated.querySelector('.swiper'), {
-    slidesPerView: 3,
-    spaceBetween: 20,
-    speed: 250,
-    effect: 'slide',
-    loop: false,
-    watchSlidesProgress: true,
-    init: false,
-    navigation: {
-      nextEl: $headingRelated.querySelector('.slider__heading-controls .swiper-button-next'),
-      prevEl: $headingRelated.querySelector('.slider__heading-controls .swiper-button-prev')
-    },
-    breakpoints: {
-      1280: {
-        slidesPerView: 4
-      }
+window.sliderRelated = function () {
+  var $headingRelated = document.querySelectorAll('[data-slider-related]');
+  $headingRelated.forEach(function ($item) {
+    if ($item.querySelector('.swiper:not(.swiper-initialized)')) {
+      // eslint-disable-next-line no-unused-vars
+      var headingRelatedSlider = new core($item.querySelector('.swiper'), {
+        slidesPerView: 3,
+        spaceBetween: 20,
+        speed: 250,
+        effect: 'slide',
+        loop: false,
+        watchSlidesProgress: true,
+        navigation: {
+          nextEl: $item.querySelector('.slider__heading-controls .swiper-button-next'),
+          prevEl: $item.querySelector('.slider__heading-controls .swiper-button-prev')
+        },
+        breakpoints: {
+          1280: {
+            slidesPerView: 4
+          }
+        }
+      });
     }
   });
-  window.addEventListener('load', function () {
-    headingRelatedSlider.init();
-  });
-}
+};
+
+window.addEventListener('load', function () {
+  window.sliderRelated();
+});
 /* MODAL GALLERY
  -------------------------------------------------- */
-
 
 window.modalGallery = function () {
   return new core('[data-modal-gallery] .swiper', {
@@ -12020,15 +11952,143 @@ window.modalGallery = function () {
     }
   });
 };
-// EXTERNAL MODULE: ./src/js/components/clip-bg.js
-var clip_bg = __webpack_require__(8184);
-;// CONCATENATED MODULE: ./src/js/components/declension.js
-function declension(oneNominative, severalGenitive, severalNominative, number) {
-  var num = number % 100; // eslint-disable-next-line no-return-assign,no-nested-ternary,no-cond-assign
+/* FULL GALLERY
+ -------------------------------------------------- */
 
+
+document.addEventListener('click', function (event) {
+  var $el = event.target;
+
+  if ($el.matches('[data-fullgallery-item]') || $el.closest('[data-fullgallery-item]')) {
+    event.preventDefault();
+    var $dataEl = $el.matches('[data-fullgallery-item]') ? $el : $el.closest('[data-fullgallery-item]');
+    var id = $dataEl.dataset.fullgalleryItem;
+    var images = JSON.parse($el.closest('[data-fullgallery]').dataset.fullgallery);
+
+    if (images.length > 0) {
+      document.body.insertAdjacentHTML('beforeend', "<div class=\"modal modal_fullgallery\" id=\"fullgallery\">\n\t\t\t\t\t<div class=\"modal__container\">\n\t\t\t\t\t\t<button class=\"modal__close\" data-modal-close>\n\t\t\t\t\t\t\t<svg class=\"icon icon_cross-large\" viewBox=\"0 0 32 32\" style=\"width: 3.2rem; height: 3.2rem;\">\n\t\t\t\t\t\t\t\t<use xlink:href=\"#cross-large\"></use>\n\t\t\t\t\t\t\t</svg>\n\t\t\t\t\t\t\t<svg class=\"icon icon_cross\" viewBox=\"0 0 18 18\" style=\"width: 1.8rem; height: 1.8rem;\">\n\t\t\t\t\t\t\t\t<use xlink:href=\"#cross\"></use>\n\t\t\t\t\t\t\t</svg>\n\t\t\t\t\t\t</button>\n\t\t\t\t\t\t<div class=\"swiper slider-gallery slider-gallery_large\">\n\t\t\t\t\t\t\t<div class=\"swiper-wrapper\">\n\t\t\t\t\t\t\t\t".concat(images.map(function (item) {
+        return "<div class=\"swiper-slide\"><img class=\"swiper-lazy\" src=\"".concat(item, "\" alt=\"\"></div>");
+      }).join(''), "\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t<div class=\"swiper-button-prev\">\n\t\t\t\t\t\t\t\t<svg class=\"icon icon_arrow-large\" viewBox=\"0 0 32 32\" style=\"width: 3.2rem; height: 3.2rem;\">\n\t\t\t\t\t\t\t\t\t<use xlink:href=\"#arrow-large\"></use>\n\t\t\t\t\t\t\t\t</svg>\n\t\t\t\t\t\t\t\t<svg class=\"icon icon_arrow-small\" viewBox=\"0 0 16 16\" style=\"width: 1.6rem; height: 1.6rem;\">\n\t\t\t\t\t\t\t\t\t<use xlink:href=\"#arrow-small\"></use>\n\t\t\t\t\t\t\t\t</svg>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t<div class=\"swiper-button-next\">\n\t\t\t\t\t\t\t\t<svg class=\"icon icon_arrow-large\" viewBox=\"0 0 32 32\" style=\"width: 3.2rem; height: 3.2rem;\">\n\t\t\t\t\t\t\t\t\t<use xlink:href=\"#arrow-large\"></use>\n\t\t\t\t\t\t\t\t</svg>\n\t\t\t\t\t\t\t\t<svg class=\"icon icon_arrow-small\" viewBox=\"0 0 16 16\" style=\"width: 1.6rem; height: 1.6rem;\">\n\t\t\t\t\t\t\t\t\t<use xlink:href=\"#arrow-small\"></use>\n\t\t\t\t\t\t\t\t</svg>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t<div class=\"swiper-pagination\"></div>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\t\t\t\t</div>"));
+      var slider = new core('#fullgallery .swiper', {
+        slidesPerView: 1,
+        spaceBetween: 0,
+        speed: 250,
+        effect: 'fade',
+        loop: false,
+        watchSlidesProgress: true,
+        fadeEffect: {
+          crossFade: true
+        },
+        preloadImages: false,
+        lazy: {
+          loadPrevNext: true,
+          loadOnTransitionStart: true
+        },
+        navigation: {
+          nextEl: '.swiper-button-next',
+          prevEl: '.swiper-button-prev'
+        },
+        pagination: {
+          el: '.swiper-pagination',
+          type: 'bullets'
+        }
+      });
+      slider.slideTo(parseInt(id), 0);
+      window.modal.open('fullgallery');
+    }
+  }
+});
+window.addEventListener('modalAfterClose', function (event) {
+  if (event.detail.id === 'fullgallery') {
+    document.getElementById('fullgallery').remove();
+  }
+});
+;// CONCATENATED MODULE: ./src/js/helpers/rem_size.js
+function remSize() {
+  var size = 10;
+  var bodyWidth = document.body.clientWidth;
+  if (bodyWidth < 375) size = window.innerWidth / 37.5;
+  if (bodyWidth >= 1580 && bodyWidth < 1780) size = 11;
+  if (bodyWidth >= 1780 && bodyWidth < 1900) size = 12;
+  if (bodyWidth >= 1900) size = 13;
+  return size;
+}
+;// CONCATENATED MODULE: ./src/js/components/clip_bg.js
+
+var clipSVG = document.getElementById('clip-circles');
+var delimiter = document.querySelector('[data-bg-delimiter]');
+var clip_bg_form = document.querySelector('[data-bg-form]');
+
+var clipPosition = function clipPosition() {
+  var fontSize = remSize();
+  var clipOptions = {
+    radius: 18,
+    centerY: 19.6,
+    offset: 3.1,
+    offsetHalf: 1.6
+  };
+
+  if (window.innerWidth < 1024) {
+    clipOptions.radius = 17.7;
+    clipOptions.centerY = 17.7;
+  }
+
+  if (window.innerWidth < 767) {
+    clipOptions.radius = (document.body.clientWidth - 3.2 * fontSize) / 2 / fontSize;
+    clipOptions.centerY = clipOptions.radius;
+  }
+
+  var clipItems = [];
+
+  var _form$getBoundingClie = clip_bg_form.getBoundingClientRect(),
+      left = _form$getBoundingClie.left,
+      width = _form$getBoundingClie.width;
+
+  var startPosition = clipOptions.radius + clipOptions.offsetHalf;
+  var leftCirclesPosition = left / fontSize - startPosition;
+  var rightCirclesPosition = (left + width) / fontSize + startPosition + 0.1;
+
+  if (window.innerWidth >= 1024) {
+    // eslint-disable-next-line no-plusplus
+    for (var i = 0; i < 10; i++) {
+      if (i !== 0) {
+        leftCirclesPosition += (clipOptions.radius * 2 + clipOptions.offset) * -1;
+        rightCirclesPosition += clipOptions.radius * 2 + clipOptions.offset;
+      }
+
+      clipItems.push(leftCirclesPosition.toFixed(1));
+      clipItems.push(rightCirclesPosition.toFixed(1));
+    }
+  }
+
+  if (window.innerWidth < 1024) {
+    clipItems.push(clipOptions.radius + 1.6);
+  }
+
+  delimiter.innerHTML = '';
+
+  if (window.innerWidth >= 1024) {
+    delimiter.insertAdjacentHTML('afterbegin', clipItems.map(function (item) {
+      return "<span class=\"clip__delimiter-item\" style=\"left: ".concat(item, "rem\"></span>");
+    }).join(''));
+  }
+
+  clipSVG.innerHTML = '';
+  clipSVG.insertAdjacentHTML('afterbegin', clipItems.map(function (item) {
+    return "<circle cx=\"".concat(item, "rem\" cy=\"").concat(clipOptions.centerY, "rem\" r=\"").concat(clipOptions.radius, "rem\" />");
+  }).join(''));
+};
+
+if (clipSVG) {
+  clipPosition();
+  window.addEventListener('resize', clipPosition);
+}
+;// CONCATENATED MODULE: ./src/js/helpers/declension.js
+function declension(number, oneNominative, severalGenitive, severalNominative) {
+  var num = number % 100;
   return num <= 14 && num >= 11 ? severalGenitive : (num %= 10) < 5 ? num > 2 ? severalNominative : num === 1 ? oneNominative : num === 0 ? severalGenitive : severalNominative : severalGenitive;
 }
-;// CONCATENATED MODULE: ./src/js/components/guests-input.js
+;// CONCATENATED MODULE: ./src/js/components/guests_input.js
 
 var $guestsControl = document.querySelector('[data-guests-control]');
 var $guests = document.querySelector('[data-guests]');
@@ -12050,7 +12110,7 @@ if ($guestsControl) {
 
   var countGuests = function countGuests() {
     var allCount = parseInt($guestsAdultsCount.value) + parseInt($guestsChildrenCount.value);
-    $guestsControl.innerText = "".concat(allCount, " ").concat(declension('гость', 'гостей', 'гостя', allCount));
+    $guestsControl.innerText = "".concat(allCount, " ").concat(declension(allCount, 'гость', 'гостей', 'гостя'));
   };
 
   $guestsAdultsCount.addEventListener('change', function () {
@@ -12065,7 +12125,7 @@ if ($guestsControl) {
       var childrenLength = $children.length;
 
       if (value > childrenLength) {
-        var childrenNew = [];
+        var childrenNew = []; // eslint-disable-next-line no-plusplus
 
         for (var i = 0; i < value - childrenLength; i++) {
           childrenNew.push(childrenLength + i);
@@ -12077,6 +12137,7 @@ if ($guestsControl) {
       }
 
       if (value < childrenLength) {
+        // eslint-disable-next-line no-plusplus
         for (var _i = 0; _i < childrenLength - value; _i++) {
           $children[childrenLength - 1 - _i].remove();
         }
@@ -12250,6 +12311,7 @@ var Counter = /*#__PURE__*/function () {
       }
 
       $input.value = $input.value.replace(this.regex, '');
+      return true;
     }
   }, {
     key: "handleInputBlur",
@@ -12285,6 +12347,7 @@ var Counter = /*#__PURE__*/function () {
       setTimeout(function () {
         $input.value = prefix + value + postfix;
       }, 300);
+      return true;
     }
   }, {
     key: "handleInputKeyup",
@@ -14801,7 +14864,7 @@ if (typeof window !== "undefined") {
 /* harmony default export */ var esm = (flatpickr);
 // EXTERNAL MODULE: ./node_modules/flatpickr/dist/l10n/ru.js
 var ru = __webpack_require__(7896);
-;// CONCATENATED MODULE: ./src/js/components/range-calendar.js
+;// CONCATENATED MODULE: ./src/js/components/range_calendar.js
 
 
 
@@ -14887,6 +14950,7 @@ var RangeCalendar = /*#__PURE__*/function () {
           $el.closest('.list__item').classList.add('list__item_active');
           $el.closest('.calendar__navigation-item').querySelector('[data-calendar-navigation] span').innerText = $el.innerText;
           _this4.data.month = nextIndex;
+          $el.closest('.calendar__navigation-item').classList.remove('calendar__navigation-item_show');
         });
       });
     }
@@ -14939,6 +15003,7 @@ var RangeCalendar = /*#__PURE__*/function () {
             $firstMonth.closest('.list__item').classList.add('list__item_active');
             $firstMonth.closest('.calendar__navigation-item').querySelector('[data-calendar-navigation] span').innerText = $firstMonth.innerText;
             _this6.data.month = nextMonth;
+            $item.closest('.calendar__navigation-item').classList.remove('calendar__navigation-item_show');
 
             _this6.handleMonthsHide();
           }
@@ -15000,7 +15065,7 @@ var RangeCalendar = /*#__PURE__*/function () {
 // EXTERNAL MODULE: ./node_modules/lodash/debounce.js
 var lodash_debounce = __webpack_require__(569);
 var debounce_default = /*#__PURE__*/__webpack_require__.n(lodash_debounce);
-;// CONCATENATED MODULE: ./src/js/components/search-autocomplete.js
+;// CONCATENATED MODULE: ./src/js/components/search_autocomplete.js
 
 
 
@@ -15031,25 +15096,31 @@ var SearchAutocomplete = /*#__PURE__*/function () {
     value: function handleRequest(value) {
       var _this = this;
 
-      if (value.length >= 3) {
+      if (value.length >= 1) {
         fetch("".concat(this.elements.$root.dataset.autocomplete, "?text=").concat(value)).then(function (response) {
           return response.json();
         }).then(function (response) {
+          if (response.messageType === 'error') {
+            _this.elements.$dropdown.innerHTML = "<div class=\"autocomplete-dropdown__message\">".concat(response.messageText, "</div>");
+
+            _this.elements.$root.classList.add(_this.classes.show);
+
+            return false;
+          }
+
           if (response.length) {
             _this.elements.$dropdown.innerHTML = "\n\t\t\t\t\t\t\t".concat(response.map(function (type) {
-              return "<div class=\"autocomplete-dropdown__item\">" +
-                  "<div class=\"autocomplete-dropdown__title\">".concat(type.type,
-                      "</div><ul class=\"list autocomplete-dropdown__list\">").concat(type.list.map(function (item) {
-                        return '<li class="list__item" data-autocomplete-type="'.concat(type.id,  '"data-autocomplete-item="').concat(item.id, '">' +
-                                '<div class="list__item-title">'.concat(item.title, '</div>')
-                                  .concat(item.footnote ? '<div class="list__item-footnote">'.concat(item.footnote, '</div>') : '', "</li>"));
-              }).join(''), "</ul></div>");
+              return "\n\t\t\t\t\t\t\t\t\t\t<div class=\"autocomplete-dropdown__item\">\n\t\t\t\t\t\t\t\t\t\t\t<div class=\"autocomplete-dropdown__title\">".concat(type.type, "</div>\n\t\t\t\t\t\t\t\t\t\t\t<ul class=\"list autocomplete-dropdown__list\">\n\t\t\t\t\t\t\t\t\t\t\t\t").concat(type.list.map(function (item) {
+                return "<li\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tclass=\"list__item\"\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tdata-autocomplete-type=\"".concat(type.id, "\"\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tdata-autocomplete-item=\"").concat(item.id, "\"\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t>\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<div class=\"list__item-title\">").concat(item.title, "</div>\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t").concat(item.footnote ? "<div class=\"list__item-footnote\">".concat(item.footnote, "</div>") : '', "\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t</li>");
+              }).join(''), "\n\t\t\t\t\t\t\t\t\t\t\t</ul>\n\t\t\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t\t");
             }).join(''), "\n\t\t\t\t\t\t\t");
 
             _this.elements.$root.classList.add(_this.classes.show);
           } else {
             _this.handleHide();
           }
+
+          return true;
         });
       } else {
         this.handleHide();
@@ -15066,12 +15137,17 @@ var SearchAutocomplete = /*#__PURE__*/function () {
       document.addEventListener('click', function (event) {
         var $el = event.target;
 
-        if ($el.matches('[data-autocomplete-item]')) {
+        if ($el.matches('[data-autocomplete-item]') || $el.closest('[data-autocomplete-item]')) {
+          var $item = $el.matches('[data-autocomplete-item]') ? $el : $el.closest('[data-autocomplete-item]');
+          var $title = $item.querySelector('.list__item-title');
+          var $footnote = $item.querySelector('.list__item-footnote');
           _this2.elements.$result.value = JSON.stringify({
-            type: $el.dataset.autocompleteType,
-            item: $el.dataset.autocompleteItem
+            type: $item.dataset.autocompleteType,
+            item: $item.dataset.autocompleteItem,
+            title: $title.innerHTML,
+            footnote: $footnote ? $footnote.innerHTML : ''
           });
-          _this2.elements.$field.value = $el.innerText;
+          _this2.elements.$field.value = $title.innerHTML.replace('<br>', ' ').replace(/<\/?[^>]+(>|$)/g, '').replace(/\s+/g, ' ').trim();
 
           _this2.handleHide();
         }
@@ -15101,6 +15177,7 @@ var SearchAutocomplete = /*#__PURE__*/function () {
 
 /* COUNTER
  -------------------------------------------------- */
+// eslint-disable-next-line no-unused-vars
 
 var pages_counter = new counter();
 /* OBJECTS TABS
