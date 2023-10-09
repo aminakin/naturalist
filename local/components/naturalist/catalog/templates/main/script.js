@@ -70,11 +70,18 @@ $(function() {
 
         $('[data-filter-set]').attr('disabled', 'disabled');
 
+        var frontFilter = $(this).data('filter-catalog-front-btn') ?? false;
+
+        var parentFrom = $('#form-catalog-filter');
+        if (frontFilter) {
+            parentFrom = $('#form-catalog-filter-front');
+        }
+
         var params = getUrlParams();
 
-        if($('#form-catalog-filter input[name="type"]:checked').length > 0) {
+        if($('input[name="type"]:checked', parentFrom).length > 0) {
             var arTypes = [];
-            $('#form-catalog-filter input[name="type"]:checked').each(function(indx, element) {
+            $('input[name="type"]:checked', parentFrom).each(function(indx, element) {
                 arTypes.push($(element).val());
             });
             params['types'] = arTypes.join(',');
@@ -83,9 +90,9 @@ $(function() {
             delete params['types'];
         }
 
-        if($('#form-catalog-filter input[name="services"]:checked').length > 0) {
+        if($('input[name="services"]:checked', parentFrom).length > 0) {
             var arServices = [];
-            $('#form-catalog-filter input[name="services"]:checked').each(function(indx, element) {
+            $('input[name="services"]:checked', parentFrom).each(function(indx, element) {
                 arServices.push($(element).val());
             });
             params['services'] = arServices.join(',');
@@ -94,9 +101,9 @@ $(function() {
             delete params['services'];
         }
 
-        if($('#form-catalog-filter input[name="food"]:checked').length > 0) {
+        if($('input[name="food"]:checked', parentFrom).length > 0) {
             var arFood = [];
-            $('#form-catalog-filter input[name="food"]:checked').each(function(indx, element) {
+            $('input[name="food"]:checked', parentFrom).each(function(indx, element) {
                 arFood.push($(element).val());
             });
             params['food'] = arFood.join(',');
@@ -105,9 +112,9 @@ $(function() {
             delete params['food'];
         }
 
-        if($('#form-catalog-filter input[name="features"]:checked').length > 0) {
+        if($('input[name="features"]:checked', parentFrom).length > 0) {
             var arFeatures = [];
-            $('#form-catalog-filter input[name="features"]:checked').each(function(indx, element) {
+            $('input[name="features"]:checked', parentFrom).each(function(indx, element) {
                 arFeatures.push($(element).val());
             });
             params['features'] = arFeatures.join(',');
@@ -116,20 +123,20 @@ $(function() {
             delete params['features'];
         }
 
-        var name = $('#form-catalog-filter input[data-autocomplete-result]').val()
-         ? $('#form-catalog-filter input[data-autocomplete-result]').val()
-         : $('#form-catalog-filter input[name="name"]').val();
+        var name = $('input[data-autocomplete-result]', parentFrom).val()
+         ? $('input[data-autocomplete-result]',parentFrom).val()
+         : $('input[name="name"]',parentFrom).val();
         if(name) {
             params["name"] = name;
         } else {
         	delete params["name"];
         }
 
-        var dateFrom = $('#form-catalog-filter [data-date-from]').text();
-        var dateTo = $('#form-catalog-filter [data-date-to]').text();
-        var guests = $('#form-catalog-filter input[name="guests-adults-count"]').val();
+        var dateFrom = $('[data-date-from]', parentFrom).text();
+        var dateTo = $('[data-date-to]', parentFrom).text();
+        var guests = $('input[name="guests-adults-count"]', parentFrom).val();
         var children = [];
-        $('#form-catalog-filter .guests__children input[data-guests-children]').each(function(indx, element) {
+        $('.guests__children input[data-guests-children]', parentFrom).each(function(indx, element) {
             var age = $(element).val()
             children.push(age);
         });
@@ -139,8 +146,7 @@ $(function() {
 
 			let transformDateFrom = new Date(arDateFrom[1] + "/" + arDateFrom[0] + "/" + arDateFrom[2]);
             let transformDateTo = new Date(arDateTo[1] + "/" + arDateTo[0] + "/" + arDateTo[2]);
-            console.log(transformDateFrom);
-            console.log(transformDateTo);
+
             params["dateFrom"] = dateFrom;
             params["dateTo"] = dateTo;
             params["guests"] = guests;
@@ -175,8 +181,8 @@ $(function() {
     });
 
     //Фильтр очистка автозаполнения
-     $(document).on('change', '#form-catalog-filter input[name="name"]', function(event) {
-        $('#form-catalog-filter input[data-autocomplete-result]').val('');
+     $(document).on('change', '.filters input[name="name"]', function(event) {
+        $('.filters input[data-autocomplete-result]').val('');
     });
 
     // Фильтр - сброс

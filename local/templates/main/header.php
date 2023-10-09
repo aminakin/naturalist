@@ -84,6 +84,8 @@ Asset::getInstance()->addJs(SITE_TEMPLATE_PATH . "/js/common.js");
         <link rel="stylesheet" href="<?= SITE_TEMPLATE_PATH ?>/assets/css/add_object.css?v=1664304519938">
     <? endif; ?>
 
+    <link rel="stylesheet" href="<?= SITE_TEMPLATE_PATH ?>/assets/css/custom.css?v=1664304519938">
+
     <? $APPLICATION->ShowHead() ?>
     <script type="text/javascript">!function () {
             var t = document.createElement("script");

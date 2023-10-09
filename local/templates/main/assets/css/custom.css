@@ -1,0 +1,41 @@
+
+/* фильтры в каталоге */
+#form-catalog-filter-front{
+    margin-bottom: 1.8rem;
+}
+#form-catalog-filter-front .form__row,
+#form-catalog-filter-front .form__group{
+    display: flex;
+    gap: 5px;
+    width: 100%;
+}
+
+#form-catalog-filter-front .form__group{
+    align-items: center;
+    justify-content: space-between;
+
+}
+#form-catalog-filter-front .form__group > div{
+    width: 33.3%;
+}
+#form-catalog-filter-front .form__row > .form__item{
+    width: 50%;
+}
+#form-catalog-filter-front  .filters__controls{
+    border-top: none;
+    border-bottom: 0.1rem solid #000;
+    border-bottom: 0.1rem solid var(--color-black);
+    padding: 0;
+}
+#form-catalog-filter-front  .guests__dropdown{
+    z-index: 10;
+}
+@media screen and (max-width: 768px) {
+
+    #form-catalog-filter-front .form__group{
+        flex-direction: column;
+    }
+    #form-catalog-filter-front .form__group > div{
+        width: 100%;
+    }
+}
