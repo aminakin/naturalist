@@ -14576,7 +14576,7 @@ var ru = __webpack_require__(7896);
 
 
 
-var RangeCalendar = /*#__PURE__*/function () {
+var RangeCalendar = function () {
   function RangeCalendar() {
     _classCallCheck(this, RangeCalendar);
 
@@ -14587,11 +14587,11 @@ var RangeCalendar = /*#__PURE__*/function () {
     };
     this.$elements = {
       main: document.querySelector('[data-calendar]'),
-      dropdown: document.querySelector('[data-calendar-dropdown]'),
+      dropdown: document.querySelectorAll('[data-calendar-dropdown]'),
       labels: document.querySelectorAll('[data-calendar-label]'),
       months: document.querySelectorAll('[data-calendar-month-select]'),
       years: document.querySelectorAll('[data-calendar-year-select]'),
-      value: document.querySelector('[data-calendar-value]'),
+      value: document.querySelectorAll('[data-calendar-value]'),
       selects: document.querySelectorAll('[data-calendar-navigation]')
     };
   }
@@ -14604,12 +14604,19 @@ var RangeCalendar = /*#__PURE__*/function () {
       document.addEventListener('click', function (event) {
         var $el = event.target;
 
+
         if (!$el.matches('[data-calendar-dropdown]') && !$el.closest('[data-calendar-dropdown]') && !$el.matches('[data-calendar-label]') && !$el.closest('[data-calendar-label]')) {
-          _this.$elements.dropdown.classList.remove('calendar__dropdown_show');
+          // _this.$elements.dropdown.classList.remove('calendar__dropdown_show');
+          _this.$elements.dropdown.forEach(function ($item) {
+            $item.classList.remove('calendar__dropdown_show');
+          });
         }
       });
       window.addEventListener('resize', function () {
-        _this.$elements.dropdown.classList.remove('calendar__dropdown_show');
+        // _this.$elements.dropdown.classList.remove('calendar__dropdown_show');
+        _this.$elements.dropdown.forEach(function ($item) {
+          $item.classList.remove('calendar__dropdown_show');
+        });
       });
     }
   }, {
@@ -14617,17 +14624,24 @@ var RangeCalendar = /*#__PURE__*/function () {
     value: function handleChangeValue() {
       var _this2 = this;
 
-      this.$elements.value.addEventListener('change', function (event) {
-        var dates = event.target.value.split(' — ');
+      this.$elements.value.forEach(($value) => {
+        $value.addEventListener('change', function (event) {
+          var dates = event.target.value.split(' — ');
+          var $el = event.target;
 
-        _this2.$elements.labels.forEach(function ($item, index) {
-          if (dates[index]) $item.innerHTML = dates[index];
+          $el.closest('[data-calendar]').querySelectorAll('[data-calendar-label]').forEach(function ($item, index) {
+            if (dates[index]) $item.innerHTML = dates[index];
+          });
+
+          if (dates.length > 1) {
+            // _this2.$elements.dropdown.classList.remove('calendar__dropdown_show');
+            _this2.$elements.dropdown.forEach(function ($item) {
+              $item.classList.remove('calendar__dropdown_show');
+            });
+          }
         });
+      })
 
-        if (dates.length > 1) {
-          _this2.$elements.dropdown.classList.remove('calendar__dropdown_show');
-        }
-      });
     }
   }, {
     key: "handleLabelClick",
@@ -14635,8 +14649,11 @@ var RangeCalendar = /*#__PURE__*/function () {
       var _this3 = this;
 
       this.$elements.labels.forEach(function ($item) {
-        $item.addEventListener('click', function () {
-          _this3.$elements.dropdown.classList.toggle('calendar__dropdown_show');
+        $item.addEventListener('click', function (event) {
+          var $el = event.target;
+
+          $el.closest('[data-calendar]').querySelector('[data-calendar-dropdown]').classList.toggle('calendar__dropdown_show');
+          // _this3.$elements.dropdown.classList.toggle('calendar__dropdown_show');
         });
       });
     }
@@ -14725,14 +14742,27 @@ var RangeCalendar = /*#__PURE__*/function () {
         var _this$$elements$main$ = this.$elements.main.dataset,
             calendarMin = _this$$elements$main$.calendarMin,
             calendarMax = _this$$elements$main$.calendarMax;
-        this.calendar = esm(this.$elements.value, {
-          locale: ru.Russian,
-          inline: true,
-          mode: 'range',
-          dateFormat: 'd.m.Y',
-          minDate: calendarMin !== undefined ? calendarMin : null,
-          maxDate: calendarMax !== undefined ? new Date().fp_incr(parseInt(calendarMax)) : null
+
+
+        this.$elements.value.forEach(($value) => {
+          esm($value, {
+            locale: ru.Russian,
+            inline: true,
+            mode: 'range',
+            dateFormat: 'd.m.Y',
+            minDate: calendarMin !== undefined ? calendarMin : null,
+            maxDate: calendarMax !== undefined ? new Date().fp_incr(parseInt(calendarMax)) : null
+          })
         });
+        // this.calendar = esm(this.$elements.value, {
+        //   locale: ru.Russian,
+        //   inline: true,
+        //   mode: 'range',
+        //   dateFormat: 'd.m.Y',
+        //   minDate: calendarMin !== undefined ? calendarMin : null,
+        //   maxDate: calendarMax !== undefined ? new Date().fp_incr(parseInt(calendarMax)) : null
+        // });
+
         this.handleChangeMonth();
         this.handleChangeValue();
         this.handleHide();

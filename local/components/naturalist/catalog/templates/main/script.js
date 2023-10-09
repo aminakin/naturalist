@@ -146,8 +146,7 @@ $(function() {
 
 			let transformDateFrom = new Date(arDateFrom[1] + "/" + arDateFrom[0] + "/" + arDateFrom[2]);
             let transformDateTo = new Date(arDateTo[1] + "/" + arDateTo[0] + "/" + arDateTo[2]);
-            console.log(transformDateFrom);
-            console.log(transformDateTo);
+
             params["dateFrom"] = dateFrom;
             params["dateTo"] = dateTo;
             params["guests"] = guests;
