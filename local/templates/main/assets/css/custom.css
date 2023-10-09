@@ -36,6 +36,7 @@
 }
 #form-catalog-filter-front  .guests__dropdown{
     z-index: 10;
+    width: auto;
 }
 @media screen and (max-width: 768px) {
 
