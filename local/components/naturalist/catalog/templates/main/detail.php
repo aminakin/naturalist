@@ -253,6 +253,13 @@ if (!empty($arSection) && !empty($dateFrom) && !empty($dateTo) && !empty($_GET['
         $roomElement = current($arExternalInfo[$arElement["ID"]]);
         $arElement["PRICE"] = $roomElement["price"];
 
+        $discountData = CCatalogProduct::GetOptimalPrice($arElement['ID'], 1, $USER->GetUserGroupArray(), 'N');
+
+        if (count($discountData['DISCOUNT'])) {
+            $arElement['DISCOUNT_DATA']['VALUE'] = $discountData['DISCOUNT']['VALUE'];
+            $arElement['DISCOUNT_DATA']['VALUE_TYPE'] = $discountData['DISCOUNT']['VALUE_TYPE'];
+        }
+
         $arElements[$arElement['ID']] = $arElement;
     }
 

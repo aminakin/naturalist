@@ -120,7 +120,7 @@
 </div>
 <!-- wrapper-->
 
-<div class="modal modal_form" id="login-email">
+<?/*<div class="modal modal_form" id="login-email">
     <div class="modal__container">
         <button class="modal__close" data-modal-close>
             <svg class="icon icon_cross" viewbox="0 0 18 18" style="width: 1.8rem; height: 1.8rem;">
@@ -164,7 +164,7 @@
             <div class="form__policy">Нажимая кнопку «Войти», я соглашаюсь c&nbsp;<a href="/agreement/">политикой конфиденциальности и&nbsp;обработки персональных данных</a>.</div>
         </form>
     </div>
-</div>
+</div>*/?>
 
 <div class="modal modal_form" id="login-phone">
     <div class="modal__container">
@@ -183,7 +183,6 @@
             </div>
             <div class="form__controls">
                 <button class="button button_primary" data-get-code data-type="phone" data-form-submit>Продолжить</button>
-                <a class="button button_transparent" href="#login-email" data-modal-close data-modal>Войти по е-mail</a>
             </div>
             <div class="form__item">
                 <span class="form__item-headnote">Войдите с помощью социальной сети</span>
@@ -222,7 +221,7 @@
             <div class="form__item">
                 <div class="field">
                     <input class="field__input" type="text" name="code" placeholder="Введите полученный код">
-
+                    <input type="hidden" name="auth_from_order">
                     <input type="hidden" name="login" />
                     <input type="hidden" name="type" />
                     <input type="hidden" name="page" value="<?= $APPLICATION->GetCurDir(); ?>"/>
@@ -456,43 +455,43 @@
 
 <!-- JS-->
 <script defer src="<?= SITE_TEMPLATE_PATH ?>/js/forIE.min.js?v=1666936088452"></script>
-<script defer src="<?= SITE_TEMPLATE_PATH ?>/assets/js/app.min.js?v=<?= filemtime($_SERVER["DOCUMENT_ROOT"].'/'.SITE_TEMPLATE_PATH.'/assets/js/app.min.js')?>"></script>
+<script defer src="<?= SITE_TEMPLATE_PATH ?>/assets/js/app.js?v=<?= filemtime($_SERVER["DOCUMENT_ROOT"].'/'.SITE_TEMPLATE_PATH.'/assets/js/app.js')?>"></script>
 <? if (CSite::InDir('/index.php')) : ?>
-    <script defer src="<?= SITE_TEMPLATE_PATH ?>/assets/js/index.min.js?v=<?= filemtime($_SERVER["DOCUMENT_ROOT"].'/'.SITE_TEMPLATE_PATH.'/assets/js/index.min.js')?>"></script>
+    <script defer src="<?= SITE_TEMPLATE_PATH ?>/assets/js/index.js?v=<?= filemtime($_SERVER["DOCUMENT_ROOT"].'/'.SITE_TEMPLATE_PATH.'/assets/js/index.js')?>"></script>
 <? endif; ?>
 <? if (CSite::InDir('/catalog')) : ?>
     <? if ($currPage === "/catalog/" || strpos($currPage,"/catalog/vpechatleniya/") !== false) : ?>
-        <script defer src="<?= SITE_TEMPLATE_PATH ?>/assets/js/catalog.min.js?v=<?= filemtime($_SERVER["DOCUMENT_ROOT"].'/'.SITE_TEMPLATE_PATH.'/assets/js/catalog.min.js')?>"></script>
+        <script defer src="<?= SITE_TEMPLATE_PATH ?>/assets/js/catalog.js?v=<?= filemtime($_SERVER["DOCUMENT_ROOT"].'/'.SITE_TEMPLATE_PATH.'/assets/js/catalog.js')?>"></script>
     <? else : ?>
-        <script defer src="<?= SITE_TEMPLATE_PATH ?>/assets/js/object.min.js?v=<?= filemtime($_SERVER["DOCUMENT_ROOT"].'/'.SITE_TEMPLATE_PATH.'/assets/js/object.min.js')?>"></script>
+        <script defer src="<?= SITE_TEMPLATE_PATH ?>/assets/js/object.js?v=<?= filemtime($_SERVER["DOCUMENT_ROOT"].'/'.SITE_TEMPLATE_PATH.'/assets/js/object.js')?>"></script>
     <? endif; ?>
 <? endif; ?>
 <? if (CSite::InDir('/order')) : ?>
-    <script defer src="<?= SITE_TEMPLATE_PATH ?>/assets/js/reservation.min.js?v=<?= filemtime($_SERVER["DOCUMENT_ROOT"].'/'.SITE_TEMPLATE_PATH.'/assets/js/reservation.min.js')?>"></script>
+    <script defer src="<?= SITE_TEMPLATE_PATH ?>/assets/js/reservation.js?v=<?= filemtime($_SERVER["DOCUMENT_ROOT"].'/'.SITE_TEMPLATE_PATH.'/assets/js/reservation.js')?>"></script>
 <? endif; ?>
 <? if (CSite::InDir('/personal/index.php')) : ?>
-    <script defer src="<?= SITE_TEMPLATE_PATH ?>/assets/js/lk_person.min.js?v=<?= filemtime($_SERVER["DOCUMENT_ROOT"].'/'.SITE_TEMPLATE_PATH.'/assets/js/lk_person.min.js')?>"></script>
+    <script defer src="<?= SITE_TEMPLATE_PATH ?>/assets/js/lk_person.js?v=<?= filemtime($_SERVER["DOCUMENT_ROOT"].'/'.SITE_TEMPLATE_PATH.'/assets/js/lk_person.js')?>"></script>
 <? endif; ?>
 <? if (CSite::InDir('/personal/reviews')) : ?>
-    <script defer src="<?= SITE_TEMPLATE_PATH ?>/assets/js/lk_reviews.min.js?v=<?= filemtime($_SERVER["DOCUMENT_ROOT"].'/'.SITE_TEMPLATE_PATH.'/assets/js/lk_reviews.min.js')?>"></script>
+    <script defer src="<?= SITE_TEMPLATE_PATH ?>/assets/js/lk_reviews.js?v=<?= filemtime($_SERVER["DOCUMENT_ROOT"].'/'.SITE_TEMPLATE_PATH.'/assets/js/lk_reviews.js')?>"></script>
 <? endif; ?>
 <? if (CSite::InDir('/personal/active')) : ?>
-    <script defer src="<?= SITE_TEMPLATE_PATH ?>/assets/js/lk_active.min.js?v=<?= filemtime($_SERVER["DOCUMENT_ROOT"].'/'.SITE_TEMPLATE_PATH.'/assets/js/lk_active.min.js')?>"></script>
+    <script defer src="<?= SITE_TEMPLATE_PATH ?>/assets/js/lk_active.js?v=<?= filemtime($_SERVER["DOCUMENT_ROOT"].'/'.SITE_TEMPLATE_PATH.'/assets/js/lk_active.js')?>"></script>
 <? endif; ?>
 <? if (CSite::InDir('/personal/history')) : ?>
-    <script defer src="<?= SITE_TEMPLATE_PATH ?>/assets/js/lk_history.min.js?v=<?= filemtime($_SERVER["DOCUMENT_ROOT"].'/'.SITE_TEMPLATE_PATH.'/assets/js/lk_history.min.js')?>"></script>
+    <script defer src="<?= SITE_TEMPLATE_PATH ?>/assets/js/lk_history.js?v=<?= filemtime($_SERVER["DOCUMENT_ROOT"].'/'.SITE_TEMPLATE_PATH.'/assets/js/lk_history.js')?>"></script>
 <? endif; ?>
 <? if (CSite::InDir('/personal/favourites')) : ?>
-    <script defer src="<?= SITE_TEMPLATE_PATH ?>/assets/js/lk_favorite.min.js?v=<?= filemtime($_SERVER["DOCUMENT_ROOT"].'/'.SITE_TEMPLATE_PATH.'/assets/js/lk_favorite.min.js')?>"></script>
+    <script defer src="<?= SITE_TEMPLATE_PATH ?>/assets/js/lk_favorite.js?v=<?= filemtime($_SERVER["DOCUMENT_ROOT"].'/'.SITE_TEMPLATE_PATH.'/assets/js/lk_favorite.js')?>"></script>
 <? endif; ?>
 <? if (CSite::InDir('/map')) : ?>
-    <script defer src="<?= SITE_TEMPLATE_PATH ?>/assets/js/catalog.min.js?v=<?= filemtime($_SERVER["DOCUMENT_ROOT"].'/'.SITE_TEMPLATE_PATH.'/assets/js/catalog.min.js')?>"></script>
+    <script defer src="<?= SITE_TEMPLATE_PATH ?>/assets/js/catalog.js?v=<?= filemtime($_SERVER["DOCUMENT_ROOT"].'/'.SITE_TEMPLATE_PATH.'/assets/js/catalog.js')?>"></script>
 <? endif; ?>
 <? if (CSite::InDir('/objects')) : ?>
-    <script defer src="<?= SITE_TEMPLATE_PATH ?>/assets/js/add_object.min.js?v=<?= filemtime($_SERVER["DOCUMENT_ROOT"].'/'.SITE_TEMPLATE_PATH.'/assets/js/add_object.min.js')?>"></script>
+    <script defer src="<?= SITE_TEMPLATE_PATH ?>/assets/js/add_object.js?v=<?= filemtime($_SERVER["DOCUMENT_ROOT"].'/'.SITE_TEMPLATE_PATH.'/assets/js/add_object.js')?>"></script>
 <? endif; ?>
 <? if (CSite::InDir('/contacts')) : ?>
-    <script defer src="<?= SITE_TEMPLATE_PATH ?>/assets/js/contacts.min.js?v=<?= filemtime($_SERVER["DOCUMENT_ROOT"].'/'.SITE_TEMPLATE_PATH.'/assets/js/contacts.min.js')?>"></script>
+    <script defer src="<?= SITE_TEMPLATE_PATH ?>/assets/js/contacts.js?v=<?= filemtime($_SERVER["DOCUMENT_ROOT"].'/'.SITE_TEMPLATE_PATH.'/assets/js/contacts.js')?>"></script>
 <? endif; ?>
 
 <script>

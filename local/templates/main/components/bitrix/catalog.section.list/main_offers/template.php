@@ -125,6 +125,10 @@ $arReviewsAvg = Reviews::getCampingRating($arCampingIDs);
                             <? endif; ?>
                         </button>
 
+                        <? if ($arItem["IS_DISCOUNT"] == 'Y'): ?>
+                            <div class="tag"><?=Loc::GetMessage('CATALOG_DISCOUNT')?></div>
+                        <? endif; ?>
+
                         <? if (!empty($arItem["UF_ACTION"])): ?>
                             <div class="tag"><?= $arItem["UF_ACTION"] ?></div>
                         <? endif; ?>
@@ -162,6 +166,6 @@ $arReviewsAvg = Reviews::getCampingRating($arCampingIDs);
     <?if ($arParams['SHOW_MORE_LINK']):?>
         <div class="objects__more">
             <a href="<?=$arParams['SHOW_MORE_LINK']?>">Показать ещё</a>
-        </div>  
-    <?endif;?>  
+        </div>
+    <?endif;?>
 </div>

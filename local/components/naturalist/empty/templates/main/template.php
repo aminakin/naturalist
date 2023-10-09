@@ -261,7 +261,6 @@ foreach($arResult as $key => $value) {
                     "CACHE_GROUPS" => "N",
                     "ITEMS_COUNT" => 12,
                     "TABS" => $arTabs,
-                    "SHOW_MORE_LINK" => "/catalog/"
                 )
             );
             ?>

@@ -3,6 +3,7 @@ use Naturalist\Rest;
 
 define("STOP_STATISTICS", true);
 define("NO_AGENT_CHECK", true);
+$_SERVER["DOCUMENT_ROOT"] = realpath(dirname(__FILE__)."/../");
 require($_SERVER["DOCUMENT_ROOT"]."/bitrix/modules/main/include/prolog_before.php");
 
 $method   = $_SERVER['REQUEST_METHOD'];
@@ -11,10 +12,12 @@ $resource = $_REQUEST['resource'];
 $api = new Rest();
 $arOutput = array();
 
-if($method == 'POST' && $resource == 'auth') {
-    $inputJSON = file_get_contents('php://input');
-    $params    = json_decode($inputJSON, true);
+$inputJSON = file_get_contents('php://input');
+$params    = json_decode($inputJSON, true);
+$filePath = $api->setCurrentData($params);
+$arSend['FILE'] = $filePath;
 
+if($method == 'POST' && $resource == 'auth') {
     $clientId     = $params['client_id'];
     $clientSecret = $params['client_secret'];
 
@@ -22,6 +25,12 @@ if($method == 'POST' && $resource == 'auth') {
     $responseCode = (!empty($arOutput['code'])) ? 401 : 200;
     unset($arOutput['code']);
 
+} elseif($argv[1] == 'prices' && !empty($argv[2])) {
+    $inputJSON = file_get_contents($argv[2]);
+    $params    = json_decode($inputJSON, true);
+
+    $arOutput = $api->updatePrices($params, $argv[2]);
+    $responseCode = $arOutput['code'];
 } else {
     $arHeaders = getallheaders();
     list($authType, $token) = explode(' ', $arHeaders["Authorization"]);
@@ -49,9 +58,6 @@ if($method == 'POST' && $resource == 'auth') {
                 case 'POST':
                     switch($resource) {
                         case 'catalog':
-                            $inputJSON = file_get_contents('php://input');
-                            $params    = json_decode($inputJSON, true);
-
                             $arOutput = $api->updateCatalog($params);
                             $responseCode = $arOutput['code'];
                             //unset($arOutput['code']);
@@ -60,12 +66,54 @@ if($method == 'POST' && $resource == 'auth') {
                             break;
 
                         case 'prices':
-                            $inputJSON = file_get_contents('php://input');
-                            $params    = json_decode($inputJSON, true);
+                            $hotelId = $params["hotel_id"];
+                            $externalId = $params["account_id"];
 
-                            $arOutput = $api->updatePrices($params);
-                            $responseCode = $arOutput['code'];
-                            //unset($arOutput['code']);
+                            $arSend['HOTEL_ID'] = $hotelId;
+                            $arSend['EXT_ID'] = $externalId;
+
+                            $arSectionHotel = CIBlockSection::GetList(
+                                false,
+                                array(
+                                    "IBLOCK_ID" => CATALOG_IBLOCK_ID,
+                                    "ID" => $hotelId,
+                                    "UF_EXTERNAL_SERVICE" => "2",
+                                ),
+                                false,
+                                array("IBLOCK_ID", "ID"),
+                                false
+                            )->Fetch();
+
+                            if (empty($arSectionHotel["ID"])) {
+                                $arSend['MESSAGE'] = 'Объект не найден';
+                                $api->sendError($arSend);
+
+                                $responseCode = 403;
+                                $arOutput = array('code' => 403, 'error' => 'Объект не найден');
+                            } else {
+                                $arRooms = $params["data"]["rooms"];
+                                $arPrices = $params["data"]["prices"];
+                                if (!$arPrices && !$arRooms) {
+                                    if (!$arPrices) {
+                                        $arSend['MESSAGE'] = 'Параметр prices не был передан.';
+                                        $api->sendError($arSend);
+
+                                        $responseCode = 404;
+                                        $arOutput = array('code' => 404, 'error' => 'Параметр prices не был передан.');
+                                    } else {
+                                        $arSend['MESSAGE'] = 'Параметр rooms не был передан.';
+                                        $api->sendError($arSend);
+
+                                        $responseCode = 404;
+                                        $arOutput = array('code' => 404, 'error' => 'Параметр rooms не был передан.');
+                                    }
+                                } else {
+                                    exec("php " . $_SERVER["DOCUMENT_ROOT"] . "/api/index.php prices " . $filePath . " > /dev/null 2>&1 &");
+
+                                    $responseCode = 200;
+                                    $arOutput = array('code' => 200, 'message' => 'Ok');
+                                }
+                            }
 
                             $isExist = true;
                             break;
@@ -75,17 +123,23 @@ if($method == 'POST' && $resource == 'auth') {
             }
 
             if(!$isExist) {
+                $arSend['MESSAGE'] = 'Ресурс не найден.';
+                $api->sendError($arSend);
                 $arOutput     = array('code' => 404, 'error' => 'Ресурс не найден.');
                 $responseCode = 404;
             }
 
         } else {
+            $arSend['MESSAGE'] = 'Ошибка в запросе.';
+            $api->sendError($arSend);
             $arOutput     = array('code' => 400, 'error' => 'Ошибка в запросе.');
             $responseCode = 400;
         }
 
     } else {
         $arOutput = $validation;
+        //$arSend['MESSAGE'] = $arOutput;
+        //$api->sendError($arSend);
         $responseCode = 401;
     }
 }
@@ -106,4 +160,5 @@ header("HTTP/1.1 ".$responseCode." ".$responseText);
 
 $APPLICATION->RestartBuffer();
 echo json_encode($arOutput, JSON_UNESCAPED_UNICODE);
+die();
 ?>

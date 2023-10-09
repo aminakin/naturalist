@@ -13,32 +13,32 @@ foreach($arResult as $key => $value) {
             <span>Сортировать по:</span>
             <ul class="list">
                 <li class="list__item">
-                    <?php if($sortBy == "sort"):?>
+                    <?if($sortBy == "sort"):?>
                         <span class="list__link" data-sort="sort" data-type="<?=$orderReverse?>"><span>По</span> <span>Наитию</span></span>
-                    <?php else:?>
+                    <?else:?>
                         <a class="list__link" href="#" data-sort="sort" data-type="asc"><span>По</span> <span>Наитию</span></a>
-                    <?php endif;?>
+                    <?endif;?>
                 </li>
                 <!--<li class="list__item">
-                    <?php /*if($sortBy == "popular"):*/?>
-                        <span class="list__link" data-sort="popular" data-type="<?php /*=$orderReverse*/?>"><span>По</span> <span>Популярности</span></span>
-                    <?php /*else:*/?>
-                        <a class="list__link" href="#" data-sort="popular" data-type="<?php /*=$orderReverse*/?>"><span>По</span> <span>Популярности</span></a>
-                    <?php /*endif;*/?>
+                    <?/*if($sortBy == "popular"):*/?>
+                        <span class="list__link" data-sort="popular" data-type="<?/*=$orderReverse*/?>"><span>По</span> <span>Популярности</span></span>
+                    <?/*else:*/?>
+                        <a class="list__link" href="#" data-sort="popular" data-type="<?/*=$orderReverse*/?>"><span>По</span> <span>Популярности</span></a>
+                    <?/*endif;*/?>
                 </li>-->
                 <li class="list__item">
-                    <?php if($sortBy == "price"):?>
+                    <?if($sortBy == "price"):?>
                         <span class="list__link" data-sort="price" data-type="<?=$orderReverse?>"><span>По</span> <span>Цене</span></span>
-                    <?php else:?>
+                    <?else:?>
                         <a class="list__link" href="#" data-sort="price" data-type="asc"><span>По</span> <span>Цене</span></a>
-                    <?php endif;?>
+                    <?endif;?>
                 </li>
                 <li class="list__item">
-                    <?php if($sortBy == "rating"):?>
+                    <?if($sortBy == "rating"):?>
                         <span class="list__link" data-sort="rating" data-type="<?=$orderReverse?>"><span>По</span> <span>Рейтингу</span></span>
-                    <?php else:?>
+                    <?else:?>
                         <a class="list__link" href="#" data-sort="rating" data-type="desc"><span>По</span> <span>Рейтингу</span></a>
-                    <?php endif;?>
+                    <?endif;?>
                 </li>
             </ul>
         </div>
@@ -48,9 +48,11 @@ foreach($arResult as $key => $value) {
                 <div class="catalog__count">Доступно <?= $allCount ?> <?= $countDeclension->get($allCount) ?></div>
             <?php
         } else {
-            ?>
-            <div class="catalog__count">К сожалению по вашему запросу ничего не найдено, попробуйте изменить параметры запроса.</div>
-            <?php
+            if (isset($_GET['name'])) {?>
+                <div class="catalog__count catalog__count--not-found"><?=Loc::GetMessage('NOT_FOUND_REGION')?></div>
+            <?} else {?>
+                <div class="catalog__count catalog__count--not-found"><?=Loc::GetMessage('NOT_FOUND')?></div>
+            <?}
         }?>
 
 
@@ -193,8 +195,8 @@ foreach($arResult as $key => $value) {
         </div>
 
         <div class="catalog__list">
-            <?php foreach ($arPageSections as $arSection) : ?>
-                <?php
+            <? foreach ($arPageSections as $arSection) : ?>
+                <?
                 $this->AddEditAction($arSection['ID'], $arSection['EDIT_LINK'], CIBlock::GetArrayByID($arSection["IBLOCK_ID"], "ELEMENT_EDIT"));
                 $this->AddDeleteAction($arSection['ID'], $arSection['DELETE_LINK'], CIBlock::GetArrayByID($arSection["IBLOCK_ID"], "ELEMENT_DELETE"), array("CONFIRM" => Loc::GetMessage('CT_BNL_ELEMENT_DELETE_CONFIRM')));
                 ?>
@@ -203,32 +205,32 @@ foreach($arResult as $key => $value) {
                         <div class="swiper slider-gallery" data-slider-object="data-slider-object" data-fullgallery="[<?= $arSection["FULL_GALLERY"];?>]">
                             <div class="swiper-wrapper">
 
-                                <?php $keyPhoto = 1; ?>
-                                <?php $keyPhotoFullGallery = 0; ?>
-                                <?php foreach ($arSection["PICTURES"] as $arPhoto) : ?>
-                                    <?php if (count($arSection["PICTURES"]) > 1): ?>
-                                        <?php
+                                <? $keyPhoto = 1; ?>
+								<? $keyPhotoFullGallery = 0; ?>
+                                <? foreach ($arSection["PICTURES"] as $arPhoto) : ?>
+                                    <? if (count($arSection["PICTURES"]) > 1): ?>
+                                        <?
                                         $alt = $arHLTypes[$arSection["UF_TYPE"]]["UF_NAME"] . " " . $arSection["NAME"] . " рис." . $keyPhoto;;
                                         $title = "Фото - " . $arSection["NAME"] . " рис." . $keyPhoto;
                                         ?>
-                                    <?php else: ?>
-                                        <?php
+                                    <? else: ?>
+                                        <?
                                         $alt = $arHLTypes[$arSection["UF_TYPE"]]["UF_NAME"] . " " . $arSection["NAME"];
                                         $title = "Фото - " . $arSection["NAME"];
                                         ?>
 
-                                    <?php endif; ?>
+                                    <? endif; ?>
                                     <div class="swiper-slide" data-fullgallery-item="<?= $keyPhotoFullGallery; ?>">
                                         <img class="swiper-lazy" alt="<?= $alt ?>" title="<?= $title ?>"
                                              data-src="<?= $arPhoto["src"] ?>">
                                     </div>
-                                    <?php $keyPhoto++; ?>
-                                    <?php $keyPhotoFullGallery++; ?>
-                                <?php endforeach; ?>
+                                    <? $keyPhoto++; ?>
+									<? $keyPhotoFullGallery++; ?>
+                                <? endforeach; ?>
 
                             </div>
 
-                            <?php if ($arSection["PICTURES"] && sizeof($arSection["PICTURES"]) > 1) : ?>
+                            <?if ($arSection["PICTURES"] && sizeof($arSection["PICTURES"]) > 1) : ?>
                                 <div class="swiper-button-prev">
                                     <svg class="icon icon_arrow-small" viewbox="0 0 16 16" style="width: 1.6rem; height: 1.6rem;">
                                         <use xlink:href="#arrow-small" />
@@ -240,21 +242,24 @@ foreach($arResult as $key => $value) {
                                     </svg>
                                 </div>
                                 <div class="swiper-pagination"></div>
-                            <?php endif;?>
+                            <? endif;?>
                         </div>
 
-                        <button class="favorite"
-                                <?php if ($arFavourites && in_array($arSection["ID"], $arFavourites)) : ?>data-favourite-remove<?php else:?>data-favourite-add<?php endif;?>data-id="<?= $arSection["ID"] ?>">
-                            <?php if ($arFavourites && in_array($arSection["ID"], $arFavourites)) : ?>
+                        <button class="favorite" <? if ($arFavourites && in_array($arSection["ID"], $arFavourites)) : ?>data-favourite-remove<?else:?>data-favourite-add<?endif;?> data-id="<?= $arSection["ID"] ?>">
+                            <? if ($arFavourites && in_array($arSection["ID"], $arFavourites)) : ?>
                                 <img src="<?= SITE_TEMPLATE_PATH ?>/assets/img/favorite-active.svg" alt>
-                            <?php else : ?>
+                            <? else : ?>
                                 <img src="<?= SITE_TEMPLATE_PATH ?>/assets/img/favorite.svg" alt>
-                            <?php endif; ?>
+                            <? endif; ?>
                         </button>
 
-                        <?php if (!empty($arSection["UF_ACTION"])) : ?>
+                        <? if ($arSection["IS_DISCOUNT"] == 'Y'): ?>
+                            <div class="tag"><?=Loc::GetMessage('CATALOG_DISCOUNT')?></div>
+                        <? endif; ?>
+
+                        <? if (!empty($arSection["UF_ACTION"])) : ?>
                             <div class="tag"><?= $arSection["UF_ACTION"] ?></div>
-                        <?php endif; ?>
+                        <? endif; ?>
                     </div>
 
                     <div class="object-row__content">
@@ -264,9 +269,10 @@ foreach($arResult as $key => $value) {
                             <div class="area-info">
                                 <img src="<?= SITE_TEMPLATE_PATH ?>/assets/img/marker.svg" alt>
                                 <div>
-                                    <?php if (isset($arHLTypes[$arSection["UF_TYPE"]])) : ?><span><?= $arHLTypes[$arSection["UF_TYPE"]]["UF_NAME"] ?></span><?php endif; ?>
-                                    <?php if (!empty($arSection["UF_DISTANCE"])) : ?><span><?= $arSection["UF_DISTANCE"] ?></span><?php endif; ?>
-                                    <?php if (!empty($arSection["UF_ADDRESS"])) : ?><span><?= $arSection["UF_ADDRESS"] ?></span><?php endif; ?>
+                                    <? if (isset($arHLTypes[$arSection["UF_TYPE"]])) : ?><span><?= $arHLTypes[$arSection["UF_TYPE"]]["UF_NAME"] ?></span><? endif; ?>
+                                    <? if (!empty($arSection["UF_DISTANCE"])) : ?><span><?= $arSection["UF_DISTANCE"] ?></span><? endif; ?>
+                                    <? if (!empty($arSection["UF_ADDRESS"])) : ?><span><?= $arSection["UF_ADDRESS"] ?></span><? endif; ?>
+                                    <? if (!empty($arSection["DISCTANCE"])) : ?><span><?= $arSection["DISCTANCE"] ?> км от <?=$arSection['DISCTANCE_TO_REGION']?></span><? endif; ?>
                                 </div>
                             </div>
                             <div class="object-row__reviews">
@@ -277,42 +283,42 @@ foreach($arResult as $key => $value) {
                                 <a href="<?=$arSection["URL"]?>#reviews-anchor"><?= $arReviewsAvg[$arSection["ID"]]["count"] ?> <?= $reviewsDeclension->get($arReviewsAvg[$arSection["ID"]]["count"]) ?></a>
                             </div>
 
-                            <?php if($arSection["UF_FEATURES"]):?>
+                            <?if($arSection["UF_FEATURES"]):?>
                                 <div class="object-row__features">
-                                    <?php foreach ($arSection["UF_FEATURES"] as $featureId) :
+                                    <? foreach ($arSection["UF_FEATURES"] as $featureId) :
                                         if (empty($arHLFeatures[$featureId]["UF_NAME"])) {
                                             continue;
                                         }
                                         ?>
                                         <span><?= $arHLFeatures[$featureId]["UF_NAME"] ?></span>
-                                    <?php endforeach; ?>
+                                    <? endforeach; ?>
                                 </div>
-                            <?php endif;?>
+                            <?endif;?>
                         </div>
 
                         <div class="object-row__order">
                             <div class="object-row__price">
-                                <?php if($arSection["PRICE"] > 0):?>
+                                <?if($arSection["PRICE"] > 0):?>
                                     <div><?= number_format($arSection["PRICE"], 0, '.', ' ') ?> ₽</div>
                                     <span>Цена за одну ночь</span>
-                                <?php endif;?>
+                                <?endif;?>
                             </div>
 
                             <a class="button button_primary" onclick="VK.Goal('customize_product');setLocalStorageCatalog(event);" href="<?=$arSection["URL"]?>">Выбрать</a>
                         </div>
                     </div>
                 </div>
-            <?php endforeach; ?>
+            <? endforeach; ?>
         </div>
 
-        <?php if ($page < $pageCount) : ?>
+        <? if ($page < $pageCount) : ?>
             <div class="catalog__more">
                 <a href="#" data-catalog-showmore data-page="<?= $page + 1 ?>">Показать ещё</a>
             </div>
-        <?php endif; ?>
+        <? endif; ?>
     </div>
 
-    <div class="catalog__map <?php if(CSite::InDir('/map')): ?>catalog__on_map<?php endif; ?>" data-map-overlay>
+    <div class="catalog__map <? if(CSite::InDir('/map')): ?>catalog__on_map<? endif; ?>" data-map-overlay>
         <div class="catalog__map-sticky">
             <div id="map"></div>
 
@@ -321,21 +327,21 @@ foreach($arResult as $key => $value) {
                     <use xlink:href="#fullscreen" />
                 </svg>
             </button>
-            <?php if(CSite::InDir('/map')): ?>
+            <? if(CSite::InDir('/map')): ?>
                 <a href="/catalog/" class="button button_primary catalog__map-halfscreen link__to_catalog">
                     <svg class="icon icon_arrow-text" viewbox="0 0 12 8" style="width: 1.2rem; height: 0.8rem;">
                         <use xlink:href="#arrow-text" />
                     </svg>
                     <span>Перейти к списку</span>
                 </a>
-            <?php else: ?>
+            <? else: ?>
                 <button class="button button_primary catalog__map-halfscreen" data-map-half type="button">
                     <svg class="icon icon_arrow-text" viewbox="0 0 12 8" style="width: 1.2rem; height: 0.8rem;">
                         <use xlink:href="#arrow-text" />
                     </svg>
                     <span>Перейти к списку</span>
                 </button>
-            <?php endif; ?>
+            <? endif; ?>
             <div class="catalog__map-more" data-map-more-wrapper></div>
         </div>
     </div>
@@ -366,61 +372,61 @@ foreach($arResult as $key => $value) {
 
             <div class="swiper">
                 <div class="swiper-wrapper">
-                    <?php foreach ($arResult["SECTIONS"] as $arItem): ?>
-                        <?php
+                    <? foreach ($arResult["SECTIONS"] as $arItem): ?>
+                        <?
                         $this->AddEditAction($arItem['ID'], $arItem['EDIT_LINK'], CIBlock::GetArrayByID($arItem["IBLOCK_ID"], "ELEMENT_EDIT"));
                         $this->AddDeleteAction($arItem['ID'], $arItem['DELETE_LINK'], CIBlock::GetArrayByID($arItem["IBLOCK_ID"], "ELEMENT_DELETE"), array("CONFIRM" => Loc::GetMessage('CT_BNL_ELEMENT_DELETE_CONFIRM')));
                         ?>
-                        <?php if ($arItem["UF_PHOTOS"]): ?>
-                            <?php $arDataFullGallery = []; ?>
-                            <?php foreach ($arItem["UF_PHOTOS"] as $keyElement => $photoId): ?>
-                                <?php
+                        <? if ($arItem["UF_PHOTOS"]): ?>
+                            <? $arDataFullGallery = []; ?>
+                            <? foreach ($arItem["UF_PHOTOS"] as $keyElement => $photoId): ?>
+                                <?
                                 $imageOriginal = CFile::GetFileArray($photoId);
                                 $arDataFullGallery[] = "&quot;".$imageOriginal["SRC"]."&quot;";
                                 ?>
-                            <?php endforeach; ?>
-                            <?php $dataFullGallery = implode(",", $arDataFullGallery); ?>
-                        <?php endif; ?>
+                            <? endforeach; ?>
+                            <? $dataFullGallery = implode(",", $arDataFullGallery); ?>
+                        <? endif; ?>
                         <div class="swiper-slide" id="<?=$this->GetEditAreaId($arItem['ID'])?>">
                             <div class="object">
                                 <div class="object__images">
                                     <div class="swiper slider-gallery" data-slider-object="data-slider-object" data-fullgallery="[<?= $dataFullGallery;?>]">
                                         <div class="swiper-wrapper">
-                                            <?php if($arItem["UF_PHOTOS"]):?>
-                                                <?php $keyPhoto = 1; ?>
-                                                <?php foreach ($arItem["UF_PHOTOS"] as $keyElement => $photoId): ?>
-                                                    <?php
+                                            <?if($arItem["UF_PHOTOS"]):?>
+                                                <? $keyPhoto = 1; ?>
+                                                <? foreach ($arItem["UF_PHOTOS"] as $keyElement => $photoId): ?>
+                                                    <?
                                                     $arPhoto = CFile::ResizeImageGet($photoId, array('width' => 600, 'height' => 360), BX_RESIZE_IMAGE_EXACT, true);
                                                     ?>
-                                                    <?php if (count((array)$arItem["UF_PHOTOS"]) > 1): ?>
-                                                        <?php
+                                                    <? if (count((array)$arItem["UF_PHOTOS"]) > 1): ?>
+                                                        <?
                                                         $alt = $arResult["HL_TYPES"][$arItem["ID"]]["UF_NAME"] . " " . $arItem["NAME"] . " рис." . $keyPhoto;;
                                                         $title = "Фото - " . $arItem["NAME"] . " рис." . $keyPhoto;
                                                         ?>
-                                                    <?php else: ?>
-                                                        <?php
+                                                    <? else: ?>
+                                                        <?
                                                         $alt = $arResult["HL_TYPES"][$arItem["ID"]]["UF_NAME"] . " " . $arItem["NAME"];
                                                         $title = "Фото - " . $arItem["NAME"];
                                                         ?>
-                                                    <?php endif; ?>
+                                                    <? endif; ?>
                                                     <div class="swiper-slide" data-fullgallery-item="<?= $keyElement; ?>">
                                                         <img class="swiper-lazy" alt="<?= $alt ?>" title="<?= $title ?>" data-src="<?= $arPhoto["src"] ?>"
                                                              alt="<?= $arItem["NAME"] ?>">
                                                     </div>
-                                                    <?php $keyPhoto++; ?>
-                                                <?php endforeach ?>
-                                            <?php else:?>
+                                                    <? $keyPhoto++; ?>
+                                                <? endforeach ?>
+                                            <?else:?>
                                                 <div class="swiper-slide">
-                                                    <?php
+                                                    <?
                                                     $alt = $arResult["HL_TYPES"][$arItem["ID"]]["UF_NAME"] . " " . $arItem["NAME"];
                                                     $title = "Фото - " . $arItem["NAME"];
                                                     ?>
                                                     <img class="swiper-lazy" alt="<?= $alt ?>" title="<?= $title ?>"data-src="<?= SITE_TEMPLATE_PATH ?>/img/no_photo.png"
                                                          alt="<?= $arItem["NAME"] ?>">
                                                 </div>
-                                            <?php endif;?>
+                                            <?endif;?>
                                         </div>
-                                        <?php if (isset($arItem["UF_PHOTOS"]) && count((array)$arItem["UF_PHOTOS"]) > 1): ?>
+                                        <? if (isset($arItem["UF_PHOTOS"]) && count((array)$arItem["UF_PHOTOS"]) > 1): ?>
                                             <div class="swiper-button-prev">
                                                 <svg class="icon icon_arrow-small" viewbox="0 0 16 16"
                                                      style="width: 1.6rem; height: 1.6rem;">
@@ -434,20 +440,20 @@ foreach($arResult as $key => $value) {
                                                 </svg>
                                             </div>
                                             <div class="swiper-pagination"></div>
-                                        <?php endif; ?>
+                                        <? endif; ?>
                                     </div>
 
                                     <button class="favorite" data-favourite-add data-id="<?= $arItem["ID"] ?>">
-                                        <?php if ($arResult["FAVOURITES"] && in_array($arItem["ID"], $arResult["FAVOURITES"])): ?>
+                                        <? if ($arResult["FAVOURITES"] && in_array($arItem["ID"], $arResult["FAVOURITES"])): ?>
                                             <img src="<?= SITE_TEMPLATE_PATH ?>/assets/img/favorite-active.svg" alt>
-                                        <?php else: ?>
+                                        <? else: ?>
                                             <img src="<?= SITE_TEMPLATE_PATH ?>/assets/img/favorite.svg" alt>
-                                        <?php endif; ?>
+                                        <? endif; ?>
                                     </button>
 
-                                    <?php if (!empty($arItem["UF_ACTION"])): ?>
+                                    <? if (!empty($arItem["UF_ACTION"])): ?>
                                         <div class="tag"><?= $arItem["UF_ACTION"] ?></div>
-                                    <?php endif; ?>
+                                    <? endif; ?>
                                 </div>
 
                                 <div class="object__heading">
@@ -469,7 +475,7 @@ foreach($arResult as $key => $value) {
                                         <a href="<?= $arItem["URL"] ?>#map">На карте</a>
                                     </div>
                                 </div>
-                                <?php
+                                <?
                                 if(isset($arResult["SECTIONS_EXTERNAL"][$arItem["UF_EXTERNAL_ID"]]) && !empty($arResult["SECTIONS_EXTERNAL"][$arItem["UF_EXTERNAL_ID"]])) {
                                     $sectionPrice = $arResult["SECTIONS_EXTERNAL"][$arItem["UF_EXTERNAL_ID"]];
                                     // Если это Traveline, то делим цену на кол-во дней
@@ -486,7 +492,7 @@ foreach($arResult as $key => $value) {
                                     ₽</a>
                             </div>
                         </div>
-                    <?php endforeach; ?>
+                    <? endforeach; ?>
                 </div>
             </div>
         </div>

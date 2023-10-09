@@ -10,6 +10,7 @@ use Bitrix\Sale\Basket;
 use Bitrix\Sale\PaySystem;
 use Bitrix\Sale\Fuser;
 use Bitrix\Main\Mail\Event;
+use Bitrix\Sale\DiscountCouponsManager;
 
 use CIBlockSection;
 use CSaleOrder;
@@ -107,6 +108,7 @@ class Orders
 
         // Список товаров
         $basket = $order->getBasket();
+        $arFields["BASE_PRICE"] = $basket->getBasePrice();        
         $arBasketItems = $basket->getBasketItems();
 
         $totalPrice = 0;
@@ -175,8 +177,9 @@ class Orders
         }
 
         // Список гостей
-        $arSaveGuests = array();
-        $arGuestList = array();
+        $arSaveGuests = [];
+        $arGuestList = [];
+        $arGuestList[] = trim($params["last_name"])." ".trim($params["name"]);
         foreach($params["guests"] as $key => $arItem) {
             $arGuestList[] = trim($arItem["surname"])." ".trim($arItem["name"])." ".trim($arItem["lastname"]);
 
@@ -194,35 +197,35 @@ class Orders
         $externalService = $arBasketItems["ITEMS"][0]["ITEM"]["SECTION"]["UF_EXTERNAL_SERVICE"];
 
         // Проверка возможности бронирования перед созданием заказа и отмена создания заказа в случае невозможности бронирования (только для Traveline)
-        if($externalService == $this->travelineSectionPropEnumId) {
-            $externalSectionId = $arBasketItems['ITEMS'][0]['ITEM']['SECTION']['UF_EXTERNAL_ID'];
-            $sectionName = $arBasketItems['ITEMS'][0]['ITEM']['SECTION']['NAME'];
-            $sectionCommission = $arBasketItems['ITEMS'][0]['ITEM']['SECTION']['UF_AGENT'];
-            $externalElementId = $arBasketItems['ITEMS'][0]['ITEM']['PROPERTIES']['EXTERNAL_ID']['VALUE'];
-            $externalCategoryId = $arBasketItems['ITEMS'][0]['ITEM']['PROPERTIES']['EXTERNAL_CATEGORY_ID']['VALUE'];
-            $dateFrom = $params['dateFrom'];
-            $dateTo = $params['dateTo'];
-            $guests = count($arGuestList);
-            $price = $arBasketItems['ITEMS'][0]["PRICE"];
-            $checksum = $params['checksum'];
-            $arChildrenAge = ($params['childrenAge']) ? explode(',', $params['childrenAge']) : [];
+        // if($externalService == $this->travelineSectionPropEnumId) {
+        //     $externalSectionId = $arBasketItems['ITEMS'][0]['ITEM']['SECTION']['UF_EXTERNAL_ID'];
+        //     $sectionName = $arBasketItems['ITEMS'][0]['ITEM']['SECTION']['NAME'];
+        //     $sectionCommission = $arBasketItems['ITEMS'][0]['ITEM']['SECTION']['UF_AGENT'];
+        //     $externalElementId = $arBasketItems['ITEMS'][0]['ITEM']['PROPERTIES']['EXTERNAL_ID']['VALUE'];
+        //     $externalCategoryId = $arBasketItems['ITEMS'][0]['ITEM']['PROPERTIES']['EXTERNAL_CATEGORY_ID']['VALUE'];
+        //     $dateFrom = $params['dateFrom'];
+        //     $dateTo = $params['dateTo'];
+        //     $guests = count($arGuestList);
+        //     $price = $arBasketItems['ITEMS'][0]["PRICE"];
+        //     $checksum = $params['checksum'];
+        //     $arChildrenAge = ($params['childrenAge']) ? explode(',', $params['childrenAge']) : [];
 
-            if(empty($arUser["EMAIL"])) {
-                $arUser["EMAIL"] = $params["email"];
-            }
-            if(empty($arUser["PERSONAL_PHONE"])) {
-                $arUser["PERSONAL_PHONE"] = $params["phone"];
-            }
+        //     if(empty($arUser["EMAIL"])) {
+        //         $arUser["EMAIL"] = $params["email"];
+        //     }
+        //     if(empty($arUser["PERSONAL_PHONE"])) {
+        //         $arUser["PERSONAL_PHONE"] = $params["phone"];
+        //     }
 
-            $arVerifyResponse = Traveline::verifyReservation($externalSectionId, $externalElementId, $externalCategoryId, $guests, $arChildrenAge, $dateFrom, $dateTo, $price, $checksum, $arGuestList, $arUser);
+        //     $arVerifyResponse = Traveline::verifyReservation($externalSectionId, $externalElementId, $externalCategoryId, $guests, $arChildrenAge, $dateFrom, $dateTo, $price, $checksum, $arGuestList, $arUser);
 
-            if (!empty($arVerifyResponse['warnings'][0]['code']) || empty($arVerifyResponse["booking"])) {
-                $errorText = $arVerifyResponse['warnings'][0]['code'] ?? $arVerifyResponse['errors'][0]['message'];
-                return json_encode([
-                    "ERROR" => "Невозможно бронирование на выбранные даты. " . $this->arErrors[$errorText]
-                ]);
-            }
-        }
+        //     if (!empty($arVerifyResponse['warnings'][0]['code']) || empty($arVerifyResponse["booking"])) {
+        //         $errorText = $arVerifyResponse['warnings'][0]['code'] ?? $arVerifyResponse['errors'][0]['message'];
+        //         return json_encode([
+        //             "ERROR" => "Невозможно бронирование на выбранные даты. " . $this->arErrors[$errorText]
+        //         ]);
+        //     }
+        // }
 
         // Создание корзины
         $siteId = Context::getCurrent()->getSite();
@@ -256,11 +259,11 @@ class Orders
         $propertyValue = $propertyCollection->getItemByOrderPropertyId($this->arPropsIDs['EMAIL']);
         $propertyValue->setValue($params["email"]);
         // Имя
-        $arUser["NAME"] = !empty($arUser["NAME"]) ? $arUser["NAME"] : $params["guests"][0]["firstName"];
+        $arUser["NAME"] = !empty($arUser["NAME"]) ? $arUser["NAME"] : $params["name"];
         $propertyValue = $propertyCollection->getItemByOrderPropertyId($this->arPropsIDs['NAME']);
         $propertyValue->setValue($arUser["NAME"]);
         // Фамилия
-        $arUser["LAST_NAME"] = !empty($arUser["LAST_NAME"]) ? $arUser["LAST_NAME"] : $params["guests"][0]["lastName"];
+        $arUser["LAST_NAME"] = !empty($arUser["LAST_NAME"]) ? $arUser["LAST_NAME"] : $params["last_name"];
         $propertyValue = $propertyCollection->getItemByOrderPropertyId($this->arPropsIDs['LAST_NAME']);
         $propertyValue->setValue($arUser["LAST_NAME"]);
         // Дата заезда
@@ -322,6 +325,21 @@ class Orders
                     $user = new CUser();
                     $user->Update($userId, array(
                         "UF_GUESTS_DATA" => json_encode($arSaveGuests)
+                    ));
+                }
+
+                // Обновление Имени и Фамилии пользователя
+                if ($arUser["NAME"] == '' && $params["name"] != '') {
+                    $user = new CUser();
+                    $user->Update($userId, array(
+                        "NAME" => json_encode($arSaveGuests)
+                    ));
+                }
+
+                if ($arUser["LAST_NAME"] == '' && $params["last_name"] != '') {
+                    $user = new CUser();
+                    $user->Update($userId, array(
+                        "LAST_NAME" => json_encode($arSaveGuests)
                     ));
                 }
 
@@ -569,7 +587,6 @@ class Orders
         } elseif($service == $this->travelineSectionPropEnumId) {
             $reservationRes = Traveline::makeReservation($orderId, $arOrder, $arUser, $reservationPropId);
         }
-        //file_put_contents($_SERVER["DOCUMENT_ROOT"] . '/log.txt', serialize($arOrder) . PHP_EOL, FILE_APPEND);
 
         if($reservationRes) {
             /* Устанавливаем свойства заказа (пользовательские) */
@@ -710,5 +727,72 @@ class Orders
                 "ERROR" => "Произошла ошибка при получении информации о штрафе."
             ]);
         }
+    }
+
+    /* Добавляет купон к заказу */
+    public function enterCoupon($coupon) {
+        $coupon = htmlspecialchars_decode(trim($coupon));
+		if (!empty($coupon)) {
+            $getCoupon = DiscountCouponsManager::getData($coupon);
+            if ($getCoupon['ACTIVE'] === 'Y') {
+                DiscountCouponsManager::add($coupon);
+                return json_encode([
+                    "MESSAGE" => "Купон применён",
+                    "STATUS" => "SUCCESS"
+                ]);
+            } else {
+                return json_encode([
+                    "MESSAGE" => "Такого промокода не существует или его срок действия истёк. Пожалуйста воспользуйтесь другим промокодом.",
+                    "STATUS" => "ERROR"
+                ]);
+            }            
+		}
+	}
+
+    /* Удаляет купон из заказа */
+	public function removeCoupon($coupon) {
+        $coupon = htmlspecialchars_decode(trim($coupon));
+		if (!empty($coupon)) {           
+			return DiscountCouponsManager::delete($coupon);
+		}
+	}
+    
+    /* Получает информацию по всем применённым в заказе купонам */
+    public function getActivatedCoupons() {
+        $result = [];
+        $arCoupons = DiscountCouponsManager::get(true, [], true, true);
+        if (!empty($arCoupons))
+        {
+            foreach ($arCoupons as &$oneCoupon)
+            {
+                if ($oneCoupon['STATUS'] == DiscountCouponsManager::STATUS_NOT_FOUND || $oneCoupon['STATUS'] == DiscountCouponsManager::STATUS_FREEZE)
+                {
+                    $oneCoupon['JS_STATUS'] = 'BAD';
+                }
+                elseif ($oneCoupon['STATUS'] == DiscountCouponsManager::STATUS_NOT_APPLYED || $oneCoupon['STATUS'] == DiscountCouponsManager::STATUS_ENTERED)
+                {
+                    $oneCoupon['JS_STATUS'] = 'ENTERED';
+                }
+                else
+                {
+                    $oneCoupon['JS_STATUS'] = 'APPLIED';
+                }
+
+                $oneCoupon['JS_CHECK_CODE'] = '';
+                if (isset($oneCoupon['CHECK_CODE_TEXT']))
+                {
+                    $oneCoupon['JS_CHECK_CODE'] = is_array($oneCoupon['CHECK_CODE_TEXT'])
+                        ? implode(', ', $oneCoupon['CHECK_CODE_TEXT'])
+                        : $oneCoupon['CHECK_CODE_TEXT'];
+                }
+
+                $result[] = $oneCoupon;
+            }
+
+            unset($oneCoupon);
+            $result = array_values($arCoupons);
+        }
+        unset($arCoupons);
+        return $result;
     }
 }

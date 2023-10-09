@@ -23,6 +23,23 @@ $APPLICATION->IncludeComponent(
 );
 ?>
 
+<?$APPLICATION->IncludeComponent(
+	"bitrix:subscribe.form", 
+	"subscribe-footer", 
+	array(
+		"CACHE_TIME" => "3600",
+		"CACHE_TYPE" => "A",
+		"PAGE" => "",
+		"SHOW_HIDDEN" => "N",
+		"USE_PERSONALIZATION" => "N",
+		"COMPONENT_TEMPLATE" => "subscribe-footer",
+		"FORM_TITLE" => "Оставайтесь на связи! Подпишитесь на нашу рассылку",
+		"FORM_SUBTITLE" => "Узнавайте первыми о горящих предложениях, новых маршрутах и эксклюзивных скидках!",		
+		"FORM_POLITICS_LINK" => "/policy/"
+	),
+	false
+);?>
+
 <?
 require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/footer.php");
 ?>

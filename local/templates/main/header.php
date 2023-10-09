@@ -38,50 +38,50 @@ Asset::getInstance()->addJs(SITE_TEMPLATE_PATH . "/js/common.js");
     <link rel="preload" href="<?= SITE_TEMPLATE_PATH ?>/assets/fonts/TTTravelsNext-Md.woff2" as="font" type="font/woff2" crossorigin>
     <link rel="preload" href="<?= SITE_TEMPLATE_PATH ?>/assets/fonts/TTTravelsNext-Regular.woff2" as="font" type="font/woff2" crossorigin>
 
-    <link rel="stylesheet" href="<?= SITE_TEMPLATE_PATH ?>/assets/css/app.min.css?v=1667839051330">
+    <link rel="stylesheet" href="<?= SITE_TEMPLATE_PATH ?>/assets/css/app.css?v=1667839051330">
     <? if (CSite::InDir('/index.php')) : ?>
-        <link rel="stylesheet" href="<?= SITE_TEMPLATE_PATH ?>/assets/css/index.min.css?v=1666595102636">
+        <link rel="stylesheet" href="<?= SITE_TEMPLATE_PATH ?>/assets/css/index.css?v=1666595102636">
     <? endif; ?>
     <? if (CSite::InDir('/catalog')) : ?>
         <?if($currPage === "/catalog/" || strpos($currPage,"/catalog/vpechatleniya/") !== false):?>
-            <link rel="stylesheet" href="<?= SITE_TEMPLATE_PATH ?>/assets/css/catalog.min.css?v=1664304519938">
+            <link rel="stylesheet" href="<?= SITE_TEMPLATE_PATH ?>/assets/css/catalog.css?v=1664304519938">
         <?else:?>
-            <link rel="stylesheet" href="<?= SITE_TEMPLATE_PATH ?>/assets/css/object.min.css?v=1667839051348">
+            <link rel="stylesheet" href="<?= SITE_TEMPLATE_PATH ?>/assets/css/object.css?v=1667839051348">
         <?endif;?>
     <? endif; ?>
     <? if (CSite::InDir('/order')) : ?>
-        <link rel="stylesheet" href="<?= SITE_TEMPLATE_PATH ?>/assets/css/reservation.min.css?v=1664554796110">
+        <link rel="stylesheet" href="<?= SITE_TEMPLATE_PATH ?>/assets/css/reservation.css?v=1664554796110">
     <? endif; ?>
     <? if (CSite::InDir('/personal')) : ?>
-        <link rel="stylesheet" href="<?= SITE_TEMPLATE_PATH ?>/assets/css/lk_person.min.css?v=1664554795104">
-        <link rel="stylesheet" href="<?= SITE_TEMPLATE_PATH ?>/assets/css/lk_person_values.min.css?v=1664554795104">
+        <link rel="stylesheet" href="<?= SITE_TEMPLATE_PATH ?>/assets/css/lk_person.css?v=1664554795104">
+        <link rel="stylesheet" href="<?= SITE_TEMPLATE_PATH ?>/assets/css/lk_person_values.css?v=1664554795104">
     <? endif; ?>
     <? if (CSite::InDir('/personal/reviews')) : ?>
-        <link rel="stylesheet" href="<?= SITE_TEMPLATE_PATH ?>/assets/css/lk_reviews.min.css?v=1664554795394">
+        <link rel="stylesheet" href="<?= SITE_TEMPLATE_PATH ?>/assets/css/lk_reviews.css?v=1664554795394">
     <? endif; ?>
     <? if (CSite::InDir('/personal/active')) : ?>
-        <link rel="stylesheet" href="<?= SITE_TEMPLATE_PATH ?>/assets/css/lk_active.min.css?v=1664554794106">
+        <link rel="stylesheet" href="<?= SITE_TEMPLATE_PATH ?>/assets/css/lk_active.css?v=1664554794106">
     <? endif; ?>
     <? if (CSite::InDir('/personal/history')) : ?>
-        <link rel="stylesheet" href="<?= SITE_TEMPLATE_PATH ?>/assets/css/lk_history.min.css?v=1664554794775">
+        <link rel="stylesheet" href="<?= SITE_TEMPLATE_PATH ?>/assets/css/lk_history.css?v=1664554794775">
     <? endif; ?>
     <? if (CSite::InDir('/personal/favourites')) : ?>
-        <link rel="stylesheet" href="<?= SITE_TEMPLATE_PATH ?>/assets/css/lk_favorite.min.css?v=1664554794433">
+        <link rel="stylesheet" href="<?= SITE_TEMPLATE_PATH ?>/assets/css/lk_favorite.css?v=1664554794433">
     <? endif; ?>
     <? if (CSite::InDir('/about')) : ?>
-        <link rel="stylesheet" href="<?= SITE_TEMPLATE_PATH ?>/assets/css/about.min.css?v=1664554795104">
+        <link rel="stylesheet" href="<?= SITE_TEMPLATE_PATH ?>/assets/css/about.css?v=1664554795104">
     <? endif; ?>
     <? if (CSite::InDir('/impressions')) : ?>
-        <link rel="stylesheet" href="<?= SITE_TEMPLATE_PATH ?>/assets/css/impressions.min.css?v=1664554795104">
+        <link rel="stylesheet" href="<?= SITE_TEMPLATE_PATH ?>/assets/css/impressions.css?v=1664554795104">
     <? endif; ?>
     <? if (CSite::InDir('/contacts')) : ?>
-        <link rel="stylesheet" href="<?= SITE_TEMPLATE_PATH ?>/assets/css/contacts.min.css?v=1664554795104">
+        <link rel="stylesheet" href="<?= SITE_TEMPLATE_PATH ?>/assets/css/contacts.css?v=1664554795104">
     <? endif; ?>
     <? if (CSite::InDir('/map')) : ?>
-        <link rel="stylesheet" href="<?= SITE_TEMPLATE_PATH ?>/assets/css/catalog.min.css?v=1664304519938">
+        <link rel="stylesheet" href="<?= SITE_TEMPLATE_PATH ?>/assets/css/catalog.css?v=1664304519938">
     <? endif; ?>
     <? if (CSite::InDir('/objects')) : ?>
-        <link rel="stylesheet" href="<?= SITE_TEMPLATE_PATH ?>/assets/css/add_object.min.css?v=1664304519938">
+        <link rel="stylesheet" href="<?= SITE_TEMPLATE_PATH ?>/assets/css/add_object.css?v=1664304519938">
     <? endif; ?>
 
     <link rel="stylesheet" href="<?= SITE_TEMPLATE_PATH ?>/assets/css/custom.css?v=1664304519938">
@@ -103,7 +103,7 @@ Asset::getInstance()->addJs(SITE_TEMPLATE_PATH . "/js/common.js");
 height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <!-- End Google Tag Manager (noscript) -->
 
-<? if ($USER->IsAuthorized()): ?>
+<? if ($USER->IsAuthorized() && $_GET['isAdmin'] == 'y') : ?>
     <div id="admin_panel"><? $APPLICATION->ShowPanel(); ?></div>
 <? endif; ?>
 
