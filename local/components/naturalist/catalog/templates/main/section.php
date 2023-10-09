@@ -501,6 +501,146 @@ $APPLICATION->AddHeadString('<meta name="description" content="' . $descriptionS
                         </a>
                     </div>
                 </div>
+
+                <div class="catalog_filter">
+                    <form class="form filters" id="form-catalog-filter-front">
+                        <div class="form__group">
+                            <div class="form__item">
+                                <div class="field field_autocomplete" data-autocomplete="/ajax/autocomplete.php">
+                                    <input type="hidden" data-autocomplete-result value='<?= ($arFilterValues["SEARCH"]) ? $arFilterValues["SEARCH"] : null?>'>
+                                    <input class="field__input" type="text" name="name" placeholder="Укажите место или глэмпинг" data-autocomplete-field value='<?= ($arFilterValues["SEARCH_TEXT"]) ? $arFilterValues["SEARCH_TEXT"] : null?>'>
+                                    <div class="autocomplete-dropdown" data-autocomplete-dropdown></div>
+                                </div>
+                            </div>
+
+                            <div class="form__row calendar" data-calendar="data-calendar" data-calendar-min="today" data-calendar-max="365">
+                                <div class="form__item">
+                                    <div class="field field_icon field_calendar">
+                                        <div class="field__input" data-calendar-label="data-calendar-label" data-date-from><?php if($dateFrom):?><?=$dateFrom?><?php else:?><span>Заезд</span><?php endif;?></div>
+                                    </div>
+                                </div>
+
+                                <div class="form__item">
+                                    <div class="field field_icon field_calendar">
+                                        <div class="field__input" data-calendar-label="data-calendar-label" data-date-to><?php if($dateTo):?><?=$dateTo?><?php else:?><span>Выезд</span><?php endif;?></div>
+                                    </div>
+                                </div>
+
+                                <div class="calendar__dropdown" data-calendar-dropdown="data-calendar-dropdown">
+                                    <div class="calendar__navigation">
+                                        <div class="calendar__navigation-item calendar__navigation-item_months">
+                                            <div class="calendar__navigation-label" data-calendar-navigation="data-calendar-navigation"><span><?= $currMonthName ?></span></div>
+                                            <ul class="list">
+                                                <?php
+                                                $k = 0;
+                                                ?>
+                                                <?php foreach ($arDates[0] as $monthName) : ?>
+                                                    <li class="list__item<?php if ($k == 0) : ?> list__item_active<?php endif; ?>">
+                                                        <button data-calendar-year="<?= $currYear ?>" class="list__item-month" data-calendar-month-select="<?= $k ?>" type="button"><?= $monthName ?></button>
+                                                    </li>
+                                                    <?php $k++; ?>
+                                                <?php endforeach ?>
+                                                <li class="list__item" data-calendar-delimiter="data-calendar-delimiter">
+                                                    <div class="list__item-year"><?= $nextYear ?></div>
+                                                </li>
+                                                <?php foreach ($arDates[1] as $monthName) : ?>
+                                                    <li class="list__item">
+                                                        <button data-calendar-year="<?= $nextYear ?>" class="list__item-month" data-calendar-month-select="<?= $k ?>" type="button"><?= $monthName ?></button>
+                                                    </li>
+                                                    <?php $k++; ?>
+                                                <?php endforeach ?>
+                                            </ul>
+                                        </div>
+
+                                        <div class="calendar__navigation-item calendar__navigation-item_years">
+                                            <div class="calendar__navigation-label" data-calendar-navigation="data-calendar-navigation"><span><?= $currYear ?></span></div>
+                                            <ul class="list">
+                                                <li class="list__item list__item_active">
+                                                    <button data-calendar-year-select="<?= $currYear ?>" type="button"><?= $currYear ?></button>
+                                                </li>
+                                                <li class="list__item">
+                                                    <button data-calendar-year-select="<?= $nextYear ?>" type="button"><?= $nextYear ?></button>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+
+                                    <div class="calendar__month">
+                                        <input type="hidden" data-calendar-value="data-calendar-value">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form__item">
+                                <div class="field field_icon guests" data-guests="data-guests">
+                                    <div class="field__input" data-guests-control="data-guests-control"><?=$guests + $children?> <?= $guestsDeclension->get($guests + $children) ?></div>
+
+                                    <div class="guests__dropdown">
+                                        <div class="guests__guests">
+                                            <div class="guests__item">
+                                                <div class="guests__label">
+                                                    <div>Взрослые</div><span>от 18 лет</span>
+                                                </div>
+                                                <div class="counter">
+                                                    <button class="counter__minus" type="button"></button>
+                                                    <input type="text" disabled="disabled" data-guests-adults-count="data-guests-adults-count" name="guests-adults-count" value="<?=$guests?>" data-min="1">
+                                                    <button class="counter__plus" type="button"></button>
+                                                </div>
+                                            </div>
+
+                                            <div class="guests__item">
+                                                <div class="guests__label">
+                                                    <div>Дети</div>
+                                                </div>
+                                                <div class="counter">
+                                                    <button class="counter__minus" type="button"></button>
+                                                    <input type="text" disabled="disabled" data-guests-children-count="data-guests-children-count" name="guests-children-count" value="<?=$children?>" data-min="0">
+                                                    <button class="counter__plus" type="button"></button>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="guests__children" data-guests-children="data-guests-children">
+                                            <?php if ($arChildrenAge): ?>
+                                                <?php foreach ($arChildrenAge as $keyAge => $valueAge): ?>
+                                                    <div class="guests__item">
+                                                        <div class="guests__label">
+                                                            <div>Возраст</div>
+                                                            <span>от 0 до 17 лет</span>
+                                                        </div>
+                                                        <div class="counter">
+                                                            <button class="counter__minus" type="button">
+                                                                <svg class="icon icon_arrow-small" viewBox="0 0 16 16" style="width: 1.6rem; height: 1.6rem;">
+                                                                    <use xlink:href="#arrow-small"></use>
+                                                                </svg>
+                                                            </button>
+                                                            <input type="text" disabled="" data-guests-children=""
+                                                                   name="guests-children-<?= $keyAge ?>"
+                                                                   value="<?= $valueAge ?>"
+                                                                   data-min="0" data-max="17">
+                                                            <button class="counter__plus" type="button">
+                                                                <svg class="icon icon_arrow-small" viewBox="0 0 16 16" style="width: 1.6rem; height: 1.6rem;">
+                                                                    <use xlink:href="#arrow-small"></use>
+                                                                </svg>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                <?php endforeach; ?>
+                                            <?php endif; ?>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="filters__controls">
+                                <!--                    <button class="button button_clear" data-filter-reset>Сбросить всё</button>-->
+                                <button class="button button_primary" data-filter-set data-filter-catalog-front-btn="true">Найти</button>
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+
             </div>
         </section>
         <!-- section-->

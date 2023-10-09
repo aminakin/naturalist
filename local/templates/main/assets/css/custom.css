@@ -6,25 +6,32 @@
 #form-catalog-filter-front .form__row,
 #form-catalog-filter-front .form__group{
     display: flex;
-    gap: 5px;
+    gap: 0;
     width: 100%;
 }
 
 #form-catalog-filter-front .form__group{
     align-items: center;
-    justify-content: space-between;
-
+    justify-content: flex-start;
 }
+
+#form-catalog-filter-front .form__group .field__input{
+    border-color: var(--color-beige);
+}
+
 #form-catalog-filter-front .form__group > div{
-    width: 33.3%;
+    /*width: fit-content;*/
+}
+
+#form-catalog-filter-front .form__group > .calendar{
+    width:40%;
 }
 #form-catalog-filter-front .form__row > .form__item{
     width: 50%;
 }
+
 #form-catalog-filter-front  .filters__controls{
-    border-top: none;
-    border-bottom: 0.1rem solid #000;
-    border-bottom: 0.1rem solid var(--color-black);
+    border: none;
     padding: 0;
 }
 #form-catalog-filter-front  .guests__dropdown{
@@ -36,6 +43,6 @@
         flex-direction: column;
     }
     #form-catalog-filter-front .form__group > div{
-        width: 100%;
+        width: 100% !important;
     }
 }
