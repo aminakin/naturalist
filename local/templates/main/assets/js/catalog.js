@@ -2360,10 +2360,10 @@
             easing: "swing", // or 'linear'
 
             /* Callbacks
-      begin(elements)
-      complete(elements)
-      progress(elements, complete, remaining, start, tweenValue)
-      */
+        begin(elements)
+        complete(elements)
+        progress(elements, complete, remaining, start, tweenValue)
+        */
           },
           initialParams
         ),
@@ -3359,8 +3359,8 @@
 
       function getDirectionLabel(property) {
         if (swiper.isHorizontal()) {
-      return property;
-    } // prettier-ignore
+        return property;
+      } // prettier-ignore
 
         return {
           width: "height",
@@ -6064,13 +6064,13 @@
     function addClasses() {
       const swiper = this;
       const {
-    classNames,
-    params,
-    rtl,
-    $el,
-    device,
-    support
-  } = swiper; // prettier-ignore
+      classNames,
+      params,
+      rtl,
+      $el,
+      device,
+      support
+    } = swiper; // prettier-ignore
 
       const suffixes = prepareClasses(
         [
@@ -13187,10 +13187,10 @@
               ? `${1 + (1 - scale) * progress}`
               : `${1 - (1 - scale) * progress}`;
           const transform = `
-        translate3d(${tX}, ${tY}, ${tZ}px)
-        rotateZ(${params.rotate ? rotate : 0}deg)
-        scale(${scaleString})
-      `;
+          translate3d(${tX}, ${tY}, ${tZ}px)
+          rotateZ(${params.rotate ? rotate : 0}deg)
+          scale(${scaleString})
+        `;
 
           if (params.slideShadows) {
             // Set shadows
@@ -13257,7 +13257,7 @@
 
     core.use([Navigation, Pagination, Lazy, EffectFade]);
     /* HEADING
- -------------------------------------------------- */
+   -------------------------------------------------- */
 
     var $heading = document.querySelector("[data-slider-heading]");
 
@@ -13290,7 +13290,7 @@
       });
     }
     /* OBJECT
- -------------------------------------------------- */
+   -------------------------------------------------- */
 
     window.objectsGallery = function () {
       var $object = document.querySelectorAll(
@@ -13299,14 +13299,15 @@
 
       if ($object.length) {
         $object.forEach(function ($item) {
+          // eslint-disable-next-line no-unused-vars
           var objectSlider = new core($item, {
             slidesPerView: 1,
             spaceBetween: 0,
             speed: 250,
             effect: "slide",
-            loop: false,
+            loop: $item.querySelectorAll(".swiper-slide").length > 1,
+            watchOverflow: true,
             watchSlidesProgress: true,
-            // init: false,
             preloadImages: false,
             lazy: {
               loadPrevNext: true,
@@ -13329,42 +13330,43 @@
       window.objectsGallery();
     });
     /* RELATED
- -------------------------------------------------- */
+   -------------------------------------------------- */
 
-    var $headingRelated = document.querySelector("[data-slider-related]");
-
-    if ($headingRelated) {
-      var headingRelatedSlider = new core(
-        $headingRelated.querySelector(".swiper"),
-        {
-          slidesPerView: 3,
-          spaceBetween: 20,
-          speed: 250,
-          effect: "slide",
-          loop: false,
-          watchSlidesProgress: true,
-          init: false,
-          navigation: {
-            nextEl: $headingRelated.querySelector(
-              ".slider__heading-controls .swiper-button-next"
-            ),
-            prevEl: $headingRelated.querySelector(
-              ".slider__heading-controls .swiper-button-prev"
-            ),
-          },
-          breakpoints: {
-            1280: {
-              slidesPerView: 4,
+    window.sliderRelated = function () {
+      var $headingRelated = document.querySelectorAll("[data-slider-related]");
+      $headingRelated.forEach(function ($item) {
+        if ($item.querySelector(".swiper:not(.swiper-initialized)")) {
+          // eslint-disable-next-line no-unused-vars
+          var headingRelatedSlider = new core($item.querySelector(".swiper"), {
+            slidesPerView: 3,
+            spaceBetween: 20,
+            speed: 250,
+            effect: "slide",
+            loop: false,
+            watchSlidesProgress: true,
+            navigation: {
+              nextEl: $item.querySelector(
+                ".slider__heading-controls .swiper-button-next"
+              ),
+              prevEl: $item.querySelector(
+                ".slider__heading-controls .swiper-button-prev"
+              ),
             },
-          },
+            breakpoints: {
+              1280: {
+                slidesPerView: 4,
+              },
+            },
+          });
         }
-      );
-      window.addEventListener("load", function () {
-        headingRelatedSlider.init();
       });
-    }
+    };
+
+    window.addEventListener("load", function () {
+      window.sliderRelated();
+    });
     /* MODAL GALLERY
- -------------------------------------------------- */
+   -------------------------------------------------- */
 
     window.modalGallery = function () {
       return new core("[data-modal-gallery] .swiper", {
@@ -13387,7 +13389,75 @@
           prevEl: ".swiper-button-prev",
         },
       });
-    }; // CONCATENATED MODULE: ./src/js/components/accordion.js
+    };
+    /* FULL GALLERY
+   -------------------------------------------------- */
+
+    document.addEventListener("click", function (event) {
+      var $el = event.target;
+
+      if (
+        $el.matches("[data-fullgallery-item]") ||
+        $el.closest("[data-fullgallery-item]")
+      ) {
+        event.preventDefault();
+        var $dataEl = $el.matches("[data-fullgallery-item]")
+          ? $el
+          : $el.closest("[data-fullgallery-item]");
+        var id = $dataEl.dataset.fullgalleryItem;
+        var images = JSON.parse(
+          $el.closest("[data-fullgallery]").dataset.fullgallery
+        );
+
+        if (images.length > 0) {
+          document.body.insertAdjacentHTML(
+            "beforeend",
+            '<div class="modal modal_fullgallery" id="fullgallery">\n\t\t\t\t\t<div class="modal__container">\n\t\t\t\t\t\t<button class="modal__close" data-modal-close>\n\t\t\t\t\t\t\t<svg class="icon icon_cross-large" viewBox="0 0 32 32" style="width: 3.2rem; height: 3.2rem;">\n\t\t\t\t\t\t\t\t<use xlink:href="#cross-large"></use>\n\t\t\t\t\t\t\t</svg>\n\t\t\t\t\t\t\t<svg class="icon icon_cross" viewBox="0 0 18 18" style="width: 1.8rem; height: 1.8rem;">\n\t\t\t\t\t\t\t\t<use xlink:href="#cross"></use>\n\t\t\t\t\t\t\t</svg>\n\t\t\t\t\t\t</button>\n\t\t\t\t\t\t<div class="swiper slider-gallery slider-gallery_large">\n\t\t\t\t\t\t\t<div class="swiper-wrapper">\n\t\t\t\t\t\t\t\t'.concat(
+              images
+                .map(function (item) {
+                  return '<div class="swiper-slide"><img class="swiper-lazy" src="'.concat(
+                    item,
+                    '" alt=""></div>'
+                  );
+                })
+                .join(""),
+              '\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t<div class="swiper-button-prev">\n\t\t\t\t\t\t\t\t<svg class="icon icon_arrow-large" viewBox="0 0 32 32" style="width: 3.2rem; height: 3.2rem;">\n\t\t\t\t\t\t\t\t\t<use xlink:href="#arrow-large"></use>\n\t\t\t\t\t\t\t\t</svg>\n\t\t\t\t\t\t\t\t<svg class="icon icon_arrow-small" viewBox="0 0 16 16" style="width: 1.6rem; height: 1.6rem;">\n\t\t\t\t\t\t\t\t\t<use xlink:href="#arrow-small"></use>\n\t\t\t\t\t\t\t\t</svg>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t<div class="swiper-button-next">\n\t\t\t\t\t\t\t\t<svg class="icon icon_arrow-large" viewBox="0 0 32 32" style="width: 3.2rem; height: 3.2rem;">\n\t\t\t\t\t\t\t\t\t<use xlink:href="#arrow-large"></use>\n\t\t\t\t\t\t\t\t</svg>\n\t\t\t\t\t\t\t\t<svg class="icon icon_arrow-small" viewBox="0 0 16 16" style="width: 1.6rem; height: 1.6rem;">\n\t\t\t\t\t\t\t\t\t<use xlink:href="#arrow-small"></use>\n\t\t\t\t\t\t\t\t</svg>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t<div class="swiper-pagination"></div>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\t\t\t\t</div>'
+            )
+          );
+          var slider = new core("#fullgallery .swiper", {
+            slidesPerView: 1,
+            spaceBetween: 0,
+            speed: 250,
+            effect: "fade",
+            loop: false,
+            watchSlidesProgress: true,
+            fadeEffect: {
+              crossFade: true,
+            },
+            preloadImages: false,
+            lazy: {
+              loadPrevNext: true,
+              loadOnTransitionStart: true,
+            },
+            navigation: {
+              nextEl: ".swiper-button-next",
+              prevEl: ".swiper-button-prev",
+            },
+            pagination: {
+              el: ".swiper-pagination",
+              type: "bullets",
+            },
+          });
+          slider.slideTo(parseInt(id), 0);
+          window.modal.open("fullgallery");
+        }
+      }
+    });
+    window.addEventListener("modalAfterClose", function (event) {
+      if (event.detail.id === "fullgallery") {
+        document.getElementById("fullgallery").remove();
+      }
+    }); // CONCATENATED MODULE: ./src/js/components/accordion.js
     function accordion(className) {
       document
         .querySelectorAll(".".concat(className, "-heading"))
@@ -13398,15 +13468,14 @@
               .classList.toggle("".concat(className, "_show"));
           });
         });
-    } // CONCATENATED MODULE: ./src/js/components/declension.js
+    } // CONCATENATED MODULE: ./src/js/helpers/declension.js
     function declension(
+      number,
       oneNominative,
       severalGenitive,
-      severalNominative,
-      number
+      severalNominative
     ) {
-      var num = number % 100; // eslint-disable-next-line no-return-assign,no-nested-ternary,no-cond-assign
-
+      var num = number % 100;
       return num <= 14 && num >= 11
         ? severalGenitive
         : (num %= 10) < 5
@@ -13418,7 +13487,7 @@
           ? severalGenitive
           : severalNominative
         : severalGenitive;
-    } // CONCATENATED MODULE: ./src/js/components/guests-input.js
+    } // CONCATENATED MODULE: ./src/js/components/guests_input.js
     var $guestsControl = document.querySelector("[data-guests-control]");
     var $guests = document.querySelector("[data-guests]");
     var $guestsAdultsCount = document.querySelector(
@@ -13447,7 +13516,7 @@
           parseInt($guestsChildrenCount.value);
         $guestsControl.innerText = ""
           .concat(allCount, " ")
-          .concat(declension("гость", "гостей", "гостя", allCount));
+          .concat(declension(allCount, "гость", "гостей", "гостя"));
       };
 
       $guestsAdultsCount.addEventListener("change", function () {
@@ -13462,7 +13531,7 @@
           var childrenLength = $children.length;
 
           if (value > childrenLength) {
-            var childrenNew = [];
+            var childrenNew = []; // eslint-disable-next-line no-plusplus
 
             for (var i = 0; i < value - childrenLength; i++) {
               childrenNew.push(childrenLength + i);
@@ -13486,6 +13555,7 @@
           }
 
           if (value < childrenLength) {
+            // eslint-disable-next-line no-plusplus
             for (var _i = 0; _i < childrenLength - value; _i++) {
               $children[childrenLength - 1 - _i].remove();
             }
@@ -16991,8 +17061,8 @@
 
     /* harmony default export */ var esm = flatpickr;
     // EXTERNAL MODULE: ./node_modules/flatpickr/dist/l10n/ru.js
-    var ru = __webpack_require__(7896); // CONCATENATED MODULE: ./src/js/components/range-calendar.js
-    var RangeCalendar = /*#__PURE__*/ (function () {
+    var ru = __webpack_require__(7896); // CONCATENATED MODULE: ./src/js/components/range_calendar.js
+    var RangeCalendar = (function () {
       function RangeCalendar() {
         _classCallCheck(this, RangeCalendar);
 
@@ -17007,11 +17077,11 @@
         };
         this.$elements = {
           main: document.querySelector("[data-calendar]"),
-          dropdown: document.querySelector("[data-calendar-dropdown]"),
+          dropdown: document.querySelectorAll("[data-calendar-dropdown]"),
           labels: document.querySelectorAll("[data-calendar-label]"),
           months: document.querySelectorAll("[data-calendar-month-select]"),
           years: document.querySelectorAll("[data-calendar-year-select]"),
-          value: document.querySelector("[data-calendar-value]"),
+          value: document.querySelectorAll("[data-calendar-value]"),
           selects: document.querySelectorAll("[data-calendar-navigation]"),
         };
       }
@@ -17031,15 +17101,17 @@
                 !$el.matches("[data-calendar-label]") &&
                 !$el.closest("[data-calendar-label]")
               ) {
-                _this.$elements.dropdown.classList.remove(
-                  "calendar__dropdown_show"
-                );
+                // _this.$elements.dropdown.classList.remove('calendar__dropdown_show');
+                _this.$elements.dropdown.forEach(function ($item) {
+                  $item.classList.remove("calendar__dropdown_show");
+                });
               }
             });
             window.addEventListener("resize", function () {
-              _this.$elements.dropdown.classList.remove(
-                "calendar__dropdown_show"
-              );
+              // _this.$elements.dropdown.classList.remove('calendar__dropdown_show');
+              _this.$elements.dropdown.forEach(function ($item) {
+                $item.classList.remove("calendar__dropdown_show");
+              });
             });
           },
         },
@@ -17048,18 +17120,25 @@
           value: function handleChangeValue() {
             var _this2 = this;
 
-            this.$elements.value.addEventListener("change", function (event) {
-              var dates = event.target.value.split(" — ");
+            this.$elements.value.forEach(($value) => {
+              $value.addEventListener("change", function (event) {
+                var dates = event.target.value.split(" — ");
+                var $el = event.target;
 
-              _this2.$elements.labels.forEach(function ($item, index) {
-                if (dates[index]) $item.innerHTML = dates[index];
+                $el
+                  .closest("[data-calendar]")
+                  .querySelectorAll("[data-calendar-label]")
+                  .forEach(function ($item, index) {
+                    if (dates[index]) $item.innerHTML = dates[index];
+                  });
+
+                if (dates.length > 1) {
+                  // _this2.$elements.dropdown.classList.remove('calendar__dropdown_show');
+                  _this2.$elements.dropdown.forEach(function ($item) {
+                    $item.classList.remove("calendar__dropdown_show");
+                  });
+                }
               });
-
-              if (dates.length > 1) {
-                _this2.$elements.dropdown.classList.remove(
-                  "calendar__dropdown_show"
-                );
-              }
             });
           },
         },
@@ -17069,10 +17148,14 @@
             var _this3 = this;
 
             this.$elements.labels.forEach(function ($item) {
-              $item.addEventListener("click", function () {
-                _this3.$elements.dropdown.classList.toggle(
-                  "calendar__dropdown_show"
-                );
+              $item.addEventListener("click", function (event) {
+                var $el = event.target;
+
+                $el
+                  .closest("[data-calendar]")
+                  .querySelector("[data-calendar-dropdown]")
+                  .classList.toggle("calendar__dropdown_show");
+                // _this3.$elements.dropdown.classList.toggle('calendar__dropdown_show');
               });
             });
           },
@@ -17106,6 +17189,9 @@
                   .querySelector("[data-calendar-navigation] span").innerText =
                   $el.innerText;
                 _this4.data.month = nextIndex;
+                $el
+                  .closest(".calendar__navigation-item")
+                  .classList.remove("calendar__navigation-item_show");
               });
             });
           },
@@ -17193,6 +17279,9 @@
                       "[data-calendar-navigation] span"
                     ).innerText = $firstMonth.innerText;
                   _this6.data.month = nextMonth;
+                  $item
+                    .closest(".calendar__navigation-item")
+                    .classList.remove("calendar__navigation-item_show");
 
                   _this6.handleMonthsHide();
                 }
@@ -17209,17 +17298,29 @@
               var _this$$elements$main$ = this.$elements.main.dataset,
                 calendarMin = _this$$elements$main$.calendarMin,
                 calendarMax = _this$$elements$main$.calendarMax;
-              this.calendar = esm(this.$elements.value, {
-                locale: ru.Russian,
-                inline: true,
-                mode: "range",
-                dateFormat: "d.m.Y",
-                minDate: calendarMin !== undefined ? calendarMin : null,
-                maxDate:
-                  calendarMax !== undefined
-                    ? new Date().fp_incr(parseInt(calendarMax))
-                    : null,
+
+              this.$elements.value.forEach(($value) => {
+                esm($value, {
+                  locale: ru.Russian,
+                  inline: true,
+                  mode: "range",
+                  dateFormat: "d.m.Y",
+                  minDate: calendarMin !== undefined ? calendarMin : null,
+                  maxDate:
+                    calendarMax !== undefined
+                      ? new Date().fp_incr(parseInt(calendarMax))
+                      : null,
+                });
               });
+              // this.calendar = esm(this.$elements.value, {
+              //   locale: ru.Russian,
+              //   inline: true,
+              //   mode: 'range',
+              //   dateFormat: 'd.m.Y',
+              //   minDate: calendarMin !== undefined ? calendarMin : null,
+              //   maxDate: calendarMax !== undefined ? new Date().fp_incr(parseInt(calendarMax)) : null
+              // });
+
               this.handleChangeMonth();
               this.handleChangeValue();
               this.handleHide();
@@ -17506,6 +17607,7 @@
             }
 
             $input.value = $input.value.replace(this.regex, "");
+            return true;
           },
         },
         {
@@ -17542,6 +17644,7 @@
             setTimeout(function () {
               $input.value = prefix + value + postfix;
             }, 300);
+            return true;
           },
         },
         {
@@ -17557,7 +17660,7 @@
       return Counter;
     })();
 
-    /* harmony default export */ var counter = Counter; // CONCATENATED MODULE: ./src/js/components/scroll_lock.js
+    /* harmony default export */ var counter = Counter; // CONCATENATED MODULE: ./src/js/components/scroll-lock.js
     var scrollPosition = 0;
     window.scrollLocked = 0;
     var $body = document.querySelector("body");
@@ -17650,7 +17753,16 @@
       isIPhone: isIPhone,
       isIPad: isIPad,
     };
-    /* harmony default export */ var device = Device; // CONCATENATED MODULE: ./src/js/components/catalog-map.js
+    /* harmony default export */ var device = Device; // CONCATENATED MODULE: ./src/js/helpers/rem_size.js
+    function remSize() {
+      var size = 10;
+      var bodyWidth = document.body.clientWidth;
+      if (bodyWidth < 375) size = window.innerWidth / 37.5;
+      if (bodyWidth >= 1580 && bodyWidth < 1780) size = 11;
+      if (bodyWidth >= 1780 && bodyWidth < 1900) size = 12;
+      if (bodyWidth >= 1900) size = 13;
+      return size;
+    } // CONCATENATED MODULE: ./src/js/components/catalog_map.js
     var CatalogMap = /*#__PURE__*/ (function () {
       function CatalogMap() {
         _classCallCheck(this, CatalogMap);
@@ -17661,6 +17773,7 @@
         this.objects = [];
         this.clusterer = null;
         this.$elements = {
+          catalog: document.querySelector(".catalog"),
           overlay: document.querySelector("[data-map-overlay]"),
           fullscreen: document.querySelectorAll("[data-map-full]"),
           halfscreen: document.querySelector("[data-map-half]"),
@@ -17672,466 +17785,537 @@
         this.fullscreen = false;
       }
 
-      _createClass(CatalogMap, [
-        {
-          key: "handleCreateObject",
-          value: function handleCreateObject(data) {
-            this.$elements.more.innerHTML =
-              '\n\t\t\t<button class="catalog__map-more-close" type="button" data-map-object-close>\n\t\t\t\t<svg class="icon icon_cross" viewBox="0 0 18 18" style="width: 1.8rem; height: 1.8rem;">\n\t\t\t\t\t<use xlink:href="#cross"></use>\n\t\t\t\t</svg>\n\t\t\t</button>\n\n\t\t\t<div class="object">\n\t\t\t\t<div class="object__images">\n\t\t\t\t\t<div class="swiper slider-gallery" data-slider-object>\n\t\t\t\t\t\t<div class="swiper-wrapper">\n\t\t\t\t\t\t\t'
-                .concat(
-                  data.gallery
-                    .map(function (item) {
-                      return '\n\t\t\t\t\t\t\t\t\t<div class="swiper-slide"><img class="swiper-lazy" src="'.concat(
-                        item,
-                        '" alt=""></div>\n\t\t\t\t\t\t\t\t'
-                      );
-                    })
-                    .join(""),
-                  '\n\t\t\t\t\t\t</div>\n\n\t\t\t\t\t\t<div class="swiper-button-prev">\n\t\t\t\t\t\t\t<svg class="icon icon_arrow-small" viewBox="0 0 16 16" style="width: 1.6rem; height: 1.6rem;">\n\t\t\t\t\t\t\t\t<use xlink:href="#arrow-small"></use>\n\t\t\t\t\t\t\t</svg>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t\t<div class="swiper-button-next">\n\t\t\t\t\t\t\t<svg class="icon icon_arrow-small" viewBox="0 0 16 16" style="width: 1.6rem; height: 1.6rem;">\n\t\t\t\t\t\t\t\t<use xlink:href="#arrow-small"></use>\n\t\t\t\t\t\t\t</svg>\n\t\t\t\t\t\t</div>\n\n\t\t\t\t\t\t<div class="swiper-pagination"></div>\n\t\t\t\t\t</div>\n\n\t\t\t\t\t<button class="favorite" data-id="'
-                )
-                .concat(data.id, '" data-favourite-')
-                .concat(
-                  data.favorite ? "remove" : "add",
-                  '>\n\t\t\t\t\t\t<img src="'
-                )
-                .concat(this.options.imageAssetsPath, "assets/img/favorite")
-                .concat(
-                  data.favorite ? "-active" : "",
-                  '.svg" alt="">\n\t\t\t\t\t</button>\n\t\t\t\t\t'
-                )
-                .concat(
-                  data.tag
-                    ? '<div class="tag">'.concat(data.tag, "</div>")
-                    : "",
-                  '\n\t\t\t\t</div>\n\n\t\t\t\t<div class="object__heading">\n\t\t\t\t\t<a class="object__title"  onclick="setLocalStorageCatalog(event);" href="'
-                )
-                .concat(data.href, '">')
-                .concat(
-                  data.title,
-                  '</a>\n\t\t\t\t\t<div class="score">\n\t\t\t\t\t\t<img src="'
-                )
-                .concat(
-                  this.options.imageAssetsPath,
-                  'assets/img/score.svg" alt="">\n\t\t\t\t\t\t<span>'
-                )
-                .concat(
-                  data.score,
-                  '</span>\n\t\t\t\t\t</div>\n\t\t\t\t</div>\n\n\t\t\t\t<div class="object__marker">\n\t\t\t\t\t'
-                )
-                .concat(
-                  data.marker
-                    ? '\n\t\t\t\t\t\t<div class="area-info">\n\t\t\t\t\t\t\t<img src="'
-                        .concat(
-                          this.options.imageAssetsPath,
-                          'assets/img/marker.svg" alt="">\n\t\t\t\t\t\t\t<div>\n\t\t\t\t\t\t\t\t<span>'
-                        )
-                        .concat(
-                          data.marker,
-                          "</span>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t"
-                        )
-                    : "",
-                  '\n\t\t\t\t</div>\n\n\t\t\t\t<a class="button button_transparent" onclick="setLocalStorageCatalog(event);" href="'
-                )
-                .concat(data.href, '">8 740 \u20BD</a>\n\t\t\t</div>\n\t\t');
-            window.objectsGallery();
+      _createClass(
+        CatalogMap,
+        [
+          {
+            key: "handleCreateObject",
+            value: function handleCreateObject(data) {
+              this.$elements.more.innerHTML =
+                '\n\t\t\t<button class="catalog__map-more-close" type="button" data-map-object-close>\n\t\t\t\t<svg class="icon icon_cross" viewBox="0 0 18 18" style="width: 1.8rem; height: 1.8rem;">\n\t\t\t\t\t<use xlink:href="#cross"></use>\n\t\t\t\t</svg>\n\t\t\t</button>\n\n\t\t\t<div class="object">\n\t\t\t\t<div class="object__images">\n\t\t\t\t\t<div class="swiper slider-gallery" data-slider-object data-fullgallery=\''
+                  .concat(
+                    JSON.stringify(data.gallery),
+                    '\'>\n\t\t\t\t\t\t<div class="swiper-wrapper">\n\t\t\t\t\t\t\t'
+                  )
+                  .concat(
+                    data.gallery
+                      .map(function (item, index) {
+                        return '\n\t\t\t\t\t\t\t\t\t\t<div class="swiper-slide" data-fullgallery-item="'
+                          .concat(index, '"><img class="swiper-lazy" src="')
+                          .concat(item, '" alt=""></div>\n\t\t\t\t\t\t\t\t\t');
+                      })
+                      .join(""),
+                    '\n\t\t\t\t\t\t</div>\n\n\t\t\t\t\t\t<div class="swiper-button-prev">\n\t\t\t\t\t\t\t<svg class="icon icon_arrow-small" viewBox="0 0 16 16" style="width: 1.6rem; height: 1.6rem;">\n\t\t\t\t\t\t\t\t<use xlink:href="#arrow-small"></use>\n\t\t\t\t\t\t\t</svg>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t\t<div class="swiper-button-next">\n\t\t\t\t\t\t\t<svg class="icon icon_arrow-small" viewBox="0 0 16 16" style="width: 1.6rem; height: 1.6rem;">\n\t\t\t\t\t\t\t\t<use xlink:href="#arrow-small"></use>\n\t\t\t\t\t\t\t</svg>\n\t\t\t\t\t\t</div>\n\n\t\t\t\t\t\t<div class="swiper-pagination"></div>\n\t\t\t\t\t</div>\n\n\t\t\t\t\t<button class="favorite" data-id="'
+                  )
+                  .concat(data.id, '" data-favourite-')
+                  .concat(
+                    data.favorite ? "remove" : "add",
+                    '>\n\t\t\t\t\t\t<img src="'
+                  )
+                  .concat(this.options.imageAssetsPath, "assets/img/favorite")
+                  .concat(
+                    data.favorite ? "-active" : "",
+                    '.svg" alt="">\n\t\t\t\t\t</button>\n\t\t\t\t\t'
+                  )
+                  .concat(
+                    data.tag
+                      ? '<div class="tag">'.concat(data.tag, "</div>")
+                      : "",
+                    '\n\t\t\t\t</div>\n\n\t\t\t\t<div class="object__heading">\n\t\t\t\t\t<a class="object__title"  onclick="setLocalStorageCatalog(event);" href="'
+                  )
+                  .concat(data.href, '">')
+                  .concat(data.title, "</a>\n\t\t\t\t\t")
+                  .concat(
+                    data.scoreData && data.scoreData.length > 0
+                      ? '<a href="'
+                          .concat(
+                            data.href,
+                            '#reviews-anchor" class="score" data-score=\''
+                          )
+                          .concat(
+                            JSON.stringify(data.scoreData),
+                            "'>\n\t\t\t\t\t\t\t\t<img src=\""
+                          )
+                          .concat(
+                            this.options.imageAssetsPath,
+                            'assets/img/score.svg" alt="">\n\t\t\t\t\t\t\t\t<span>'
+                          )
+                          .concat(data.score, "</span>\n\t\t\t\t\t\t\t</a>")
+                      : "",
+                    '\n\t\t\t\t</div>\n\n\t\t\t\t<div class="object__marker">\n\t\t\t\t\t'
+                  )
+                  .concat(
+                    data.marker
+                      ? '\n\t\t\t\t\t\t\t\t<div class="area-info">\n\t\t\t\t\t\t\t\t\t<img src="'
+                          .concat(
+                            this.options.imageAssetsPath,
+                            'assets/img/marker.svg" alt="">\n\t\t\t\t\t\t\t\t\t<div>\n\t\t\t\t\t\t\t\t\t\t<span>'
+                          )
+                          .concat(
+                            data.marker,
+                            "</span>\n\t\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t"
+                          )
+                      : "",
+                    '\n\t\t\t\t</div>\n\n\t\t\t\t<a class="button button_transparent" onclick="setLocalStorageCatalog(event);" href="'
+                  )
+                  .concat(data.href, '">')
+                  .concat(data.price, "</a>\n\t\t\t</div>\n\t\t");
+              window.objectsGallery();
+              window.scoreCreate();
+            },
           },
-        },
-        {
-          key: "handleCreateClusters",
-          value: function handleCreateClusters() {
-            var clusterLayout = ymaps.templateLayoutFactory.createClass(
-              '<div class="object-cluster">{{ properties.geoObjects.length }}</div>'
-            );
-            this.clusterer = new ymaps.Clusterer({
-              clusterIconLayout: clusterLayout,
-              clusterIconShape: {
-                type: "Circle",
-                coordinates: [0, 0],
-                radius: 16,
-              },
-              groupByCoordinates: false,
-              clusterDisableClickZoom: false,
-              clusterHideIconOnBalloonOpen: true,
-              geoObjectHideIconOnBalloonOpen: false,
-              gridSize: 120,
-              clusterOpenBalloonOnClick: false,
-            });
+          {
+            key: "handleCreateClusters",
+            value: function handleCreateClusters() {
+              var clusterLayout = ymaps.templateLayoutFactory.createClass(
+                '<div class="object-cluster">{{ properties.geoObjects.length }}</div>'
+              );
+              this.clusterer = new ymaps.Clusterer({
+                clusterIconLayout: clusterLayout,
+                clusterIconShape: {
+                  type: "Circle",
+                  coordinates: [0, 0],
+                  radius: 16,
+                },
+                groupByCoordinates: false,
+                clusterDisableClickZoom: false,
+                clusterHideIconOnBalloonOpen: true,
+                geoObjectHideIconOnBalloonOpen: false,
+                gridSize: 120,
+                clusterOpenBalloonOnClick: false,
+              });
+            },
           },
-        },
-        {
-          key: "handleCreateMarkers",
-          value: function handleCreateMarkers() {
-            var _this = this;
+          {
+            key: "handleCreateMarkers",
+            value: function handleCreateMarkers() {
+              var _this = this;
 
-            var iconLayout = ymaps.templateLayoutFactory.createClass(
-              '<div class="object-placemark[if properties.active || properties.hover] object-placemark_active[endif]">$[properties.markerData.price]</div>'
-            );
-            var balloonLayout = ymaps.templateLayoutFactory.createClass(
-              '\n\t\t\t<div class="mini-balloon">\n\t\t\t\t<div class="mini-balloon__image">\n\t\t\t\t\t<img src="$[properties.markerData.preview]" alt="">\n\t\t\t\t</div>\n\t\t\t\t<div class="mini-balloon__content">\n\t\t\t\t\t<div class="h6">$[properties.markerData.title]</div>\n\t\t\t\t\t<div class="score"><img src="'
-                .concat(
-                  this.options.imageAssetsPath,
-                  'assets/img/score.svg" alt=""><span>$[properties.markerData.score]</span></div>\n\t\t\t\t\t<div class="area-info"><img src="'
-                )
-                .concat(
-                  this.options.imageAssetsPath,
-                  'assets/img/marker.svg" alt=""><div><span>$[properties.markerData.marker]</span></div></div>\n\t\t\t\t</div>\n\t\t\t</div>\n\t\t'
-                )
-            );
-            this.items.forEach(function (marker, index) {
-              _this.objects[index] = new ymaps.Placemark(
-                marker.coords,
+              var iconLayout = ymaps.templateLayoutFactory.createClass(
+                '<div class="object-placemark[if properties.active || properties.hover] object-placemark_active[endif]">$[properties.markerData.price]</div>'
+              );
+              var balloonLayout = ymaps.templateLayoutFactory.createClass(
+                '\n\t\t\t<div class="mini-balloon">\n\t\t\t\t<div class="mini-balloon__image">\n\t\t\t\t\t<img src="$[properties.markerData.preview]" alt="">\n\t\t\t\t</div>\n\t\t\t\t<div class="mini-balloon__content">\n\t\t\t\t\t<div class="h6">$[properties.markerData.title]</div>\n\t\t\t\t\t<div class="score"><img src="'
+                  .concat(
+                    this.options.imageAssetsPath,
+                    'assets/img/score.svg" alt=""><span>$[properties.markerData.score]</span></div>\n\t\t\t\t\t<div class="area-info"><img src="'
+                  )
+                  .concat(
+                    this.options.imageAssetsPath,
+                    'assets/img/marker.svg" alt=""><div><span>$[properties.markerData.marker]</span></div></div>\n\t\t\t\t</div>\n\t\t\t</div>\n\t\t'
+                  )
+              );
+              this.items.forEach(function (marker, index) {
+                _this.objects[index] = new ymaps.Placemark(
+                  marker.coords,
+                  {
+                    markerData: marker,
+                    active: false,
+                    hover: false,
+                  },
+                  {
+                    iconLayout: iconLayout,
+                    balloonLayout: balloonLayout,
+                    balloonPanelMaxMapArea: 1,
+                    hideIconOnBalloonOpen: false,
+                    openBalloonOnClick: false,
+                    iconShape: {
+                      type: "Rectangle",
+                      coordinates: [
+                        [-36, -12],
+                        [36, 12],
+                      ],
+                    },
+                  }
+                );
+
+                _this.objects[index].events
+                  .add("mouseenter", function (event) {
+                    if (device.isTouch()) return false;
+                    var $el = event.get("target"); // eslint-disable-next-line no-underscore-dangle
+
+                    var isActive = $el.properties._data.active;
+                    $el.properties.singleSet("hover", true);
+
+                    if (!isActive) {
+                      $el.balloon.open();
+                      var balloonTimeout = setTimeout(function () {
+                        var $marker = document.querySelector(
+                          ".object-placemark_active"
+                        );
+                        var $balloon = document.querySelector(".mini-balloon");
+
+                        if ($marker && $balloon) {
+                          var overlaySizes = _this.$elements.overlay
+                            .querySelector(".catalog__map-sticky")
+                            .getBoundingClientRect();
+
+                          var markerSizes = $marker.getBoundingClientRect();
+                          var balloonSizes = $balloon.getBoundingClientRect();
+
+                          if (window.innerHeight - markerSizes.top < 92) {
+                            $balloon.style.marginTop = "-8rem";
+                          }
+
+                          var markerLeft =
+                            markerSizes.left + markerSizes.width / 2;
+
+                          if (
+                            markerLeft - overlaySizes.left <
+                            balloonSizes.width / 2
+                          ) {
+                            $balloon.style.marginLeft = "".concat(
+                              (balloonSizes.width / 2 -
+                                (markerLeft - overlaySizes.left)) /
+                                10,
+                              "rem"
+                            );
+                          }
+
+                          if (
+                            overlaySizes.width +
+                              overlaySizes.left -
+                              markerLeft <
+                            balloonSizes.width / 2
+                          ) {
+                            $balloon.style.marginLeft = "".concat(
+                              (overlaySizes.width +
+                                overlaySizes.left -
+                                markerLeft -
+                                balloonSizes.width / 2) /
+                                10,
+                              "rem"
+                            );
+                          }
+
+                          $balloon.classList.add("mini-balloon_show");
+                        }
+
+                        clearTimeout(balloonTimeout);
+                      }, 100);
+                    }
+
+                    return true;
+                  })
+                  .add("mouseleave", function (event) {
+                    if (device.isTouch()) return false;
+                    var $el = event.get("target");
+                    $el.properties.singleSet("hover", false);
+                    $el.balloon.close();
+                    return true;
+                  })
+                  .add("click", function (event) {
+                    var $el = event.get("target"); // eslint-disable-next-line no-underscore-dangle
+
+                    var isActive = $el.properties._data.active;
+
+                    if (!isActive) {
+                      _this.$elements.more.innerHTML = "";
+
+                      _this.objects.forEach(function (item, idx) {
+                        if (index !== idx) {
+                          item.properties.singleSet("active", false);
+                        }
+                      });
+
+                      $el.balloon.close();
+                      $el.properties.singleSet("active", true); // eslint-disable-next-line no-underscore-dangle
+
+                      _this.handleCreateObject($el.properties._data.markerData);
+                    }
+                  });
+              });
+            },
+          },
+          {
+            key: "handleAddObjects",
+            value: function handleAddObjects() {
+              this.clusterer.add(this.objects);
+              this.map.geoObjects.add(this.clusterer); // this.map.setBounds(this.clusterer.getBounds(), {
+              // 	checkZoomRange: true,
+              // 	zoomMargin: 40
+              // })
+            },
+          },
+          {
+            key: "handleItemHover",
+            value: function handleItemHover() {
+              var _this2 = this;
+
+              if (!device.isTouch()) {
+                document
+                  .querySelectorAll("[data-map-id]")
+                  .forEach(function ($item) {
+                    var id = $item.dataset.mapId; // eslint-disable-next-line no-underscore-dangle
+
+                    var placemark = _this2.objects.find(function (marker) {
+                      return marker.properties._data.markerData.id === id;
+                    });
+
+                    if (placemark) {
+                      $item.addEventListener("mouseenter", function () {
+                        placemark.properties.singleSet("hover", true);
+                      });
+                      $item.addEventListener("mouseleave", function () {
+                        placemark.properties.singleSet("hover", false);
+                      });
+                    }
+                  });
+              }
+            },
+          },
+          {
+            key: "handleClearActive",
+            value: function handleClearActive() {
+              this.objects.forEach(function (item) {
+                item.properties.singleSet("active", false);
+              });
+              this.$elements.more.innerHTML = "";
+            },
+          },
+          {
+            key: "handleChangeView",
+            value: function handleChangeView() {
+              this.$elements.overlay.classList.toggle(
+                "catalog__map_fullscreen",
+                this.fullscreen
+              );
+              this.$elements.catalog.classList.toggle(
+                "catalog_map",
+                this.fullscreen
+              );
+
+              if (this.fullscreen) {
+                scrollLockEnable();
+              } else {
+                scrollLockDisable();
+              }
+
+              if (this.$elements.mobileFull)
+                this.$elements.mobileFull.classList.toggle(
+                  "crumbs__controls-mobile_hide",
+                  this.fullscreen
+                );
+              this.$elements.route.classList.toggle(
+                "route_show",
+                this.fullscreen
+              );
+              if (this.map) this.map.container.fitToViewport();
+            },
+          },
+          {
+            key: "handleShowHide",
+            value: function handleShowHide(show) {
+              this.fullscreen = show;
+              this.handleChangeView();
+            },
+          },
+          {
+            key: "handleInitMap",
+            value: function handleInitMap() {
+              console.log(ymaps);
+              this.map = new ymaps.Map(
+                "map",
                 {
-                  markerData: marker,
-                  active: false,
-                  hover: false,
+                  center: this.options.center,
+                  zoom: this.options.zoom,
+                  controls: [],
                 },
                 {
-                  iconLayout: iconLayout,
-                  balloonLayout: balloonLayout,
-                  balloonPanelMaxMapArea: 1,
-                  hideIconOnBalloonOpen: false,
-                  openBalloonOnClick: false,
-                  iconShape: {
-                    type: "Rectangle",
-                    coordinates: [
-                      [-36, -12],
-                      [36, 12],
-                    ],
+                  minZoom: 5,
+                  maxZoom: this.options.maxZoom,
+                }
+              );
+              var zoomLayout = ymaps.templateLayoutFactory.createClass(
+                '\n\t\t\t\t\t\t<button class="catalog__map-control catalog__map-control_zoom-in" type="button" id="zoom-in"></button>\n\t\t\t\t\t\t<button class="catalog__map-control catalog__map-control_zoom-out" type="button" id="zoom-out"></button>\n\t\t\t\t\t',
+                {
+                  build: function build() {
+                    zoomLayout.superclass.build.call(this);
+                    this.zoomInCallback = ymaps.util.bind(this.zoomIn, this);
+                    this.zoomOutCallback = ymaps.util.bind(this.zoomOut, this);
+                    document
+                      .getElementById("zoom-in")
+                      .addEventListener("click", this.zoomInCallback);
+                    document
+                      .getElementById("zoom-out")
+                      .addEventListener("click", this.zoomOutCallback);
+                  },
+                  clear: function clear() {
+                    document
+                      .getElementById("zoom-in")
+                      .removeEventListener("click", this.zoomInCallback);
+                    document
+                      .getElementById("zoom-out")
+                      .removeEventListener("click", this.zoomOutCallback);
+                    zoomLayout.superclass.clear.call(this);
+                  },
+                  zoomIn: function zoomIn() {
+                    var map = this.getData().control.getMap();
+                    map.setZoom(map.getZoom() + 1, {
+                      checkZoomRange: true,
+                    });
+                  },
+                  zoomOut: function zoomOut() {
+                    var map = this.getData().control.getMap();
+                    map.setZoom(map.getZoom() - 1, {
+                      checkZoomRange: true,
+                    });
                   },
                 }
               );
-
-              _this.objects[index].events
-                .add("mouseenter", function (event) {
-                  var $el = event.get("target");
-                  var isActive = $el.properties._data.active;
-                  $el.properties.singleSet("hover", true);
-
-                  if (!isActive) {
-                    $el.balloon.open();
-                    var balloonTimeout = setTimeout(function () {
-                      var $marker = document.querySelector(
-                        ".object-placemark_active"
-                      );
-                      var $balloon = document.querySelector(".mini-balloon");
-
-                      if ($marker && $balloon) {
-                        var overlaySizes = _this.$elements.overlay
-                          .querySelector(".catalog__map-sticky")
-                          .getBoundingClientRect();
-
-                        var markerSizes = $marker.getBoundingClientRect();
-                        var balloonSizes = $balloon.getBoundingClientRect();
-
-                        if (window.innerHeight - markerSizes.top < 92) {
-                          $balloon.style.marginTop = "-8rem";
-                        }
-
-                        var markerLeft =
-                          markerSizes.left + markerSizes.width / 2;
-
-                        if (
-                          markerLeft - overlaySizes.left <
-                          balloonSizes.width / 2
-                        ) {
-                          $balloon.style.marginLeft = "".concat(
-                            (balloonSizes.width / 2 -
-                              (markerLeft - overlaySizes.left)) /
-                              10,
-                            "rem"
-                          );
-                        }
-
-                        if (
-                          overlaySizes.width + overlaySizes.left - markerLeft <
-                          balloonSizes.width / 2
-                        ) {
-                          $balloon.style.marginLeft = "".concat(
-                            (overlaySizes.width +
-                              overlaySizes.left -
-                              markerLeft -
-                              balloonSizes.width / 2) /
-                              10,
-                            "rem"
-                          );
-                        }
-
-                        $balloon.classList.add("mini-balloon_show");
-                      }
-
-                      clearTimeout(balloonTimeout);
-                    }, 0);
-                  }
-                })
-                .add("mouseleave", function (event) {
-                  var $el = event.get("target");
-                  $el.properties.singleSet("hover", false);
-                  $el.balloon.close();
-                })
-                .add("click", function (event) {
-                  var $el = event.get("target");
-                  var isActive = $el.properties._data.active;
-
-                  if (!isActive) {
-                    _this.$elements.more.innerHTML = "";
-
-                    _this.objects.forEach(function (item, idx) {
-                      if (index !== idx) {
-                        item.properties.singleSet("active", false);
-                      }
-                    });
-
-                    $el.balloon.close();
-                    $el.properties.singleSet("active", true);
-
-                    _this.handleCreateObject($el.properties._data.markerData);
-                  }
-                });
-            });
-          },
-        },
-        {
-          key: "handleAddObjects",
-          value: function handleAddObjects() {
-            this.clusterer.add(this.objects);
-            this.map.geoObjects.add(this.clusterer);
-            this.map.setBounds(this.clusterer.getBounds(), {
-              checkZoomRange: true,
-              zoomMargin: 40,
-            });
-          },
-        },
-        {
-          key: "handleItemHover",
-          value: function handleItemHover() {
-            var _this2 = this;
-
-            if (!device.isTouch()) {
-              document
-                .querySelectorAll("[data-map-id]")
-                .forEach(function ($item) {
-                  var id = $item.dataset.mapId;
-
-                  var placemark = _this2.objects.find(function (marker) {
-                    return marker.properties._data.markerData.id === id;
-                  });
-
-                  if (placemark) {
-                    $item.addEventListener("mouseenter", function () {
-                      placemark.properties.singleSet("hover", true);
-                    });
-                    $item.addEventListener("mouseleave", function () {
-                      placemark.properties.singleSet("hover", false);
-                    });
-                  }
-                });
-            }
-          },
-        },
-        {
-          key: "handleClearActive",
-          value: function handleClearActive() {
-            this.objects.forEach(function (item) {
-              item.properties.singleSet("active", false);
-            });
-            this.$elements.more.innerHTML = "";
-          },
-        },
-        {
-          key: "handleChangeView",
-          value: function handleChangeView() {
-            this.$elements.overlay.classList.toggle(
-              "catalog__map_fullscreen",
-              this.fullscreen
-            );
-
-            if (this.fullscreen) {
-              scrollLockEnable();
-            } else {
-              scrollLockDisable();
-            }
-
-            if (this.$elements.mobileFull)
-              this.$elements.mobileFull.classList.toggle(
-                "crumbs__controls-mobile_hide",
-                this.fullscreen
-              );
-            this.$elements.route.classList.toggle(
-              "route_show",
-              this.fullscreen
-            );
-            if (this.map) this.map.container.fitToViewport();
-          },
-        },
-        {
-          key: "handleShowHide",
-          value: function handleShowHide(show) {
-            this.fullscreen = show;
-            this.handleChangeView();
-          },
-        },
-        {
-          key: "init",
-          value: function init() {
-            var _this3 = this;
-
-            document.addEventListener("click", function (event) {
-              var $el = event.target;
-
-              if ($el.matches("[data-map-object-close]")) {
-                _this3.handleClearActive();
-              }
-            });
-            window.addEventListener("load", function () {
-              var overlaySizes = document
-                .querySelector(".catalog")
-                .getBoundingClientRect();
-              _this3.$elements.overlay.style.marginRight = "".concat(
-                ((document.body.clientWidth -
-                  overlaySizes.left -
-                  overlaySizes.width) /
-                  10) *
-                  -1,
-                "rem"
-              );
-              var urlParam = window.location.search;
-
-              if (Array.from(urlParam)[0] === "?") {
-                urlParam = urlParam.substring(1);
-              }
-
-              urlParam = urlParam
-                .split("&")
-                .map(function (item) {
-                  return item.split("=");
-                })
-                .find(function (item) {
-                  return item[0] === "fullmap";
-                });
-
-              if (urlParam && urlParam[1] === "y") {
-                _this3.handleShowHide(true);
-              }
-
-              setTimeout(function () {
-                ymaps.ready(function () {
-                  _this3.map = new ymaps.Map("map", {
-                    center: _this3.options.center,
-                    zoom: _this3.options.zoom,
-                    controls: [],
-                  });
-                  var zoomLayout = ymaps.templateLayoutFactory.createClass(
-                    '\n\t\t\t\t\t<button class="catalog__map-control catalog__map-control_zoom-in" type="button" id="zoom-in"></button>\n\t\t\t\t\t<button class="catalog__map-control catalog__map-control_zoom-out" type="button" id="zoom-out"></button>\n\t\t\t\t',
-                    {
-                      build: function build() {
-                        zoomLayout.superclass.build.call(this);
-                        this.zoomInCallback = ymaps.util.bind(
-                          this.zoomIn,
-                          this
-                        );
-                        this.zoomOutCallback = ymaps.util.bind(
-                          this.zoomOut,
-                          this
-                        );
-                        document
-                          .getElementById("zoom-in")
-                          .addEventListener("click", this.zoomInCallback);
-                        document
-                          .getElementById("zoom-out")
-                          .addEventListener("click", this.zoomOutCallback);
-                      },
-                      clear: function clear() {
-                        document
-                          .getElementById("zoom-in")
-                          .removeEventListener("click", this.zoomInCallback);
-                        document
-                          .getElementById("zoom-out")
-                          .removeEventListener("click", this.zoomOutCallback);
-                        zoomLayout.superclass.clear.call(this);
-                      },
-                      zoomIn: function zoomIn() {
-                        var map = this.getData().control.getMap();
-                        map.setZoom(map.getZoom() + 1, {
-                          checkZoomRange: true,
-                        });
-                      },
-                      zoomOut: function zoomOut() {
-                        var map = this.getData().control.getMap();
-                        map.setZoom(map.getZoom() - 1, {
-                          checkZoomRange: true,
-                        });
-                      },
-                    }
-                  );
-                  var zoomControl = new ymaps.control.ZoomControl({
-                    options: {
-                      layout: zoomLayout,
-                      position: {
-                        left: "auto",
-                        right: 50,
-                        top: 0,
-                      },
-                    },
-                  });
-
-                  _this3.map.controls.add(zoomControl);
-
-                  _this3.handleCreateClusters();
-
-                  _this3.handleCreateMarkers();
-
-                  _this3.handleAddObjects();
-
-                  _this3.handleItemHover();
-                });
-              }, 0); // if (this.map) this.map.container.fitToViewport()
-
-              _this3.$elements.fullscreen.forEach(function ($item) {
-                $item.addEventListener("click", function (event) {
-                  event.preventDefault();
-                  _this3.fullscreen = true;
-
-                  _this3.handleClearActive();
-
-                  _this3.handleChangeView();
-                });
+              var zoomControl = new ymaps.control.ZoomControl({
+                options: {
+                  layout: zoomLayout,
+                  position: {
+                    left: "auto",
+                    right: 50,
+                    top: 0,
+                  },
+                },
               });
+              this.map.controls.add(zoomControl);
+              this.handleCreateClusters();
+              this.handleCreateMarkers();
+              this.handleAddObjects();
+              this.handleItemHover();
+              this.map.container.fitToViewport();
+            },
+          },
+          {
+            key: "init",
+            value: function init() {
+              var _this3 = this;
 
-              _this3.$elements.halfscreen.addEventListener(
-                "click",
-                function () {
-                  _this3.fullscreen = false;
+              document.addEventListener("click", function (event) {
+                var $el = event.target;
 
+                if ($el.matches("[data-map-object-close]")) {
                   _this3.handleClearActive();
-
-                  _this3.handleChangeView();
                 }
-              );
-            });
-            window.addEventListener("resize", function () {
-              var scroll = 0;
-              if (_this3.fullscreen) scroll = _this3.scrollWidth;
+              });
+              window.addEventListener("load", function () {
+                var _this3$$elements$half;
 
-              if (_this3.map) {
                 var overlaySizes = document
                   .querySelector(".catalog")
                   .getBoundingClientRect();
                 _this3.$elements.overlay.style.marginRight = "".concat(
                   ((document.body.clientWidth -
                     overlaySizes.left -
-                    overlaySizes.width -
-                    scroll) /
-                    10) *
+                    overlaySizes.width) /
+                    remSize()) *
                     -1,
                   "rem"
                 );
+                var urlParam = window.location.search;
 
-                _this3.map.container.fitToViewport();
-              }
-            });
+                if (Array.from(urlParam)[0] === "?") {
+                  urlParam = urlParam.substring(1);
+                }
+
+                urlParam = urlParam
+                  .split("&")
+                  .map(function (item) {
+                    return item.split("=");
+                  })
+                  .find(function (item) {
+                    return item[0] === "fullmap";
+                  });
+
+                if (urlParam && urlParam[1] === "y") {
+                  _this3.handleShowHide(true);
+                }
+
+                var mapCreate = function mapCreate() {
+                  if (window.innerWidth >= 1024) {
+                    var mapCreateTimeout = setTimeout(function () {
+                      if (!_this3.map) CatalogMap.handleCreateMap();
+                      clearTimeout(mapCreateTimeout);
+                    }, 0);
+                  }
+                };
+
+                if (
+                  _this3.$elements.overlay.classList.contains(
+                    "catalog__map_fullscreen"
+                  )
+                ) {
+                  var mapCreateTimeout = setTimeout(function () {
+                    if (!_this3.map) CatalogMap.handleCreateMap();
+                    clearTimeout(mapCreateTimeout);
+                  }, 0);
+                } else {
+                  mapCreate();
+                }
+
+                window.addEventListener("resize", function () {
+                  if (!_this3.map) mapCreate();
+                });
+
+                _this3.$elements.fullscreen.forEach(function ($item) {
+                  $item.addEventListener("click", function (event) {
+                    event.preventDefault();
+                    _this3.fullscreen = true;
+
+                    _this3.handleClearActive();
+
+                    _this3.handleChangeView();
+
+                    if (!_this3.map) CatalogMap.handleCreateMap();
+                  });
+                });
+
+                (_this3$$elements$half = _this3.$elements.halfscreen) ===
+                  null || _this3$$elements$half === void 0
+                  ? void 0
+                  : _this3$$elements$half.addEventListener(
+                      "click",
+                      function () {
+                        _this3.fullscreen = false;
+
+                        _this3.handleClearActive();
+
+                        _this3.handleChangeView();
+                      }
+                    );
+              });
+              window.addEventListener("resize", function () {
+                var scroll = 0;
+                if (_this3.fullscreen) scroll = _this3.scrollWidth;
+
+                if (_this3.map) {
+                  var overlaySizes = document
+                    .querySelector(".catalog")
+                    .getBoundingClientRect();
+                  _this3.$elements.overlay.style.marginRight = "".concat(
+                    ((document.body.clientWidth -
+                      overlaySizes.left -
+                      overlaySizes.width -
+                      scroll) /
+                      remSize()) *
+                      -1,
+                    "rem"
+                  );
+
+                  _this3.map.container.fitToViewport();
+                }
+              });
+            },
           },
-        },
-      ]);
+        ],
+        [
+          {
+            key: "handleCreateMap",
+            value: function handleCreateMap() {
+              var script = document.createElement("script");
+              script.src =
+                "//api-maps.yandex.ru/2.1/?lang=ru_RU&onload=window.map.handleInitMap";
+              script.defer = true;
+              document.body.appendChild(script);
+            },
+          },
+        ]
+      );
 
       return CatalogMap;
     })();
@@ -18139,7 +18323,7 @@
     /* harmony default export */ var catalog_map = CatalogMap;
     // EXTERNAL MODULE: ./node_modules/lodash/debounce.js
     var lodash_debounce = __webpack_require__(569);
-    var debounce_default = /*#__PURE__*/ __webpack_require__.n(lodash_debounce); // CONCATENATED MODULE: ./src/js/components/search-autocomplete.js
+    var debounce_default = /*#__PURE__*/ __webpack_require__.n(lodash_debounce); // CONCATENATED MODULE: ./src/js/components/search_autocomplete.js
     var SearchAutocomplete = /*#__PURE__*/ (function () {
       function SearchAutocomplete() {
         _classCallCheck(this, SearchAutocomplete);
@@ -18168,7 +18352,7 @@
           value: function handleRequest(value) {
             var _this = this;
 
-            if (value.length >= 3) {
+            if (value.length >= 1) {
               fetch(
                 ""
                   .concat(this.elements.$root.dataset.autocomplete, "?text=")
@@ -18178,6 +18362,18 @@
                   return response.json();
                 })
                 .then(function (response) {
+                  if (response.messageType === "error") {
+                    _this.elements.$dropdown.innerHTML =
+                      '<div class="autocomplete-dropdown__message">'.concat(
+                        response.messageText,
+                        "</div>"
+                      );
+
+                    _this.elements.$root.classList.add(_this.classes.show);
+
+                    return false;
+                  }
+
                   if (response.length) {
                     _this.elements.$dropdown.innerHTML =
                       "\n\t\t\t\t\t\t\t".concat(
@@ -18191,13 +18387,28 @@
                               .concat(
                                 type.list
                                   .map(function (item) {
-                                    return '<li class="list__item" data-autocomplete-type="'
+                                    return '<li\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tclass="list__item"\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tdata-autocomplete-type="'
                                       .concat(
                                         type.id,
-                                        '" data-autocomplete-item="'
+                                        '"\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tdata-autocomplete-item="'
                                       )
-                                      .concat(item.id, '">')
-                                      .concat(item.title, "</li>");
+                                      .concat(
+                                        item.id,
+                                        '"\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t>\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<div class="list__item-title">'
+                                      )
+                                      .concat(
+                                        item.title,
+                                        "</div>\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t"
+                                      )
+                                      .concat(
+                                        item.footnote
+                                          ? '<div class="list__item-footnote">'.concat(
+                                              item.footnote,
+                                              "</div>"
+                                            )
+                                          : "",
+                                        "\n\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t</li>"
+                                      );
                                   })
                                   .join(""),
                                 "\n\t\t\t\t\t\t\t\t\t\t\t</ul>\n\t\t\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t\t"
@@ -18211,6 +18422,8 @@
                   } else {
                     _this.handleHide();
                   }
+
+                  return true;
                 });
             } else {
               this.handleHide();
@@ -18231,12 +18444,26 @@
             document.addEventListener("click", function (event) {
               var $el = event.target;
 
-              if ($el.matches("[data-autocomplete-item]")) {
+              if (
+                $el.matches("[data-autocomplete-item]") ||
+                $el.closest("[data-autocomplete-item]")
+              ) {
+                var $item = $el.matches("[data-autocomplete-item]")
+                  ? $el
+                  : $el.closest("[data-autocomplete-item]");
+                var $title = $item.querySelector(".list__item-title");
+                var $footnote = $item.querySelector(".list__item-footnote");
                 _this2.elements.$result.value = JSON.stringify({
-                  type: $el.dataset.autocompleteType,
-                  item: $el.dataset.autocompleteItem,
+                  type: $item.dataset.autocompleteType,
+                  item: $item.dataset.autocompleteItem,
+                  title: $title.innerHTML,
+                  footnote: $footnote ? $footnote.innerHTML : "",
                 });
-                _this2.elements.$field.value = $el.innerText;
+                _this2.elements.$field.value = $title.innerHTML
+                  .replace("<br>", " ")
+                  .replace(/<\/?[^>]+(>|$)/g, "")
+                  .replace(/\s+/g, " ")
+                  .trim();
 
                 _this2.handleHide();
               }
@@ -18260,25 +18487,26 @@
 
     /* harmony default export */ var search_autocomplete = SearchAutocomplete; // CONCATENATED MODULE: ./src/js/pages/catalog.js
     /* COUNTER
- -------------------------------------------------- */
+   -------------------------------------------------- */
+    // eslint-disable-next-line no-unused-vars
 
     var catalog_counter = new counter();
     /* MAP
- -------------------------------------------------- */
+   -------------------------------------------------- */
 
     window.map = new catalog_map();
     window.map.init();
     /* ACCORDION
- -------------------------------------------------- */
+   -------------------------------------------------- */
 
     accordion("form__dropdown");
     /* CALENDAR
- -------------------------------------------------- */
+   -------------------------------------------------- */
 
     var rangeCalendar = new range_calendar();
     rangeCalendar.init();
     /* AUTOCOMPLETE
- -------------------------------------------------- */
+   -------------------------------------------------- */
 
     var searchAutocomplete = new search_autocomplete();
     searchAutocomplete.init();

@@ -151,6 +151,59 @@
       /***/
     },
 
+    /***/ 1373: /***/ function () {
+      var reviewControlText = ["Обзор полностью", "Скрыть обзор"];
+
+      window.reviewsText = function () {
+        document
+          .querySelectorAll(".review__text:not(.review__text_show)")
+          .forEach(function ($item) {
+            var $container = $item.querySelector(".review__text-container");
+
+            if (
+              $container.clientHeight <
+              $container.querySelector("div").clientHeight
+            ) {
+              var more = false;
+              $item.classList.add("review__text_hide");
+              $item.insertAdjacentHTML(
+                "beforeend",
+                '<button data-review-more type="submit">'.concat(
+                  reviewControlText[0],
+                  "</button>"
+                )
+              );
+              var $more = $item.querySelector("[data-review-more]");
+              $more.addEventListener("click", function (event) {
+                event.preventDefault();
+                more = !more;
+                $item.classList.toggle("review__text_hide", !more);
+                $item.classList.toggle("review__text_more", more);
+                $more.innerText = $item.classList.contains("review__text_more")
+                  ? reviewControlText[1]
+                  : reviewControlText[0];
+              });
+            }
+
+            var showDelay = setTimeout(function () {
+              $item.classList.add("review__text_show");
+              clearTimeout(showDelay);
+            }, 0);
+          });
+      };
+
+      window.reviewsText();
+      window.addEventListener("resize", function () {
+        document.querySelectorAll(".review__text").forEach(function ($item) {
+          $item.className = "review__text";
+          $item.querySelector("[data-review-more]").remove();
+        });
+        window.reviewsText();
+      });
+
+      /***/
+    },
+
     /***/ 543: /***/ function () {
       var $share = document.querySelector("[data-share]");
 
@@ -1693,10 +1746,10 @@
             easing: "swing", // or 'linear'
 
             /* Callbacks
-      begin(elements)
-      complete(elements)
-      progress(elements, complete, remaining, start, tweenValue)
-      */
+        begin(elements)
+        complete(elements)
+        progress(elements, complete, remaining, start, tweenValue)
+        */
           },
           initialParams
         ),
@@ -2692,8 +2745,8 @@
 
       function getDirectionLabel(property) {
         if (swiper.isHorizontal()) {
-      return property;
-    } // prettier-ignore
+        return property;
+      } // prettier-ignore
 
         return {
           width: "height",
@@ -5397,13 +5450,13 @@
     function addClasses() {
       const swiper = this;
       const {
-    classNames,
-    params,
-    rtl,
-    $el,
-    device,
-    support
-  } = swiper; // prettier-ignore
+      classNames,
+      params,
+      rtl,
+      $el,
+      device,
+      support
+    } = swiper; // prettier-ignore
 
       const suffixes = prepareClasses(
         [
@@ -12520,10 +12573,10 @@
               ? `${1 + (1 - scale) * progress}`
               : `${1 - (1 - scale) * progress}`;
           const transform = `
-        translate3d(${tX}, ${tY}, ${tZ}px)
-        rotateZ(${params.rotate ? rotate : 0}deg)
-        scale(${scaleString})
-      `;
+          translate3d(${tX}, ${tY}, ${tZ}px)
+          rotateZ(${params.rotate ? rotate : 0}deg)
+          scale(${scaleString})
+        `;
 
           if (params.slideShadows) {
             // Set shadows
@@ -12590,7 +12643,7 @@
 
     core.use([Navigation, Pagination, Lazy, EffectFade]);
     /* HEADING
- -------------------------------------------------- */
+   -------------------------------------------------- */
 
     var $heading = document.querySelector("[data-slider-heading]");
 
@@ -12623,7 +12676,7 @@
       });
     }
     /* OBJECT
- -------------------------------------------------- */
+   -------------------------------------------------- */
 
     window.objectsGallery = function () {
       var $object = document.querySelectorAll(
@@ -12632,14 +12685,15 @@
 
       if ($object.length) {
         $object.forEach(function ($item) {
+          // eslint-disable-next-line no-unused-vars
           var objectSlider = new core($item, {
             slidesPerView: 1,
             spaceBetween: 0,
             speed: 250,
             effect: "slide",
-            loop: false,
+            loop: $item.querySelectorAll(".swiper-slide").length > 1,
+            watchOverflow: true,
             watchSlidesProgress: true,
-            // init: false,
             preloadImages: false,
             lazy: {
               loadPrevNext: true,
@@ -12662,42 +12716,43 @@
       window.objectsGallery();
     });
     /* RELATED
- -------------------------------------------------- */
+   -------------------------------------------------- */
 
-    var $headingRelated = document.querySelector("[data-slider-related]");
-
-    if ($headingRelated) {
-      var headingRelatedSlider = new core(
-        $headingRelated.querySelector(".swiper"),
-        {
-          slidesPerView: 3,
-          spaceBetween: 20,
-          speed: 250,
-          effect: "slide",
-          loop: false,
-          watchSlidesProgress: true,
-          init: false,
-          navigation: {
-            nextEl: $headingRelated.querySelector(
-              ".slider__heading-controls .swiper-button-next"
-            ),
-            prevEl: $headingRelated.querySelector(
-              ".slider__heading-controls .swiper-button-prev"
-            ),
-          },
-          breakpoints: {
-            1280: {
-              slidesPerView: 4,
+    window.sliderRelated = function () {
+      var $headingRelated = document.querySelectorAll("[data-slider-related]");
+      $headingRelated.forEach(function ($item) {
+        if ($item.querySelector(".swiper:not(.swiper-initialized)")) {
+          // eslint-disable-next-line no-unused-vars
+          var headingRelatedSlider = new core($item.querySelector(".swiper"), {
+            slidesPerView: 3,
+            spaceBetween: 20,
+            speed: 250,
+            effect: "slide",
+            loop: false,
+            watchSlidesProgress: true,
+            navigation: {
+              nextEl: $item.querySelector(
+                ".slider__heading-controls .swiper-button-next"
+              ),
+              prevEl: $item.querySelector(
+                ".slider__heading-controls .swiper-button-prev"
+              ),
             },
-          },
+            breakpoints: {
+              1280: {
+                slidesPerView: 4,
+              },
+            },
+          });
         }
-      );
-      window.addEventListener("load", function () {
-        headingRelatedSlider.init();
       });
-    }
+    };
+
+    window.addEventListener("load", function () {
+      window.sliderRelated();
+    });
     /* MODAL GALLERY
- -------------------------------------------------- */
+   -------------------------------------------------- */
 
     window.modalGallery = function () {
       return new core("[data-modal-gallery] .swiper", {
@@ -12720,15 +12775,82 @@
           prevEl: ".swiper-button-prev",
         },
       });
-    }; // CONCATENATED MODULE: ./src/js/components/declension.js
+    };
+    /* FULL GALLERY
+   -------------------------------------------------- */
+
+    document.addEventListener("click", function (event) {
+      var $el = event.target;
+
+      if (
+        $el.matches("[data-fullgallery-item]") ||
+        $el.closest("[data-fullgallery-item]")
+      ) {
+        event.preventDefault();
+        var $dataEl = $el.matches("[data-fullgallery-item]")
+          ? $el
+          : $el.closest("[data-fullgallery-item]");
+        var id = $dataEl.dataset.fullgalleryItem;
+        var images = JSON.parse(
+          $el.closest("[data-fullgallery]").dataset.fullgallery
+        );
+
+        if (images.length > 0) {
+          document.body.insertAdjacentHTML(
+            "beforeend",
+            '<div class="modal modal_fullgallery" id="fullgallery">\n\t\t\t\t\t<div class="modal__container">\n\t\t\t\t\t\t<button class="modal__close" data-modal-close>\n\t\t\t\t\t\t\t<svg class="icon icon_cross-large" viewBox="0 0 32 32" style="width: 3.2rem; height: 3.2rem;">\n\t\t\t\t\t\t\t\t<use xlink:href="#cross-large"></use>\n\t\t\t\t\t\t\t</svg>\n\t\t\t\t\t\t\t<svg class="icon icon_cross" viewBox="0 0 18 18" style="width: 1.8rem; height: 1.8rem;">\n\t\t\t\t\t\t\t\t<use xlink:href="#cross"></use>\n\t\t\t\t\t\t\t</svg>\n\t\t\t\t\t\t</button>\n\t\t\t\t\t\t<div class="swiper slider-gallery slider-gallery_large">\n\t\t\t\t\t\t\t<div class="swiper-wrapper">\n\t\t\t\t\t\t\t\t'.concat(
+              images
+                .map(function (item) {
+                  return '<div class="swiper-slide"><img class="swiper-lazy" src="'.concat(
+                    item,
+                    '" alt=""></div>'
+                  );
+                })
+                .join(""),
+              '\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t<div class="swiper-button-prev">\n\t\t\t\t\t\t\t\t<svg class="icon icon_arrow-large" viewBox="0 0 32 32" style="width: 3.2rem; height: 3.2rem;">\n\t\t\t\t\t\t\t\t\t<use xlink:href="#arrow-large"></use>\n\t\t\t\t\t\t\t\t</svg>\n\t\t\t\t\t\t\t\t<svg class="icon icon_arrow-small" viewBox="0 0 16 16" style="width: 1.6rem; height: 1.6rem;">\n\t\t\t\t\t\t\t\t\t<use xlink:href="#arrow-small"></use>\n\t\t\t\t\t\t\t\t</svg>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t<div class="swiper-button-next">\n\t\t\t\t\t\t\t\t<svg class="icon icon_arrow-large" viewBox="0 0 32 32" style="width: 3.2rem; height: 3.2rem;">\n\t\t\t\t\t\t\t\t\t<use xlink:href="#arrow-large"></use>\n\t\t\t\t\t\t\t\t</svg>\n\t\t\t\t\t\t\t\t<svg class="icon icon_arrow-small" viewBox="0 0 16 16" style="width: 1.6rem; height: 1.6rem;">\n\t\t\t\t\t\t\t\t\t<use xlink:href="#arrow-small"></use>\n\t\t\t\t\t\t\t\t</svg>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t<div class="swiper-pagination"></div>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\t\t\t\t</div>'
+            )
+          );
+          var slider = new core("#fullgallery .swiper", {
+            slidesPerView: 1,
+            spaceBetween: 0,
+            speed: 250,
+            effect: "fade",
+            loop: false,
+            watchSlidesProgress: true,
+            fadeEffect: {
+              crossFade: true,
+            },
+            preloadImages: false,
+            lazy: {
+              loadPrevNext: true,
+              loadOnTransitionStart: true,
+            },
+            navigation: {
+              nextEl: ".swiper-button-next",
+              prevEl: ".swiper-button-prev",
+            },
+            pagination: {
+              el: ".swiper-pagination",
+              type: "bullets",
+            },
+          });
+          slider.slideTo(parseInt(id), 0);
+          window.modal.open("fullgallery");
+        }
+      }
+    });
+    window.addEventListener("modalAfterClose", function (event) {
+      if (event.detail.id === "fullgallery") {
+        document.getElementById("fullgallery").remove();
+      }
+    }); // CONCATENATED MODULE: ./src/js/helpers/declension.js
     function declension(
+      number,
       oneNominative,
       severalGenitive,
-      severalNominative,
-      number
+      severalNominative
     ) {
-      var num = number % 100; // eslint-disable-next-line no-return-assign,no-nested-ternary,no-cond-assign
-
+      var num = number % 100;
       return num <= 14 && num >= 11
         ? severalGenitive
         : (num %= 10) < 5
@@ -12740,7 +12862,7 @@
           ? severalGenitive
           : severalNominative
         : severalGenitive;
-    } // CONCATENATED MODULE: ./src/js/components/guests-input.js
+    } // CONCATENATED MODULE: ./src/js/components/guests_input.js
     var $guestsControl = document.querySelector("[data-guests-control]");
     var $guests = document.querySelector("[data-guests]");
     var $guestsAdultsCount = document.querySelector(
@@ -12769,7 +12891,7 @@
           parseInt($guestsChildrenCount.value);
         $guestsControl.innerText = ""
           .concat(allCount, " ")
-          .concat(declension("гость", "гостей", "гостя", allCount));
+          .concat(declension(allCount, "гость", "гостей", "гостя"));
       };
 
       $guestsAdultsCount.addEventListener("change", function () {
@@ -12784,7 +12906,7 @@
           var childrenLength = $children.length;
 
           if (value > childrenLength) {
-            var childrenNew = [];
+            var childrenNew = []; // eslint-disable-next-line no-plusplus
 
             for (var i = 0; i < value - childrenLength; i++) {
               childrenNew.push(childrenLength + i);
@@ -12808,6 +12930,7 @@
           }
 
           if (value < childrenLength) {
+            // eslint-disable-next-line no-plusplus
             for (var _i = 0; _i < childrenLength - value; _i++) {
               $children[childrenLength - 1 - _i].remove();
             }
@@ -13063,6 +13186,7 @@
             }
 
             $input.value = $input.value.replace(this.regex, "");
+            return true;
           },
         },
         {
@@ -13099,6 +13223,7 @@
             setTimeout(function () {
               $input.value = prefix + value + postfix;
             }, 300);
+            return true;
           },
         },
         {
@@ -16592,7 +16717,7 @@
 
     /* harmony default export */ var esm = flatpickr;
     // EXTERNAL MODULE: ./node_modules/flatpickr/dist/l10n/ru.js
-    var ru = __webpack_require__(7896); // CONCATENATED MODULE: ./src/js/components/range-calendar.js
+    var ru = __webpack_require__(7896); // CONCATENATED MODULE: ./src/js/components/range_calendar.js
     var RangeCalendar = /*#__PURE__*/ (function () {
       function RangeCalendar() {
         _classCallCheck(this, RangeCalendar);
@@ -16707,6 +16832,9 @@
                   .querySelector("[data-calendar-navigation] span").innerText =
                   $el.innerText;
                 _this4.data.month = nextIndex;
+                $el
+                  .closest(".calendar__navigation-item")
+                  .classList.remove("calendar__navigation-item_show");
               });
             });
           },
@@ -16794,6 +16922,9 @@
                       "[data-calendar-navigation] span"
                     ).innerText = $firstMonth.innerText;
                   _this6.data.month = nextMonth;
+                  $item
+                    .closest(".calendar__navigation-item")
+                    .classList.remove("calendar__navigation-item_show");
 
                   _this6.handleMonthsHide();
                 }
@@ -16883,13 +17014,16 @@
       return RangeCalendar;
     })();
 
-    /* harmony default export */ var range_calendar = RangeCalendar; // CONCATENATED MODULE: ./src/js/pages/object.js
+    /* harmony default export */ var range_calendar = RangeCalendar;
+    // EXTERNAL MODULE: ./src/js/components/reviews_text.js
+    var reviews_text = __webpack_require__(1373); // CONCATENATED MODULE: ./src/js/pages/object.js
     /* COUNTER
- -------------------------------------------------- */
+   -------------------------------------------------- */
+    // eslint-disable-next-line no-unused-vars
 
     var object_counter = new counter();
     /* REVIEWS GALLERY
- -------------------------------------------------- */
+   -------------------------------------------------- */
 
     var $gallerySliderContainer = document.querySelector(
       "[data-modal-gallery]"
@@ -16933,7 +17067,7 @@
       }
     });
     /* ROOM FEATURES
- -------------------------------------------------- */
+   -------------------------------------------------- */
 
     document.addEventListener("click", function (event) {
       var $el = event.target;
@@ -16944,7 +17078,7 @@
       }
     });
     /* TEXT HIDE
- -------------------------------------------------- */
+   -------------------------------------------------- */
 
     window.addEventListener("load", function () {
       var $textShow = document.querySelector("[data-text-show] div");
@@ -16976,36 +17110,140 @@
       }
     });
     /* SERVICES HIDE
- -------------------------------------------------- */
+   -------------------------------------------------- */
 
-    var $servicesShow = document.querySelector("[data-services-show]");
+    var $servicesHidden = document.querySelectorAll("[data-services-hide]");
 
-    if ($servicesShow) {
-      document
-        .querySelector("[data-services-show-control]")
-        .addEventListener("click", function (event) {
-          event.preventDefault();
-          var scrollAfter = 0;
+    if ($servicesHidden.length) {
+      var _document$querySelect;
 
-          if ($servicesShow.classList.contains("about__services_show")) {
-            scrollAfter = event.target.getBoundingClientRect().top;
-          }
+      var $servicesParent = document.querySelector("[data-services-parent]");
+      $servicesParent === null || $servicesParent === void 0
+        ? void 0
+        : $servicesParent.classList.add("about_hidden-children");
+      (_document$querySelect = document.querySelector(
+        "[data-services-control]"
+      )) === null || _document$querySelect === void 0
+        ? void 0
+        : _document$querySelect.addEventListener("click", function (event) {
+            event.preventDefault();
+            var $el = event.target;
+            var scrollAfter = 0;
 
-          $servicesShow.classList.toggle("about__services_show");
+            if ($servicesParent.classList.contains("about_show-hidden")) {
+              scrollAfter = $el.getBoundingClientRect().top;
+            }
 
-          if (!$servicesShow.classList.contains("about__services_show")) {
-            window.scrollBy(
-              0,
-              event.target.getBoundingClientRect().top - scrollAfter
-            );
-          }
-        });
-    }
+            $servicesParent.classList.toggle("about_show-hidden");
+
+            if (!$servicesParent.classList.contains("about_show-hidden")) {
+              window.scrollBy(0, $el.getBoundingClientRect().top - scrollAfter);
+            }
+          });
+    } // const $servicesShow = document.querySelector('[data-services-control]')
+    //
+    // if ($servicesShow) {
+    // 	document.querySelector('[data-services-show-control]').addEventListener('click', event => {
+    // 		event.preventDefault()
+    //
+    // 		let scrollAfter = 0
+    //
+    // 		if ($servicesShow.classList.contains('about__services_show')) {
+    // 			scrollAfter = event.target.getBoundingClientRect().top
+    // 		}
+    //
+    // 		$servicesShow.classList.toggle('about__services_show')
+    //
+    // 		if (!$servicesShow.classList.contains('about__services_show')) {
+    // 			window.scrollBy(0, event.target.getBoundingClientRect().top - scrollAfter)
+    // 		}
+    // 	})
+    // }
+
     /* CALENDAR
- -------------------------------------------------- */
+   -------------------------------------------------- */
 
     var rangeCalendar = new range_calendar();
     rangeCalendar.init();
+    /* MORE
+   -------------------------------------------------- */
+
+    document.addEventListener("click", function (event) {
+      var $el = event.target;
+
+      if ($el.dataset.roomMore !== undefined) {
+        event.preventDefault(); // eslint-disable-next-line no-undef
+
+        var content = moreRooms.find(function (item) {
+          return item.id === $el.dataset.roomMore;
+        });
+        var $contentModal = document.querySelector("[data-room-more-content]");
+        $contentModal.innerHTML = "";
+        $contentModal.insertAdjacentHTML(
+          "beforeend",
+          '\n\t\t\t\t\t<div class="modal-more">\n\t\t\t\t\t\t<div class="h3 modal-more__title">'
+            .concat(content.title, "</div>\n\t\t\t\t\t\t")
+            .concat(
+              content.title
+                ? '<div class="modal-more__footnote">'.concat(
+                    content.footnote,
+                    "</div>"
+                  )
+                : "",
+              "\n\t\t\t\t\t\t"
+            )
+            .concat(
+              content.text
+                ? '<div class="modal-more__text">'.concat(
+                    content.text,
+                    "</div>"
+                  )
+                : "",
+              "\n\t\t\t\t\t\t"
+            )
+            .concat(
+              content.furnishings.length
+                ? '\n\t\t\t\t\t\t\t\t\t<div class="h6">\u041E\u0441\u043D\u0430\u0449\u0435\u043D\u0438\u0435 \u043D\u043E\u043C\u0435\u0440\u0430</div>\n\t\t\t\t\t\t\t\t\t<ul class="list list_circle">\n\t\t\t\t\t\t\t\t\t\t'.concat(
+                    content.furnishings
+                      .map(function (item) {
+                        return '<li class="list__item">'.concat(item, "</li>");
+                      })
+                      .join(""),
+                    "\n\t\t\t\t\t\t\t\t\t</ul>\n\t\t\t\t\t\t\t\t"
+                  )
+                : "",
+              "\n\t\t\t\t\t\t"
+            )
+            .concat(
+              content.services.length
+                ? '\n\t\t\t\t\t\t\t\t\t<div class="h6">\u0423\u0441\u043B\u0443\u0433\u0438</div>\n\t\t\t\t\t\t\t\t\t<ul class="list list_circle">\n\t\t\t\t\t\t\t\t\t\t'.concat(
+                    content.services
+                      .map(function (item) {
+                        return '<li class="list__item">'.concat(item, "</li>");
+                      })
+                      .join(""),
+                    "\n\t\t\t\t\t\t\t\t\t</ul>\n\t\t\t\t\t\t\t\t"
+                  )
+                : "",
+              "\n\t\t\t\t\t\t"
+            )
+            .concat(
+              content.reservCancel.length
+                ? '\n\t\t\t\t\t\t\t\t\t<div class="h6">\u0423\u0441\u043B\u043E\u0432\u0438\u044F \u043E\u0442\u043C\u0435\u043D\u044B \u0431\u0440\u043E\u043D\u0438\u0440\u043E\u0432\u0430\u043D\u0438\u044F</div>\n\t\t\t\t\t\t\t\t\t<ul class="list list_circle-small">\n\t\t\t\t\t\t\t\t\t\t'.concat(
+                    content.reservCancel
+                      .map(function (item) {
+                        return '<li class="list__item">'.concat(item, "</li>");
+                      })
+                      .join(""),
+                    "\n\t\t\t\t\t\t\t\t\t</ul>\n\t\t\t\t\t\t\t\t"
+                  )
+                : "",
+              "\n\t\t\t\t\t</div>\n\t\t\t\t"
+            )
+        );
+        window.modal.open("more");
+      }
+    });
   })();
   /******/
 })();

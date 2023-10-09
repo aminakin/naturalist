@@ -1,1 +1,69 @@
-.section_error{padding-top:7.6rem}.error{font-family:TT Travels Next;font-family:var(--header-text-font-family);text-align:center}.error__title{color:#e6c48e;color:var(--color-beige);font-size:26.8rem;line-height:.9}.error__footnote,.error__title{font-weight:600;letter-spacing:-.01em}.error__footnote{font-size:2.8rem;line-height:3.4rem}.error__footnote,.error__text{margin:3.2rem auto 0;max-width:46rem}.error__text{font-weight:500}@media (max-width:1023px){.section_error{padding-top:0}.error__title{font-size:25rem;line-height:1}.error__footnote{font-size:2.1rem;line-height:1;max-width:34.3rem}.error__text{margin-top:1.6rem;max-width:30rem}}@media (max-width:767px){.error__title{font-size:12rem}.error__footnote{font-size:1.5rem;line-height:1.9rem;max-width:24rem}}
+.section_error {
+    padding-top: 7.6rem
+}
+
+.error {
+    font-family: TT Travels Next;
+    font-family: var(--header-text-font-family);
+    text-align: center
+}
+
+.error__title {
+    color: #e6c48e;
+    color: var(--color-beige);
+    font-size: 26.8rem;
+    line-height: .9
+}
+
+.error__footnote, .error__title {
+    font-weight: 600;
+    letter-spacing: -.01em
+}
+
+.error__footnote {
+    font-size: 2.8rem;
+    line-height: 3.4rem
+}
+
+.error__footnote, .error__text {
+    margin: 3.2rem auto 0;
+    max-width: 46rem
+}
+
+.error__text {
+    font-weight: 500
+}
+
+@media (max-width: 1023px) {
+    .section_error {
+        padding-top: 0
+    }
+
+    .error__title {
+        font-size: 25rem;
+        line-height: 1
+    }
+
+    .error__footnote {
+        font-size: 2.1rem;
+        line-height: 1;
+        max-width: 34.3rem
+    }
+
+    .error__text {
+        margin-top: 1.6rem;
+        max-width: 30rem
+    }
+}
+
+@media (max-width: 767px) {
+    .error__title {
+        font-size: 12rem
+    }
+
+    .error__footnote {
+        font-size: 1.5rem;
+        line-height: 1.9rem;
+        max-width: 24rem
+    }
+}

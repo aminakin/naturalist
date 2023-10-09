@@ -55,7 +55,8 @@ var Autocomplete = /*#__PURE__*/function () {
   function Autocomplete() {
     _classCallCheck(this, Autocomplete);
 
-    this.$roots = document.querySelectorAll('[data-autocomplete]');
+    this.$roots = document.querySelectorAll('[data-autocomplete]'); // eslint-disable-next-line no-undef
+
     this.data = autocomplete;
   }
 
@@ -90,6 +91,7 @@ var Autocomplete = /*#__PURE__*/function () {
           Object.entries(data).filter(function (item) {
             return item[0] !== 'id';
           }).forEach(function (item) {
+            // eslint-disable-next-line prefer-destructuring
             $root.querySelector("[data-autocomplete-field=\"".concat(item[0], "\"]")).value = item[1];
           });
           Autocomplete.handleClear($root);

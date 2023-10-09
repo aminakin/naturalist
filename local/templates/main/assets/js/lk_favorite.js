@@ -116,7 +116,7 @@
       /***/
     },
 
-    /***/ 6449: /***/ function () {
+    /***/ 8485: /***/ function () {
       var $navigationControl = document.querySelector(
         "[data-navigation-control]"
       );
@@ -1664,10 +1664,10 @@
             easing: "swing", // or 'linear'
 
             /* Callbacks
-      begin(elements)
-      complete(elements)
-      progress(elements, complete, remaining, start, tweenValue)
-      */
+        begin(elements)
+        complete(elements)
+        progress(elements, complete, remaining, start, tweenValue)
+        */
           },
           initialParams
         ),
@@ -2663,8 +2663,8 @@
 
       function getDirectionLabel(property) {
         if (swiper.isHorizontal()) {
-      return property;
-    } // prettier-ignore
+        return property;
+      } // prettier-ignore
 
         return {
           width: "height",
@@ -5368,13 +5368,13 @@
     function addClasses() {
       const swiper = this;
       const {
-    classNames,
-    params,
-    rtl,
-    $el,
-    device,
-    support
-  } = swiper; // prettier-ignore
+      classNames,
+      params,
+      rtl,
+      $el,
+      device,
+      support
+    } = swiper; // prettier-ignore
 
       const suffixes = prepareClasses(
         [
@@ -12491,10 +12491,10 @@
               ? `${1 + (1 - scale) * progress}`
               : `${1 - (1 - scale) * progress}`;
           const transform = `
-        translate3d(${tX}, ${tY}, ${tZ}px)
-        rotateZ(${params.rotate ? rotate : 0}deg)
-        scale(${scaleString})
-      `;
+          translate3d(${tX}, ${tY}, ${tZ}px)
+          rotateZ(${params.rotate ? rotate : 0}deg)
+          scale(${scaleString})
+        `;
 
           if (params.slideShadows) {
             // Set shadows
@@ -12561,7 +12561,7 @@
 
     core.use([Navigation, Pagination, Lazy, EffectFade]);
     /* HEADING
- -------------------------------------------------- */
+   -------------------------------------------------- */
 
     var $heading = document.querySelector("[data-slider-heading]");
 
@@ -12594,7 +12594,7 @@
       });
     }
     /* OBJECT
- -------------------------------------------------- */
+   -------------------------------------------------- */
 
     window.objectsGallery = function () {
       var $object = document.querySelectorAll(
@@ -12603,14 +12603,15 @@
 
       if ($object.length) {
         $object.forEach(function ($item) {
+          // eslint-disable-next-line no-unused-vars
           var objectSlider = new core($item, {
             slidesPerView: 1,
             spaceBetween: 0,
             speed: 250,
             effect: "slide",
-            loop: false,
+            loop: $item.querySelectorAll(".swiper-slide").length > 1,
+            watchOverflow: true,
             watchSlidesProgress: true,
-            // init: false,
             preloadImages: false,
             lazy: {
               loadPrevNext: true,
@@ -12633,42 +12634,43 @@
       window.objectsGallery();
     });
     /* RELATED
- -------------------------------------------------- */
+   -------------------------------------------------- */
 
-    var $headingRelated = document.querySelector("[data-slider-related]");
-
-    if ($headingRelated) {
-      var headingRelatedSlider = new core(
-        $headingRelated.querySelector(".swiper"),
-        {
-          slidesPerView: 3,
-          spaceBetween: 20,
-          speed: 250,
-          effect: "slide",
-          loop: false,
-          watchSlidesProgress: true,
-          init: false,
-          navigation: {
-            nextEl: $headingRelated.querySelector(
-              ".slider__heading-controls .swiper-button-next"
-            ),
-            prevEl: $headingRelated.querySelector(
-              ".slider__heading-controls .swiper-button-prev"
-            ),
-          },
-          breakpoints: {
-            1280: {
-              slidesPerView: 4,
+    window.sliderRelated = function () {
+      var $headingRelated = document.querySelectorAll("[data-slider-related]");
+      $headingRelated.forEach(function ($item) {
+        if ($item.querySelector(".swiper:not(.swiper-initialized)")) {
+          // eslint-disable-next-line no-unused-vars
+          var headingRelatedSlider = new core($item.querySelector(".swiper"), {
+            slidesPerView: 3,
+            spaceBetween: 20,
+            speed: 250,
+            effect: "slide",
+            loop: false,
+            watchSlidesProgress: true,
+            navigation: {
+              nextEl: $item.querySelector(
+                ".slider__heading-controls .swiper-button-next"
+              ),
+              prevEl: $item.querySelector(
+                ".slider__heading-controls .swiper-button-prev"
+              ),
             },
-          },
+            breakpoints: {
+              1280: {
+                slidesPerView: 4,
+              },
+            },
+          });
         }
-      );
-      window.addEventListener("load", function () {
-        headingRelatedSlider.init();
       });
-    }
+    };
+
+    window.addEventListener("load", function () {
+      window.sliderRelated();
+    });
     /* MODAL GALLERY
- -------------------------------------------------- */
+   -------------------------------------------------- */
 
     window.modalGallery = function () {
       return new core("[data-modal-gallery] .swiper", {
@@ -12691,15 +12693,82 @@
           prevEl: ".swiper-button-prev",
         },
       });
-    }; // CONCATENATED MODULE: ./src/js/components/declension.js
+    };
+    /* FULL GALLERY
+   -------------------------------------------------- */
+
+    document.addEventListener("click", function (event) {
+      var $el = event.target;
+
+      if (
+        $el.matches("[data-fullgallery-item]") ||
+        $el.closest("[data-fullgallery-item]")
+      ) {
+        event.preventDefault();
+        var $dataEl = $el.matches("[data-fullgallery-item]")
+          ? $el
+          : $el.closest("[data-fullgallery-item]");
+        var id = $dataEl.dataset.fullgalleryItem;
+        var images = JSON.parse(
+          $el.closest("[data-fullgallery]").dataset.fullgallery
+        );
+
+        if (images.length > 0) {
+          document.body.insertAdjacentHTML(
+            "beforeend",
+            '<div class="modal modal_fullgallery" id="fullgallery">\n\t\t\t\t\t<div class="modal__container">\n\t\t\t\t\t\t<button class="modal__close" data-modal-close>\n\t\t\t\t\t\t\t<svg class="icon icon_cross-large" viewBox="0 0 32 32" style="width: 3.2rem; height: 3.2rem;">\n\t\t\t\t\t\t\t\t<use xlink:href="#cross-large"></use>\n\t\t\t\t\t\t\t</svg>\n\t\t\t\t\t\t\t<svg class="icon icon_cross" viewBox="0 0 18 18" style="width: 1.8rem; height: 1.8rem;">\n\t\t\t\t\t\t\t\t<use xlink:href="#cross"></use>\n\t\t\t\t\t\t\t</svg>\n\t\t\t\t\t\t</button>\n\t\t\t\t\t\t<div class="swiper slider-gallery slider-gallery_large">\n\t\t\t\t\t\t\t<div class="swiper-wrapper">\n\t\t\t\t\t\t\t\t'.concat(
+              images
+                .map(function (item) {
+                  return '<div class="swiper-slide"><img class="swiper-lazy" src="'.concat(
+                    item,
+                    '" alt=""></div>'
+                  );
+                })
+                .join(""),
+              '\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t<div class="swiper-button-prev">\n\t\t\t\t\t\t\t\t<svg class="icon icon_arrow-large" viewBox="0 0 32 32" style="width: 3.2rem; height: 3.2rem;">\n\t\t\t\t\t\t\t\t\t<use xlink:href="#arrow-large"></use>\n\t\t\t\t\t\t\t\t</svg>\n\t\t\t\t\t\t\t\t<svg class="icon icon_arrow-small" viewBox="0 0 16 16" style="width: 1.6rem; height: 1.6rem;">\n\t\t\t\t\t\t\t\t\t<use xlink:href="#arrow-small"></use>\n\t\t\t\t\t\t\t\t</svg>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t<div class="swiper-button-next">\n\t\t\t\t\t\t\t\t<svg class="icon icon_arrow-large" viewBox="0 0 32 32" style="width: 3.2rem; height: 3.2rem;">\n\t\t\t\t\t\t\t\t\t<use xlink:href="#arrow-large"></use>\n\t\t\t\t\t\t\t\t</svg>\n\t\t\t\t\t\t\t\t<svg class="icon icon_arrow-small" viewBox="0 0 16 16" style="width: 1.6rem; height: 1.6rem;">\n\t\t\t\t\t\t\t\t\t<use xlink:href="#arrow-small"></use>\n\t\t\t\t\t\t\t\t</svg>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t<div class="swiper-pagination"></div>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\t\t\t\t</div>'
+            )
+          );
+          var slider = new core("#fullgallery .swiper", {
+            slidesPerView: 1,
+            spaceBetween: 0,
+            speed: 250,
+            effect: "fade",
+            loop: false,
+            watchSlidesProgress: true,
+            fadeEffect: {
+              crossFade: true,
+            },
+            preloadImages: false,
+            lazy: {
+              loadPrevNext: true,
+              loadOnTransitionStart: true,
+            },
+            navigation: {
+              nextEl: ".swiper-button-next",
+              prevEl: ".swiper-button-prev",
+            },
+            pagination: {
+              el: ".swiper-pagination",
+              type: "bullets",
+            },
+          });
+          slider.slideTo(parseInt(id), 0);
+          window.modal.open("fullgallery");
+        }
+      }
+    });
+    window.addEventListener("modalAfterClose", function (event) {
+      if (event.detail.id === "fullgallery") {
+        document.getElementById("fullgallery").remove();
+      }
+    }); // CONCATENATED MODULE: ./src/js/helpers/declension.js
     function declension(
+      number,
       oneNominative,
       severalGenitive,
-      severalNominative,
-      number
+      severalNominative
     ) {
-      var num = number % 100; // eslint-disable-next-line no-return-assign,no-nested-ternary,no-cond-assign
-
+      var num = number % 100;
       return num <= 14 && num >= 11
         ? severalGenitive
         : (num %= 10) < 5
@@ -12711,7 +12780,7 @@
           ? severalGenitive
           : severalNominative
         : severalGenitive;
-    } // CONCATENATED MODULE: ./src/js/components/guests-input.js
+    } // CONCATENATED MODULE: ./src/js/components/guests_input.js
     var $guestsControl = document.querySelector("[data-guests-control]");
     var $guests = document.querySelector("[data-guests]");
     var $guestsAdultsCount = document.querySelector(
@@ -12740,7 +12809,7 @@
           parseInt($guestsChildrenCount.value);
         $guestsControl.innerText = ""
           .concat(allCount, " ")
-          .concat(declension("гость", "гостей", "гостя", allCount));
+          .concat(declension(allCount, "гость", "гостей", "гостя"));
       };
 
       $guestsAdultsCount.addEventListener("change", function () {
@@ -12755,7 +12824,7 @@
           var childrenLength = $children.length;
 
           if (value > childrenLength) {
-            var childrenNew = [];
+            var childrenNew = []; // eslint-disable-next-line no-plusplus
 
             for (var i = 0; i < value - childrenLength; i++) {
               childrenNew.push(childrenLength + i);
@@ -12779,6 +12848,7 @@
           }
 
           if (value < childrenLength) {
+            // eslint-disable-next-line no-plusplus
             for (var _i = 0; _i < childrenLength - value; _i++) {
               $children[childrenLength - 1 - _i].remove();
             }
@@ -13034,6 +13104,7 @@
             }
 
             $input.value = $input.value.replace(this.regex, "");
+            return true;
           },
         },
         {
@@ -13070,6 +13141,7 @@
             setTimeout(function () {
               $input.value = prefix + value + postfix;
             }, 300);
+            return true;
           },
         },
         {
@@ -16559,7 +16631,7 @@
 
     /* harmony default export */ var esm = flatpickr;
     // EXTERNAL MODULE: ./node_modules/flatpickr/dist/l10n/ru.js
-    var ru = __webpack_require__(7896); // CONCATENATED MODULE: ./src/js/components/range-calendar.js
+    var ru = __webpack_require__(7896); // CONCATENATED MODULE: ./src/js/components/range_calendar.js
     var RangeCalendar = /*#__PURE__*/ (function () {
       function RangeCalendar() {
         _classCallCheck(this, RangeCalendar);
@@ -16674,6 +16746,9 @@
                   .querySelector("[data-calendar-navigation] span").innerText =
                   $el.innerText;
                 _this4.data.month = nextIndex;
+                $el
+                  .closest(".calendar__navigation-item")
+                  .classList.remove("calendar__navigation-item_show");
               });
             });
           },
@@ -16761,6 +16836,9 @@
                       "[data-calendar-navigation] span"
                     ).innerText = $firstMonth.innerText;
                   _this6.data.month = nextMonth;
+                  $item
+                    .closest(".calendar__navigation-item")
+                    .classList.remove("calendar__navigation-item_show");
 
                   _this6.handleMonthsHide();
                 }
@@ -16851,14 +16929,15 @@
     })();
 
     /* harmony default export */ var range_calendar = RangeCalendar;
-    // EXTERNAL MODULE: ./src/js/components/navigation-dropdown.js
-    var navigation_dropdown = __webpack_require__(6449); // CONCATENATED MODULE: ./src/js/pages/lk_favorite.js
+    // EXTERNAL MODULE: ./src/js/components/navigation_dropdown.js
+    var navigation_dropdown = __webpack_require__(8485); // CONCATENATED MODULE: ./src/js/pages/lk_favorite.js
     /* COUNTER
- -------------------------------------------------- */
+   -------------------------------------------------- */
+    // eslint-disable-next-line no-unused-vars
 
     var lk_favorite_counter = new counter();
     /* CALENDAR
- -------------------------------------------------- */
+   -------------------------------------------------- */
 
     var rangeCalendar = new range_calendar();
     rangeCalendar.init();
