@@ -133,9 +133,9 @@ foreach ($arParams['VARS'] as $key => $value) {
                         </div>
 
                         <?if($arTariff['price']):?>
-                            <?if ($arElement['DISCOUNT_DATA']) {
+                            <?if ($arElement['DISCOUNT_DATA']) {                                
                                 if ($arElement['DISCOUNT_DATA']['VALUE_TYPE'] == 'P') {
-                                    $elementPrice = $arTariff['price'] * $arElement['DISCOUNT_DATA']['VALUE'] / 100;
+                                    $elementPrice = $arTariff['price'] * (100 - $arElement['DISCOUNT_DATA']['VALUE']) / 100;
                                 } else {
                                     $elementPrice = $arTariff['price'] - $arElement['DISCOUNT_DATA']['VALUE'];
                                 }                                        
@@ -143,7 +143,7 @@ foreach ($arParams['VARS'] as $key => $value) {
                             } else {
                                 $elementPrice = $arTariff['price'];
                             }?>
-                            <div class="room__order">
+                            <div class="room__order">                                
                                 <div class="room__price">
                                     <?if ($elementOldPrice) {?>
                                         <span class="room__old-price"><?= number_format($elementOldPrice, 0, '.', ' ') ?> ₽</span>
@@ -255,9 +255,9 @@ foreach ($arParams['VARS'] as $key => $value) {
                                 </div>
 
                                 <?if($arExternalItem['price']):?>
-                                    <?if ($arElement['DISCOUNT_DATA']) {
+                                    <?if ($arElement['DISCOUNT_DATA']) {                                        
                                         if ($arElement['DISCOUNT_DATA']['VALUE_TYPE'] == 'P') {
-                                            $elementPrice = $arExternalItem['price'] * $arElement['DISCOUNT_DATA']['VALUE'] / 100;
+                                            $elementPrice = $arExternalItem['price'] * (100 - $arElement['DISCOUNT_DATA']['VALUE']) / 100;
                                         } else {
                                             $elementPrice = $arExternalItem['price'] - $arElement['DISCOUNT_DATA']['VALUE'];
                                         }                                        
