@@ -13401,6 +13401,7 @@ function FlatpickrInstance(element, instanceConfig) {
   }
 
   function changeMonth(value, isOffset) {
+
     if (isOffset === void 0) {
       isOffset = true;
     }
@@ -14580,7 +14581,7 @@ var RangeCalendar = function () {
   function RangeCalendar() {
     _classCallCheck(this, RangeCalendar);
 
-    this.calendar = null;
+    this.calendar = [];
     this.data = {
       month: 0,
       year: parseInt(document.querySelector('.list__item_active [data-calendar-year-select]').dataset.calendarYearSelect)
@@ -14665,11 +14666,18 @@ var RangeCalendar = function () {
       this.$elements.months.forEach(function ($item) {
         $item.addEventListener('click', function (event) {
           var nextIndex = parseInt(event.target.dataset.calendarMonthSelect);
-
-          _this4.calendar.changeMonth(nextIndex - _this4.data.month);
-
           var $el = event.target;
-          document.querySelector("[data-calendar-month-select=\"".concat(_this4.data.month, "\"]")).closest('.list__item').classList.remove('list__item_active');
+          var $parentCalendar = $el.closest('[data-calendar-dropdown]');
+          var calendarIndex = Array.from(_this4.$elements.dropdown).indexOf($parentCalendar);
+
+
+          _this4.calendar[calendarIndex].changeMonth(nextIndex - _this4.data.month);
+
+
+          // document.querySelector("[data-calendar-month-select=\"".concat(_this4.data.month, "\"]")).closest('.list__item').classList.remove('list__item_active');
+          document.querySelectorAll('[data-calendar-dropdown] .list__item_active').forEach(function ($item) {
+            $item.classList.remove('list__item_active');
+          });
           $el.closest('.list__item').classList.add('list__item_active');
           $el.closest('.calendar__navigation-item').querySelector('[data-calendar-navigation] span').innerText = $el.innerText;
           _this4.data.month = nextIndex;
@@ -14709,8 +14717,11 @@ var RangeCalendar = function () {
       var _this6 = this;
 
       this.$elements.years.forEach(function ($item) {
-        $item.addEventListener('click', function () {
+        $item.addEventListener('click', function (event) {
           var $parent = $item.closest('.list__item');
+          var $el = event.target;
+          var $parentCalendar = $el.closest('[data-calendar-dropdown]');
+          var calendarIndex = Array.from(_this6.$elements.dropdown).indexOf($parentCalendar);
 
           if (!$parent.classList.contains('list__item_active')) {
             _this6.data.year = parseInt($item.dataset.calendarYearSelect);
@@ -14720,7 +14731,7 @@ var RangeCalendar = function () {
             var $firstMonth = document.querySelector("[data-calendar-year=\"".concat(_this6.data.year, "\"]"));
             var nextMonth = parseInt($firstMonth.dataset.calendarMonthSelect);
 
-            _this6.calendar.changeMonth(nextMonth - _this6.data.month);
+            _this6.calendar[calendarIndex].changeMonth(nextMonth - _this6.data.month);
 
             document.querySelector('.calendar__navigation-item_months .list__item_active').classList.remove('list__item_active');
             $firstMonth.closest('.list__item').classList.add('list__item_active');
@@ -14744,16 +14755,17 @@ var RangeCalendar = function () {
             calendarMax = _this$$elements$main$.calendarMax;
 
 
-        this.$elements.value.forEach(($value) => {
-          esm($value, {
+         this.$elements.value.forEach(($value) => {
+           this.calendar.push(esm($value, {
             locale: ru.Russian,
             inline: true,
             mode: 'range',
             dateFormat: 'd.m.Y',
             minDate: calendarMin !== undefined ? calendarMin : null,
             maxDate: calendarMax !== undefined ? new Date().fp_incr(parseInt(calendarMax)) : null
-          })
+          }))
         });
+
         // this.calendar = esm(this.$elements.value, {
         //   locale: ru.Russian,
         //   inline: true,
@@ -14771,7 +14783,11 @@ var RangeCalendar = function () {
         this.handleYearChange();
         if (window.innerWidth < 1280) this.handleMonthsHide();
         window.matchMedia('(max-width: 1279px)').addListener(function (event) {
-          _this7.calendar.changeMonth(0 - _this7.data.month);
+          var $el = event.target;
+          var $parentCalendar = $el.closest('[data-calendar-dropdown]');
+          var calendarIndex = Array.from(_this7.$elements.dropdown).indexOf($parentCalendar);
+
+          _this7.calendar[calendarIndex].changeMonth(0 - _this7.data.month);
 
           _this7.data = {
             month: 0,
@@ -15296,7 +15312,7 @@ var CatalogMap = /*#__PURE__*/function () {
   }, {
     key: "handleInitMap",
     value: function handleInitMap() {
-      console.log(ymaps);
+
       this.map = new ymaps.Map('map', {
         center: this.options.center,
         zoom: this.options.zoom,
