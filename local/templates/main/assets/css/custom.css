@@ -36,6 +36,10 @@
 }
 #form-catalog-filter-front  .guests__dropdown{
     z-index: 10;
+    width: auto;
+    max-height: 350px;
+    overflow: scroll;
+    overflow-x: hidden;
 }
 @media screen and (max-width: 768px) {
 

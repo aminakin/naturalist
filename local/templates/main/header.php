@@ -103,9 +103,9 @@ Asset::getInstance()->addJs(SITE_TEMPLATE_PATH . "/js/common.js");
 height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <!-- End Google Tag Manager (noscript) -->
 
-<? if ($USER->IsAuthorized() && $_GET['isAdmin'] == 'y') : ?>
+
     <div id="admin_panel"><? $APPLICATION->ShowPanel(); ?></div>
-<? endif; ?>
+
 
 <div class="wrapper">
     <header class="header" data-scroll-fixed>
