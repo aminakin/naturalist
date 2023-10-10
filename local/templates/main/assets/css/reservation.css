@@ -1,442 +1,441 @@
 @charset "UTF-8";
 .area-info {
-    -webkit-box-align: start;
-    -ms-flex-align: start;
-    align-items: flex-start;
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex
+  -webkit-box-align: start;
+  -ms-flex-align: start;
+  align-items: flex-start;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
 }
 
 .area-info > * {
-    min-height: 1px;
-    min-width: 1px
+  min-height: 1px;
+  min-width: 1px;
 }
 
 .area-info img {
-    -webkit-box-flex: 0;
-    -ms-flex: none;
-    flex: none;
-    margin-right: .4rem;
-    margin-top: .2rem
+  -webkit-box-flex: 0;
+  -ms-flex: none;
+  flex: none;
+  margin-right: 0.4rem;
+  margin-top: 0.2rem;
 }
 
 .area-info div {
-    -webkit-box-flex: 1;
-    -ms-flex: 1;
-    flex: 1;
-    font-size: 1.2rem;
-    line-height: 1.5rem
+  -webkit-box-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+  font-size: 1.2rem;
+  line-height: 1.5rem;
 }
 
 .area-info div span + span:before {
-    content: "•";
-    padding: 0 .6rem
+  content: "•";
+  padding: 0 0.6rem;
 }
 
 [data-autocomplete] {
-    position: relative
+  position: relative;
 }
 
 [data-autocomplete] .list_autocomplete {
-    background-color: #fbeed7;
-    background-color: var(--color-beige-light);
-    border-radius: .2rem;
-    -webkit-box-shadow: 0 .8rem 2.2rem rgba(0, 0, 0, .15);
-    box-shadow: 0 .8rem 2.2rem rgba(0, 0, 0, .15);
-    -webkit-box-shadow: var(--shadow);
-    box-shadow: var(--shadow);
-    display: none;
-    left: 0;
-    opacity: 0;
-    padding: .5rem 0;
-    position: absolute;
-    top: 100%;
-    width: 100%;
-    z-index: 9
+  background-color: #fbeed7;
+  background-color: var(--color-beige-light);
+  border-radius: 0.2rem;
+  -webkit-box-shadow: 0 0.8rem 2.2rem rgba(0, 0, 0, 0.15);
+  box-shadow: 0 0.8rem 2.2rem rgba(0, 0, 0, 0.15);
+  -webkit-box-shadow: var(--shadow);
+  box-shadow: var(--shadow);
+  display: none;
+  left: 0;
+  opacity: 0;
+  padding: 0.5rem 0;
+  position: absolute;
+  top: 100%;
+  width: 100%;
+  z-index: 9;
 }
 
 [data-autocomplete] .list_autocomplete.list_show {
-    -webkit-animation: fadeIn .25s forwards;
-    animation: fadeIn .25s forwards;
-    display: block
+  -webkit-animation: fadeIn 0.25s forwards;
+  animation: fadeIn 0.25s forwards;
+  display: block;
 }
 
 [data-autocomplete] .list_autocomplete button {
-    background: none;
-    border: none;
-    display: block;
-    font-family: TT Travels Next;
-    font-family: var(--header-text-font-family);
-    font-size: 1rem;
-    font-weight: 600;
-    letter-spacing: .02em;
-    padding: 1rem 1.6rem;
-    text-align: left;
-    -webkit-transition: background-color .25s;
-    transition: background-color .25s;
-    width: 100%
+  background: none;
+  border: none;
+  display: block;
+  font-family: TT Travels Next;
+  font-family: var(--header-text-font-family);
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  padding: 1rem 1.6rem;
+  text-align: left;
+  -webkit-transition: background-color 0.25s;
+  transition: background-color 0.25s;
+  width: 100%;
 }
 
 [data-autocomplete] .list_autocomplete button:hover {
-    background-color: #e6c48e;
-    background-color: var(--color-beige)
+  background-color: #e6c48e;
+  background-color: var(--color-beige);
 }
 
 .reservation {
-    -webkit-box-pack: justify;
-    -ms-flex-pack: justify;
-    -webkit-box-align: start;
-    -ms-flex-align: start;
-    align-items: flex-start;
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-    justify-content: space-between
+  -webkit-box-pack: justify;
+  -ms-flex-pack: justify;
+  -webkit-box-align: start;
+  -ms-flex-align: start;
+  align-items: flex-start;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  justify-content: space-between;
 }
 
 .reservation > * {
-    min-height: 1px;
-    min-width: 1px
+  min-height: 1px;
+  min-width: 1px;
 }
 
 .reservation__content {
-    -webkit-box-flex: 0;
-    -ms-flex: none;
-    flex: none;
-    width: 51.6%
+  -webkit-box-flex: 0;
+  -ms-flex: none;
+  flex: none;
+  width: 51.6%;
 }
 
 .reservation__image {
-    -webkit-box-flex: 1;
-    -ms-flex: 1;
-    flex: 1;
-    max-width: 39.056%;
-    text-align: right
+  -webkit-box-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+  max-width: 39.056%;
+  text-align: right;
 }
 
 .reservation__image img {
-    display: inline-block;
-    max-width: 100%;
-    vertical-align: top
+  display: inline-block;
+  max-width: 100%;
+  vertical-align: top;
 }
 
 .reservation__heading {
-    -webkit-box-align: start;
-    -ms-flex-align: start;
-    align-items: flex-start;
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex
+  -webkit-box-align: start;
+  -ms-flex-align: start;
+  align-items: flex-start;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
 }
 
 .reservation__heading > * {
-    min-height: 1px;
-    min-width: 1px
+  min-height: 1px;
+  min-width: 1px;
 }
 
 .reservation__heading-title {
-    -webkit-box-flex: 1;
-    -ms-flex: 1;
-    flex: 1;
-    padding-right: 3.2rem
+  -webkit-box-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+  padding-right: 3.2rem;
 }
 
 .reservation__heading .h3 {
-    line-height: 1;
-    margin-bottom: 1.6rem
+  line-height: 1;
+  margin-bottom: 1.6rem;
 }
 
 .reservation__heading-score {
-    -webkit-box-flex: 0;
-    -webkit-box-align: center;
-    -ms-flex-align: center;
-    align-items: center;
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-    -ms-flex: none;
-    flex: none;
-    margin-top: .3rem
+  -webkit-box-flex: 0;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex: none;
+  flex: none;
+  margin-top: 0.3rem;
 }
 
 .reservation__heading-score > * {
-    min-height: 1px;
-    min-width: 1px
+  min-height: 1px;
+  min-width: 1px;
 }
 
 .reservation__heading-score > a {
-    -webkit-box-flex: 0;
-    -ms-flex: none;
-    flex: none;
-    font-family: TT Travels Next;
-    font-family: var(--header-text-font-family);
-    font-size: 1rem;
-    font-weight: 600;
-    line-height: 1.5rem;
-    margin-left: .8rem
+  -webkit-box-flex: 0;
+  -ms-flex: none;
+  flex: none;
+  font-family: TT Travels Next;
+  font-family: var(--header-text-font-family);
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.5rem;
+  margin-left: 0.8rem;
 }
 
 .reservation .list_time {
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-    margin-top: 1.6rem
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  margin-top: 1.6rem;
 }
 
 .reservation .list_time > * {
-    min-height: 1px;
-    min-width: 1px
+  min-height: 1px;
+  min-width: 1px;
 }
 
 .reservation .list_time .list__item {
-    -webkit-box-flex: 0;
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-    -ms-flex: none;
-    flex: none
+  -webkit-box-flex: 0;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex: none;
+  flex: none;
 }
 
 .reservation .list_time .list__item > * {
-    min-height: 1px;
-    min-width: 1px
+  min-height: 1px;
+  min-width: 1px;
 }
 
 .reservation .list_time .list__item span {
-    font-size: 1.2rem;
-    line-height: 1.5rem;
-    padding-right: 1.4rem
+  font-size: 1.2rem;
+  line-height: 1.5rem;
+  padding-right: 1.4rem;
 }
 
 .reservation .list_time .list__item div {
-    font-family: TT Travels Next;
-    font-family: var(--header-text-font-family);
-    font-weight: 700;
-    letter-spacing: -.01em
+  font-family: TT Travels Next;
+  font-family: var(--header-text-font-family);
+  font-weight: 700;
+  letter-spacing: -0.01em;
 }
 
 .reservation .list_time .list__item + .list__item {
-    margin-left: 2.4rem
+  margin-left: 2.4rem;
 }
 
 .reservation .list_icon {
-    grid-row-gap: 1.2rem;
-    grid-column-gap: 2.4rem;
-    display: grid;
-    grid-template-columns:1fr 1fr;
-    margin-top: 4.8rem;
-    max-width: 51.8rem
+  grid-row-gap: 1.2rem;
+  grid-column-gap: 2.4rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  margin-top: 4.8rem;
+  max-width: 51.8rem;
 }
 
 .reservation .list_icon > * {
-    min-height: 1px;
-    min-width: 1px
+  min-height: 1px;
+  min-width: 1px;
 }
 
 .reservation .list_icon .list__item {
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
 }
 
 .reservation .list_icon .list__item > * {
-    min-height: 1px;
-    min-width: 1px
+  min-height: 1px;
+  min-width: 1px;
 }
 
 .reservation .list_icon .list__item-icon {
-    -webkit-box-flex: 0;
-    -ms-flex: none;
-    flex: none;
-    width: 2rem
+  -webkit-box-flex: 0;
+  -ms-flex: none;
+  flex: none;
+  width: 2rem;
 }
 
 .reservation .list_icon .list__item-icon img {
-    display: block;
-    max-width: 100%
+  display: block;
+  max-width: 100%;
 }
 
 .reservation .list_icon .list__item-title {
-    -webkit-box-flex: 1;
-    -ms-flex: 1;
-    flex: 1;
-    line-height: 1.6rem;
-    margin-top: .2rem;
-    padding-left: .8rem
+  -webkit-box-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+  line-height: 1.6rem;
+  margin-top: 0.2rem;
+  padding-left: 0.8rem;
 }
 
 .reservation-form {
-    border-top: .1rem solid #000;
-    border-top: .1rem solid var(--color-black);
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-    margin-top: 4.8rem;
-    padding-top: 4.8rem
+  border-top: 0.1rem solid #000;
+  border-top: 0.1rem solid var(--color-black);
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  margin-top: 4.8rem;
+  padding-top: 4.8rem;
 }
 
 .reservation-form > * {
-    min-height: 1px;
-    min-width: 1px
+  min-height: 1px;
+  min-width: 1px;
 }
 
 .reservation-form__form {
-    -webkit-box-flex: 1;
-    -ms-flex: 1;
-    flex: 1;
-    padding-right: 3.2rem
+  -webkit-box-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+  padding-right: 3.2rem;
 }
 
 .reservation-form__form-holder {
-    max-width: 57rem
+  max-width: 57rem;
 }
 
 .reservation-form__form .h3 {
-    margin-bottom: 3.2rem
+  margin-bottom: 3.2rem;
 }
 
 .reservation-form__control {
-    padding-top: .8rem
+  padding-top: 0.8rem;
 }
 
 .reservation-form__control .button {
-    width: 100%
+  width: 100%;
 }
 
 .reservation-form__fields-label {
-    font-family: TT Travels Next;
-    font-family: var(--header-text-font-family);
-    font-size: 1.5rem;
-    font-weight: 600;
-    letter-spacing: -.01em;
-    margin-bottom: 1.6rem
+  font-family: TT Travels Next;
+  font-family: var(--header-text-font-family);
+  font-size: 1.5rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  margin-bottom: 1.6rem;
 }
 
 .reservation-form__title {
-    font-size: 20px;
-    font-weight: 600;
-    line-height: 21px;
-    font-family: var(--header-text-font-family);
-    margin: 0;
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 21px;
+  font-family: var(--header-text-font-family);
 }
 .reservation-form__fields-item .form__row {
-    grid-column-gap: 1.6rem
+  gap: 1.6rem;
 }
 
 .reservation-form__fields-item * + .checkbox {
-    margin-top: 1.6rem
+  margin-top: 1.6rem;
 }
 
 .reservation-form__fields-item + .reservation-form__fields-item {
-    margin-top: 3.2rem
+  margin-top: 4rem;
 }
 
 .reservation-form__summary {
-    -webkit-box-flex: 0;
-    -webkit-box-pack: end;
-    -ms-flex-pack: end;
-    border-left: .1rem solid #000;
-    border-left: .1rem solid var(--color-black);
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-    -ms-flex: none;
-    flex: none;
-    justify-content: flex-end;
-    padding-left: 3.2rem;
-    width: 39.056%
+  -webkit-box-flex: 0;
+  -webkit-box-pack: end;
+  -ms-flex-pack: end;
+  border-left: 0.1rem solid #000;
+  border-left: 0.1rem solid var(--color-black);
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex: none;
+  flex: none;
+  justify-content: flex-end;
+  padding-left: 3.2rem;
+  width: 39.056%;
 }
 
 .reservation-form__summary > * {
-    min-height: 1px;
-    min-width: 1px
+  min-height: 1px;
+  min-width: 1px;
 }
 
 .reservation-form__summary-holder {
-    -webkit-box-flex: 0;
-    -ms-flex: none;
-    flex: none;
-    max-width: 34rem
+  -webkit-box-flex: 0;
+  -ms-flex: none;
+  flex: none;
+  max-width: 34rem;
 }
 
 .reservation-form__summary .list_summary_time {
-    grid-column-gap: 2rem;
-    display: grid;
-    grid-template-columns:1fr 1fr;
-    margin-top: 4.8rem;
-    border-bottom: 1px solid black;
-    padding-bottom: 4.8rem;
+  grid-column-gap: 2rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  margin-top: 4.8rem;
+  border-bottom: 1px solid black;
+  padding-bottom: 4.8rem;
 }
 
 .reservation-form__summary .list_summary_time > * {
-    min-height: 1px;
-    min-width: 1px
+  min-height: 1px;
+  min-width: 1px;
 }
 
 .reservation-form__summary .list_summary_time .list__item div {
-    line-height: 1;
-    margin-bottom: 0
+  line-height: 1;
+  margin-bottom: 0;
 }
 
 .reservation-form__summary .list_summary_time .list__item span {
-    display: block;
-    margin-top: 2.4rem
+  display: block;
+  margin-top: 2.4rem;
 }
 
 .reservation-form__summary .list_summary_time .list__item span + span {
-    margin-top: .4rem
+  margin-top: 0.4rem;
 }
 
 .reservation-form__summary .button {
-    margin-top: 5.6rem;
-    width: 100%
+  margin-top: 3rem;
+  width: 100%;
 }
 
 .reservation-form__price {
-    -webkit-box-align: end;
-    -ms-flex-align: end;
-    grid-column-gap: 2rem;
-    align-items: flex-end;
-    border-top: .1rem solid #000;
-    border-top: .1rem solid var(--color-black);
-    display: grid;
-    font-family: TT Travels Next;
-    font-family: var(--header-text-font-family);
-    font-weight: 600;
-    grid-template-columns:1fr 1fr;
-    letter-spacing: -.01em;
-    margin-top: 2.4rem;
-    padding-top: 2.4rem
+  -webkit-box-align: end;
+  -ms-flex-align: end;
+  grid-column-gap: 2rem;
+  align-items: flex-end;
+  border-top: 0.1rem solid #000;
+  border-top: 0.1rem solid var(--color-black);
+  display: grid;
+  font-family: TT Travels Next;
+  font-family: var(--header-text-font-family);
+  font-weight: 600;
+  grid-template-columns: 1fr 1fr;
+  letter-spacing: -0.01em;
+  margin-top: 2rem;
+  padding-top: 2rem;
 }
 
 .reservation-form__price > * {
-    min-height: 1px;
-    min-width: 1px
+  min-height: 1px;
+  min-width: 1px;
 }
 
 .reservation-form__price span {
-    display: block;
-    font-size: 1.5rem;
-    margin-bottom: .4rem
+  display: block;
+  font-size: 1.5rem;
+  margin-bottom: 0.4rem;
 }
 
 .reservation-form__price .h1 {
-    white-space: nowrap
+  white-space: nowrap;
 }
 
 .reservation-form__footnote {
-    margin-top: 2.4rem
+  margin-top: 2.4rem;
 }
 
 .reservation-form__footnote .checkbox span {
-    font-size: 1.2rem
+  font-size: 1.2rem;
 }
 
 .reservation-form__footnote > div {
   font-size: 1.2rem;
   line-height: 1.5rem;
-  margin-top: 1.6rem;
+  margin-top: 1rem;
 }
 .form__coupons {
   padding-top: 25px;
@@ -511,192 +510,194 @@
   color: var(--color-dark-grey-2);
 }
 @media (max-width: 1023px) {
-    .reservation {
-        -webkit-box-orient: vertical;
-        -webkit-box-direction: normal;
-        -ms-flex-direction: column;
-        flex-direction: column
-    }
+  .reservation {
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
+    flex-direction: column;
+  }
 
-    .reservation__content {
-        -webkit-box-ordinal-group: 3;
-        -ms-flex-order: 2;
-        order: 2;
-        width: 100%
-    }
+  .reservation__content {
+    -webkit-box-ordinal-group: 3;
+    -ms-flex-order: 2;
+    order: 2;
+    width: 100%;
+  }
 
-    .reservation__image {
-        -webkit-box-ordinal-group: 2;
-        -ms-flex-order: 1;
-        margin-bottom: 1.6rem;
-        max-width: none;
-        order: 1;
-        width: 100%
-    }
+  .reservation__image {
+    -webkit-box-ordinal-group: 2;
+    -ms-flex-order: 1;
+    margin-bottom: 1.6rem;
+    max-width: none;
+    order: 1;
+    width: 100%;
+  }
 
-    .reservation__image img {
-        width: 100%
-    }
+  .reservation__image img {
+    width: 100%;
+  }
 
-    .reservation__heading .h3 {
-        font-size: 2.2rem;
-        line-height: 3rem
-    }
+  .reservation__heading .h3 {
+    font-size: 2.2rem;
+    line-height: 3rem;
+  }
 
-    .reservation__heading-score {
-        margin-top: .7rem
-    }
+  .reservation__heading-score {
+    margin-top: 0.7rem;
+  }
 
-    .reservation .list_icon {
-        margin-top: 3.2rem
-    }
+  .reservation .list_icon {
+    margin-top: 3.2rem;
+  }
 
-    .reservation-form {
-        display: block;
-        margin-top: 3.2rem;
-        padding-top: 3.2rem
-    }
+  .reservation-form {
+    display: block;
+    margin-top: 3.2rem;
+    padding-top: 3.2rem;
+  }
 
-    .reservation-form__form {
-        padding-right: 0
-    }
+  .reservation-form__form {
+    padding-right: 0;
+  }
 
-    .reservation-form__form-holder {
-        max-width: none
-    }
+  .reservation-form__form-holder {
+    max-width: none;
+  }
 
-    .reservation-form__control {
-        padding-top: 0
-    }
+  .reservation-form__control {
+    padding-top: 0;
+  }
 
-    .reservation-form__summary {
-        border: none;
-        border-top: .1rem solid #000;
-        border-top: .1rem solid var(--color-black);
-        display: block;
-        margin-top: 5.6rem;
-        padding-left: 0;
-        padding-top: 3.2rem;
-        width: 100%
-    }
+  .reservation-form__summary {
+    border: none;
+    border-top: 0.1rem solid #000;
+    border-top: 0.1rem solid var(--color-black);
+    display: block;
+    margin-top: 5.6rem;
+    padding-left: 0;
+    padding-top: 3.2rem;
+    width: 100%;
+  }
 
-    .reservation-form__summary-holder {
-        max-width: none
-    }
+  .reservation-form__summary-holder {
+    max-width: none;
+  }
 
-    .reservation-form__summary .list_summary_time {
-        grid-column-gap: 3rem;
-        max-width: 31rem
-    }
+  .reservation-form__summary .list_summary_time {
+    grid-column-gap: 3rem;
+    max-width: 31rem;
+  }
 
-    .reservation-form__summary .button {
-        margin-top: 3.2rem
-    }
+  .reservation-form__summary .button {
+    margin-top: 3.2rem;
+  }
 
-    .reservation-form__price {
-        border-bottom: .1rem solid #000;
-        border-bottom: .1rem solid var(--color-black);
-        padding-bottom: 2.4rem
-    }
+  .reservation-form__price {
+    border-bottom: 0.1rem solid #000;
+    border-bottom: 0.1rem solid var(--color-black);
+    padding-bottom: 2.4rem;
+  }
 }
 
 @media (max-width: 767px) {
-    .reservation__heading {
-        display: block
-    }
+  .reservation__heading {
+    display: block;
+  }
 
-    .reservation__heading-title {
-        padding-right: 0
-    }
+  .reservation__heading-title {
+    padding-right: 0;
+  }
 
-    .reservation__heading .h3 {
-        line-height: 2.8rem
-    }
+  .reservation__heading .h3 {
+    line-height: 2.8rem;
+  }
 
-    .reservation__heading-score {
-        margin-top: 1.6rem
-    }
+  .reservation__heading-score {
+    margin-top: 1.6rem;
+  }
 
-    .reservation .list_time {
-        margin-top: 1rem
-    }
+  .reservation .list_time {
+    margin-top: 1rem;
+  }
 
-    .reservation .list_icon {
-        margin-top: 2.4rem
-    }
+  .reservation .list_icon {
+    margin-top: 2.4rem;
+  }
 
-    .reservation .list_icon, .reservation-form__fields-item .form__row {
-        grid-row-gap: .8rem;
-        grid-template-columns:1fr
-    }
+  .reservation .list_icon,
+  .reservation-form__fields-item .form__row {
+    grid-row-gap: 0.8rem;
+    grid-template-columns: 1fr;
+  }
 
-    .reservation-form__fields-item * + .checkbox {
-        margin-top: .8rem
-    }
+  .reservation-form__fields-item * + .checkbox {
+    margin-top: 0.8rem;
+  }
 
-    .reservation-form__summary {
-        margin-top: 3.2rem
-    }
+  .reservation-form__summary {
+    margin-top: 3.2rem;
+  }
 
-    .reservation-form__summary .list_summary_time {
-        -webkit-box-pack: justify;
-        -ms-flex-pack: justify;
-        grid-template-columns:13rem 13rem;
-        justify-content: space-between;
-        max-width: none;
-        padding-bottom: 2.4rem;
-        margin-top: 2.4rem;
-        gap: 5px;
-    }
+  .reservation-form__summary .list_summary_time {
+    -webkit-box-pack: justify;
+    -ms-flex-pack: justify;
+    grid-template-columns: 13rem 13rem;
+    justify-content: space-between;
+    max-width: none;
+    padding-bottom: 2.4rem;
+    margin-top: 2.4rem;
+    gap: 5px;
+  }
 
-    .list_summary_time .list__item span, .list_summary_time .list__item span + span {
-        margin-top: 0;
-    }
+  .list_summary_time .list__item span,
+  .list_summary_time .list__item span + span {
+    margin-top: 0;
+  }
 
-    .list>.list__item {
-        display: flex;
-        align-items: center;
-        gap: 15px;
-    }
+  .list > .list__item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+  }
 
-    .form__coupons {
-        flex-wrap: wrap;
-    }
+  .form__coupons {
+    flex-wrap: wrap;
+  }
 
-    .coupon__enter.button.button_primary {
-        width: 100%;
-    }
+  .coupon__enter.button.button_primary {
+    width: 100%;
+  }
 
-    .reservation-form__price .h1 {
-        text-align: right;
-    }
+  .reservation-form__price .h1 {
+    text-align: right;
+  }
 
-    .field__input.coupon__input {
-        max-width: unset;
-        width: 100%;
-    }
+  .field__input.coupon__input {
+    max-width: unset;
+    width: 100%;
+  }
 
-    .reservation-form__discount-price {
-        font-size: 16px;
-    }
+  .reservation-form__discount-price {
+    font-size: 16px;
+  }
 
-    .coupon__success-icon {
-        top: 36px;
-        left: 84%;
-    }
+  .coupon__success-icon {
+    top: 36px;
+    left: 84%;
+  }
 
-    .reservation-form__pre-final {
-        font-size: 16px;
-    }
-    .coupon__entered .field__input.coupon__input {
-        width: 91%;
-    }
-    .reservation-form__title {
-        font-size: 1.5rem;
-    }
+  .reservation-form__pre-final {
+    font-size: 16px;
+  }
+  .coupon__entered .field__input.coupon__input {
+    width: 91%;
+  }
+  .reservation-form__title {
+    font-size: 1.5rem;
+  }
 
-    .form__row-item .form__footnote {
-        margin-top: 5px;
-        font-size: 10px;
-    }
+  .form__row-item .form__footnote {
+    margin-top: 5px;
+    font-size: 10px;
+  }
 }
