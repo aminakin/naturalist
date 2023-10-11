@@ -45,8 +45,8 @@
 }
 
 .area-info div span + span:before {
-    content: "•";
-    padding: 0 .6rem
+    /*content: "•";*/
+    /*padding: 0 .6rem*/
 }
 
 .tag {
@@ -481,11 +481,13 @@
 }
 
 .object-row__features {
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-    -ms-flex-wrap: wrap;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    /*display: -webkit-box;*/
+    /*display: -ms-flexbox;*/
+    /*display: flex;*/
+    /*-ms-flex-wrap: wrap;*/
+    /*flex-wrap: wrap;*/
     font-size: 1.2rem;
     line-height: 1.5rem;
     margin-left: -.8rem;
@@ -499,11 +501,21 @@
 
 .object-row__features span {
     -webkit-box-flex: 0;
-    display: block;
+    display: flex;
+    align-items: center;
     -ms-flex: none;
     flex: none;
     margin: .4rem 0 0 .8rem;
     max-width: calc(100% - .8rem)
+}
+
+.object-row__features span:before {
+    content: "•";
+    padding: 0 .6rem;
+    display: flex;
+    align-items: center;
+    color: var(--color-orange);
+    font-size: 25px;
 }
 
 .object-row__order {
