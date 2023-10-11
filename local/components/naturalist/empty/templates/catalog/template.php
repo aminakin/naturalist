@@ -139,9 +139,9 @@ foreach($arResult as $key => $value) {
                                 <img src="<?= SITE_TEMPLATE_PATH ?>/assets/img/marker.svg" alt>
                                 <div>
                                     <?php if (isset($arHLTypes[$arSection["UF_TYPE"]])) : ?><span><?= $arHLTypes[$arSection["UF_TYPE"]]["UF_NAME"] ?></span><?php endif; ?>
-                                    <?php if (!empty($arSection["UF_DISTANCE"])) : ?><span><?= $arSection["UF_DISTANCE"] ?></span><?php endif; ?>
-                                    <?php if (!empty($arSection["UF_ADDRESS"])) : ?><span><?= $arSection["UF_ADDRESS"] ?></span><?php endif; ?>
-                                    <?php if (!empty($arSection["DISCTANCE"])) : ?><span><?= $arSection["DISCTANCE"] ?> км от <?=$arSection['DISCTANCE_TO_REGION']?></span><?php endif; ?>
+                                    <?/*php if (!empty($arSection["UF_DISTANCE"])) : ?><span><?= $arSection["UF_DISTANCE"] ?></span><?php endif; */?>
+                                    <?/*php if (!empty($arSection["UF_ADDRESS"])) : ?><span><?= $arSection["UF_ADDRESS"] ?></span><?php endif; */?>
+                                    <?php if (!empty($arSection["DISCTANCE"])) : ?><span>, <?= $arSection["DISCTANCE"] ?> км от <?=$arSection['DISCTANCE_TO_REGION']?></span><?php endif; ?>
                                 </div>
                             </div>
                             <div class="object-row__reviews">
