@@ -154,8 +154,14 @@ foreach($arResult as $key => $value) {
 
                             <?php if($arSection["UF_FEATURES"]):?>
                                 <div class="object-row__features">
-                                    <?php foreach ($arSection["UF_FEATURES"] as $featureId) :
+                                    <?php
+                                    $featureCounter = 0;
+                                    foreach ($arSection["UF_FEATURES"] as $featureId) :
                                         if (empty($arHLFeatures[$featureId]["UF_NAME"])) {
+                                            continue;
+                                        }
+                                        $featureCounter++;
+                                        if ($featureCounter > 6) {
                                             continue;
                                         }
                                         ?>
