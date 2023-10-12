@@ -20,11 +20,11 @@
     width: 50%;
 }
 
-#form-catalog-filter-front .form_group_wrapper-filter_items .calendar{
+#form-catalog-filter-front .form_group_wrapper-filter_items .form__row.calendar{
     width: 66.7%;
 }
 
-#form-catalog-filter-front .form_group_wrapper-filter_items .calendar > div{
+#form-catalog-filter-front .form_group_wrapper-filter_items .form__row.calendar > .form__item{
     width: 50%;
 }
 #form-catalog-filter-front .form_group_wrapper-filter_items .guest{
