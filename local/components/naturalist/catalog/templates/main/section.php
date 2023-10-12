@@ -672,6 +672,8 @@ $APPLICATION->AddHeadString('<meta name="description" content="' . $descriptionS
                         "arHLFeatures" => $arHLFeatures,
                         "arServices" => $arServices,
                         "arSearchedRegions" => $arRegionIds,
+                        "searchedRegionData" => $searchedRegionData,
+                        "searchName" => $searchName,
                         "arFilterValues" => $arFilterValues,
                         "dateFrom" => $dateFrom,
                         "dateTo" => $dateTo,

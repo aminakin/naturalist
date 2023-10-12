@@ -1443,6 +1443,7 @@
     width: 70rem
 }
 
+.same_items-header,
 .catalog__count {
     /*font-family: TT Travels Next;*/
     /*font-family: var(--header-text-font-family);*/
@@ -1450,9 +1451,16 @@
     /*letter-spacing: -.01em;*/
     margin-bottom: 1.8rem
 }
+
+.same_items-header,
 .catalog__count--not-found{
     padding: 10px 20px;
     background-color: #E2C189;
+}
+
+
+.same_items-header{
+    margin-bottom: 24px;
 }
 
 .catalog__more {
