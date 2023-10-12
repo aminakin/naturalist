@@ -209,7 +209,7 @@ foreach ($arResult as $key => $value) {
             </div>
         <?php endif; ?>
 
-        <div id="same_items" style="<?=($page < $pageCount) ? 'display:none;' : 'magin-top: 24px;'?>">
+        <div id="same_items" style="<?=($page < $pageCount) ? 'display:none;' : 'margin-top: 24px;'?>">
 
             <?php if ($arResult['arSearchedRegions'] && is_array($arResult["SECTIONS"]) && count($arResult["SECTIONS"]) > 0) { ?>
                 <div class="same_items-header">
