@@ -14790,11 +14790,11 @@
           this.handleYearChange();
           if (window.innerWidth < 1280) this.handleMonthsHide();
           window.matchMedia('(max-width: 1279px)').addListener(function (event) {
-            var $el = event.target;
-            var $parentCalendar = $el.closest('[data-calendar-dropdown]');
-            var calendarIndex = Array.from(_this7.$elements.dropdown).indexOf($parentCalendar);
+            // var $el = event.target;
+            // var $parentCalendar = $el.closest('[data-calendar-dropdown]');
+            // var calendarIndex = Array.from(_this7.$elements.dropdown).indexOf($parentCalendar);
   
-            _this7.calendar[calendarIndex].changeMonth(0 - _this7.data.month);
+            _this7.calendar[0].changeMonth(0 - _this7.data.month);
   
             _this7.data = {
               month: 0,

@@ -1,8 +1,10 @@
 <?php
 
 use Bitrix\Main\Web\Uri;
+use Naturalist\Morpher;
 use Naturalist\Products;
 use Naturalist\Regions;
+use Naturalist\Utils;
 
 $arResult = array(
     "sortBy" => $arParams['sortBy'],
@@ -18,6 +20,8 @@ $arResult = array(
     "arHLTypes" => $arParams['arHLTypes'],
     "arHLFeatures" => $arParams['arHLFeatures'],
     "arSearchedRegions" => $arParams['arSearchedRegions'] ?? false,
+    "searchedRegionData" => $arParams['searchedRegionData'] ?? false,
+    "searchName" => $arParams['searchName'] ?? '',
     "arFilterValues" => $arParams['arFilterValues'],
     "dateFrom" => $arParams['dateFrom'],
     "dateTo" => $arParams['dateTo'],
@@ -155,6 +159,17 @@ if ($arResult['arSearchedRegions']) {
                 if ($arSection["UF_COORDS"]) {
                     $arSection["COORDS"] = explode(',', $arSection["UF_COORDS"]);
                 }
+
+
+                /* Растояние до поискового запроса */
+                if ($arResult['searchedRegionData']) {
+                    $searchedRegionData['COORDS'] = explode(',', $arResult['searchedRegionData']['UF_COORDS']);
+
+                    $arSection['DISCTANCE'] = Utils::calculateTheDistance($searchedRegionData['COORDS'][0], $searchedRegionData['COORDS'][1], $arSection['COORDS'][0], $arSection['COORDS'][1]);
+                    $arSection['DISCTANCE_TO_REGION'] = Utils::morpher($arResult['searchName'], Morpher::CASE_GENITIVE);
+                }
+
+                /* -- */
 
                 if ($arExternalInfo) {
                     $sectionPrice = $arExternalInfo[$arSection["UF_EXTERNAL_ID"]];

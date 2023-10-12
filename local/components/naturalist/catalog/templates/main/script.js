@@ -28,6 +28,9 @@ $(function() {
 
                 window.objectsGallery();
                 window.map.handleItemHover();
+
+
+                $('#same_items').show();
             }
         });
     });
