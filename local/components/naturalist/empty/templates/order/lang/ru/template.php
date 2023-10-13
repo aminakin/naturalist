@@ -15,7 +15,7 @@ $MESS['ORDER_COMMENT'] = 'Комментарий к заказу';
 $MESS['ORDER_COMMENT_PLACEHOLDER'] = 'Введите дополнительную информацию или пожелания к заказу';
 $MESS['ORDER_RUBLE'] = '₽';
 $MESS['ORDER_POLITICS'] = 'Согласен с условиями <a href="#LINK#">пользовательского соглашения</a>.';
-$MESS['ORDER_PAY'] = 'Оплатить банковской картой';
+$MESS['ORDER_PAY'] = 'Оплатить';
 $MESS['ORDER_SSL'] = 'Передача информации защищена сертификатом SSL, оплата осуществляется через интернет-эквайринг СБЕР.';
 $MESS['ORDER_MODAL_CLOSE'] = 'Принять';
 $MESS['ORDER_CANCELLATION_LINK'] = 'Ознакомлен с <a href="#LINK#" #DATA_ATTR#>условиями отмены бронирования</a>.';

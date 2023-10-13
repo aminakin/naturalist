@@ -359,31 +359,31 @@
   max-width: 34rem;
 }
 
-.reservation-form__summary .list_summary_time {
+.list_summary_time {
   grid-column-gap: 2rem;
   display: grid;
   grid-template-columns: 1fr 1fr;
-  margin-top: 4.8rem;
+  margin-top: 3rem;
   border-bottom: 1px solid black;
-  padding-bottom: 4.8rem;
+  padding-bottom: 3rem;
 }
 
-.reservation-form__summary .list_summary_time > * {
+.list_summary_time > * {
   min-height: 1px;
   min-width: 1px;
 }
 
-.reservation-form__summary .list_summary_time .list__item div {
+.list_summary_time .list__item div {
   line-height: 1;
   margin-bottom: 0;
 }
 
-.reservation-form__summary .list_summary_time .list__item span {
+.list_summary_time .list__item span {
   display: block;
   margin-top: 2.4rem;
 }
 
-.reservation-form__summary .list_summary_time .list__item span + span {
+.list_summary_time .list__item span + span {
   margin-top: 0.4rem;
 }
 
@@ -583,7 +583,7 @@
     max-width: none;
   }
 
-  .reservation-form__summary .list_summary_time {
+  .list_summary_time {
     grid-column-gap: 3rem;
     max-width: 31rem;
   }
@@ -638,11 +638,9 @@
     margin-top: 3.2rem;
   }
 
-  .reservation-form__summary .list_summary_time {
-    -webkit-box-pack: justify;
-    -ms-flex-pack: justify;
-    grid-template-columns: 13rem 13rem;
-    justify-content: space-between;
+  .list_summary_time {
+    flex-direction: column;
+    display: flex;
     max-width: none;
     padding-bottom: 2.4rem;
     margin-top: 2.4rem;
