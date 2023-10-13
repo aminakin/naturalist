@@ -20,7 +20,7 @@ class Regions
     /**
      * Поиск города по наименованию
      * @param $cityName
-     * @return void
+     * @return array
      */
     public static function getCityByName($cityName)
     {
@@ -43,7 +43,7 @@ class Regions
                 ]
             ])
             ->whereLike('UF_NAME', '%' . $cityName . '%')
-            ->fetchAll();
+            ?->fetchAll() ?? [];
     }
 
     /**
@@ -65,7 +65,7 @@ class Regions
             ->addSelect('ID')
             ->addSelect('UF_REGION')
             ->whereLike('UF_NAME', '%' . $cityName . '%')
-            ->fetchAll();
+            ?->fetchAll() ?? [];
 
         $arResultRegion = [];
         foreach ($citiesData as $cityData) {
@@ -73,7 +73,7 @@ class Regions
                 ->addSelect('ID')
                 ->addSelect('UF_NAME')
                 ->where('ID', $cityData['UF_REGION'])
-                ->fetch();
+                ?->fetchAll() ?? [];
         }
 
         return $arResultRegion;
@@ -82,7 +82,7 @@ class Regions
     /**
      * Поиск региона по name
      * @param $region
-     * @return mixed
+     * @return array
      * @throws \Bitrix\Main\SystemException
      */
     public static function getRegionByName($regionName)
@@ -99,13 +99,31 @@ class Regions
             ->addSelect('UF_SORT')
             ->addSelect('UF_COORDS')
             ->whereLike('UF_NAME', '%' . $regionName . '%')
-            ->fetchAll();
+            ?->fetchAll() ?? [];
+    }
+
+    /**
+     * Возвращает список избранных регионов
+     *
+     * @return array
+     */
+    public static function getFavoriteRegions()
+    {
+        $regionesDataClass = HighloadBlockTable::compileEntity(self::$regionsHL)->getDataClass();
+
+        return $regionesDataClass::query()
+            ->addSelect('ID')
+            ->addSelect('UF_NAME')
+            ->addSelect('UF_SORT')
+            ->addSelect('UF_COORDS')
+            ->where('UF_FAVORITE', true)
+            ?->fetchAll() ?? [];
     }
 
     /**
      * Поиск региона по ИД
      * @param $regionID
-     * @return mixed
+     * @return array
      * @throws \Bitrix\Main\SystemException
      */
     public static function getRegionById($regionID)
@@ -122,12 +140,12 @@ class Regions
             ->addSelect('UF_SORT')
             ->addSelect('UF_COORDS')
             ->where('ID', $regionID)
-            ->fetch();
+            ?->fetchAll() ?? [];
     }
 
     /**
      * Список регионов
-     * @return mixed
+     * @return array
      * @throws \Bitrix\Main\SystemException
      */
     public static function getRegionList($ignoredIds = [])
@@ -140,6 +158,6 @@ class Regions
             ->addSelect('UF_SORT')
             ->addSelect('UF_COORDS')
             ->whereNotIn('ID', $ignoredIds)
-            ->fetchAll();
+            ?->fetchAll() ?? [];
     }
 }

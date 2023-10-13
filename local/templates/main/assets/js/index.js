@@ -17782,7 +17782,7 @@
           value: function handleRequest(value) {
             var _this = this;
 
-            if (value.length >= 1) {
+            if (value.length >= 0) {
               fetch(
                 ""
                   .concat(this.elements.$root.dataset.autocomplete, "?text=")

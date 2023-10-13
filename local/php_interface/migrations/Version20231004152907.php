@@ -3,6 +3,8 @@
 namespace Sprint\Migration;
 
 
+use Bitrix\Main\Loader;
+
 class Version20231004152907 extends Version
 {
     protected $description = "101021 | Добавить миграцию для установки цен / рубрик | установка цен для номеров";
@@ -11,8 +13,8 @@ class Version20231004152907 extends Version
 
     public function up()
     {
-        \Bitrix\Main\Loader::includeModule('iblock');
-        \Bitrix\Main\Loader::includeModule('sale');
+        Loader::includeModule('iblock');
+        Loader::includeModule('sale');
 
         $elements = \Bitrix\Iblock\Elements\ElementGlampingsTable::getList([
             'select' => ['ID', 'NAME'],

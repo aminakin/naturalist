@@ -20,6 +20,8 @@ $request = Application::getInstance()->getContext()->getRequest();
 /**
  * Sorting item flats
  */
+
+
 if ($request->get('text') != null) {
     $requestName = urldecode($request->get('text'));
 }
@@ -202,5 +204,30 @@ if ($requestName) {
         echo $encode = json_encode(["messageType" => "error", "messageText" => "Объекты или регион не найдены"], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
     }
 } else {
-    echo "Повторите запрос";
+    //show favorite
+    $arRegions = Regions::getFavoriteRegions();
+
+    $arAreas = [
+        'type' => 'Регион',
+        'id' => 'area',
+        'list' => [],
+    ];
+
+
+    foreach ($arRegions as $arRegion) {
+        $arAreas['list'][] = [
+            'id' => $arRegion['UF_NAME'],
+            'title' => $arRegion['UF_NAME']
+        ];
+    }
+
+    if ($arAreas['list']) {
+        $arReturn[] = $arAreas;
+    }
+
+    if(isset($arReturn) && !empty($arReturn)){
+        echo $encode = json_encode($arReturn, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+    }else {
+        echo $encode = json_encode(["messageType" => "error", "messageText" => "Объекты или регион не найдены"], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+    }
 }
