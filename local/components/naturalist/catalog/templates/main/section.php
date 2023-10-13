@@ -75,6 +75,7 @@ if (!empty($_GET['name']) && isset($_GET['name'])) {
                 $arRegions = Regions::getRegionByName($searchName);
                 $arCityRegions = Regions::getRegionByCity($searchName);
 
+
                 $arRegionIds = [];
                 if (is_array($arRegions) && !empty($arRegions)) {
                     foreach ($arRegions as $arRegion) {
@@ -83,9 +84,12 @@ if (!empty($_GET['name']) && isset($_GET['name'])) {
                 }
                 if (is_array($arCityRegions) && !empty($arCityRegions)) {
                     foreach ($arCityRegions as $arCityRegion) {
-                        $arRegionIds[] = $arCityRegion['ID'];
+                        foreach ($arCityRegion as $region) {
+                            $arRegionIds[] = $region['ID'];
+                        }
                     }
                 }
+
 
                 $arFilter["UF_REGION"] = $arRegionIds;
 
