@@ -3,9 +3,9 @@
 namespace Sprint\Migration;
 
 
-class Version20230905125041 extends Version
+class Version20231013150940 extends Version
 {
-    protected $description   = "99373 | Поисковая выдача / Доработка внешнего вида подсказок | Заполненный справочник регионов";
+    protected $description   = "101310 | Баги | Перезаполнен справочник городов";
     protected $moduleVersion = "4.4.1";
 
     /**
