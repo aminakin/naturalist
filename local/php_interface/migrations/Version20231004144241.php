@@ -3,6 +3,8 @@
 namespace Sprint\Migration;
 
 
+use Bitrix\Main\Loader;
+
 class Version20231004144241 extends Version
 {
     protected $description = "101021 | Добавить миграцию для установки цен / рубрик | создание рубрики для рассылки";
@@ -11,7 +13,7 @@ class Version20231004144241 extends Version
 
     public function up()
     {
-        \Bitrix\Main\Loader::includeModule('subscribe');
+        Loader::includeModule('subscribe');
 
         $rubric = new \CRubric;
         $arFields = Array(

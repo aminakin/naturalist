@@ -3,6 +3,9 @@
 namespace Sprint\Migration;
 
 
+use Bitrix\Iblock\IblockTable;
+use Bitrix\Main\Loader;
+
 class Version20231004143116 extends Version
 {
     protected $description = "101021 | Добавить миграцию для установки цен / рубрик | превращает инфоблок номеров в торговый каталог";
@@ -11,8 +14,8 @@ class Version20231004143116 extends Version
 
     public function up()
     {
-        \Bitrix\Main\Loader::includeModule('catalog');
-        $iblockId = \Bitrix\Iblock\IblockTable::getList(['filter'=>['CODE'=>'catalog']])->Fetch()["ID"];
+        Loader::includeModule('catalog');
+        $iblockId = IblockTable::getList(['filter'=>['CODE'=>'catalog']])->Fetch()["ID"];
         if (!\CCatalog::GetByID($iblockId))
         {
             $arFields = array(
