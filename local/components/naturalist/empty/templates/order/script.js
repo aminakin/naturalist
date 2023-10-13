@@ -278,4 +278,11 @@ $(function () {
       $("#form__coupons").hide();
     }
   });
+
+  $('.coupon__input').on('input', function(){
+    if ($(this).val() == '') {
+      $(this).removeClass('error');
+      $('.coupon__error-message').hide();
+    }
+  })
 });

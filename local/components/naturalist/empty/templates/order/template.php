@@ -79,7 +79,7 @@ use Bitrix\Main\Localization\Loc;
     </div>
 
     <div class="reservation__image">
-        <img class="lazy" data-src="<?=current($arSection["PICTURES"])["src"]?>" alt="<?=$arSection["NAME"]?>">
+        <img class="lazy" data-src="<?=CFile::getPath($arResult['arElement']['PROPERTY_PHOTOS_VALUE'][0])?>" alt="<?=$arSection["NAME"]?>">
     </div>
 </div>
 
