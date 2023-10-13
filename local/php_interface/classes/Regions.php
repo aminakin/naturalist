@@ -140,7 +140,7 @@ class Regions
             ->addSelect('UF_SORT')
             ->addSelect('UF_COORDS')
             ->where('ID', $regionID)
-            ?->fetchAll() ?? [];
+            ?->fetch() ?? [];
     }
 
     /**
