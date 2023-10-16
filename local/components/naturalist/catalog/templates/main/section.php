@@ -72,24 +72,7 @@ if (!empty($_GET['name']) && isset($_GET['name'])) {
             case 'area':
 //                $arFilter["%UF_REGION_NAME"] = $decodeSearch['item'];
                 $searchName = $decodeSearch['item'];
-                $arRegions = Regions::getRegionByName($searchName);
-                $arCityRegions = Regions::getRegionByCity($searchName);
-
-
-                $arRegionIds = [];
-                if (is_array($arRegions) && !empty($arRegions)) {
-                    foreach ($arRegions as $arRegion) {
-                        $arRegionIds[] = $arRegion['ID'];
-                    }
-                }
-                if (is_array($arCityRegions) && !empty($arCityRegions)) {
-                    foreach ($arCityRegions as $arCityRegion) {
-                        foreach ($arCityRegion as $region) {
-                            $arRegionIds[] = $region['ID'];
-                        }
-                    }
-                }
-
+                $arRegionIds = Regions::RegionFilterSearcher($searchName);
 
                 $arFilter["UF_REGION"] = $arRegionIds;
 
@@ -114,6 +97,7 @@ if (!empty($_GET['name']) && isset($_GET['name'])) {
         $arFilterValues["SEARCH_TEXT"] = strip_tags($decodeSearch['title']);
     }
     else {
+
         CModule::IncludeModule('search');
         $obSearch = new CSearch;
         $obSearch->SetOptions(array(
@@ -138,11 +122,14 @@ if (!empty($_GET['name']) && isset($_GET['name'])) {
                 $arSectionIDs[] = substr($row['ITEM_ID'],1);
             }
         }
+
+        $arRegionIds = Regions::RegionFilterSearcher($search);
         $arFilter["ID"] = $arSectionIDs;
 
         $arFilterValues["SEARCH_TEXT"] = strip_tags($search);
     }
 }
+
 
 // Заезд, выезд, кол-во гостей
 $dateFrom = $_GET['dateFrom'];
@@ -225,7 +212,7 @@ $arSort = array($sort => $sortOrder);
 $rsSections = CIBlockSection::GetList($arSort, $arFilter, false, array("IBLOCK_ID", "ID", "NAME", "CODE", "SECTION_PAGE_URL", "UF_*"), false);
 $arSections = array();
 
-$searchedRegionData = Regions::getRegionById($arRegionIds[0] ?? false);
+$searchedRegionData = Regions::getRegionById( $arRegionIds[0] ?? false);
 
 while ($arSection = $rsSections->GetNext()) {
     $arDataFullGallery = [];
@@ -255,7 +242,8 @@ while ($arSection = $rsSections->GetNext()) {
         $searchedRegionData['COORDS'] = explode(',', $searchedRegionData['UF_COORDS']);
 
         $arSection['DISCTANCE'] = Utils::calculateTheDistance($searchedRegionData['COORDS'][0], $searchedRegionData['COORDS'][1], $arSection['COORDS'][0], $arSection['COORDS'][1]);
-        $arSection['DISCTANCE_TO_REGION'] = Utils::morpher($searchName, Morpher::CASE_GENITIVE);
+        $arSection['DISCTANCE_TO_REGION'] = Utils::morpher($searchName ?? $search, Morpher::CASE_GENITIVE);
+        $arSection['DISCTANCE_TO_REGION'] = ucfirst($arSection['DISCTANCE_TO_REGION']);
     }
 
     /* -- */
@@ -497,12 +485,7 @@ $APPLICATION->AddHeadString('<meta name="description" content="' . $descriptionS
                     <div class="crumbs__controls">
                         <!--<a class="crumbs__controls-mobile" href="#" data-map-full="data-map-full">Смотреть на карте</a>-->
                         <a class="button button_transparent" target="_blank" href="https://yandex.ru/maps/?mode=routes&rtext=" data-route="data-route">Маршрут</a>
-                        <a class="button button_primary" href="#filters-modal" data-modal="data-modal">
-                            <svg class="icon icon_filters" viewbox="0 0 16 16" style="width: 1.6rem; height: 1.6rem;">
-                                <use xlink:href="#filters"/>
-                            </svg>
-                            <span>Фильтры</span>
-                        </a>
+
                     </div>
                 </div>
 
@@ -649,6 +632,56 @@ $APPLICATION->AddHeadString('<meta name="description" content="' . $descriptionS
                         </div>
 
                     </form>
+                </div>
+
+                <div class="catalog_sorter">
+                    <div class="filter_btn">
+                        <a class="button" href="#filters-modal" data-modal="data-modal">
+                            <svg class="icon icon_filters" viewbox="0 0 16 16" style="width: 1.6rem; height: 1.6rem;">
+                                <use xlink:href="#filters"/>
+                            </svg>
+                            <span>Фильтры</span>
+                        </a>
+                    </div>
+
+                    <div class="sort">
+                        <span>Сортировать по:</span>
+                        <ul class="list">
+                            <li class="list__item">
+                                <?php if ($sortBy == "sort"): ?>
+                                    <span class="list__link" data-sort="sort"
+                                          data-type="<?= $orderReverse ?>"><span>По</span> <span>Наитию</span></span>
+                                <?php else: ?>
+                                    <a class="list__link" href="#" data-sort="sort" data-type="asc"><span>По</span>
+                                        <span>Наитию</span></a>
+                                <?php endif; ?>
+                            </li>
+                            <!--<li class="list__item">
+                    <?php /*if($sortBy == "popular"):*/ ?>
+                        <span class="list__link" data-sort="popular" data-type="<?php /*=$orderReverse*/ ?>"><span>По</span> <span>Популярности</span></span>
+                    <?php /*else:*/ ?>
+                        <a class="list__link" href="#" data-sort="popular" data-type="<?php /*=$orderReverse*/ ?>"><span>По</span> <span>Популярности</span></a>
+                    <?php /*endif;*/ ?>
+                </li>-->
+                            <li class="list__item">
+                                <?php if ($sortBy == "price"): ?>
+                                    <span class="list__link" data-sort="price"
+                                          data-type="<?= $orderReverse ?>"><span>По</span> <span>Цене</span></span>
+                                <?php else: ?>
+                                    <a class="list__link" href="#" data-sort="price" data-type="asc"><span>По</span>
+                                        <span>Цене</span></a>
+                                <?php endif; ?>
+                            </li>
+                            <li class="list__item">
+                                <?php if ($sortBy == "rating"): ?>
+                                    <span class="list__link" data-sort="rating"
+                                          data-type="<?= $orderReverse ?>"><span>По</span> <span>Рейтингу</span></span>
+                                <?php else: ?>
+                                    <a class="list__link" href="#" data-sort="rating" data-type="desc"><span>По</span> <span>Рейтингу</span></a>
+                                <?php endif; ?>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
 
             </div>

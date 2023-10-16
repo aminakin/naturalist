@@ -3672,7 +3672,7 @@ img.lazy.loaded {
   -webkit-transform: none;
   -ms-transform: none;
   transform: none;
-  width: 34.4rem;
+  width: 100%;
 }
 
 .modal_fullgallery {
@@ -4679,7 +4679,7 @@ img.lazy.loaded {
 
 @media (min-width: 1280px) {
   .modal_filters .modal__container {
-    width: 45.6rem;
+    /*width: 45.6rem;*/
   }
 }
 

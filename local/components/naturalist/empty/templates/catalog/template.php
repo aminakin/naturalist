@@ -14,44 +14,6 @@ foreach ($arResult as $key => $value) {
 
     <div class="catalog__objects" data-catalog-container>
 
-        <div class="sort">
-            <span>Сортировать по:</span>
-            <ul class="list">
-                <li class="list__item">
-                    <?php if ($sortBy == "sort"): ?>
-                        <span class="list__link" data-sort="sort"
-                              data-type="<?= $orderReverse ?>"><span>По</span> <span>Наитию</span></span>
-                    <?php else: ?>
-                        <a class="list__link" href="#" data-sort="sort" data-type="asc"><span>По</span>
-                            <span>Наитию</span></a>
-                    <?php endif; ?>
-                </li>
-                <!--<li class="list__item">
-                    <?php /*if($sortBy == "popular"):*/ ?>
-                        <span class="list__link" data-sort="popular" data-type="<?php /*=$orderReverse*/ ?>"><span>По</span> <span>Популярности</span></span>
-                    <?php /*else:*/ ?>
-                        <a class="list__link" href="#" data-sort="popular" data-type="<?php /*=$orderReverse*/ ?>"><span>По</span> <span>Популярности</span></a>
-                    <?php /*endif;*/ ?>
-                </li>-->
-                <li class="list__item">
-                    <?php if ($sortBy == "price"): ?>
-                        <span class="list__link" data-sort="price"
-                              data-type="<?= $orderReverse ?>"><span>По</span> <span>Цене</span></span>
-                    <?php else: ?>
-                        <a class="list__link" href="#" data-sort="price" data-type="asc"><span>По</span>
-                            <span>Цене</span></a>
-                    <?php endif; ?>
-                </li>
-                <li class="list__item">
-                    <?php if ($sortBy == "rating"): ?>
-                        <span class="list__link" data-sort="rating"
-                              data-type="<?= $orderReverse ?>"><span>По</span> <span>Рейтингу</span></span>
-                    <?php else: ?>
-                        <a class="list__link" href="#" data-sort="rating" data-type="desc"><span>По</span> <span>Рейтингу</span></a>
-                    <?php endif; ?>
-                </li>
-            </ul>
-        </div>
 
         <?php if ($allCount > 0) {
             ?>

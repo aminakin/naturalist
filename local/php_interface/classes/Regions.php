@@ -160,4 +160,32 @@ class Regions
             ->whereNotIn('ID', $ignoredIds)
             ?->fetchAll() ?? [];
     }
+
+    /**
+     * Поиск в базе регионов по наименованию
+     * @param $name
+     * @return array
+     */
+    public static function RegionFilterSearcher($searchName)
+    {
+        $arRegions = self::getRegionByName($searchName);
+        $arCityRegions = self::getRegionByCity($searchName);
+
+        $arRegionIds = [];
+        if (is_array($arRegions) && !empty($arRegions)) {
+            foreach ($arRegions as $arRegion) {
+                $arRegionIds[] = $arRegion['ID'];
+            }
+        }
+
+        if (is_array($arCityRegions) && !empty($arCityRegions)) {
+            foreach ($arCityRegions as $arCityRegion) {
+                foreach ($arCityRegion as $region) {
+                    $arRegionIds[] = $region['ID'];
+                }
+            }
+        }
+
+        return $arRegionIds ?? [];
+    }
 }
