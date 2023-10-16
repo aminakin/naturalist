@@ -53,7 +53,7 @@ $(function() {
     }
 
     // Сортировка
-    $(document).on('click', '[data-catalog-container] [data-sort]', function(event) {
+    $(document).on('click', '[data-sort]', function(event) {
         event.preventDefault();
 
         var sort = $(this).data('sort');

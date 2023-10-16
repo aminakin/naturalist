@@ -1126,15 +1126,26 @@
     z-index: -1
 }
 
+.catalog_sorter {
+    max-width: 70rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 4rem;
+}
+
+.filter_btn a {
+    border: none;
+    padding: 0;
+    font-size: 2rem;
+}
+
 .sort {
-    border-bottom: .1rem solid #000;
-    border-bottom: .1rem solid var(--color-black);
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
     line-height: 1.9rem;
-    margin-bottom: 1.6rem;
-    padding-bottom: .5rem
+    font-size: 1.5rem;
 }
 
 .sort > * {
@@ -1449,17 +1460,26 @@
     /*font-family: var(--header-text-font-family);*/
     font-weight: 500;
     /*letter-spacing: -.01em;*/
-    margin-bottom: 1.8rem
+    margin-bottom: 2rem
+}
+
+.catalog__count {
+    font-weight: 700;
+    border-bottom: 0.1rem solid #000;
+    border-bottom: 0.1rem solid var(--color-black);
+    margin-bottom: 4rem;
+    padding-bottom: 2rem;
+    font-size: 1.8rem;
 }
 
 .same_items-header,
-.catalog__count--not-found{
+.catalog__count--not-found {
     padding: 10px 20px;
     background-color: #E2C189;
 }
 
 
-.same_items-header{
+.same_items-header {
     margin-bottom: 24px;
 }
 
@@ -1750,7 +1770,13 @@
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
-    padding: 3rem 4rem 2rem
+    padding: 3rem 4rem 2rem;
+
+    font-family: var(--header-text-font-family);
+    font-weight: 500;
+    font-size: 3.7rem;
+    line-height: 5.2rem;
+    letter-spacing: .04em;
 }
 
 .filters__heading > * {
@@ -1767,12 +1793,85 @@
     text-align: left
 }
 
+
 .filters__heading .modal__close {
     margin: -2rem -1.4rem -2rem 0;
     position: relative;
     right: auto;
     top: auto
 }
+
+/* фильтры в каталоге */
+#form-catalog-filter-front {
+    margin-bottom: 1.8rem;
+}
+
+#popup_filter_body .filters__controls,
+#form-catalog-filter-front  .filters__controls {
+    border: none;
+    padding: 0;
+    width: fit-content !important;
+}
+
+#popup_filter_body .filters__controls button,
+#form-catalog-filter-front  .filters__controls button {
+    padding: 0 5rem;
+}
+/**/
+
+#popup_filter_body .form__group{
+    border-bottom: 1px solid #000;
+    border-bottom: 1px solid var(--color-black);
+    margin-bottom: 4rem;
+    padding-bottom: 2rem;
+}
+.form__row,
+.form__group,
+.form_group_wrapper,
+.form_group_wrapper-filter_items {
+    display: flex;
+    gap: 0;
+}
+
+.form_group_wrapper {
+    width: 72rem;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.form_group_wrapper > div {
+    width: 50%;
+}
+
+.form_group_wrapper-filter_items .form__row.calendar {
+    width: 66.7%;
+}
+
+.form_group_wrapper-filter_items .form__row.calendar > .form__item {
+    width: 50%;
+}
+
+.form_group_wrapper-filter_items .guest {
+    width: 33.3%;
+}
+
+.form__group {
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.form__group .field__input {
+    border-color: var(--color-beige);
+}
+
+.guests__dropdown {
+    z-index: 10;
+    width: auto;
+    max-height: 350px;
+    overflow: scroll;
+    overflow-x: hidden;
+}
+
 
 .filters__form {
     -ms-overflow-style: none;
@@ -1789,8 +1888,8 @@
 }
 
 .filters__form .calendar {
-    grid-column-gap: 1rem;
-    grid-row-gap: 1rem
+    /*grid-column-gap: 1rem;*/
+    /*grid-row-gap: 1rem*/
 }
 
 .filters__form .calendar__dropdown {
@@ -1854,6 +1953,88 @@
 .filters__controls .button_primary {
     padding: 0 2rem
 }
+
+.filters_attrs{
+    display: flex;
+    justify-content: space-between;
+    max-width: 70rem;
+}
+.filters_attrs  .form__dropdown-body{
+    padding: 0;
+}
+.filters_attrs .form__dropdown{
+    border: none;
+    padding-top: 0;
+}
+.filters_attrs .form__dropdown_show .form__dropdown-heading:after{
+    display: none;
+}
+
+.filters_features{
+    border-top: 1px solid #000;
+    border-top: 1px solid var(--color-black);
+    margin-top: 4rem;
+    padding-top: 2rem;
+}
+.filters_features .form__dropdown-heading{
+    display: none;
+}
+
+.filters_features .form__dropdown-body{
+    max-width: 70rem;
+}
+.filters_features .form__dropdown-body ul{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+}
+
+@media screen and (max-width: 768px) {
+
+    .catalog_sorter,
+    .filters_features .form__dropdown-body ul,
+    .filters_attrs,
+    .form__group,
+    .form_group_wrapper,
+    .form_group_wrapper-filter_items {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .filters_attrs,
+    .form_group_wrapper-filter_items > div,
+    .form_group_wrapper > div,
+    .form__group > div {
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+    .catalog_sorter{
+        margin-bottom: 4rem;
+        padding-bottom: 2rem;
+        border-bottom: 0.1rem solid #000;
+        border-bottom: 0.1rem solid var(--color-black);
+    }
+    .catalog__count{
+        border: none;
+    }
+    .filters_attrs .form__dropdown_show .form__dropdown-heading:after{
+        display: block;
+    }
+    .filters_attrs  .form__dropdown-body{
+        padding-bottom: 2.4rem;
+    }
+
+    .filters_features .form__dropdown-heading{
+        display: block;
+    }
+    .filter_btn, .filter_btn a{
+        width: 100%;
+    }
+    .filter_btn a{
+        border: 1px solid var(--color-beige);
+    }
+}
+
 
 @media (min-width: 1280px) {
     .calendar__navigation-item_years {
