@@ -88,10 +88,7 @@ h1.page_title {
     align-items: center;
     justify-content: space-between;
 }
-.catalog__map-sticky {
-    height: calc(100vh - 16rem);
-    top: 16rem;
-}
+
 .section_crumbs_catalog_new {
     padding-bottom: 0;
 }
