@@ -627,7 +627,7 @@ class Orders
                 'EMAIL' => $params["email"],
                 'PHONE' => $params["phone"]
             ]);
-            Debug::writeToFile(var_export($userId, true));
+
 
 //            return json_encode([
 //                "ERROR" => "Необходимо авторизоваться."
