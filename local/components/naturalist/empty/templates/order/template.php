@@ -83,7 +83,7 @@ use Bitrix\Main\Localization\Loc;
     </div>
 </div>
 
-<form class="form reservation-form form_validation" id="form-order" is_auth="<?=$isAuthorized ? 'true' : 'false'?>">
+<form class="form reservation-form form_validation" id="form-order" is_auth="true" <?/*is_auth="<?=$isAuthorized ? 'true' : 'false'*/?>">
     <div class="reservation-form__form">
         <div class="reservation-form__form-holder">            
             <p class="reservation-form__title"><?=Loc::getMessage('ORDER_FORM_TITLE')?></p>
@@ -208,11 +208,11 @@ use Bitrix\Main\Localization\Loc;
                 <span>Итого</span>
                 <div class="h1"><?= number_format($arResult['finalPrice']['REAL_PRICE'], 0, '.', ' ') ?> <?=Loc::getMessage('ORDER_RUBLE')?></div>
             </div>
-            <? if ($isAuthorized): ?>
+            <?/* if ($isAuthorized): */?>
                 <button class="button button_primary" type="button" data-form-submit data-order><?=Loc::getMessage('ORDER_PAY')?></button>
-            <? else: ?>
+            <? /*else: ?>
                 <button class="button button_primary" id="order__confirm-data" type="button" data-form-submit data-order><?=Loc::getMessage('ORDER_CONFIRM_ACTION')?></button>
-            <? endif; ?>
+            <? endif; */?>
             <div class="reservation-form__footnote">
                 <div class="field">
                     <label class="checkbox">
