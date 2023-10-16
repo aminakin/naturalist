@@ -1415,9 +1415,9 @@
     background-color: var(--color-beige-light);
     margin-bottom: .8rem;
     padding-bottom: 2.6rem;
-    position: sticky;
-    top: 5.3rem;
-    z-index: 99
+    position: static;
+    /*top: 5.3rem;*/
+    /*z-index: 99*/
 }
 
 [data-map-show] {
@@ -1608,10 +1608,10 @@
 }
 
 .catalog__map-sticky {
-    height: calc(100vh - 12.3rem);
+    height: calc(100vh - 5rem);
     left: 0;
     position: sticky;
-    top: 12.3rem
+    top: 5rem
 }
 
 .catalog__map-sticky #map {
