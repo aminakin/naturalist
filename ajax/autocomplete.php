@@ -186,7 +186,7 @@ if ($requestName) {
         ];
     }
 
-    $arStreets['list'] = array_unique_key($arStreets['list'], 'title');
+//    $arStreets['list'] = array_unique_key($arStreets['list'], 'title');
 
     if ($arAreas['list']) {
         $arReturn[] = $arAreas;
@@ -197,6 +197,7 @@ if ($requestName) {
     /*if ($arObjects['list']) {
         $arReturn[] = $arObjects;
     }*/
+
 
     if(isset($arReturn) && !empty($arReturn)){
         echo $encode = json_encode($arReturn, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
