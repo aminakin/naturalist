@@ -1464,9 +1464,7 @@
 }
 
 .catalog__count {
-    font-weight: 700;
-    border-bottom: 0.1rem solid #000;
-    border-bottom: 0.1rem solid var(--color-black);
+    font-weight: 500;
     margin-bottom: 4rem;
     padding-bottom: 2rem;
     font-size: 1.8rem;
