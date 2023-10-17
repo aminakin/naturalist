@@ -1835,7 +1835,7 @@
 .form_group_wrapper,
 .form_group_wrapper-filter_items {
     display: flex;
-    gap: 0;
+    gap: 1px;
 }
 
 .form_group_wrapper {
