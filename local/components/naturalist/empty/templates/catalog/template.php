@@ -126,7 +126,7 @@ foreach ($arResult as $key => $value) {
                                     <img src="<?= SITE_TEMPLATE_PATH ?>/assets/img/score.svg" alt>
                                     <span><?= $arReviewsAvg[$arSection["ID"]]["avg"] ?? 0 ?></span>
                                 </a>
-                                <a href="<?= $arSection["URL"] ?>#reviews-anchor"><?= $arReviewsAvg[$arSection["ID"]]["count"] ?> <?= $reviewsDeclension->get($arReviewsAvg[$arSection["ID"]]["count"]) ?></a>
+                                <a href="<?= $arSection["URL"] ?>#reviews-anchor"><?= $arReviewsAvg[$arSection["ID"]]["count"]  ?? 0?> <?= $reviewsDeclension->get($arReviewsAvg[$arSection["ID"]]["count"]) ?></a>
                             </div>
 
                             <?php if ($arSection["UF_FEATURES"]): ?>
@@ -277,7 +277,7 @@ foreach ($arResult as $key => $value) {
                                             <img src="<?= SITE_TEMPLATE_PATH ?>/assets/img/score.svg" alt>
                                             <span><?= $arReviewsAvg[$arSection["ID"]]["avg"] ?? 0 ?></span>
                                         </a>
-                                        <a href="<?= $arSection["URL"] ?>#reviews-anchor"><?= $arReviewsAvg[$arSection["ID"]]["count"] ?> <?= $reviewsDeclension->get($arReviewsAvg[$arSection["ID"]]["count"]) ?></a>
+                                        <a href="<?= $arSection["URL"] ?>#reviews-anchor"><?= $arReviewsAvg[$arSection["ID"]]["count"] ?? 0 ?> <?= $reviewsDeclension->get($arReviewsAvg[$arSection["ID"]]["count"]) ?></a>
                                     </div>
 
                                     <?php if ($arSection["UF_FEATURES"]): ?>
