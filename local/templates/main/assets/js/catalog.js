@@ -15490,9 +15490,9 @@
       };
       this.elements = {
         $root: document.querySelector('[data-autocomplete]'),
-        $field: document.querySelector('[data-autocomplete-field]'),
+        $field: document.querySelectorAll('[data-autocomplete-field]'),
         $result: document.querySelector('[data-autocomplete-result]'),
-        $dropdown: document.querySelector('[data-autocomplete-dropdown]')
+        $dropdown: document.querySelectorAll('[data-autocomplete-dropdown]')
       };
     }
   
@@ -15504,30 +15504,37 @@
       }
     }, {
       key: "handleRequest",
-      value: function handleRequest(value) {
+      value: function handleRequest(value, $inputElement) {
         var _this = this;
-  
+
         if (value.length >= 0) {
           fetch("".concat(this.elements.$root.dataset.autocomplete, "?text=").concat(value)).then(function (response) {
             return response.json();
           }).then(function (response) {
             if (response.messageType === 'error') {
-              _this.elements.$dropdown.innerHTML = "<div class=\"autocomplete-dropdown__message\">".concat(response.messageText, "</div>");
-  
-              _this.elements.$root.classList.add(_this.classes.show);
+
+              _this.elements.$dropdown.forEach(($item) => {
+                $item.innerHTML = "<div class=\"autocomplete-dropdown__message\">".concat(response.messageText, "</div>");
+              });
+
+              $inputElement.closest('[data-autocomplete]').classList.add(_this.classes.show);
+              // _this.elements.$root.classList.add(_this.classes.show);
   
               return false;
             }
   
             if (response.length) {
 
-              _this.elements.$dropdown.innerHTML = "\n\t\t\t\t\t\t\t".concat(response.map(function (type) {
-                return "<div class=\"autocomplete-dropdown__item\"><div class=\"autocomplete-dropdown__title\">".concat(type.type, "</div><ul class=\"list autocomplete-dropdown__list\">").concat(type.list.map(function (item) {
-                  return "<li class=\"list__item\" data-autocomplete-type=\"".concat(type.id, "\"data-autocomplete-item=\"").concat(item.id, "\"><div class=\"list__item-title\">").concat(item.title, "</div>").concat(item.footnote ? "<div class=\"list__item-footnote\">".concat(item.footnote, "</div>") : '', "</li>");
-                }).join(''), "</ul></div>");
-              }).join(''), "");
-  
-              _this.elements.$root.classList.add(_this.classes.show);
+              _this.elements.$dropdown.forEach(($item) => {
+                $item.innerHTML = "\n\t\t\t\t\t\t\t".concat(response.map(function (type) {
+                  return "<div class=\"autocomplete-dropdown__item\"><div class=\"autocomplete-dropdown__title\">".concat(type.type, "</div><ul class=\"list autocomplete-dropdown__list\">").concat(type.list.map(function (item) {
+                    return "<li class=\"list__item\" data-autocomplete-type=\"".concat(type.id, "\"data-autocomplete-item=\"").concat(item.id, "\"><div class=\"list__item-title\">").concat(item.title, "</div>").concat(item.footnote ? "<div class=\"list__item-footnote\">".concat(item.footnote, "</div>") : '', "</li>");
+                  }).join(''), "</ul></div>");
+                }).join(''), "");
+              });
+
+              $inputElement.closest('[data-autocomplete]').classList.add(_this.classes.show);
+              // _this.elements.$root.classList.add(_this.classes.show);
             } else {
               _this.handleHide();
             }
@@ -15542,10 +15549,15 @@
       key: "init",
       value: function init() {
         var _this2 = this;
-  
-        this.elements.$field.addEventListener('keyup', debounce_default()(function (event) {
-          _this2.handleRequest(event.target.value);
-        }, 500));
+
+
+        _this2.elements.$field.forEach(($item) => {
+          $item.addEventListener('keyup', debounce_default()(function (event) {
+            _this2.handleRequest(event.target.value, $item);
+          }, 500));
+        });
+
+
         document.addEventListener('click', function (event) {
           var $el = event.target;
   
@@ -15568,9 +15580,14 @@
             _this2.handleHide();
           }
         });
-        this.elements.$field.addEventListener('focusin', function (event) {
-          _this2.handleRequest(event.target.value);
+
+
+        this.elements.$field.forEach(($item) => {
+          $item.addEventListener('focusin', function (event) {
+            _this2.handleRequest(event.target.value, $item);
+          });
         });
+
       }
     }]);
   
