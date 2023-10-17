@@ -5,7 +5,7 @@ foreach ($arResult as $key => $value) {
 ?>
 <form class="form filters" id="form-catalog-filter">
     <div class="filters__heading">
-        <div class="h3">Фильтр</div>
+        <div class="h3">Фильтры</div>
         <button class="modal__close" data-modal-close>
             <svg class="icon icon_cross" viewbox="0 0 18 18" style="width: 1.8rem; height: 1.8rem;">
                 <use xlink:href="#cross"/>

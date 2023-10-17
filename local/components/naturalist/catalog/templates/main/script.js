@@ -80,6 +80,9 @@ $(function() {
             parentFrom = $('#form-catalog-filter-front');
         }
 
+        console.log(parentFrom, 'parentFrom');
+
+
         var params = getUrlParams();
 
         if($('input[name="type"]:checked', parentFrom).length > 0) {
@@ -143,7 +146,9 @@ $(function() {
             var age = $(element).val()
             children.push(age);
         });
-        if(dateFrom != "Заезд" && dateTo != "Выезд" && guests > 0) {
+
+
+        if(dateFrom.trim() != "Заезд" && dateTo.trim() != "Выезд" && guests > 0) {
 			let arDateFrom = dateFrom.split('.');
 			let arDateTo = dateTo.split('.');
 
