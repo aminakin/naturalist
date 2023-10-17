@@ -15018,7 +15018,7 @@
   var $fixedItems = document.querySelectorAll('[data-scroll-fixed]');
   function scrollLockEnable() {
     window.scrollLocked += 1;
-  
+
     if (window.scrollLocked === 1) {
       scrollPosition = window.scrollY;
       var scrollbarWidth = window.innerWidth - document.body.clientWidth;
@@ -15299,7 +15299,7 @@
       value: function handleChangeView() {
         this.$elements.overlay.classList.toggle('catalog__map_fullscreen', this.fullscreen);
         this.$elements.catalog.classList.toggle('catalog_map', this.fullscreen);
-  
+
         if (this.fullscreen) {
           scrollLockEnable();
         } else {

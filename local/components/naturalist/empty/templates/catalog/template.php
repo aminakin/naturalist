@@ -21,9 +21,9 @@ foreach ($arResult as $key => $value) {
             <?php
         } else {
             if (isset($_GET['name'])) { ?>
-                <div class="catalog__count catalog__count--not-found"><?= Loc::GetMessage('NOT_FOUND_REGION') ?></div>
+                <div class="catalog__count--not-found"><?= Loc::GetMessage('NOT_FOUND_REGION') ?></div>
             <?php } else { ?>
-                <div class="catalog__count catalog__count--not-found"><?= Loc::GetMessage('NOT_FOUND') ?></div>
+                <div class="catalog__count--not-found"><?= Loc::GetMessage('NOT_FOUND') ?></div>
                 <?php
             }
         } ?>

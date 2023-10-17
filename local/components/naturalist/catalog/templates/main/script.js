@@ -29,8 +29,9 @@ $(function() {
                 window.objectsGallery();
                 window.map.handleItemHover();
 
-
-                $('#same_items').show();
+                if (updPagerHtml =='') {
+                    $('#same_items').show();
+                }
             }
         });
     });
