@@ -15571,8 +15571,12 @@
               title: $title.innerHTML,
               footnote: $footnote ? $footnote.innerHTML : ''
             });
-            _this2.elements.$field.value = $title.innerHTML.replace('<br>', ' ').replace(/<\/?[^>]+(>|$)/g, '').replace(/\s+/g, ' ').trim();
-  
+
+
+            _this2.elements.$field.forEach(($item) => {
+              $item.value = $title.innerHTML.replace('<br>', ' ').replace(/<\/?[^>]+(>|$)/g, '').replace(/\s+/g, ' ').trim();
+            });
+
             _this2.handleHide();
           }
   

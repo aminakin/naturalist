@@ -98,35 +98,36 @@ if (!empty($_GET['name']) && isset($_GET['name'])) {
     }
     else {
 
-        CModule::IncludeModule('search');
-        $obSearch = new CSearch;
-        $obSearch->SetOptions(array(
-            'ERROR_ON_EMPTY_STEM' => false,
-        ));
-        $obSearch->Search(array(
-            'QUERY' => trim($search),
-            'MODULE_ID' => 'iblock',
-            'PARAM1' => 'catalog',
-            'PARAM2' => CATALOG_IBLOCK_ID
-        ));
-        if (!$obSearch->selectedRowsCount()) {//и делаем резапрос, если не найдено с морфологией...
-            $obSearch->Search(array(
-                'QUERY' => trim($search),
-                'MODULE_ID' => 'iblock',
-                'PARAM1' => 'catalog',
-                'PARAM2' => CATALOG_IBLOCK_ID
-            ), array(), array('STEMMING' => false));//... уже с отключенной морфологией
-        }
-        while ($row = $obSearch->fetch()) {
-            if($row['ITEM_ID'][0] == 'S'){
-                $arSectionIDs[] = substr($row['ITEM_ID'],1);
-            }
-        }
+//        CModule::IncludeModule('search');
+//        $obSearch = new CSearch;
+//        $obSearch->SetOptions(array(
+//            'ERROR_ON_EMPTY_STEM' => false,
+//        ));
+//        $obSearch->Search(array(
+//            'QUERY' => trim($search),
+//            'MODULE_ID' => 'iblock',
+//            'PARAM1' => 'catalog',
+//            'PARAM2' => CATALOG_IBLOCK_ID
+//        ));
+//        if (!$obSearch->selectedRowsCount()) {//и делаем резапрос, если не найдено с морфологией...
+//            $obSearch->Search(array(
+//                'QUERY' => trim($search),
+//                'MODULE_ID' => 'iblock',
+//                'PARAM1' => 'catalog',
+//                'PARAM2' => CATALOG_IBLOCK_ID
+//            ), array(), array('STEMMING' => false));//... уже с отключенной морфологией
+//        }
+//        while ($row = $obSearch->fetch()) {
+//            if($row['ITEM_ID'][0] == 'S'){
+//                $arSectionIDs[] = substr($row['ITEM_ID'],1);
+//            }
+//        }
 
         $arRegionIds = Regions::RegionFilterSearcher($search);
-        $arFilter["ID"] = $arSectionIDs;
 
-        $arFilterValues["SEARCH_TEXT"] = strip_tags($search);
+        $arFilter["UF_REGION"] = $arRegionIds;
+//        $arFilter["ID"] = $arSectionIDs;
+//        $arFilterValues["SEARCH_TEXT"] = strip_tags($search);
     }
 }
 
@@ -195,6 +196,10 @@ if (!empty($_GET['impressions']) && isset($_GET['impressions'])) {
 
 /* Сортировка */
 $sortBy = (!empty($_GET['sort']) && isset($_GET['sort'])) ? strtolower($_GET['sort']) : "sort";
+if (!empty($_GET['name']) && isset($_GET['name'])) {
+    $sortBy = 'distance';
+}
+
 $sortOrder = (!empty($_GET['order']) && isset($_GET['order'])) ? strtolower($_GET['order']) : "asc";
 $orderReverse = (!empty($_GET['order']) && isset($_GET['order']) && $_GET['order'] == 'asc') ? "desc" : "asc";
 switch ($sortBy) {
@@ -206,6 +211,7 @@ switch ($sortBy) {
         $sort = 'SORT';
         break;
 }
+
 $arSort = array($sort => $sortOrder);
 
 /* Получение разделов */
