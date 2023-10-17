@@ -827,7 +827,7 @@
     padding-left: 11.8rem;
     position: absolute;
     top: 100%;
-    z-index: 9
+    z-index: 10
 }
 
 .calendar__dropdown > * {
@@ -1363,7 +1363,7 @@
     scrollbar-width: none;
     top: 100%;
     width: 100%;
-    z-index: 11
+    z-index: 1001
 }
 
 .autocomplete-dropdown::-webkit-scrollbar {
@@ -1873,16 +1873,16 @@
 
 .filters__form {
     -ms-overflow-style: none;
-    height: calc(100% - 14.7rem);
+    /*height: calc(100% - 14.7rem);*/
     overflow-y: auto;
     padding: 0 4rem 3.4rem;
     scrollbar-width: none
 }
 
 .filters__form::-webkit-scrollbar {
-    display: none;
-    height: 0;
-    width: 0
+    /*display: none;*/
+    /*height: 0;*/
+    /*width: 0*/
 }
 
 .filters__form .calendar {
