@@ -1770,7 +1770,7 @@
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
-    padding: 3rem 4rem 2rem;
+    padding: 3rem 4rem 1rem;
 
     font-family: var(--header-text-font-family);
     font-weight: 500;
@@ -1825,8 +1825,8 @@
 #popup_filter_body .form__group{
     border-bottom: 1px solid #000;
     border-bottom: 1px solid var(--color-black);
-    margin-bottom: 4rem;
-    padding-bottom: 2rem;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
 }
 .form__row,
 .form__group,
@@ -1985,6 +1985,7 @@
 
 .filters_features .form__dropdown-body{
     /*max-width: 70rem;*/
+    padding-bottom: 0;
 }
 .filters_features .form__dropdown-body ul{
     display: grid;
