@@ -1817,6 +1817,9 @@
 #form-catalog-filter-front  .filters__controls button {
     padding: 0 5rem;
 }
+#popup_filter_body li.list__item{
+    margin: 0.2rem 0;
+}
 /**/
 
 #popup_filter_body .form__group{
@@ -1981,12 +1984,13 @@
 }
 
 .filters_features .form__dropdown-body{
-    max-width: 70rem;
+    /*max-width: 70rem;*/
 }
 .filters_features .form__dropdown-body ul{
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
 }
+
 
 @media screen and (max-width: 768px) {
 
@@ -2032,6 +2036,9 @@
     }
     .filter_btn a{
         border: 1px solid var(--color-beige);
+    }
+    #popup_filter_body li.list__item{
+        margin: 0.5rem 0;
     }
 }
 
