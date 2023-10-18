@@ -196,10 +196,6 @@ if (!empty($_GET['impressions']) && isset($_GET['impressions'])) {
 
 /* Сортировка */
 $sortBy = (!empty($_GET['sort']) && isset($_GET['sort'])) ? strtolower($_GET['sort']) : "sort";
-if (!empty($_GET['name']) && isset($_GET['name'])) {
-    $sortBy = 'distance';
-}
-
 $sortOrder = (!empty($_GET['order']) && isset($_GET['order'])) ? strtolower($_GET['order']) : "asc";
 $orderReverse = (!empty($_GET['order']) && isset($_GET['order']) && $_GET['order'] == 'asc') ? "desc" : "asc";
 switch ($sortBy) {
@@ -716,7 +712,7 @@ $APPLICATION->AddHeadString('<meta name="description" content="' . $descriptionS
                         "arServices" => $arServices,
                         "arSearchedRegions" => $arRegionIds,
                         "searchedRegionData" => $searchedRegionData,
-                        "searchName" => $searchName,
+                        "searchName" => $searchName ?? $search,
                         "arFilterValues" => $arFilterValues,
                         "dateFrom" => $dateFrom,
                         "dateTo" => $dateTo,
