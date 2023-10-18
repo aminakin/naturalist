@@ -280,6 +280,13 @@ while ($arSection = $rsSections->GetNext()) {
 
     $arSections[$arSection["ID"]] = $arSection;
 }
+
+if ($searchedRegionData) {
+    
+    usort($arSections, function($a,$b){
+        return ($a['DISCTANCE'] - $b['DISCTANCE']);
+    });
+}
 $allCount = count($arSections);
 
 /* Отзывы */
