@@ -511,13 +511,18 @@
 }
 
 .object-row__features span:before {
-    content: "•";
-    padding: 0 .6rem;
-    display: flex;
+    content: "";
+    width: 5px;
+    height: 5px;
+    border-radius: 50px;
+    margin: 0 0.6rem;
+    display: block;
     align-items: center;
     color: var(--color-orange);
     font-size: 25px;
     align-self: center;
+    background-color: var(--color-orange);
+    flex-shrink: 0;
 }
 
 .object-row__order {
