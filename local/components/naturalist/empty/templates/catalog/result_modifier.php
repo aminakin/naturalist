@@ -181,6 +181,10 @@ if ($arResult['arSearchedRegions']) {
                         $arSection['DISCTANCE'] = Utils::calculateTheDistance($searchedRegionData['COORDS'][0], $searchedRegionData['COORDS'][1], $arSection['COORDS'][0], $arSection['COORDS'][1]);
                         $arSection['DISCTANCE_TO_REGION'] = Utils::morpher($arResult['searchName'], Morpher::CASE_GENITIVE);
                     }
+                    /* до 500км */
+                    if ($arSection['DISCTANCE'] < 500) {
+                        continue;
+                    }
 
                     /* -- */
 
@@ -215,6 +219,10 @@ if ($arResult['arSearchedRegions']) {
                     $arResult['SECTIONS'][$arSection["ID"]] = $arSection;
                 }
             }
+
+            usort($arResult['SECTIONS'], function($a,$b){
+                return ($a['DISCTANCE'] - $b['DISCTANCE']);
+            });
 
             //save
             $cache->endDataCache($arResult['SECTIONS']);
