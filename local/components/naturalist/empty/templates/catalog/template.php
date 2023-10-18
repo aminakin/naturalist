@@ -126,7 +126,7 @@ foreach ($arResult as $key => $value) {
                                     <img src="<?= SITE_TEMPLATE_PATH ?>/assets/img/score.svg" alt>
                                     <span><?= $arReviewsAvg[$arSection["ID"]]["avg"] ?? 0 ?></span>
                                 </a>
-                                <a href="<?= $arSection["URL"] ?>#reviews-anchor"><?= $arReviewsAvg[$arSection["ID"]]["count"]  ?? 0?> <?= $reviewsDeclension->get($arReviewsAvg[$arSection["ID"]]["count"]) ?></a>
+                                <a href="<?= $arSection["URL"] ?>#reviews-anchor"><?= $arReviewsAvg[$arSection["ID"]]["count"] ?? 0 ?> <?= $reviewsDeclension->get($arReviewsAvg[$arSection["ID"]]["count"]) ?></a>
                             </div>
 
                             <?php if ($arSection["UF_FEATURES"]): ?>
@@ -171,12 +171,15 @@ foreach ($arResult as $key => $value) {
             </div>
         <?php endif; ?>
 
-        <div id="same_items" style="<?=($page < $pageCount) ? 'display:none;' : 'margin-top: 24px;'?>">
+        <div id="same_items" style="<?= ($page < $pageCount) ? 'display:none;' : 'margin-top: 24px;' ?>">
 
             <?php if ($arResult['arSearchedRegions'] && is_array($arResult["SECTIONS"]) && count($arResult["SECTIONS"]) > 0) { ?>
-                <div class="same_items-header">
+
+                <?php if ($allCount > 0) { ?>
+                    <div class="same_items-header">
                     <?= Loc::GetMessage('SAME_ITEMS_HEAD') ?>
-                </div>
+                    </div>
+                <?php } ?>
 
                 <div class="same_items-body">
                     <?php foreach ($arResult["SECTIONS"] as $arSection): ?>
