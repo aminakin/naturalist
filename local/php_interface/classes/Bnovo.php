@@ -1619,7 +1619,8 @@ class Bnovo
         $response = curl_exec($ch);
         $arResponse = json_decode($response, true);
         curl_close($ch);
-        //file_put_contents($_SERVER["DOCUMENT_ROOT"] . '/log_bnovo.txt', $response . PHP_EOL, FILE_APPEND);
+
+        file_put_contents($_SERVER["DOCUMENT_ROOT"] . '/log_bnovo_responce.txt', $response . PHP_EOL, FILE_APPEND);
 
         if ($arResponse['created_bookings'][0]['ota_booking_id']) {
             // Сохраняем ID бронирования в заказе
