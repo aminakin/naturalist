@@ -182,7 +182,7 @@ if ($arResult['arSearchedRegions']) {
                         $arSection['DISCTANCE_TO_REGION'] = Utils::morpher($arResult['searchName'], Morpher::CASE_GENITIVE);
                     }
                     /* до 500км */
-                    if ($arSection['DISCTANCE'] < 500) {
+                    if ((int)$arSection['DISCTANCE'] > 500) {
                         continue;
                     }
 
