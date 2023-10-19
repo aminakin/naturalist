@@ -133,12 +133,21 @@ class Regions
         }
 
         $regionesDataClass = HighloadBlockTable::compileEntity(self::$regionsHL)->getDataClass();
+        $citiesDataClass = HighloadBlockTable::compileEntity(self::$citiesHL)->getDataClass();
 
         return $regionesDataClass::query()
             ->addSelect('ID')
             ->addSelect('UF_NAME')
             ->addSelect('UF_SORT')
             ->addSelect('UF_COORDS')
+            ->addSelect('UF_CENTER')
+            ->addSelect('CENTER', 'CENTER_')
+            ->registerRuntimeField('CENTER', [
+                'data_type' => $citiesDataClass,
+                'reference' => [
+                    'this.UF_CENTER' => 'ref.ID'
+                ]
+            ])
             ->where('ID', $regionID)
             ?->fetch() ?? [];
     }

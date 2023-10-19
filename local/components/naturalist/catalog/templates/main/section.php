@@ -215,7 +215,6 @@ $rsSections = CIBlockSection::GetList($arSort, $arFilter, false, array("IBLOCK_I
 $arSections = array();
 
 $searchedRegionData = Regions::getRegionById( $arRegionIds[0] ?? false);
-
 while ($arSection = $rsSections->GetNext()) {
     $arDataFullGallery = [];
     if($arSection["UF_PHOTOS"]) {
@@ -244,7 +243,7 @@ while ($arSection = $rsSections->GetNext()) {
         $searchedRegionData['COORDS'] = explode(',', $searchedRegionData['UF_COORDS']);
 
         $arSection['DISCTANCE'] = Utils::calculateTheDistance($searchedRegionData['COORDS'][0], $searchedRegionData['COORDS'][1], $arSection['COORDS'][0], $arSection['COORDS'][1]);
-        $arSection['DISCTANCE_TO_REGION'] = Utils::morpher($searchName ?? $search, Morpher::CASE_GENITIVE);
+        $arSection['DISCTANCE_TO_REGION'] = Utils::morpher($searchedRegionData['CENTER_UF_NAME'], Morpher::CASE_GENITIVE);
         $arSection['DISCTANCE_TO_REGION'] = ucfirst($arSection['DISCTANCE_TO_REGION']);
     }
 
