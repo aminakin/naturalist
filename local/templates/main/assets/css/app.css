@@ -4720,6 +4720,7 @@ img.lazy.loaded {
 
   .main {
     padding-bottom: 5.8rem;
+    padding-top: 2rem;
   }
 
   .header .container {
@@ -4964,6 +4965,11 @@ img.lazy.loaded {
   :root {
     --header-text-font-size-1: 2.2rem;
     --header-text-font-size-3: 1.5rem;
+  }
+
+
+  .main {
+    padding-top: 2rem;
   }
 
   .footer .container {
