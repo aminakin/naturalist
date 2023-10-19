@@ -1864,6 +1864,9 @@
 .form_group_wrapper-filter_items .guest {
     width: 33.3%;
 }
+.form_group_wrapper-filter_items .guest button{
+    display: none;
+}
 
 .form__group {
     align-items: center;
@@ -2009,6 +2012,9 @@
         flex-direction: column;
         gap: 15px;
     }
+    .filters_features .form__dropdown-body ul{
+        gap: 0;
+    }
 
     .filters_attrs,
     .form_group_wrapper-filter_items > div,
@@ -2026,11 +2032,39 @@
     .catalog__count{
         border: none;
     }
+    .form_group_wrapper-filter_items .guest{
+        display: flex;
+        gap: 1px;
+    }
+
+    #form-catalog-filter .filters__heading,
+    #form-catalog-filter .mainsearch{
+        margin-top: -20px !important;
+        margin-left: -20px !important;
+    }
+    #form-catalog-filter .mainsearch{
+        margin-top: 1.5rem !important;
+    }
+
+    .form_group_wrapper-filter_items .guest > .guests{
+        width: 50%;
+    }
+    .form_group_wrapper-filter_items .guest button{
+        width: 50%;
+        display: block;
+    }
+    #form-catalog-filter-front .filters__controls,
+    #popup_filter_body .filters__controls{
+        display: none;
+    }
+    .filters_attrs{
+        margin-top: 1.5rem;
+    }
     .filters_attrs .form__dropdown_show .form__dropdown-heading:after{
         display: block;
     }
     .filters_attrs  .form__dropdown-body{
-        padding-bottom: 2.4rem;
+        padding-bottom: 0;
     }
 
     .filters_features .form__dropdown-heading{
@@ -2042,8 +2076,34 @@
     .filter_btn a{
         border: 1px solid var(--color-beige);
     }
+
     #popup_filter_body li.list__item{
         margin: 0.5rem 0;
+    }
+    #popup_filter_body .filters_features,
+    #popup_filter_body .form__group{
+        border: none;
+        margin: 0;
+        padding: 0;
+    }
+    #popup_filter_body .filters_features{
+        margin-top: 15px;
+    }
+    #popup_filter_body .form__dropdown-heading {
+        padding-top: 1.5rem;
+        border-top: 1px solid #000;
+        border-top: 1px solid var(--color-black);
+    }
+
+    #filters-modal .filters__controls{
+        background: var(--color-beige-light);
+        position: sticky;
+        bottom: 0;
+        left: auto;
+        right: auto;
+        width: 100%;
+        margin: 0 auto;
+        text-align: center;
     }
 }
 

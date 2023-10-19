@@ -14,7 +14,7 @@ foreach ($arResult as $key => $value) {
     </div>
 
     <div class="filters__form" id="popup_filter_body">
-        <div class="form__group">
+        <div class="form__group mainsearch">
             <div class="form_group_wrapper">
 
                 <div class="form__item name">
@@ -171,6 +171,9 @@ foreach ($arResult as $key => $value) {
                                 </div>
                             </div>
                         </div>
+
+
+                        <button class="button button_primary" data-filter-set data-filter-catalog-front-btn="true">Найти</button>
                     </div>
                 </div>
             </div>
