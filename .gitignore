@@ -15,7 +15,6 @@ robots.txt
 web.config
 yandex*.txt
 google*.html
-*.xml
 .DS_Store
 
 node_modules/
@@ -33,3 +32,6 @@ vendor/
 /log_bnovo_order.txt
 /__bx_log.log
 /test.php
+/sitemap.xml
+/sitemap-files.xml
+/sitemap-iblock-1.xml
