@@ -179,7 +179,8 @@ if ($arResult['arSearchedRegions']) {
                         $searchedRegionData['COORDS'] = explode(',', $arResult['searchedRegionData']['UF_COORDS']);
 
                         $arSection['DISCTANCE'] = Utils::calculateTheDistance($searchedRegionData['COORDS'][0], $searchedRegionData['COORDS'][1], $arSection['COORDS'][0], $arSection['COORDS'][1]);
-                        $arSection['DISCTANCE_TO_REGION'] = Utils::morpher($arResult['searchName'], Morpher::CASE_GENITIVE);
+                        $arSection['DISCTANCE_TO_REGION'] = Utils::morpher($arResult['searchedRegionData']['CENTER_UF_NAME'], Morpher::CASE_GENITIVE);
+                        $arSection['DISCTANCE_TO_REGION'] = ucfirst($arSection['DISCTANCE_TO_REGION']);
                     }
                     /* до 500км */
                     if ((int)$arSection['DISCTANCE'] > 500) {
