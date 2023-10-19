@@ -629,6 +629,9 @@ $APPLICATION->AddHeadString('<meta name="description" content="' . $descriptionS
                                                 </div>
                                             </div>
                                         </div>
+
+
+                                        <button class="button button_primary" data-filter-set data-filter-catalog-front-btn="true">Найти</button>
                                     </div>
                                 </div>
                             </div>
