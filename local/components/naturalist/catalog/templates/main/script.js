@@ -76,10 +76,7 @@ $(function () {
 
         var frontFilter = $(this).data('filter-catalog-front-btn') ?? false;
 
-        var parentFrom = $('#form-catalog-filter');
-        if (frontFilter) {
-            parentFrom = $('#form-catalog-filter-front');
-        }
+        var parentFrom = $(this).parents('form');
 
         var params = getUrlParams();
 
@@ -144,7 +141,6 @@ $(function () {
             var age = $(element).val()
             children.push(age);
         });
-
 
         if (dateFrom.trim() != "Заезд" && dateTo.trim() != "Выезд" && guests > 0) {
             let arDateFrom = dateFrom.split('.');
@@ -280,10 +276,7 @@ $(function () {
 
         var frontFilter = $(this).data('filter-catalog-front-btn') ?? false;
 
-        var parentFrom = $('#form-catalog-filter');
-        if (frontFilter) {
-            parentFrom = $('#form-catalog-filter-front');
-        }
+        var parentFrom = $(this).parents('form');
 
         var params = getUrlParams();
         var dateFrom = $.trim($('[data-date-from]', parentFrom).text());
