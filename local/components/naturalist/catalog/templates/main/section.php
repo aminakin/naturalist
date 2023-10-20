@@ -690,12 +690,7 @@ $APPLICATION->AddHeadString('<meta name="description" content="' . $descriptionS
                             <svg class="icon icon_filters" viewbox="0 0 16 16" style="width: 1.6rem; height: 1.6rem;">
                                 <use xlink:href="#filters"/>
                             </svg>
-                            <span>
-                                <?php if (CSite::InDir('/map')) {
-                                    echo 'Фильтр';
-                                } else {
-                                    echo 'Фильтры';
-                                } ?></span>
+                            <span>Фильтры</span>
                         </a>
                     </div>
 

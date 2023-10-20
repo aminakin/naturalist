@@ -14676,8 +14676,10 @@
                     document.addEventListener('click', function (event) {
                         var $el = event.target;
 
-
-                        if (!$el.matches('[data-calendar-dropdown]') && !$el.closest('[data-calendar-dropdown]') && !$el.matches('[data-calendar-label]') && !$el.closest('[data-calendar-label]')) {
+                        if (!$el.matches('[data-calendar-dropdown]') &&
+                            !$el.closest('[data-calendar-dropdown]') &&
+                            !$el.matches('[data-calendar-label]') &&
+                            !$el.closest('[data-calendar-label]')) {
                             // _this.$elements.dropdown.classList.remove('calendar__dropdown_show');
                             _this.$elements.dropdown.forEach(function ($item) {
                                 $item.classList.remove('calendar__dropdown_show');
@@ -15579,8 +15581,15 @@
             _createClass(SearchAutocomplete, [{
                 key: "handleHide",
                 value: function handleHide() {
-                    this.elements.$root.classList.remove(this.classes.show);
-                    this.elements.$dropdown.innerHTML = '';
+                    document.querySelectorAll('[data-autocomplete]').forEach(($item) => {
+                        $item.classList.remove(this.classes.show);
+                    });
+                    // this.elements.$root.classList.remove(this.classes.show);
+                    // this.elements.$dropdown.innerHTML = '';
+                    this.elements.$dropdown.forEach(($item) => {
+                        $item.innerHTML = '';
+                    });
+
                 }
             }, {
                 key: "handleRequest",
