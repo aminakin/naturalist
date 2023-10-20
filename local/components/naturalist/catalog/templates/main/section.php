@@ -27,7 +27,7 @@ use Naturalist\Utils;
 global $arUser, $userId, $isAuthorized;
 
 $request = Application::getInstance()->getContext()->getRequest();
-$isAjax  = $request->isAjaxRequest();
+$isAjax = $request->isAjaxRequest();
 
 $arUriParams = array(
     'dateFrom' => $_GET['dateFrom'],
@@ -56,7 +56,6 @@ $arReviewsAvg = array_map(function ($a) {
 }, $arReviews);*/
 
 
-
 /* Фильтрация */
 $arFilter = array(
     "IBLOCK_ID" => CATALOG_IBLOCK_ID,
@@ -66,8 +65,8 @@ $arFilter = array(
 if (!empty($_GET['name']) && isset($_GET['name'])) {
     $search = ($_GET['name']) ? $_GET['name'] : null;
 
-    $decodeSearch = json_decode($search,true);
-    if($decodeSearch['type']){
+    $decodeSearch = json_decode($search, true);
+    if ($decodeSearch['type']) {
         switch ($decodeSearch['type']) {
             case 'area':
 //                $arFilter["%UF_REGION_NAME"] = $decodeSearch['item'];
@@ -86,7 +85,7 @@ if (!empty($_GET['name']) && isset($_GET['name'])) {
 
             case 'object':
                 $arNameResult = CIBlockSection::GetList([], array_merge($arFilter, ["%NAME" => trim($decodeSearch['item'])]), false, array("ID"), false)->Fetch();
-                if($arNameResult) {
+                if ($arNameResult) {
                     $arSectionIDs[] = $arNameResult["ID"];
                 }
                 $arFilter["ID"] = $arSectionIDs;
@@ -95,8 +94,7 @@ if (!empty($_GET['name']) && isset($_GET['name'])) {
 
         $arFilterValues["SEARCH"] = json_encode($decodeSearch, JSON_UNESCAPED_UNICODE);
         $arFilterValues["SEARCH_TEXT"] = strip_tags($decodeSearch['title']);
-    }
-    else {
+    } else {
 
 //        CModule::IncludeModule('search');
 //        $obSearch = new CSearch;
@@ -137,14 +135,14 @@ $dateFrom = $_GET['dateFrom'];
 $dateTo = $_GET['dateTo'];
 $guests = $_GET['guests'] ?? 2;
 $children = $_GET['children'] ?? 0;
-$arChildrenAge = (isset($_GET['childrenAge'])) ? explode(',' , $_GET['childrenAge']) : [];
+$arChildrenAge = (isset($_GET['childrenAge'])) ? explode(',', $_GET['childrenAge']) : [];
 if (!empty($dateFrom) && !empty($dateTo) && !empty($_GET['guests'])) {
     $daysCount = abs(strtotime($dateTo) - strtotime($dateFrom)) / 86400;
 
     // Запрос в апи на получение списка кемпингов со свободными местами в выбранный промежуток
     $arExternalInfo = Products::search($guests, $arChildrenAge, $dateFrom, $dateTo, false);
     $arExternalIDs = array_keys($arExternalInfo);
-    if($arExternalIDs) {
+    if ($arExternalIDs) {
         $arFilter["UF_EXTERNAL_ID"] = $arExternalIDs;
     } else {
         $arFilter["UF_EXTERNAL_ID"] = false;
@@ -186,7 +184,7 @@ if (!empty($_GET['impressions']) && isset($_GET['impressions'])) {
 
     $rsImpressions = CIBlockElement::GetList(false, array("IBLOCK_ID" => IMPRESSIONS_IBLOCK_ID, "CODE" => $arRequestImpressions));
     $arFilterImpressions = array();
-    while($arImpression = $rsImpressions->Fetch()) {
+    while ($arImpression = $rsImpressions->Fetch()) {
         $arFilterImpressions[] = $arImpression["ID"];
         $arSeoImpressions[] = $arImpression;
     }
@@ -214,18 +212,18 @@ $arSort = array($sort => $sortOrder);
 $rsSections = CIBlockSection::GetList($arSort, $arFilter, false, array("IBLOCK_ID", "ID", "NAME", "CODE", "SECTION_PAGE_URL", "UF_*"), false);
 $arSections = array();
 
-$searchedRegionData = Regions::getRegionById( $arRegionIds[0] ?? false);
+$searchedRegionData = Regions::getRegionById($arRegionIds[0] ?? false);
 while ($arSection = $rsSections->GetNext()) {
     $arDataFullGallery = [];
-    if($arSection["UF_PHOTOS"]) {
+    if ($arSection["UF_PHOTOS"]) {
         foreach ($arSection["UF_PHOTOS"] as $photoId) {
             $imageOriginal = CFile::GetFileArray($photoId);
-            $arDataFullGallery[] = "&quot;".$imageOriginal["SRC"]."&quot;";
+            $arDataFullGallery[] = "&quot;" . $imageOriginal["SRC"] . "&quot;";
             $arSection["PICTURES"][$photoId] = CFile::ResizeImageGet($photoId, array('width' => 600, 'height' => 360), BX_RESIZE_IMAGE_EXACT, true);
         }
 
     } else {
-        $arSection["PICTURES"][0]["src"] = SITE_TEMPLATE_PATH."/img/no_photo.png";
+        $arSection["PICTURES"][0]["src"] = SITE_TEMPLATE_PATH . "/img/no_photo.png";
     }
 
     $arSection["FULL_GALLERY"] = implode(",", $arDataFullGallery);
@@ -249,10 +247,10 @@ while ($arSection = $rsSections->GetNext()) {
 
     /* -- */
 
-    if($arExternalInfo) {
+    if ($arExternalInfo) {
         $sectionPrice = $arExternalInfo[$arSection["UF_EXTERNAL_ID"]];
         // Если это Traveline, то делим цену на кол-во дней
-        if($arSection["UF_EXTERNAL_SERVICE"] == 1) {
+        if ($arSection["UF_EXTERNAL_SERVICE"] == 1) {
             $sectionPrice = round($sectionPrice / $daysCount);
         }
 
@@ -281,8 +279,8 @@ while ($arSection = $rsSections->GetNext()) {
 }
 
 if ($searchedRegionData) {
-    
-    usort($arSections, function($a,$b){
+
+    usort($arSections, function ($a, $b) {
         return ($a['DISCTANCE'] - $b['DISCTANCE']);
     });
 }
@@ -292,7 +290,7 @@ $allCount = count($arSections);
 $arCampingIDs = array_map(function ($a) {
     return $a["ID"];
 }, $arSections);
-if(isset($arCampingIDs) && !empty($arCampingIDs)) {
+if (isset($arCampingIDs) && !empty($arCampingIDs)) {
     $arReviewsAvg = Reviews::getCampingRating($arCampingIDs);
     foreach ($arReviewsAvg as $id => $review) {
         $arSections[$id]["RATING"] = $review["avg"];
@@ -301,26 +299,26 @@ if(isset($arCampingIDs) && !empty($arCampingIDs)) {
 
 /* Кастомная сортировка по рейтингу */
 if ($sortBy == 'rating') {
-    uasort($arSections, function($a, $b) use($sortOrder) {
+    uasort($arSections, function ($a, $b) use ($sortOrder) {
         if ($a['RATING'] == $b['RATING'])
             return false;
 
-        if($sortOrder == 'asc') {
+        if ($sortOrder == 'asc') {
             return ($a['RATING'] > $b['RATING']) ? 1 : -1;
-        } elseif($sortOrder == 'desc') {
+        } elseif ($sortOrder == 'desc') {
             return ($a['RATING'] < $b['RATING']) ? 1 : -1;
         }
     });
 }
 /* Кастомная сортировка по цене */
 if ($sortBy == 'price') {
-    uasort($arSections, function($a, $b) use($sortOrder) {
+    uasort($arSections, function ($a, $b) use ($sortOrder) {
         if ($a['PRICE'] == $b['PRICE'])
             return false;
 
-        if($sortOrder == 'asc') {
+        if ($sortOrder == 'asc') {
             return ($a['PRICE'] > $b['PRICE']) ? 1 : -1;
-        } elseif($sortOrder == 'desc') {
+        } elseif ($sortOrder == 'desc') {
             return ($a['PRICE'] < $b['PRICE']) ? 1 : -1;
         }
     });
@@ -328,7 +326,7 @@ if ($sortBy == 'price') {
 
 /* Пагинация */
 // Данные из сессии по предыдущему просмотру каталога
-$session = \Bitrix\Main\Application::getInstance()->getSession();
+$session = Application::getInstance()->getSession();
 $previousShowenItems = $session['catalog_showen_items'];
 $nextPage = $session['current_catalog_page'];
 
@@ -349,19 +347,19 @@ $elements = ElementGlampingsTable::getList([
     'filter' => ['IBLOCK_SECTION_ID' => $arSectionIds],
 ])->fetchAll();
 
-foreach ($elements as $element) {    
-    $arElementsBySection[$element['IBLOCK_SECTION_ID']][] = $element;    
+foreach ($elements as $element) {
+    $arElementsBySection[$element['IBLOCK_SECTION_ID']][] = $element;
 }
 unset($element);
 
 foreach ($arSections as &$section) {
     foreach ($arElementsBySection[$section['ID']] as $element) {
-        $arPrice = CCatalogProduct::GetOptimalPrice($element['ID'], 1, $USER->GetUserGroupArray(), 'N');        
+        $arPrice = CCatalogProduct::GetOptimalPrice($element['ID'], 1, $USER->GetUserGroupArray(), 'N');
         if (is_array($arPrice['DISCOUNT']) && count($arPrice['DISCOUNT'])) {
-            $section['IS_DISCOUNT'] = 'Y';            
+            $section['IS_DISCOUNT'] = 'Y';
             break;
         }
-    }    
+    }
 }
 unset($section);
 
@@ -418,7 +416,7 @@ while ($arEntity = $rsData->Fetch()) {
 // Услуги
 $rsServices = CIBlockElement::GetList(array("SORT" => "ASC"), array("IBLOCK_ID" => SERVICES_IBLOCK_ID, "ACTIVE" => "Y", "PROPERTY_SHOW_FILTER_VALUE" => "Y"), false, false, array("IBLOCK_ID", "ID", "CODE", "NAME"));
 $arServices = array();
-while($arService = $rsServices->Fetch()) {
+while ($arService = $rsServices->Fetch()) {
     $arServices[$arService["ID"]] = $arService;
 }
 
@@ -492,7 +490,8 @@ $APPLICATION->AddHeadString('<meta name="description" content="' . $descriptionS
                     <h1 class="page_title" <? if ($arParams["MAP"]): ?> style="visibility: hidden;"<? endif; ?>><?= $h1SEO; ?></h1>
                     <div class="crumbs__controls">
                         <!--<a class="crumbs__controls-mobile" href="#" data-map-full="data-map-full">Смотреть на карте</a>-->
-                        <a class="button button_transparent" target="_blank" href="https://yandex.ru/maps/?mode=routes&rtext=" data-route="data-route">Маршрут</a>
+                        <a class="button button_transparent" target="_blank"
+                           href="https://yandex.ru/maps/?mode=routes&rtext=" data-route="data-route">Маршрут</a>
 
                     </div>
                 </div>
@@ -504,47 +503,64 @@ $APPLICATION->AddHeadString('<meta name="description" content="' . $descriptionS
                             <div class="form_group_wrapper">
                                 <div class="form__item item_name">
                                     <div class="field field_autocomplete" data-autocomplete="/ajax/autocomplete.php">
-                                        <input type="hidden" data-autocomplete-result value='<?= ($arFilterValues["SEARCH"]) ? $arFilterValues["SEARCH"] : null?>'>
-                                        <input class="field__input" type="text" name="name" placeholder="Укажите место или глэмпинг" data-autocomplete-field value='<?= ($arFilterValues["SEARCH_TEXT"]) ? $arFilterValues["SEARCH_TEXT"] : null?>'>
+                                        <input type="hidden" data-autocomplete-result
+                                               value='<?= ($arFilterValues["SEARCH"]) ? $arFilterValues["SEARCH"] : null ?>'>
+                                        <input class="field__input" type="text" name="name"
+                                               placeholder="Укажите место или глэмпинг" data-autocomplete-field
+                                               value='<?= ($arFilterValues["SEARCH_TEXT"]) ? $arFilterValues["SEARCH_TEXT"] : null ?>'>
                                         <div class="autocomplete-dropdown" data-autocomplete-dropdown></div>
                                     </div>
                                 </div>
 
                                 <div class="form_group_wrapper-filter_items">
 
-                                    <div class="form__row calendar" data-calendar="data-calendar" data-calendar-min="today" data-calendar-max="365">
+                                    <div class="form__row calendar" data-calendar="data-calendar"
+                                         data-calendar-min="today" data-calendar-max="365">
                                         <div class="form__item">
                                             <div class="field field_icon field_calendar">
-                                                <div class="field__input" data-calendar-label="data-calendar-label" data-date-from><?php if($dateFrom):?><?=$dateFrom?><?php else:?><span>Заезд</span><?php endif;?></div>
+                                                <div class="field__input" data-calendar-label="data-calendar-label"
+                                                     data-date-from><?php if ($dateFrom): ?><?= $dateFrom ?><?php else: ?>
+                                                        <span>Заезд</span><?php endif; ?></div>
                                             </div>
                                         </div>
 
                                         <div class="form__item">
                                             <div class="field field_icon field_calendar">
-                                                <div class="field__input" data-calendar-label="data-calendar-label" data-date-to><?php if($dateTo):?><?=$dateTo?><?php else:?><span>Выезд</span><?php endif;?></div>
+                                                <div class="field__input" data-calendar-label="data-calendar-label"
+                                                     data-date-to><?php if ($dateTo): ?><?= $dateTo ?><?php else: ?>
+                                                        <span>Выезд</span><?php endif; ?></div>
                                             </div>
                                         </div>
 
                                         <div class="calendar__dropdown" data-calendar-dropdown="data-calendar-dropdown">
                                             <div class="calendar__navigation">
                                                 <div class="calendar__navigation-item calendar__navigation-item_months">
-                                                    <div class="calendar__navigation-label" data-calendar-navigation="data-calendar-navigation"><span><?= $currMonthName ?></span></div>
+                                                    <div class="calendar__navigation-label"
+                                                         data-calendar-navigation="data-calendar-navigation">
+                                                        <span><?= $currMonthName ?></span></div>
                                                     <ul class="list">
                                                         <?php
                                                         $k = 0;
                                                         ?>
                                                         <?php foreach ($arDates[0] as $monthName) : ?>
                                                             <li class="list__item<?php if ($k == 0) : ?> list__item_active<?php endif; ?>">
-                                                                <button data-calendar-year="<?= $currYear ?>" class="list__item-month" data-calendar-month-select="<?= $k ?>" type="button"><?= $monthName ?></button>
+                                                                <button data-calendar-year="<?= $currYear ?>"
+                                                                        class="list__item-month"
+                                                                        data-calendar-month-select="<?= $k ?>"
+                                                                        type="button"><?= $monthName ?></button>
                                                             </li>
                                                             <?php $k++; ?>
                                                         <?php endforeach ?>
-                                                        <li class="list__item" data-calendar-delimiter="data-calendar-delimiter">
+                                                        <li class="list__item"
+                                                            data-calendar-delimiter="data-calendar-delimiter">
                                                             <div class="list__item-year"><?= $nextYear ?></div>
                                                         </li>
                                                         <?php foreach ($arDates[1] as $monthName) : ?>
                                                             <li class="list__item">
-                                                                <button data-calendar-year="<?= $nextYear ?>" class="list__item-month" data-calendar-month-select="<?= $k ?>" type="button"><?= $monthName ?></button>
+                                                                <button data-calendar-year="<?= $nextYear ?>"
+                                                                        class="list__item-month"
+                                                                        data-calendar-month-select="<?= $k ?>"
+                                                                        type="button"><?= $monthName ?></button>
                                                             </li>
                                                             <?php $k++; ?>
                                                         <?php endforeach ?>
@@ -552,13 +568,17 @@ $APPLICATION->AddHeadString('<meta name="description" content="' . $descriptionS
                                                 </div>
 
                                                 <div class="calendar__navigation-item calendar__navigation-item_years">
-                                                    <div class="calendar__navigation-label" data-calendar-navigation="data-calendar-navigation"><span><?= $currYear ?></span></div>
+                                                    <div class="calendar__navigation-label"
+                                                         data-calendar-navigation="data-calendar-navigation">
+                                                        <span><?= $currYear ?></span></div>
                                                     <ul class="list">
                                                         <li class="list__item list__item_active">
-                                                            <button data-calendar-year-select="<?= $currYear ?>" type="button"><?= $currYear ?></button>
+                                                            <button data-calendar-year-select="<?= $currYear ?>"
+                                                                    type="button"><?= $currYear ?></button>
                                                         </li>
                                                         <li class="list__item">
-                                                            <button data-calendar-year-select="<?= $nextYear ?>" type="button"><?= $nextYear ?></button>
+                                                            <button data-calendar-year-select="<?= $nextYear ?>"
+                                                                    type="button"><?= $nextYear ?></button>
                                                         </li>
                                                     </ul>
                                                 </div>
@@ -572,53 +592,68 @@ $APPLICATION->AddHeadString('<meta name="description" content="' . $descriptionS
 
                                     <div class="form__item guest">
                                         <div class="field field_icon guests" data-guests="data-guests">
-                                            <div class="field__input" data-guests-control="data-guests-control"><?=$guests + $children?> <?= $guestsDeclension->get($guests + $children) ?></div>
+                                            <div class="field__input"
+                                                 data-guests-control="data-guests-control"><?= $guests + $children ?> <?= $guestsDeclension->get($guests + $children) ?></div>
 
                                             <div class="guests__dropdown">
                                                 <div class="guests__guests">
                                                     <div class="guests__item">
                                                         <div class="guests__label">
-                                                            <div><?=GetMessage('FILTER_ADULTS')?></div><span><?=GetMessage('FILTER_ADULTS_AGE')?></span>
+                                                            <div><?= GetMessage('FILTER_ADULTS') ?></div>
+                                                            <span><?= GetMessage('FILTER_ADULTS_AGE') ?></span>
                                                         </div>
                                                         <div class="counter">
                                                             <button class="counter__minus" type="button"></button>
-                                                            <input type="text" disabled="disabled" data-guests-adults-count="data-guests-adults-count" name="guests-adults-count" value="<?=$guests?>" data-min="1">
+                                                            <input type="text" disabled="disabled"
+                                                                   data-guests-adults-count="data-guests-adults-count"
+                                                                   name="guests-adults-count" value="<?= $guests ?>"
+                                                                   data-min="1">
                                                             <button class="counter__plus" type="button"></button>
                                                         </div>
                                                     </div>
 
                                                     <div class="guests__item">
                                                         <div class="guests__label">
-                                                            <div><?=GetMessage('FILTER_CHILDREN')?></div><span><?=GetMessage('FILTER_CHILDREN_AGE')?></span>
+                                                            <div><?= GetMessage('FILTER_CHILDREN') ?></div>
+                                                            <span><?= GetMessage('FILTER_CHILDREN_AGE') ?></span>
                                                         </div>
                                                         <div class="counter">
                                                             <button class="counter__minus" type="button"></button>
-                                                            <input type="text" disabled="disabled" data-guests-children-count="data-guests-children-count" name="guests-children-count" value="<?=$children?>" data-min="0">
+                                                            <input type="text" disabled="disabled"
+                                                                   data-guests-children-count="data-guests-children-count"
+                                                                   name="guests-children-count" value="<?= $children ?>"
+                                                                   data-min="0">
                                                             <button class="counter__plus" type="button"></button>
                                                         </div>
                                                     </div>
                                                 </div>
 
-                                                <div class="guests__children" data-guests-children="data-guests-children">
+                                                <div class="guests__children"
+                                                     data-guests-children="data-guests-children">
                                                     <?php if ($arChildrenAge): ?>
                                                         <?php foreach ($arChildrenAge as $keyAge => $valueAge): ?>
                                                             <div class="guests__item">
                                                                 <div class="guests__label">
-                                                                    <div><?=GetMessage('FILTER_CHILD_AGE')?></div>
-                                                                    <span><?=getChildrenOrderTitle($keyAge + 1)?> <?=GetMessage('FILTER_CHILD')?></span>
+                                                                    <div><?= GetMessage('FILTER_CHILD_AGE') ?></div>
+                                                                    <span><?= getChildrenOrderTitle($keyAge + 1) ?> <?= GetMessage('FILTER_CHILD') ?></span>
                                                                 </div>
                                                                 <div class="counter">
                                                                     <button class="counter__minus" type="button">
-                                                                        <svg class="icon icon_arrow-small" viewBox="0 0 16 16" style="width: 1.6rem; height: 1.6rem;">
+                                                                        <svg class="icon icon_arrow-small"
+                                                                             viewBox="0 0 16 16"
+                                                                             style="width: 1.6rem; height: 1.6rem;">
                                                                             <use xlink:href="#arrow-small"></use>
                                                                         </svg>
                                                                     </button>
-                                                                    <input type="text" disabled="" data-guests-children=""
+                                                                    <input type="text" disabled=""
+                                                                           data-guests-children=""
                                                                            name="guests-children-<?= $keyAge ?>"
                                                                            value="<?= $valueAge ?>"
                                                                            data-min="0" data-max="17">
                                                                     <button class="counter__plus" type="button">
-                                                                        <svg class="icon icon_arrow-small" viewBox="0 0 16 16" style="width: 1.6rem; height: 1.6rem;">
+                                                                        <svg class="icon icon_arrow-small"
+                                                                             viewBox="0 0 16 16"
+                                                                             style="width: 1.6rem; height: 1.6rem;">
                                                                             <use xlink:href="#arrow-small"></use>
                                                                         </svg>
                                                                     </button>
@@ -631,14 +666,18 @@ $APPLICATION->AddHeadString('<meta name="description" content="' . $descriptionS
                                         </div>
 
 
-                                        <button class="button button_primary" data-filter-set data-filter-catalog-front-btn="true">Найти</button>
+                                        <button class="button button_primary" data-filter-set
+                                                data-filter-catalog-front-btn="true">Найти
+                                        </button>
                                     </div>
                                 </div>
                             </div>
 
                             <div class="filters__controls">
                                 <!--                    <button class="button button_clear" data-filter-reset>Сбросить всё</button>-->
-                                <button class="button button_primary" data-filter-set data-filter-catalog-front-btn="true">Найти</button>
+                                <button class="button button_primary" data-filter-set
+                                        data-filter-catalog-front-btn="true">Найти
+                                </button>
                             </div>
                         </div>
 
@@ -651,7 +690,12 @@ $APPLICATION->AddHeadString('<meta name="description" content="' . $descriptionS
                             <svg class="icon icon_filters" viewbox="0 0 16 16" style="width: 1.6rem; height: 1.6rem;">
                                 <use xlink:href="#filters"/>
                             </svg>
-                            <span>Фильтры</span>
+                            <span>
+                                <?php if (CSite::InDir('/map')) {
+                                    echo 'Фильтр';
+                                } else {
+                                    echo 'Фильтры';
+                                } ?></span>
                         </a>
                     </div>
 
@@ -688,7 +732,8 @@ $APPLICATION->AddHeadString('<meta name="description" content="' . $descriptionS
                                     <span class="list__link" data-sort="rating"
                                           data-type="<?= $orderReverse ?>"><span>По</span> <span>Рейтингу</span></span>
                                 <?php else: ?>
-                                    <a class="list__link" href="#" data-sort="rating" data-type="desc"><span>По</span> <span>Рейтингу</span></a>
+                                    <a class="list__link" href="#" data-sort="rating" data-type="desc"><span>По</span>
+                                        <span>Рейтингу</span></a>
                                 <?php endif; ?>
                             </li>
                         </ul>
@@ -700,7 +745,7 @@ $APPLICATION->AddHeadString('<meta name="description" content="' . $descriptionS
         <!-- section-->
 
         <section class="section section_catalog">
-            <div class="container">                                
+            <div class="container">
                 <?
                 $APPLICATION->IncludeComponent(
                     "naturalist:empty",
