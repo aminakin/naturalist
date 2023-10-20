@@ -23,7 +23,7 @@ $(function() {
             children.push(age);
         });
 
-        if(dateFrom != "Заезд" && dateTo != "Выезд" && guests > 0) {
+        if(dateFrom.trim() != "Заезд" && dateTo.trim() != "Выезд" && guests > 0) {
             params["dateFrom"] = dateFrom;
             params["dateTo"] = dateTo;
             params["guests"] = guests;

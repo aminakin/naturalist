@@ -295,9 +295,8 @@ $(function () {
             children.push(age);
         });
 
-        console.log(dateFrom, dateTo);
 
-        if (dateFrom != "Заезд" && dateTo != "Выезд" && guests > 0) {
+        if (dateFrom.trim() != "Заезд" && dateTo.trim() != "Выезд" && guests > 0) {
             let arDateFrom = dateFrom.split('.');
             let arDateTo = dateTo.split('.');
 
