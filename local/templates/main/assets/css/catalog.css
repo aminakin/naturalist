@@ -2029,13 +2029,20 @@
          gap: 15px !important;
     }
     .catalog_sorter{
-        margin-bottom: 4rem;
+        margin-bottom: 0rem;
         padding-bottom: 2rem;
         border-bottom: 0.1rem solid #000;
         border-bottom: 0.1rem solid var(--color-black);
     }
+    .catalog_sorter .sort{
+        width: 100%;
+        justify-content: space-between;
+    }
     .catalog__count{
         border: none;
+        margin-bottom: 1rem;
+
+        font-size: 1.5rem;
     }
     .form_group_wrapper-filter_items .guest{
         display: flex;
@@ -2086,6 +2093,7 @@
         width: 100%;
     }
     .filter_btn a{
+        font-size: 1.5rem;
         border: 1px solid var(--color-beige);
     }
 
