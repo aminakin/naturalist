@@ -173,7 +173,7 @@ foreach ($arResult as $key => $value) {
                         </div>
 
 
-                        <button class="button button_primary" data-filter-set data-filter-catalog-front-btn="true">Найти</button>
+                        <button class="button button_primary" data-filter-set>Найти</button>
                     </div>
                 </div>
             </div>

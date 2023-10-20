@@ -1864,7 +1864,7 @@
 .form_group_wrapper-filter_items .guest {
     width: 33.3%;
 }
-.form_group_wrapper-filter_items .guest button{
+.form_group_wrapper-filter_items .guest button[data-filter-set]{
     display: none;
 }
 
@@ -1907,7 +1907,7 @@
 }
 
 .filters__form .guests__dropdown {
-    width: 100%
+    /*width: 100%*/
 }
 
 .filters__form .guests__label {
@@ -2061,7 +2061,7 @@
     .form_group_wrapper-filter_items .guest > .guests{
         width: 50%;
     }
-    .form_group_wrapper-filter_items .guest button{
+    .form_group_wrapper-filter_items .guest button[data-filter-set]{
         width: 50%;
         display: block;
     }

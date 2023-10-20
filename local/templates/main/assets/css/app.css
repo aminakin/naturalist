@@ -4720,7 +4720,7 @@ img.lazy.loaded {
 
   .main {
     padding-bottom: 5.8rem;
-    padding-top: 2rem;
+    /*padding-top: 2rem;*/
   }
 
   .header .container {
@@ -4969,7 +4969,7 @@ img.lazy.loaded {
 
 
   .main {
-    padding-top: 2rem;
+    /*padding-top: 28px;*/
   }
 
   .footer .container {
