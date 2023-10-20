@@ -244,6 +244,7 @@
     line-height: 17.979px;
     font-weight: 600;
     text-transform: none;
+    border-radius: 50px;
   }
 
   .input__error {
