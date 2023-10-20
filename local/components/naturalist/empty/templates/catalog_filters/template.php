@@ -3,7 +3,7 @@ foreach ($arResult as $key => $value) {
     ${$key} = $value;
 }
 ?>
-<form class="form filters" id="form-catalog-filter">
+<form class="form filters <?php if (CSite::InDir('/map')): ?>filter__on_map<?php endif; ?>" id="form-catalog-filter">
     <div class="filters__heading">
         <div class="h3">Фильтры</div>
         <button class="modal__close" data-modal-close>

@@ -2034,15 +2034,16 @@
         border-bottom: 0.1rem solid #000;
         border-bottom: 0.1rem solid var(--color-black);
     }
-    .catalog_sorter .sort{
+    .catalog_sorter .sort,
+    .catalog_sorter .sort ul{
         width: 100%;
         justify-content: space-between;
     }
     .catalog__count{
+        font-family: 'TT Travels Next'; /* мда хех*/
         border: none;
         margin-bottom: 1rem;
-
-        font-size: 1.5rem;
+        font-size: 13px;
     }
     .form_group_wrapper-filter_items .guest{
         display: flex;
@@ -2130,6 +2131,41 @@
         margin: 0 auto !important;
         border: none;
     }
+
+    /*map*/
+
+    .main__on_map .catalog__objects,
+    .main__on_map .catalog_sorter .sort,
+    .main__on_map #form-catalog-filter-front,
+    .main__on_map .section.section_crumbs .container .crumbs,
+    .main__on_map .section.section_crumbs .container .catalog_filter{
+        display: none;
+    }
+    .main__on_map .section.section_crumbs .container{
+        display: flex;
+        gap: 15px;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .main__on_map .wrapper_title_catalog_page,
+    .main__on_map .catalog_sorter{
+        width: 50%;
+        margin: 0;
+        padding: 0;
+        border: none;
+    }
+
+    .catalog__map.catalog__on_map{
+        position: static;
+        display: block;
+        height: 500px;
+        overflow: hidden;
+    }
+    .body__on_map{
+        overflow-y: auto !important;
+        position: static !important;
+    }
+
 }
 
 

@@ -97,7 +97,7 @@ Asset::getInstance()->addJs(SITE_TEMPLATE_PATH . "/js/common.js");
     </noscript>
 </head>
 
-<body>
+<body class=" <?php if (CSite::InDir('/map')): ?>body__on_map<?php endif; ?>">
 <!-- Google Tag Manager (noscript) -->
 <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5762ML9"
 height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>

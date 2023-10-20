@@ -476,7 +476,7 @@ $APPLICATION->AddHeadString('<meta name="description" content="' . $descriptionS
 /**/
 ?>
 
-    <main class="main">
+    <main class="main  <?php if (CSite::InDir('/map')): ?>main__on_map<?php endif; ?>">
         <section class="section section_crumbs section_crumbs_catalog_new">
             <div class="container">
                 <?
