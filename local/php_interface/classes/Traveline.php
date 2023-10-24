@@ -5,6 +5,7 @@ namespace Naturalist;
 use Bitrix\Highloadblock\HighloadBlockTable;
 use Bitrix\Main\Application;
 use Bitrix\Main\Context;
+use Bitrix\Main\Diag\Debug;
 use Bitrix\Main\Loader;
 use Bitrix\Sale\Order;
 use CIBlockElement;
@@ -171,6 +172,8 @@ class Traveline
         $arTravelineItems = json_decode($response, true);
         curl_close($ch);
 
+        Debug::writeToFile(var_export($arTravelineItems, true), '$arTravelineItems');
+
         $iS = new CIBlockSection();
         $iE = new CIBlockElement();
         $campingFeaturesEntityClass = self::getEntityClass(self::$campingFeaturesHLId);
@@ -314,7 +317,7 @@ class Traveline
                 $res = $iS->Update($sectionId, $arFields);
 
                 if($res)
-                    echo "Обновлен раздел (".$sectionId.") \"".$sectionName."\"<br>\r\n";
+                    echo date('Y-M-d H:i:s'). " Обновлен раздел (".$sectionId.") \"".$sectionName."\"<br>\r\n";
 
             } else {
                 $arFields["ACTIVE"] = "N";
@@ -398,7 +401,7 @@ class Traveline
                         $elementId = $iE->Add($arFields);
 
                         if($elementId)
-                            echo "Добавлен номер (".$elementId.") \"".$elementName."\" в отель (".$sectionId.") \"".$sectionName."\"<br>\r\n";
+                            echo date('Y-M-d H:i:s') . " Добавлен номер (".$elementId.") \"".$elementName."\" в отель (".$sectionId.") \"".$sectionName."\"<br>\r\n";
                     }
                 }
             }
