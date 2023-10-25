@@ -34,7 +34,7 @@
 
 .subscribe-form form {
   text-align: center;
-  margin: 0.78vw auto 0 auto;
+  margin: 0.78rem auto 0 auto;
   display: flex;  
   flex-wrap: wrap;
 }
@@ -52,13 +52,13 @@
   text-align: left;
   margin-top: 6px;
   color: var(--color-red);
-  font-size: 0.6vw;  
+  font-size: 0.6rem;  
   font-weight: 500;
   line-height: 120%;  
 }
 
 .subscribe-form__title {  
-  font-size: 1.4vw;
+  font-size: 16px;
   font-weight: 600;
   text-transform: uppercase;
   font-family: 'TT Travels Next';
@@ -67,22 +67,23 @@
 }
 
 .subscribe-form__subtitle {
-  margin: 0.57vw 0 0 0;
+  margin: 9px 0 0 0;
   font-family: 'TT Travels Next';
-  font-size: 0.6vw;
+  font-size: 11px;
   color: var(--color-black);
   font-weight: 500;
   line-height: normal;  
 }
 
 .subscribe__input {
-  width: 27vw;
-  padding: 0.5vw 0.5vw;
-  font-size: 0.6vw;  
+  width: 100%;
+  max-width: 320px;
+  padding: 0.5rem 0.5rem;
   font-weight: 500;
   line-height: 142%;
   border: none;
-  height: 1.8vw;
+  height: 40px;
+  font-size: 11px;
 }
 
 .subscribe__input.error {
@@ -94,9 +95,9 @@
 }
 
 .subscribe__submit {
-  height: 1.8vw;
-  padding: 0.52vw 0.52vw;
-  font-size: 0.6vw;
+  height: 40px;
+  padding: 0.52rem 0.52rem;
+  font-size: 7px;
   color: var(--color-black);
   font-weight: 700;
   line-height: 143%;
@@ -108,7 +109,7 @@
 
 .subscribe-form__agree {
   margin-top: 6px;
-  font-size: 0.6vw;  
+  font-size: 9px;
   color: var(--color-black);
   font-weight: 500;
   line-height: normal;
@@ -134,8 +135,7 @@
 }
 
 @media (max-width: 1200px) {
-  .subscribe-form__title {    
-    font-size: 16px;
+  .subscribe-form__title {
     font-style: normal;
     font-weight: 600;
     line-height: normal;
@@ -159,7 +159,6 @@
     height: 40px;
     width: 305px;
     padding: 8px 12px;
-    font-size: 13px;
     line-height: initial;
   }
 
@@ -182,7 +181,6 @@
 
   .subscribe-form__agree {
     text-align: left;
-    font-size: 9px;
     line-height: normal;
   }
 
@@ -232,6 +230,9 @@
     padding: 8px 12px;
     font-size: 13px;
     line-height: 180%;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
   }
 
   .subscribe__submit {
@@ -244,6 +245,9 @@
     line-height: 17.979px;
     font-weight: 600;
     text-transform: none;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
   }
 
   .input__error {

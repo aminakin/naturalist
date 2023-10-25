@@ -19,7 +19,7 @@ if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED!==true) {
 <section class="subscribe-form"  id="subscribe-form">
 	<div class="container">
 		<div class="subscribe-form__left">
-			<p class="subscribe-form__title"><?=$arParams['FORM_TITLE']?></p>
+			<p class="subscribe-form__title"><?=$arParams['~FORM_TITLE']?></p>
 			<p class="subscribe-form__subtitle"><?=$arParams['FORM_SUBTITLE']?></p>
 			<form action="<?=$arResult["FORM_ACTION"]?>">
 				<?foreach($arResult["RUBRICS"] as $itemID => $itemValue):?>

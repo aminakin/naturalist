@@ -14,7 +14,7 @@
             "SHOW_HIDDEN" => "N",
             "USE_PERSONALIZATION" => "N",
             "COMPONENT_TEMPLATE" => "subscribe-footer",
-            "FORM_TITLE" => "Оставайтесь на связи! Подпишитесь на нашу рассылку",
+            "FORM_TITLE" => "Оставайтесь на связи! <br> Подпишитесь на нашу рассылку",
             "FORM_SUBTITLE" => "Узнавайте первыми о горящих предложениях, новых маршрутах и эксклюзивных скидках!",		
             "FORM_POLITICS_LINK" => "/policy/"
         ),

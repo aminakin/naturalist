@@ -490,8 +490,8 @@ $APPLICATION->AddHeadString('<meta name="description" content="' . $descriptionS
                     <h1 class="page_title" <? if ($arParams["MAP"]): ?> style="visibility: hidden;"<? endif; ?>><?= $h1SEO; ?></h1>
                     <div class="crumbs__controls">
                         <!--<a class="crumbs__controls-mobile" href="#" data-map-full="data-map-full">Смотреть на карте</a>-->
-                        <a class="button button_transparent" target="_blank"
-                           href="https://yandex.ru/maps/?mode=routes&rtext=" data-route="data-route">Маршрут</a>
+<!--                        <a class="button button_transparent" target="_blank"-->
+<!--                           href="https://yandex.ru/maps/?mode=routes&rtext=" data-route="data-route">Маршрут</a>-->
 
                     </div>
                 </div>

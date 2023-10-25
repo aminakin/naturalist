@@ -92,47 +92,6 @@ h1.page_title {
 .section_crumbs_catalog_new {
     padding-bottom: 0;
 }
-@media (max-width: 1023px) {
-    .catalog__map-sticky {
-        height: 100%;
-        position: relative;
-        top: 0;
-    }
-    .wrapper_title_catalog_page {
-        display: block;
-        padding-bottom: 1rem;
-    }
-    .catalog__map {
-        top: 27rem;
-    }
-    .catalog__map.catalog__on_map {
-        top: 39rem;
-    }
-    .section_crumbs {
-        top: 6rem;
-    }
-}
-@media (max-width: 599px) {
-    .section_title_page {
-        padding-top: 2.4rem;
-        padding-bottom: 2.4rem;
-    }
-    .section_title_page.catalog_page {
-        padding-top: 0rem;
-        margin-top: -2rem;
-        padding-bottom: 2.4rem;
-    }
-    h1.page_title {
-        font-family: var(--header-text-font-family);
-        font-weight: 500;
-        font-size: 3rem;
-        line-height: 4.2rem;
-        letter-spacing: .04em;
-    }
-    .catalog__map.catalog__on_map {
-        top: 15rem;
-    }
-}
 .section.section_form .clip {
     -webkit-transform: translateZ(0);
     -webkit-mask-image: -webkit-radial-gradient(circle, white 100%, black 100%);
@@ -140,6 +99,14 @@ h1.page_title {
 .catalog__map_fullscreen .catalog__map-halfscreen.link__to_catalog {
     display: flex;
 }
+
+.catalog__map_fullscreen .link_route {
+    left: calc((50% - var(--container-max-width) / 2) + 210px);
+    position: absolute;
+    top: 2rem;
+    border: none;
+}
+
 .profile-preview__image {
 	-moz-border-radius: 50%;
 	-webkit-border-radius: 50%;
@@ -172,4 +139,52 @@ h1.page_title {
     /*text-overflow: ellipsis;*/
     /*white-space: nowrap;*/
 
+}
+
+
+@media (max-width: 1024px) {
+    .catalog__map-sticky {
+        height: 100%;
+        position: relative;
+        top: 0;
+    }
+    .wrapper_title_catalog_page {
+        display: block;
+        padding-bottom: 1rem;
+    }
+    .catalog__map {
+        top: 27rem;
+    }
+    .catalog__map.catalog__on_map {
+        top: 39rem;
+    }
+    .section_crumbs {
+        top: 6rem;
+    }
+
+    .catalog__map_fullscreen .link_route{
+        left: var(--container-gap);
+        top: calc(2rem + 50px);
+    }
+}
+@media (max-width: 599px) {
+    .section_title_page {
+        padding-top: 2.4rem;
+        padding-bottom: 2.4rem;
+    }
+    .section_title_page.catalog_page {
+        padding-top: 0rem;
+        margin-top: -2rem;
+        padding-bottom: 2.4rem;
+    }
+    h1.page_title {
+        font-family: var(--header-text-font-family);
+        font-weight: 500;
+        font-size: 3rem;
+        line-height: 4.2rem;
+        letter-spacing: .04em;
+    }
+    .catalog__map.catalog__on_map {
+        top: 15rem;
+    }
 }
