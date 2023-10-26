@@ -58,7 +58,7 @@
 }
 
 .subscribe-form__title {  
-  font-size: 16px;
+  font-size: 24px;
   font-weight: 600;
   text-transform: uppercase;
   font-family: 'TT Travels Next';
@@ -76,8 +76,8 @@
 }
 
 .subscribe__input {
-  width: 100%;
-  max-width: 320px;
+  width: 70%;
+  max-width: 485px;
   padding: 0.5rem 0.5rem;
   font-weight: 500;
   line-height: 142%;
@@ -96,8 +96,8 @@
 
 .subscribe__submit {
   height: 40px;
-  padding: 0.52rem 0.52rem;
-  font-size: 7px;
+  padding: 0.52rem 1.5rem;
+  font-size: 11px;
   color: var(--color-black);
   font-weight: 700;
   line-height: 143%;
@@ -136,6 +136,7 @@
 
 @media (max-width: 1200px) {
   .subscribe-form__title {
+    font-size: 20px;
     font-style: normal;
     font-weight: 600;
     line-height: normal;
@@ -156,6 +157,7 @@
   }
 
   .subscribe__input {
+    max-width: 320px;
     height: 40px;
     width: 305px;
     padding: 8px 12px;
