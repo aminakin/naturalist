@@ -141,6 +141,7 @@ class Regions
             ->addSelect('UF_SORT')
             ->addSelect('UF_COORDS')
             ->addSelect('UF_CENTER')
+            ->addSelect('UF_CENTER_NAME_RU')
             ->addSelect('CENTER', 'CENTER_')
             ->registerRuntimeField('CENTER', [
                 'data_type' => $citiesDataClass,
