@@ -6,18 +6,17 @@ use Bitrix\Main\Diag\Debug;
 
 class Morpher
 {
-
-    const CASE_NOMENATIVE = -1; //Правила
-const CASE_GENITIVE = 0; //именительный
-    const CASE_DATIVE = 1; //родительный
-    const CASE_ACCUSATIVE = 2; //дательный
-    const CASE_INSTRUMENTAL = 3; //винительный
-    const CASE_PREPOSITIONAL = 4; //творительный
-    const GENDER_ANDROGYNOUS = 0; //предложный
-const GENDER_MALE = 1; // Пол не определен
-    const GENDER_FEMALE = 2; // Мужской
-    protected static $rules; // Женский
-protected $gender = Morpher::GENDER_ANDROGYNOUS; //Пол male/мужской female/женский
+    const CASE_NOMENATIVE = -1; //именительный
+    const CASE_GENITIVE = 0; //родительный
+    const CASE_DATIVE = 1; //дательный
+    const CASE_ACCUSATIVE = 2; //винительный
+    const CASE_INSTRUMENTAL = 3; //творительный
+    const CASE_PREPOSITIONAL = 4; //предложный
+    const GENDER_ANDROGYNOUS = 0; //Пол не определен
+    const GENDER_MALE = 1; // Мужской
+    const GENDER_FEMALE = 2; // Женский
+    protected static $rules; // правила
+    protected $gender = Morpher::GENDER_ANDROGYNOUS; //Пол male/мужской female/женский
 
     /**
      * Конструтор класса Петрович
@@ -115,11 +114,16 @@ protected $gender = Morpher::GENDER_ANDROGYNOUS; //Пол male/мужской fe
         $lower_name = mb_strtolower($name);
 
         foreach (static::$rules[$type]->exceptions as $rule) {
-            if (!$this->checkGender($rule->gender))
+
+            if (!$this->checkGender($rule->gender)) {
                 continue;
+            }
+
             if (array_search($lower_name, $rule->test) !== false) {
-                if ($rule->mods[$case] == '.')
+
+                if ($rule->mods[$case] == '.') {
                     return $name;
+                }
                 return $this->applyRule($rule->mods, $name, $case);
             }
         }
@@ -175,6 +179,7 @@ protected $gender = Morpher::GENDER_ANDROGYNOUS; //Пол male/мужской fe
             $mods[$case] = mb_strtoupper($mods[$case]);
         }
         $result .= str_replace('-', '', $mods[$case]);
+
         return $result;
     }
 
@@ -192,9 +197,13 @@ protected $gender = Morpher::GENDER_ANDROGYNOUS; //Пол male/мужской fe
             if (!$this->checkGender($rule->gender)) {
                 continue;
             }
+
+            Debug::writeToFile(var_export($rule, true), '$rule');
             foreach ($rule->test as $last_char) {
                 $last_name_char = mb_strtolower(mb_substr($name, mb_strlen($name) - mb_strlen($last_char), mb_strlen($last_char)));
+
                 if (mb_strtolower($last_char) == $last_name_char) {
+
                     if ($rule->mods[$case] == '.') {
                         return $name;
                     }

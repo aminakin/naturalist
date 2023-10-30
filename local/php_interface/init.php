@@ -9,28 +9,28 @@ if (file_exists($_SERVER['DOCUMENT_ROOT'] . '/local/php_interface/vendor/autoloa
 
 // Автозагрузка классов
 Loader::registerAutoLoadClasses(null, array(
-    'Naturalist\Users'     => '/local/php_interface/classes/Users.php',
-    'Naturalist\Orders'    => '/local/php_interface/classes/Order.php',
-    'Naturalist\Baskets'   => '/local/php_interface/classes/Basket.php',
-    'Naturalist\Products'  => '/local/php_interface/classes/Product.php',
-    'Naturalist\Reviews'   => '/local/php_interface/classes/Reviews.php',
-    'Naturalist\Events'    => '/local/php_interface/classes/Events.php',
-    'Naturalist\Settings'  => '/local/php_interface/classes/Settings.php',
+    'Naturalist\Users' => '/local/php_interface/classes/Users.php',
+    'Naturalist\Orders' => '/local/php_interface/classes/Order.php',
+    'Naturalist\Baskets' => '/local/php_interface/classes/Basket.php',
+    'Naturalist\Products' => '/local/php_interface/classes/Product.php',
+    'Naturalist\Reviews' => '/local/php_interface/classes/Reviews.php',
+    'Naturalist\Events' => '/local/php_interface/classes/Events.php',
+    'Naturalist\Settings' => '/local/php_interface/classes/Settings.php',
     'Naturalist\Traveline' => '/local/php_interface/classes/Traveline.php',
-    'Naturalist\Bnovo'     => '/local/php_interface/classes/Bnovo.php',
-    'Naturalist\Rest'      => '/local/php_interface/classes/Rest.php',
-    'Naturalist\Regions'      => '/local/php_interface/classes/Regions.php',
-    'Naturalist\CatalogProvider'      => '/local/php_interface/classes/CatalogProvider.php',
-    'Naturalist\HighLoadBlockHelper'      => '/local/php_interface/classes/HighLoadBlockHelper.php',
-    'Naturalist\Utils'      => '/local/php_interface/classes/Utils.php',
-    'Naturalist\Morpher'      => '/local/php_interface/classes/Morpher.php',
+    'Naturalist\Bnovo' => '/local/php_interface/classes/Bnovo.php',
+    'Naturalist\Rest' => '/local/php_interface/classes/Rest.php',
+    'Naturalist\Regions' => '/local/php_interface/classes/Regions.php',
+    'Naturalist\CatalogProvider' => '/local/php_interface/classes/CatalogProvider.php',
+    'Naturalist\HighLoadBlockHelper' => '/local/php_interface/classes/HighLoadBlockHelper.php',
+    'Naturalist\Utils' => '/local/php_interface/classes/Utils.php',
+    'Naturalist\Morpher' => '/local/php_interface/classes/Morpher.php',
 ));
 
 // Константы
-require_once($_SERVER["DOCUMENT_ROOT"]."/local/php_interface/init_constants.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/local/php_interface/init_constants.php");
 
 // Хэлперы
-require_once($_SERVER["DOCUMENT_ROOT"]."/local/php_interface/helpers.php");
+require_once($_SERVER["DOCUMENT_ROOT"] . "/local/php_interface/helpers.php");
 
 // Библиотеки
 //require_once($_SERVER["DOCUMENT_ROOT"]."/local/vendor/autoload.php");
