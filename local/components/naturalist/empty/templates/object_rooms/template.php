@@ -131,8 +131,8 @@ foreach ($arParams['VARS'] as $key => $value) {
                                 <a class="room__features-more" href="#" data-room-more="<?=$arElement['ID'].'-'.$arTariff['tariffId']?>">Подробнее о номере</a>
                             </div>
                         </div>
-
                         <?if($arTariff['price']):?>
+                            <?$elementOldPrice = 0;?>
                             <?if ($arElement['DISCOUNT_DATA']) {                                
                                 if ($arElement['DISCOUNT_DATA']['VALUE_TYPE'] == 'P') {
                                     $elementPrice = $arTariff['price'] * (100 - $arElement['DISCOUNT_DATA']['VALUE']) / 100;
@@ -255,6 +255,7 @@ foreach ($arParams['VARS'] as $key => $value) {
                                 </div>
 
                                 <?if($arExternalItem['price']):?>
+                                    <?$elementOldPrice = 0;?>
                                     <?if ($arElement['DISCOUNT_DATA']) {                                        
                                         if ($arElement['DISCOUNT_DATA']['VALUE_TYPE'] == 'P') {
                                             $elementPrice = $arExternalItem['price'] * (100 - $arElement['DISCOUNT_DATA']['VALUE']) / 100;
@@ -264,7 +265,7 @@ foreach ($arParams['VARS'] as $key => $value) {
                                         $elementOldPrice = $arExternalItem['price'];
                                     } else {
                                         $elementPrice = $arExternalItem['price'];
-                                    }?>
+                                    }?>                                    
                                     <div class="room__order">
                                         <div class="room__price">
                                             <?if ($elementOldPrice) {?>
@@ -309,9 +310,7 @@ foreach ($arParams['VARS'] as $key => $value) {
         </div>
     <?endif;?>
 
-    <?if($arSection["UF_EXTERNAL_SERVICE"] == "bnovo"):?>
-        <?//xprint($arElementsJson);?>
-        <?//xprint($arExternalInfo);?>
+    <?if($arSection["UF_EXTERNAL_SERVICE"] == "bnovo"):?>        
         <script>
             window.moreRooms = [
                 <?foreach($arElementsJson as $arElement):
