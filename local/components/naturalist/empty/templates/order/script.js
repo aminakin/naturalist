@@ -208,6 +208,7 @@ var Order = function () {
   };
 
   this.sendCoupon = function () {
+    _this = this;
     let data = {
       coupon: $(".coupon__input").val(),
       action: "couponAdd",
@@ -219,6 +220,7 @@ var Order = function () {
       dataType: "json",
       success: function (data) {
         if (data.STATUS == "SUCCESS") {
+          _this.setCookieValuesFromForm();
           location.reload();
         } else {
           let elem =
@@ -231,6 +233,34 @@ var Order = function () {
         location.reload();
       },
     });
+  };
+
+  this.setCookieValuesFromForm = function () {
+    let name = $('[name="name"]').val();
+    let surname = $('[name="surname"]').val();
+    let phone = $('[name="phone"]').val();
+    let email = $('[name="email"]').val();
+    let comment = $('[name="comment"]').val();
+
+    if (name != "") {
+      this.setCookie(coockiePrefix + "_orderName", name);
+    }
+
+    if (name != "") {
+      this.setCookie(coockiePrefix + "_orderSurname", surname);
+    }
+
+    if (name != "") {
+      this.setCookie(coockiePrefix + "_orderPhone", phone);
+    }
+
+    if (name != "") {
+      this.setCookie(coockiePrefix + "_orderEmail", email);
+    }
+
+    if (name != "") {
+      this.setCookie(coockiePrefix + "_orderComment", comment);
+    }
   };
 
   this.removeCoupon = function (coupon) {
@@ -250,6 +280,30 @@ var Order = function () {
         location.reload();
       },
     });
+  };
+
+  this.setCookie = function (name, value, options = {}) {
+    options = {
+      path: "/",
+      ...options,
+    };
+
+    if (options.expires instanceof Date) {
+      options.expires = options.expires.toUTCString();
+    }
+
+    let updatedCookie =
+      encodeURIComponent(name) + "=" + encodeURIComponent(value);
+
+    for (let optionKey in options) {
+      updatedCookie += "; " + optionKey;
+      let optionValue = options[optionKey];
+      if (optionValue !== true) {
+        updatedCookie += "=" + optionValue;
+      }
+    }
+
+    document.cookie = updatedCookie;
   };
 };
 var order = new Order();
@@ -279,10 +333,10 @@ $(function () {
     }
   });
 
-  $('.coupon__input').on('input', function(){
-    if ($(this).val() == '') {
-      $(this).removeClass('error');
-      $('.coupon__error-message').hide();
+  $(".coupon__input").on("input", function () {
+    if ($(this).val() == "") {
+      $(this).removeClass("error");
+      $(".coupon__error-message").hide();
     }
-  })
+  });
 });

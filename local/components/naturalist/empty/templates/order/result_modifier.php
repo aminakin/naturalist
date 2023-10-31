@@ -10,7 +10,7 @@ use Naturalist\Users;
 use Naturalist\Baskets;
 use Naturalist\Orders;
 
-global $arUser, $userId, $isAuthorized;
+global $arUser, $userId, $isAuthorized, $APPLICATION;
 
 $baskets = new Baskets();
 $arBasket = $baskets->get();
@@ -136,6 +136,34 @@ $discounts = $order->getDiscount();
 $showPrices = $discounts->getShowPrices();
 foreach ($showPrices['BASKET'] as $finalprices) {
     $finalBaskePrices = $finalprices;
+}
+
+/* Проверяем куки на наличие данных из формы */
+global $APPLICATION;
+$coockieName = $APPLICATION->get_cookie("orderName");
+$coockieSurname = $APPLICATION->get_cookie("orderSurname");
+$coockiePhone = $APPLICATION->get_cookie("orderPhone");
+$coockieEmail = $APPLICATION->get_cookie("orderEmail");
+$coockieComment = $APPLICATION->get_cookie("orderComment");
+
+if ($coockieName != '') {
+    $arUser['NAME'] = $coockieName;
+}
+
+if ($coockieSurname != '') {
+    $arUser['LAST_NAME'] = $coockieSurname;
+}
+
+if ($coockiePhone != '') {
+    $arUser['PERSONAL_PHONE'] = $coockiePhone;
+}
+
+if ($coockieEmail != '') {
+    $arUser['EMAIL'] = $coockieEmail;
+}
+
+if ($coockieComment != '') {
+    $arUser['COMMENT'] = $coockieComment;
 }
 
 $arResult = array(
