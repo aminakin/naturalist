@@ -246,19 +246,19 @@ var Order = function () {
       this.setCookie(coockiePrefix + "_orderName", name);
     }
 
-    if (name != "") {
+    if (surname != "") {
       this.setCookie(coockiePrefix + "_orderSurname", surname);
     }
 
-    if (name != "") {
+    if (phone != "") {
       this.setCookie(coockiePrefix + "_orderPhone", phone);
     }
 
-    if (name != "") {
+    if (email != "") {
       this.setCookie(coockiePrefix + "_orderEmail", email);
     }
 
-    if (name != "") {
+    if (comment != "") {
       this.setCookie(coockiePrefix + "_orderComment", comment);
     }
   };
