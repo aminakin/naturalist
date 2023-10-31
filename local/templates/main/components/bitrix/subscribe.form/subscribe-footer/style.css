@@ -222,8 +222,8 @@
   }
 
   .subscribe-form form {
-    margin-top: 15px;    
-    justify-content: flex-start;
+    margin-top: 15px;
+    justify-content: space-between;
   }
 
   .subscribe__input {
@@ -238,7 +238,7 @@
   }
 
   .subscribe__submit {
-    width: 44%;
+    width: calc(50% - 7px);
     margin-left: 7px;
     padding: 11px 18px;
     height: 40px;
@@ -247,6 +247,8 @@
     line-height: 17.979px;
     font-weight: 600;
     text-transform: none;
+
+    -webkit-appearance: none;
     -webkit-border-radius: 3px;
     -moz-border-radius: 3px;
     border-radius: 3px;
