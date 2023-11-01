@@ -164,7 +164,7 @@ use Bitrix\Main\Localization\Loc;
                 <div class="reservation-form__fields-item">
                     <div class="reservation-form__fields-label"><?=Loc::getMessage('ORDER_COMMENT')?></div>
                     <div class="field">
-                        <textarea class="field__input" name="comment" placeholder="Введите дополнительную информацию или пожелания к заказу"></textarea>
+                        <textarea class="field__input" name="comment" placeholder="Введите дополнительную информацию или пожелания к заказу"><?=$arUser['COMMENT']?></textarea>
                     </div>
                 </div>
             </div>            
@@ -302,4 +302,5 @@ use Bitrix\Main\Localization\Loc;
         },
         <?endforeach;?>
     ];
+    var coockiePrefix = "<?=COption::GetOptionString("main", "cookie_name", "BITRIX_SM");?>";
 </script>
