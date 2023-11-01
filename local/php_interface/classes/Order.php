@@ -515,7 +515,7 @@ class Orders
             $userId = $arOrder["FIELDS"]["USER_ID"];
             $arUser = CUser::GetByID($userId)->GetNext();
         }
-        $arUser["EMAIL"] = !empty($arUser["EMAIL"]) ? $arUser["EMAIL"] : $arOrder['PROPS']["EMAIL"];
+        $arUser["EMAIL"] = !empty($arOrder['PROPS']["EMAIL"]) ? $arOrder['PROPS']["EMAIL"] : $arUser["EMAIL"];
         $arUser["PERSONAL_PHONE"] = !empty($arUser["PERSONAL_PHONE"]) ? $arUser["PERSONAL_PHONE"] : $arOrder['PROPS']["PHONE"];
 
         $service = $arOrder['ITEMS'][0]['ITEM']['SECTION']['UF_EXTERNAL_SERVICE'];
