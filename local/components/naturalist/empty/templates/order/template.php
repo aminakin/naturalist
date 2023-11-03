@@ -83,7 +83,7 @@ use Bitrix\Main\Localization\Loc;
     </div>
 </div>
 
-<form class="form reservation-form form_validation" id="form-order" is_auth="true" <?/*is_auth="<?=$isAuthorized ? 'true' : 'false'*/?>">
+<form class="form reservation-form form_validation" id="form-order" is_auth="true" <?/*is_auth="<?=$isAuthorized ? 'true' : 'false'*/?>>
     <div class="reservation-form__form">
         <div class="reservation-form__form-holder">            
             <p class="reservation-form__title"><?=Loc::getMessage('ORDER_FORM_TITLE')?></p>
