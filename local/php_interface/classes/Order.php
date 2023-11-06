@@ -67,11 +67,10 @@ class Orders
     public function __construct()
     {
         Loader::includeModule("sale");
-    }
-
-    /* Получение списка заказов текущего пользователя */
+    }    
 
     /* авторегистрация пользователя */
+
     public static function autoRegisterUser($definedProps)
     {
         $userEmail = isset($definedProps['EMAIL']) ? trim((string)$definedProps['EMAIL']) : '';
@@ -152,7 +151,7 @@ class Orders
         return intval($addResult);
     }
 
-    /* Получение заказа по ID */
+    /* Отменить заказ - до отмены (Traveline) */
 
     public function beforeCancel($orderId)
     {
@@ -181,7 +180,7 @@ class Orders
         }
     }
 
-    /* Добавление нового заказа */
+    /* Получение заказа по ID */    
 
     public function get($orderId)
     {
@@ -259,7 +258,7 @@ class Orders
         return $arOrder;
     }
 
-    /* Изменение статуса заказа */
+    /* Отменить заказ */    
 
     public function cancel($orderId, $reason = "")
     {
@@ -299,7 +298,7 @@ class Orders
         }
     }
 
-    /* Отменить заказ - до отмены (Traveline) */
+    /* Отмена бронирования объекта из заказа во внешнем сервисе */
 
     public function cancelReservation($arOrder)
     {
@@ -346,7 +345,7 @@ class Orders
         }
     }
 
-    /* Отменить заказ */
+    /* Изменение статуса заказа */
 
     public function updateStatus($orderId, $statusCode)
     {
@@ -423,6 +422,8 @@ class Orders
         }
     }
 
+    /* Получение списка заказов текущего пользователя */
+
     public function getList($filter = array(), $sort = array('DATE_INSERT' => 'ASC'))
     {
         global $userId;
@@ -447,7 +448,7 @@ class Orders
         return $arOrdersList;
     }
 
-    /* Бронирование объекта из заказа во внешнем сервисе */
+    
 
     public function updatePayment($order)
     {
@@ -500,7 +501,7 @@ class Orders
         $gateResponse = $RBS_Gateway->closeOfdReceipt();
     }
 
-    /* Отмена бронирования объекта из заказа во внешнем сервисе */
+    /* Бронирование объекта из заказа во внешнем сервисе */
 
     public function makeReservation($orderId)
     {
@@ -564,7 +565,7 @@ class Orders
         }
     }
 
-    /* Получение ссылки на оплату */
+    /* Получение информации о штрафе */
 
     public function getCancellationAmount($params)
     {
@@ -594,7 +595,7 @@ class Orders
         }
     }
 
-    /* Получение информации о штрафе */
+    /* Добавляет купон к заказу */    
 
     public function enterCoupon($coupon)
     {
@@ -616,7 +617,7 @@ class Orders
         }
     }
 
-    /* Добавляет купон к заказу */
+    /* Добавление нового заказа */
 
     public function add($params)
     {
@@ -655,35 +656,35 @@ class Orders
         $externalService = $arBasketItems["ITEMS"][0]["ITEM"]["SECTION"]["UF_EXTERNAL_SERVICE"];
 
         // Проверка возможности бронирования перед созданием заказа и отмена создания заказа в случае невозможности бронирования (только для Traveline)
-        // if($externalService == $this->travelineSectionPropEnumId) {
-        //     $externalSectionId = $arBasketItems['ITEMS'][0]['ITEM']['SECTION']['UF_EXTERNAL_ID'];
-        //     $sectionName = $arBasketItems['ITEMS'][0]['ITEM']['SECTION']['NAME'];
-        //     $sectionCommission = $arBasketItems['ITEMS'][0]['ITEM']['SECTION']['UF_AGENT'];
-        //     $externalElementId = $arBasketItems['ITEMS'][0]['ITEM']['PROPERTIES']['EXTERNAL_ID']['VALUE'];
-        //     $externalCategoryId = $arBasketItems['ITEMS'][0]['ITEM']['PROPERTIES']['EXTERNAL_CATEGORY_ID']['VALUE'];
-        //     $dateFrom = $params['dateFrom'];
-        //     $dateTo = $params['dateTo'];
-        //     $guests = count($arGuestList);
-        //     $price = $arBasketItems['ITEMS'][0]["PRICE"];
-        //     $checksum = $params['checksum'];
-        //     $arChildrenAge = ($params['childrenAge']) ? explode(',', $params['childrenAge']) : [];
+        if($externalService == $this->travelineSectionPropEnumId) {
+            $externalSectionId = $arBasketItems['ITEMS'][0]['ITEM']['SECTION']['UF_EXTERNAL_ID'];
+            $sectionName = $arBasketItems['ITEMS'][0]['ITEM']['SECTION']['NAME'];
+            $sectionCommission = $arBasketItems['ITEMS'][0]['ITEM']['SECTION']['UF_AGENT'];
+            $externalElementId = $arBasketItems['ITEMS'][0]['ITEM']['PROPERTIES']['EXTERNAL_ID']['VALUE'];
+            $externalCategoryId = $arBasketItems['ITEMS'][0]['ITEM']['PROPERTIES']['EXTERNAL_CATEGORY_ID']['VALUE'];
+            $dateFrom = $params['dateFrom'];
+            $dateTo = $params['dateTo'];
+            $guests = count($arGuestList);
+            $price = $arBasketItems['ITEMS'][0]["PRICE"];
+            $checksum = $params['checksum'];
+            $arChildrenAge = ($params['childrenAge']) ? explode(',', $params['childrenAge']) : [];
 
-        //     if(empty($arUser["EMAIL"])) {
-        //         $arUser["EMAIL"] = $params["email"];
-        //     }
-        //     if(empty($arUser["PERSONAL_PHONE"])) {
-        //         $arUser["PERSONAL_PHONE"] = $params["phone"];
-        //     }
+            if(empty($arUser["EMAIL"])) {
+                $arUser["EMAIL"] = $params["email"];
+            }
+            if(empty($arUser["PERSONAL_PHONE"])) {
+                $arUser["PERSONAL_PHONE"] = $params["phone"];
+            }
 
-        //     $arVerifyResponse = Traveline::verifyReservation($externalSectionId, $externalElementId, $externalCategoryId, $guests, $arChildrenAge, $dateFrom, $dateTo, $price, $checksum, $arGuestList, $arUser);
+            $arVerifyResponse = Traveline::verifyReservation($externalSectionId, $externalElementId, $externalCategoryId, $guests, $arChildrenAge, $dateFrom, $dateTo, $price, $checksum, $arGuestList, $arUser);
 
-        //     if (!empty($arVerifyResponse['warnings'][0]['code']) || empty($arVerifyResponse["booking"])) {
-        //         $errorText = $arVerifyResponse['warnings'][0]['code'] ?? $arVerifyResponse['errors'][0]['message'];
-        //         return json_encode([
-        //             "ERROR" => "Невозможно бронирование на выбранные даты. " . $this->arErrors[$errorText]
-        //         ]);
-        //     }
-        // }
+            if (!empty($arVerifyResponse['warnings'][0]['code']) || empty($arVerifyResponse["booking"])) {
+                $errorText = $arVerifyResponse['warnings'][0]['code'] ?? $arVerifyResponse['errors'][0]['message'];
+                return json_encode([
+                    "ERROR" => "Невозможно бронирование на выбранные даты. " . $this->arErrors[$errorText]
+                ]);
+            }
+        }
 
         // Создание корзины
         $siteId = Context::getCurrent()->getSite();
@@ -831,7 +832,7 @@ class Orders
         }
     }
 
-    /* Удаляет купон из заказа */
+    /* Получение ссылки на оплату */
 
     public function getPaymentUrl($orderId, $isJSON = true)
     {
@@ -866,7 +867,7 @@ class Orders
         }
     }
 
-    /* Получает информацию по всем применённым в заказе купонам */
+    /* Удаляет купон из заказа */
 
     public function removeCoupon($coupon)
     {
@@ -875,6 +876,8 @@ class Orders
             return DiscountCouponsManager::delete($coupon);
         }
     }
+
+    /* Получает информацию по всем применённым в заказе купонам */
 
     public function getActivatedCoupons()
     {
