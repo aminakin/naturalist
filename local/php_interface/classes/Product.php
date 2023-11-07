@@ -3,18 +3,23 @@
 namespace Naturalist;
 
 use Bitrix\Highloadblock\HighloadBlockTable;
+use Bitrix\Main\Loader;
 use CIBlockElement;
 use CIBlockSection;
 use CUser;
 use CFile;
 use CCatalogDiscount;
 use CCatalogProduct;
+use CPrice;
 
 defined("B_PROLOG_INCLUDED") && B_PROLOG_INCLUDED === true || die();
 /**
  * @global CMain $APPLICATION
  * @global CUser $USER
  */
+
+Loader::includeModule('iblock');
+Loader::includeModule('sale');
 
 class Products
 {
@@ -153,5 +158,40 @@ class Products
         }
 
         return [];
+    }
+
+    /**
+     * Устанавливает количество для номера
+     *
+     * @param mixed $prodId ID товара     
+     * 
+     */
+    public static function setQuantity($prodId) {
+        $arFields = [
+            "ID" => $prodId,
+            "QUANTITY" => 999,	    
+        ];
+        CCatalogProduct::Add($arFields);
+    }
+
+    /**
+     * Устанавливает цену для номера
+     *
+     * @param mixed $prodId ID товара     
+     * 
+     */
+    public static function setPrice($prodId) {
+        $arFields = [
+            "PRODUCT_ID" => $prodId,
+            "CATALOG_GROUP_ID" => 1,
+            "PRICE" => 10000,
+            "CURRENCY" => "RUB",	    
+        ];
+        $res = CPrice::GetList([], ["PRODUCT_ID" => $prodId, "CATALOG_GROUP_ID" => 1]);
+        if ($arr = $res->Fetch()) {
+            CPrice::Update($arr["ID"], $arFields);
+        } else {
+            CPrice::Add($arFields);
+        }	
     }
 }

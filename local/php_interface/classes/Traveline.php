@@ -12,6 +12,7 @@ use CIBlockElement;
 use CIBlockSection;
 use CFile;
 use CUtil;
+use Naturalist\Products;
 
 Loader::includeModule("iblock");
 
@@ -400,8 +401,12 @@ class Traveline
                         );
                         $elementId = $iE->Add($arFields);
 
-                        if($elementId)
+                        if($elementId) {
+                            Products::setQuantity($elementId);
+                            Products::setPrice($elementId);
+                            
                             echo date('Y-M-d H:i:s') . " Добавлен номер (".$elementId.") \"".$elementName."\" в отель (".$sectionId.") \"".$sectionName."\"<br>\r\n";
+                        }
                     }
                 }
             }
