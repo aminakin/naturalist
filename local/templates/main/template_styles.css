@@ -138,7 +138,10 @@ h1.page_title {
     /*-o-text-overflow: ellipsis;*/
     /*text-overflow: ellipsis;*/
     /*white-space: nowrap;*/
-
+    font-size: 0;
+}
+.object-row .area-info div > span {
+    font-size: 13px;
 }
 
 @media (max-width: 1650px) {
