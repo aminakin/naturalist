@@ -172,7 +172,7 @@ class Traveline
         $arTravelineItems = json_decode($response, true);
         curl_close($ch);
 
-        Debug::writeToFile(var_export($arTravelineItems, true), '$arTravelineItems');
+        // Debug::writeToFile(var_export($arTravelineItems, true), '$arTravelineItems');
 
         $iS = new CIBlockSection();
         $iE = new CIBlockElement();

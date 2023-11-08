@@ -840,14 +840,16 @@ class Bnovo
             $sectionId = $iS->Add($arFields);
 
             if ($sectionId) {
-                //echo "Добавлен раздел (" . $sectionId . ") \"" . $sectionName . "\"<br>\r\n";
+                echo "Добавлен раздел (" . $sectionId . ") \"" . $sectionName . "\"<br>\r\n";
                 $arSection['UF_EXTERNAL_ID'] = $arSection["id"];
                 $arSection['ID'] = $sectionId;
 
+                echo 'Добавлен объект с ID ' . $uid . ': ' . $sectionName;
                 $arResult["MESSAGE"]["SUCCESS"] = 'Добавлен объект с ID ' . $uid . ': ' . $sectionName;
             }
         } else {
             $arSection = array_merge($arData['account'], $arSection);
+            echo 'Объект с ID = ' . $arSection['ID'] . ' уже существует. Данные по объекту были обновлены.';
             $arResult["MESSAGE"]["ERRORS"] = 'Объект с указанным ID уже существует. Данные по объекту были обновлены.';
         }
 
