@@ -59,9 +59,11 @@ var Order = function () {
         data: data,
         dataType: "json",
         beforeSend: function () {
+          window.preloader.show();
           $("[data-order]").attr("disabled", "disabled");
         },
         success: function (a) {
+          window.preloader.hide();
           if (!a.ERROR) {
             if (a.REDIRECT_URL) {
               location.href = a.REDIRECT_URL;
