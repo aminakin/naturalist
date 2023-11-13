@@ -30,6 +30,8 @@ class Traveline
     private static $travelineApiURL = 'https://partner.tlintegration.com/api';
     private static $travelineApiKey = '5498c10a-4bfd-4728-8da2-e283ac52fda1';
 
+    private static $travellineAmenitiesRequestLink = '/content/v1/room-amenity-categories';
+
     private static $travelineSectionPropEnumId = '1';
     private static $travelineElementPropEnumId = '5';
 
@@ -154,123 +156,36 @@ class Traveline
 
     /* Выгрузка кемпингов и номеров */
     public static function update() {
-        $url = self::$travelineApiURL.'/content/v1/properties';
-        $headers = array(
-            "X-API-KEY: ".self::$travelineApiKey,
-            "Content-Type: application/json"
-        );
-        $data = array(
-            "include" => "all"
-        );
+        // Сначала обновляем список возможных удобств
+        self::updateAmenities();
 
-        $ch = curl_init();
-        curl_setopt_array($ch, array(
-            CURLOPT_URL            => $url.'?'.http_build_query($data),
-            CURLOPT_RETURNTRANSFER => 1,
-            CURLOPT_HTTPHEADER     => $headers,
-        ));
-        $response = curl_exec($ch);
-        $arTravelineItems = json_decode($response, true);
-        curl_close($ch);
+        // Все отели Travelline
+        $arSectionItems = self::getSections();
 
-        // Debug::writeToFile(var_export($arTravelineItems, true), '$arTravelineItems');
+        // Все номера Travelline
+        $arCatalogItems = self::getRooms();
+
+        // Все удобства в номерах
+        $arUpdatedAmenities = self::getAmenities();
+
+        // Ответ от эндпоинта
+        $arTravelineItems = self::getResponse('/content/v1/properties');
 
         $iS = new CIBlockSection();
-        $iE = new CIBlockElement();
-        $campingFeaturesEntityClass = self::getEntityClass(self::$campingFeaturesHLId);
-        $roomsFeaturesEntityClass   = self::getEntityClass(self::$roomsFeaturesHLId);
-
-        $rsElements = CIBlockElement::GetList(false, array("IBLOCK_ID" => SERVICES_IBLOCK_ID), false, false, array("IBLOCK_ID", "ID", "CODE"));
-        while ($arServiceItem = $rsElements->Fetch()) {
-            $arServiceItems[$arServiceItem['CODE']] = $arServiceItem;
-        }
-
-        $rsSectionObjects = CIBlockSection::GetList(false, array("IBLOCK_ID" => CATALOG_IBLOCK_ID), false, array('UF_*'));
-        while ($arSectionItem = $rsSectionObjects->Fetch()){
-            $arSectionItems[$arSectionItem['UF_EXTERNAL_ID']] = $arSectionItem;
-        }
+        $iE = new CIBlockElement();        
+        
         foreach($arTravelineItems["properties"] as $arSection) {
             $sectionName = $arSection["name"];
             $sectionCode = CUtil::translit($sectionName, "ru");
-            $arImages = array();
-
-            // HL Особенности номера
-            $arAmenities = array();
-            foreach($arSection["roomTypes"] as $arElement) {
-                if($arElement["amenities"]) {
-                    foreach($arElement["amenities"] as $arItem) {
-                        $name = stripslashes($arItem["name"]);
-                        $code = $arItem["code"];
-
-                        $rsData = $roomsFeaturesEntityClass::getList([
-                            "select" => ["*"],
-                            "filter" => [
-                                "UF_XML_ID" => $code
-                            ],
-                            "order" => ["UF_SORT" => "ASC"],
-                        ]);
-                        $arEntity = $rsData->Fetch();
-
-                        if(!$arEntity) {
-                            $arValues = array(
-                                'UF_NAME' => $name,
-                                'UF_XML_ID' => $code,
-                                'UF_SORT' => 500,
-                                'UF_TRAVELINE' => true,
-                            );
-                            $result = $roomsFeaturesEntityClass::add($arValues);
-                            $entityId = $result->getId();
-
-                        } else {
-                            $arValues = array(
-                                'UF_NAME' => $name,
-                                'UF_TRAVELINE' => true,
-                            );
-                            $entityId = $arEntity["ID"];
-                            $roomsFeaturesEntityClass::update($entityId, $arValues);
-                        }
-                    }
-                }
-            }
-
-            // ИБ Услуги
-            /*$arServices = array();
-            if($arSection["services"]) {
-                foreach($arSection["services"] as $arItem) {
-                    $name = $arItem["name"];
-                    $code = "travel_service_". CUtil::translit($arItem["name"], "ru");
-
-                    $arFields = array(
-                        "ACTIVE" => "Y",
-                        "IBLOCK_ID" => SERVICES_IBLOCK_ID,
-                        "NAME" => $name,
-                        "CODE" => $code,
-                        "PROPERTY_VALUES" => array(
-                            "TRAVELINE" => getEnumIdByXml(SERVICES_IBLOCK_ID, 'TRAVELINE', 'Y')
-                        )
-                    );
-
-                    if (array_key_exists($code, $arServiceItems)) {
-                        $elementId = $arServiceItems[$code]["ID"];
-                        $res = $iE->Update($elementId, $arFields);
-
-                    } else {
-                        $elementId = $iE->Add($arFields);
-                    }
-
-                    if($elementId) {
-                        $arServices[] = $elementId;
-                    }
-                }
-            }*/
+            $arImages = array();            
 
             // Кол-во номеров
-            $roomsCount = 0;
-            foreach($arSection["ratePlans"] as $arRatePlan) {
-                foreach($arSection["roomTypes"] as $arRoomType) {
-                    $roomsCount++;
-                }
-            }
+            // $roomsCount = 0;
+            // foreach($arSection["ratePlans"] as $arRatePlan) {
+            //     foreach($arSection["roomTypes"] as $arRoomType) {
+            //         $roomsCount++;
+            //     }
+            // }           
 
             // Поля раздела
             $arFields = array(
@@ -287,10 +202,9 @@ class Traveline
                 "UF_TIME_FROM" => $arSection["policy"]["checkInTime"],
                 "UF_TIME_TO" => $arSection["policy"]["checkOutTime"],
                 //"UF_SERVICES" => $arServices,
-                "UF_ROOMS_COUNT" => $roomsCount,
+                //"UF_ROOMS_COUNT" => $roomsCount,
             );
-
-            //$arExistSection = CIBlockSection::GetList(false, array("IBLOCK_ID" => CATALOG_IBLOCK_ID, "UF_EXTERNAL_ID" => $arSection["id"]), false, array('UF_*'))->Fetch();
+            
             if(array_key_exists($arSection["id"], $arSectionItems)) {
                 $arExistSection = $arSectionItems[$arSection["id"]];
                 // Проверка чекбоксов полей
@@ -346,22 +260,15 @@ class Traveline
 
                     // Amenities
                     $arAmenities = array();
-                    foreach($arRoomType["amenities"] as $arItem) {
-                        $rsData = $roomsFeaturesEntityClass::getList([
-                            "select" => ["*"],
-                            "filter" => [
-                                "UF_XML_ID" => $arItem["code"]
-                            ],
-                            "order" => ["UF_SORT" => "ASC"],
-                        ]);
-                        $arEntity = $rsData->Fetch();
+                    foreach($arRoomType["amenities"] as $arItem) {                        
+                        $arEntity = $arUpdatedAmenities[$arItem["code"]];
                         if($arEntity) {
                             $arAmenities[] = $arEntity["UF_XML_ID"];
                         }
                     }
 
-                    // Поля элемента
-                    $arExistElement = CIBlockElement::GetList(false, array("IBLOCK_ID" => CATALOG_IBLOCK_ID, "PROPERTY_EXTERNAL_ID" => $arRatePlan['id'], "PROPERTY_EXTERNAL_CATEGORY_ID" => $arRoomType["id"]))->Fetch();
+                    // Поля элемента                    
+                    $arExistElement = $arCatalogItems[$arRatePlan['id'].'_'.$arRoomType["id"]];
                     if($arExistElement) {
                         $elementId = $arExistElement["ID"];
                         $arFields = array(
@@ -411,6 +318,137 @@ class Traveline
                 }
             }
         }
+    }
+
+    /**
+     * Возвращает все разделы (отели) Travelline
+     *
+     * @return array
+     * 
+     */
+    private static function getSections() {
+        $entity = \Bitrix\Iblock\Model\Section::compileEntityByIblock(CATALOG_IBLOCK_ID);
+        $rsSectionObjects = $entity::getList(
+            [
+                'filter' => ['IBLOCK_ID' => CATALOG_IBLOCK_ID, 'UF_EXTERNAL_SERVICE' => self::$travelineSectionPropEnumId],
+                'select' => ['*', 'UF_*'],
+            ]
+        );        
+        while ($arSectionItem = $rsSectionObjects->Fetch()){
+            $arSectionItems[$arSectionItem['UF_EXTERNAL_ID']] = $arSectionItem;
+        }
+        return $arSectionItems;
+    }
+
+    /**
+     * Возвращает все элементы (номера) Travelline
+     *
+     * @return array
+     * 
+     */
+    public static function getRooms() {
+        $arRoomsRequest = \Bitrix\Iblock\Elements\ElementGlampingsTable::getList([
+            'select' => ['ID', 'NAME', 'EXTERNAL_SERVICE_' => 'EXTERNAL_SERVICE', 'EXTERNAL_CATEGORY_ID_'=> 'EXTERNAL_CATEGORY_ID', 'EXTERNAL_ID_' => 'EXTERNAL_ID'],
+            'filter' => ['EXTERNAL_SERVICE.VALUE' => self::$travelineElementPropEnumId],
+        ]);
+
+        // Формируем массив элементов, где ключём будет сочетание значений 2-х свойств
+        while ($room = $arRoomsRequest->Fetch()){
+            $arRooms[$room['EXTERNAL_ID_VALUE'].'_'.$room['EXTERNAL_CATEGORY_ID_VALUE']] = $room;
+        }
+
+        return $arRooms;
+    }
+
+    /**
+     * Возвращает все возможные удобства в номерах Travelline
+     *
+     * @return array
+     * 
+     */
+    public static function getAmenities() {
+        $roomsFeaturesEntityClass = self::getEntityClass(self::$roomsFeaturesHLId);
+        $rsData = $roomsFeaturesEntityClass::getList(
+            [
+                "select" => ["*"],
+                "filter" => [],
+                "order" => ["UF_SORT" => "ASC"],
+            ]
+        );
+        while ($amenity = $rsData->Fetch()){
+            $arAmenities[$amenity['UF_XML_ID']] = $amenity;
+        }
+
+        return $arAmenities;
+    }
+
+    /**
+     * Обновляет все возможные удобства в номерах Travelline      
+     */
+    public static function updateAmenities() {
+        $roomsFeaturesEntityClass = self::getEntityClass(self::$roomsFeaturesHLId);
+        $arInternalAmenities = self::getAmenities();
+        $apiResponse = self::getResponse(self::$travellineAmenitiesRequestLink);
+        foreach ($apiResponse as $amenityCategory) {
+            foreach ($amenityCategory['amenities'] as $amenity) {
+                $arAmenitiesExternal[] = $amenity;
+            }
+        }
+
+        foreach($arAmenitiesExternal as $arItem) {
+            $name = stripslashes($arItem["name"]);
+            $code = $arItem["code"];
+
+            $arEntity = $arInternalAmenities[$code];
+
+            if(!$arEntity) {
+                $arValues = array(
+                    'UF_NAME' => $name,
+                    'UF_XML_ID' => $code,
+                    'UF_SORT' => 500,
+                    'UF_TRAVELINE' => true,
+                );
+                $result = $roomsFeaturesEntityClass::add($arValues);
+                $entityId = $result->getId();                
+
+            } else {
+                $arValues = array(
+                    'UF_NAME' => $name,
+                    'UF_TRAVELINE' => true,
+                );
+                $entityId = $arEntity["ID"];
+                $roomsFeaturesEntityClass::update($entityId, $arValues);
+            }
+        }
+    }
+
+    /**
+     * Возвращает ответ от сервиса Travelline
+     *
+     * @param string $requestUrl Адрес запроса.
+     * 
+     * @return array
+     * 
+     */
+    private static function getResponse($requestUrl) {
+        $url = self::$travelineApiURL.$requestUrl;
+        $headers = array(
+            "X-API-KEY: ".self::$travelineApiKey,
+            "Content-Type: application/json"
+        );
+        $data = array(
+            "include" => "all"
+        );
+
+        $ch = curl_init();
+        curl_setopt_array($ch, array(
+            CURLOPT_URL            => $url.'?'.http_build_query($data),
+            CURLOPT_RETURNTRANSFER => 1,
+            CURLOPT_HTTPHEADER     => $headers,
+        ));
+        $response = curl_exec($ch);
+
+        return json_decode($response, true);        
     }
 
     public static function getImages($arImagesUrl) {
