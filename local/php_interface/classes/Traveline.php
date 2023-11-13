@@ -157,7 +157,7 @@ class Traveline
     /* Выгрузка кемпингов и номеров */
     public static function update() {
         // Сначала обновляем список возможных удобств
-        self::updateAmenities();
+        //self::updateAmenities();
 
         // Все отели Travelline
         $arSectionItems = self::getSections();
@@ -232,7 +232,7 @@ class Traveline
                 $res = $iS->Update($sectionId, $arFields);
 
                 if($res)
-                    echo date('Y-M-d H:i:s'). " Обновлен раздел (".$sectionId.") \"".$sectionName."\"<br>\r\n";
+                    echo date('Y-M-d H:i:s'). " Обновлен раздел (".$sectionId.") \"".$sectionName."\"<br>\r\n";                    
 
             } else {
                 $arFields["ACTIVE"] = "N";
@@ -246,7 +246,7 @@ class Traveline
                 $sectionId = $iS->Add($arFields);
 
                 if($sectionId)
-                    echo "Добавлен раздел (".$sectionId.") \"".$sectionName."\"<br>\r\n";
+                    echo "Добавлен раздел (".$sectionId.") \"".$sectionName."\"<br>\r\n";                    
             }
 
             // Номера
@@ -280,13 +280,13 @@ class Traveline
 
                         $res = $iE->Update($elementId, $arFields);
                         CIBlockElement::SetPropertyValuesEx($elementId, CATALOG_IBLOCK_ID, array(
-                            //"PHOTOS" => $arElementImages,
+                            "PHOTOS" => $arElementImages,
                             "FEATURES" => $arAmenities,
                             "SQUARE" => $arRoomType['size']['value'],
                         ));
 
                         if($res)
-                            echo "Обновлен номер (".$elementId.") \"".$elementName."\" в отеле (".$sectionId.") \"".$sectionName."\"<br>\r\n";
+                            echo "Обновлен номер (".$elementId.") \"".$elementName."\" в отеле (".$sectionId.") \"".$sectionName."\"<br>\r\n";                            
 
                     } else {
                         $arFields = array(
@@ -310,13 +310,14 @@ class Traveline
 
                         if($elementId) {
                             Products::setQuantity($elementId);
-                            Products::setPrice($elementId);
-                            
-                            echo date('Y-M-d H:i:s') . " Добавлен номер (".$elementId.") \"".$elementName."\" в отель (".$sectionId.") \"".$sectionName."\"<br>\r\n";
+                            Products::setPrice($elementId);                            
+                            echo date('Y-M-d H:i:s') . " Добавлен номер (".$elementId.") \"".$elementName."\" в отель (".$sectionId.") \"".$sectionName."\"<br>\r\n";                            
                         }
                     }
                 }
             }
+            unset($arRatePlan);
+            unset($arRoomType);
         }
     }
 
@@ -437,7 +438,7 @@ class Traveline
             "Content-Type: application/json"
         );
         $data = array(
-            "include" => "all"
+            "include" => "all"            
         );
 
         $ch = curl_init();

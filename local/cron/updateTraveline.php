@@ -2,7 +2,7 @@
 use Bitrix\Main\Application;
 use Naturalist\Traveline;
 
-set_time_limit(600);
+set_time_limit(0);
 if (!$_SERVER['DOCUMENT_ROOT']) {
     $_SERVER["DOCUMENT_ROOT"] = realpath(dirname(__FILE__)."/../../");
 }
