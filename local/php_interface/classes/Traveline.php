@@ -8,6 +8,7 @@ use Bitrix\Main\Context;
 use Bitrix\Main\Diag\Debug;
 use Bitrix\Main\Loader;
 use Bitrix\Sale\Order;
+use Bitrix\Main\Config\Option;
 use CIBlockElement;
 use CIBlockSection;
 use CFile;
@@ -31,6 +32,7 @@ class Traveline
     private static $travelineApiKey = '5498c10a-4bfd-4728-8da2-e283ac52fda1';
 
     private static $travellineAmenitiesRequestLink = '/content/v1/room-amenity-categories';
+    private static $travellineHotelsRequestLink = '/content/v1/properties';
 
     private static $travelineSectionPropEnumId = '1';
     private static $travelineElementPropEnumId = '5';
@@ -48,7 +50,7 @@ class Traveline
 
     /* Получение списка свободных объектов в выбранный промежуток */
     public static function search($guests, $arChildrenAge, $dateFrom, $dateTo, $sectionIds = []) {
-        $rsSections = CIBlockSection::GetList(false, array("IBLOCK_ID" => CATALOG_IBLOCK_ID, "ID" => $sectionIds, "ACTIVE" => "Y", "!UF_EXTERNAL_ID" => false, "UF_EXTERNAL_SERVICE" => self::$travelineSectionPropEnumId), false, array("ID", "UF_EXTERNAL_ID"), false);
+        $rsSections = CIBlockSection::GetList(false, array("IBLOCK_ID" => CATALOG_IBLOCK_ID, "ID" => '237', "ACTIVE" => "Y", "!UF_EXTERNAL_ID" => false, "UF_EXTERNAL_SERVICE" => self::$travelineSectionPropEnumId), false, array("ID", "UF_EXTERNAL_ID"), false);
         $arSectionExternalIDs = array();
         while($arSection = $rsSections->Fetch()) {
             $arSectionExternalIDs[] = (string)$arSection["UF_EXTERNAL_ID"];
@@ -70,6 +72,10 @@ class Traveline
             $data["childAges"] = $arChildrenAge;
         }
 
+        xprint($url);
+
+        xprint($data);
+
         $ch = curl_init();
         curl_setopt_array($ch, array(
             CURLOPT_URL            => $url,
@@ -81,6 +87,8 @@ class Traveline
         $response = curl_exec($ch);
         $arResponse = json_decode($response, true);
         curl_close($ch);
+
+        xprint($arResponse);
 
         $arHotelsIDs = array();
         foreach($arResponse["roomStays"] as $arItem) {
@@ -124,6 +132,9 @@ class Traveline
             $data["childAges"] = $arChildrenAge;
         }
 
+        xprint($url);
+        xprint($data);
+
         $ch = curl_init();
         curl_setopt_array($ch, array(
             CURLOPT_URL            => $url.'?'.http_build_query($data),
@@ -133,6 +144,8 @@ class Traveline
         $response = curl_exec($ch);
         $arItems = json_decode($response, true);
         curl_close($ch);
+
+        xprint($arItems);
 
         $arRooms = array();
         foreach($arItems["roomStays"] as $arItem) {
@@ -154,10 +167,129 @@ class Traveline
         return $arRooms;
     }
 
+    /**
+     * Обновляет активность разделов (отелей)     
+     * 
+     */
+    public static function updateActivity() {
+        $iS = new CIBlockSection();
+        // Получаем разделы сайта и ID отелей от сервиса
+        $arSectionItems = self::getSections();        
+        $arTravelineItems = self::getResponse(self::$travellineHotelsRequestLink, ["include" => ""]);
+
+        // Преобразуем пришедшие данные
+        if (is_array($arTravelineItems) && count($arTravelineItems)) {
+            foreach ($arTravelineItems['properties'] as $travel) {
+                $arTravellineExternal[] = $travel['id'];
+            }
+        }
+
+        // Активация/деактивация
+        if ($arTravellineExternal) {
+            foreach ($arSectionItems as $externalId => $section) {
+                if (array_search($externalId, $arTravellineExternal) !== null) {
+                    $res = $iS->Update($section['ID'], ['ACTIVE' => 'Y']);
+                } else {
+                    $res = $iS->Update($section['ID'], ['ACTIVE' => 'N']);
+                }
+            }
+        }        
+    }
+
+    /**
+     * Загружает картинки для разделов
+     * 
+     */
+    public static function downloadSertionImages() {
+        $travelineSectionOffset = Option::get("main", "traveline_section_offset");
+        $travelineSectionLimit = Option::get("main", "traveline_section_limit");        
+        $travelineSectionCount = self::getSections(1, 0, 1, true)->getCount();
+        $iS = new CIBlockSection();
+            
+        Option::set("main", "traveline_section_count", $travelineSectionCount);        
+
+        if ($travelineSectionOffset == '') {
+            $travelineSectionOffset = 0;
+            Option::set("main", "traveline_section_offset", $travelineSectionOffset);
+        }
+
+        if ($travelineSectionLimit == '') {
+            $travelineSectionLimit = 20;
+            Option::set("main", "traveline_section_limit", $travelineSectionLimit);
+        }
+
+        $sections = self::getSections($travelineSectionLimit, $travelineSectionOffset, 1, true)->fetchAll();                
+
+        foreach ($sections as $section) {
+            if($section["UF_CHECKBOX_1"] != 1) {
+                $arImages = self::getImages(json_decode($section["UF_PHOTO_ARRAY"], true));                
+                $arFields["UF_PHOTOS"] = $arImages;
+                $res = $iS->Update($section['ID'], $arFields);
+
+                if($res) {
+                    echo date('Y-M-d H:i:s'). " Загружены фото для раздела (".$section['ID'].") \"".$section['NAME']."\"<br>\r\n"; 
+                }
+            }
+        }
+
+        $nextOffset = $travelineSectionOffset + $travelineSectionLimit;
+
+        if ($nextOffset >= $travelineSectionCount) {
+            $nextOffset = 0;
+        }
+
+        Option::set("main", "traveline_section_offset", $nextOffset);        
+    }
+
+    /**
+     * Загружает картинки для элементов
+     * 
+     */
+    public static function downloadElementImages() {
+        $travelineElementOffset = Option::get("main", "traveline_element_offset");
+        $travelineElementLimit = Option::get("main", "traveline_element_limit");        
+        $travelineElementCount = self::getRooms(1, 0, 1, true)->getCount();
+        $iE = new CIBlockElement();        
+
+        Option::set("main", "traveline_element_count", $travelineElementCount);        
+
+        if ($travelineElementOffset == '') {
+            $travelineElementOffset = 0;
+            Option::set("main", "traveline_element_offset", $travelineElementOffset);
+        }
+
+        if ($travelineElementLimit == '') {
+            $travelineElementLimit = 50;
+            Option::set("main", "traveline_element_limit", $travelineElementLimit);
+        }
+
+        $rooms = self::getRooms($travelineElementLimit, $travelineElementOffset, 1, true)->fetchAll();           
+        
+        foreach ($rooms as $room) {            
+            $arImages = self::getImages(json_decode(unserialize($room["PHOTO_ARRAY_VALUE"])['TEXT'], true));
+
+            CIBlockElement::SetPropertyValuesEx($room['ID'], CATALOG_IBLOCK_ID, array(    
+                "PHOTOS" => $arImages,                                        
+            ));
+
+            if(count($arImages)) {
+                echo date('Y-M-d H:i:s'). " Загружены фото для элемента (".$room['ID'].") \"".$room['NAME']."\"<br>\r\n"; 
+            }            
+        }
+
+        $nextOffset = $travelineElementOffset + $travelineElementLimit;
+
+        if ($nextOffset >= $travelineElementCount) {
+            $nextOffset = 0;
+        }
+
+        Option::set("main", "traveline_element_offset", $nextOffset);
+    }
+
     /* Выгрузка кемпингов и номеров */
     public static function update() {
         // Сначала обновляем список возможных удобств
-        //self::updateAmenities();
+        self::updateAmenities();
 
         // Все отели Travelline
         $arSectionItems = self::getSections();
@@ -169,7 +301,7 @@ class Traveline
         $arUpdatedAmenities = self::getAmenities();
 
         // Ответ от эндпоинта
-        $arTravelineItems = self::getResponse('/content/v1/properties');
+        $arTravelineItems = self::getResponse(self::$travellineHotelsRequestLink, ["include" => "all"]);
 
         $iS = new CIBlockSection();
         $iE = new CIBlockElement();        
@@ -177,43 +309,22 @@ class Traveline
         foreach($arTravelineItems["properties"] as $arSection) {
             $sectionName = $arSection["name"];
             $sectionCode = CUtil::translit($sectionName, "ru");
-            $arImages = array();            
-
-            // Кол-во номеров
-            // $roomsCount = 0;
-            // foreach($arSection["ratePlans"] as $arRatePlan) {
-            //     foreach($arSection["roomTypes"] as $arRoomType) {
-            //         $roomsCount++;
-            //     }
-            // }           
 
             // Поля раздела
             $arFields = array(
-                "IBLOCK_ID" => CATALOG_IBLOCK_ID,
-                //"ACTIVE" => "Y",
-                //"NAME" => $sectionName,
-                //"CODE" => $sectionCode,
-                //"DESCRIPTION" => $arSection["description"],
+                "IBLOCK_ID" => CATALOG_IBLOCK_ID,                
                 "UF_EXTERNAL_ID" => $arSection["id"],
-                "UF_EXTERNAL_SERVICE" => self::$travelineSectionPropEnumId,
-                "UF_PHOTOS" => $arImages,
-                "UF_ADDRESS" => $arSection["contactInfo"]["address"]["addressLine"],
-                //"UF_COORDS" => $arSection["contactInfo"]["address"]["latitude"].",".$arSection["contactInfo"]["address"]["longitude"],
+                "UF_EXTERNAL_SERVICE" => self::$travelineSectionPropEnumId,                
+                "UF_ADDRESS" => $arSection["contactInfo"]["address"]["addressLine"],                
                 "UF_TIME_FROM" => $arSection["policy"]["checkInTime"],
                 "UF_TIME_TO" => $arSection["policy"]["checkOutTime"],
-                //"UF_SERVICES" => $arServices,
-                //"UF_ROOMS_COUNT" => $roomsCount,
+                "UF_PHOTO_ARRAY" => json_encode($arSection["images"]),
             );
             
             if(array_key_exists($arSection["id"], $arSectionItems)) {
                 $arExistSection = $arSectionItems[$arSection["id"]];
                 // Проверка чекбоксов полей
-                if($arExistSection["UF_CHECKBOX_1"]) {
-                    unset($arFields["UF_PHOTOS"]);
-                } else {
-                    $arImages = self::getImages($arSection["images"]);
-                    $arFields["UF_PHOTOS"] = $arImages;
-                }
+                
                 if($arExistSection["UF_CHECKBOX_2"]) {
                     unset($arFields["UF_SERVICES"]);
                 }
@@ -240,9 +351,8 @@ class Traveline
                 $arFields["CODE"] = $sectionCode;
                 $arFields["DESCRIPTION"] = $arSection["description"];
                 $arFields["UF_COORDS"] = $arSection["contactInfo"]["address"]["latitude"].",".$arSection["contactInfo"]["address"]["longitude"];
+                $arFields["UF_PHOTO_ARRAY"] = json_encode($arSection["images"]);
 
-                $arImages = self::getImages($arSection["images"]);
-                $arFields["UF_PHOTOS"] = $arImages;
                 $sectionId = $iS->Add($arFields);
 
                 if($sectionId)
@@ -254,9 +364,6 @@ class Traveline
                 foreach($arSection["roomTypes"] as $arRoomType) {
                     $elementName = $arRatePlan["name"]." (".$arRoomType["name"].")";
                     $elementCode = CUtil::translit($elementName, "ru");
-
-                    $arElementImages = array();
-                    $arElementImages = self::getImages($arRoomType["images"]);
 
                     // Amenities
                     $arAmenities = array();
@@ -271,16 +378,13 @@ class Traveline
                     $arExistElement = $arCatalogItems[$arRatePlan['id'].'_'.$arRoomType["id"]];
                     if($arExistElement) {
                         $elementId = $arExistElement["ID"];
-                        $arFields = array(
-                            //"NAME" => $elementName,
-                            "CODE" => $elementCode,
-                            //"DETAIL_TEXT" => nl2br($arRoomType["description"]),
-                            //"DETAIL_TEXT_TYPE" => 'html'
+                        $arFields = array(                            
+                            "CODE" => $elementCode,                            
                         );
 
                         $res = $iE->Update($elementId, $arFields);
-                        CIBlockElement::SetPropertyValuesEx($elementId, CATALOG_IBLOCK_ID, array(
-                            "PHOTOS" => $arElementImages,
+                        CIBlockElement::SetPropertyValuesEx($elementId, CATALOG_IBLOCK_ID, array(    
+                            "PHOTO_ARRAY" => json_encode($arRoomType['images']),                        
                             "FEATURES" => $arAmenities,
                             "SQUARE" => $arRoomType['size']['value'],
                         ));
@@ -297,8 +401,8 @@ class Traveline
                             "CODE" => $elementCode,
                             "DETAIL_TEXT" => nl2br($arRoomType["description"]),
                             "DETAIL_TEXT_TYPE" => 'html',
-                            "PROPERTY_VALUES" => array(
-                                "PHOTOS" => $arElementImages,
+                            "PROPERTY_VALUES" => array(                             
+                                "PHOTO_ARRAY" => json_encode($arRoomType['images']),
                                 "EXTERNAL_ID" => $arRatePlan["id"],
                                 "EXTERNAL_CATEGORY_ID" => $arRoomType["id"],
                                 "EXTERNAL_SERVICE" => self::$travelineElementPropEnumId,
@@ -310,7 +414,7 @@ class Traveline
 
                         if($elementId) {
                             Products::setQuantity($elementId);
-                            Products::setPrice($elementId);                            
+                            Products::setPrice($elementId);
                             echo date('Y-M-d H:i:s') . " Добавлен номер (".$elementId.") \"".$elementName."\" в отель (".$sectionId.") \"".$sectionName."\"<br>\r\n";                            
                         }
                     }
@@ -323,18 +427,31 @@ class Traveline
 
     /**
      * Возвращает все разделы (отели) Travelline
+     * 
+     * @param string $limit Ограничение элементов.
+     * @param string $offset С какого элемента выбирать.
+     * @param string $countTotal Подсчёт общего количества.
+     * @param boolean $raw Вернуть не обработанный объект.
      *
      * @return array
      * 
      */
-    private static function getSections() {
+    private static function getSections($limit = '', $offset = '', $countTotal = '', $raw = false) {
         $entity = \Bitrix\Iblock\Model\Section::compileEntityByIblock(CATALOG_IBLOCK_ID);
         $rsSectionObjects = $entity::getList(
             [
                 'filter' => ['IBLOCK_ID' => CATALOG_IBLOCK_ID, 'UF_EXTERNAL_SERVICE' => self::$travelineSectionPropEnumId],
                 'select' => ['*', 'UF_*'],
+                'limit' => $limit,
+                'offset' => $offset,
+                'count_total' => $countTotal
             ]
-        );        
+        );
+
+        if ($raw) {
+            return $rsSectionObjects;
+        }
+
         while ($arSectionItem = $rsSectionObjects->Fetch()){
             $arSectionItems[$arSectionItem['UF_EXTERNAL_ID']] = $arSectionItem;
         }
@@ -343,15 +460,27 @@ class Traveline
 
     /**
      * Возвращает все элементы (номера) Travelline
+     * 
+     * @param string $limit Ограничение элементов.
+     * @param string $offset С какого элемента выбирать.
+     * @param string $countTotal Подсчёт общего количества.
+     * @param boolean $raw Вернуть не обработанный объект.
      *
      * @return array
      * 
      */
-    public static function getRooms() {
+    public static function getRooms($limit = '', $offset = '', $countTotal = '', $raw = false) {
         $arRoomsRequest = \Bitrix\Iblock\Elements\ElementGlampingsTable::getList([
-            'select' => ['ID', 'NAME', 'EXTERNAL_SERVICE_' => 'EXTERNAL_SERVICE', 'EXTERNAL_CATEGORY_ID_'=> 'EXTERNAL_CATEGORY_ID', 'EXTERNAL_ID_' => 'EXTERNAL_ID'],
+            'select' => ['ID', 'NAME', 'EXTERNAL_SERVICE_' => 'EXTERNAL_SERVICE', 'EXTERNAL_CATEGORY_ID_'=> 'EXTERNAL_CATEGORY_ID', 'EXTERNAL_ID_' => 'EXTERNAL_ID', 'PHOTO_ARRAY_' => 'PHOTO_ARRAY'],
             'filter' => ['EXTERNAL_SERVICE.VALUE' => self::$travelineElementPropEnumId],
+            'limit' => $limit,
+            'offset' => $offset,
+            'count_total' => $countTotal
         ]);
+
+        if ($raw) {
+            return $arRoomsRequest;
+        }
 
         // Формируем массив элементов, где ключём будет сочетание значений 2-х свойств
         while ($room = $arRoomsRequest->Fetch()){
@@ -427,23 +556,21 @@ class Traveline
      * Возвращает ответ от сервиса Travelline
      *
      * @param string $requestUrl Адрес запроса.
+     * @param array $params Параметры запроса.
      * 
      * @return array
      * 
      */
-    private static function getResponse($requestUrl) {
+    private static function getResponse($requestUrl, $params = []) {
         $url = self::$travelineApiURL.$requestUrl;
         $headers = array(
             "X-API-KEY: ".self::$travelineApiKey,
             "Content-Type: application/json"
         );
-        $data = array(
-            "include" => "all"            
-        );
 
         $ch = curl_init();
         curl_setopt_array($ch, array(
-            CURLOPT_URL            => $url.'?'.http_build_query($data),
+            CURLOPT_URL            => $url.'?'.http_build_query($params),
             CURLOPT_RETURNTRANSFER => 1,
             CURLOPT_HTTPHEADER     => $headers,
         ));
@@ -453,7 +580,7 @@ class Traveline
     }
 
     public static function getImages($arImagesUrl) {
-        $arImages = array();
+        $arImages = array();        
         foreach ($arImagesUrl as $key => $arImage) {
             $arFile = CFile::MakeFileArray($arImage["url"]);
 
