@@ -198,7 +198,6 @@ class Morpher
                 continue;
             }
 
-            Debug::writeToFile(var_export($rule, true), '$rule');
             foreach ($rule->test as $last_char) {
                 $last_name_char = mb_strtolower(mb_substr($name, mb_strlen($name) - mb_strlen($last_char), mb_strlen($last_char)));
 
