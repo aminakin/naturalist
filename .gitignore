@@ -5,7 +5,7 @@
 /local/php_interface/data/*
 /local/php_interface/log
 /local/php_interface/init_constants.php
-
+/local/cron/*.log
 
 /local/modules
 .htaccess
@@ -30,6 +30,7 @@ vendor/
 /log.txt
 /log_bnovo.txt
 /log_bnovo_order.txt
+/log_bnovo_responce.txt
 /__bx_log.log
 /test.php
 /sitemap.xml
