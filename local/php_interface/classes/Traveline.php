@@ -222,12 +222,14 @@ class Traveline
 
         foreach ($sections as $section) {
             if($section["UF_CHECKBOX_1"] != 1) {
-                $arImages = self::getImages(json_decode($section["UF_PHOTO_ARRAY"], true));                
-                $arFields["UF_PHOTOS"] = $arImages;
-                $res = $iS->Update($section['ID'], $arFields);
+                $arImages = self::getImages(json_decode($section["UF_PHOTO_ARRAY"], true));  
+                if(count($arImages)) {              
+                    $arFields["UF_PHOTOS"] = $arImages;
+                    $res = $iS->Update($section['ID'], $arFields);
 
-                if($res) {
-                    echo date('Y-M-d H:i:s'). " Загружены фото для раздела (".$section['ID'].") \"".$section['NAME']."\"<br>\r\n"; 
+                    if($res) {
+                        echo date('Y-M-d H:i:s'). " Загружены фото для раздела (".$section['ID'].") \"".$section['NAME']."\"<br>\r\n"; 
+                    }
                 }
             }
         }
@@ -268,11 +270,11 @@ class Traveline
         foreach ($rooms as $room) {            
             $arImages = self::getImages(json_decode(unserialize($room["PHOTO_ARRAY_VALUE"])['TEXT'], true));
 
-            CIBlockElement::SetPropertyValuesEx($room['ID'], CATALOG_IBLOCK_ID, array(    
-                "PHOTOS" => $arImages,                                        
-            ));
-
             if(count($arImages)) {
+                CIBlockElement::SetPropertyValuesEx($room['ID'], CATALOG_IBLOCK_ID, array(    
+                    "PHOTOS" => $arImages,                                        
+                ));
+
                 echo date('Y-M-d H:i:s'). " Загружены фото для элемента (".$room['ID'].") \"".$room['NAME']."\"<br>\r\n"; 
             }            
         }
