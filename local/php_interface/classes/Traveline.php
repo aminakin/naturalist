@@ -50,7 +50,7 @@ class Traveline
 
     /* Получение списка свободных объектов в выбранный промежуток */
     public static function search($guests, $arChildrenAge, $dateFrom, $dateTo, $sectionIds = []) {
-        $rsSections = CIBlockSection::GetList(false, array("IBLOCK_ID" => CATALOG_IBLOCK_ID, "ID" => '237', "ACTIVE" => "Y", "!UF_EXTERNAL_ID" => false, "UF_EXTERNAL_SERVICE" => self::$travelineSectionPropEnumId), false, array("ID", "UF_EXTERNAL_ID"), false);
+        $rsSections = CIBlockSection::GetList(false, array("IBLOCK_ID" => CATALOG_IBLOCK_ID, "ID" => $sectionIds, "ACTIVE" => "Y", "!UF_EXTERNAL_ID" => false, "UF_EXTERNAL_SERVICE" => self::$travelineSectionPropEnumId), false, array("ID", "UF_EXTERNAL_ID"), false);
         $arSectionExternalIDs = array();
         while($arSection = $rsSections->Fetch()) {
             $arSectionExternalIDs[] = (string)$arSection["UF_EXTERNAL_ID"];
@@ -70,11 +70,7 @@ class Traveline
         );
         if(count($arChildrenAge) > 0) {
             $data["childAges"] = $arChildrenAge;
-        }
-
-        xprint($url);
-
-        xprint($data);
+        }        
 
         $ch = curl_init();
         curl_setopt_array($ch, array(
@@ -87,8 +83,6 @@ class Traveline
         $response = curl_exec($ch);
         $arResponse = json_decode($response, true);
         curl_close($ch);
-
-        xprint($arResponse);
 
         $arHotelsIDs = array();
         foreach($arResponse["roomStays"] as $arItem) {
@@ -130,10 +124,7 @@ class Traveline
         );
         if(count($arChildrenAge) > 0) {
             $data["childAges"] = $arChildrenAge;
-        }
-
-        xprint($url);
-        xprint($data);
+        }        
 
         $ch = curl_init();
         curl_setopt_array($ch, array(
@@ -144,8 +135,6 @@ class Traveline
         $response = curl_exec($ch);
         $arItems = json_decode($response, true);
         curl_close($ch);
-
-        xprint($arItems);
 
         $arRooms = array();
         foreach($arItems["roomStays"] as $arItem) {
