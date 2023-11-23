@@ -543,14 +543,14 @@ class Orders
 
             if (!isset($reservationRes["ERROR"])) {
                 // Отсылка уведомлений на почту
-                if ($arUser["UF_SUBSCRIBE_EMAIL_1"]) {
+                //if ($arUser["UF_SUBSCRIBE_EMAIL_1"]) {
                     $sendRes = Users::sendEmail("USER_RESERVATION", "55", array(
                         "EMAIL" => $arUser["EMAIL"],
                         "ORDER_ID" => $orderId,
                         "RESERVATION_ID" => $reservationRes,
                         "LINK" => 'https://' . $_SERVER['SERVER_NAME'] . '/personal/active/'
                     ));
-                }
+                //}
                 // Отсылка уведомления на СМС
                 if ($arUser["UF_SUBSCRIBE_SMS_1"]) {
                 }

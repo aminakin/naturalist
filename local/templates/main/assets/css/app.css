@@ -179,6 +179,10 @@ a:not([class]):hover {
   color: var(--color-orange);
 }
 
+.notifications-widget-root a:not([class]) {
+  border: none;
+}
+
 a svg,
 a use {
   pointer-events: none;
