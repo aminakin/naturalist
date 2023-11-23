@@ -145,7 +145,7 @@ if (!$isAuthorized) {
                                     </div>
                                 </div>
                             </div>
-
+                            <?/*
                             <div class="person__item">
                                 <div class="person__heading">
                                     <div class="h3">Уведомления по почте</div>
@@ -164,7 +164,7 @@ if (!$isAuthorized) {
                                     </div>
                                 </div>
                             </div>
-
+                            */?>
                             <?if(false):?>
                                 <div class="person__item">
                                     <div class="person__heading">

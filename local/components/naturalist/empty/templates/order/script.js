@@ -37,6 +37,9 @@ var Order = function () {
       }
 
       var params = {
+        fromOrder: true,
+        login: phone,
+        type: "phone",
         phone: phone,
         email: email,
         guests: arGuests,

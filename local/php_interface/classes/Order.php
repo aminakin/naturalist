@@ -21,6 +21,8 @@ use Sberbank\Payments\Gateway;
 use function NormalizePhone;
 use function randString;
 
+use Naturalist\Users;
+
 defined("B_PROLOG_INCLUDED") && B_PROLOG_INCLUDED === true || die();
 
 /**
@@ -622,17 +624,10 @@ class Orders
     public function add($params)
     {
         global $arUser, $userId;
+
         if (intval($userId) < 1) {
-            $userId = self::autoRegisterUser([
-                'FIO' => trim($params["last_name"]) . " " . trim($params["name"]),
-                'EMAIL' => $params["email"],
-                'PHONE' => $params["phone"]
-            ]);
-
-
-//            return json_encode([
-//                "ERROR" => "Необходимо авторизоваться."
-//            ]);
+            $users = new Users();
+            $userId = $users->authGetCode($params);
         }
 
         // Список гостей

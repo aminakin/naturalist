@@ -84,30 +84,34 @@ class Users
             ));
         }
 
-        if ($userId > 0) {
-            if ($type == 'phone') {
-                $res = $this->sendCodeBySMS($login, $code);
-            } elseif ($type == 'email') {
-                $res = $this->sendCodeByEmail($login, $code, $userId, $arUser);
-            }
-
-            $res = true;
-
-            if ($res) {
-                return json_encode([
-                    "MESSAGE" => "Код успешно отправлен."
-                ]);
-
+        if (!$params['fromOrder']) {
+            if ($userId > 0) {
+                if ($type == 'phone') {
+                    $res = $this->sendCodeBySMS($login, $code);
+                } elseif ($type == 'email') {
+                    $res = $this->sendCodeByEmail($login, $code, $userId, $arUser);
+                }
+    
+                $res = true;
+    
+                if ($res) {
+                    return json_encode([
+                        "MESSAGE" => "Код успешно отправлен."
+                    ]);
+    
+                } else {
+                    return json_encode([
+                        "ERROR" => "Ошибка при отправке кода."
+                    ]);
+                }
+    
             } else {
                 return json_encode([
-                    "ERROR" => "Ошибка при отправке кода."
+                    "ERROR" => $user->LAST_ERROR
                 ]);
             }
-
         } else {
-            return json_encode([
-                "ERROR" => $user->LAST_ERROR
-            ]);
+            return $userId;
         }
     }
 
