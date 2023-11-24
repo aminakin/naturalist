@@ -186,7 +186,7 @@ if ($requestName) {
         ];
     }
 
-    $arStreets['list'] = array_unique_key($arStreets['list'], 'title');
+//    $arStreets['list'] = array_unique_key($arStreets['list'], 'title');
 
     if ($arAreas['list']) {
         $arReturn[] = $arAreas;
