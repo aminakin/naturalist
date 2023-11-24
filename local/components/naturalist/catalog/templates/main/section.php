@@ -124,11 +124,16 @@ if (!empty($_GET['name']) && isset($_GET['name'])) {
         $arRegionIds = Regions::RegionFilterSearcher($search);
         $arFilter["UF_REGION"] = $arRegionIds;
 
+
         if (empty($arRegionIds)) {
-            $arNameResult = CIBlockSection::GetList([], ['%NAME%' => $search], false, ['ID'], false)->Fetch();
+
+            $arNameResult = CIBlockSection::GetList([], ['NAME' => '%' . $search . '%'], false, ['ID'], false)->Fetch();
             if ($arNameResult) {
                 $arSectionIDs[] = $arNameResult["ID"];
             }
+
+
+
             $arFilter["ID"] = $arSectionIDs;
             unset($arFilter["UF_REGION"]);
         }

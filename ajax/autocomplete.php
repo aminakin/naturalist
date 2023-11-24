@@ -28,21 +28,6 @@ if ($request->get('text') != null) {
 
 if ($requestName) {
 
-    function array_unique_key($array, $key)
-    {
-        $tmp = $key_array = array();
-        $i = 0;
-
-        foreach ($array as $val) {
-            if (!in_array($val[$key], $key_array)) {
-                $key_array[$i] = $val[$key];
-                $tmp[$i] = $val;
-            }
-            $i++;
-        }
-        return $tmp;
-    }
-
     $arFilterArea = [
         "IBLOCK_ID" => CATALOG_IBLOCK_ID,
         "ACTIVE" => "Y"
@@ -154,7 +139,14 @@ if ($requestName) {
         false
     );
 
+    $temp = [];
     while ($arStreet = $resStreets->GetNext()) {
+
+        if (in_array($arStreet['NAME'], $temp)) {
+            continue;
+        }
+
+        $temp[] = $arStreet['NAME'];
         $arStreets['list'][] = [
             'id' => $arStreet['ID'],
             'title' => $arStreet['NAME'],
@@ -179,12 +171,19 @@ if ($requestName) {
     );
 
     while ($arObject = $resObjects->GetNext()) {
+
+        if (in_array($arObject['NAME'], $temp)) {
+            continue;
+        }
+
+        $temp[] = $arObject['NAME'];
         $arStreets['list'][] = [
             'id' => $arObject['ID'],
             'title' => $arObject['NAME'],
             'footnote' => $arObject['UF_ADDRESS']
         ];
     }
+
 
 //    $arStreets['list'] = array_unique_key($arStreets['list'], 'title');
 
