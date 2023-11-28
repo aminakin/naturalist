@@ -204,8 +204,7 @@ class Bnovo
                     foreach ($arOccupancy["PROPERTY_CHILDREN_AGES_VALUE"] as $key => $idAge) {
                         foreach ($arChildrenAge as $age) {
                             if ($arAges[$idAge]['UF_MIN_AGE'] <= $age && $arAges[$idAge]['UF_MAX_AGE'] >= $age && $arOccupancy["PROPERTY_CHILDREN_AGES_DESCRIPTION"][$key] == $children) {
-                                $childrenStatus = true;
-                                //xprint($arOccupancy);
+                                $childrenStatus = true;                                
                             }
                         }
 
@@ -298,7 +297,7 @@ class Bnovo
             ],
             "order" => ["ID" => "ASC"],
         ]);
-        $arData = $rsData->FetchAll();
+        $arData = $rsData->FetchAll();        
 
         $arDataGrouped = array();
         foreach ($arData as $arItem) {
@@ -312,7 +311,7 @@ class Bnovo
 
         $arDataGroupedValues = array_reduce($arDataGrouped, 'array_merge', array());
         $arExternalTariffIDs = array_unique(array_column($arDataGroupedValues, 'UF_TARIFF_ID'));
-        $arExternalCategoryIDs = array_unique(array_column($arDataGroupedValues, 'UF_CATEGORY_ID'));
+        $arExternalCategoryIDs = array_unique(array_column($arDataGroupedValues, 'UF_CATEGORY_ID'));        
 
         // Категории номеров
         $rsRoomTypes = CIBlockElement::GetList(
@@ -354,7 +353,7 @@ class Bnovo
             $arTariffsExternalIDs[$arTariff["PROPERTY_EXTERNAL_ID_VALUE"]] = $arTariff["ID"];
             $arTariffsValue[$arTariff["ID"]] = $arTariff;
         }
-        //xprint($arExternalTariffIDs);
+        
         $arTariffsIDs = array();
         foreach ($arExternalTariffIDs as $externalId) {
             $arTariffsIDs[] = $arTariffsExternalIDs[$externalId];
@@ -394,8 +393,7 @@ class Bnovo
                     foreach ($arOccupancy["PROPERTY_CHILDREN_AGES_VALUE"] as $key => $idAge) {
                         foreach ($arChildrenAge as $age) {
                             if ($arAges[$idAge]['UF_MIN_AGE'] <= $age && $arAges[$idAge]['UF_MAX_AGE'] >= $age && $arOccupancy["PROPERTY_CHILDREN_AGES_DESCRIPTION"][$key] == $children) {
-                                $childrenStatus = true;
-                                //xprint($arOccupancy);
+                                $childrenStatus = true;                                
                             }
                         }
 
@@ -422,13 +420,9 @@ class Bnovo
             }
         }
 
-        /*xprint($arCategoriesFilterredIDs);
-        die();*/
         $arCategoriesFilterredIDs = array_unique($arCategoriesFilterredIDs);
 
-        // Номера
-        //xprint($arCategoriesFilterredIDs);
-        /*xprint($arTariffsIDs); die();*/
+        // Номера        
         if ($arCategoriesFilterredIDs && $arTariffsIDs) {
             $rsElements = CIBlockElement::GetList(
                 false,
@@ -443,7 +437,7 @@ class Bnovo
                 array("IBLOCK_ID", "ID", "NAME", "PROPERTY_CATEGORY", "PROPERTY_TARIFF", "PROPERTY_EXTERNAL_ID")
             );
             $arElementsFilterred = array();
-            while ($arElement = $rsElements->Fetch()) {
+            while ($arElement = $rsElements->Fetch()) {                
                 foreach ($arElement["PROPERTY_CATEGORY_VALUE"] as $categoryId) {
                     foreach ($arElement["PROPERTY_TARIFF_VALUE"] as $tariffId) {
                         $arElementsFilterred[$tariffId][$categoryId][] = $arElement["ID"];
@@ -483,7 +477,7 @@ class Bnovo
                 }
             }
         }
-        //xprint($arItems);
+        
         // Сортировка номеров по убыванию цены
         if (!empty($arItems)) {
             uasort($arItems, function ($a, $b) {
@@ -491,7 +485,6 @@ class Bnovo
             });
         }
 
-//xprint($arItems); die();
         return $arItems ?? [];
     }
 
@@ -910,7 +903,6 @@ class Bnovo
     /* Тарифы отеля */
     public function updatePublicTariffs($arSection)
     {
-        //xprint($arSection);
         // Тарифы
         $url = $this->bnovoApiPublicURL . '/plans';
         $headers = array(
@@ -930,7 +922,7 @@ class Bnovo
         $response = curl_exec($ch);
         $arData = json_decode($response, true);
         curl_close($ch);
-        $arTarrifs = $arData['plans'];
+        $arTarrifs = $arData['plans'];        
 
         $iE = new CIBlockElement();
 
@@ -984,7 +976,7 @@ class Bnovo
                 "PROPERTY_EXTERNAL_ID" => $arTarrif['id'],
             ))->Fetch();
 
-            if (!$arElementTariff && empty($arSectionTarriffs)) {
+            if (!$arElementTariff) {
                 $arFields = array(
                     "ACTIVE" => "Y",
                     "IBLOCK_ID" => TARIFFS_IBLOCK_ID,
@@ -1049,7 +1041,7 @@ class Bnovo
         $response = curl_exec($ch);
         $arData = json_decode($response, true);
         curl_close($ch);
-        $arRooms = $arData['rooms'];
+        $arRooms = $arData['rooms'];        
 
         $iE = new CIBlockElement();
 
@@ -1115,8 +1107,7 @@ class Bnovo
                 "CODE" => $sectionCode,
                 "UF_EXTERNAL_ID" => $arSection["UF_EXTERNAL_ID"],
             );
-
-            //xprint($arFields);
+            
             $sectionIdOccupancies = $iS->Add($arFields);
 
             if ($sectionIdOccupancies) {
@@ -1339,8 +1330,9 @@ class Bnovo
             CURLOPT_RETURNTRANSFER => 1,
             CURLOPT_HTTPHEADER => $headers
         ));
-        $response = curl_exec($ch);
-        $arData = json_decode($response, true);
+        $response = curl_exec($ch);        
+        $arData = json_decode($response, true);        
+
         if (empty($arData) || (isset($arData['code']) && $arData['code'] != 200)) {
             return 'empty or error arData cURL code- '.$arData['code'] .' '. $arData['message'];
         }
@@ -1466,7 +1458,7 @@ class Bnovo
             CURLOPT_HTTPHEADER => $headers
         ));
         $response = curl_exec($ch);
-        $arData = json_decode($response, true);
+        $arData = json_decode($response, true);        
 
         if (empty($arData) || (isset($arData['code']) && $arData['code'] != 200)) {
             return 'empty or error arData cURL code- '.$arData['code'] .' '. $arData['message'];

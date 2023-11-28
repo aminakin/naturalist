@@ -50,10 +50,10 @@ if($method == 'POST' && $resource == 'auth') {
                             //unset($arOutput['code']);
 
                             $isExist = true;
-                            break;
+                        break;
                     }
 
-                    break;
+                break;
 
                 case 'POST':
                     switch($resource) {
@@ -63,7 +63,7 @@ if($method == 'POST' && $resource == 'auth') {
                             //unset($arOutput['code']);
 
                             $isExist = true;
-                            break;
+                        break;
 
                         case 'prices':
                             $hotelId = $params["hotel_id"];
@@ -116,10 +116,10 @@ if($method == 'POST' && $resource == 'auth') {
                             }
 
                             $isExist = true;
-                            break;
+                        break;
                     }
 
-                    break;
+                break;
             }
 
             if(!$isExist) {
