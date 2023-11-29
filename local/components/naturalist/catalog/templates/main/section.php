@@ -388,6 +388,7 @@ if ($pageCount > 1) {
     $arPageSections = $arSections;
 }
 
+
 /* HL Blocks */
 // Тип объекта
 $hlId = 2;

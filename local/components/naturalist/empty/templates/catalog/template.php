@@ -32,6 +32,10 @@ foreach ($arResult as $key => $value) {
         <div class="catalog__list">
             <?php foreach ($arPageSections as $arSection) : ?>
                 <?php
+                if(empty($arSection["ID"])) {
+                    continue;
+                }
+                
                 $this->AddEditAction($arSection['ID'], $arSection['EDIT_LINK'], CIBlock::GetArrayByID($arSection["IBLOCK_ID"], "ELEMENT_EDIT"));
                 $this->AddDeleteAction($arSection['ID'], $arSection['DELETE_LINK'], CIBlock::GetArrayByID($arSection["IBLOCK_ID"], "ELEMENT_DELETE"), array("CONFIRM" => Loc::GetMessage('CT_BNL_ELEMENT_DELETE_CONFIRM')));
                 ?>

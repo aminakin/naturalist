@@ -539,31 +539,6 @@ class Rest
     /* Изменение каталога */
     public function updateCatalog($params)
     {
-        /*
-        {
-            "hotel_id": "12345", //id отеля в OTA
-            "account_id": "123", //id аккаунта в CM "Bnovo"
-            //сопоставления категорий
-            //1,2 - id категорий в CM "Bnovo", 11,12 - id категорий в OTA
-            "roomtypes": {
-                "1":["11"],
-                "2":["12"]
-            },
-            //сопоставления размещений
-            //1,2,3 - id категорий в CM "Bnovo", 11_1,11_2,12_1,12_2 - id размещений в OTA
-            "occupancies": {
-                "1":["11_1", "11_2"],
-                "2":["12_1"],
-                "3":["12_2"],
-            },
-            //сопоставления тарифов
-            //1,2 - id тарифов в CM "Bnovo", 31,32,33 - id тарифов в OTA
-            "rates": {
-                "1": ["31"],
-                "2": ["33"]
-            }
-        }
-        */
         $hotelId = $params["hotel_id"];
         $externalId = $params["account_id"];
 
@@ -636,38 +611,6 @@ class Rest
     /* Изменение цен, наличия, ограничений */
     public function updatePrices($params, $fileName = '')
     {
-        /*
-        {
-            "hotel_id" : 1, //id отеля в OTA
-            "account_id": 123, //id аккаунта в CM "Bnovo"
-            "data": {
-                // rooms - уведомление об изменении наличия
-                // 1 - id категории в CM "Bnovo"
-                "rooms":{
-                    "1":[
-                        "2019-01-27"
-                        "2019-01-30",
-                        "2019-01-29",
-                        "2019-01-28"
-                    ]
-                },
-                // prices - уведомление об изменении цен/ограничений
-                // 2 - id тарифа в CM "Bnovo"
-                // 1 - id категории в CM "Bnovo"
-                "prices":{
-                    "2":{
-                        "1":[
-                            "2019-01-27",
-                            "2019-01-30",
-                            "2019-01-29",
-                            "2019-01-28"
-                        ]
-                    }
-                }
-            }
-        }
-        */
-
         $hotelId = $params["hotel_id"];
         $externalId = $params["account_id"];
 
