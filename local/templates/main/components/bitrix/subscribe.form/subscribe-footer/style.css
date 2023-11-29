@@ -1,4 +1,4 @@
-.subscribe-form {  
+.subscribe-form {
   background-color: var(--color-beige);
   border-top: 1.5px solid var(--color-black);
   border-bottom: 1.5px solid var(--color-black);
@@ -12,7 +12,7 @@
   top: 0;
   right: 0;
   height: 100%;
-  background-image: url('img/back-desc.jpg');
+  background-image: url("img/back-desc.jpg");
   background-position: center;
   background-size: cover;
   background-repeat: no-repeat;
@@ -29,13 +29,12 @@
 }
 
 .subscribe-form__right {
-  
 }
 
 .subscribe-form form {
   text-align: center;
   margin: 0.78rem auto 0 auto;
-  display: flex;  
+  display: flex;
   flex-wrap: wrap;
 }
 
@@ -48,31 +47,31 @@
 }
 
 .input__error {
-  display: none;  
+  display: none;
   text-align: left;
   margin-top: 6px;
   color: var(--color-red);
-  font-size: 0.6rem;  
+  font-size: 0.6rem;
   font-weight: 500;
-  line-height: 120%;  
+  line-height: 120%;
 }
 
-.subscribe-form__title {  
+.subscribe-form__title {
   font-size: 24px;
   font-weight: 600;
   text-transform: uppercase;
-  font-family: 'TT Travels Next';
+  font-family: "TT Travels Next";
   margin: 0 auto;
   color: var(--color-black);
 }
 
 .subscribe-form__subtitle {
   margin: 9px 0 0 0;
-  font-family: 'TT Travels Next';
+  font-family: "TT Travels Next";
   font-size: 11px;
   color: var(--color-black);
   font-weight: 500;
-  line-height: normal;  
+  line-height: normal;
 }
 
 .subscribe__input {
@@ -116,15 +115,15 @@
 }
 
 #subscribe_result .modal__title {
-  font-size: 21px;  
+  font-size: 21px;
   font-weight: 600;
   line-height: normal;
-  font-family: 'TT Travels Next';
+  font-family: "TT Travels Next";
   text-align: center;
 }
 
 #subscribe_result .modal__subtitle {
-  font-size: 13px;  
+  font-size: 13px;
   font-weight: 500;
   line-height: normal;
   text-align: center;
@@ -152,7 +151,7 @@
   }
 
   .subscribe-form form {
-    margin-top: 15px;    
+    margin-top: 15px;
     justify-content: flex-start;
   }
 
@@ -167,10 +166,10 @@
   .subscribe__submit {
     font-size: 7px;
     line-height: 9px;
-    font-weight: bold;    
-    width: 85px;    
+    font-weight: bold;
+    width: 85px;
     padding: 11px 0;
-    height: 40px;    
+    height: 40px;
   }
 
   .input__error {
@@ -196,7 +195,7 @@
 
   .subscribe-form::before {
     width: 33%;
-    background-image: url('img/back-tab.jpg');
+    background-image: url("img/back-tab.jpg");
   }
 
   .subscribe-form .container {
@@ -209,7 +208,7 @@
 }
 
 @media (max-width: 450px) {
-  .subscribe-form__title {    
+  .subscribe-form__title {
     font-size: 20px;
     font-style: normal;
     font-weight: 600;
@@ -277,11 +276,11 @@
   }
 
   .subscribe-form::before {
-    display: none;    
+    display: none;
   }
 
   .subscribe-form {
-    background-image: url('img/back-mob.jpg');
+    background-image: url("img/back-mob.jpg");
     background-position: center;
     background-size: cover;
     background-repeat: no-repeat;
