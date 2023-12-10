@@ -1,6 +1,9 @@
 /.idea
 /images
-/bitrix
+/bitrix/*
+!/bitrix/modules/
+/bitrix/modules/*
+!/bitrix/modules/add_object_bnovo/
 /upload
 /local/php_interface/data/*
 /local/php_interface/log
