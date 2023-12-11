@@ -37,6 +37,7 @@ class Bnovo
     private static $childrenAgesHLId = CHILDREN_HL_ID;
 
     private $bnovoSectionPropEnumId = '2';
+    private $sendEventName = 'BNOVO_IMPORT_NOTICE';
 
     /*
     private $bnovoApiURL = 'https://api.sandbox.reservationsteps.ru/v1/api';
@@ -765,8 +766,8 @@ class Bnovo
     }
 
     /* Получение объекта по UID и дальнейшее получение данных */
-    public function updatePublicObject($uid)
-    {
+    public function updatePublicObject($uid, $onlyRooms = false)
+    {        
         $arSection = [];
         // Отели
         $arSection = CIBlockSection::GetList(
@@ -833,23 +834,23 @@ class Bnovo
             $sectionId = $iS->Add($arFields);
 
             if ($sectionId) {
-                echo "Добавлен раздел (" . $sectionId . ") \"" . $sectionName . "\"<br>\r\n";
+                // echo "Добавлен раздел (" . $sectionId . ") \"" . $sectionName . "\"<br>\r\n";
                 $arSection['UF_EXTERNAL_ID'] = $arSection["id"];
                 $arSection['ID'] = $sectionId;
 
-                echo 'Добавлен объект с ID ' . $uid . ': ' . $sectionName;
+                // echo 'Добавлен объект с ID ' . $uid . ': ' . $sectionName;
                 $arResult["MESSAGE"]["SUCCESS"] = 'Добавлен объект с ID ' . $uid . ': ' . $sectionName;
             }
         } else {
             $arSection = array_merge($arData['account'], $arSection);
-            echo 'Объект с ID = ' . $arSection['ID'] . ' уже существует. Данные по объекту были обновлены.';
+            // echo 'Объект с ID = ' . $arSection['ID'] . ' уже существует. Данные по объекту были обновлены.'."<br>\r\n";
             $arResult["MESSAGE"]["ERRORS"] = 'Объект с указанным ID уже существует. Данные по объекту были обновлены.';
         }
 
         if (!empty($arSection['UF_EXTERNAL_ID'])) {
             $childrenAgesId = self::updatePublicChildrenAges($arSection);
             $tariffsId = self::updatePublicTariffs($arSection);
-            self::updatePublicRoomtypes($arSection, $tariffsId, $childrenAgesId);
+            $this->updatePublicRoomtypes($arSection, $tariffsId, $childrenAgesId, $onlyRooms);
         }
 
         return $arResult;
@@ -903,6 +904,9 @@ class Bnovo
     /* Тарифы отеля */
     public function updatePublicTariffs($arSection)
     {
+        $isSectionJustCreated = false;
+        $sectionName = $arSection["NAME"] ?? $arSection["name"];
+
         // Тарифы
         $url = $this->bnovoApiPublicURL . '/plans';
         $headers = array(
@@ -940,8 +944,7 @@ class Bnovo
         )->Fetch();
 
         if (empty($arSectionTarriffs)) {
-            $iS = new CIBlockSection();
-            $sectionName = $arSection["NAME"] ?? $arSection["name"];
+            $iS = new CIBlockSection();            
             $sectionCode = \CUtil::translit($sectionName, "ru");
 
             // Поля раздела
@@ -956,13 +959,32 @@ class Bnovo
             $sectionId = $iS->Add($arFields);
 
             if ($sectionId) {
-                //echo "Добавлен раздел тарифов (" . $sectionId . ") \"" . $sectionName . "\"<br>\r\n";
+                $isSectionJustCreated = true;
+                // echo "Добавлен раздел тарифов (" . $sectionId . ") \"" . $sectionName . "\"<br>\r\n";
             }
         } else{
             $sectionId = $arSectionTarriffs['ID'];
         }
 
         $tariffsIds = [];
+
+        // Если раздел для тарифов был создан только что, добавляем стандартный тариф без свойств
+        if ($isSectionJustCreated) {
+            $arFields = [
+                "ACTIVE" => "Y",
+                "IBLOCK_ID" => TARIFFS_IBLOCK_ID,
+                "IBLOCK_SECTION_ID" => $sectionId,
+                "NAME" => "Стандартный тариф",                
+            ];
+            $elementId = $iE->Add($arFields);
+
+            if ($elementId) {
+                $tariffsIds[] = $elementId;
+            }
+
+            // echo "Добавлен стандартный тариф (".$elementId.") в отеле (".$sectionId.") \"".$sectionName."\"<br>\r\n";
+        }
+
         foreach ($arTarrifs as $arTarrif) {
             if ($arTarrif['enabled_ota'] != 1) {
                 continue;
@@ -976,39 +998,18 @@ class Bnovo
                 "PROPERTY_EXTERNAL_ID" => $arTarrif['id'],
             ))->Fetch();
 
-            if (!$arElementTariff) {
-                $arFields = array(
-                    "ACTIVE" => "Y",
-                    "IBLOCK_ID" => TARIFFS_IBLOCK_ID,
-                    "IBLOCK_SECTION_ID" => $sectionId,
-                    "NAME" => $elementName,
-                    "CODE" => $elementCode,
-                    "PROPERTY_VALUES" => array(
-                        "EXTERNAL_ID" => $arTarrif['id'],
-                        "CANCELLATION_RULES" => nl2br($arTarrif['cancellation_rules']),
-                        "CANCELLATION_DEADLINE" => nl2br($arTarrif['cancellation_deadline']),
-                        "CANCELLATION_FINE_TYPE" => $arTarrif['cancellation_fine_type'],
-                        "CANCELLATION_FINE_AMOUNT" => $arTarrif['cancellation_fine_amount'],
-                    )
-                );
-                $elementId = $iE->Add($arFields);
-
-                if ($elementId) {
-                    //echo "Добавлен тариф (" . $elementId . ") \"" . $elementName . "\" в отель (" . $sectionId . ") \"" . $sectionName . "\"<br>\r\n";
-                }
-            } elseif (isset($arElementTariff)) {
+            if (isset($arElementTariff)) {
                 $elementId = $arElementTariff['ID'];
 
-                $res = CIBlockElement::SetPropertyValuesEx($elementId, TARIFFS_IBLOCK_ID, array(
+                $res = CIBlockElement::SetPropertyValuesEx($elementId, TARIFFS_IBLOCK_ID, array(                    
                     "CANCELLATION_RULES" => nl2br($arTarrif['cancellation_rules']),
                     "CANCELLATION_DEADLINE" => nl2br($arTarrif['cancellation_deadline']),
                     "CANCELLATION_FINE_TYPE" => $arTarrif['cancellation_fine_type'],
                     "CANCELLATION_FINE_AMOUNT" => $arTarrif['cancellation_fine_amount'],
                 ));
 
-                if($res){
-                    //echo "Обновлен тариф (".$elementId.") \"".$elementName."\" в отеле (".$sectionId.") \"".$sectionName."\"<br>\r\n";
-                }
+                // echo "Обновлен тариф (".$elementId.") \"".$elementName."\" в отеле (".$sectionId.") \"".$sectionName."\"<br>\r\n";
+                
             } else {
                 continue;
             }
@@ -1020,8 +1021,10 @@ class Bnovo
     }
 
     /* Категории отеля */
-    public function updatePublicRoomtypes($arSection, $tariffsIds, $childrenAgesId)
+    public function updatePublicRoomtypes($arSection, $tariffsIds, $childrenAgesId, $onlyRooms)
     {
+        $sectionName = $arSection["NAME"] ?? $arSection["name"];
+
         // Номера
         $url = $this->bnovoApiPublicURL . '/roomtypes';
         $headers = array(
@@ -1075,7 +1078,7 @@ class Bnovo
             $sectionId = $iS->Add($arFields);
 
             if ($sectionId) {
-                //echo "Добавлен раздел (" . $sectionId . ") \"" . $sectionName . "\"<br>\r\n";
+                // echo "Добавлен раздел (" . $sectionId . ") \"" . $sectionName . "\"<br>\r\n";
             }
         } else{
             $sectionId = $arSectionCategory['ID'];
@@ -1095,8 +1098,7 @@ class Bnovo
         )->Fetch();
 
         if (empty($arSectionOccupancies)) {
-            $iS = new CIBlockSection();
-            $sectionName = $arSection["NAME"] ?? $arSection["name"];
+            $iS = new CIBlockSection();            
             $sectionCode = \CUtil::translit($sectionName, "ru");
 
             // Поля раздела
@@ -1111,7 +1113,7 @@ class Bnovo
             $sectionIdOccupancies = $iS->Add($arFields);
 
             if ($sectionIdOccupancies) {
-                //echo "Добавлен раздел размещения (" . $sectionIdOccupancies . ") \"" . $sectionName . "\"<br>\r\n";
+                // echo "Добавлен раздел размещения (" . $sectionIdOccupancies . ") \"" . $sectionName . "\"<br>\r\n";
             }
         } else{
             $sectionIdOccupancies = $arSectionOccupancies['ID'];
@@ -1144,7 +1146,7 @@ class Bnovo
                 $elementIdCat = $iE->Add($arFields);
 
                 if ($elementIdCat) {
-                    //echo "Добавлен номер (" . $elementIdCat . ") \"" . $elementName . "\" в отель (" . $sectionId . ") \"" . $sectionName . "\"<br>\r\n";
+                    // echo "Добавлен номер (" . $elementIdCat . ") \"" . $elementName . "\" в отель (" . $sectionId . ") \"" . $sectionName . "\"<br>\r\n";
                 }
             } else {
                 $elementIdCat = $arCategory['ID'];
@@ -1190,7 +1192,7 @@ class Bnovo
                 $elementIdOccupancies = $iE->Add($arFields);
 
                 if ($elementIdOccupancies) {
-                    //echo "Добавлено размещение (" . $elementIdOccupancies . ") \"" . $elementName . "\" в отель (" . $sectionId . ") \"" . $sectionName . "\"<br>\r\n";
+                    // echo "Добавлено размещение (" . $elementIdOccupancies . ") \"" . $elementName . "\" в отель (" . $sectionId . ") \"" . $sectionName . "\"<br>\r\n";
                 }
             } else {
                 $elementId = $arOccupancies["ID"];
@@ -1235,30 +1237,32 @@ class Bnovo
             // Поля элемента
             $arExistElement = CIBlockElement::GetList(false, array("IBLOCK_ID" => CATALOG_IBLOCK_ID, "PROPERTY_EXTERNAL_ID" => $arRoom['id']))->Fetch();
             if ($arExistElement) {
-                $elementId = $arExistElement["ID"];
-                $arFields = array(
-                    //"NAME" => $elementName,
-                    "CODE" => $elementCode,
-                    //"DETAIL_TEXT" => empty($arRoom["description"]) ? nl2br($arRoom["description_ru"]) : nl2br($arRoom["description"]),
-                    //"DETAIL_TEXT_TYPE" => 'html'
-                );
+                if (!$onlyRooms) {
+                    $elementId = $arExistElement["ID"];
+                    $arFields = array(
+                        //"NAME" => $elementName,
+                        "CODE" => $elementCode,
+                        //"DETAIL_TEXT" => empty($arRoom["description"]) ? nl2br($arRoom["description_ru"]) : nl2br($arRoom["description"]),
+                        //"DETAIL_TEXT_TYPE" => 'html'
+                    );
 
-                $res = $iE->Update($elementId, $arFields);
-                CIBlockElement::SetPropertyValuesEx($elementId, CATALOG_IBLOCK_ID, array(
-                    //"PHOTOS" => $arElementImages,
-                    "CATEGORY" => $elementIdCat,
-                    "TARIFF" => $tariffsIds,
-                    "FEATURES" => $arAmenities,
-                    "PARENT_ID" => $arRoom["parent_id"],
-                    "SQUARE" => $arRoom["amenities"]["1"]["value"],
-                ));
+                    $res = $iE->Update($elementId, $arFields);
+                    CIBlockElement::SetPropertyValuesEx($elementId, CATALOG_IBLOCK_ID, array(
+                        //"PHOTOS" => $arElementImages,
+                        "CATEGORY" => $elementIdCat,
+                        "TARIFF" => $tariffsIds,
+                        "FEATURES" => $arAmenities,
+                        "PARENT_ID" => $arRoom["parent_id"],
+                        "SQUARE" => $arRoom["amenities"]["1"]["value"],
+                    ));
 
-                if ($res) {
-                    //echo "Обновлен номер (".$elementId.") \"".$elementName."\" в отеле (".$sectionId.") \"".$sectionName."\"<br>\r\n";
-                }
+                    if ($res) {
+                        // echo "Обновлен номер (".$elementId.") \"".$elementName."\" в отеле (".$sectionId.") \"".$sectionName."\"<br>\r\n";
+                    }
+                }                
             } else {
-                $arElementImages = array();
-                $arElementImages = self::getImages($arRoom["photos"]);
+                // $arElementImages = array();
+                // $arElementImages = self::getImages($arRoom["photos"]);
 
                 $arFields = array(
                     "ACTIVE" => "Y",
@@ -1269,7 +1273,7 @@ class Bnovo
                     "DETAIL_TEXT" => empty($arRoom["description"]) ? nl2br($arRoom["description_ru"]) : nl2br($arRoom["description"]),
                     "DETAIL_TEXT_TYPE" => 'html',
                     "PROPERTY_VALUES" => array(
-                        "PHOTOS" => $arElementImages,
+                        //"PHOTOS" => $arElementImages,
                         "EXTERNAL_ID" => $arRoom["id"],
                         "CATEGORY" => $elementIdCat,
                         "TARIFF" => $tariffsIds,
@@ -1281,13 +1285,13 @@ class Bnovo
                 );
                 $elementId = $iE->Add($arFields);
 
-                if ($elementId) {
-                    //echo "Добавлен номер (".$elementId.") \"".$elementName."\" в отель (".$sectionId.") \"".$sectionName."\"<br>\r\n";
+                if ($elementId && $onlyRooms) {                    
+                    $this->sendMessage([
+                        'MESSAGE' => "Добавлен номер (".$elementId.") \"".$elementName."\" в отель (".$sectionId.") \"".$sectionName."\"",
+                    ]);                              
                 }
-
             }
-        }
-        //die();
+        }        
     }
 
     public static function getImages($arImagesUrl) {
@@ -1334,8 +1338,17 @@ class Bnovo
         $arData = json_decode($response, true);        
 
         if (empty($arData) || (isset($arData['code']) && $arData['code'] != 200)) {
-            return 'empty or error arData cURL code- '.$arData['code'] .' '. $arData['message'];
+            if ($arData['code'] == 403) {
+                return 'Объект отключен от вашего канала продаж';
+            } else {
+                return 'Непредвиденная ошибка. Код ошибки - '.$arData['code'] .'. Сообщение - '. $arData['message'];
+            }
         }
+
+        if (!empty($arData) && empty($arData["plans_data"])) {
+            return 'Пустой массив. По объекту нет доступных тарифов';
+        }
+        
         curl_close($ch);
 
         $entityClass = $this->getEntityClass();
@@ -1432,7 +1445,7 @@ class Bnovo
     }
 
     /* Обновление наличия */
-    public function updateAvailabilityData($hotelId, $arCategories, $arDates)
+    public function updateAvailabilityData($hotelId, $arCategories, $arDates, $fromOrder = false)
     {
         $url = $this->bnovoApiURL . '/availability';
         $headers = array(
@@ -1461,7 +1474,19 @@ class Bnovo
         $arData = json_decode($response, true);        
 
         if (empty($arData) || (isset($arData['code']) && $arData['code'] != 200)) {
-            return 'empty or error arData cURL code- '.$arData['code'] .' '. $arData['message'];
+            if ($arData['code'] == 403) {
+                return 'Объект отключен от вашего канала продаж';
+            } else {
+                return 'Непредвиденная ошибка. Код ошибки - '.$arData['code'] .'. Сообщение - '. $arData['message'];
+            }
+        }
+
+        if (!empty($arData) && empty($arData["availability"])) {
+            return 'Пустой массив. По объекту нет доступных тарифов';
+        }
+
+        if ($fromOrder) {
+            return $arData['availability'];
         }
 
         curl_close($ch);
@@ -1731,5 +1756,9 @@ class Bnovo
         $hlblock = HighloadBlockTable::getById($hlId)->fetch();
         $entity = HighloadBlockTable::compileEntity($hlblock);
         return $entity;
+    }
+
+    private function sendMessage($arSend) {        
+        \CEvent::Send($this->sendEventName, SITE_ID, $arSend);
     }
 }

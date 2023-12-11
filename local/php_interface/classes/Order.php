@@ -650,7 +650,7 @@ class Orders
         // Получение кода внешнего сервиса (1 - Traveline, 2 - Bnovo)
         $externalService = $arBasketItems["ITEMS"][0]["ITEM"]["SECTION"]["UF_EXTERNAL_SERVICE"];
 
-        // Проверка возможности бронирования перед созданием заказа и отмена создания заказа в случае невозможности бронирования (только для Traveline)
+        // Проверка возможности бронирования перед созданием заказа и отмена создания заказа в случае невозможности бронирования для Traveline
         if($externalService == $this->travelineSectionPropEnumId) {
             $externalSectionId = $arBasketItems['ITEMS'][0]['ITEM']['SECTION']['UF_EXTERNAL_ID'];
             $sectionName = $arBasketItems['ITEMS'][0]['ITEM']['SECTION']['NAME'];
@@ -679,6 +679,27 @@ class Orders
                     "ERROR" => "Невозможно бронирование на выбранные даты. " . $this->arErrors[$errorText]
                 ]);
             }
+        }
+
+        // Проверка возможности бронирования перед созданием заказа и отмена создания заказа в случае невозможности бронирования для Bnovo
+        if($externalService == $this->bnovoSectionPropEnumId) {            
+            $categoryId = $arBasketItems['ITEMS'][0]['PROPS']['CATEGORY_ID'];
+            $externalSectionId = $arBasketItems['ITEMS'][0]['ITEM']['SECTION']['UF_EXTERNAL_ID'];            
+            $bnovo = new Bnovo();
+            $response = $bnovo->updateAvailabilityData($externalSectionId, [$categoryId], [date('Y-m-d', strtotime($params["dateFrom"])), date('Y-m-d', strtotime($params["dateTo"]))], true);            
+            if (is_array($response) && isset($response[$categoryId])) {
+                foreach ($response[$categoryId] as $date) {
+                    if ($date == 0) {
+                        return json_encode([
+                            "ERROR" => "Невозможно бронирование на выбранные даты.",
+                        ]);
+                    }
+                }
+            } else {
+                return json_encode([
+                    "ERROR" => "В процессе подтверждения бронирования произошла ошибка. Пожалуйста, попробуйте позднее или свяжитесь с нами",
+                ]);
+            }            
         }
 
         // Создание корзины

@@ -189,7 +189,7 @@ class Traveline
      * Загружает картинки для разделов
      * 
      */
-    public static function downloadSertionImages() {
+    public static function downloadSectionImages() {
         $travelineSectionOffset = Option::get("main", "traveline_section_offset");
         $travelineSectionLimit = Option::get("main", "traveline_section_limit");        
         $travelineSectionCount = self::getSections(1, 0, 1, true)->getCount();
