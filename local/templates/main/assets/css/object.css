@@ -2398,7 +2398,7 @@
 
 .review__text {
   margin-top: 1.6rem;
-  opacity: 0;
+  /* opacity: 0; */
   padding-right: 3.6rem;
   -webkit-transition: opacity 0.25s;
   transition: opacity 0.25s;
