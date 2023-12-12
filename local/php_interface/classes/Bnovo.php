@@ -14,6 +14,7 @@ use DatePeriod;
 use DateTime;
 use DateInterval;
 use http\Params;
+use Naturalist\Products;
 
 Loader::IncludeModule("iblock");
 Loader::IncludeModule("catalog");
@@ -1261,8 +1262,8 @@ class Bnovo
                     }
                 }                
             } else {
-                // $arElementImages = array();
-                // $arElementImages = self::getImages($arRoom["photos"]);
+                $arElementImages = array();
+                $arElementImages = self::getImages($arRoom["photos"]);
 
                 $arFields = array(
                     "ACTIVE" => "Y",
@@ -1273,7 +1274,7 @@ class Bnovo
                     "DETAIL_TEXT" => empty($arRoom["description"]) ? nl2br($arRoom["description_ru"]) : nl2br($arRoom["description"]),
                     "DETAIL_TEXT_TYPE" => 'html',
                     "PROPERTY_VALUES" => array(
-                        //"PHOTOS" => $arElementImages,
+                        "PHOTOS" => $arElementImages,
                         "EXTERNAL_ID" => $arRoom["id"],
                         "CATEGORY" => $elementIdCat,
                         "TARIFF" => $tariffsIds,
@@ -1285,7 +1286,12 @@ class Bnovo
                 );
                 $elementId = $iE->Add($arFields);
 
-                if ($elementId && $onlyRooms) {                    
+                if ($elementId) {
+                    Products::setQuantity($elementId);
+                    Products::setPrice($elementId);
+                }
+
+                if ($elementId && $onlyRooms) {
                     $this->sendMessage([
                         'MESSAGE' => "Добавлен номер (".$elementId.") \"".$elementName."\" в отель (".$sectionId.") \"".$sectionName."\"",
                     ]);                              
@@ -1639,6 +1645,7 @@ class Bnovo
         $arResponse = json_decode($response, true);
         curl_close($ch);
 
+        file_put_contents($_SERVER["DOCUMENT_ROOT"] . '/log_bnovo_responce.txt', 'Номер заказа: ' . $orderId . PHP_EOL, FILE_APPEND);
         file_put_contents($_SERVER["DOCUMENT_ROOT"] . '/log_bnovo_responce.txt', $response . PHP_EOL, FILE_APPEND);
 
         if ($arResponse['created_bookings'][0]['ota_booking_id']) {
