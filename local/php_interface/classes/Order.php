@@ -686,7 +686,7 @@ class Orders
             $categoryId = $arBasketItems['ITEMS'][0]['PROPS']['CATEGORY_ID'];
             $externalSectionId = $arBasketItems['ITEMS'][0]['ITEM']['SECTION']['UF_EXTERNAL_ID'];            
             $bnovo = new Bnovo();
-            $response = $bnovo->updateAvailabilityData($externalSectionId, [$categoryId], [date('Y-m-d', strtotime($params["dateFrom"])), date('Y-m-d', strtotime($params["dateTo"]))], true);            
+            $response = $bnovo->updateAvailabilityData($externalSectionId, [$categoryId], [date('Y-m-d', strtotime($params["dateFrom"])), date('Y-m-d', strtotime($params["dateTo"]))], true);                        
             if (is_array($response) && isset($response[$categoryId])) {
                 foreach ($response[$categoryId] as $date) {
                     if ($date == 0) {
