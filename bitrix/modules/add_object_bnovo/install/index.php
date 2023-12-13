@@ -1,6 +1,6 @@
 <?
 
-Class AddObjectBnovo extends CModule
+Class add_object_bnovo extends CModule
 {
     var $MODULE_ID = "add_object_bnovo";
     var $MODULE_VERSION;
