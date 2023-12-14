@@ -82,7 +82,7 @@ class Bnovo
 
     /* Получение списка свободных объектов в выбранный промежуток */
     public function search($guests, $arChildrenAge, $dateFrom, $dateTo)
-    {
+    {        
         $arDates = array();
         $period = new DatePeriod(new DateTime($dateFrom), new DateInterval('P1D'),
             new DateTime(date('d.m.Y', strtotime($dateTo . '+1 day'))));
@@ -188,12 +188,6 @@ class Bnovo
             array("ID", "NAME", "PROPERTY_CATEGORY_ID", "PROPERTY_GUESTS_COUNT", "PROPERTY_CHILDREN_COUNT", "PROPERTY_CHILDREN_AGES")
         );
         $arCategoriesFilterredIDs = array();
-
-        /*while ($arOccupancy = $rsOccupancies->Fetch()) {
-            if ($arOccupancy["PROPERTY_GUESTS_COUNT_VALUE"] == $guests && $arOccupancy["PROPERTY_CHILDREN_COUNT_VALUE"] >= $children) {
-                $arCategoriesFilterredIDs[] = $arOccupancy["PROPERTY_CATEGORY_ID_VALUE"];
-            }
-        }*/
 
         // HL Возрастные интервалы
         $arAges = self::getAges();
