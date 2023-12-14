@@ -32,7 +32,7 @@ $bVarsFromForm = false; // флаг "Данные получены с формы
 if ($REQUEST_METHOD == "POST" && check_bitrix_sessid() && !empty($_REQUEST["object_id"])) {
 
     $bnovo = new Bnovo();
-    $object = $bnovo->updatePublicObject($_REQUEST["object_id"], $_REQUEST["only_rooms"]);
+    $object = $bnovo->updatePublicObject($_REQUEST["object_id"], $_REQUEST["only_rooms"], $_REQUEST["only_tariffs"]);
 
 	if (!empty($object["MESSAGE"]["ERRORS"])) {
         foreach ($object["MESSAGE"]["ERRORS"] as $error) {
@@ -105,6 +105,14 @@ if (!$message && !empty($object["MESSAGE"]["SUCCESS"])) {
             <label>
                 <input type="checkbox" name="only_rooms" id="only_rooms" value="Y">
                 <span><?=GetMessage("MODULE_ONLY_ROOMS")?></span>
+            </label>
+        </td>
+    </tr>    
+    <tr>
+        <td style="padding: 10px 0 0 0;">
+            <label>
+                <input type="checkbox" name="only_tariffs" id="only_tariffs" value="Y">
+                <span><?=GetMessage("MODULE_ONLY_TARIFFS")?></span>
             </label>
         </td>
     </tr>    

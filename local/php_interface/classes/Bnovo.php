@@ -767,7 +767,7 @@ class Bnovo
     }
 
     /* Получение объекта по UID и дальнейшее получение данных */
-    public function updatePublicObject($uid, $onlyRooms = false)
+    public function updatePublicObject($uid, $onlyRooms = false, $onlyTariffs = false)
     {        
         $arSection = [];
         // Отели
@@ -851,7 +851,9 @@ class Bnovo
         if (!empty($arSection['UF_EXTERNAL_ID'])) {
             $childrenAgesId = self::updatePublicChildrenAges($arSection);
             $tariffsId = self::updatePublicTariffs($arSection);
-            $this->updatePublicRoomtypes($arSection, $tariffsId, $childrenAgesId, $onlyRooms);
+            if (!$onlyTariffs) {
+                $this->updatePublicRoomtypes($arSection, $tariffsId, $childrenAgesId, $onlyRooms);
+            }
         }
 
         return $arResult;

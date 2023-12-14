@@ -297,19 +297,25 @@ class Rest
         }
 
         // Тарифы
-        $rsTariffs = CIBlockElement::GetList(
-            array("ID" => "ASC"),
-            array(
-                "IBLOCK_ID" => $this->tariffsIBlockID,
-                "ACTIVE" => "Y",
-            ),
-            false,
-            false,
-            array("ID", "NAME")
+        $entity = \Bitrix\Iblock\Model\Section::compileEntityByIblock($this->tariffsIBlockID);
+        $rsSectionObjects = $entity::getList(
+            [
+                'filter' => ['IBLOCK_ID' => $this->tariffsIBlockID, 'UF_EXTERNAL_ID' => $arSectionExternalIds[0]],
+                'select' => ['ID', 'NAME', 'TARIF_ID' => 'TariffTable.ID', 'TARIF_NAME' => 'TariffTable.NAME'],    
+                'runtime' => [
+                    new \Bitrix\Main\Entity\ReferenceField(
+                        'TariffTable',
+                        \Bitrix\Iblock\Elements\ElementTariffsTable::class,
+                        ['=this.ID' => 'ref.IBLOCK_SECTION_ID'],
+                        ['join_type' => 'RIGHT']
+                    )
+                ]            
+            ]
         );
+
         $arTariffsAll = array();
-        while ($arTariff = $rsTariffs->Fetch()) {
-            $arTariffsAll[$arTariff["ID"]] = $arTariff["NAME"];
+        while ($arTariff = $rsSectionObjects->Fetch()) {
+            $arTariffsAll[$arTariff["TARIF_ID"]] = $arTariff["TARIF_NAME"];
         }
 
         // Номера
@@ -404,13 +410,6 @@ class Rest
         $arOccupanciesAll = array();
 
         while ($arOccupancy = $rsOccupancies->Fetch()) {
-            /*if(!empty($arOccupancy["PROPERTY_CHILDREN_MIN_AGE_VALUE"]) && !empty($arOccupancy["PROPERTY_CHILDREN_MAX_AGE_VALUE"])) {
-                $arAgesAll[$arOccupancy["PROPERTY_CATEGORY_ID_VALUE"]] = array(
-                    "min" => $arOccupancy["PROPERTY_CHILDREN_MIN_AGE_VALUE"],
-                    "max" => $arOccupancy["PROPERTY_CHILDREN_MAX_AGE_VALUE"]
-                );
-            }*/
-
             if (isset($arChildrenIdsBx[$arOccupancy["PROPERTY_CATEGORY_ID_VALUE"]])) {
                 $arOccupancy["PROPERTY_CATEGORY_ID_VALUE"] = $arChildrenIdsBx[$arOccupancy["PROPERTY_CATEGORY_ID_VALUE"]];
             }
@@ -444,30 +443,24 @@ class Rest
 
         $arTariffs = array();
         $arRoomTypes = array();
-        $arAges = array();
-        //while($arElement = $rsElements->Fetch()) {
+        $arAges = array();        
         foreach ($arRoomsTariffs as $arElement) {
             $arElementIDs[] = $arElement["ID"];
             $arElementsSectionLinks[$arElement["ID"]] = $arElement["IBLOCK_SECTION_ID"];
 
-            // Тарифы
-            //xprint($arTariffsAll);
-            //xprint($arTariffs);
-            //xprint($arElement["PROPERTY_TARIFF_VALUE"]);
-
-            //die();
-            foreach ($arElement["PROPERTY_TARIFF_VALUE"] as $tariffId) {
-                if (!isset($arTariffs[$arElement["IBLOCK_SECTION_ID"]][$tariffId]) && $tariffId) {
-                    $arTariffs[$arElement["IBLOCK_SECTION_ID"]][$tariffId] = array(
-                        'title' => $arTariffsAll[$tariffId],
+            // Тарифы            
+            foreach ($arTariffsAll as $tariffIndex => $tariffId) {
+                if (!isset($arTariffs[$arElement["IBLOCK_SECTION_ID"]][$tariffIndex]) && $tariffIndex) {
+                    $arTariffs[$arElement["IBLOCK_SECTION_ID"]][$tariffIndex] = array(
+                        'title' => $arTariffsAll[$tariffIndex],
                         'permitted_data' => 'all',
                         'rooms' => array(),
                     );
                 }
 
-                if ($arTariffs[$arElement["IBLOCK_SECTION_ID"]][$tariffId]) {
+                if ($arTariffs[$arElement["IBLOCK_SECTION_ID"]][$tariffIndex]) {
                     if (!empty($arElement["PROPERTY_CATEGORY_VALUE"][0])) {
-                        $arTariffs[$arElement["IBLOCK_SECTION_ID"]][$tariffId]["rooms"][] = $arElement["PROPERTY_CATEGORY_VALUE"][0];
+                        $arTariffs[$arElement["IBLOCK_SECTION_ID"]][$tariffIndex]["rooms"][] = $arElement["PROPERTY_CATEGORY_VALUE"][0];
                     }
                 }
             }
