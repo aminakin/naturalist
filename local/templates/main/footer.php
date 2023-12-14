@@ -746,7 +746,7 @@
 <?}?>
 
 <?    
-if (\Bitrix\Main\Engine\CurrentUser::get()->isAdmin()) {
+if (\Bitrix\Main\Engine\CurrentUser::get()->isAdmin() || \Bitrix\Main\Engine\CurrentUser::get()->getId() == 352) {
 ?>
     <script>
         (function(w,d,u){
