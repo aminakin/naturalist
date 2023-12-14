@@ -32,8 +32,8 @@ class Baskets
         if(!empty($userIdF)) {
             $fUserId = CSaleUser::GetList(array("USER_ID" => (int)$userIdF))["ID"];
         } else {
-            $fUserId = (intval($userId) > 0) ? CSaleUser::getFUserCode() : CSaleBasket::GetBasketUserID();
-        }        
+            $fUserId = Fuser::getId();
+        }                
         $arBasketItems = array();
         $rsBasketItems = CSaleBasket::GetList(
             array(

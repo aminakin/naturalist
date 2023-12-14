@@ -431,8 +431,7 @@ class Bnovo
                 array(
                     "IBLOCK_ID" => $this->catalogIBlockID,
                     "ACTIVE" => "Y",
-                    "PROPERTY_CATEGORY" => $arCategoriesFilterredIDs,
-                    "PROPERTY_TARIFF" => $arTariffsIDs,
+                    "PROPERTY_CATEGORY" => $arCategoriesFilterredIDs,                    
                 ),
                 false,
                 false,
@@ -441,7 +440,7 @@ class Bnovo
             $arElementsFilterred = array();
             while ($arElement = $rsElements->Fetch()) {                
                 foreach ($arElement["PROPERTY_CATEGORY_VALUE"] as $categoryId) {
-                    foreach ($arElement["PROPERTY_TARIFF_VALUE"] as $tariffId) {
+                    foreach ($arTariffsIDs as $tariffId) {
                         $arElementsFilterred[$tariffId][$categoryId][] = $arElement["ID"];
                     }
                 }
