@@ -355,7 +355,7 @@ class Bnovo
             if (isset($arTariffsExternalIDs[$externalId])) {
                 $arTariffsIDs[] = $arTariffsExternalIDs[$externalId];
             }
-        }        
+        }
 
         // Размещение номеров
         // HL Возрастные интервалы
@@ -481,8 +481,6 @@ class Bnovo
                 return ($a['minPrice'] - $b['minPrice']);
             });
         }
-
-        xprint($arItems);
 
         return $arItems ?? [];
     }

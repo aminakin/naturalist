@@ -1,0 +1,73 @@
+<?php
+
+namespace Naturalist;
+use \Bitrix\Iblock\Model\Section;
+use \Bitrix\Main\Loader;
+
+Loader::includeModule("iblock");
+
+/**
+ * Товары каталога.
+ */
+
+class CustomFunctions
+{
+    private static $ufFolder = '/upload/uf/';
+
+    /**
+     * Удаляет неиспользуемые файлы из папки /upload/uf/
+     *     
+     */
+    public static function deleteOldUfFiles() {
+        $entity = Section::compileEntityByIblock(CATALOG_IBLOCK_ID);
+        $rsSectionObjects = $entity::getList(
+            [
+                'filter' => ['IBLOCK_ID' => CATALOG_IBLOCK_ID],
+                'select' => ['NAME', 'UF_PHOTOS'],        
+            ]
+        );
+
+        while ($arSectionItem = $rsSectionObjects->Fetch()){
+            if (is_array($arSectionItem['UF_PHOTOS']) && count($arSectionItem['UF_PHOTOS'])) {
+                foreach ($arSectionItem['UF_PHOTOS'] as $photo) {
+                    $filePath = $_SERVER['DOCUMENT_ROOT'].\CFile::getPath($photo);
+                    if (str_contains($filePath, '/uf')) {
+                        $photoPaths[] = $filePath;
+                    }            
+                }
+            }    
+        }
+
+        $photoPaths = array_unique($photoPaths);
+        $uf = scandir($_SERVER['DOCUMENT_ROOT'].self::$ufFolder);
+
+        foreach ($uf as $ufFolder) {
+            if ($ufFolder != '.' && $ufFolder != '..') {        
+                $ufInnerFolder = scandir($_SERVER['DOCUMENT_ROOT'].self::$ufFolder.$ufFolder);
+
+                foreach ($ufInnerFolder as $innerFolder) {
+                    if ($innerFolder != '.' && $innerFolder != '..') {
+                        $ufInnerFiles = scandir($_SERVER['DOCUMENT_ROOT'].self::$ufFolder.$ufFolder.'/'.$innerFolder);
+
+                        foreach ($ufInnerFiles as $lastFile) {
+                            if (is_file($_SERVER['DOCUMENT_ROOT'].self::$ufFolder.$ufFolder.'/'.$innerFolder.'/'.$lastFile)) {
+                                $ufAllFiles[] = $_SERVER['DOCUMENT_ROOT'].self::$ufFolder.$ufFolder.'/'.$innerFolder.'/'.$lastFile;
+                            }    
+                        }
+                        unset($lastFile);
+                    }
+                    if (is_file($_SERVER['DOCUMENT_ROOT'].self::$ufFolder.$ufFolder.'/'.$innerFolder)) {
+                        $ufAllFiles[] = $_SERVER['DOCUMENT_ROOT'].self::$ufFolder.$ufFolder.'/'.$innerFolder;
+                    }            
+                }
+                unset($innerFolder);
+            }    
+        }
+
+        foreach ($ufAllFiles as $photo) {    
+            if (array_search($photo, $photoPaths) === false) {
+                unlink($photo);
+            }
+        }
+    }    
+}
