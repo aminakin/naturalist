@@ -489,20 +489,9 @@ class Rest
         $hotelId = $params["hotel_id"];
         $externalId = $params["account_id"];
 
-        $arSectionHotel = CIBlockSection::GetList(
-            array("ID" => "ASC"),
-            array(
-                "IBLOCK_ID" => $this->catalogIBlockID,
-                //"ACTIVE"    => "Y",
-                "ID" => $hotelId,
-                "UF_EXTERNAL_SERVICE" => $this->bnovoSectionPropEnumId,
-            ),
-            false,
-            array("IBLOCK_ID", "ID"),
-            false
-        )->Fetch();
+        $bnovoCatalogSection = $this->getCatalogSection($hotelId);
 
-        if (empty($arSectionHotel["ID"])) {
+        if (empty($bnovoCatalogSection["ID"])) {
             return array('code' => 404, 'error' => 'Объект не найден');
         }
 
@@ -565,19 +554,9 @@ class Rest
         $arSend['EXT_ID'] = $externalId;
         $arSend['FILE'] = $fileName;
 
-        $arSectionHotel = CIBlockSection::GetList(
-            false,
-            array(
-                "IBLOCK_ID" => $this->catalogIBlockID,
-                "ID" => $hotelId,
-                "UF_EXTERNAL_SERVICE" => $this->bnovoSectionPropEnumId,
-            ),
-            false,
-            array("IBLOCK_ID", "ID"),
-            false
-        )->Fetch();
+        $bnovoCatalogSection = $this->getCatalogSection($hotelId);
 
-        if (empty($arSectionHotel["ID"])) {
+        if (empty($bnovoCatalogSection["ID"])) {
             $arSend['MESSAGE'] = 'Объект не найден';
             $this->sendError($arSend);
             return array('code' => 404, 'error' => 'Объект не найден');
@@ -652,5 +631,25 @@ class Rest
         $hlblock = HighloadBlockTable::getById($hlId)->fetch();
         $entity = HighloadBlockTable::compileEntity($hlblock);
         return $entity->getDataClass();
+    }
+
+    /**
+     * Получает раздел каталога
+     *
+     * @param int $hotelId
+     * 
+     * @return array
+     * 
+     */
+    private function getCatalogSection($hotelId) {
+        $sectionEntity = \Bitrix\Iblock\Model\Section::compileEntityByIblock(CATALOG_IBLOCK_ID);
+        $rsSectionObjects = $sectionEntity::getList(
+            [
+                'filter' => ['IBLOCK_ID' => $this->catalogIBlockID, 'UF_EXTERNAL_SERVICE' => $this->bnovoSectionPropEnumId, 'ID' => $hotelId],
+                'select' => ['IBLOCK_ID', 'ID'],        
+            ]
+        )->Fetch();
+
+        return $rsSectionObjects;
     }
 }

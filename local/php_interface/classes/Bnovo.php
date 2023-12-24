@@ -37,6 +37,7 @@ class Bnovo
     // HL ID возраста
     private static $childrenAgesHLId = CHILDREN_HL_ID;
 
+    private static $pricesHlCode = 'RoomOffers';
     private $bnovoSectionPropEnumId = '2';
     private $sendEventName = 'BNOVO_IMPORT_NOTICE';
 
@@ -250,7 +251,7 @@ class Bnovo
             new DateTime(date('d.m.Y', strtotime($dateTo . '+1 day'))));
         foreach ($period as $value) {
             $arDates[] = $value->format('d.m.Y');
-        }
+        }        
         $daysCount = count($arDates) - 1;
         //Проверка на детей без мест и размещения без детей
         $arHotel = CIBlockSection::GetList(false, array("IBLOCK_ID" => CATALOG_IBLOCK_ID, "ID" => $sectionId), false, array("ID", "UF_EXTERNAL_ID", "UF_MIN_AGE", "UF_NO_CHILDREN_PLACE"), false)->Fetch();
@@ -1338,7 +1339,7 @@ class Bnovo
             CURLOPT_HTTPHEADER => $headers
         ));
         $response = curl_exec($ch);        
-        $arData = json_decode($response, true);        
+        $arData = json_decode($response, true);
 
         if (empty($arData) || (isset($arData['code']) && $arData['code'] != 200)) {
             if ($arData['code'] == 403) {
@@ -1353,8 +1354,8 @@ class Bnovo
         }
         
         curl_close($ch);
-
-        $entityClass = $this->getEntityClass();
+        
+        $entityClass = new HighLoadBlockHelper(self::$pricesHlCode);
         $arResultRooms = [];
 
         $arDatesFilter = [];
@@ -1364,8 +1365,8 @@ class Bnovo
             $arDatesFilter[] = $value->format('d.m.Y');
         }
 
-        $rsData = $entityClass::getList([
-            "select" => [
+        $entityClass->prepareParamsQuery(
+            [
                 "ID",
                 "UF_PRICE",
                 "UF_CLOSED",
@@ -1376,21 +1377,21 @@ class Bnovo
                 "UF_TARIFF_ID",
                 "UF_CATEGORY_ID",
                 "UF_DATE"
+            ],            
+            [
+                "ID" => "ASC"
             ],
-            "filter" => [
+            [
                 "UF_HOTEL_ID" => $hotelId,
                 "UF_DATE" => $arDatesFilter
             ],
-            "order" => ["ID" => "ASC"],
-        ]);
-        $rsObData = $rsData;
-        $arResData = $rsData->FetchAll();
+        );        
+
+        $arResData = $entityClass->getDataAll();
+        
         foreach ($arResData as $key => $arEntity) {
             $arResultRooms[$arEntity['UF_TARIFF_ID']][$arEntity['UF_CATEGORY_ID']][$arEntity['UF_DATE']->format("Y-m-d")] = $arEntity;
         }
-
-        $entityClassAdd = $this->getEntityCollection();
-        $valuesCollectionAdd = $entityClassAdd->createCollection();
 
         $triggerAdd = false;
         foreach ($arData["plans_data"] as $tariffId => $arCategories) {
@@ -1410,41 +1411,36 @@ class Bnovo
                         $entityId = $tmpRoom['ID'];
                         unset($tmpRoom['ID'], $tmpRoom['UF_TARIFF_ID'], $tmpRoom['UF_CATEGORY_ID'], $tmpRoom['UF_DATE']);
 
-                        $arFields = array(
+                        $arFields = [
                             "UF_PRICE" => $price,
                             "UF_CLOSED" => $isReserved,
                             "UF_MIN_STAY" => $minStay,
                             "UF_MAX_STAY" => $maxStay,
                             "UF_CLOSED_ARRIVAL" => $closedArrival,
                             "UF_CLOSED_DEPARTURE" => $closedDeparture,
-                        );
+                        ];
 
                         if (array_diff($tmpRoom, $arFields)) {
-                            $entityClass::update($entityId, $arFields);
+                            $entityClass->update($entityId, $arFields);
                         }
-                    } else {
-                        $triggerAdd = true;
-                        $collectionObjAdd =
-                            $entityClassAdd->createObject()->set("UF_HOTEL_ID", $hotelId)
-                                ->set("UF_TARIFF_ID", $tariffId)
-                                ->set("UF_CATEGORY_ID", $categoryId)
-                                ->set("UF_DATE", date('d.m.Y', strtotime($date)))
-                                ->set("UF_PRICE", $price)
-                                ->set("UF_CLOSED", $isReserved)
-                                ->set("UF_MIN_STAY", $minStay)
-                                ->set("UF_MAX_STAY", $maxStay)
-                                ->set("UF_CLOSED_ARRIVAL", $closedArrival)
-                                ->set("UF_CLOSED_DEPARTURE", $closedDeparture);
-                        $valuesCollectionAdd->add($collectionObjAdd);
+                    } else {                        
+                        $arFields = [
+                            "UF_HOTEL_ID" => $hotelId,
+                            "UF_TARIFF_ID" => $tariffId,
+                            "UF_CATEGORY_ID" => $categoryId,
+                            "UF_DATE" => date('d.m.Y', strtotime($date)),
+                            "UF_PRICE" => $price,
+                            "UF_CLOSED" => $isReserved,
+                            "UF_MIN_STAY" => $minStay,
+                            "UF_MAX_STAY" => $maxStay,
+                            "UF_CLOSED_ARRIVAL" => $closedArrival,
+                            "UF_CLOSED_DEPARTURE" => $closedDeparture,
+                        ];                        
+                        $entityClass->add($arFields);
                     }
                 }
             }
         }
-
-        if ($triggerAdd) {
-            $valuesCollectionAdd->save(true);
-        }
-
     }
 
     /* Обновление наличия */
@@ -1493,9 +1489,8 @@ class Bnovo
         }
 
         curl_close($ch);
-        $initEntityClass = $this->getEntityCollection();
-        $entityClass = $initEntityClass->getDataClass();
-        $collection = $initEntityClass->getCollectionClass();
+
+        $entityClass = new HighLoadBlockHelper(self::$pricesHlCode);
 
         $arDatesFilter = [];
         $period = new DatePeriod(new DateTime($dateFrom), new DateInterval('P1D'),
@@ -1506,20 +1501,31 @@ class Bnovo
 
         $arReservedOne = [];
         $arReservedNull = [];
+
+        xprint($arData['availability']);
+
         foreach ($arData["availability"] as $categoryId => $arCategoryDates) {
             $arResultRoomsId = [];
             $arResultRooms = [];
-            $rsData = $entityClass::getList([
-                "select" => ["ID", "UF_RESERVED", "UF_DATE"],
-                "filter" => [
+
+            $entityClass->prepareParamsQuery(
+                [
+                    "ID",
+                    "UF_RESERVED",
+                    "UF_DATE",                    
+                ],            
+                [
+                    "ID" => "ASC"
+                ],
+                [
                     "UF_HOTEL_ID" => $hotelId,
                     "=UF_CATEGORY_ID" => $categoryId,
                     "UF_DATE" => $arDatesFilter,
                 ],
-                "order" => ["ID" => "ASC"],
-            ]);
-
-            $arResData = $rsData->FetchAll();
+            );        
+    
+            $arResData = $entityClass->getDataAll();
+            
             if(empty($arResData)) {
                 return 'Нет данных по объекту bnovoId: ' . $hotelId . ' bnovoCategoryId '.$categoryId.' на переданные в запросе даты';
             }
@@ -1541,8 +1547,7 @@ class Bnovo
                                 $arReservedOne[] = $id;
                             } else {
                                 $arReservedNull[] = $id;
-                            }
-                            //$entityClass::update($id, $arFields);
+                            }                            
                         }
                     }
                 }
@@ -1550,25 +1555,15 @@ class Bnovo
         }
 
         if (!empty($arReservedOne)) {
-            $obData = $collection::wakeUp($arReservedOne);
-
-            foreach ($obData as $key => $data)
-            {
-                $data->set("UF_RESERVED", "1");
+            foreach ($arReservedOne as $data) {
+                $entityClass->update($data, ["UF_RESERVED" => "1"]);                
             }
-
-            $obData->save(true);
         }
 
         if (!empty($arReservedNull)) {
-            $obData = $collection::wakeUp($arReservedNull);
-
-            foreach ($obData as $key => $data)
-            {
-                $data->set("UF_RESERVED", "0");
+            foreach ($arReservedNull as $data) {
+                $entityClass->update($data, ["UF_RESERVED" => "0"]);
             }
-
-            $obData->save(true);
         }
     }
 
@@ -1743,6 +1738,25 @@ class Bnovo
             return true;
         } else {
             return false;
+        }
+    }
+
+    public static function deleteOldPrices() {
+        $hlEntity = new HighLoadBlockHelper(self::$pricesHlCode);
+        $today = \Bitrix\Main\Type\DateTime::createFromTimestamp(strtotime('-1 days'))->format("d.m.Y");
+
+        $hlEntity->prepareParamsQuery(
+            ["ID"],            
+            ["ID" => "ASC"],
+            ["<UF_DATE" => $today],
+        );        
+
+        $rows = $hlEntity->getDataAll();
+
+        if(is_array($rows) && count($rows)) {
+            foreach ($rows as $key => $row) {
+                $hlEntity->delete($row['ID']);
+            }            
         }
     }
 
