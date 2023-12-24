@@ -1502,8 +1502,6 @@ class Bnovo
         $arReservedOne = [];
         $arReservedNull = [];
 
-        xprint($arData['availability']);
-
         foreach ($arData["availability"] as $categoryId => $arCategoryDates) {
             $arResultRoomsId = [];
             $arResultRooms = [];
