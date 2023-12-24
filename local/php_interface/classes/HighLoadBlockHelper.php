@@ -147,4 +147,38 @@ class HighLoadBlockHelper
     {
         return $this->entityDataClass::add($fields);
     }
+
+    /**
+     * Обновляет запись в highload блоке.
+     *
+     * @param int $id
+     * @param array $fields
+     *      
+     * @return mixed
+     */
+    public function update(int $id, array $fields)
+    {
+        return $this->entityDataClass::update($id, $fields);
+    }
+
+    /**
+     * Копирует запись в highload блоке.
+     *
+     * @param int $id
+     * @param array $fields
+     *      
+     * @return mixed
+     */
+    public function copy(int $id)
+    {
+        $this->prepareParamsQuery(
+            ['*'],
+            ["ID" => "ASC"],
+            ['ID' => $id]
+        );
+        $fields = $this->getData();
+        unset($fields['ID']);
+
+        return $this->entityDataClass::add($fields);
+    }
 }
