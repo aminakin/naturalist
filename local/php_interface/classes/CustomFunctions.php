@@ -13,12 +13,14 @@ Loader::includeModule("iblock");
 class CustomFunctions
 {
     private static $ufFolder = '/upload/uf/';
+    private static $amenitiesHlCode = 'CampingFeatures';
 
     /**
      * Удаляет неиспользуемые файлы из папки /upload/uf/
      *     
      */
     public static function deleteOldUfFiles() {
+        // Получаем все фото из доп. полей разделов каталога
         $entity = Section::compileEntityByIblock(CATALOG_IBLOCK_ID);
         $rsSectionObjects = $entity::getList(
             [
@@ -37,6 +39,26 @@ class CustomFunctions
                 }
             }    
         }
+
+        // Получаем все фото из HL блока особенностей объектов
+        $hlEntity = new HighLoadBlockHelper(self::$amenitiesHlCode);
+
+        $hlEntity->prepareParamsQuery(
+            ["ID", "UF_ICON"],            
+            ["ID" => "ASC"],
+            [],
+        );        
+
+        $rows = $hlEntity->getDataAll();
+        
+        if (is_array($rows) && count($rows)) {
+            foreach ($rows as $HlPhoto) {
+                if ($HlPhoto['UF_ICON']) {
+                    $filePath = $_SERVER['DOCUMENT_ROOT'].\CFile::getPath($HlPhoto['UF_ICON']);                    
+                    $photoPaths[] = $filePath;                                
+                }                
+            }
+        }        
 
         $photoPaths = array_unique($photoPaths);
         $uf = scandir($_SERVER['DOCUMENT_ROOT'].self::$ufFolder);
