@@ -719,9 +719,16 @@ class Orders
 
         /* Оплата */
         $paymentCollection = $order->getPaymentCollection();
-        $payment = $paymentCollection->createItem(
-            PaySystem\Manager::getObjectById($this->paymentTypeId)
-        );
+        if (isset($params['paysystem'])) {
+            $payment = $paymentCollection->createItem(
+                PaySystem\Manager::getObjectById($params['paysystem'])
+            );
+        } else {
+            $payment = $paymentCollection->createItem(
+                PaySystem\Manager::getObjectById($this->paymentTypeId)
+            );
+        }
+        
         $payment->setField("SUM", $order->getPrice());
         $payment->setField("CURRENCY", $order->getCurrency());
 
@@ -793,7 +800,13 @@ class Orders
                 $baskets->deleteAll();
 
                 // Ссылка на оплату
-                $paymentUrl = $this->getPaymentUrl($orderId, false);
+                $paymentData = '';
+                if (isset($params['paysystem']) && $params['paysystem'] != $this->paymentTypeId) {
+                    $paymentUrl = false;
+                    $paymentData = $this->getPaymentUrl($orderId, false, true);
+                } else {
+                    $paymentUrl = $this->getPaymentUrl($orderId, false);
+                }
 
                 // Сохранение гостей в пользовательском поле UF_GUESTS_DATA для текущего пользователя
                 if ($arSaveGuests) {
@@ -832,7 +845,8 @@ class Orders
                 return json_encode([
                     "ID" => $orderId,
                     "MESSAGE" => "Заказ успешно добавлен.",
-                    "REDIRECT_URL" => $paymentUrl
+                    "REDIRECT_URL" => $paymentUrl,
+                    "PAYMENT_DATA" => $paymentData,
                 ]);
 
             } else {
@@ -850,7 +864,7 @@ class Orders
 
     /* Получение ссылки на оплату */
 
-    public function getPaymentUrl($orderId, $isJSON = true)
+    public function getPaymentUrl($orderId, $isJSON = true, $isYaPay = false)
     {
         $orderId = intval($orderId);
         $order = Order::load($orderId);
@@ -873,6 +887,9 @@ class Orders
 
             if ($initResult->isSuccess()) {
                 $link = $initResult->getTemplate();
+                if ($isYaPay) {
+                    return json_decode($link);
+                }
                 return ($isJSON) ? json_encode([
                     "LINK" => $link
                 ]) : $link;

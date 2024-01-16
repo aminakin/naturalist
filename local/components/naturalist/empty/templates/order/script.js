@@ -2,6 +2,7 @@ var Order = function () {
   this.add = function () {
     var arGuests = {};
     var error = 0;
+    let _this = this;
     let orderForm = $("#form-order");
     let isAuth = orderForm.attr("is_auth");
     if (isAuth === "true") {
@@ -51,6 +52,7 @@ var Order = function () {
         dateTo: $('#form-order input[name="date_to"]').val(),
         checksum:
           $('#form-order input[name="travelineChecksum"]').val() ?? false,
+        paysystem: $('#form-order input[name="paysystem"]:checked').val(),
       };
       var data = {
         params: params,
@@ -68,8 +70,12 @@ var Order = function () {
         success: function (a) {
           window.preloader.hide();
           if (!a.ERROR) {
-            if (a.REDIRECT_URL) {
+            if (a.REDIRECT_URL && a.REDIRECT_URL != false) {
               location.href = a.REDIRECT_URL;
+            } else if (a.PAYMENT_DATA) {
+              _this.getYaPayUrl(a.PAYMENT_DATA);
+            } else {
+              console.log(a);
             }
           } else {
             window.infoModal(ERROR_TITLE, a.ERROR);
@@ -309,6 +315,24 @@ var Order = function () {
     }
 
     document.cookie = updatedCookie;
+  };
+
+  this.getYaPayUrl = function (data) {
+    fetch("/bitrix/services/yandexpay.pay/trading/orders", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    })
+      .then((response) => {
+        return response.json();
+      })
+      .then((result) => {
+        if (result.status === "success") {
+          location.href = result.data.paymentUrl;
+        } else {
+          console.error("orders error - " + result.reasonCode + result.reason);
+        }
+      });
   };
 };
 var order = new Order();

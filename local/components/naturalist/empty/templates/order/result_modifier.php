@@ -166,6 +166,14 @@ if ($coockieComment != '') {
     $arUser['COMMENT'] = $coockieComment;
 }
 
+
+$paySystemResult = \Bitrix\Sale\PaySystem\Manager::getList(array(
+    'filter'  => array(
+        'ACTIVE' => 'Y',
+        '!ACTION_FILE' => 'inner'
+    )
+))->fetchAll();
+
 $arResult = array(
     "elementId" => $elementId,
     "sectionId" => $sectionId,
@@ -193,7 +201,8 @@ $arResult = array(
     "arHLFeatures" => $arHLFeatures,
     "arGuestsNamesData" => $arGuestsNamesData,
     "coupons" => $coupons,
-    "finalPrice" => $finalBaskePrices
+    "finalPrice" => $finalBaskePrices,
+    "paySystems" => $paySystemResult,
 );
 if(!empty($prices)) {
     $arResult["priceOneNight"] = array_shift(unserialize($prices));

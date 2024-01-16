@@ -208,6 +208,34 @@ use Bitrix\Main\Localization\Loc;
                 <span>Итого</span>
                 <div class="h1"><?= number_format($arResult['finalPrice']['REAL_PRICE'], 0, '.', ' ') ?> <?=Loc::getMessage('ORDER_RUBLE')?></div>
             </div>
+            <?if (Bitrix\Main\Engine\CurrentUser::get()->isAdmin()) {?>
+                <div class="order-split-bage">
+                    <yandex-pay-badge
+                        merchant-id="d82873ad-61ce-4050-b05e-1f4599f0bb7b"
+                        type="bnpl"
+                        amount="<?=$arResult['finalPrice']['REAL_PRICE']?>"
+                        size="l"
+                        variant="simple"
+                        theme="light"
+                        color="primary"
+                    />
+                </div>                
+                <div class="payment-block">
+                    <p>Выберите способ оплаты:</p>
+                    <div class="payment-methods">
+                        <?if (is_array($arResult['paySystems'])) {
+                            foreach ($arResult['paySystems'] as $key => $paysystem) {?>
+                                <label class="checkbox payment-item">
+                                    <input type="radio" class="checkbox" value="<?=$paysystem['ID']?>" name="paysystem" <?=$key == 0 ? 'checked' : ''?>>
+                                    <span></span>
+                                    <img src="<?=CFile::getPath($paysystem['LOGOTIP'])?>">
+                                    <p><?=$paysystem['NAME']?></p>
+                                </label>  
+                            <?}
+                        }?>
+                    </div>
+                </div>
+            <?}?>
             <?/* if ($isAuthorized): */?>
                 <button class="button button_primary" type="button" data-form-submit data-order><?=Loc::getMessage('ORDER_PAY')?></button>
             <? /*else: ?>
