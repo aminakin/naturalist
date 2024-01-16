@@ -211,7 +211,15 @@ $dateFrom = $_GET['dateFrom'];
 $dateTo = $_GET['dateTo'];
 $guests = $_GET['guests'] ?? 2;
 $children = $_GET['children'] ?? 0;
-$arChildrenAge = (isset($_GET['childrenAge'])) ? explode(',' , $_GET['childrenAge']) : [];
+if (isset($_GET['childrenAge'])) {
+    if (is_array($_GET['childrenAge'])) {
+        $arChildrenAge = $_GET['childrenAge'];
+    } else {
+        $arChildrenAge = explode(',' , $_GET['childrenAge']);
+    }
+} else {
+    $arChildrenAge = [];
+}
 if (!empty($arSection) && !empty($dateFrom) && !empty($dateTo) && !empty($_GET['guests'])) {
     $daysRange = $dateFrom." - ".$dateTo;
     $daysCount = abs(strtotime($dateTo) - strtotime($dateFrom)) / 86400;

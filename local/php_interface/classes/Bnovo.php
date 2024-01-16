@@ -1420,9 +1420,9 @@ class Bnovo
                             "UF_CLOSED_DEPARTURE" => $closedDeparture,
                         ];
 
-                        if (array_diff($tmpRoom, $arFields)) {
+                        //if (array_diff($tmpRoom, $arFields)) {
                             $entityClass->update($entityId, $arFields);
-                        }
+                        //}
                     } else {                        
                         $arFields = [
                             "UF_HOTEL_ID" => $hotelId,
