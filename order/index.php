@@ -1,6 +1,7 @@
 <?
 /* Оформление заказа */
 require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/header.php");
+
 $metaTags = getMetaTags();
 $currentURLDir = $APPLICATION->GetCurDir();
 
@@ -13,6 +14,7 @@ if(!empty($metaTags[$currentURLDir])) {
     $APPLICATION->AddHeadString('<meta name="description" content="Оформление заказа | Натуралист - удобный онлайн-сервис поиска и бронирования глэмпинга для отдыха на природе с оплатой на сайте. Вы можете подобрать место для комфортного природного туризма в России по выгодным ценам с моментальной системой бронирования." />');
 }
 ?>
+<script src="https://pay.yandex.ru/sdk/v1/pay.js" onload="onYaPayLoad()" async></script>
 
 <main class="main">
     <section class="section section_crumbs">

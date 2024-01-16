@@ -1,9 +1,7 @@
 [data-slider-related] .slider__heading-controls {
   z-index: 1;
 }
-/*img.lazy.loaded, .review__image img {
-    height: 100%;
-}*/
+
 @media (max-width: 1160px) {
   .object-row:not(.object-row_profile) .object-row__images .swiper img {
     width: 100%;
@@ -134,14 +132,39 @@ h1.page_title {
   width: 100%;
 }
 .object-row .area-info div {
-  /*overflow: hidden;*/
-  /*-o-text-overflow: ellipsis;*/
-  /*text-overflow: ellipsis;*/
-  /*white-space: nowrap;*/
   font-size: 0;
 }
 .object-row .area-info div > span {
   font-size: 13px;
+}
+
+.order-split-bage {
+  text-align: right;
+  margin-right: -25px;
+  margin-top: 15px;
+}
+
+.payment-block {
+  margin-top: 30px;
+}
+
+.payment-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.payment-item p {
+  margin-left: 15px;
+}
+
+.payment-item img {
+  max-width: 60px;
+}
+
+.payment-item.checkbox span {
+  width: 16px;
+  height: 16px;
 }
 
 @media (max-width: 1650px) {
