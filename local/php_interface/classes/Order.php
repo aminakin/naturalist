@@ -217,12 +217,16 @@ class Orders
             $count = intval($item->getQuantity());
             $cost = floatval($price * $count);
 
+            $basketPropertyCollection = $item->getPropertyCollection();
+            $itemBasketProps = $basketPropertyCollection->getPropertyValues();
+
             $arItems[] = array(
                 "ID" => $productId,
                 "QUANTITY" => $count,
                 "PRODUCT_PRICE" => $price,
                 "PRODUCT_COST" => $cost,
                 "ITEM" => $arProduct,
+                "ITEM_BAKET_PROPS" => $itemBasketProps,
             );
 
             $totalPrice += $cost;
@@ -660,6 +664,7 @@ class Orders
             $dateFrom = $params['dateFrom'];
             $dateTo = $params['dateTo'];
             $guests = count($arGuestList);
+            $adults = $params['adults'];
             $price = $arBasketItems['ITEMS'][0]["PRICE"];
             $checksum = $params['checksum'];
             $arChildrenAge = ($params['childrenAge']) ? explode(',', $params['childrenAge']) : [];
@@ -671,7 +676,7 @@ class Orders
                 $arUser["PERSONAL_PHONE"] = $params["phone"];
             }
 
-            $arVerifyResponse = Traveline::verifyReservation($externalSectionId, $externalElementId, $externalCategoryId, $guests, $arChildrenAge, $dateFrom, $dateTo, $price, $checksum, $arGuestList, $arUser);
+            $arVerifyResponse = Traveline::verifyReservation($externalSectionId, $externalElementId, $externalCategoryId, $guests, $arChildrenAge, $dateFrom, $dateTo, $price, $checksum, $arGuestList, $arUser, $adults);
 
             if (!empty($arVerifyResponse['warnings'][0]['code']) || empty($arVerifyResponse["booking"])) {
                 $errorText = $arVerifyResponse['warnings'][0]['code'] ?? $arVerifyResponse['errors'][0]['message'];

@@ -25,6 +25,8 @@ Loader::registerAutoLoadClasses(null, array(
     'Naturalist\Utils' => '/local/php_interface/classes/Utils.php',
     'Naturalist\Morpher' => '/local/php_interface/classes/Morpher.php',
     'Naturalist\CustomFunctions' => '/local/php_interface/classes/CustomFunctions.php',
+    'Naturalist\PdfGenerator' => '/local/php_interface/classes/PdfGenerator.php',
+    'Naturalist\PrepareOrderData' => '/local/php_interface/classes/PrepareOrderData.php',
 ));
 
 // Константы
