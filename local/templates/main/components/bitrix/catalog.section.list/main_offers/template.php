@@ -77,8 +77,8 @@ $arReviewsAvg = Reviews::getCampingRating($arCampingIDs);
                                             ?>
                                         <? endif; ?>
                                         <div class="swiper-slide" data-fullgallery-item="<?= $keyElement; ?>">
-                                            <img class="swiper-lazy" alt="<?= $alt ?>" title="<?= $title ?>"
-                                                 data-src="<?= $arPhoto["src"] ?>"
+                                            <img class="" loading="lazy" alt="<?= $alt ?>" title="<?= $title ?>"
+                                                 src="<?= $arPhoto["src"] ?>"
                                                  alt="<?= $arItem["NAME"] ?>">
                                         </div>
                                         <? $keyPhoto++; ?>
@@ -89,8 +89,8 @@ $arReviewsAvg = Reviews::getCampingRating($arCampingIDs);
                                     $title = "Фото - " . $arItem["NAME"];
                                     ?>
                                     <div class="swiper-slide">
-                                        <img class="swiper-lazy" alt="<?= $alt ?>" title="<?= $title ?>"
-                                             data-src="<?= SITE_TEMPLATE_PATH ?>/img/no_photo.png"
+                                        <img class="" loading="lazy" alt="<?= $alt ?>" title="<?= $title ?>"
+                                             src="<?= SITE_TEMPLATE_PATH ?>/img/no_photo.png"
                                              alt="<?= $arItem["NAME"] ?>">
                                     </div>
                                 <? endif; ?>
