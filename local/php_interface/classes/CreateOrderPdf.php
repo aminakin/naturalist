@@ -148,6 +148,7 @@ class CreateOrderPdf {
     
             return json_encode([
                 "LINK" => HTTP_HOST.$this->pdfManager->getPathFilePdf(),
+                "SHORT" => $this->pdfManager->getPathFilePdf()
             ]);
     
             // $dir = new IO\Directory(

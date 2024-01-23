@@ -13,6 +13,7 @@ use Bitrix\Sale\PaySystem;
 use Bitrix\Sale\Fuser;
 use Bitrix\Main\Mail\Event;
 use Bitrix\Sale\DiscountCouponsManager;
+use Naturalist\CreateOrderPdf;
 
 use CIBlockSection;
 use CSaleOrder;
@@ -545,8 +546,9 @@ class Orders
             $propertyValue->setValue(date('d.m.Y H:i:s'));
 
             // Имя и фамилия покупателя
-            $clientName = $propertyCollection->getItemByOrderPropertyId($this->arPropsIDs['NAME']);
-            $clientLastName = $propertyCollection->getItemByOrderPropertyId($this->arPropsIDs['LAST_NAME']);
+            $clientName = $propertyCollection->getItemByOrderPropertyId($this->arPropsIDs['NAME'])->getValue();
+            $clientLastName = $propertyCollection->getItemByOrderPropertyId($this->arPropsIDs['LAST_NAME'])->getValue();
+            $clientEmail = $propertyCollection->getItemByOrderPropertyId($this->arPropsIDs['EMAIL'])->getValue();
 
             // Сохранение изменений в заказе
             $orderRes = $order->save();
@@ -554,13 +556,16 @@ class Orders
             if (!isset($reservationRes["ERROR"])) {
                 // Отсылка уведомлений на почту
                 //if ($arUser["UF_SUBSCRIBE_EMAIL_1"]) {
+                    $PDF = new CreateOrderPdf();
+                    $file = json_decode($PDF->getPdfLink($orderId))->SHORT;
+
                     $sendRes = Users::sendEmail("USER_RESERVATION", "55", array(
-                        "EMAIL" => $arUser["EMAIL"],
+                        "EMAIL" => $clientEmail,
                         "ORDER_ID" => $orderId,
                         "NAME" => $clientLastName. ' ' . $clientName,
                         "RESERVATION_ID" => $reservationRes,
                         "LINK" => 'https://' . $_SERVER['SERVER_NAME'] . '/personal/active/'
-                    ));
+                    ), [$_SERVER["DOCUMENT_ROOT"].$file]);
                 //}
                 // Отсылка уведомления на СМС
                 if ($arUser["UF_SUBSCRIBE_SMS_1"]) {

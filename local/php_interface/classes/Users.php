@@ -773,13 +773,14 @@ class Users
     }
 
     // Отправка почты
-    public static function sendEmail($eventName, $templateId, $data)
+    public static function sendEmail($eventName, $templateId, $data, $files = [])
     {
         $res = Event::send(array(
             "EVENT_NAME" => $eventName,
             "MESSAGE_ID" => $templateId,
             "LID" => "s1",
-            "C_FIELDS" => $data
+            "C_FIELDS" => $data,
+            "FILE" => $files,
         ));
 
         return $res;

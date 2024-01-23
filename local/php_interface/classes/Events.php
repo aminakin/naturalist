@@ -35,8 +35,7 @@ class Events
         $event->addEventHandler('main', 'OnEndBufferContent', [self::class, "deleteKernelJs"]);
         $event->addEventHandler('main', 'OnEndBufferContent', [self::class, "deleteKernelCss"]);
         $event->addEventHandler('sale', 'OnSaleOrderSaved', [self::class, "makeReservation"]);
-        $event->addEventHandler('iblock', 'OnBeforeIBlockSectionDelete', [self::class, "OnBeforeIBlockSectionDeleteHandler"]);
-        //$event->addEventHandler('main', 'OnBeforeEventAdd', [self::class, "addFileToEmail"]);
+        $event->addEventHandler('iblock', 'OnBeforeIBlockSectionDelete', [self::class, "OnBeforeIBlockSectionDeleteHandler"]);        
     }
 
     public static function deleteKernelJs(&$content) {
@@ -203,15 +202,5 @@ class Events
         $hlblock = HighloadBlockTable::getById($hlId)->fetch();
         $entity = HighloadBlockTable::compileEntity($hlblock);
         return $entity->getDataClass();
-    }
-
-    public static function addFileToEmail($event, $lid, $arFields) {
-        if ($event == "USER_RESERVATION")
-        {           
-            $PDF = new CreateOrderPdf();
-            $link = $PDF->getPdfLink($arFields['ORDER_ID']);
-            SendAttache($event, $lid, $arFields, json_decode($link)->LINK);
-            $event = 'null'; $lid = 'null';
-        }
     }
 }

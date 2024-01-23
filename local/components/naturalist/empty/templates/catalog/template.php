@@ -63,7 +63,7 @@ foreach ($arResult as $key => $value) {
                                     <?php endif; ?>
                                     <div class="swiper-slide" data-fullgallery-item="<?= $keyPhotoFullGallery; ?>">
                                         <img class="" loading="lazy" alt="<?= $alt ?>" title="<?= $title ?>"
-                                             data-src="<?= $arPhoto["src"] ?>">
+                                             src="<?= $arPhoto["src"] ?>">
                                     </div>
                                     <?php $keyPhoto++; ?>
                                     <?php $keyPhotoFullGallery++; ?>
@@ -224,7 +224,7 @@ foreach ($arResult as $key => $value) {
                                             <div class="swiper-slide"
                                                  data-fullgallery-item="<?= $keyPhotoFullGallery; ?>">
                                                 <img class="" loading="lazy" alt="<?= $alt ?>" title="<?= $title ?>"
-                                                     data-src="<?= $arPhoto["src"] ?>">
+                                                     src="<?= $arPhoto["src"] ?>">
                                             </div>
                                             <?php $keyPhoto++; ?>
                                             <?php $keyPhotoFullGallery++; ?>
