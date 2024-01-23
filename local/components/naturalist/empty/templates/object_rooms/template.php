@@ -317,6 +317,7 @@ foreach ($arParams['VARS'] as $key => $value) {
                                            data-category-id="<?=$arElement["PROPERTY_EXTERNAL_CATEGORY_ID_VALUE"]?>"
                                            data-traveline-checksum="<?=$checksum?>"
                                            data-cancel-amount="<?=$arExternalItem['cancelAmount']?>"
+                                           data-people="<?=$arExternalItem['fullPlacementsName']?>"
                                            href="#"
                                         >Забронировать</a>
                                     </div>

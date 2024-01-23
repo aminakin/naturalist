@@ -59,8 +59,6 @@ var Order = function () {
         params: params,
       };
 
-      console.log(JSON.stringify(data));
-
       jQuery.ajax({
         type: "POST",
         url: "/ajax/handlers/addOrder.php",

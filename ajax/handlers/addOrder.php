@@ -16,8 +16,12 @@ $orders = new Orders();
 $context = Application::getInstance()->getContext();
 $request = $context->getRequest();
 
+$session = Application::getInstance()->getSession();	
+$checksum = $session->get('traveline_checksum');
+
 if ($request->get("params")) {
 	$params = $request->get("params");
+	$params['SESSION_CHECKSUM'] = $checksum;
 	$res = $orders->add($params);
 	echo $res;
 } else if ($request->get('action') == 'couponAdd') {

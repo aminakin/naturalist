@@ -154,9 +154,8 @@ class PdfGenerator
         $htmlStyles = [];
 
         foreach ($this->pdfStyles as $styleLink) {
-            array_push($htmlStyles, 
-                // '<link rel="stylesheet" href=' . $_SERVER["HTTP_ORIGIN"] . $styleLink . '>'
-                '<link rel="stylesheet" href="http://naturalist/' . $styleLink . '">'
+            array_push($htmlStyles,                 
+                '<link rel="stylesheet" href="' . HTTP_HOST . $styleLink . '">'
             );
         }
 

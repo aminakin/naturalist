@@ -98,7 +98,7 @@ class Baskets
         $arProduct = $products->get($productId);
         self::deleteAll();
         self::manageHL($fBasketUserId, $productId, $price);
-        
+
         $arFields = array(
             'PRODUCT_ID' => $productId,
             'PRODUCT_PRICE_ID' => 1,

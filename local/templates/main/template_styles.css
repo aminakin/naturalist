@@ -226,3 +226,18 @@ h1.page_title {
     padding: 25px !important;
   }
 }
+
+.profile__get-vaucher {
+  display: block;
+  text-align: center;
+  margin-left: auto;
+  margin-top: 5px;
+  text-decoration: underline;
+}
+
+@media (max-width: 1139px) {
+  .profile__get-vaucher {
+    width: max-content;
+    margin-left: 0;
+  }
+}

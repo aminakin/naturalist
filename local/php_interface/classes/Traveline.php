@@ -663,10 +663,7 @@ class Traveline
         ));
         $response = curl_exec($ch);
         $arItemsResponse = json_decode($response, true);
-        xprint($externalElementId);
-        xprint($externalCategoryId);
-        xprint($checksum);
-        xprint($arItemsResponse);
+        
         curl_close($ch);
         if($arItemsResponse['roomStays']) {
             $arExternalData = array();

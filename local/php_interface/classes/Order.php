@@ -544,6 +544,10 @@ class Orders
             $propertyValue = $propertyCollection->getItemByOrderPropertyId($this->arPropsIDs['DATE_PAID']);
             $propertyValue->setValue(date('d.m.Y H:i:s'));
 
+            // Имя и фамилия покупателя
+            $clientName = $propertyCollection->getItemByOrderPropertyId($this->arPropsIDs['NAME']);
+            $clientLastName = $propertyCollection->getItemByOrderPropertyId($this->arPropsIDs['LAST_NAME']);
+
             // Сохранение изменений в заказе
             $orderRes = $order->save();
 
@@ -553,6 +557,7 @@ class Orders
                     $sendRes = Users::sendEmail("USER_RESERVATION", "55", array(
                         "EMAIL" => $arUser["EMAIL"],
                         "ORDER_ID" => $orderId,
+                        "NAME" => $clientLastName. ' ' . $clientName,
                         "RESERVATION_ID" => $reservationRes,
                         "LINK" => 'https://' . $_SERVER['SERVER_NAME'] . '/personal/active/'
                     ));
@@ -666,7 +671,7 @@ class Orders
             $guests = count($arGuestList);
             $adults = $params['adults'];
             $price = $arBasketItems['ITEMS'][0]["PRICE"];
-            $checksum = $params['checksum'];
+            $checksum = $params['SESSION_CHECKSUM'] ? $params['SESSION_CHECKSUM'] : $params['checksum'];
             $arChildrenAge = ($params['childrenAge']) ? explode(',', $params['childrenAge']) : [];
 
             if(empty($arUser["EMAIL"])) {

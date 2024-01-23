@@ -14,6 +14,7 @@ use CIBlockElement;
 use Naturalist\Users;
 use Naturalist\Orders;
 use Naturalist\Settings;
+use Naturalist\CreateOrderPdf;
 
 defined("B_PROLOG_INCLUDED") && B_PROLOG_INCLUDED === true || die();
 /**
@@ -35,6 +36,7 @@ class Events
         $event->addEventHandler('main', 'OnEndBufferContent', [self::class, "deleteKernelCss"]);
         $event->addEventHandler('sale', 'OnSaleOrderSaved', [self::class, "makeReservation"]);
         $event->addEventHandler('iblock', 'OnBeforeIBlockSectionDelete', [self::class, "OnBeforeIBlockSectionDeleteHandler"]);
+        //$event->addEventHandler('main', 'OnBeforeEventAdd', [self::class, "addFileToEmail"]);
     }
 
     public static function deleteKernelJs(&$content) {
@@ -141,8 +143,14 @@ class Events
         if(!$order->getField('PAYED') || !$oldValues['PAYED'] || ($order->getField('PAYED') != 'Y') && ($oldValues['PAYED'] != 'N'))
             return;
 
-        $orderId = $order->getId();
+        // Если тестовый заказ, выходим
+        $propertyCollection = $order->getPropertyCollection();
+        $isTest = $propertyCollection->getItemByOrderPropertyId(IS_ORDER_TEST_PROP_ID)->getValue();
+        if ($isTest == 'Y') {
+            return;
+        };
 
+        $orderId = $order->getId();
         $orders = new Orders();
         $reservationRes = $orders->makeReservation($orderId);
 
@@ -195,5 +203,15 @@ class Events
         $hlblock = HighloadBlockTable::getById($hlId)->fetch();
         $entity = HighloadBlockTable::compileEntity($hlblock);
         return $entity->getDataClass();
+    }
+
+    public static function addFileToEmail($event, $lid, $arFields) {
+        if ($event == "USER_RESERVATION")
+        {           
+            $PDF = new CreateOrderPdf();
+            $link = $PDF->getPdfLink($arFields['ORDER_ID']);
+            SendAttache($event, $lid, $arFields, json_decode($link)->LINK);
+            $event = 'null'; $lid = 'null';
+        }
     }
 }

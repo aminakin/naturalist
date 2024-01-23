@@ -64,11 +64,9 @@
 .room__photo {
   width: 230px;
   float: right;
-}
-
-.room__photo img {
-  max-width: 100%;
-  height: auto;
+  height: 153px;
+  background-position: center center;
+  background-size: cover;
 }
 
 .room__address {
