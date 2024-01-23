@@ -153,7 +153,7 @@ foreach ($arParams['VARS'] as $key => $value) {
                                         <span class="room__nights">за <?=$daysCount?> <?=$daysDeclension->get($daysCount)?></span>
                                     </div>
                                     <?if (Bitrix\Main\Engine\CurrentUser::get()->isAdmin()) {?>
-                                        <div style="margin-top: 10px;">
+                                        <div class="split-wrap">
                                             <yandex-pay-badge
                                                 merchant-id="d82873ad-61ce-4050-b05e-1f4599f0bb7b"
                                                 type="bnpl"
@@ -289,7 +289,7 @@ foreach ($arParams['VARS'] as $key => $value) {
                                                 <span class="room__nights">/ за <?=$daysCount?> <?=$daysDeclension->get($daysCount)?></span>
                                             </div>
                                             <?if (Bitrix\Main\Engine\CurrentUser::get()->isAdmin()) {?>
-                                                <div style="margin-top: 10px;">
+                                                <div class="split-wrap">
                                                     <yandex-pay-badge
                                                         merchant-id="d82873ad-61ce-4050-b05e-1f4599f0bb7b"
                                                         type="bnpl"

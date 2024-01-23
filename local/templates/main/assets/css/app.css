@@ -3107,33 +3107,41 @@ img.lazy.loaded {
 }
 
 .checkbox input:checked + span:before {
-  background-color: #f18d3f;
   background-color: var(--color-orange);
-  border-color: #f18d3f;
   border-color: var(--color-orange);
+}
+
+.checkbox input:checked + span:after {
+  content: "";
+  background-color: var(--color-beige-light);
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  position: absolute;
+  top: calc(50% - 6px);
+  left: 6px;
 }
 
 .checkbox span {
   display: block;
   font-size: 1.3rem;
   line-height: 1.8rem;
-  padding-left: 2.4rem;
+  padding-left: 38px;
   position: relative;
 }
 
 .checkbox span:before {
-  border: 0.1rem solid #9e9d9c;
-  border: 0.1rem solid var(--color-dark-grey);
+  border: 0.1rem solid var(--base-text-color);
   border-radius: 50%;
   content: "";
   display: block;
-  height: 1.6rem;
+  height: 24px;
   left: 0;
   position: absolute;
-  top: 0.1rem;
+  top: calc(50% - 12px);
   -webkit-transition: background-color 0.25s, border-color 0.25s;
   transition: background-color 0.25s, border-color 0.25s;
-  width: 1.6rem;
+  width: 24px;
 }
 
 @-webkit-keyframes load {

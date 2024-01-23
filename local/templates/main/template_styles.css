@@ -138,24 +138,31 @@ h1.page_title {
   font-size: 13px;
 }
 
-.order-split-bage {
-  text-align: right;
-  margin-right: -25px;
-  margin-top: 15px;
+.payment-block {
+  margin-top: 64px;
 }
 
-.payment-block {
-  margin-top: 30px;
+.payment-block__title {
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 20px;
+  font-family: var(--header-text-font-family);
+  margin-bottom: 24px;
 }
 
 .payment-item {
   display: flex;
   align-items: center;
-  margin-bottom: 20px;
+}
+
+.payment-item:not(:last-child) {
+  margin-bottom: 24px;
 }
 
 .payment-item p {
-  margin-left: 15px;
+  margin-left: 14px;
+  font-size: 16px;
+  font-family: "Montserrat";
 }
 
 .payment-item img {
@@ -163,8 +170,8 @@ h1.page_title {
 }
 
 .payment-item.checkbox span {
-  width: 16px;
-  height: 16px;
+  width: 24px;
+  height: 24px;
 }
 
 @media (max-width: 1650px) {
@@ -224,6 +231,10 @@ h1.page_title {
 
   .cq-popup_suslic___body {
     padding: 25px !important;
+  }
+
+  .payment-block {
+    margin-top: 48px;
   }
 }
 

@@ -2212,8 +2212,16 @@
 }
 
 .room__order .button {
-  margin-top: 2.2rem;
+  margin-top: 16px;
   width: 100%;
+}
+
+.room__order yandex-pay-badge {
+  max-width: 250px;
+}
+
+.room__order .split-wrap {
+  margin-top: 12px;
 }
 
 .room__discount {

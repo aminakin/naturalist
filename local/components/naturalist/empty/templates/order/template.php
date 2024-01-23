@@ -208,29 +208,35 @@ use Bitrix\Main\Localization\Loc;
                 <span>Итого</span>
                 <div class="h1"><?= number_format($arResult['finalPrice']['REAL_PRICE'], 0, '.', ' ') ?> <?=Loc::getMessage('ORDER_RUBLE')?></div>
             </div>
-            <?if (Bitrix\Main\Engine\CurrentUser::get()->isAdmin()) {?>
-                <div class="order-split-bage">
-                    <yandex-pay-badge
-                        merchant-id="d82873ad-61ce-4050-b05e-1f4599f0bb7b"
-                        type="bnpl"
-                        amount="<?=$arResult['finalPrice']['REAL_PRICE']?>"
-                        size="l"
-                        variant="simple"
-                        theme="light"
-                        color="primary"
-                    />
-                </div>                
+            <?if (Bitrix\Main\Engine\CurrentUser::get()->isAdmin()) {?>                
                 <div class="payment-block">
-                    <p>Выберите способ оплаты:</p>
+                    <p class="payment-block__title">Выберите способ оплаты:</p>
                     <div class="payment-methods">
                         <?if (is_array($arResult['paySystems'])) {
                             foreach ($arResult['paySystems'] as $key => $paysystem) {?>
+                                <?if ($paysystem['ID'] != YANDEX_SPLIT_PAYSYSTEM_ID) {?>                                
+                                <?$img = CFile::getFileArray($paysystem['LOGOTIP'])?>
                                 <label class="checkbox payment-item">
                                     <input type="radio" class="checkbox" value="<?=$paysystem['ID']?>" name="paysystem" <?=$key == 0 ? 'checked' : ''?>>
                                     <span></span>
-                                    <img src="<?=CFile::getPath($paysystem['LOGOTIP'])?>">
+                                    <img src="<?=$img['SRC']?>" width="<?=intval($img['WIDTH'])/2?>">
                                     <p><?=$paysystem['NAME']?></p>
-                                </label>  
+                                </label> 
+                                <?} else {?> 
+                                    <label class="checkbox payment-item">
+                                        <input type="radio" class="checkbox" value="<?=$paysystem['ID']?>" name="paysystem" <?=$key == 0 ? 'checked' : ''?>>
+                                        <span></span>
+                                        <yandex-pay-badge
+                                            merchant-id="d82873ad-61ce-4050-b05e-1f4599f0bb7b"
+                                            type="bnpl"
+                                            amount="<?=$arResult['finalPrice']['REAL_PRICE']?>"
+                                            size="l"
+                                            variant="detailed"
+                                            theme="light"
+                                            color="primary"
+                                        />
+                                    </label> 
+                                <?}?>
                             <?}
                         }?>
                     </div>
