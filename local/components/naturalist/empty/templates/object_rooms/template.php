@@ -56,7 +56,7 @@ foreach ($arParams['VARS'] as $key => $value) {
                                             ?>
                                         <? endif; ?>
                                         <div class="swiper-slide" data-fullgallery-item="<?= $keyPhotoRoom; ?>">
-                                            <img class="" loading="lazy" alt="<?= $alt; ?>" title="<?= $title; ?>" data-src="<?=$arPhoto["src"]?>">
+                                            <img class="" loading="lazy" alt="<?= $alt; ?>" title="<?= $title; ?>" src="<?=$arPhoto["src"]?>">
                                         </div>
                                         <? $keyPhoto++; ?>
                                         <? $keyPhotoRoom++; ?>
@@ -214,7 +214,7 @@ foreach ($arParams['VARS'] as $key => $value) {
                                                     ?>
                                                 <? endif; ?>
                                                 <div class="swiper-slide" data-fullgallery-item="<?= $keyPhotoRoom; ?>">
-                                                    <img class="" loading="lazy" alt="<?= $alt; ?>" title="<?= $title; ?>" data-src="<?=$arPhoto["src"]?>">
+                                                    <img class="" loading="lazy" alt="<?= $alt; ?>" title="<?= $title; ?>" src="<?=$arPhoto["src"]?>">
                                                 </div>
                                                 <? $keyPhoto++; ?>
                                                 <? $keyPhotoRoom++; ?>
@@ -317,6 +317,7 @@ foreach ($arParams['VARS'] as $key => $value) {
                                            data-category-id="<?=$arElement["PROPERTY_EXTERNAL_CATEGORY_ID_VALUE"]?>"
                                            data-traveline-checksum="<?=$checksum?>"
                                            data-cancel-amount="<?=$arExternalItem['cancelAmount']?>"
+                                           data-people="<?=$arExternalItem['fullPlacementsName']?>"
                                            href="#"
                                         >Забронировать</a>
                                     </div>

@@ -1,0 +1,185 @@
+.order-pdf__wrap {
+}
+
+.order-pdf__line {
+  height: 1px;
+  width: 100%;
+  background-color: #000000;
+}
+
+.order-pdf__logo {
+  margin-bottom: 13px;
+}
+
+.clear {
+  clear: both;
+}
+
+* {
+  /*background-color: grey;*/
+}
+
+.order-pdf__block1 {
+  margin-top: 35px;
+  padding-bottom: 35px;
+}
+
+.order-pdf__number {
+  font-family: "travels_600";
+  font-size: 23px;
+  line-height: 24.5px;
+  float: left;
+}
+
+.order-pdf__payed {
+  font-family: "travels_600";
+  padding: 5px 45px 8px 45px;
+  letter-spacing: 0.34px;
+  text-transform: uppercase;
+  background-color: #f18d3f;
+  border-radius: 30px;
+  font-size: 17px;
+  line-height: 17px;
+  color: white;
+  float: right;
+}
+
+.order-pdf__room {
+  margin-top: 19px;
+  padding-bottom: 19px;
+}
+
+.room__text {
+  width: 266px;
+  float: left;
+}
+
+.room__name {
+  font-family: "travels_500";
+  letter-spacing: -0.1px;
+  font-size: 20px;
+  line-height: 18px;
+}
+
+.room__photo {
+  width: 230px;
+  float: right;
+  height: 153px;
+  background-position: center center;
+  background-size: cover;
+}
+
+.room__address {
+  margin-top: 20px;
+}
+
+.room__address img {
+  display: inline-block;
+  vertical-align: top;
+  margin-right: 4px;
+}
+
+.room__address span {
+  width: 245px;
+  font-size: 10px;
+  font-family: "montserat_500";
+  line-height: 10px;
+  display: inline-block;
+}
+
+.room__time {
+  font-family: "montserat_500";
+  font-size: 10px;
+  margin-top: 20px;
+}
+
+.room__time span {
+  font-family: "montserat_700";
+  font-size: 20px;
+  letter-spacing: -0.2px;
+}
+
+.order-pdf__specs {
+  margin-top: 17px;
+  padding-bottom: 40px;
+}
+
+.specs__item {
+  margin-bottom: 4px;
+}
+
+.specs__item img {
+  display: inline-block;
+  margin-right: 6px;
+}
+
+.specs__item span {
+  font-family: "montserat_500";
+  font-size: 10px;
+  line-height: 17px;
+  vertical-align: top;
+}
+
+.order-pdf__contacts {
+  margin-top: 15px;
+  font-family: "travels_600";
+  font-size: 16px;
+  letter-spacing: -0.16px;
+}
+
+.order-pdf__email {
+  float: left;
+}
+
+.order-pdf__phone {
+  float: right;
+}
+
+.order-pdf__guests {
+  margin-top: 15px;
+}
+
+.guests__title {
+  font-family: "montserat_500";
+  font-size: 10px;
+  line-height: 17px;
+}
+
+.guests__name {
+  font-size: 23px;
+  letter-spacing: -0.23px;
+  line-height: 18px;
+  font-family: "travels_600";
+  margin-top: 5px;
+}
+
+.order-pdf__nav a {
+  font-family: "travels_700";
+  display: inline-block;
+  margin-top: 30px;
+  font-size: 16px;
+  line-height: 14px;
+  text-decoration-line: underline;
+  color: #000000;
+}
+
+.order-pdf__bottom {
+  margin-top: 40px;
+}
+
+.bottom__text img {
+  float: right;
+}
+
+.bottom__text {
+  float: left;
+  font-family: "travels_700";
+  width: 204px;
+  vertical-align: middle;
+  font-size: 17px;
+  letter-spacing: 0.17px;
+  line-height: 15px;
+  height: 56px;
+  border-right: 1px solid #000000;
+  padding-left: 9px;
+}

@@ -1,4 +1,8 @@
 <?
+use Bitrix\Main\Localization\Loc;
+
+Loc::loadMessages(__FILE__);
+
 foreach($arResult as $key => $value) {
     ${$key} = $value;
 }
@@ -168,11 +172,16 @@ foreach($arResult as $key => $value) {
                                             <div class="object-row__price">
                                                 <div><?= number_format($totalPrice, 0, '.', ' ') ?> ₽</div>
                                             </div>
-                                            <div class="tag"><?=$arOrder["DATA"]["STATUS"]?></div>
-
-                                            <?if($arOrder["FIELDS"]["IS_PAYED"] != "Y"):?>
+                                            <div class="profile__status">
+                                                <div class="tag"><?=$arOrder["DATA"]["STATUS"]?></div>
+                                                <?if($arOrder["FIELDS"]["IS_PAYED"] == "Y"):?>
+                                                    <a class="profile__get-vaucher" href="#" data-id="<?=$arOrder["ID"]?>"><?=Loc::getMessage('GET_VAUCHER')?></a>
+                                                <?endif;?>
+                                            </div>
+                                                
+                                            <?if($arOrder["FIELDS"]["IS_PAYED"] != "Y"):?>                                                
                                                 <a class="button button_transparent" href="#" data-payment data-id="<?=$arOrder["ID"]?>">Оплатить</a>
-                                            <?else:?>
+                                            <?else:?>                                                
                                                 <a class="button button_transparent" href="#" data-order-cancel data-id="<?=$arOrder["ID"]?>">Отмена</a>
                                             <?endif;?>
                                         </div>

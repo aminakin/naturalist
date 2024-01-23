@@ -217,12 +217,16 @@ class Orders
             $count = intval($item->getQuantity());
             $cost = floatval($price * $count);
 
+            $basketPropertyCollection = $item->getPropertyCollection();
+            $itemBasketProps = $basketPropertyCollection->getPropertyValues();
+
             $arItems[] = array(
                 "ID" => $productId,
                 "QUANTITY" => $count,
                 "PRODUCT_PRICE" => $price,
                 "PRODUCT_COST" => $cost,
                 "ITEM" => $arProduct,
+                "ITEM_BAKET_PROPS" => $itemBasketProps,
             );
 
             $totalPrice += $cost;
@@ -540,6 +544,10 @@ class Orders
             $propertyValue = $propertyCollection->getItemByOrderPropertyId($this->arPropsIDs['DATE_PAID']);
             $propertyValue->setValue(date('d.m.Y H:i:s'));
 
+            // Имя и фамилия покупателя
+            $clientName = $propertyCollection->getItemByOrderPropertyId($this->arPropsIDs['NAME']);
+            $clientLastName = $propertyCollection->getItemByOrderPropertyId($this->arPropsIDs['LAST_NAME']);
+
             // Сохранение изменений в заказе
             $orderRes = $order->save();
 
@@ -549,6 +557,7 @@ class Orders
                     $sendRes = Users::sendEmail("USER_RESERVATION", "55", array(
                         "EMAIL" => $arUser["EMAIL"],
                         "ORDER_ID" => $orderId,
+                        "NAME" => $clientLastName. ' ' . $clientName,
                         "RESERVATION_ID" => $reservationRes,
                         "LINK" => 'https://' . $_SERVER['SERVER_NAME'] . '/personal/active/'
                     ));
@@ -660,8 +669,9 @@ class Orders
             $dateFrom = $params['dateFrom'];
             $dateTo = $params['dateTo'];
             $guests = count($arGuestList);
+            $adults = $params['adults'];
             $price = $arBasketItems['ITEMS'][0]["PRICE"];
-            $checksum = $params['checksum'];
+            $checksum = $params['SESSION_CHECKSUM'] ? $params['SESSION_CHECKSUM'] : $params['checksum'];
             $arChildrenAge = ($params['childrenAge']) ? explode(',', $params['childrenAge']) : [];
 
             if(empty($arUser["EMAIL"])) {
@@ -671,7 +681,7 @@ class Orders
                 $arUser["PERSONAL_PHONE"] = $params["phone"];
             }
 
-            $arVerifyResponse = Traveline::verifyReservation($externalSectionId, $externalElementId, $externalCategoryId, $guests, $arChildrenAge, $dateFrom, $dateTo, $price, $checksum, $arGuestList, $arUser);
+            $arVerifyResponse = Traveline::verifyReservation($externalSectionId, $externalElementId, $externalCategoryId, $guests, $arChildrenAge, $dateFrom, $dateTo, $price, $checksum, $arGuestList, $arUser, $adults);
 
             if (!empty($arVerifyResponse['warnings'][0]['code']) || empty($arVerifyResponse["booking"])) {
                 $errorText = $arVerifyResponse['warnings'][0]['code'] ?? $arVerifyResponse['errors'][0]['message'];

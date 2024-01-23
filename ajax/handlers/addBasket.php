@@ -6,6 +6,7 @@
  */
 
 use Naturalist\Baskets;
+use Bitrix\Main\Application;
 
 if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) {
 	include_once $_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_before.php";
@@ -18,6 +19,7 @@ $childrenAge = $_REQUEST["childrenAge"];
 $dateFrom   = $_REQUEST["dateFrom"];
 $dateTo     = $_REQUEST["dateTo"];
 $externalId = $_REQUEST["externalId"];
+$people = $_REQUEST["people"];
 
 $externalService = $_REQUEST["externalService"];
 if($externalService == "bnovo") {
@@ -27,6 +29,8 @@ if($externalService == "bnovo") {
 
 } else {
 	$checksum = $_REQUEST["checksum"];
+	$session = Application::getInstance()->getSession();	
+	$session->set('traveline_checksum', $checksum);	
 }
 
 $count = 1;
@@ -34,35 +38,48 @@ $daysCount = (strtotime($dateTo) - strtotime($dateFrom)) / (60*60*24);
 $arProps = array(
 	[
 		'CODE' => 'DATE_FROM',
+		'NAME' => 'Дата заезда',
 		'VALUE' => $dateFrom
 	],
 	[
 		'CODE' => 'DATE_TO',
-		'VALUE' => $dateTo
+		'NAME' => 'Дата выезда',
+		'VALUE' => $dateTo,
 	],
 	[
 		'CODE' => 'GUESTS_COUNT',
-		'VALUE' => $guests
+		'NAME' => 'Количество гостей',
+		'VALUE' => $guests,		
 	],
 	[
 		'CODE' => 'CHILDREN',
-		'VALUE' => $childrenAge
+		'NAME' => 'Возраст детей',
+		'VALUE' => $childrenAge,		
 	],
 	[
 		'CODE' => 'DAYS_COUNT',
-		'VALUE' => $daysCount
+		'NAME' => 'Количество дней',
+		'VALUE' => $daysCount,
 	],
 	[
 		'CODE' => 'EXTERNAL_ID',
-		'VALUE' => $externalId
+		'NAME' => 'Внешний ID',
+		'VALUE' => $externalId,		
 	],
 	[
 		'CODE' => 'EXTERNAL_SERVICE',
-		'VALUE' => $externalService
+		'NAME' => 'Внешний сервис',
+		'VALUE' => $externalService,
 	],
 	[
 		'CODE' => 'REAL_PRICE',
-		'VALUE' => $price
+		'NAME' => 'Цена',
+		'VALUE' => $price,
+	],
+	[
+		'CODE' => 'PEOPLE',
+		'NAME' => 'Состав гостей',
+		'VALUE' => $people,		
 	]
 );
 if($externalService == 'bnovo') {

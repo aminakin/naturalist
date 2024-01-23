@@ -316,7 +316,8 @@ var Order = function () {
     tariffId,
     categoryId,
     prices,
-    checksum
+    checksum,
+    people
   ) {
     var data = {
       productId: productId,
@@ -331,6 +332,7 @@ var Order = function () {
       categoryId: categoryId,
       prices: prices,
       checksum: checksum,
+      people: people,
     };
 
     jQuery.ajax({
@@ -367,6 +369,7 @@ $(function () {
     var categoryId = $(this).data("category-id");
     var prices = $(this).data("prices");
     var checksum = $(this).data("traveline-checksum");
+    var people = $(this).data("people");
 
     order.addBasket(
       productId,
@@ -380,7 +383,8 @@ $(function () {
       tariffId,
       categoryId,
       prices,
-      checksum
+      checksum,
+      people
     );
   });
 });

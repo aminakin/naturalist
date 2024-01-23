@@ -44,6 +44,7 @@ var Order = function () {
         phone: phone,
         email: email,
         guests: arGuests,
+        adults: $('#form-order input[name="guests"]').val(),
         name: $('#form-order input[name="name"]').val(),
         last_name: $('#form-order input[name="surname"]').val(),
         childrenAge: $('#form-order input[name="childrenAge"]').val(),

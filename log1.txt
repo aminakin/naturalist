@@ -1,0 +1,16 @@
+Host: naturalist
+Date: 2024-01-23 13:51:14
+Y
+#0: Naturalist\Events::makeReservation
+	
+#1: call_user_func_array
+	D:\OSPanel\domains\naturalist\bitrix\modules\main\lib\eventmanager.php:444
+#2: Bitrix\Main\EventManager->sendToEventHandler
+	D:\OSPanel\domains\naturalist\bitrix\modules\main\lib\eventmanager.php:380
+#3: Bitrix\Main\EventManager->send
+	D:\OSPanel\domains\naturalist\bitrix\modules\main\lib\event.php:142
+#4: Bitrix\Main\Event->send
+	D:\OSPanel\domains\naturalist\bitrix\modules\sale\lib\orderbase.php:1403
+#5: Bitrix\Sale\OrderBase->callEventOnSaleOrderSaved
+	D:\OSPanel\domains\naturalist\bitrix\modules\sale\lib\order.php:2335
+----------

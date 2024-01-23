@@ -124,7 +124,7 @@ class Traveline
         );
         if(count($arChildrenAge) > 0) {
             $data["childAges"] = $arChildrenAge;
-        }        
+        }
 
         $ch = curl_init();
         curl_setopt_array($ch, array(
@@ -639,7 +639,7 @@ class Traveline
     }
 
     /* Проверка возможности бронирование объекта из заказа */
-    public static function verifyReservation($externalSectionId, $externalElementId, $externalCategoryId, $guests, $arChildrenAge, $dateFrom, $dateTo, $price, $checksum, $arGuestList, $arUser) {
+    public static function verifyReservation($externalSectionId, $externalElementId, $externalCategoryId, $guests, $arChildrenAge, $dateFrom, $dateTo, $price, $checksum, $arGuestList, $arUser, $adults) {
         // Получение объекта номера для запроса бронирования
         $url = self::$travelineApiURL.'/search/v1/properties/'.$externalSectionId.'/room-stays/';
         $headers = array(
@@ -647,7 +647,7 @@ class Traveline
             "Content-Type: application/json"
         );
         $data = array(
-            "adults" => $guests,
+            "adults" => $adults,
             "arrivalDate" => date('Y-m-d', strtotime($dateFrom)),
             "departureDate" => date('Y-m-d', strtotime($dateTo)),
         );
@@ -663,6 +663,7 @@ class Traveline
         ));
         $response = curl_exec($ch);
         $arItemsResponse = json_decode($response, true);
+        
         curl_close($ch);
         if($arItemsResponse['roomStays']) {
             $arExternalData = array();
@@ -739,7 +740,7 @@ class Traveline
                     ]
                 );
 
-                //file_put_contents($_SERVER["DOCUMENT_ROOT"] . '/log.txt', serialize($data) . PHP_EOL, FILE_APPEND);
+                file_put_contents($_SERVER["DOCUMENT_ROOT"] . '/log.txt', serialize($data) . PHP_EOL, FILE_APPEND);
                 $ch = curl_init();
                 curl_setopt_array($ch, array(
                     CURLOPT_URL            => $url,
@@ -751,7 +752,7 @@ class Traveline
                 $response = curl_exec($ch);
                 $arVerifyResponse = json_decode($response, true);
                 curl_close($ch);
-                //file_put_contents($_SERVER["DOCUMENT_ROOT"] . '/log.txt', serialize($arVerifyResponse) . PHP_EOL, FILE_APPEND);
+                file_put_contents($_SERVER["DOCUMENT_ROOT"] . '/log.txt', serialize($arVerifyResponse) . PHP_EOL, FILE_APPEND);
                 $arResponse = $arVerifyResponse;
 
             } else {
