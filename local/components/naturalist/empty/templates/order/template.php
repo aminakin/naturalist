@@ -208,7 +208,7 @@ use Bitrix\Main\Localization\Loc;
                 <span>Итого</span>
                 <div class="h1"><?= number_format($arResult['finalPrice']['REAL_PRICE'], 0, '.', ' ') ?> <?=Loc::getMessage('ORDER_RUBLE')?></div>
             </div>
-            <?if (Bitrix\Main\Engine\CurrentUser::get()->isAdmin()) {?>                
+            <?if (Bitrix\Main\Engine\CurrentUser::get()->isAdmin() || Bitrix\Main\Engine\CurrentUser::get()->getId() == 23) {?>                
                 <div class="payment-block">
                     <p class="payment-block__title">Выберите способ оплаты:</p>
                     <div class="payment-methods">

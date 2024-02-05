@@ -9,11 +9,13 @@ use Bitrix\Main\Diag\Debug;
 use Bitrix\Main\Loader;
 use Bitrix\Sale\Order;
 use Bitrix\Main\Config\Option;
+use Bitrix\Main\Session\Handlers\Table\UserSessionTable;
 use CIBlockElement;
 use CIBlockSection;
 use CFile;
 use CUtil;
 use Naturalist\Products;
+use Naturalist\CustomFunctions;
 
 Loader::includeModule("iblock");
 
@@ -639,7 +641,7 @@ class Traveline
     }
 
     /* Проверка возможности бронирование объекта из заказа */
-    public static function verifyReservation($externalSectionId, $externalElementId, $externalCategoryId, $guests, $arChildrenAge, $dateFrom, $dateTo, $price, $checksum, $arGuestList, $arUser, $adults) {
+    public static function verifyReservation($externalSectionId, $externalElementId, $externalCategoryId, $guests, $arChildrenAge, $dateFrom, $dateTo, $price, $checksum, $arGuestList, $arUser, $adults) {                     
         // Получение объекта номера для запроса бронирования
         $url = self::$travelineApiURL.'/search/v1/properties/'.$externalSectionId.'/room-stays/';
         $headers = array(
@@ -766,6 +768,26 @@ class Traveline
         return $arResponse;
     }
 
+    /* Получаем чексумму из сессии, которая хранится в БД */
+    private static function getChecksum($sessionId) {        
+        if (!$sessionId) {
+            return '';
+        }
+        
+        $session = UserSessionTable::getRow([
+            'select' => ['*'],
+            'filter' => ['=SESSION_ID' => $sessionId],
+        ]);
+
+        $parsedSessionData = CustomFunctions::unserialize_php(base64_decode($session['SESSION_DATA']));
+
+        if (!is_array($parsedSessionData) && !isset($parsedSessionData['traveline_checksum'])) {            
+            return '';
+        }
+
+        return $parsedSessionData['traveline_checksum'];     
+    }
+
     /* Бронирование объекта из заказа */
     public static function makeReservation($orderId, $arOrder, $arUser, $reservationPropId) {
         $externalSectionId = $arOrder['ITEMS'][0]['ITEM']['SECTION']['UF_EXTERNAL_ID'];
@@ -776,10 +798,11 @@ class Traveline
         $guests = $arOrder['PROPS']['GUESTS_COUNT'];
         $arChildrenAge = $arOrder['PROPS']['CHILDREN_AGE'];
         $price = $arOrder['FIELDS']['BASE_PRICE'];
-        $checksum = $arOrder['PROPS']['CHECKSUM'];
+        $checksum = self::getChecksum($arOrder["ITEMS"][0]["ITEM_BAKET_PROPS"]["SESSION_ID"]['VALUE']);
         $arGuestList = $arOrder['PROPS']['GUEST_LIST'];
+        $adults = $arOrder["ITEMS"][0]["ITEM_BAKET_PROPS"]["GUESTS_COUNT"]['VALUE'];
 
-        $arVerifyResponse = self::verifyReservation($externalSectionId, $externalElementId, $externalCategoryId, $guests, $arChildrenAge, $dateFrom, $dateTo, $price, $checksum, $arGuestList, $arUser);
+        $arVerifyResponse = self::verifyReservation($externalSectionId, $externalElementId, $externalCategoryId, $guests, $arChildrenAge, $dateFrom, $dateTo, $price, $checksum, $arGuestList, $arUser, $adults);
         if($arVerifyResponse["booking"]) {
             if($arVerifyResponse["booking"]['roomStays']) {
                 foreach ($arVerifyResponse["booking"]['roomStays'] as $key => &$arItem) {
@@ -807,7 +830,7 @@ class Traveline
             $response = curl_exec($ch);
             $arResponse = json_decode($response, true);
             curl_close($ch);
-            //file_put_contents($_SERVER["DOCUMENT_ROOT"] . '/log.txt', serialize($data) . PHP_EOL, FILE_APPEND);
+            file_put_contents($_SERVER["DOCUMENT_ROOT"] . '/log.txt', serialize($data) . PHP_EOL, FILE_APPEND);
             if($arResponse['booking']['status'] == "Confirmed" && $arResponse['booking']['number']) {
                 // Сохраняем ID бронирования в заказе
                 $reservationId = $arResponse['booking']['number'];
@@ -829,7 +852,7 @@ class Traveline
 
             } else {
                 $errorText = $arResponse['warnings'][0]['code'] ?? $arResponse['errors'][0]['message'];
-                //file_put_contents($_SERVER["DOCUMENT_ROOT"] . '/log.txt', serialize($arResponse) . PHP_EOL, FILE_APPEND);
+                file_put_contents($_SERVER["DOCUMENT_ROOT"] . '/log.txt', serialize($arResponse) . PHP_EOL, FILE_APPEND);
                 return [
                     "ERROR" => "Ошибка запроса бронирования. ".$errorText
                 ];

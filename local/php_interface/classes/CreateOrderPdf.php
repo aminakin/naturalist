@@ -66,8 +66,10 @@ class CreateOrderPdf {
             $imgTemp = str_replace(['[', ']'], '', $this->orderData['ITEMS'][0]['ITEM']['PROPERTIES']['PHOTO_ARRAY']['~VALUE']['TEXT']);
             $imgTemp = explode(',', $imgTemp)[0];
             $this->orderData['IMAGE_URL'] = json_decode($imgTemp)->url;
-        } else {        
-            $this->orderData['IMAGE'] = CFile::getPath($this->orderData['ITEMS'][0]['ITEM']['PROPERTIES']['PHOTOS']['VALUE'][0]);
+        } else if (is_array($this->orderData['ITEMS'][0]['ITEM']['PROPERTIES']['PHOTOS']['VALUE'][0]) && count($this->orderData['ITEMS'][0]['ITEM']['PROPERTIES']['PHOTOS']['VALUE'][0])) {        
+            $this->orderData['IMAGE'] = \CFile::getPath($this->orderData['ITEMS'][0]['ITEM']['PROPERTIES']['PHOTOS']['VALUE'][0]);
+        } else {
+            $this->orderData['IMAGE'] = $this->orderData['ITEMS'][0]['ITEM_BAKET_PROPS']['PHOTO']['VALUE'];
         }
     }
 

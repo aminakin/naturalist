@@ -47,7 +47,7 @@ Loc::loadMessages(__FILE__); ?>
         </div>
         <div class="specs__item">
             <img width="20" height="20" src="<?=HTTP_HOST?>/ajax/pdf/inc/img/room.png" alt="">
-            <span><?=$arResult['ITEMS'][0]['ITEM']['NAME']?></span>
+            <span><?=$arResult['ITEMS'][0]['ITEM_BAKET_PROPS']['TITLE']['VALUE'] ? $arResult['ITEMS'][0]['ITEM_BAKET_PROPS']['TITLE']['VALUE'] : $arResult['ITEMS'][0]['ITEM']['NAME']?></span>
         </div>
     </div>
     <div class="order-pdf__line"></div>

@@ -1341,6 +1341,8 @@ class Bnovo
         $response = curl_exec($ch);        
         $arData = json_decode($response, true);
 
+        $this->writeToFile($arData, 'updateReservationData', $hotelId);
+
         if (empty($arData) || (isset($arData['code']) && $arData['code'] != 200)) {
             if ($arData['code'] == 403) {
                 return 'Объект отключен от вашего канала продаж';
@@ -1470,7 +1472,9 @@ class Bnovo
             CURLOPT_HTTPHEADER => $headers
         ));
         $response = curl_exec($ch);
-        $arData = json_decode($response, true);        
+        $arData = json_decode($response, true);    
+        
+        $this->writeToFile($arData, 'updateAvailabilityData', $hotelId);
 
         if (empty($arData) || (isset($arData['code']) && $arData['code'] != 200)) {
             if ($arData['code'] == 403) {
@@ -1776,5 +1780,16 @@ class Bnovo
 
     private function sendMessage($arSend) {        
         \CEvent::Send($this->sendEventName, SITE_ID, $arSend);
+    }
+
+    private function writeToFile($data, $function, $hotelId) {
+        if(is_array($data))
+        {
+            $importFilePath = $_SERVER["DOCUMENT_ROOT"].'/import/bnovo/answers/'.$function.'_hotelid_'.$hotelId.'_date_'.date("j-m-Y-H-i-s").'.json';
+
+            $fp = fopen($importFilePath, 'w+');
+            fwrite($fp, json_encode($data));
+            fclose($fp);
+        }
     }
 }

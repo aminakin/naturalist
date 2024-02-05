@@ -20,6 +20,8 @@ $dateFrom   = $_REQUEST["dateFrom"];
 $dateTo     = $_REQUEST["dateTo"];
 $externalId = $_REQUEST["externalId"];
 $people = $_REQUEST["people"];
+$title = $_REQUEST["title"];
+$photo = isset($_REQUEST["photo"]) ? $_REQUEST["photo"] : '';
 
 $externalService = $_REQUEST["externalService"];
 if($externalService == "bnovo") {
@@ -31,6 +33,7 @@ if($externalService == "bnovo") {
 	$checksum = $_REQUEST["checksum"];
 	$session = Application::getInstance()->getSession();	
 	$session->set('traveline_checksum', $checksum);	
+	$sessionId = $session->getId();
 }
 
 $count = 1;
@@ -80,16 +83,33 @@ $arProps = array(
 		'CODE' => 'PEOPLE',
 		'NAME' => 'Состав гостей',
 		'VALUE' => $people,		
+	],
+	[
+		'CODE' => 'SESSION_ID',
+		'NAME' => 'Сессия',
+		'VALUE' => $sessionId,
+	],
+	[
+		'CODE' => 'TITLE',
+		'NAME' => 'Название номера',
+		'VALUE' => $title,
+	],
+	[
+		'CODE' => 'PHOTO',
+		'NAME' => 'Фото номера',
+		'VALUE' => $photo,
 	]
 );
 if($externalService == 'bnovo') {
 	$arProps = array_merge($arProps, array(
 		[
 			'CODE' => 'TARIFF_ID',
+			'NAME' => 'ID тарифа Бново',
 			'VALUE' => $tariffId
 		],
 		[
 			'CODE' => 'CATEGORY_ID',
+			'NAME' => 'ID номера Бново',
 			'VALUE' => $categoryId
 		],
 		[

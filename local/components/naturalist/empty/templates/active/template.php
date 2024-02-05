@@ -125,9 +125,10 @@ foreach($arResult as $key => $value) {
                         <?if($arOrders):?>
                             <?foreach($arOrders as $arOrder):?>
                                 <?
+                                //xprint($arOrder);
                                 $dateFrom = $arOrder["PROPS"]["DATE_FROM"];
                                 $dateTo = $arOrder["PROPS"]["DATE_TO"];
-                                $guests = $arOrder["PROPS"]["GUESTS_COUNT"];
+                                $guests = $arOrder["ITEMS"][0]["ITEM_BAKET_PROPS"]["GUESTS_COUNT"]['VALUE'];
                                 $daysCount = $daysCount = (strtotime($dateTo) - strtotime($dateFrom)) / (60*60*24);
                                 $totalPrice = $arOrder["FIELDS"]["PRICE"];
 

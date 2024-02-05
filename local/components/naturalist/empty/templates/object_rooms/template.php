@@ -182,6 +182,9 @@ foreach ($arParams['VARS'] as $key => $value) {
                                    data-category-id="<?=$arTariff['categoryId']?>"
                                    data-prices='<?=serialize($arTariff['prices'])?>'
                                    data-cancel-amount="<?=$arTariff['cancelAmount']?>"
+                                   data-people="<?=$text?>"
+                                   data-room-title="<?=$arElement["NAME"] . ' ' . ($arTariff['value']['PROPERTY_NAME_DETAIL_VALUE'] ?? $arTariff['value']['NAME'])?>"
+                                   data-room-photo="<?=$arElement["PICTURES"][array_key_first($arElement["PICTURES"])]['src']?>"
                                    href="#"
                                 >Забронировать</a>
                             </div>
@@ -318,6 +321,7 @@ foreach ($arParams['VARS'] as $key => $value) {
                                            data-traveline-checksum="<?=$checksum?>"
                                            data-cancel-amount="<?=$arExternalItem['cancelAmount']?>"
                                            data-people="<?=$arExternalItem['fullPlacementsName']?>"
+                                           data-room-title="<?=$arElement["NAME"]?>"                                           
                                            href="#"
                                         >Забронировать</a>
                                     </div>
