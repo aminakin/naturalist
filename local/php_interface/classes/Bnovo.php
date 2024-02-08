@@ -1341,7 +1341,7 @@ class Bnovo
         $response = curl_exec($ch);        
         $arData = json_decode($response, true);
 
-        $this->writeToFile($arData, 'updateReservationData', $hotelId);
+        // $this->writeToFile($arData, 'updateReservationData', $hotelId);
 
         if (empty($arData) || (isset($arData['code']) && $arData['code'] != 200)) {
             if ($arData['code'] == 403) {
@@ -1474,7 +1474,7 @@ class Bnovo
         $response = curl_exec($ch);
         $arData = json_decode($response, true);    
         
-        $this->writeToFile($arData, 'updateAvailabilityData', $hotelId);
+        // $this->writeToFile($arData, 'updateAvailabilityData', $hotelId);
 
         if (empty($arData) || (isset($arData['code']) && $arData['code'] != 200)) {
             if ($arData['code'] == 403) {
