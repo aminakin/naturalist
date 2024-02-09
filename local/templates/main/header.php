@@ -12,6 +12,9 @@ $currPage = $APPLICATION->GetCurPage();
 
 Asset::getInstance()->addJs(SITE_TEMPLATE_PATH . "/js/jquery-3.6.1.min.js");
 Asset::getInstance()->addJs(SITE_TEMPLATE_PATH . "/js/common.js");
+
+use Naturalist\Users;
+
 ?><!DOCTYPE html>
 <html lang="<?= LANGUAGE_ID ?>">
 
@@ -212,6 +215,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                         <li class="list__item highlight_orange cert_balance">
                             <span class="list__link">
                                 <?= $arSettings['header_balance_certification'] ?>
+                                <?= number_format(Users::getInnerScore(), 0, '.', ' ')?>
+                                ₽
                             </span>
                         </li>
                     <? endif; ?>

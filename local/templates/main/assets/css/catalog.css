@@ -36,6 +36,41 @@
     margin-top: .2rem
 }
 
+.object-row__cert-price {
+    display: flex;
+    align-items: center;
+    border-radius: 50px;
+    padding: 0 31px;
+    gap: 6px;
+    background-color: var(--color-orange);
+    width: fit-content;
+    height: fit-content;
+    margin-top: 8px;
+}
+
+.object-row__cert-price > span {
+    margin: 0 !important;
+    color: var(--color-black);
+    font-size: 15px;
+    list-style: 21px;
+    font-weight: 500;
+}
+
+@media (max-width: 768px) {
+    .object-row__cert-price {
+        padding: 0 17px;
+        font-size: 13px;
+        line-height: 19px;
+    }
+}
+
+@media (max-width: 375px) {
+    .object-row__cert-price {
+        padding: 0 9.5px;
+    }
+}
+
+
 .area-info div {
     -webkit-box-flex: 1;
     -ms-flex: 1;
@@ -549,10 +584,23 @@
 }
 
 .object-row__price {
+    display: flex;
+    flex-direction: column;
     font-family: TT Travels Next;
     font-family: var(--header-text-font-family);
     margin-bottom: auto;
     padding-top: .1rem
+}
+
+@media (max-width: 768px) {
+    .object-row__price {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: flex-end;
+    }
+    .object-row__cert-price {
+        margin-bottom: 4px;
+    }
 }
 
 .object-row__price div {

@@ -1,6 +1,7 @@
 <?php
 
 use Bitrix\Main\Localization\Loc;
+use Naturalist\Users;
 
 Loc::loadMessages(__FILE__);
 
@@ -162,8 +163,21 @@ foreach ($arResult as $key => $value) {
                         <div class="object-row__order">
                             <div class="object-row__price">
                                 <?php if ($arSection["PRICE"] > 0): ?>
-                                    <div><?= number_format($arSection["PRICE"], 0, '.', ' ') ?> ₽</div>
-                                    <span>Цена за одну ночь</span>
+
+                                    <div class="object-row__price_wrapper">
+                                        <div><?= number_format($arSection["PRICE"], 0, '.', ' ') ?> ₽</div>
+                                        <span>Цена за одну ночь</span>
+                                    </div>
+
+                                    <?php if ($arSection["PRICE"] > Users::getInnerScore()): ?>
+                                        <div class="object-row__cert-price">
+                                            <span>Доплата</span>
+                                            <span>
+                                                <?=number_format($arSection["PRICE"] - Users::getInnerScore(), 0, '.', ' ')?>₽
+                                            </span>
+                                        </div>
+                                    <? endif; ?>
+
                                 <?php endif; ?>
                             </div>
 
