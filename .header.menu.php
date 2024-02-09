@@ -1,4 +1,5 @@
-<?
+<?php
+
 $aMenuLinks = Array(
 	Array(
 		"Главная", 
@@ -37,5 +38,13 @@ $aMenuLinks = Array(
 		Array(), 
 		"" 
 	),
+	Array(
+		"Сертификат", 
+		"/certificates/", 
+		Array(), 
+		Array(
+			"HIGHLIGHT_BROWN" => "Y",
+		), 
+		"\$GLOBALS['USER']->IsAuthorized()"
+	),
 );
-?>

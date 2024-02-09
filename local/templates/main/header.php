@@ -208,6 +208,14 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                         </li>
                     <? endif; ?>
 
+                    <? if ($isAuthorized): ?>
+                        <li class="list__item highlight_orange cert_balance">
+                            <span class="list__link">
+                                <?= $arSettings['header_balance_certification'] ?>
+                            </span>
+                        </li>
+                    <? endif; ?>
+
                     <li class="list__item list__item_desktop">
                         <a class="list__link" href="#feedback" data-modal>
                             <svg class="icon icon_message" viewbox="0 0 24 24" style="width: 2.4rem; height: 2.4rem;">
