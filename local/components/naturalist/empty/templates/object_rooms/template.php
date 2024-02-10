@@ -1,7 +1,13 @@
-<?
+<?php
+
+use Naturalist\Users;
+
+global $isAuthorized;
+
 foreach ($arParams['VARS'] as $key => $value) {
     ${$key} = $value;
 }
+
 ?>
 <div class="rooms" data-object-container>
     <div class="rooms__heading h3">Выберите номер <span><?=$daysRange?>, <?=$guests?> <?=$guestsDeclension->get($guests)?><?if($children > 0):?>, <?=$children?> <?=$childrenDeclension->get($children)?><?endif;?></span></div>
@@ -143,7 +149,25 @@ foreach ($arParams['VARS'] as $key => $value) {
                             } else {
                                 $elementPrice = $arTariff['price'];
                             }?>
-                            <div class="room__order">                                
+                            <div class="room__order">
+
+                                <?php if ($USER->IsAdmin()):?>
+                                    <?php if (
+                                        $elementPrice > Users::getInnerScore()
+                                        && Users::getInnerScore() !== 0
+                                        && $isAuthorized
+                                    ):?>
+                                        <div class="room__price_cert_price">
+                                            <div class="room__price_cert_price-item">
+                                                <span>Доплата</span>
+                                                <span>
+                                                    <?=number_format($elementPrice - Users::getInnerScore(), 0, '.', ' ')?> ₽
+                                                </span>
+                                            </div>
+                                        </div>
+                                    <? endif; ?>
+                                <? endif; ?>
+                             
                                 <div class="room__price">
                                     <?if ($elementOldPrice) {?>
                                         <span class="room__old-price"><?= number_format($elementOldPrice, 0, '.', ' ') ?> ₽</span>
@@ -283,6 +307,24 @@ foreach ($arParams['VARS'] as $key => $value) {
                                         $elementPrice = $arExternalItem['price'];
                                     }?>                                    
                                     <div class="room__order">
+
+                                        <?php if ($USER->IsAdmin()):?>
+                                            <?php if (
+                                                $elementPrice > Users::getInnerScore()
+                                                && Users::getInnerScore() !== 0
+                                                && $isAuthorized
+                                            ):?>
+                                                <div class="room__price_cert_price">
+                                                    <div class="room__price_cert_price-item">
+                                                        <span>Доплата</span>
+                                                        <span>
+                                                            <?=number_format($elementPrice - Users::getInnerScore(), 0, '.', ' ')?> ₽
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            <? endif; ?>
+                                        <? endif; ?>
+
                                         <div class="room__price">
                                             <?if ($elementOldPrice) {?>
                                                 <span class="room__old-price"><?= number_format($elementOldPrice, 0, '.', ' ') ?> ₽</span>

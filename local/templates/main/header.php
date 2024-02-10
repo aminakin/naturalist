@@ -211,7 +211,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                         </li>
                     <? endif; ?>
 
-                    <? if ($isAuthorized): ?>
+                    <? if ($isAuthorized && $USER->IsAdmin()): ?>
                         <li class="list__item highlight_orange cert_balance">
                             <span class="list__link">
                                 <?= $arSettings['header_balance_certification'] ?>

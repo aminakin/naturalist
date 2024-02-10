@@ -424,6 +424,56 @@
   white-space: nowrap;
 }
 
+.reservation-form__price-cert__item {
+  font-family: TT Travels Next;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  letter-spacing: -1%;
+  font-weight: 600;
+}
+
+.reservation-form__price-cert__wrapper {
+  margin-top: 35px;
+}
+
+.reservation-form__price-cert__item:not(:last-child) {
+  padding-bottom: 16px;
+  border-bottom: 1.55px solid var(--color-black);
+}
+
+.reservation-form__price-cert__item:not(:first-child) {
+  padding-top: 16px;
+}
+
+.reservation-form__price-cert__item > span:nth-child(1) {
+  font-size: 1.5rem;
+  line-height: 29.47px;
+}
+
+.reservation-form__price-cert__item > span:nth-child(2) {
+  font-size: 28px;
+  line-height: 34px;
+}
+
+@media (max-width: 1440px) {
+  .reservation-form__price-cert__item > span:nth-child(1) {
+    font-size: 14px;
+    line-height: 18px;
+    letter-spacing: 4%;
+  }
+}
+
+@media (max-width: 768px) {
+  .reservation-form__price-cert__item:not(:last-child) {
+    padding-bottom: 24px;
+  }
+  
+  .reservation-form__price-cert__item:not(:first-child) {
+    padding-top: 24px;
+  }
+}
+
 .reservation-form__footnote {
   margin-top: 2.4rem;
 }

@@ -1,8 +1,11 @@
 <?php
-use Bitrix\Main\Localization\Loc;
-?>
 
-<?foreach($arResult as $key => $value) {
+use Bitrix\Main\Localization\Loc;
+use Naturalist\Users;
+
+global $isAuthorized;
+
+foreach($arResult as $key => $value) {
     ${$key} = $value;
 }
 ?>
@@ -208,6 +211,31 @@ use Bitrix\Main\Localization\Loc;
                 <span>Итого</span>
                 <div class="h1"><?= number_format($arResult['finalPrice']['REAL_PRICE'], 0, '.', ' ') ?> <?=Loc::getMessage('ORDER_RUBLE')?></div>
             </div>
+
+            <?php if ($USER->IsAdmin()):?>
+                <?php if (
+                    $arResult['finalPrice']['REAL_PRICE'] > Users::getInnerScore()
+                    && Users::getInnerScore() !== 0
+                    && $isAuthorized
+                ):?>
+                    <div class="reservation-form__price-cert__wrapper">
+                        <div class="reservation-form__price-cert__item">
+                            <span>Ваш баланс</span>
+                            <span>
+                                <?=number_format(Users::getInnerScore(), 0, '.', ' ')?> ₽
+                            </span>
+                        </div>
+                        <div class="reservation-form__price-cert__item">
+                            <span>Доплата</span>
+                            <span>
+                                <?=number_format($arResult['finalPrice']['REAL_PRICE'] - Users::getInnerScore(), 0, '.', ' ')?> ₽
+                            </span>
+                        </div>
+                    </div>
+
+                <? endif; ?>
+            <? endif; ?>
+
             <?if (Bitrix\Main\Engine\CurrentUser::get()->isAdmin() || Bitrix\Main\Engine\CurrentUser::get()->getId() == 23) {?>                
                 <div class="payment-block">
                     <p class="payment-block__title">Выберите способ оплаты:</p>
