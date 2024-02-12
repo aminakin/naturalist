@@ -2184,6 +2184,56 @@
   opacity: 0;
 }
 
+.room__price_cert_price {
+  display: flex;
+  flex: 1 1;
+}
+
+.room__price_cert_price-item {
+  display: flex;
+  gap: 4px;
+  font-size: 15px;
+  line-height: 21px;
+  font-weight: 500;
+  padding: 5.5px 25px;
+  border-radius: 50px;
+  height: fit-content;
+  background-color: var(--color-orange);
+}
+
+@media (max-width: 1440px) {
+  .room__price_cert_price-item {
+    font-size: 13px;
+    line-height: 19px;
+    padding: 2px 17px;
+  }
+}
+
+@media (max-width: 1024px) {
+
+  .room__order {
+    position: relative;
+  }
+
+  .room__price_cert_price {
+    position: absolute;
+    right: 0;
+    top: 0;
+  }
+
+  .room__price_cert_price-item {
+    padding: 1px 11px;
+  }
+
+}
+
+@media (max-width: 600px) {
+  .room__price_cert_price {
+    position: relative;
+    margin-bottom: 26px;
+  }
+}
+
 .room__order {
   -webkit-box-flex: 0;
   -webkit-box-orient: vertical;

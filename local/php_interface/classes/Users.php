@@ -35,6 +35,19 @@ class Users
         return CFile::MakeFileArray(SITE_TEMPLATE_PATH."/img/av-".rand(1, 5).".png");
     }
 
+    public static function getInnerScore()
+    {
+        Loader::includeModule('sale');
+
+        if (!\Bitrix\Main\Engine\CurrentUser::get()->getId()) {
+            return 0;
+        }
+
+        return \CSaleUserAccount::GetByID(
+            \Bitrix\Main\Engine\CurrentUser::get()->getId()
+        )['CURRENT_BUDGET'];
+    }
+
     // Получения кода для авторизации
     public function authGetCode($params)
     {

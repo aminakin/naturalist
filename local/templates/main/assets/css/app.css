@@ -2464,6 +2464,25 @@ span.flatpickr-weekday {
   list-style: none;
 }
 
+.list > .list__item.highlight_orange {
+  display: flex;
+  align-items: center;
+}
+
+.list > .list__item.highlight_orange:hover > .list__link,
+.list > .list__item.highlight_orange.list__item_active  > .list__link {
+  background-color: var(--color-orange);
+  color: var(--color-white);
+}
+
+.list > .list__item.highlight_orange > .list__link {
+  height: fit-content !important;
+  padding: 2px 16px;
+  border-radius: 50px;
+  background-color: var(--color-beige);
+  transition: .2s all ease-in-out;
+}
+
 .list__link {
   display: block;
 }
@@ -2674,6 +2693,12 @@ span.flatpickr-weekday {
   margin-left: 2.4rem;
 }
 
+@media (max-width: 1440px) {
+  .header__controls .list__item + .list__item {
+    margin-left: 16px;
+  }
+}
+
 .header__controls .list__link {
   -webkit-box-align: center;
   -ms-flex-align: center;
@@ -2791,7 +2816,7 @@ span.flatpickr-weekday {
 }
 
 .navigation > .list > .list__item:not(.list__item_mobile) + .list__item {
-  margin-left: 4.8rem;
+  margin-left: 32px;
 }
 
 .navigation .list__item {
@@ -4786,7 +4811,8 @@ img.lazy.loaded {
     min-width: 2.8rem;
   }
 
-  .header__controls .list__link span {
+  .header__controls .list__link span,
+  .list > .list__item.cert_balance {
     display: none;
   }
 
