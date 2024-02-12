@@ -170,7 +170,8 @@ if ($coockieComment != '') {
 $paySystemResult = \Bitrix\Sale\PaySystem\Manager::getList(array(
     'filter'  => array(
         'ACTIVE' => 'Y',
-        '!ACTION_FILE' => 'inner'
+        '!ACTION_FILE' => 'inner',
+        '!CODE' => 'CERT',
     )
 ))->fetchAll();
 

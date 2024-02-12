@@ -123,6 +123,7 @@ foreach($arResult as $key => $value) {
                         <input type="hidden" name="externalId" value="<?=$arSection["UF_EXTERNAL_ID"]?>" />
                         <input type="hidden" name="externalElementId" value="<?=$arElement["PROPERTY_EXTERNAL_ID_VALUE"]?>" />
                         <input type="hidden" name="price" value="<?=$totalPrice?>" />
+                        <input type="hidden" name="user_balance" value="<?=number_format(Users::getInnerScore(), 0, '.', '')?>">
                         <?if($arSection["UF_EXTERNAL_SERVICE"] == 1):?>
                             <input type="hidden" name="travelineCategoryId" value="<?=$arElement["PROPERTY_EXTERNAL_CATEGORY_ID_VALUE"]?>" />
                             <input type="hidden" name="travelineChecksum" value="<?=$checksum?>" />
@@ -215,7 +216,7 @@ foreach($arResult as $key => $value) {
             <?php if ($USER->IsAdmin()):?>
                 <?php if (
                     $arResult['finalPrice']['REAL_PRICE'] > Users::getInnerScore()
-                    && Users::getInnerScore() !== 0
+                    && intval(Users::getInnerScore()) !== 0
                     && $isAuthorized
                 ):?>
                     <div class="reservation-form__price-cert__wrapper">
@@ -231,45 +232,62 @@ foreach($arResult as $key => $value) {
                                 <?=number_format($arResult['finalPrice']['REAL_PRICE'] - Users::getInnerScore(), 0, '.', ' ')?> ₽
                             </span>
                         </div>
-                    </div>
-
+                    </div>                
+                <? elseif (
+                    $arResult['finalPrice']['REAL_PRICE'] <= Users::getInnerScore()
+                    && intval(Users::getInnerScore()) !== 0
+                    && $isAuthorized
+                ): ?>
+                    <div class="reservation-form__price-cert__wrapper">
+                        <div class="reservation-form__price-cert__item">
+                            <span>Ваш баланс</span>
+                            <span>
+                                <?=number_format(Users::getInnerScore(), 0, '.', ' ')?> ₽
+                            </span>
+                        </div>
+                        <div class="reservation-form__price-cert__item">
+                            <span>Остаток на счёте</span>
+                            <span>
+                                <?=number_format(Users::getInnerScore() - $arResult['finalPrice']['REAL_PRICE'], 0, '.', ' ')?> ₽
+                            </span>
+                        </div>
+                    </div>      
                 <? endif; ?>
             <? endif; ?>
-
-            <?if (Bitrix\Main\Engine\CurrentUser::get()->isAdmin() || Bitrix\Main\Engine\CurrentUser::get()->getId() == 23) {?>                
-                <div class="payment-block">
-                    <p class="payment-block__title">Выберите способ оплаты:</p>
-                    <div class="payment-methods">
-                        <?if (is_array($arResult['paySystems'])) {
-                            foreach ($arResult['paySystems'] as $key => $paysystem) {?>
-                                <?if ($paysystem['ID'] != YANDEX_SPLIT_PAYSYSTEM_ID) {?>                                
-                                <?$img = CFile::getFileArray($paysystem['LOGOTIP'])?>
+            
+            <div class="payment-block" <?=Users::getInnerScore() - $arResult['finalPrice']['REAL_PRICE'] > 0 ? 'style="display:none"' : ''?>>
+                <p class="payment-block__title">Выберите способ оплаты:</p>
+                <div class="payment-methods">
+                    <?if (is_array($arResult['paySystems'])) {
+                        foreach ($arResult['paySystems'] as $key => $paysystem) {?>
+                            <?if ($paysystem['ID'] != YANDEX_SPLIT_PAYSYSTEM_ID) {?>                                
+                            <?$img = CFile::getFileArray($paysystem['LOGOTIP'])?>
+                            <label class="checkbox payment-item">
+                                <input type="radio" class="checkbox" value="<?=$paysystem['ID']?>" name="paysystem" <?=$key == 0 ? 'checked' : ''?>>
+                                <span></span>
+                                <img src="<?=$img['SRC']?>" width="<?=intval($img['WIDTH'])/2?>">
+                                <p><?=$paysystem['NAME']?></p>
+                            </label> 
+                            <?} else {?> 
                                 <label class="checkbox payment-item">
                                     <input type="radio" class="checkbox" value="<?=$paysystem['ID']?>" name="paysystem" <?=$key == 0 ? 'checked' : ''?>>
                                     <span></span>
-                                    <img src="<?=$img['SRC']?>" width="<?=intval($img['WIDTH'])/2?>">
-                                    <p><?=$paysystem['NAME']?></p>
+                                    <yandex-pay-badge
+                                        merchant-id="d82873ad-61ce-4050-b05e-1f4599f0bb7b"
+                                        type="bnpl"
+                                        amount="<?=$arResult['finalPrice']['REAL_PRICE'] - Users::getInnerScore()?>"
+                                        size="l"
+                                        variant="detailed"
+                                        theme="light"
+                                        color="primary"
+                                    />
                                 </label> 
-                                <?} else {?> 
-                                    <label class="checkbox payment-item">
-                                        <input type="radio" class="checkbox" value="<?=$paysystem['ID']?>" name="paysystem" <?=$key == 0 ? 'checked' : ''?>>
-                                        <span></span>
-                                        <yandex-pay-badge
-                                            merchant-id="d82873ad-61ce-4050-b05e-1f4599f0bb7b"
-                                            type="bnpl"
-                                            amount="<?=$arResult['finalPrice']['REAL_PRICE']?>"
-                                            size="l"
-                                            variant="detailed"
-                                            theme="light"
-                                            color="primary"
-                                        />
-                                    </label> 
-                                <?}?>
-                            <?}
-                        }?>
-                    </div>
+                            <?}?>
+                        <?}
+                    }?>
                 </div>
-            <?}?>
+            </div>
+            
             <?/* if ($isAuthorized): */?>
                 <button class="button button_primary" type="button" data-form-submit data-order><?=Loc::getMessage('ORDER_PAY')?></button>
             <? /*else: ?>

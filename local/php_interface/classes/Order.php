@@ -52,6 +52,7 @@ class Orders
         'OBJECT' => 14,
         'COMMISSION' => 15,
         'DATE_PAID' => 16,
+        'CERT_VALUE' => CERT_VALUE_PROP_ID,
     );
     public $statusNames = array(
         "N" => "Не оплачено",
@@ -60,12 +61,15 @@ class Orders
         "C" => "Отменён"
     );
     public $paymentTypeId = 4; // Сбербанк
+    public $innerPaymentTypeId = 3; // Внутренний счёт
 
     private $arErrors = [
         'The LastName field is required.' => 'Заполните поле Фамилия у гостя.',
         'The FirstName field is required.' => 'Заполните поле Имя у гостя.',
         'ConditionsChanged' => 'Информация о бронировании изменилась, оформите заказ заново.',
     ];
+
+    private $orderSuccessLink = '/personal/active/';
 
     public function __construct()
     {
@@ -633,11 +637,34 @@ class Orders
         }
     }
 
+    /**
+     * Устанавливает оплату для заказа
+     *
+     * @param mixed $paymentCollection
+     * 
+     * @return [type]
+     * 
+     */
+    private function setOrderPayment(&$order, $paySystemId, $summ, $isPayed)
+    {
+        $paymentCollection = $order->getPaymentCollection();
+        $payment = $paymentCollection->createItem(
+            PaySystem\Manager::getObjectById($paySystemId)
+        );
+        $payment->setField("SUM", $summ);
+        $payment->setField("CURRENCY", $order->getCurrency());
+        if ($isPayed) {
+            $payment->setPaid("Y");
+        }        
+    }
+
     /* Добавление нового заказа */
 
     public function add($params)
     {
         global $arUser, $userId;
+
+        $doublePayment = false;
 
         if (intval($userId) < 1) {
             $users = new Users();
@@ -733,19 +760,30 @@ class Orders
         }
 
         /* Оплата */
-        $paymentCollection = $order->getPaymentCollection();
-        if (isset($params['paysystem'])) {
-            $payment = $paymentCollection->createItem(
-                PaySystem\Manager::getObjectById($params['paysystem'])
-            );
-        } else {
-            $payment = $paymentCollection->createItem(
-                PaySystem\Manager::getObjectById($this->paymentTypeId)
-            );
-        }
-        
-        $payment->setField("SUM", $order->getPrice());
-        $payment->setField("CURRENCY", $order->getCurrency());
+
+        // Если баланс пользователя не равен 0, то часть или вся оплата будут с внутреннего счёта
+        if ($params['userbalance'] != 0) {
+
+            // Вычисляем разницу между суммой заказа и балансом счёта
+            $difference = intval($order->getPrice()) - intval($params['userbalance']);
+
+            // Создаём оплату с внутреннего счёта. Если денег не достаточно, делаем скидку на сумму остатка на внутреннем счёте
+            if ($difference <= 0) {
+                $this->setOrderPayment($order, $this->innerPaymentTypeId, $order->getPrice(), true);
+            } else {
+                $doublePayment = true;                
+                $basketItems = $basket->getBasketItems();
+                $item = $basketItems[0];
+                $item->setFields(array(
+                    'PRICE' => $difference,
+                    'CUSTOM_PRICE' => 'Y',
+                ));
+                $basket->save();                
+                $this->setOrderPayment($order, $params['paysystem'], $difference, false);
+            }
+        } else {            
+            $this->setOrderPayment($order, $params['paysystem'], $order->getPrice(), false);            
+        }        
 
         /* Устанавливаем свойства заказа (пользовательские) */
         $propertyCollection = $order->getPropertyCollection();
@@ -784,6 +822,11 @@ class Orders
         // АК (агентская комиссия)
         $propertyValue = $propertyCollection->getItemByOrderPropertyId($this->arPropsIDs['COMMISSION']);
         $propertyValue->setValue($sectionCommission);
+        // Сумма оплаты по сертификату, если была частичная оплата
+        if ($doublePayment) {
+            $propertyValue = $propertyCollection->getItemByOrderPropertyId($this->arPropsIDs['CERT_VALUE']);
+            $propertyValue->setValue(intval($params['userbalance']));
+        }
 
         if ($externalService == $this->bnovoSectionPropEnumId) {
             // ID тарифа Bnovo
@@ -814,9 +857,17 @@ class Orders
                 // Очистка корзины
                 $baskets->deleteAll();
 
+                // Списываем баланс со счёта вручную, если была частичная оплата, т.к. она идёт как скидка
+                // Списываем именно здесь, т.к. ранее нельзя получить ID заказа
+                if ($doublePayment) {
+                    \CSaleUserAccount::UpdateAccount($userId, -$params['userbalance'], 'RUB', 'Оплата заказа ', $order->getId());
+                }
+
                 // Ссылка на оплату
                 $paymentData = '';
-                if (isset($params['paysystem']) && $params['paysystem'] != $this->paymentTypeId) {
+                if ($params['userbalance'] != 0 && !$doublePayment) {                    
+                    $paymentUrl = $this->orderSuccessLink;
+                } elseif (isset($params['paysystem']) && $params['paysystem'] != $this->paymentTypeId) {
                     $paymentUrl = false;
                     $paymentData = $this->getPaymentUrl($orderId, false, true);
                 } else {
@@ -893,10 +944,12 @@ class Orders
         $_REQUEST["ORDER_ID"] = $orderId;
 
         $paymentCollection = $order->getPaymentCollection();
-        $payment = $paymentCollection[0];
 
-        if (!empty($payment)) {
-            $paymentId = $payment->getPaymentSystemId();
+        foreach($paymentCollection as $payment) {
+            $paymentId = $payment->getPaymentSystemId();            
+            if ($paymentId == $this->innerPaymentTypeId) {
+                continue;
+            }            
             $service = PaySystem\Manager::getObjectById($paymentId);
             $initResult = $service->initiatePay($payment, $request, PaySystem\BaseServiceHandler::STRING);
 

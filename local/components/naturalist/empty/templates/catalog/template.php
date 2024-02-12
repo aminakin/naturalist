@@ -174,7 +174,7 @@ foreach ($arResult as $key => $value) {
                                     <?php if ($USER->IsAdmin()):?>
                                         <?php if (
                                                 $arSection["PRICE"] > Users::getInnerScore()
-                                                && Users::getInnerScore() !== 0
+                                                && intval(Users::getInnerScore()) !== 0
                                                 && $isAuthorized
                                             ): ?>
                                             <div class="object-row__cert-price">
@@ -346,7 +346,7 @@ foreach ($arResult as $key => $value) {
                                             <?php if ($USER->IsAdmin()):?>
                                                 <?php if (
                                                         $arSection["PRICE"] > Users::getInnerScore()
-                                                        && Users::getInnerScore() !== 0
+                                                        && intval(Users::getInnerScore()) !== 0
                                                         && $isAuthorized
                                                     ): ?>
                                                     <div class="object-row__cert-price">
