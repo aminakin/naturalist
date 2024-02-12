@@ -1,0 +1,41 @@
+<?php
+require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/header.php");
+$APPLICATION->SetTitle("Купить");?>
+<script src="https://pay.yandex.ru/sdk/v1/pay.js" onload="onYaPayLoad()" async></script>
+<main class="main">
+    <section class="section section_crumbs">
+        <div class="container">
+            <div class="crumbs">
+                <ul class="list crumbs__list">
+                    <?
+                    $APPLICATION->IncludeComponent(
+                        "bitrix:breadcrumb",
+                        "main",
+                        array(
+                            "PATH" => "",
+                            "SITE_ID" => "s1",
+                            "START_FROM" => "0",
+                            "COMPONENT_TEMPLATE" => "main"
+                        ),
+                        false
+                    );
+                    ?>
+                </ul>
+            </div>
+        </div>
+    </section>
+    <?$APPLICATION->IncludeComponent(
+        "addamant:certificates.buy",
+        "",
+        Array(
+            "CACHE_TIME" => "36000000",
+            "CACHE_TYPE" => "A",
+            "POCKET_COST" => "690",
+            "MIN_COST" => "5000",
+            "VARIANT_COST" => "300"
+        )
+    );?>
+</main>
+
+<?php
+require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/footer.php");?>

@@ -14,13 +14,15 @@ use Naturalist\HighLoadBlockHelper;
 
 class CatalogHelper
 {    
-    private $hlVariantsValues;
-    private $hlPocketsValues;
+    public $hlVariantsValues;
+    public $hlPocketsValues;
+    public $hlElVariantsValues;
 
     public function __construct()
     {
         $this->hlVariantsValues = $this->getHlPropData(new HighLoadBlockHelper('Certvar'));
         $this->hlPocketsValues = $this->getHlPropData(new HighLoadBlockHelper('Certpocket'));
+        $this->hlElVariantsValues = $this->getHlPropData(new HighLoadBlockHelper('Certelvar'));
     }
 
     /**
@@ -33,7 +35,8 @@ class CatalogHelper
     {
         $result = [];
         $elements = ElementCertificatesTable::getList([
-            'select' => ['NAME', 'ID', 'PRICETABLE', 'VARIANT', 'POCKET'],
+            'order' => ['SORT' => 'ASC'],
+            'select' => ['NAME', 'ID', 'PRICETABLE', 'VARIANT', 'VARIANT_EL', 'POCKET', 'PRICE_COLOR'],
             'filter' => ['=ACTIVE' => 'Y'],
             'runtime' => [
                 new ReferenceField(
@@ -49,8 +52,10 @@ class CatalogHelper
             $result[] =  [
                 'ID' => $element->getId(),
                 'PRICE' => $element->get('PRICETABLE')->get('PRICE'),
+                'COLOR' => $element->getPriceColor()->getValue(),
                 'VARIANT' => $this->getMultiProp($element->getVariant()->getAll(), $this->hlVariantsValues),
                 'POCKET' => $this->getMultiProp($element->getPocket()->getAll(), $this->hlPocketsValues),
+                'VARIANT_EL' => $this->getMultiProp($element->getVariantEl()->getAll(), $this->hlElVariantsValues),
             ];
         }
 
