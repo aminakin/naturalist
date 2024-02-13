@@ -1,0 +1,1 @@
+<span style="color:white">Подарите маленькое <br> путешествие своим близким - <br> <span style="color:#F18D3F">сертификат в глэмпинг</span></span>
