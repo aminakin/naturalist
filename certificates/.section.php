@@ -1,5 +1,5 @@
-<?
-$sSectionName = "Сертификаты";
+<?php 
+$sSectionName = "Сертификат";
 $arDirProperties = Array(
 
 );
