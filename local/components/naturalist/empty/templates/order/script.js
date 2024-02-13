@@ -54,6 +54,7 @@ var Order = function () {
         checksum:
           $('#form-order input[name="travelineChecksum"]').val() ?? false,
         paysystem: $('#form-order input[name="paysystem"]:checked').val(),
+        userbalance: $('#form-order input[name="user_balance"]').val() ?? false,
       };
       var data = {
         params: params,
