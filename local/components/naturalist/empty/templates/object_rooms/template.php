@@ -154,7 +154,7 @@ foreach ($arParams['VARS'] as $key => $value) {
                                 <?php if ($USER->IsAdmin()):?>
                                     <?php if (
                                         $elementPrice > Users::getInnerScore()
-                                        && Users::getInnerScore() !== 0
+                                        && intval(Users::getInnerScore()) !== 0
                                         && $isAuthorized
                                     ):?>
                                         <div class="room__price_cert_price">
@@ -175,20 +175,18 @@ foreach ($arParams['VARS'] as $key => $value) {
                                     <div class="room__price-per-night">
                                         <span class="room__final-price"><?= number_format($elementPrice, 0, '.', ' ') ?> ₽</span>
                                         <span class="room__nights">за <?=$daysCount?> <?=$daysDeclension->get($daysCount)?></span>
-                                    </div>
-                                    <?if (Bitrix\Main\Engine\CurrentUser::get()->isAdmin()) {?>
-                                        <div class="split-wrap">
-                                            <yandex-pay-badge
-                                                merchant-id="d82873ad-61ce-4050-b05e-1f4599f0bb7b"
-                                                type="bnpl"
-                                                amount="<?=$elementPrice?>"
-                                                size="l"
-                                                variant="detailed"
-                                                theme="light"
-                                                color="primary"
-                                            />
-                                        </div>
-                                    <?}?>
+                                    </div>                                                                        
+                                    <div class="split-wrap" <?=$elementPrice - Users::getInnerScore() <= 0 ? 'style="display: none"' : ''?>>
+                                        <yandex-pay-badge
+                                            merchant-id="d82873ad-61ce-4050-b05e-1f4599f0bb7b"
+                                            type="bnpl"
+                                            amount="<?=$elementPrice - Users::getInnerScore()?>"
+                                            size="l"
+                                            variant="simple"
+                                            theme="light"
+                                            color="primary"
+                                        />
+                                    </div>                                    
                                 </div>
 
                                 <a class="button button_primary"
@@ -311,7 +309,7 @@ foreach ($arParams['VARS'] as $key => $value) {
                                         <?php if ($USER->IsAdmin()):?>
                                             <?php if (
                                                 $elementPrice > Users::getInnerScore()
-                                                && Users::getInnerScore() !== 0
+                                                && intval(Users::getInnerScore()) !== 0
                                                 && $isAuthorized
                                             ):?>
                                                 <div class="room__price_cert_price">
@@ -332,20 +330,18 @@ foreach ($arParams['VARS'] as $key => $value) {
                                             <div class="room__price-per-night">
                                                 <span class="room__final-price"><?= number_format($elementPrice, 0, '.', ' ') ?> ₽</span>
                                                 <span class="room__nights">/ за <?=$daysCount?> <?=$daysDeclension->get($daysCount)?></span>
-                                            </div>
-                                            <?if (Bitrix\Main\Engine\CurrentUser::get()->isAdmin()) {?>
-                                                <div class="split-wrap">
-                                                    <yandex-pay-badge
-                                                        merchant-id="d82873ad-61ce-4050-b05e-1f4599f0bb7b"
-                                                        type="bnpl"
-                                                        amount="<?=$elementPrice?>"
-                                                        size="l"
-                                                        variant="simple"
-                                                        theme="light"
-                                                        color="primary"
-                                                    />
-                                                </div>     
-                                            <?}?>                                      
+                                            </div>                                                                          
+                                            <div class="split-wrap" <?=$elementPrice - Users::getInnerScore() <= 0 ? 'style="display: none"' : ''?>>
+                                                <yandex-pay-badge
+                                                    merchant-id="d82873ad-61ce-4050-b05e-1f4599f0bb7b"
+                                                    type="bnpl"
+                                                    amount="<?=$elementPrice - Users::getInnerScore()?>"
+                                                    size="l"
+                                                    variant="simple"
+                                                    theme="light"
+                                                    color="primary"
+                                                />
+                                            </div>                                                                
                                         </div>
 
                                         <a class="button button_primary"

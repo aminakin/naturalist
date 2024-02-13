@@ -43,8 +43,8 @@ class Users
             return 0;
         }
 
-        return \CSaleUserAccount::GetByID(
-            \Bitrix\Main\Engine\CurrentUser::get()->getId()
+        return \CSaleUserAccount::GetByUserID(
+            \Bitrix\Main\Engine\CurrentUser::get()->getId(), 'RUB'
         )['CURRENT_BUDGET'];
     }
 
