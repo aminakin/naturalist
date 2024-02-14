@@ -99,11 +99,11 @@ class Users
 
         if (!$params['fromOrder']) {
             if ($userId > 0) {
-                if ($type == 'phone') {
-                    $res = $this->sendCodeBySMS($login, $code);
-                } elseif ($type == 'email') {
-                    $res = $this->sendCodeByEmail($login, $code, $userId, $arUser);
-                }
+                // if ($type == 'phone') {
+                //     $res = $this->sendCodeBySMS($login, $code);
+                // } elseif ($type == 'email') {
+                //     $res = $this->sendCodeByEmail($login, $code, $userId, $arUser);
+                // }
     
                 $res = true;
     
