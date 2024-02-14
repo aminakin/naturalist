@@ -107,10 +107,10 @@ echo '</pre>';
                 <? endif; ?>
                 <div class="certificates_index__btns">
                     <div class="certificates_index__btn orange">
-                        <a href="">Купить</a>
+                        <a href="buy/">Купить</a>
                     </div>
                     <div class="certificates_index__btn blue">
-                        <a href="">Активировать</a>
+                        <a href="activate/">Активировать</a>
                     </div>
                     <div class="certificates_index__btn transparent">
                         <a href="">Для корпоративных клиентов</a>

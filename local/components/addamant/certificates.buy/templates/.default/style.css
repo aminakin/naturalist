@@ -1,0 +1,592 @@
+.cert-buy__form {
+  display: grid;
+  gap: 88px;
+}
+
+.form__title-block {
+  font-family: "TT Travels Next";
+  font-size: 28px;
+  letter-spacing: -1pt;
+  line-height: 34px;
+  font-weight: 600;
+  position: relative;
+}
+
+.form__dot {
+  width: 23px;
+  height: 23px;
+  border-radius: 50%;
+  border: 1px solid #696969;
+  position: absolute;
+  right: 0;
+  top: 50px;
+}
+
+.form__number {
+}
+
+.form__title {
+  margin: 8px 0 0 0;
+  padding: 8px 0 0 0;
+  border-top: 1px solid black;
+}
+
+label {
+  transition: all 0.25s;
+  cursor: pointer;
+}
+
+.form__cert label {
+  padding: 62px 10px;
+  border-radius: 15px;
+  border: 1px solid black;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+label:has(input:checked) {
+  border-color: #f18d3f;
+  box-shadow: inset 0 0 0 3px #f18d3f;
+}
+
+.form__certs {
+  margin-top: 88px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+
+.nominal__custom-cost {
+  width: 100%;
+  text-align: center;
+  background: transparent;
+  border: none;
+  margin: 0;
+  padding: 0;
+  height: 34px;
+}
+
+.nominal__price {
+  font-family: "TT Travels Next";
+  font-size: 36px;
+  line-height: 34px;
+  letter-spacing: -1pt;
+  font-weight: 800;
+}
+
+.form__block:has(input:checked) .form__dot {
+  background-color: #f18d3f;
+  border-color: #f18d3f;
+}
+
+.nominal__descr {
+  font-weight: 500;
+  text-align: center;
+  margin: 16px 0 0 0;
+  font-size: 18px;
+  line-height: 24px;
+}
+
+.form__format {
+  margin-top: 88px;
+  display: flex;
+  gap: 70px;
+  justify-content: space-between;
+}
+
+.form__format label {
+  padding: 49px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-radius: 15px;
+  border: 1px solid black;
+  gap: 34px;
+  min-height: 301px;
+}
+
+.format__electro {
+  width: 38%;
+}
+
+.format__fiz {
+  width: 49%;
+}
+
+.format__title {
+  text-transform: uppercase;
+  font-family: "TT Travels Next";
+  font-weight: 600;
+  font-size: 28px;
+  line-height: 34px;
+  letter-spacing: -1pt;
+  text-align: center;
+}
+
+.format__title span {
+  font-weight: 400;
+}
+
+.format__descr {
+  margin-top: 24px;
+  text-align: center;
+  font-weight: 500;
+  font-size: 18px;
+}
+
+.format__descr span {
+  display: block;
+  margin-top: 24px;
+  text-align: center;
+  font-size: 13px;
+}
+
+.format__electro label:has(input:checked) {
+  border-color: transparent;
+  box-shadow: none;
+  background-color: #1b2d50;
+}
+
+.format__electro label:has(input:checked) .format__title {
+  color: #e6c48e;
+}
+
+.format__electro label:has(input:checked) svg g > path:first-child {
+  fill: #fbeed7;
+}
+
+.format__fiz label:has(input:checked) {
+  border-color: transparent;
+  box-shadow: none;
+  background-color: #e6c48e;
+}
+
+.format__fiz label:has(input:checked) svg g > path:first-child {
+  fill: #fbeed7;
+}
+
+.form__el-variant {
+  margin-top: 88px;
+  display: flex;
+  gap: 20px;
+}
+
+.design label {
+  border: none;
+}
+
+.design label img {
+  transition: all 0.25s;
+  border: 4px solid transparent;
+  border-radius: 15px;
+  margin-top: 16px;
+}
+
+.design label .el-variant__title {
+  transition: all 0.25s;
+  padding: 0 10px;
+  font-size: 18px;
+  line-height: 24px;
+  font-weight: 500;
+  border-radius: 50px;
+}
+
+.design label:has(input:checked) {
+  border-color: transparent;
+  box-shadow: none;
+}
+
+.design label:has(input:checked) .el-variant__title {
+  background-color: #f18d3f;
+}
+
+.design label:has(input:checked) img {
+  border-color: #f18d3f;
+}
+
+.congrats__content,
+.user-data__content {
+  max-width: 678px;
+  margin: 0 auto;
+}
+
+.congrats__content textarea {
+  width: 100%;
+  height: 219px;
+  margin-top: 12px;
+  padding: 12px;
+  border: 1px solid black;
+  border-radius: 2px;
+  background-color: transparent;
+  font-weight: 500;
+  font-size: 15px;
+  line-height: 21px;
+}
+
+.congrats__content textarea::placeholder {
+  color: #696969;
+}
+
+.form__congrats,
+.form__user-data,
+.form__comment {
+  margin-top: 88px;
+}
+
+.congrats__text {
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 24px;
+  margin: 0;
+}
+
+.congrats__footnote {
+  margin: 12px 0 0 0;
+  font-weight: 500;
+  font-size: 13px;
+  line-height: 19px;
+}
+
+.user-data__title {
+  margin: 0;
+  font-weight: 500;
+  font-size: 13px;
+  line-height: 19px;
+}
+
+.user-data__block input {
+  display: block;
+  width: 100%;
+  margin: 12px 0 0 0;
+  padding: 18px 9px;
+  border: 1px solid black;
+  border-radius: 2px;
+  font-weight: 500;
+  font-size: 15px;
+  line-height: 21px;
+  background-color: transparent;
+}
+
+.user-data__block input::placeholder {
+  color: #696969;
+}
+
+.user-data__content label:has(input:checked) {
+  box-shadow: none;
+  border-color: transparent;
+}
+
+.city,
+.delivery {
+  margin-top: 24px;
+}
+
+.user-data__block-title {
+  margin: 0;
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 24px;
+}
+
+.user-data__inputs {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 8px;
+  align-items: flex-start;
+}
+
+.user-data__inputs .checkbox span {
+  font-weight: 500;
+  font-size: 15px;
+  line-height: 25px;
+}
+
+.payment__content label:has(input:checked) {
+  box-shadow: none;
+  border-color: transparent;
+}
+
+.payment__content {
+  max-width: 678px;
+  margin: 88px auto 0 auto;
+}
+
+.form__submit {
+  font-family: "TT Travels Next";
+  font-size: 28px;
+  line-height: 34px;
+  letter-spacing: 5pt;
+  text-align: center;
+  width: 100%;
+  padding: 20px;
+  border-radius: 83px;
+  font-weight: 600;
+  background-color: #f18e3c;
+  border: none;
+  margin-top: 32px;
+  color: white;
+}
+
+.cert-buy .form__footnote {
+  margin-top: 56px;
+}
+
+.payment__note {
+  margin-top: 24px;
+  font-weight: 500;
+  font-size: 19px;
+  line-height: 23px;
+}
+
+.cert-buy .field .checkbox span {
+  font-weight: 500;
+  font-size: 19px;
+  line-height: 24px;
+}
+
+.cert-buy .checkbox input {
+  visibility: visible;
+}
+
+.user-data__block.electro {
+  margin-top: 48px;
+}
+
+.user-data__title.electro {
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 24px;
+}
+
+.nominal__custom-cost::-webkit-outer-spin-button,
+.nominal__custom-cost::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.nominal__custom-cost[type="number"] {
+  -moz-appearance: textfield;
+}
+
+@media (max-width: 1000px) {
+  .section_crumbs {
+    padding-bottom: 1rem;
+  }
+
+  .form__certs {
+    margin-top: 48px;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .cert-buy__form {
+    gap: 48px;
+  }
+
+  .form__format {
+    margin-top: 48px;
+    flex-wrap: wrap;
+    gap: 48px;
+  }
+
+  .format__electro,
+  .format__fiz {
+    width: 100%;
+  }
+
+  .form__format label {
+    padding: 30px 0;
+    min-height: 264px;
+  }
+
+  .format__descr,
+  .format__descr span {
+    margin-top: 16px;
+  }
+
+  .form__el-variant {
+    margin-top: 48px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px 22px;
+  }
+
+  .congrats__content,
+  .user-data__content {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .form__congrats,
+  .form__user-data,
+  .form__comment {
+    margin-top: 48px;
+  }
+
+  .payment__content {
+    margin-top: 48px;
+    max-width: 100%;
+  }
+
+  .form__submit {
+    padding: 15px;
+  }
+}
+
+@media (max-width: 500px) {
+  .section_crumbs {
+    padding-bottom: 1rem;
+  }
+
+  .form__title-block {
+    font-size: 21px;
+    line-height: 21px;
+  }
+
+  .form__dot {
+    top: 40px;
+  }
+
+  .form__certs {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .form__cert label {
+    padding: 49px 10px;
+  }
+
+  .nominal__descr {
+    margin-top: 19px;
+    font-size: 13px;
+    line-height: 19px;
+  }
+
+  .nominal__descr br {
+    display: none;
+  }
+
+  .form__format label {
+    padding: 28px 10px;
+    min-height: 224px;
+    gap: 16px;
+  }
+
+  .format__title {
+    font-size: 21px;
+    line-height: 21px;
+  }
+
+  .format__title span {
+    font-size: 15px;
+  }
+
+  .format__descr {
+    font-size: 13px;
+    line-height: 19px;
+  }
+
+  .format__descr span {
+    line-height: 19px;
+  }
+
+  .form__title {
+    padding-right: 30px;
+  }
+
+  .design label .el-variant__title {
+    font-size: 13px;
+    line-height: 19px;
+  }
+
+  .form__el-variant {
+    margin-top: 38px;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  .design label img {
+    margin-top: 8px;
+  }
+
+  .congrats__content,
+  .user-data__content {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .form__congrats,
+  .form__user-data,
+  .form__comment {
+    margin-top: 48px;
+  }
+
+  .congrats__text,
+  .congrats__content textarea {
+    font-size: 13px;
+    line-height: 19px;
+  }
+
+  .congrats__footnote {
+    font-size: 12px;
+    line-height: 15px;
+  }
+
+  .user-data__block input {
+    padding: 14.5px 9px;
+  }
+
+  .user-data__block.electro {
+    margin-top: 32px;
+  }
+
+  .user-data__title.electro,
+  .user-data__block-title {
+    font-size: 15px;
+    line-height: 21px;
+  }
+
+  .user-data__title.electro br {
+    display: none;
+  }
+
+  .user-data__inputs .checkbox span {
+    font-size: 13px;
+    line-height: 19px;
+  }
+
+  .payment__content {
+    margin-top: 48px;
+    max-width: 100%;
+  }
+
+  .form__submit {
+    padding: 15px;
+  }
+
+  .payment-item p,
+  .cert-buy .field .checkbox span {
+    font-size: 15px;
+    line-height: 21px;
+  }
+
+  .form__submit {
+    margin-top: 24px;
+    font-size: 21px;
+    line-height: 21px;
+    letter-spacing: normal;
+    padding: 13.5px;
+  }
+
+  .payment__note {
+    font-size: 13px;
+    line-height: 19px;
+  }
+
+  .cert-buy .form__footnote {
+    margin-top: 48px;
+  }
+}

@@ -778,7 +778,7 @@ $APPLICATION->AddHeadString('<meta name="description" content="' . $descriptionS
                         "arHLTypes" => $arHLTypes,
                         "arHLFeatures" => $arHLFeatures,
                         "arServices" => $arServices,
-                        "arSearchedRegions" => $arRegionIds,
+                        "arSearchedRegions" => is_array($arRegionIds) ? array_unique($arRegionIds) : '',
                         "searchedRegionData" => $searchedRegionData,
                         "searchName" => $searchName ?? $search,
                         "arFilterValues" => $arFilterValues,
