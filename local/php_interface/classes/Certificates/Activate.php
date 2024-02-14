@@ -55,6 +55,8 @@ class Activate
         if ($this->activateCert()) {
             $result['SUCCESS_MESSAGE'] = 'Сертификат успешно активирован';
             $result['STATUS'] = 'SUCCESS';
+            $result['AMOUNT'] = $this->certificate['UF_COST'];
+            $result['DATE'] = $this->certificate['UF_DATE_UNTIL']->format("d.m.Y");
         }
 
         return $result;
@@ -101,7 +103,7 @@ class Activate
             return 'Сертификат с таким кодом уже активирован';
         }
 
-        if ($this->objDateTime->format("d.m.Y") > $this->certificate['UF_DATE_UNTIL']->format("d.m.Y")) {
+        if ($this->objDateTime->getTimestamp() > $this->certificate['UF_DATE_UNTIL']->getTimestamp()) {
             return 'Истёк срок действия сертификата';
         }
 
