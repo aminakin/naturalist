@@ -34,11 +34,12 @@ class Create
      * Добавляет новый сертификат.
      *
      * @param int $nominal
+     * @param int $orderId
      * 
      * @return bool
      * 
      */
-    public function add(int $nominal) : bool
+    public function add(int $nominal, int $orderId) : bool
     {
         $objDateTime = new DateTime();
 
@@ -46,7 +47,8 @@ class Create
             'UF_CODE' => $this->generateCode(),
             'UF_DATE_CREATE' => $objDateTime->format("d.m.Y"),
             'UF_DATE_UNTIL' => $objDateTime->add(new DateInterval('P1Y'))->format("d.m.Y"),
-            'UF_COST' => $nominal
+            'UF_COST' => $nominal,
+            'UF_ORDER_ID' => $orderId,
         ];
 
         if($this->hlEntity->add($arFields)) {

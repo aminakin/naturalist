@@ -14,10 +14,23 @@ Loc::loadMessages(__FILE__);
 
 ?>
 
-<?//xprint($arResult['PAY_SYSTEMS'])?>
+<?php 
+if ($arResult['PAYMENT_URL']) {
+    LocalRedirect($arResult['PAYMENT_URL'], true);    
+}
+
+if ($arResult['ERROR']) {
+    echo $arResult['ERROR'];
+} else {
+?>
 
 <section class="container cert-buy">
     <form action="" class="cert-buy__form" method="post">
+        <input type="hidden" name="fromOrder" value="Y">
+        <input type="hidden" name="is_cert" value="Y">
+        <input type="hidden" name="type" value="phone">
+        <input type="hidden" name="variant_cost" value="<?=$arParams['VARIANT_COST']?>">
+        <input type="hidden" name="pocket_cost" value="<?=$arParams['POCKET_COST']?>">
         <section class="form__block nominal">
             <div class="form__title-block">
                 <span class="form__number">1</span>
@@ -29,6 +42,7 @@ Loc::loadMessages(__FILE__);
                     <?php foreach ($arResult['CERTIFICATES'] as $cert) {?>
                         <div class="form__cert">
                             <label 
+                                class="cert--<?=$cert['ID']?>"
                                 variant="
                                     <?php foreach ($cert['VARIANT'] as $key => $certVariant) {
                                         echo $certVariant['UF_FILE'] . ';';
@@ -44,12 +58,12 @@ Loc::loadMessages(__FILE__);
                                         echo $certPocket['UF_FILE'] . ';';
                                     } ?>
                                 ">
-                                <input type="radio" name="cert_id" value="<?=$cert['ID']?>" class="visually-hidden">
+                                <input cost="<?=$cert['PRICE']?>" type="radio" name="cert_id" value="<?=$cert['ID']?>" class="visually-hidden">
                                 <?php if ($cert['PRICE'] != 0) {?>
                                     <span style="color:<?=$cert['COLOR'] ? $cert['COLOR'] : 'black'?>" class="nominal__price"><?=CurrencyFormat($cert['PRICE'], 'RUB')?></span>
                                 </label>
                                 <?php } else {?>
-                                    <input target="<?=$cert['ID']?>" style="color:<?=$cert['COLOR'] ? $cert['COLOR'] : 'black'?>" type="text" name="cert_price" placeholder="0000 ₽" class="nominal__custom-cost nominal__price">                                
+                                    <input target="<?=$cert['ID']?>" style="color:<?=$cert['COLOR'] ? $cert['COLOR'] : 'black'?>" type="number" min="<?=$arParams['MIN_COST']?>" name="cert_price" placeholder="0000 ₽" class="nominal__custom-cost nominal__price">                                
                                 </label>
                                 <p class="nominal__descr"><?=Loc::GetMessage('NOMINAL_DESCR', ['#COST#' => $arParams['MIN_COST']])?></p>
                                 <?php } ?>                        
@@ -107,7 +121,7 @@ Loc::loadMessages(__FILE__);
                 </div>
             </div>
         </section>
-        <section class="form__block el-variant design">
+        <section class="form__block el-variant design" style="display: none">
             <div class="form__title-block">
                 <span class="form__number">3</span>
                 <p class="form__title"><?=Loc::GetMessage('VARIANT_EL_TITLE')?></p>
@@ -116,14 +130,14 @@ Loc::loadMessages(__FILE__);
             <div class="form__el-variant">
                 <?php foreach ($arResult['VARIANT_EL'] as $elVariant) {?>
                     <label>
-                        <input type="radio" name="cert_el_variant" value="<?=$elVariant['UF_FILE']?>" class="visually-hidden">
+                        <input type="radio" name="cert_el_variant" value="<?=$localHost.CFile::getPath($elVariant['UF_FILE'])?>" class="visually-hidden">
                         <span class="el-variant__title"><?=$elVariant['UF_NAME']?></span>
                         <img src="<?=CFile::getPath($elVariant['UF_FILE'])?>" alt="">                    
                     </label>
                 <?php } ?>                
             </div>
         </section>
-        <section class="form__block variant design">
+        <section class="form__block variant design" style="display: none">
             <div class="form__title-block">
                 <span class="form__number">3</span>
                 <p class="form__title"><?=Loc::GetMessage('VARIANT_TITLE', ['#COST#' => $arParams['VARIANT_COST']])?></p>
@@ -132,14 +146,14 @@ Loc::loadMessages(__FILE__);
             <div class="form__el-variant">
                 <?php foreach ($arResult['VARIANT'] as $variant) {?>
                     <label>
-                        <input type="radio" name="cert_variant" value="<?=$variant['UF_FILE']?>" class="visually-hidden">
+                        <input type="radio" name="cert_variant" value="<?=$localHost.CFile::getPath($variant['UF_FILE'])?>" class="visually-hidden">
                         <span class="el-variant__title"><?=$variant['UF_NAME']?></span>
                         <img src="<?=CFile::getPath($variant['UF_FILE'])?>" alt="">                    
                     </label>
                 <?php } ?>                
             </div>
         </section>
-        <section class="form__block pocket design">
+        <section class="form__block pocket design" style="display: none">
             <div class="form__title-block">
                 <span class="form__number">4</span>
                 <p class="form__title"><?=Loc::GetMessage('POCKET_TITLE', ['#COST#' => $arParams['POCKET_COST']])?></p>
@@ -148,7 +162,7 @@ Loc::loadMessages(__FILE__);
             <div class="form__el-variant">
                 <?php foreach ($arResult['POCKET'] as $pocket) {?>
                     <label>
-                        <input type="radio" name="cert_pocket" value="<?=$pocket['UF_FILE']?>" class="visually-hidden">
+                        <input type="radio" name="cert_pocket" value="<?=$localHost.CFile::getPath($pocket['UF_FILE'])?>" class="visually-hidden">
                         <span class="el-variant__title"><?=$pocket['UF_NAME']?></span>
                         <img src="<?=CFile::getPath($pocket['UF_FILE'])?>" alt="">                    
                     </label>
@@ -181,31 +195,38 @@ Loc::loadMessages(__FILE__);
                         <p class="user-data__title"><?=Loc::GetMessage('USER_DATA_TITLE')?></p>
                         <input type="text" required name="name" placeholder="<?=Loc::GetMessage('USER_DATA_NAME')?>">
                         <input type="text" required name="last_name" placeholder="<?=Loc::GetMessage('USER_DATA_LAST_NAME')?>">
-                        <input type="tel" required name="phone" placeholder="<?=Loc::GetMessage('USER_DATA_PHONE')?>">
+                        <input type="tel" required name="login" placeholder="<?=Loc::GetMessage('USER_DATA_PHONE')?>">
                         <input type="email" required name="email" placeholder="<?=Loc::GetMessage('USER_DATA_EMAIL')?>">
                     </div>
-                    <div class="user-data__block city">
-                        <p class="user-data__block-title"><?=Loc::GetMessage('USER_DATA_CITY_TITLE')?></p>
-                        <div class="user-data__inputs">
-                            <label class="checkbox">
-                                <input type="radio" name="city" value="Москва в пределах МКАД" checked>
-                                <span>Москва в пределах МКАД</span>
-                            </label>
-                            <label class="checkbox">
-                                <input type="radio" name="city" value="Москва за пределами МКАД">
-                                <span>Москва за пределами МКАД</span>
-                            </label>
-                        </div>
+                    <div class="user-data__block electro">
+                        <p class="user-data__title electro"><?=Loc::GetMessage('USER_DATA_ELECTRO_TITLE')?></p>
+                        <input type="text" name="gift_name" placeholder="<?=Loc::GetMessage('USER_DATA_GIFT_NAME')?>">                                                
+                        <input type="email" name="gift_email" placeholder="<?=Loc::GetMessage('USER_DATA_GIFT_EMAIL')?>">
                     </div>
-                    <div class="user-data__block delivery">
-                        <p class="user-data__block-title"><?=Loc::GetMessage('USER_DATA_DELIVERY_TITLE')?></p>
-                        <div class="user-data__inputs">
-                            <?php foreach ($arResult['DELIVERIES'] as $delKey => $delivery) {?>
+                    <div class="user-data__block fiz" style="display: none">
+                        <div class="user-data__block city">
+                            <p class="user-data__block-title"><?=Loc::GetMessage('USER_DATA_CITY_TITLE')?></p>
+                            <div class="user-data__inputs">
                                 <label class="checkbox">
-                                    <input type="radio" name="delivery" value="<?=$delivery['ID']?>" class="visually-hidden" <?=$delKey == 0 ? 'checked' : ''?>>
-                                    <span><?=$delivery['DESCRIPTION']?></span>
+                                    <input type="radio" name="city" value="Москва в пределах МКАД" checked>
+                                    <span>Москва в пределах МКАД</span>
                                 </label>
-                            <?php } ?>
+                                <label class="checkbox">
+                                    <input type="radio" name="city" value="Москва за пределами МКАД">
+                                    <span>Москва за пределами МКАД</span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="user-data__block delivery">
+                            <p class="user-data__block-title"><?=Loc::GetMessage('USER_DATA_DELIVERY_TITLE')?></p>
+                            <div class="user-data__inputs">
+                                <?php foreach ($arResult['DELIVERIES'] as $delKey => $delivery) {?>
+                                    <label class="checkbox">
+                                        <input cost="<?=$delivery['CONFIG']['MAIN']['PRICE']?>" type="radio" name="delivery" value="<?=$delivery['ID']?>" class="visually-hidden" <?=$delKey == 0 ? 'checked' : ''?>>
+                                        <span><?=$delivery['DESCRIPTION']?></span>
+                                    </label>
+                                <?php } ?>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -229,28 +250,32 @@ Loc::loadMessages(__FILE__);
             </div>
             <div class="payment__content">
                 <div class="payment__list">
-                    <?php foreach ($arResult['PAY_SYSTEMS'] as $key => $paysystem) {?>
+                    <?php foreach ($arResult['PAY_SYSTEMS'] as $key => $paysystem) {?>                        
                         <?if ($paysystem['ID'] != CERT_YANDEX_SPLIT_PAYSYSTEM_ID) {?>                                
                             <?$img = CFile::getFileArray($paysystem['LOGOTIP'])?>
-                            <label class="checkbox payment-item">
+                            <label class="checkbox payment-item" <?=$paysystem['IS_CASH'] == 'Y' ? 'style="display:none" cash="Y"' : ''?>>
                                 <input type="radio" class="checkbox" value="<?=$paysystem['ID']?>" name="paysystem" <?=$key == 0 ? 'checked' : ''?>>
                                 <span></span>
-                                <img src="<?=$img['SRC']?>" width="<?=intval($img['WIDTH'])/2?>">
+                                <?if ($img) {?>
+                                    <img src="<?=$img['SRC']?>" width="<?=intval($img['WIDTH'])/2?>">
+                                <? } ?>
                                 <p><?=$paysystem['PSA_NAME']?></p>
                             </label> 
                         <?} else {?> 
                             <label class="checkbox payment-item">
                                 <input type="radio" class="checkbox" value="<?=$paysystem['ID']?>" name="paysystem" <?=$key == 0 ? 'checked' : ''?>>
                                 <span></span>
-                                <yandex-pay-badge
-                                    merchant-id="d82873ad-61ce-4050-b05e-1f4599f0bb7b"
-                                    type="bnpl"
-                                    amount="10000"
-                                    size="l"
-                                    variant="detailed"
-                                    theme="light"
-                                    color="primary"
-                                />
+                                <div class="split-badge">
+                                    <yandex-pay-badge
+                                        merchant-id="d82873ad-61ce-4050-b05e-1f4599f0bb7b"
+                                        type="bnpl"
+                                        amount="10000"
+                                        size="l"
+                                        variant="detailed"
+                                        theme="light"
+                                        color="primary"
+                                    />
+                                </div>
                             </label> 
                         <?}?>
                     <?php }?>
@@ -270,6 +295,21 @@ Loc::loadMessages(__FILE__);
     </form>
 </section>
 
+<style>
+    <?php foreach ($arResult['CERTIFICATES'] as $style) {?>
+        label:has(input:checked).cert--<?=$style['ID']?> {
+            background-color: <?=$style['BACK_HOVER_COLOR']?>;
+            box-shadow: none;
+            border-color: transparent;            
+        }
+        label:has(input:checked).cert--<?=$style['ID']?> .nominal__price {
+            color: <?=$style['PRICE_HOVER_COLOR']?> !important
+        }
+    <?php }?>
+</style>
+
 <script>
     let buyCert = new BuyCert();
 </script>
+
+<?php } ?>

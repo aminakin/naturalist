@@ -36,7 +36,7 @@ class CatalogHelper
         $result = [];
         $elements = ElementCertificatesTable::getList([
             'order' => ['SORT' => 'ASC'],
-            'select' => ['NAME', 'ID', 'PRICETABLE', 'VARIANT', 'VARIANT_EL', 'POCKET', 'PRICE_COLOR'],
+            'select' => ['NAME', 'ID', 'PRICETABLE', 'VARIANT', 'VARIANT_EL', 'POCKET', 'PRICE_COLOR', 'PRICE_HOVER_COLOR', 'BACK_HOVER_COLOR'],
             'filter' => ['=ACTIVE' => 'Y'],
             'runtime' => [
                 new ReferenceField(
@@ -53,6 +53,8 @@ class CatalogHelper
                 'ID' => $element->getId(),
                 'PRICE' => $element->get('PRICETABLE')->get('PRICE'),
                 'COLOR' => $element->getPriceColor()->getValue(),
+                'PRICE_HOVER_COLOR' => $element->getPriceHoverColor()->getValue(),
+                'BACK_HOVER_COLOR' => $element->getBackHoverColor()->getValue(),
                 'VARIANT' => $this->getMultiProp($element->getVariant()->getAll(), $this->hlVariantsValues),
                 'POCKET' => $this->getMultiProp($element->getPocket()->getAll(), $this->hlPocketsValues),
                 'VARIANT_EL' => $this->getMultiProp($element->getVariantEl()->getAll(), $this->hlElVariantsValues),

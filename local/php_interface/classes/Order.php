@@ -946,13 +946,12 @@ class Orders
         $paymentCollection = $order->getPaymentCollection();
 
         foreach($paymentCollection as $payment) {
-            $paymentId = $payment->getPaymentSystemId();            
+            $paymentId = $payment->getPaymentSystemId();                    
             if ($paymentId == $this->innerPaymentTypeId) {
                 continue;
             }            
             $service = PaySystem\Manager::getObjectById($paymentId);
-            $initResult = $service->initiatePay($payment, $request, PaySystem\BaseServiceHandler::STRING);
-
+            $initResult = $service->initiatePay($payment, $request, PaySystem\BaseServiceHandler::STRING);            
             if ($initResult->isSuccess()) {
                 $link = $initResult->getTemplate();
                 if ($isYaPay) {

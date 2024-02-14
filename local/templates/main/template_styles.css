@@ -175,13 +175,13 @@ h1.page_title {
 }
 
 .payment-item p {
-  margin-left: 14px;
   font-size: 16px;
   font-family: "Montserrat";
 }
 
 .payment-item img {
   max-width: 60px;
+  margin-right: 14px;
 }
 
 .payment-item.checkbox span {
@@ -265,5 +265,95 @@ h1.page_title {
   .profile__get-vaucher {
     width: max-content;
     margin-left: 0;
+  }
+}
+
+.cert__back {
+  margin-top: 62px;
+  border-top: 1px solid black;
+  border-bottom: 1px solid black;
+  background-image: url("/local/components/addamant/certificates.buy/templates/.default/img/back.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cert__message {
+  position: absolute;
+  padding: 54px 25px 25px 25px;
+  max-width: 682px;
+  width: 100%;
+  min-height: 233px;
+  background-color: #e6c48e;
+  box-shadow: 0px 8px 20px 0px #00000026;
+  border-radius: 20px;
+  text-align: center;
+}
+
+.cert__message-title {
+  font-family: "TT Travels Next";
+  font-size: 35px;
+  line-height: 40px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.cert__message-text {
+  font-size: 18px;
+  line-height: 35px;
+  font-weight: 500;
+  margin: 30px 0 0 0;
+}
+
+.cert__geo img {
+  border-bottom: 1px solid black;
+}
+
+@media (max-width: 1440px) {
+  .cert__back {
+    background-image: url("/local/components/addamant/certificates.buy/templates/.default/img/back-laptop.png");
+  }
+}
+
+@media (max-width: 769px) {
+  .cert__back {
+    background-image: url("/local/components/addamant/certificates.buy/templates/.default/img/back-tablet.png");
+  }
+
+  .cert__message {
+    padding: 47px 20px 33px 20px;
+    max-width: 502px;
+  }
+
+  .cert__message-text {
+    line-height: 27px;
+    margin-top: 16px;
+  }
+}
+
+@media (max-width: 501px) {
+  .cert__back {
+    background-image: url("/local/components/addamant/certificates.buy/templates/.default/img/back-mob.png");
+  }
+
+  .cert__message {
+    padding: 40px 10px;
+    max-width: 302px;
+    min-height: 196px;
+  }
+
+  .cert__message-title {
+    font-size: 21px;
+    line-height: 21px;
+  }
+
+  .cert__message-text {
+    font-size: 12px;
+    line-height: 15px;
+    margin-top: 35px;
   }
 }

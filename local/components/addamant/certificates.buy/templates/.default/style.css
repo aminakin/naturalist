@@ -19,7 +19,7 @@
   border: 1px solid #696969;
   position: absolute;
   right: 0;
-  bottom: 10px;
+  top: 50px;
 }
 
 .form__number {
@@ -326,7 +326,7 @@ label:has(input:checked) {
   font-weight: 600;
   background-color: #f18e3c;
   border: none;
-  margin-top: 56px;
+  margin-top: 32px;
   color: white;
 }
 
@@ -349,4 +349,244 @@ label:has(input:checked) {
 
 .cert-buy .checkbox input {
   visibility: visible;
+}
+
+.user-data__block.electro {
+  margin-top: 48px;
+}
+
+.user-data__title.electro {
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 24px;
+}
+
+.nominal__custom-cost::-webkit-outer-spin-button,
+.nominal__custom-cost::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.nominal__custom-cost[type="number"] {
+  -moz-appearance: textfield;
+}
+
+@media (max-width: 1000px) {
+  .section_crumbs {
+    padding-bottom: 1rem;
+  }
+
+  .form__certs {
+    margin-top: 48px;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .cert-buy__form {
+    gap: 48px;
+  }
+
+  .form__format {
+    margin-top: 48px;
+    flex-wrap: wrap;
+    gap: 48px;
+  }
+
+  .format__electro,
+  .format__fiz {
+    width: 100%;
+  }
+
+  .form__format label {
+    padding: 30px 0;
+    min-height: 264px;
+  }
+
+  .format__descr,
+  .format__descr span {
+    margin-top: 16px;
+  }
+
+  .form__el-variant {
+    margin-top: 48px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px 22px;
+  }
+
+  .congrats__content,
+  .user-data__content {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .form__congrats,
+  .form__user-data,
+  .form__comment {
+    margin-top: 48px;
+  }
+
+  .payment__content {
+    margin-top: 48px;
+    max-width: 100%;
+  }
+
+  .form__submit {
+    padding: 15px;
+  }
+}
+
+@media (max-width: 500px) {
+  .section_crumbs {
+    padding-bottom: 1rem;
+  }
+
+  .form__title-block {
+    font-size: 21px;
+    line-height: 21px;
+  }
+
+  .form__dot {
+    top: 40px;
+  }
+
+  .form__certs {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .form__cert label {
+    padding: 49px 10px;
+  }
+
+  .nominal__descr {
+    margin-top: 19px;
+    font-size: 13px;
+    line-height: 19px;
+  }
+
+  .nominal__descr br {
+    display: none;
+  }
+
+  .form__format label {
+    padding: 28px 10px;
+    min-height: 224px;
+    gap: 16px;
+  }
+
+  .format__title {
+    font-size: 21px;
+    line-height: 21px;
+  }
+
+  .format__title span {
+    font-size: 15px;
+  }
+
+  .format__descr {
+    font-size: 13px;
+    line-height: 19px;
+  }
+
+  .format__descr span {
+    line-height: 19px;
+  }
+
+  .form__title {
+    padding-right: 30px;
+  }
+
+  .design label .el-variant__title {
+    font-size: 13px;
+    line-height: 19px;
+  }
+
+  .form__el-variant {
+    margin-top: 38px;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  .design label img {
+    margin-top: 8px;
+  }
+
+  .congrats__content,
+  .user-data__content {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .form__congrats,
+  .form__user-data,
+  .form__comment {
+    margin-top: 48px;
+  }
+
+  .congrats__text,
+  .congrats__content textarea {
+    font-size: 13px;
+    line-height: 19px;
+  }
+
+  .congrats__footnote {
+    font-size: 12px;
+    line-height: 15px;
+  }
+
+  .user-data__block input {
+    padding: 14.5px 9px;
+  }
+
+  .user-data__block.electro {
+    margin-top: 32px;
+  }
+
+  .user-data__title.electro,
+  .user-data__block-title {
+    font-size: 15px;
+    line-height: 21px;
+  }
+
+  .user-data__title.electro br {
+    display: none;
+  }
+
+  .user-data__inputs .checkbox span {
+    font-size: 13px;
+    line-height: 19px;
+  }
+
+  .payment__content {
+    margin-top: 48px;
+    max-width: 100%;
+  }
+
+  .form__submit {
+    padding: 15px;
+  }
+
+  .payment-item p,
+  .cert-buy .field .checkbox span {
+    font-size: 15px;
+    line-height: 21px;
+  }
+
+  .form__submit {
+    margin-top: 24px;
+    font-size: 21px;
+    line-height: 21px;
+    letter-spacing: normal;
+    padding: 13.5px;
+  }
+
+  .payment__note {
+    font-size: 13px;
+    line-height: 19px;
+  }
+
+  .cert-buy .form__footnote {
+    margin-top: 48px;
+  }
 }

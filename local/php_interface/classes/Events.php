@@ -15,6 +15,7 @@ use Naturalist\Users;
 use Naturalist\Orders;
 use Naturalist\Settings;
 use Naturalist\CreateOrderPdf;
+use Naturalist\Certificates;
 
 defined("B_PROLOG_INCLUDED") && B_PROLOG_INCLUDED === true || die();
 /**
@@ -136,16 +137,23 @@ class Events
     public static function makeReservation($event)
     {
         $order = $event->getParameter("ENTITY");
+        $propertyCollection = $order->getPropertyCollection();
         $oldValues = $event->getParameter("VALUES");
 
         // Если это не оплата заказа
         if(!$order->getField('PAYED') || !$oldValues['PAYED'] || ($order->getField('PAYED') != 'Y') && ($oldValues['PAYED'] != 'N'))
             return;
 
-        // Если тестовый заказ, выходим
-        $propertyCollection = $order->getPropertyCollection();
+        // Если тестовый заказ, выходим        
         $isTest = $propertyCollection->getItemByOrderPropertyId(IS_ORDER_TEST_PROP_ID)->getValue();
         if ($isTest == 'Y') {
+            return;
+        };
+
+        // Если это оплата сертификата, запускаем другую функцию        
+        $isCert = $propertyCollection->getItemByOrderPropertyId(ORDER_PROP_IS_CERT)->getValue();
+        if ($isCert == 'Y') {
+            self::certOrderHandler($order);
             return;
         };
 
@@ -161,6 +169,14 @@ class Events
             // Отменяем заказ
             $orders->cancel($orderId, "Невозможно забронировать заказ: ".$reservationRes["ERROR"]);
         }
+    }
+
+    private static function certOrderHandler($order) {
+        $orderId = $order->getId();
+        $propertyCollection = $order->getPropertyCollection();
+        $nominal = $propertyCollection->getItemByOrderPropertyId(ORDER_PROP_CERT_PRICE)->getValue();
+        $cert = new Certificates\Create();
+        $cert->add($nominal, $orderId);        
     }
 
     // Удаление данных по размещениям Биново при удалении объекта
