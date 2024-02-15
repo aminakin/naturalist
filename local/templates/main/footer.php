@@ -575,6 +575,38 @@
                         }
                     }
                 }
+            },
+            {
+                "form": "form-corporat",
+                "schema": {
+                    "name": {
+                        "presence": {
+                            "allowEmpty": false,
+                            "message": "Незаполненное поле"
+                        }
+                    },
+                    "phone": {
+                        "presence": {
+                            "allowEmpty": false,
+                            "message": "Незаполненное поле"
+                        }
+                    },
+                    "email": {
+                        "presence": {
+                            "allowEmpty": false,
+                            "message": "Незаполненное поле"
+                        },
+                        "email": {
+                            "message": "Введите верную почту"
+                        }
+                    },       
+                    "cancel_policy": {
+                        "presence": {
+                            "allowEmpty": false,
+                            "message": 'Необходимо Ваше согласие c условиями отмены бронирования'
+                        }
+                    }                
+                }
             }
         ],
         {

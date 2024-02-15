@@ -517,44 +517,45 @@ $(function () {
       });
     }
   });
-  /*$(document).on('click', '[data-form-feedback-send]', function(e) {
-        e.preventDefault();
-        var name = $('#form-feedback input[name="name"]').val();
-        if(!name) {
-            window.infoModal(ERROR_TITLE, 'Введите имя.');
-            return;
-        }
-        var email = $('#form-feedback input[name="email"]').val();
-        if(!email) {
-            window.infoModal(ERROR_TITLE, 'Введите почту.');
-            return;
-        }
-        var message = $('#form-feedback textarea[name="message"]').val();
-        if(!message) {
-            window.infoModal(ERROR_TITLE, 'Введите сообщение.');
-            return;
-        }
 
-        var data = {
-            name: name,
-            email: email,
-            message: message
-        }
+  window.addEventListener("sendForm", (event) => {
+    if (event.detail.form == "form-corporat") {
+      var name = $('#form-corporat input[name="name"]').val();
+      if (!name) {
+        window.infoModal(ERROR_TITLE, "Введите имя.");
+        return;
+      }
+      var email = $('#form-corporat input[name="email"]').val();
+      if (!email) {
+        window.infoModal(ERROR_TITLE, "Введите почту.");
+        return;
+      }
+      var phone = $('#form-corporat input[name="phone"]').val();
+      if (!phone) {
+        window.infoModal(ERROR_TITLE, "Введите телефон.");
+        return;
+      }
 
-        jQuery.ajax({
-            type: 'POST',
-            url: '/ajax/forms/feedback.php',
-            data: data,
-            dataType: 'json',
-            success: function(a) {
-                if(!a.ERROR) {
-                    window.infoModal(SUCCESS_TITLE, a.MESSAGE);
-                    location.reload();
+      var data = {
+        name: name,
+        email: email,
+        phone: phone,
+      };
 
-                } else {
-                    window.infoModal(ERROR_TITLE, a.ERROR);
-                }
-            }
-        });
-    });*/
+      jQuery.ajax({
+        type: "POST",
+        url: "/ajax/forms/corporat.php",
+        data: data,
+        dataType: "json",
+        success: function (a) {
+          if (!a.ERROR) {
+            window.modal.close("corporat");
+            window.infoModal(SUCCESS_TITLE, a.MESSAGE);
+          } else {
+            window.infoModal(ERROR_TITLE, a.ERROR);
+          }
+        },
+      });
+    }
+  });
 });
