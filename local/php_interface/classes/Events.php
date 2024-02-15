@@ -36,6 +36,7 @@ class Events
         $event->addEventHandler('main', 'OnEndBufferContent', [self::class, "deleteKernelJs"]);
         $event->addEventHandler('main', 'OnEndBufferContent', [self::class, "deleteKernelCss"]);
         $event->addEventHandler('sale', 'OnSaleOrderSaved', [self::class, "makeReservation"]);
+        $event->addEventHandler('sale', 'OnSaleOrderSaved', [self::class, "cancelOrder"]);
         $event->addEventHandler('iblock', 'OnBeforeIBlockSectionDelete', [self::class, "OnBeforeIBlockSectionDeleteHandler"]);        
     }
 
@@ -177,6 +178,15 @@ class Events
         $nominal = $propertyCollection->getItemByOrderPropertyId(ORDER_PROP_CERT_PRICE)->getValue();
         $cert = new Certificates\Create();
         $cert->add($nominal, $orderId);        
+    }
+
+    public static function cancelOrder($event) {
+        $order = $event->getParameter("ENTITY");
+        if ($order->isCanceled()) {
+            $orderId = $order->getId();
+            $orders = new Orders();
+            $orders->cancel($orderId, 'Отмена заказа из админки');
+        }
     }
 
     // Удаление данных по размещениям Биново при удалении объекта
