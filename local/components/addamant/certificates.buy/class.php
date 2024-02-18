@@ -34,7 +34,7 @@ class CertBuy extends \CBitrixComponent
         $this->certificates = new CatalogHelper();
 
         $this->arResult = [
-            'LOCAL_HOST' => !empty($_SERVER['HTTPS']) ? 'https' : 'http' . '://' . $_SERVER['HTTP_HOST'],
+            'LOCAL_HOST' => (!empty($_SERVER['HTTPS']) ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'],
             'CERTIFICATES' => $this->getCertificates(),
             'VARIANT' => $this->certificates->hlVariantsValues,
             'VARIANT_EL' => $this->certificates->hlElVariantsValues,
