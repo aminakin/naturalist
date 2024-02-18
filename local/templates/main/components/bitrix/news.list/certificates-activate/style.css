@@ -29,7 +29,7 @@
 .form-body {
   margin: 56px 0 90px;
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: flex-start;
 }
 .form-active-sert .form-path {

@@ -15,7 +15,7 @@ CModule::IncludeModule("iblock");
 CModule::IncludeModule("form");
 
 $name = htmlspecialchars($_REQUEST['name']);
-$phone = htmlspecialchars($_REQUEST['email']);
+$phone = htmlspecialchars($_REQUEST['phone']);
 $email = htmlspecialchars($_REQUEST['email']);
 
 if (!empty($name) && !empty($phone)) {

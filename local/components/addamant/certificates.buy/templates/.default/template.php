@@ -130,7 +130,7 @@ if ($arResult['ERROR']) {
             <div class="form__el-variant">
                 <?php foreach ($arResult['VARIANT_EL'] as $elVariant) {?>
                     <label>
-                        <input type="radio" name="cert_el_variant" value="<?=$localHost.CFile::getPath($elVariant['UF_FILE'])?>" class="visually-hidden">
+                        <input type="radio" name="cert_el_variant" value="<?=$arResult['LOCAL_HOST'].CFile::getPath($elVariant['UF_FILE'])?>" class="visually-hidden">
                         <span class="el-variant__title"><?=$elVariant['UF_NAME']?></span>
                         <img src="<?=CFile::getPath($elVariant['UF_FILE'])?>" alt="">                    
                     </label>
@@ -146,7 +146,7 @@ if ($arResult['ERROR']) {
             <div class="form__el-variant">
                 <?php foreach ($arResult['VARIANT'] as $variant) {?>
                     <label>
-                        <input type="radio" name="cert_variant" value="<?=$localHost.CFile::getPath($variant['UF_FILE'])?>" class="visually-hidden">
+                        <input type="radio" name="cert_variant" value="<?=$arResult['LOCAL_HOST'].CFile::getPath($variant['UF_FILE'])?>" class="visually-hidden">
                         <span class="el-variant__title"><?=$variant['UF_NAME']?></span>
                         <img src="<?=CFile::getPath($variant['UF_FILE'])?>" alt="">                    
                     </label>
@@ -162,7 +162,7 @@ if ($arResult['ERROR']) {
             <div class="form__el-variant">
                 <?php foreach ($arResult['POCKET'] as $pocket) {?>
                     <label>
-                        <input type="radio" name="cert_pocket" value="<?=$localHost.CFile::getPath($pocket['UF_FILE'])?>" class="visually-hidden">
+                        <input type="radio" name="cert_pocket" value="<?=$arResult['LOCAL_HOST'].CFile::getPath($pocket['UF_FILE'])?>" class="visually-hidden">
                         <span class="el-variant__title"><?=$pocket['UF_NAME']?></span>
                         <img src="<?=CFile::getPath($pocket['UF_FILE'])?>" alt="">                    
                     </label>

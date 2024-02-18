@@ -35,7 +35,7 @@ global $userId;
 <form action="POST" class="form-active-sert">
 	<input type="hidden" name="user_id" value="<?=$userId?>">
 	<div class="form-body">
-		<div class="form-path">
+		<div class="form-path" <?=$userId != 0 ? 'style="width: 0; max-width: inset"' : ''?>>
 			<?if ($userId == 0) {?>
 				<div class="form-input-wrap">
 					<label for="phone">Введите номер телефона</label>
