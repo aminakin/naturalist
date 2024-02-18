@@ -81,7 +81,7 @@ $arProps = array(
 	],
 	[
 		'CODE' => 'PEOPLE',
-		'NAME' => 'Состав гостей',
+		'NAME' => 'Размещение гостей',
 		'VALUE' => $people,		
 	],
 	[

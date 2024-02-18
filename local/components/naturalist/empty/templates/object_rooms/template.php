@@ -359,7 +359,8 @@ foreach ($arParams['VARS'] as $key => $value) {
                                            data-traveline-checksum="<?=$checksum?>"
                                            data-cancel-amount="<?=$arExternalItem['cancelAmount']?>"
                                            data-people="<?=$arExternalItem['fullPlacementsName']?>"
-                                           data-room-title="<?=$arElement["NAME"]?>"                                           
+                                           data-room-title="<?=$arElement["NAME"]?>"      
+                                           data-room-photo="<?=$arElement["PICTURES"][array_key_first($arElement["PICTURES"])]['src']?>"                                     
                                            href="#"
                                         >Забронировать</a>
                                     </div>
