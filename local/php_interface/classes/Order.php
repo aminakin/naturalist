@@ -14,6 +14,7 @@ use Bitrix\Sale\Fuser;
 use Bitrix\Main\Mail\Event;
 use Bitrix\Sale\DiscountCouponsManager;
 use Naturalist\CreateOrderPdf;
+use Bitrix\Main\Grid\Declension;
 
 use CIBlockSection;
 use CSaleOrder;
@@ -53,6 +54,13 @@ class Orders
         'COMMISSION' => 15,
         'DATE_PAID' => 16,
         'CERT_VALUE' => CERT_VALUE_PROP_ID,
+        'ROOM_PHOTO' => ORDER_PROP_ROOM_PHOTO,
+        'CHECKIN_TIME' => ORDER_PROP_CHECKIN_TIME,
+        'CHECOUT_TIME' => ORDER_PROP_CHECOUT_TIME,
+        'GUESTS_PLACE' => ORDER_PROP_GUESTS_PLACE,
+        'OBJECT_ADDRESS' => ORDER_PROP_OBJECT_ADDRESS,
+        'GUESTS_LINE_UP' => ORDER_PROP_GUESTS_LINE_UP,
+        'DATES_NIGHTS' => ORDER_PROP_DATES_NIGHTS,
     );
     public $statusNames = array(
         "N" => "Не оплачено",
@@ -691,6 +699,9 @@ class Orders
         // Получение кода внешнего сервиса (1 - Traveline, 2 - Bnovo)
         $externalService = $arBasketItems["ITEMS"][0]["ITEM"]["SECTION"]["UF_EXTERNAL_SERVICE"];
 
+        // xprint($arBasketItems);
+        // die();
+
         // Проверка возможности бронирования перед созданием заказа и отмена создания заказа в случае невозможности бронирования для Traveline
         if($externalService == $this->travelineSectionPropEnumId) {
             $externalSectionId = $arBasketItems['ITEMS'][0]['ITEM']['SECTION']['UF_EXTERNAL_ID'];
@@ -812,16 +823,39 @@ class Orders
         $propertyValue->setValue($arGuestList);
         // Кол-во детей
         $propertyValue = $propertyCollection->getItemByOrderPropertyId($this->arPropsIDs['CHILDREN']);
-        $propertyValue->setValue($params["childrenAge"]);
+        //$propertyValue->setValue($params["childrenAge"]);
+        $propertyValue->setValue(count(explode(',', $params["childrenAge"])));        
         // Checksum
         $propertyValue = $propertyCollection->getItemByOrderPropertyId($this->arPropsIDs['CHECKSUM']);
         $propertyValue->setValue($params["checksum"]);
         // Объект
         $propertyValue = $propertyCollection->getItemByOrderPropertyId($this->arPropsIDs['OBJECT']);
-        $propertyValue->setValue($sectionName);
+        $propertyValue->setValue($arBasketItems['ITEMS'][0]['ITEM']['SECTION']['NAME']);
         // АК (агентская комиссия)
         $propertyValue = $propertyCollection->getItemByOrderPropertyId($this->arPropsIDs['COMMISSION']);
         $propertyValue->setValue($sectionCommission);
+        // Фото номера
+        $propertyValue = $propertyCollection->getItemByOrderPropertyId($this->arPropsIDs['ROOM_PHOTO']);
+        $propertyValue->setValue(HTTP_HOST.$arBasketItems['ITEMS'][0]['PROPS']['PHOTO']);
+        // Время заезда
+        $propertyValue = $propertyCollection->getItemByOrderPropertyId($this->arPropsIDs['CHECKIN_TIME']);
+        $propertyValue->setValue($arBasketItems['ITEMS'][0]['ITEM']['SECTION']['UF_TIME_FROM']);
+        // Время выезда
+        $propertyValue = $propertyCollection->getItemByOrderPropertyId($this->arPropsIDs['CHECOUT_TIME']);
+        $propertyValue->setValue($arBasketItems['ITEMS'][0]['ITEM']['SECTION']['UF_TIME_TO']);
+        // Размещения
+        $propertyValue = $propertyCollection->getItemByOrderPropertyId($this->arPropsIDs['GUESTS_PLACE']);
+        $propertyValue->setValue($arBasketItems['ITEMS'][0]['PROPS']['PEOPLE']);
+        // Адрес объекта
+        $propertyValue = $propertyCollection->getItemByOrderPropertyId($this->arPropsIDs['OBJECT_ADDRESS']);
+        $propertyValue->setValue($arBasketItems['ITEMS'][0]['ITEM']['SECTION']['UF_ADDRESS']);
+        // Состав гостей
+        $propertyValue = $propertyCollection->getItemByOrderPropertyId($this->arPropsIDs['GUESTS_LINE_UP']);
+        $propertyValue->setValue($this->getGuests($arBasketItems['ITEMS'][0]));    
+        // Дни, ночи
+        $propertyValue = $propertyCollection->getItemByOrderPropertyId($this->arPropsIDs['DATES_NIGHTS']);
+        $propertyValue->setValue($params["dateFrom"] . ' - ' . $params["dateTo"] . ' / ' . $arBasketItems['ITEMS'][0]['PROPS']['DAYS_COUNT']);         
+        
         // Сумма оплаты по сертификату, если была частичная оплата
         if ($doublePayment) {
             $propertyValue = $propertyCollection->getItemByOrderPropertyId($this->arPropsIDs['CERT_VALUE']);
@@ -1007,6 +1041,28 @@ class Orders
             $result = array_values($arCoupons);
         }
         unset($arCoupons);
+        return $result;
+    }
+
+    /**
+     * Возвращает список гостей
+     *
+     * @param array $item
+     * 
+     * @return string
+     * 
+     */
+    private function getGuests($item) : string {
+        $result = '';
+        $countAdults = new Declension('взрослый', 'взрозлых', 'взрозлых');
+        $result = $item['PROPS']['GUESTS_COUNT'] . ' ' . $countAdults->get(intval($item['PROPS']['GUESTS_COUNT']));
+    
+        if (isset($item['PROPS']['CHILDREN']) && $item['PROPS']['CHILDREN'] != '') {
+            $countChildren = new Declension('ребёнок', 'детей', 'детей');
+            $children = count(explode(',', $item['PROPS']['CHILDREN']));
+            $result .= ', ' . $children . ' ' . $countChildren->get(intval($children));
+        }
+
         return $result;
     }
 }
