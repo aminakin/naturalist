@@ -36,6 +36,13 @@ $aMenuLinks = Array(
 		"" 
 	),
 	Array(
+		"Сертификаты", 
+		"/personal/certificates/", 
+		Array(), 
+		Array(), 
+		"" 
+	),
+	Array(
 		"Выйти", 
 		"/personal/logout/", 
 		Array(), 

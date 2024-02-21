@@ -41,10 +41,12 @@ class BuyCert {
     let _this = this;
     this.customPriceInput.addEventListener("focus", function () {
       this.previousElementSibling.checked = true;
+      this.setAttribute("placeholder", "");
     });
     this.customPriceInput.addEventListener("blur", function () {
       _this.refreshSplitBadge(this.value);
       this.reportValidity();
+      this.setAttribute("placeholder", "0000 ₽");
     });
   }
 

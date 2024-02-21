@@ -322,7 +322,7 @@
   }
 }
 
-@media (max-width: 375px) {
+@media (max-width: 480px) {
   .certificates_index__header-title {
     font-size: 21px;
     line-height: 21px;
@@ -403,80 +403,8 @@
   .certificates__section {
     margin-bottom: 32px;
   }
-}
 
-#corporat .modal__container {
-  max-width: 775px;
-  padding: 25px 33px 33px 33px;
-}
-
-#corporat .modal__footnote {
-  font-size: 21px;
-  line-height: 36px;
-  text-align: left;
-  margin: 0 0 23px 0;
-}
-
-#corporat .modal__footnote span {
-  font-family: "TT Travels Next";
-  font-size: 21px;
-  font-weight: 700;
-  line-height: 18px;
-  letter-spacing: 1pt;
-}
-
-#corporat .checkbox span {
-  font-size: 13px;
-  line-height: 19px;
-  font-weight: 500;
-  padding-left: 25px;
-}
-
-#corporat .checkbox span:before {
-  top: 3px;
-  height: 16px;
-  width: 16px;
-}
-
-#corporat .checkbox span:after {
-  top: 7px;
-  left: 4px;
-  width: 8px;
-  height: 8px;
-}
-
-#corporat .form__item > span {
-  display: inline-block;
-  margin-bottom: 8px;
-  font-family: "TT Travels Next";
-  font-size: 15px;
-  font-weight: 600;
-  line-height: 19px;
-  letter-spacing: -1pt;
-}
-
-#corporat.modal_form .modal__container .form__item + .form__item {
-  margin: 0;
-}
-
-#corporat.modal_form .modal__container .form__controls .button {
-  font-size: 14px;
-  line-height: 18px;
-  letter-spacing: 2pt;
-  font-weight: 500;
-  background-color: #1b2d50;
-  color: white;
-  height: 38px;
-}
-
-@media (max-width: 500px) {
-  #corporat .modal__container {
-    padding: 40px 24px 20px 24px;
-  }
-
-  #corporat .modal__footnote,
-  #corporat .modal__footnote span {
-    font-size: 15px;
-    line-height: 21px;
+  .certificates_index__btn.transparent {
+    margin-top: 0;
   }
 }

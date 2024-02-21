@@ -22,16 +22,16 @@ class Reviews
     private $photosDir = 'users/reviews';
 
     /* Получение списка отзывов */
-    public function getList($arSort = false, $arFilter = false, $arSelect = false)
+    public function getList($arSort = false, $arFilter = false, $arSelect = false, $iblockId = REVIEWS_IBLOCK_ID)
     {
         if (!$arSort) {
             $arSort = array("SORT" => "ASC");
         }
 
         if (!$arFilter) {
-            $arFilter = array("IBLOCK_ID" => REVIEWS_IBLOCK_ID, "ACTIVE" => "Y");
+            $arFilter = array("IBLOCK_ID" => $iblockId, "ACTIVE" => "Y");
         } else {
-            $arFilter = array_merge(array("IBLOCK_ID" => REVIEWS_IBLOCK_ID, "ACTIVE" => "Y"), $arFilter);
+            $arFilter = array_merge(array("IBLOCK_ID" => $iblockId, "ACTIVE" => "Y"), $arFilter);
         }
 
         if (!$arSelect) {
@@ -157,7 +157,7 @@ class Reviews
         $obItem = CIBlockElement::GetList(
             false,
             array(
-                "IBLOCK_ID" => REVIEWS_IBLOCK_ID,
+                //"IBLOCK_ID" => REVIEWS_IBLOCK_ID,
                 "ID" => intval($reviewId)
             ),
             false,
@@ -183,22 +183,9 @@ class Reviews
         global $userId;
         $el = new CIBlockElement();
 
-        $arPhotos = array();
+        $arPhotos = [];
         if ($_FILES['files']) {
-            foreach ($_FILES['files']['name'] as $key => $name) {
-                $arInputFile = array(
-                    'name' => $_FILES['files']['name'][$key],
-                    'type' => $_FILES['files']['type'][$key],
-                    'tmp_name' => $_FILES['files']['tmp_name'][$key],
-                    'size' => $_FILES['files']['size'][$key],
-                );
-
-                $arFile = array_merge($arInputFile, array("del" => "Y", "MODULE_ID" => "iblock"));
-                $fileId = CFile::SaveFile($arFile, $this->photosDir);
-                if ($fileId) {
-                    $arPhotos[] = $fileId;
-                }
-            }
+            $arPhotos = $this->makeFilesArray($_FILES['files']);            
         }
 
         if (isset($params["criterias"]) && !empty($params["criterias"])) {
@@ -249,6 +236,82 @@ class Reviews
                 "ERROR" => "Произошла ошибка при добавлении отзыва."
             ]);
         }
+    }
+    
+    /**
+     * Добавляет отзыв по сертификатам
+     *
+     * @param array $params
+     * 
+     * @return [type]
+     * 
+     */
+    public function addCertReview($params)   {
+        global $userId;
+        $el = new CIBlockElement();
+
+        $arPhotos = [];
+        if ($_FILES['files']) {
+            $arPhotos = $this->makeFilesArray($_FILES['files']);            
+        }
+
+        $arFields = array(
+            "IBLOCK_ID" => CERT_REVIEWS_IBLOCK_ID,
+            "ACTIVE" => "N",
+            "NAME" => $params["name"],
+            "DETAIL_TEXT" => $params["text"],
+            "DETAIL_TEXT_TYPE" => "text",
+            "PROPERTY_VALUES" => array(            
+                "CRITERION_1" => $params["rating"],
+                "RATING" => $params["rating"],
+                "USER_ID" => $userId,
+                "ORDER_ID" => $params["orderId"],
+                "PHOTOS" => $arPhotos,
+            )
+        );
+
+        $elementId = $el->Add($arFields);
+        if ($elementId) {
+            return json_encode([
+                "ID" => $elementId,
+                "MESSAGE" => "Отзыв успешно добавлен.",
+                "RELOAD" => true
+            ]);
+
+        } else {
+            return json_encode([
+                "ERROR" => "Произошла ошибка при добавлении отзыва."
+            ]);
+        }
+    }
+
+    /**
+     * [Description for makeFilesArray]
+     *
+     * @param array $files
+     * 
+     * @return array
+     * 
+     */
+    private function makeFilesArray($files) : array 
+    {
+        $result = [];
+        foreach ($files['name'] as $key => $name) {
+            $arInputFile = array(
+                'name' => $files['name'][$key],
+                'type' => $files['type'][$key],
+                'tmp_name' => $files['tmp_name'][$key],
+                'size' => $files['size'][$key],
+            );
+
+            $arFile = array_merge($arInputFile, array("del" => "Y", "MODULE_ID" => "iblock"));
+            $fileId = CFile::SaveFile($arFile, $this->photosDir);
+            if ($fileId) {
+                $result[] = $fileId;
+            }
+        }
+
+        return $result;
     }
 
     /* Обновление отзыва */
@@ -318,7 +381,7 @@ class Reviews
             "RATING" => $rating
         );
 
-        CIBlockElement::SetPropertyValuesEx($reviewId, REVIEWS_IBLOCK_ID, $arProps);
+        CIBlockElement::SetPropertyValuesEx($reviewId, $params['iblockId'], $arProps);
 
         if ($res) {
             return json_encode([

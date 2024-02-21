@@ -2464,13 +2464,14 @@ span.flatpickr-weekday {
   list-style: none;
 }
 
-.list > .list__item.highlight_orange {
+.list > .list__item.highlight_orange,
+.list > .list__item.always_orange {
   display: flex;
   align-items: center;
 }
 
 .list > .list__item.highlight_orange:hover > .list__link,
-.list > .list__item.highlight_orange.list__item_active  > .list__link {
+.list > .list__item.highlight_orange.list__item_active > .list__link {
   background-color: var(--color-orange);
   color: var(--color-white);
 }
@@ -2480,7 +2481,21 @@ span.flatpickr-weekday {
   padding: 2px 16px;
   border-radius: 50px;
   background-color: var(--color-beige);
-  transition: .2s all ease-in-out;
+  transition: 0.2s all ease-in-out;
+}
+
+.list > .list__item.always_orange > .list__link {
+  height: fit-content !important;
+  padding: 2px 16px;
+  border-radius: 50px;
+  background-color: var(--color-orange);
+  transition: 0.2s all ease-in-out;
+  color: white;
+}
+
+.list > .list__item.always_orange:hover > .list__link,
+.list > .list__item.always_orange.list__item_active > .list__link {
+  color: var(--color-white);
 }
 
 .list__link {

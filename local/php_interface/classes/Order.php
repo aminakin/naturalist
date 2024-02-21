@@ -61,6 +61,16 @@ class Orders
         'OBJECT_ADDRESS' => ORDER_PROP_OBJECT_ADDRESS,
         'GUESTS_LINE_UP' => ORDER_PROP_GUESTS_LINE_UP,
         'DATES_NIGHTS' => ORDER_PROP_DATES_NIGHTS,
+        'CERT_FORMAT' => ORDER_PROP_CERT_FORMAT,
+        'IS_CERT' => ORDER_PROP_IS_CERT,
+        'FIZ_VARIANT' => ORDER_PROP_FIZ_VARIANT,
+        'FIZ_POCKET' => ORDER_PROP_FIZ_POCKET,
+        'CITY' => ORDER_PROP_CITY,
+        'GIFT_NAME' => ORDER_PROP_GIFT_NAME,
+        'GIFT_EMAIL' => ORDER_PROP_GIFT_EMAIL,
+        'ELECTRO_VARIANT' => ORDER_PROP_ELECTRO_VARIANT,
+        'PROP_CONGRATS' => ORDER_PROP_CONGRATS,
+        'PROP_CERT_PRICE' => ORDER_PROP_CERT_PRICE,
     );
     public $statusNames = array(
         "N" => "Не оплачено",
@@ -698,9 +708,6 @@ class Orders
 
         // Получение кода внешнего сервиса (1 - Traveline, 2 - Bnovo)
         $externalService = $arBasketItems["ITEMS"][0]["ITEM"]["SECTION"]["UF_EXTERNAL_SERVICE"];
-
-        // xprint($arBasketItems);
-        // die();
 
         // Проверка возможности бронирования перед созданием заказа и отмена создания заказа в случае невозможности бронирования для Traveline
         if($externalService == $this->travelineSectionPropEnumId) {

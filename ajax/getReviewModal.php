@@ -20,6 +20,13 @@ $reviewId = $_REQUEST['reviewId'] ?? '';
 
 $reviews = new Reviews();
 $arReview = $reviews->get($reviewId);
+
+if ($arReview['IBLOCK_ID'] == REVIEWS_IBLOCK_ID) {
+    $propsCount = 8;
+} else {
+    $propsCount = 1;
+}
+
 $arPics = [];
 if($arReview["PICTURES"]) {
 
@@ -37,6 +44,7 @@ $picsJSON = htmlspecialchars(stripslashes(json_encode($arPics)));
 <form class="form" id="form-review">
     <input type="hidden" name="campingId" value="<?=$arReview["PROPERTIES"]["CAMPING_ID"]["VALUE"]?>">
     <input type="hidden" name="orderId" value="<?=$arReview["PROPERTIES"]["ORDER_ID"]["VALUE"]?>">
+    <input type="hidden" name="iblockId" value="<?=$arReview['IBLOCK_ID']?>">
 
     <div class="form__item">
         <div class="field">
@@ -53,9 +61,11 @@ $picsJSON = htmlspecialchars(stripslashes(json_encode($arPics)));
 
     <div class="form__item">
         <div class="scores-edit">
-            <div class="scores-edit__title">Ваша оценка:</div>
+            <?if ($arReview['IBLOCK_ID'] == REVIEWS_IBLOCK_ID) {?>
+                <div class="scores-edit__title">Ваша оценка:</div>
+            <?}?>
             <div class="scores-edit__list">
-                <?for($i = 1; $i <= 8; $i++):?>
+                <?for($i = 1; $i <= $propsCount; $i++):?>
                 <div class="scores-edit__item">
                     <div class="scores-edit__label"><?=$arReview["PROPERTIES"]["CRITERION_".$i]["NAME"]?></div>
                     <div class="scores-edit__value" data-rating="data-rating">

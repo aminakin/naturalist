@@ -1,0 +1,386 @@
+.pers-cert__steps {
+  display: grid;
+  gap: 100px;
+  grid-template-columns: 1fr 1fr;
+}
+
+.step__title {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  font-size: 28px;
+  line-height: 34px;
+  letter-spacing: -1pt;
+  font-weight: 600;
+  font-family: "TT Travels Next";
+}
+
+.step__number {
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 4px solid black;
+  border-radius: 50%;
+}
+
+.step__title {
+  padding-bottom: 24px;
+  border-bottom: 1px solid black;
+}
+
+.step__text {
+  font-size: 18px;
+  line-height: 24px;
+  margin-top: 24px;
+}
+
+.pers-cert__title {
+  font-family: "TT Travels Next";
+  font-size: 28px;
+  line-height: 34px;
+  letter-spacing: -1pt;
+  font-weight: 600;
+}
+
+.pers-cert__step {
+  padding-bottom: 24px;
+  border-bottom: 1px solid black;
+}
+
+.step__link {
+  display: block;
+  min-height: 76px;
+  padding: 20px;
+  border-radius: 83px;
+  text-align: center;
+  font-family: "TT Travels Next";
+  font-weight: 600;
+}
+
+.step__link.orange {
+  margin-top: 48px;
+  color: white;
+  font-size: 28px;
+  line-height: 34px;
+  letter-spacing: 4.2px;
+  background-color: var(--color-orange);
+}
+
+.step__link.transparent {
+  border: 1px solid black;
+  margin: 32px 0 48px 0;
+  font-size: 21px;
+  line-height: normal;
+}
+
+.cert-order__list {
+  border-top: 1px solid black;
+}
+
+.step__link.blue {
+  margin-top: 48px;
+  color: white;
+  font-size: 28px;
+  line-height: 34px;
+  letter-spacing: 4.2px;
+  background-color: var(--color-deep-blue);
+}
+
+.cert-order__col-1 img {
+  border-radius: 5px;
+}
+
+.cert-order__col-1,
+.cert-order__col-3 {
+  flex-shrink: 0;
+}
+
+.cert-order__col-3 {
+  margin-left: auto;
+}
+
+.cert-order__item {
+  display: flex;
+  gap: 26px;
+  padding-bottom: 30px;
+  border-bottom: 1px solid black;
+  margin-top: 30px;
+}
+
+.cert-order__col-2 {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.cert-order__number {
+  font-size: 24px;
+  line-height: 23px;
+  font-weight: 500;
+}
+
+.cert-order__prop {
+  font-size: 18px;
+  line-height: 22px;
+  font-weight: 500;
+}
+
+.cert-order__sum-title {
+  font-size: 18px;
+  line-height: 22px;
+  font-weight: 500;
+}
+
+.object-row__price {
+  font-family: "TT Travels Next";
+  font-size: 35px;
+  line-height: 35px;
+  font-weight: 600;
+}
+
+.cert-order__col-row {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 16px;
+}
+
+.cert-order__col-row .tag {
+  padding: 5px 15px;
+  background-color: var(--color-orange);
+  color: white;
+  text-transform: uppercase;
+  font-family: "TT Travels Next";
+  font-size: 14px;
+  line-height: 21px;
+  font-weight: 600;
+  letter-spacing: 0.4px;
+  border-radius: 100px;
+  width: 100%;
+  text-align: center;
+}
+
+.cart-order__get-pdf {
+  font-family: "TT Travels Next";
+  font-size: 14px;
+  line-height: 18px;
+  font-weight: 600;
+  letter-spacing: 0.56px;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.cert-order__col-3 {
+  display: grid;
+  min-width: 204px;
+}
+
+.cert-order__col-3 button {
+  height: auto;
+  margin-top: auto;
+  margin-left: auto;
+  padding: 5px 15px;
+  border-radius: 100px;
+  border: none;
+  background: var(--color-beige);
+  font-family: "TT Travels Next";
+  font-size: 15px;
+  line-height: 21px;
+  width: 100%;
+  text-align: center;
+  font-weight: 500;
+}
+
+.cert-order__item.cert .cert-order__sum-title {
+  align-self: flex-start;
+}
+
+.cert-order__to-catalog {
+  background-color: var(--color-beige);
+  padding: 13px 10px;
+  font-family: "TT Travels Next";
+  font-size: 17px;
+  line-height: 23px;
+  letter-spacing: -0.17px;
+  font-weight: 700;
+  border-radius: 3px;
+  margin-top: auto;
+  text-align: center;
+}
+
+@media (max-width: 1440px) {
+  .cert-order__item {
+    margin-top: 16px;
+    padding-bottom: 16px;
+    gap: 22px;
+  }
+
+  .cert-order__col-1 img {
+    width: 160px;
+  }
+
+  .cert-order__col-2 {
+    gap: 8px;
+  }
+
+  .cert-order__number {
+    font-size: 20px;
+    line-height: 21px;
+  }
+
+  .cert-order__prop {
+    font-size: 15px;
+    line-height: 21px;
+  }
+
+  .cert-order__col-3 {
+    min-width: 134px;
+  }
+
+  .cert-order__sum-title {
+    font-size: 12px;
+    line-height: 15px;
+  }
+
+  .cert-order__col-row {
+    gap: 8px;
+  }
+
+  .object-row__price {
+    font-size: 21px;
+    line-height: 21px;
+  }
+
+  .cert-order__col-row .tag {
+    font-size: 9px;
+    line-height: 12px;
+    padding: 3.5px;
+  }
+
+  .cart-order__get-pdf {
+    font-size: 12px;
+    line-height: 15px;
+    font-family: "Montserrat";
+    font-weight: 500;
+  }
+
+  .cert-order__col-3 button {
+    padding: 3px 15px;
+    font-size: 9px;
+    line-height: 12px;
+  }
+
+  .cert-order__to-catalog {
+    font-size: 13px;
+    line-height: 18px;
+    font-weight: 600;
+    padding: 10px;
+  }
+}
+
+@media (max-width: 1023px) {
+  .pers-cert__title {
+    font-size: 20px;
+    line-height: 28px;
+    font-weight: 700;
+  }
+
+  .pers-cert__steps {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  .step__link {
+    min-height: 64px;
+    padding: 15px;
+  }
+}
+
+@media (max-width: 500px) {
+  .step__title {
+    gap: 14px;
+    font-size: 21px;
+    line-height: normal;
+    padding-bottom: 16px;
+  }
+
+  .step__number {
+    border-width: 3px;
+    width: 38px;
+    height: 38px;
+  }
+
+  .step__text {
+    font-size: 16px;
+    line-height: 19px;
+    margin-top: 16px;
+  }
+
+  .pers-cert__step {
+    padding-bottom: 16px;
+  }
+
+  .pers-cert__steps {
+    gap: 16px;
+  }
+
+  .step__link {
+    min-height: 48px;
+    padding: 10px;
+  }
+
+  .step__link.orange {
+    margin-top: 32px;
+    font-size: 21px;
+    line-height: normal;
+    letter-spacing: normal;
+  }
+
+  .step__link.transparent {
+    margin: 16px 0 32px 0;
+    font-size: 15px;
+    line-height: 25px;
+    letter-spacing: -0.15px;
+  }
+
+  .step__link.blue {
+    margin-top: 32px;
+    font-size: 21px;
+    line-height: normal;
+    letter-spacing: normal;
+  }
+
+  .cert-order__item {
+    gap: 16px;
+    flex-direction: column;
+  }
+
+  .cert-order__col-1 img {
+    width: 100%;
+  }
+
+  .cert-order__col-3 {
+    margin-left: 0;
+    grid-template-columns: 1fr 1fr;
+    gap: 15%;
+  }
+
+  .cert-order__col-2 {
+    gap: 4px;
+  }
+
+  .cert-order__number {
+    font-size: 15px;
+  }
+
+  .cert-order__prop {
+    font-size: 13px;
+    line-height: 19px;
+  }
+
+  .cert-order__item.cert .cert-order__sum-title br {
+    display: none;
+  }
+}
