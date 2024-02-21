@@ -5,12 +5,10 @@ namespace Naturalist\Certificates;
 use Bitrix\Main\Loader;
 use Bitrix\Sale\Basket;
 use Bitrix\Sale\Order;
-use Bitrix\Sale\Fuser;
 use Bitrix\Sale\PaySystem;
 use Bitrix\Sale\Delivery;
 use Bitrix\Main\Context;
 use Bitrix\Currency\CurrencyManager;
-use Naturalist\HighLoadBlockHelper;
 use Naturalist\Users;
 
 /**
@@ -40,6 +38,7 @@ class OrderHelper
         'gift_email' => ORDER_PROP_GIFT_EMAIL,
         'cert_el_variant' => ORDER_PROP_ELECTRO_VARIANT,
         'congrats' => ORDER_PROP_CONGRATS,
+        'cert_format' => ORDER_PROP_CERT_FORMAT,
     ];
 
     public function __construct(array $params)

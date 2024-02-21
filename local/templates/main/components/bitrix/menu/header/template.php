@@ -23,7 +23,8 @@ if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) die();
 			<?if($arItem["DEPTH_LEVEL"] == 1):?>
 				<li class="list__item 
 						<?if($arItem["PARAMS"]["IS_MOBILE"] == "Y"):?>list__item_mobile<?endif;?> 
-						<?if($arItem["PARAMS"]["HIGHLIGHT_BROWN"] == "Y"):?>highlight_orange<?endif;?> 
+						<?if($arItem["PARAMS"]["HIGHLIGHT_BROWN"] == "Y"):?>highlight_orange<?endif;?>
+						<?if($arItem["PARAMS"]["ALWAYS_ORANGE"] == "Y"):?>always_orange<?endif;?>
 						<?if($arItem["SELECTED"]):?> list__item_active<?endif;?>
 					"
 				>

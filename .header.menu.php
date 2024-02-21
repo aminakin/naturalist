@@ -43,8 +43,8 @@ $aMenuLinks = Array(
 		"/certificates/", 
 		Array(), 
 		Array(
-			"HIGHLIGHT_BROWN" => "Y",
+			"ALWAYS_ORANGE" => "Y",
 		), 
-		"\$GLOBALS['USER']->IsAuthorized()"
+		""
 	),
 );

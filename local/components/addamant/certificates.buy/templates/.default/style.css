@@ -589,4 +589,8 @@ label:has(input:checked) {
   .cert-buy .form__footnote {
     margin-top: 48px;
   }
+
+  .nominal__price {
+    font-size: 30px;
+  }
 }

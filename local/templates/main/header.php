@@ -211,15 +211,15 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                         </li>
                     <? endif; ?>
 
-                    <? if ($isAuthorized && $USER->IsAdmin()): ?>
+                    <?if (intval(Users::getInnerScore()) != 0) {?>                    
                         <li class="list__item highlight_orange cert_balance">
                             <span class="list__link">
-                                <?= $arSettings['header_balance_certification'] ?>
+                                <?= $arSettings['header_balance_certification'] ?>                            
                                 <?= number_format(Users::getInnerScore(), 0, '.', ' ')?>
                                 ₽
                             </span>
-                        </li>
-                    <? endif; ?>
+                        </li>                    
+                    <?}?>
 
                     <li class="list__item list__item_desktop">
                         <a class="list__link" href="#feedback" data-modal>
