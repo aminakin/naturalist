@@ -473,7 +473,7 @@
 <!-- JS-->
 <script defer src="<?= SITE_TEMPLATE_PATH ?>/js/forIE.min.js?v=1666936088452"></script>
 <script defer src="<?= SITE_TEMPLATE_PATH ?>/assets/js/app.js?v=<?= filemtime($_SERVER["DOCUMENT_ROOT"].'/'.SITE_TEMPLATE_PATH.'/assets/js/app.js')?>"></script>
-<? if (CSite::InDir('/index.php')) : ?>
+<? if (CSite::InDir('/index.php') || CSite::InDir('/certificates/')) : ?>
     <script defer src="<?= SITE_TEMPLATE_PATH ?>/assets/js/index.js?v=<?= filemtime($_SERVER["DOCUMENT_ROOT"].'/'.SITE_TEMPLATE_PATH.'/assets/js/index.js')?>"></script>
 <? endif; ?>
 <? if (CSite::InDir('/catalog')) : ?>

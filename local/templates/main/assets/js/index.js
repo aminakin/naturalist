@@ -13386,6 +13386,12 @@
               },
             },
           });
+          if (
+            $item.classList.contains("cert-index__slider") &&
+            window.innerWidth < 1025
+          ) {
+            headingRelatedSlider.destroy();
+          }
         }
       });
     };
