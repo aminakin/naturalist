@@ -30,3 +30,9 @@ $MESS['PAYMENT_POLICY'] = 'Согласен с условиями <a href="#LINK
 $MESS['USER_DATA_ELECTRO_TITLE'] = 'Вы также можете указать имя и почту получателя. <br>Мы сразу отправим ему письмо.';
 $MESS['USER_DATA_GIFT_NAME'] = 'Имя получателя (укажем на открытке)';
 $MESS['USER_DATA_GIFT_EMAIL'] = 'Почта получателя (сразу отправим сертификат на указанную почту)';
+$MESS['USER_DATA_ADDRESS'] = 'Улица, дом, корпус/строение, квартира/офис, код/домофон';
+$MESS['USER_DATA_ADDRESS_TITLE'] = 'Укажите адрес доставки';
+$MESS['SUMM_TITLE'] = 'Стоимость заказа';
+$MESS['SUMM_PROD'] = 'Стоимость сертификата:';
+$MESS['SUMM_DELIVERY'] = 'Доставка и упаковка:';
+$MESS['SUMM_ALL'] = 'Итого';
