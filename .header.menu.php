@@ -1,50 +1,46 @@
-<?php
-
+<?
 $aMenuLinks = Array(
 	Array(
 		"Главная", 
-		"/", 
+		SITE_DIR."/", 
 		Array(), 
-		Array(
-		    "IS_MOBILE" => "Y",
-        ),
+		Array("IS_MOBILE"=>"Y"), 
 		"" 
 	),
 	Array(
 		"Карта", 
-		"/map/", 
+		SITE_DIR."/map/", 
 		Array(), 
 		Array(), 
 		"" 
 	),
 	Array(
 		"Каталог", 
-		"/catalog/", 
+		SITE_DIR."/catalog/", 
 		Array(), 
 		Array(), 
 		"" 
 	),
 	Array(
 		"Впечатления", 
-		"/impressions/", 
+		SITE_DIR."/impressions/", 
 		Array(), 
 		Array(), 
 		"" 
 	),
 	Array(
 		"О проекте", 
-		"/about/", 
+		SITE_DIR."/about/", 
 		Array(), 
 		Array(), 
 		"" 
 	),
 	Array(
 		"Сертификат", 
-		"/certificates/", 
+		SITE_DIR."/certificates/", 
 		Array(), 
-		Array(
-			"ALWAYS_ORANGE" => "Y",
-		), 
-		""
-	),
+		Array("ALWAYS_ORANGE"=>"Y"), 
+		"CSite::InGroup(array(1))" 
+	)
 );
+?>

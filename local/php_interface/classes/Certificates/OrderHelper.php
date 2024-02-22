@@ -39,6 +39,7 @@ class OrderHelper
         'cert_el_variant' => ORDER_PROP_ELECTRO_VARIANT,
         'congrats' => ORDER_PROP_CONGRATS,
         'cert_format' => ORDER_PROP_CERT_FORMAT,
+        'address' => ORDER_PROP_CERT_ADDRESS,
     ];
 
     public function __construct(array $params)

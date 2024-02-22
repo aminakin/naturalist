@@ -146,7 +146,7 @@ if ($arResult['ERROR']) {
             <div class="form__el-variant">
                 <?php foreach ($arResult['VARIANT'] as $variant) {?>
                     <label>
-                        <input type="radio" name="cert_variant" value="<?=$arResult['LOCAL_HOST'].CFile::getPath($variant['UF_FILE'])?>" class="visually-hidden">
+                        <input type="radio" cost="<?=$arParams['VARIANT_COST']?>" name="cert_variant" value="<?=$arResult['LOCAL_HOST'].CFile::getPath($variant['UF_FILE'])?>" class="visually-hidden">
                         <span class="el-variant__title"><?=$variant['UF_NAME']?></span>
                         <img src="<?=CFile::getPath($variant['UF_FILE'])?>" alt="">                    
                     </label>
@@ -162,7 +162,7 @@ if ($arResult['ERROR']) {
             <div class="form__el-variant">
                 <?php foreach ($arResult['POCKET'] as $pocket) {?>
                     <label>
-                        <input type="radio" name="cert_pocket" value="<?=$arResult['LOCAL_HOST'].CFile::getPath($pocket['UF_FILE'])?>" class="visually-hidden">
+                        <input cost="<?=$arParams['POCKET_COST']?>" type="radio" name="cert_pocket" value="<?=$arResult['LOCAL_HOST'].CFile::getPath($pocket['UF_FILE'])?>" class="visually-hidden">
                         <span class="el-variant__title"><?=$pocket['UF_NAME']?></span>
                         <img src="<?=CFile::getPath($pocket['UF_FILE'])?>" alt="">                    
                     </label>
@@ -208,25 +208,29 @@ if ($arResult['ERROR']) {
                             <p class="user-data__block-title"><?=Loc::GetMessage('USER_DATA_CITY_TITLE')?></p>
                             <div class="user-data__inputs">
                                 <label class="checkbox">
-                                    <input type="radio" name="city" value="Москва в пределах МКАД" checked>
+                                    <input type="radio" location="inner" name="city" value="Москва в пределах МКАД" class="visually-hidden">
                                     <span>Москва в пределах МКАД</span>
                                 </label>
                                 <label class="checkbox">
-                                    <input type="radio" name="city" value="Москва за пределами МКАД">
+                                    <input type="radio" location="outer" name="city" value="Москва за пределами МКАД" class="visually-hidden">
                                     <span>Москва за пределами МКАД</span>
                                 </label>
                             </div>
                         </div>
-                        <div class="user-data__block delivery">
+                        <div class="user-data__block delivery" style="display: none">
                             <p class="user-data__block-title"><?=Loc::GetMessage('USER_DATA_DELIVERY_TITLE')?></p>
                             <div class="user-data__inputs">
                                 <?php foreach ($arResult['DELIVERIES'] as $delKey => $delivery) {?>
-                                    <label class="checkbox">
-                                        <input cost="<?=$delivery['CONFIG']['MAIN']['PRICE']?>" type="radio" name="delivery" value="<?=$delivery['ID']?>" class="visually-hidden" <?=$delKey == 0 ? 'checked' : ''?>>
+                                    <label class="checkbox" style="display: none">
+                                        <input cost="<?=$delivery['CONFIG']['MAIN']['PRICE']?>" type="radio" name="delivery" value="<?=$delivery['ID']?>" class="visually-hidden">
                                         <span><?=$delivery['DESCRIPTION']?></span>
                                     </label>
                                 <?php } ?>
                             </div>
+                        </div>
+                        <div class="user-data__block">
+                            <p class="user-data__title"><?=Loc::GetMessage('USER_DATA_ADDRESS_TITLE')?></p>
+                            <input type="text" name="address" placeholder="<?=Loc::GetMessage('USER_DATA_ADDRESS')?>">                            
                         </div>
                     </div>
                 </div>
@@ -241,6 +245,25 @@ if ($arResult['ERROR']) {
             <div class="form__comment">
                 <div class="congrats__content">                    
                     <textarea name="comment" placeholder="<?=Loc::GetMessage('COMMENT_INPUT_PLACEHOLDER')?>"></textarea>                    
+                </div>
+            </div>
+        </section>
+        <section class="form__block summ">
+            <div class="form__title-block">                
+                <p class="form__title"><?=Loc::GetMessage('SUMM_TITLE')?></p>                
+            </div>
+            <div class="summ__content">
+                <div class="summ__item prod">
+                    <span class="summ__text"><?=Loc::GetMessage('SUMM_PROD')?></span>
+                    <span class="summ__price">0 ₽</span>
+                </div>
+                <div class="summ__item del-var" >
+                    <span class="summ__text"><?=Loc::GetMessage('SUMM_DELIVERY')?></span>
+                    <span class="summ__price">0 ₽</span>
+                </div>
+                <div class="summ__item all">
+                    <span class="summ__text"><?=Loc::GetMessage('SUMM_ALL')?></span>
+                    <span class="summ__price">0 ₽</span>
                 </div>
             </div>
         </section>

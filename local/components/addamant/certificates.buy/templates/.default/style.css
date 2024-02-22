@@ -183,6 +183,7 @@ label:has(input:checked) {
   border: 4px solid transparent;
   border-radius: 15px;
   margin-top: 16px;
+  width: 100%;
 }
 
 .design label .el-variant__title {
@@ -310,7 +311,8 @@ label:has(input:checked) {
   border-color: transparent;
 }
 
-.payment__content {
+.payment__content,
+.summ__content {
   max-width: 678px;
   margin: 88px auto 0 auto;
 }
@@ -350,6 +352,7 @@ label:has(input:checked) {
 
 .cert-buy .checkbox input {
   visibility: visible;
+  height: auto;
 }
 
 .user-data__block.electro {
@@ -370,6 +373,41 @@ label:has(input:checked) {
 
 .nominal__custom-cost[type="number"] {
   -moz-appearance: textfield;
+}
+
+.user-data__block.fiz .user-data__block {
+  margin-top: 24px;
+}
+
+.summ__content {
+  display: grid;
+  gap: 24px;
+}
+
+.summ__item {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.summ__text {
+  font-family: "TT Travels Next";
+  font-size: 23px;
+  line-height: 25px;
+  font-weight: 600;
+}
+
+.summ__price {
+  font-family: "TT Travels Next";
+  font-size: 28px;
+  line-height: 29px;
+  font-weight: 600;
+  letter-spacing: -0.28px;
+}
+
+.summ__item.all {
+  padding-top: 24px;
+  border-top: 1px solid black;
 }
 
 @media (max-width: 1000px) {
