@@ -1,0 +1,65 @@
+.cert-review__user-name {
+  margin-top: 16px;
+  font-family: "TT Travels Next";
+  font-size: 21px;
+  line-height: 19px;
+  font-weight: 600;
+}
+
+.cert-review__text {
+  margin-top: 16px;
+  font-size: 15px;
+  line-height: 21px;
+  font-weight: 500;
+}
+
+.cert-index__more {
+  display: none;
+}
+
+@media (max-width: 1024px) {
+  .cert-index__slider.slider .swiper-slide {
+    opacity: 1;
+  }
+
+  .cert-index__slider.slider .swiper-slide:nth-child(n + 3) {
+    display: none;
+  }
+
+  .cert-index__slider.slider .swiper-wrapper {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+
+  .cert-index__more {
+    display: block;
+    width: max-content;
+    margin: 24px auto 0 auto;
+    font-family: "TT Travels Next";
+    font-size: 13px;
+    line-height: 19px;
+    font-weight: 500;
+    text-decoration: underline;
+  }
+
+  .slider__heading-controls {
+    display: none !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .cert-index__slider.slider .swiper-wrapper {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  .cert-review__text {
+    font-size: 13px;
+    line-height: 19px;
+  }
+
+  .cert-index__slider.slider .slider__heading {
+    margin-bottom: 24px;
+  }
+}

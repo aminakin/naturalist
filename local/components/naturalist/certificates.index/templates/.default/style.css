@@ -3,6 +3,7 @@
   display: flex;
   width: 100%;
   height: 100%;
+  overflow: hidden;
 }
 
 .section.section_crumbs {
@@ -195,6 +196,7 @@
   display: flex;
   flex-direction: column;
   border-bottom: 1px solid black;
+  cursor: pointer;
 }
 
 .certificates_index__question:first-child {
@@ -230,6 +232,18 @@
 
 .certificates_index__question.active::after {
   transform: rotate(180deg);
+}
+
+.cert-index__seo-text {
+  margin-top: 64px;
+  font-family: "TT Travels Next";
+  font-size: 21px;
+  line-height: 34px;
+  font-weight: 500;
+}
+
+.cert-index__reviews {
+  margin-top: 88px;
 }
 
 @media (max-width: 1440px) {
@@ -320,6 +334,18 @@
   .certificates_index__question {
     padding: 24px 12px 24px 0;
   }
+
+  .cert-index__reviews {
+    margin-top: 48px;
+  }
+
+  .cert-index__seo-text {
+    margin-top: 48px;
+    font-size: 15px;
+    line-height: 19px;
+    font-weight: 600;
+    letter-spacing: -0.19px;
+  }
 }
 
 @media (max-width: 480px) {
@@ -406,5 +432,9 @@
 
   .certificates_index__btn.transparent {
     margin-top: 0;
+  }
+
+  .cert-index__reviews {
+    margin-top: 32px;
   }
 }
