@@ -68,8 +68,6 @@ class BuyCert {
 
   citySelectHandler() {
     let _this = this;
-    this.deliverySumm = 0;
-    this.calcSumm();
     this.cityRadio.forEach((element) => {
       element.addEventListener("change", function () {
         if (this.checked) {
@@ -78,6 +76,8 @@ class BuyCert {
           } else if (this.getAttribute("location") == "outer") {
             _this.showOuterDeliveries();
           }
+          _this.deliverySumm = 0;
+          _this.calcSumm();
         }
       });
     });

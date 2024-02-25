@@ -632,4 +632,27 @@ label:has(input:checked) {
   .nominal__price {
     font-size: 30px;
   }
+
+  .summ__content {
+    margin-top: 48px;
+  }
+
+  .summ__text {
+    font-size: 15px;
+    line-height: 19px;
+    max-width: 150px;
+  }
+
+  .summ__content {
+    gap: 16px;
+  }
+
+  .summ__item.all {
+    padding-top: 16px;
+  }
+
+  .summ__price {
+    font-size: 21px;
+    line-height: 21px;
+  }
 }
