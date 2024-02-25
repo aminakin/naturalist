@@ -15,6 +15,7 @@ use DateTime;
 use DateInterval;
 use http\Params;
 use Naturalist\Products;
+use Bitrix\Main\Grid\Declension;
 
 Loader::IncludeModule("iblock");
 Loader::IncludeModule("catalog");
@@ -246,6 +247,8 @@ class Bnovo
     /* Получение списка свободных номеров объекта в выбранный промежуток */
     public function searchRooms($sectionId, $externalId, $guests, $arChildrenAge, $dateFrom, $dateTo)
     {
+        $error = '';
+        $daysDeclension = new Declension('ночь', 'ночи', 'ночей');
         $arDates = array();
         $period = new DatePeriod(new DateTime($dateFrom), new DateInterval('P1D'),
             new DateTime(date('d.m.Y', strtotime($dateTo . '+1 day'))));
@@ -271,7 +274,7 @@ class Bnovo
         }
 
         // Запрос по выбранным датам в HL
-        $entityClass = $this->getEntityClass();
+        $entityClass = $this->getEntityClass();        
         $rsData = $entityClass::getList([
             "select" => ["*"],
             "filter" => [
@@ -289,15 +292,24 @@ class Bnovo
                     [">=UF_MAX_STAY" => $daysCount],
                     ["=UF_MAX_STAY" => 0],
                 ],
+                // [
+                //     "LOGIC" => "OR",
+                //     ["<=UF_MIN_STAY_ARRIVAL" => $daysCount],
+                //     ["=UF_MIN_STAY_ARRIVAL" => ''],
+                // ],                
                 "=UF_CLOSED_ARRIVAL" => "0",
                 "=UF_CLOSED_DEPARTURE" => "0"
             ],
             "order" => ["ID" => "ASC"],
         ]);
-        $arData = $rsData->FetchAll();        
+        $arData = $rsData->FetchAll();
 
         $arDataGrouped = array();
         foreach ($arData as $arItem) {
+            if (intval($arItem['UF_MIN_STAY_ARRIVAL']) > $daysCount) {
+                $error = 'На выбранные даты возможно бронирование минимум на ' . $arItem['UF_MIN_STAY_ARRIVAL'] . ' ' . $daysDeclension->get($arItem['UF_MIN_STAY_ARRIVAL']);
+                continue;
+            }
             $arDataGrouped[$arItem["UF_TARIFF_ID"] . "-" . $arItem["UF_CATEGORY_ID"]][] = $arItem;
         }
         foreach ($arDataGrouped as $key => $arItems) {
@@ -483,7 +495,10 @@ class Bnovo
             });
         }
 
-        return $arItems ?? [];
+        return [
+            'arItems' => $arItems,
+            'error' => $error,
+        ];
     }
 
     // HL Возрастные интервалы
@@ -1374,6 +1389,7 @@ class Bnovo
                 "UF_CLOSED",
                 "UF_MIN_STAY",
                 "UF_MAX_STAY",
+                "UF_MIN_STAY_ARRIVAL",
                 "UF_CLOSED_ARRIVAL",
                 "UF_CLOSED_DEPARTURE",
                 "UF_TARIFF_ID",
@@ -1394,8 +1410,7 @@ class Bnovo
         foreach ($arResData as $key => $arEntity) {
             $arResultRooms[$arEntity['UF_TARIFF_ID']][$arEntity['UF_CATEGORY_ID']][$arEntity['UF_DATE']->format("Y-m-d")] = $arEntity;
         }
-
-        $triggerAdd = false;
+        
         foreach ($arData["plans_data"] as $tariffId => $arCategories) {
             foreach ($arCategories as $categoryId => $arCategoryDates) {
                 foreach ($arCategoryDates as $date => $arDate) {
@@ -1405,6 +1420,7 @@ class Bnovo
                     $maxStay = $arDate['max_stay'];
                     $closedArrival = $arDate['closed_arrival'];
                     $closedDeparture = $arDate['closed_departure'];
+                    $minStayArrival = $arDate['min_stay_arrival'] != 0 ? $arDate['min_stay_arrival'] : 0;
 
                     $tmpRoom = [];
                     $arFields = [];
@@ -1420,6 +1436,7 @@ class Bnovo
                             "UF_MAX_STAY" => $maxStay,
                             "UF_CLOSED_ARRIVAL" => $closedArrival,
                             "UF_CLOSED_DEPARTURE" => $closedDeparture,
+                            "UF_MIN_STAY_ARRIVAL" => $minStayArrival,
                         ];
 
                         //if (array_diff($tmpRoom, $arFields)) {
@@ -1437,6 +1454,7 @@ class Bnovo
                             "UF_MAX_STAY" => $maxStay,
                             "UF_CLOSED_ARRIVAL" => $closedArrival,
                             "UF_CLOSED_DEPARTURE" => $closedDeparture,
+                            "UF_MIN_STAY_ARRIVAL" => $minStayArrival,
                         ];                        
                         $entityClass->add($arFields);
                     }

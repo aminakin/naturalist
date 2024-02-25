@@ -120,15 +120,22 @@ class Products
             return false;
         }
 
+        $error = '';
+
         if($serviceType == self::$travelinePropEnumXmlId) { // Traveline
-            $arRooms = Traveline::searchRooms($sectionId, $externalId, $guests, $arChildrenAge, $dateFrom, $dateTo);
+            $arRooms = Traveline::searchRooms($sectionId, $externalId, $guests, $arChildrenAge, $dateFrom, $dateTo);            
 
         } elseif($serviceType == self::$bnovoPropEnumXmlId) { // Bnovo
             $bnovo = new Bnovo();
-            $arRooms = $bnovo->searchRooms($sectionId, $externalId, $guests, $arChildrenAge, $dateFrom, $dateTo);
+            $arResult = $bnovo->searchRooms($sectionId, $externalId, $guests, $arChildrenAge, $dateFrom, $dateTo);
+            $arRooms = $arResult['arItems'];
+            $error = $arResult['error'];
         }
 
-        return $arRooms;
+        return [
+            'arRooms' => $arRooms,
+            'error' => $error,
+        ];
     }
     
     /**

@@ -232,12 +232,14 @@ if (!empty($arSection) && !empty($dateFrom) && !empty($dateTo) && !empty($_GET['
     );
 
     // Запрос в апи на получение списка кемпингов со свободными местами в выбранный промежуток
-    $arExternalInfo = Products::searchRooms($arSection['ID'], $arSection['UF_EXTERNAL_ID'], $arSection['UF_EXTERNAL_SERVICE'], $guests, $arChildrenAge, $dateFrom, $dateTo);
+    $arExternalResult = Products::searchRooms($arSection['ID'], $arSection['UF_EXTERNAL_ID'], $arSection['UF_EXTERNAL_SERVICE'], $guests, $arChildrenAge, $dateFrom, $dateTo);
+    $arExternalInfo = $arExternalResult['arRooms'];
+    $searchError = $arExternalResult['error'];    
     if($arExternalInfo) {
         $arFilter["ID"] = array_keys($arExternalInfo);
     } else {
         $arFilter["ID"] = false;
-    }
+    }    
 
     // Список номеров
     $rsElements = CIBlockElement::GetList(array("SORT" => "ASC"), $arFilter, false, false, array("IBLOCK_ID", "ID", "IBLOCK_SECTION_ID", "NAME", "DETAIL_TEXT", "PROPERTY_PHOTOS", "PROPERTY_FEATURES", "PROPERTY_EXTERNAL_ID", "PROPERTY_EXTERNAL_CATEGORY_ID", "PROPERTY_SQUARE", "PROPERTY_PARENT_ID"));
@@ -546,6 +548,8 @@ $APPLICATION->AddHeadString('<meta name="description" content="' . $descriptionS
             </div>
         </section>
         <!-- section-->
+    <?else:?>
+        <p class="search-error" style="display: none"><?=$searchError != '' ? $searchError : 'Не найдено номеров на выбранные даты'?></p>
     <?endif;?>
 
     <?if($arReviews):?>

@@ -365,6 +365,8 @@ $(function () {
       var ajaxContainer = "section.section_room";
       var ajaxContainerRelated = "section.section_related";
 
+      console.log(url);
+
       jQuery.ajax({
         type: "POST",
         url: url,
@@ -389,7 +391,7 @@ $(function () {
             window.scrollToElement("#rooms-anchor");
             window.history.replaceState(null, null, url);
           } else {
-            var error = "Не найдено номеров на выбранные даты";
+            var error = $(html).find(".search-error").text();
             window.infoModal("Ну вот....", error);
           }
 
