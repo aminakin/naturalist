@@ -92,7 +92,20 @@ foreach ($arResult as $key => $value) {
                                     ?>
                                     <div class="cert-order__item">
                                         <div class="cert-order__col-1">
-                                            <img width="192" class="lazy" data-src="<?= $arOrder['PROPS']['CERT_FORMAT'] == 'fiz' ? $arOrder['PROPS']['FIZ_VARIANT'] : $arOrder['PROPS']['ELECTRO_VARIANT'] ?>">
+                                            <?
+                                                $certImgSrc = '';
+                                                if ($arOrder['PROPS']['CERT_FORMAT'] == 'fiz') {
+                                                    $certImgSrc = $arOrder['PROPS']['FIZ_VARIANT'];
+                                                } else {
+                                                    $certImgSrc = $arOrder['PROPS']['ELECTRO_VARIANT'];
+                                                }                                                
+                                                
+                                                if ($certImgSrc == '' || !file_exists(preg_replace('/https:\/\/naturalist\.travel/m', $_SERVER['DOCUMENT_ROOT'], $certImgSrc))) {
+                                                    $certImgSrc = SITE_TEMPLATE_PATH.'/img/cert-default.jpg';
+                                                }
+                                            ?>
+                                            
+                                            <img width="192" class="lazy" data-src="<?= $certImgSrc?>">
                                         </div>
 
                                         <div class="cert-order__col-2">                                        
@@ -124,7 +137,15 @@ foreach ($arResult as $key => $value) {
                                 <? } else {?>
                                     <div class="cert-order__item cert">
                                         <div class="cert-order__col-1">
-                                            <img width="192" class="lazy" data-src="<?= $arOrder['ORDER'][$arOrder['UF_ORDER_ID']]['PROPS']['CERT_FORMAT'] == 'fiz' ? $arOrder['ORDER'][$arOrder['UF_ORDER_ID']]['PROPS']['FIZ_VARIANT'] : $arOrder['ORDER']['PROPS']['ELECTRO_VARIANT'] ?>">
+                                            <?
+                                                $certImgSrc = '';
+                                                if ($arOrder['ORDER'][$arOrder['UF_ORDER_ID']]['PROPS']['CERT_FORMAT'] == 'fiz') {
+                                                    $certImgSrc = $arOrder['ORDER'][$arOrder['UF_ORDER_ID']]['PROPS']['FIZ_VARIANT'];
+                                                } else {
+                                                    $certImgSrc = $arOrder['ORDER']['PROPS']['ELECTRO_VARIANT'];
+                                                }                                                
+                                            ?>
+                                            <img width="192" class="lazy" data-src="<?= $certImgSrc != '' ? $certImgSrc : SITE_TEMPLATE_PATH.'/img/cert-default.jpg' ?>">
                                         </div>
 
                                         <div class="cert-order__col-2">                                        

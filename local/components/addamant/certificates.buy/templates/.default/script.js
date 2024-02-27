@@ -162,7 +162,7 @@ class BuyCert {
     let _this = this;
     this.customPriceInput.addEventListener("focus", function () {
       this.previousElementSibling.checked = true;
-      this.setAttribute("placeholder", "");
+      this.setAttribute("placeholder", "    ₽");
     });
     this.customPriceInput.addEventListener("blur", function () {
       _this.refreshSplitBadge(this.value);
@@ -224,6 +224,8 @@ class BuyCert {
     });
 
     // устанавливаем/удаляем обязательность нужных полей
+    this.setRequired(this.certElVariants[0]);
+    this.removeRequired(this.certVariants[0]);
     this.removeRequired(this.cityRadio[0]);
     this.removeRequired(this.addressInput);
     this.removeRequired(this.deliveryInput[0]);
@@ -245,6 +247,8 @@ class BuyCert {
     this.setRequired(this.cityRadio[0]);
     this.setRequired(this.addressInput);
     this.setRequired(this.deliveryInput[0]);
+    this.setRequired(this.certVariants[0]);
+    this.removeRequired(this.certElVariants[0]);
 
     // расставляем порядковые номера для блоков
     this.setSectionNumbers();

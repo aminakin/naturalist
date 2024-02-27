@@ -58,7 +58,7 @@ if ($arResult['ERROR']) {
                                         echo $certPocket['UF_FILE'] . ';';
                                     } ?>
                                 ">
-                                <input cost="<?=$cert['PRICE']?>" type="radio" name="cert_id" value="<?=$cert['ID']?>" class="visually-hidden">
+                                <input cost="<?=$cert['PRICE']?>" type="radio" name="cert_id" value="<?=$cert['ID']?>" class="visually-hidden" required>
                                 <?php if ($cert['PRICE'] != 0) {?>
                                     <span style="color:<?=$cert['COLOR'] ? $cert['COLOR'] : 'black'?>" class="nominal__price"><?=CurrencyFormat($cert['PRICE'], 'RUB')?></span>
                                 </label>
@@ -81,7 +81,7 @@ if ($arResult['ERROR']) {
             <div class="form__format">
                 <div class="format__electro">
                     <label>
-                        <input type="radio" name="cert_format" value="electro" class="visually-hidden">
+                        <input type="radio" name="cert_format" value="electro" class="visually-hidden" required>
                         <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64" fill="none">
                             <g clip-path="url(#clip0_4879_59206)">
                                 <path d="M32 0C14.3262 0 0 14.3262 0 32C0 49.6738 14.3262 64 32 64C49.6738 64 64 49.6707 64 32C64 14.3293 49.6707 0 32 0Z" fill="#1B2D50"/>
@@ -99,7 +99,7 @@ if ($arResult['ERROR']) {
                 </div>
                 <div class="format__fiz">
                     <label>
-                        <input type="radio" name="cert_format" value="fiz" class="visually-hidden">
+                        <input type="radio" name="cert_format" value="fiz" class="visually-hidden" required>
                         <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64" fill="none">
                             <g clip-path="url(#clip0_4879_59214)">
                                 <path d="M32 0C14.3262 0 0 14.3262 0 32C0 49.6738 14.3262 64 32 64C49.6738 64 64 49.6707 64 32C64 14.3293 49.6707 0 32 0Z" fill="#E2C189"/>

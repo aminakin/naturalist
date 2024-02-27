@@ -213,9 +213,9 @@ foreach($arResult as $key => $value) {
                 <div class="h1"><?= number_format($arResult['finalPrice']['REAL_PRICE'], 0, '.', ' ') ?> <?=Loc::getMessage('ORDER_RUBLE')?></div>
             </div>
 
-            <?php if ($USER->IsAdmin()):?>
+            <?php if ($USER->IsAdmin()):?>                
                 <?php if (
-                    $arResult['finalPrice']['REAL_PRICE'] > Users::getInnerScore()
+                    $arResult['finalPrice']['REAL_PRICE'] > floatval(Users::getInnerScore())
                     && intval(Users::getInnerScore()) !== 0
                     && $isAuthorized
                 ):?>
@@ -234,7 +234,7 @@ foreach($arResult as $key => $value) {
                         </div>
                     </div>                
                 <? elseif (
-                    $arResult['finalPrice']['REAL_PRICE'] <= Users::getInnerScore()
+                    $arResult['finalPrice']['REAL_PRICE'] <= floatval(Users::getInnerScore())
                     && intval(Users::getInnerScore()) !== 0
                     && $isAuthorized
                 ): ?>
@@ -255,7 +255,7 @@ foreach($arResult as $key => $value) {
                 <? endif; ?>
             <? endif; ?>
             
-            <div class="payment-block" <?=Users::getInnerScore() - $arResult['finalPrice']['REAL_PRICE'] > 0 ? 'style="display:none"' : ''?>>
+            <div class="payment-block" <?=Users::getInnerScore() - $arResult['finalPrice']['REAL_PRICE'] >= 0 ? 'style="display:none"' : ''?>>
                 <p class="payment-block__title">Выберите способ оплаты:</p>
                 <div class="payment-methods">
                     <?if (is_array($arResult['paySystems'])) {
