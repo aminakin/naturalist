@@ -560,6 +560,11 @@ class Orders
         }
 
         if ($reservationRes) {
+            // Списываем баланс со счёта, если свойство не пустое
+            if ($arOrder['PROPS']['CERT_VALUE'] != '') {                
+                \CSaleUserAccount::UpdateAccount($arUser['ID'], -intval($arOrder['PROPS']['CERT_VALUE']), 'RUB', 'Оплата заказа ', $orderId);                
+            }
+
             /* Устанавливаем свойства заказа (пользовательские) */
             $order = Order::load($orderId);
             $propertyCollection = $order->getPropertyCollection();
@@ -576,19 +581,19 @@ class Orders
             $orderRes = $order->save();
 
             if (!isset($reservationRes["ERROR"])) {
-                // Отсылка уведомлений на почту
-                //if ($arUser["UF_SUBSCRIBE_EMAIL_1"]) {
-                    $PDF = new CreateOrderPdf();
-                    $file = json_decode($PDF->getPdfLink($orderId))->SHORT;
+                // Отсылка уведомлений на почту                
 
-                    $sendRes = Users::sendEmail("USER_RESERVATION", "55", array(
-                        "EMAIL" => $clientEmail,
-                        "ORDER_ID" => $orderId,
-                        "NAME" => $clientLastName. ' ' . $clientName,
-                        "RESERVATION_ID" => $reservationRes,
-                        "LINK" => 'https://' . $_SERVER['SERVER_NAME'] . '/personal/active/'
-                    ), [$_SERVER["DOCUMENT_ROOT"].$file]);
-                //}
+                $PDF = new CreateOrderPdf();
+                $file = json_decode($PDF->getPdfLink($orderId))->SHORT;
+
+                $sendRes = Users::sendEmail("USER_RESERVATION", "55", array(
+                    "EMAIL" => $clientEmail,
+                    "ORDER_ID" => $orderId,
+                    "NAME" => $clientLastName. ' ' . $clientName,
+                    "RESERVATION_ID" => $reservationRes,
+                    "LINK" => 'https://' . $_SERVER['SERVER_NAME'] . '/personal/active/'
+                ), [$_SERVER["DOCUMENT_ROOT"].$file]);
+
                 // Отсылка уведомления на СМС
                 if ($arUser["UF_SUBSCRIBE_SMS_1"]) {
                 }
@@ -897,12 +902,6 @@ class Orders
             if ($orderId) {
                 // Очистка корзины
                 $baskets->deleteAll();
-
-                // Списываем баланс со счёта вручную, если была частичная оплата, т.к. она идёт как скидка
-                // Списываем именно здесь, т.к. ранее нельзя получить ID заказа
-                if ($doublePayment) {
-                    \CSaleUserAccount::UpdateAccount($userId, -$params['userbalance'], 'RUB', 'Оплата заказа ', $order->getId());
-                }
 
                 // Ссылка на оплату
                 $paymentData = '';
