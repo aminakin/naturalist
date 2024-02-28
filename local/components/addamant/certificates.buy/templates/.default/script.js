@@ -62,6 +62,9 @@ class BuyCert {
         _this.prodSumm = this.getAttribute("cost");
         _this.renderPrice(_this.prodCostElement, this.getAttribute("cost"));
         _this.calcSumm();
+        if (!this.value != 15287) {
+          _this.removeRequired(_this.customPriceInput);
+        }
       });
     });
   }
@@ -162,16 +165,38 @@ class BuyCert {
     let _this = this;
     this.customPriceInput.addEventListener("focus", function () {
       this.previousElementSibling.checked = true;
+      _this.setRequired(this);
       this.setAttribute("placeholder", "    ₽");
     });
-    this.customPriceInput.addEventListener("blur", function () {
-      _this.refreshSplitBadge(this.value);
-      _this.prodSumm = this.value;
-      _this.renderPrice(_this.prodCostElement, this.value);
-      _this.calcSumm();
-      this.reportValidity();
-      this.setAttribute("placeholder", "0000 ₽");
-    });
+    this.customPriceInput.addEventListener(
+      "mouseleave",
+      this.checkCustomPrice.bind(this)
+    );
+    this.customPriceInput.addEventListener(
+      "input",
+      this.checkCustomPrice.bind(this)
+    );
+    this.customPriceInput.addEventListener(
+      "blur",
+      this.checkCustomPrice.bind(this)
+    );
+  }
+
+  checkCustomPrice() {
+    if (+this.customPriceInput.value === 0) {
+      this.prodSumm = 0;
+      this.calcSumm();
+    } else if (this.customPriceInput.checkValidity()) {
+      this.customPriceInput.setCustomValidity("");
+      this.refreshSplitBadge(this.customPriceInput.value);
+      this.prodSumm = this.customPriceInput.value;
+      this.calcSumm();
+    } else {
+      this.customPriceInput.setCustomValidity("");
+    }
+    this.customPriceInput.reportValidity();
+    this.renderPrice(this.prodCostElement, this.customPriceInput.value);
+    this.customPriceInput.setAttribute("placeholder", "0000 ₽");
   }
 
   refreshSplitBadge(amount) {

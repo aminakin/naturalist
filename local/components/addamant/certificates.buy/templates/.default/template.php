@@ -132,7 +132,9 @@ if ($arResult['ERROR']) {
                     <label>
                         <input type="radio" name="cert_el_variant" value="<?=$arResult['LOCAL_HOST'].CFile::getPath($elVariant['UF_FILE'])?>" class="visually-hidden">
                         <span class="el-variant__title"><?=$elVariant['UF_NAME']?></span>
-                        <img src="<?=CFile::getPath($elVariant['UF_FILE'])?>" alt="">                    
+                        <div class="variant__img-wrap">
+                            <img src="<?=CFile::ResizeImageGet($elVariant['UF_FILE'], array('width' => 600, 'height' => 763), BX_RESIZE_IMAGE_EXACT, true)['src']?>" alt="">
+                        </div>                        
                     </label>
                 <?php } ?>                
             </div>
@@ -148,7 +150,9 @@ if ($arResult['ERROR']) {
                     <label>
                         <input type="radio" cost="<?=$arParams['VARIANT_COST']?>" name="cert_variant" value="<?=$arResult['LOCAL_HOST'].CFile::getPath($variant['UF_FILE'])?>" class="visually-hidden">
                         <span class="el-variant__title"><?=$variant['UF_NAME']?></span>
-                        <img src="<?=CFile::getPath($variant['UF_FILE'])?>" alt="">                    
+                        <div class="variant__img-wrap">
+                            <img src="<?=CFile::ResizeImageGet($variant['UF_FILE'], array('width' => 600, 'height' => 763), BX_RESIZE_IMAGE_EXACT, true)['src']?>" alt="">
+                        </div>                                   
                     </label>
                 <?php } ?>                
             </div>
@@ -164,7 +168,9 @@ if ($arResult['ERROR']) {
                     <label>
                         <input cost="<?=$arParams['POCKET_COST']?>" type="radio" name="cert_pocket" value="<?=$arResult['LOCAL_HOST'].CFile::getPath($pocket['UF_FILE'])?>" class="visually-hidden">
                         <span class="el-variant__title"><?=$pocket['UF_NAME']?></span>
-                        <img src="<?=CFile::getPath($pocket['UF_FILE'])?>" alt="">                    
+                        <div class="variant__img-wrap">
+                            <img src="<?=CFile::ResizeImageGet($pocket['UF_FILE'], array('width' => 600, 'height' => 763), BX_RESIZE_IMAGE_EXACT, true)['src']?>" alt="">
+                        </div>                                        
                     </label>
                 <?php } ?>                
             </div>

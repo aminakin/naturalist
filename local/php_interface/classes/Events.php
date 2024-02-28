@@ -14,8 +14,8 @@ use CIBlockElement;
 use Naturalist\Users;
 use Naturalist\Orders;
 use Naturalist\Settings;
-use Naturalist\CreateOrderPdf;
 use Naturalist\Certificates;
+use Naturalist\CreateCertPdf;
 
 defined("B_PROLOG_INCLUDED") && B_PROLOG_INCLUDED === true || die();
 /**
@@ -176,8 +176,34 @@ class Events
         $orderId = $order->getId();
         $propertyCollection = $order->getPropertyCollection();
         $nominal = $propertyCollection->getItemByOrderPropertyId(ORDER_PROP_CERT_PRICE)->getValue();
+        $type = $propertyCollection->getItemByOrderPropertyId(ORDER_PROP_CERT_FORMAT)->getValue();
+        $clientName = $propertyCollection->getItemByOrderPropertyId(10)->getValue();
+        $clientLastName = $propertyCollection->getItemByOrderPropertyId(11)->getValue();
+        $clientEmail = $propertyCollection->getItemByOrderPropertyId(2)->getValue();
+        $giftEmail = $propertyCollection->getItemByOrderPropertyId(ORDER_PROP_GIFT_EMAIL)->getValue();
+
         $cert = new Certificates\Create();
-        $cert->add($nominal, $orderId);        
+        $cert->add($nominal, $orderId);     
+        
+        // Создание pdf с сертификатом        
+        $PDF = new CreateCertPdf();
+        $file = json_decode($PDF->getPdfLink($orderId))->SHORT;
+
+        // Отправка писем в зависимости от формата сертификата
+        $fields = [
+            "EMAIL" => $clientEmail,
+            "NAME" => $clientLastName. ' ' . $clientName,
+        ];
+        if ($type == 'fiz') {
+            Users::sendEmail("FIZ_CERT_PURCHASED", "66", $fields, [$_SERVER["DOCUMENT_ROOT"].$file]);
+        } else {
+            Users::sendEmail("EL_CERT_PURCHASED", "65", $fields, [$_SERVER["DOCUMENT_ROOT"].$file]);
+            if ($giftEmail != '') {
+                $fields['EMAIL'] = $giftEmail;
+                Users::sendEmail("EL_CERT_PURCHASED", "65", $fields, [$_SERVER["DOCUMENT_ROOT"].$file]);
+            }
+        }
+        
     }
 
     public static function cancelOrder($event) {

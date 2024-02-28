@@ -151,43 +151,7 @@ class CreateOrderPdf {
             return json_encode([
                 "LINK" => HTTP_HOST.$this->pdfManager->getPathFilePdf(),
                 "SHORT" => $this->pdfManager->getPathFilePdf()
-            ]);
-    
-            // $dir = new IO\Directory(
-            //     implode('', [
-            //         $documentRoot , 
-            //         PDF_DEFAULT_PATH , 
-            //         'calculator'
-            //         ]
-            //     )
-            // );
-    
-            // if (!$dir->isExists()) {
-            //     $dir->create();
-            // }
-    
-            // $arFiles = $dir->getChildren();
-    
-            // if (!empty($arFiles)) {
-    
-            //     $currentDateEntity = new DateTime();
-            //     $currentDate = $currentDateEntity->format("d-m-Y H:i");
-    
-            //     foreach ($arFiles as $arFile) {
-    
-            //         $pathFile = $arFile->getPath();
-            //         $fileEntity = new IO\File($pathFile);
-    
-            //         $createdAtFile = DateTime::createFromTimestamp(
-            //             $fileEntity->getCreationTime()
-            //         )->add('30 minutes')->format("d-m-Y H:i");
-    
-            //         if ($currentDate > $createdAtFile) {
-            //             $fileEntity->deleteFile($pathFile);
-            //         }
-    
-            //     }
-            // }
+            ]);            
              
         } else {
             return json_encode([
