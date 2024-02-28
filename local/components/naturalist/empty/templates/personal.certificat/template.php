@@ -124,7 +124,7 @@ foreach ($arResult as $key => $value) {
                                                     <div><?= number_format($arOrder["FIELDS"]["PRICE"], 0, '.', ' ') ?> ₽</div>
                                                 </div>
                                                 <div class="tag"><?= $arOrder["DATA"]["STATUS"] ?></div>
-                                                <a href="#" class="cart-order__get-pdf">Скачать сертификат</a>
+                                                <a href="#" data-id="<?=$arOrder["ID"]?>" class="cart-order__get-pdf">Скачать сертификат</a>
                                             </div>
                                             <? if ($arOrder["FIELDS"]["STATUS_ID"] != "C") : ?>
                                                 <button type="button" data-modal-review="<?= $arOrder["ID"] ?>"

@@ -27,7 +27,7 @@ if(isset($orderNum) && !empty($orderNum)) {
 
 /* Список заказов */
 $order = new Orders();
-$arOrders = $order->getList($arFilter);
+$arOrders = $order->getList($arFilter, ['ID' => 'DESC']);
 
 /* Список свойств ИБ Отзывы */
 $rsProps = CIBlockProperty::GetList(array(), array("IBLOCK_ID" => REVIEWS_IBLOCK_ID));

@@ -124,8 +124,7 @@ foreach($arResult as $key => $value) {
                     <div class="profile__content">
                         <?if($arOrders):?>
                             <?foreach($arOrders as $arOrder):?>
-                                <?
-                                //xprint($arOrder);
+                                <?                                
                                 $dateFrom = $arOrder["PROPS"]["DATE_FROM"];
                                 $dateTo = $arOrder["PROPS"]["DATE_TO"];
                                 $guests = $arOrder["ITEMS"][0]["ITEM_BAKET_PROPS"]["GUESTS_COUNT"]['VALUE'];

@@ -27,6 +27,7 @@ Loader::registerAutoLoadClasses(null, array(
     'Naturalist\CustomFunctions' => '/local/php_interface/classes/CustomFunctions.php',
     'Naturalist\PdfGenerator' => '/local/php_interface/classes/PdfGenerator.php',
     'Naturalist\CreateOrderPdf' => '/local/php_interface/classes/CreateOrderPdf.php',
+    'Naturalist\CreateCertPdf' => '/local/php_interface/classes/CreateCertPdf.php',
     'Naturalist\Certificates\Create' => '/local/php_interface/classes/Certificates/Create.php',
     'Naturalist\Certificates\Activate' => '/local/php_interface/classes/Certificates/Activate.php',
     'Naturalist\Certificates\CatalogHelper' => '/local/php_interface/classes/Certificates/CatalogHelper.php',

@@ -31,7 +31,7 @@ $steps = ElementCertificatesStepsTable::getList([
 
 // Заказы
 $order = new Orders();
-$arTmpOrders = $order->getList([], ['DATE_INSERT' => 'DESC']);
+$arTmpOrders = $order->getList(["STATUS_ID" => ["P", "F"]], ['DATE_INSERT' => 'DESC']);
 foreach ($arTmpOrders as $arOrder) {
     if ($arOrder['PROPS']['IS_CERT'] == 'Y') {
         $arOrders[] = $arOrder;

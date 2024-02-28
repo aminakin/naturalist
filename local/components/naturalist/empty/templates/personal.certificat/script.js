@@ -33,8 +33,30 @@ var Review = function () {
       },
     });
   };
+
+  this.getPdf = function (orderId) {
+    var data = {
+      orderId: orderId,
+    };
+
+    jQuery.ajax({
+      type: "POST",
+      url: "/ajax/pdf/createCertPdf.php",
+      data: data,
+      dataType: "json",
+      success: function (data) {
+        console.log(data);
+        if (!data.ERROR) {
+          window.open(data.LINK, "blank");
+        } else {
+          alert(data.ERROR);
+        }
+      },
+    });
+  };
 };
 var reviews = new Review();
+
 $(function () {
   $(document).on("click", "[data-before-review-add]", function (e) {
     var orderId = $(this).data("order-id");
@@ -58,4 +80,13 @@ $(function () {
 
     reviews.add(params);
   });
+
+  let getVaucherButtons = document.querySelectorAll(".cart-order__get-pdf");
+  if (getVaucherButtons.length) {
+    getVaucherButtons.forEach((element) => {
+      element.addEventListener("click", function () {
+        reviews.getPdf(element.dataset.id);
+      });
+    });
+  }
 });
