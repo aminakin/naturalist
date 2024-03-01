@@ -71,6 +71,7 @@ class Orders
         'ELECTRO_VARIANT' => ORDER_PROP_ELECTRO_VARIANT,
         'PROP_CONGRATS' => ORDER_PROP_CONGRATS,
         'PROP_CERT_PRICE' => ORDER_PROP_CERT_PRICE,
+        'CERT_ADDRESS' => ORDER_PROP_CERT_ADDRESS,
     );
     public $statusNames = array(
         "N" => "Не оплачено",
@@ -211,6 +212,7 @@ class Orders
     {
         $orderId = intval($orderId);
         $order = Order::load($orderId);
+        $payments = [];
         if (!$order) {
             return [
                 "ERROR" => "Заказ не найден."
@@ -275,8 +277,15 @@ class Orders
             "STATUS" => $this->statusNames[$arFields["STATUS_ID"]]
         );
 
+        // Оплаты
+        $paymentCollection = $order->getPaymentCollection();
+        foreach ($paymentCollection as $payment) {
+            $payments[] = $payment->getPaymentSystemId();
+        }
+
         $arOrder = array(
             "ID" => $orderId,
+            "PAYMENTS" => $payments,
             "ITEMS" => $arItems,
             "FIELDS" => $arFields,
             "PROPS" => $arProps,

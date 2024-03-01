@@ -105,15 +105,14 @@ class PdfGenerator
      * Сохранение файла PDF
      * 
      * @param string $path Путь сдля сохранения.
+     * @param string $fileNamePrefix Имя файла до расширения.
      * 
      * @return mixed Кол-во записанных байт в случае успешной записи, иначе false.
      */
-    function saveFilePdf(string $path = PDF_DEFAULT_PATH) : mixed
+    function saveFilePdf(string $path = PDF_DEFAULT_PATH, string $fileNamePrefix) : mixed
     {
 
-        $filename = implode('-', [
-            bitrix_sessid()
-        ]) . '.pdf';
+        $filename = $fileNamePrefix . '.pdf';
 
         $pathSave = implode('/', [
             Application::getDocumentRoot()  . $path,

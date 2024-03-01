@@ -13,6 +13,8 @@ if (!$isAuthorized) {
     LocalRedirect('/');
 }
 
+$arOrders = [];
+
 // Шаги для сертификата
 $steps = ElementCertificatesStepsTable::getList([
     'select' => [
@@ -31,8 +33,11 @@ $steps = ElementCertificatesStepsTable::getList([
 
 // Заказы
 $order = new Orders();
-$arTmpOrders = $order->getList(["STATUS_ID" => ["P", "F"]], ['DATE_INSERT' => 'DESC']);
-foreach ($arTmpOrders as $arOrder) {
+$arTmpOrders = $order->getList(["STATUS_ID" => ["N", "P", "F"]], ['DATE_INSERT' => 'DESC']);
+foreach ($arTmpOrders as $arOrder) {    
+    if (array_search(CERT_CASH_PAYSYSTEM_ID, $arOrder['PAYMENTS']) === false) {
+        continue;
+    }
     if ($arOrder['PROPS']['IS_CERT'] == 'Y') {
         $arOrders[] = $arOrder;
     }
@@ -55,6 +60,7 @@ foreach ($certs as &$cert) {
 function cmp($a, $b) {
     return strcmp($b["ID"], $a["ID"]);
 }
+
 usort($arOrders, "cmp");
 
 $arResult = array(    

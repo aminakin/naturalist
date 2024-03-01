@@ -58,7 +58,7 @@ class CreateCertPdf {
          global $APPLICATION;
      
          $APPLICATION->IncludeFile(
-             '/ajax/pdf/inc/certpdfHtml.php', 
+             '/ajax/pdf/inc/certPdfHtml.php', 
              [
                  'arResult' => $this->orderData,            
              ], 
@@ -97,7 +97,7 @@ class CreateCertPdf {
         $this->pdfManager->quickRender($this->createHtml());
     
         $processSaveFile = $this->pdfManager->saveFilePdf(
-            '/upload/certs'
+            '/upload/certs', 'Сертификат_'.$orderId
         );
     
         if ($processSaveFile) {

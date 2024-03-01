@@ -113,8 +113,10 @@ foreach ($arResult as $key => $value) {
                                             <span class="cert-order__prop">Дата покупки: <?=$dateFrom?></span>
                                             <span class="cert-order__prop">Срок действия: до <?=$dateTo?></span>
                                             <span class="cert-order__prop">Номинал: <?= number_format($arOrder['PROPS']['PROP_CERT_PRICE'], 0, '.', ' ') ?> ₽</span>
-                                            <span class="cert-order__prop">Формат: <?= $arOrder['PROPS']['CERT_FORMAT'] == 'fiz' ? 'offline' : 'online'?></span>
-                                            <span class="cert-order__prop">Адрес доставки: <?=$arOrder['PROPS']['CITY']?></span>
+                                            <span class="cert-order__prop">Формат: <?= $arOrder['PROPS']['CERT_FORMAT'] == 'fiz' ? 'offline' : 'online'?></span>                                            
+                                            <?if ($arOrder['PROPS']['CERT_ADDRESS']) {?>
+                                                <span class="cert-order__prop">Адрес доставки: <?=$arOrder['PROPS']['CERT_ADDRESS']?></span>
+                                            <?}?>
                                         </div>
 
                                         <div class="cert-order__col-3">
@@ -124,9 +126,11 @@ foreach ($arResult as $key => $value) {
                                                     <div><?= number_format($arOrder["FIELDS"]["PRICE"], 0, '.', ' ') ?> ₽</div>
                                                 </div>
                                                 <div class="tag"><?= $arOrder["DATA"]["STATUS"] ?></div>
-                                                <a href="#" data-id="<?=$arOrder["ID"]?>" class="cart-order__get-pdf">Скачать сертификат</a>
+                                                <?if ($arOrder["FIELDS"]["IS_PAYED"] == 1) {?>
+                                                    <a href="#" data-id="<?=$arOrder["ID"]?>" class="cart-order__get-pdf">Скачать сертификат</a>
+                                                <?}?>
                                             </div>
-                                            <? if ($arOrder["FIELDS"]["STATUS_ID"] != "C") : ?>
+                                            <? if ($arOrder["FIELDS"]["STATUS_ID"] != "C" && $arOrder["FIELDS"]["IS_PAYED"] == 1) : ?>
                                                 <button type="button" data-modal-review="<?= $arOrder["ID"] ?>"
                                                         data-before-review-add data-order-id="<?= $arOrder["ID"] ?>"
                                                         data-camping-id="<?= $arOrderSection["ID"] ?>">Оставить

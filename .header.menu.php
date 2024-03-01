@@ -40,7 +40,7 @@ $aMenuLinks = Array(
 		SITE_DIR."/certificates/", 
 		Array(), 
 		Array("ALWAYS_ORANGE"=>"Y"), 
-		"CSite::InGroup(array(1))" 
+		//"CSite::InGroup(array(1))" 
 	)
 );
 ?>

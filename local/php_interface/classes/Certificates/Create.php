@@ -27,7 +27,8 @@ class Create
      */
     private function generateCode() : string
     {
-        return bin2hex(random_bytes(2)) . '-' . bin2hex(random_bytes(2)) . '-' . bin2hex(random_bytes(2));
+        // return bin2hex(random_bytes(2)) . '-' . bin2hex(random_bytes(2)) . '-' . bin2hex(random_bytes(2));
+        return rand(1111, 9999) . '-' . rand(1111, 9999) . '-' . rand(1111, 9999);
     }
    
     /**

@@ -148,7 +148,7 @@ if ($arResult['ERROR']) {
             <div class="form__el-variant">
                 <?php foreach ($arResult['VARIANT'] as $variant) {?>
                     <label>
-                        <input type="radio" cost="<?=$arParams['VARIANT_COST']?>" name="cert_variant" value="<?=$arResult['LOCAL_HOST'].CFile::getPath($variant['UF_FILE'])?>" class="visually-hidden">
+                        <input type="radio" cost="<?=$arParams['VARIANT_COST']?>" name="cert_variant" value="<?=$arResult['LOCAL_HOST'].CFile::getPath($variant['UF_IMG_TO_CERT'])?>" class="visually-hidden">
                         <span class="el-variant__title"><?=$variant['UF_NAME']?></span>
                         <div class="variant__img-wrap">
                             <img src="<?=CFile::ResizeImageGet($variant['UF_FILE'], array('width' => 600, 'height' => 763), BX_RESIZE_IMAGE_EXACT, true)['src']?>" alt="">
@@ -234,7 +234,7 @@ if ($arResult['ERROR']) {
                                 <?php } ?>
                             </div>
                         </div>
-                        <div class="user-data__block">
+                        <div class="user-data__block address">
                             <p class="user-data__title"><?=Loc::GetMessage('USER_DATA_ADDRESS_TITLE')?></p>
                             <input type="text" name="address" placeholder="<?=Loc::GetMessage('USER_DATA_ADDRESS')?>">                            
                         </div>
@@ -283,7 +283,7 @@ if ($arResult['ERROR']) {
                         <?if ($paysystem['ID'] != CERT_YANDEX_SPLIT_PAYSYSTEM_ID) {?>                                
                             <?$img = CFile::getFileArray($paysystem['LOGOTIP'])?>
                             <label class="checkbox payment-item" <?=$paysystem['IS_CASH'] == 'Y' ? 'style="display:none" cash="Y"' : ''?>>
-                                <input type="radio" class="checkbox" value="<?=$paysystem['ID']?>" name="paysystem" <?=$key == 0 ? 'checked' : ''?>>
+                                <input type="radio" class="checkbox visually-hidden" value="<?=$paysystem['ID']?>" name="paysystem" <?=$key == 0 ? 'checked' : ''?>>
                                 <span></span>
                                 <?if ($img) {?>
                                     <img src="<?=$img['SRC']?>" width="<?=intval($img['WIDTH'])/2?>">
@@ -292,13 +292,13 @@ if ($arResult['ERROR']) {
                             </label> 
                         <?} else {?> 
                             <label class="checkbox payment-item">
-                                <input type="radio" class="checkbox" value="<?=$paysystem['ID']?>" name="paysystem" <?=$key == 0 ? 'checked' : ''?>>
+                                <input type="radio" class="checkbox visually-hidden" value="<?=$paysystem['ID']?>" name="paysystem" <?=$key == 0 ? 'checked' : ''?>>
                                 <span></span>
                                 <div class="split-badge">
                                     <yandex-pay-badge
                                         merchant-id="d82873ad-61ce-4050-b05e-1f4599f0bb7b"
                                         type="bnpl"
-                                        amount="10000"
+                                        amount="5000"
                                         size="l"
                                         variant="detailed"
                                         theme="light"

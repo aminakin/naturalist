@@ -14,11 +14,12 @@ Loc::loadMessages(__FILE__); ?>
     <div class="order-pdf__block1">
         <?if ($arResult['PROPS']['PROP_CONGRATS'] == '') {?>
             <div class="order-pdf__congrats-title"><?=Loc::getMessage('PDF_CONGRATS_TITLE');?></div>
-            <div class="order-pdf__congrats">
+            <div class="order-pdf__congrats">                
                 <?=Loc::getMessage('PDF_CONGRATS');?> 
             </div>
         <?} else {?>        
             <div class="order-pdf__congrats">
+                <?=$arResult['PROPS']['GIFT_NAME'] ? $arResult['PROPS']['GIFT_NAME'].'!<br>' : ''?>
                 <?=$arResult['PROPS']['PROP_CONGRATS']?> 
             </div>
         <?}?>
