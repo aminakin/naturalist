@@ -18,7 +18,7 @@ class CreateCertPdf {
     public function __construct() {
         $documentRoot = Application::getDocumentRoot();
         require $documentRoot . '/local/php_interface/lib/dompdf/autoload.inc.php';
-        $this->pdfManager = new PdfGenerator();
+        $this->pdfManager = new PdfGenerator([0,0,440,623]);
         $this->hlEntity = new HighLoadBlockHelper('Certificates');
     }
 
