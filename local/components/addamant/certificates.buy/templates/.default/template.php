@@ -184,7 +184,7 @@ if ($arResult['ERROR']) {
             <div class="form__congrats">
                 <div class="congrats__content">
                     <p class="congrats__text"><?=Loc::GetMessage('CONGRATS_INPUT_TITLE')?></p>
-                    <textarea name="congrats" placeholder="<?=Loc::GetMessage('CONGRATS_INPUT_PLACEHOLDER')?>"></textarea>
+                    <textarea name="congrats" placeholder="<?=Loc::GetMessage('CONGRATS_INPUT_PLACEHOLDER')?>" maxlength="150"></textarea>
                     <p class="congrats__footnote"><?=Loc::GetMessage('CONGRATS_INPUT_FOOTNOTE')?></p>
                 </div>
             </div>
@@ -204,7 +204,7 @@ if ($arResult['ERROR']) {
                         <input type="tel" required name="login" placeholder="<?=Loc::GetMessage('USER_DATA_PHONE')?>">
                         <input type="email" required name="email" placeholder="<?=Loc::GetMessage('USER_DATA_EMAIL')?>">
                     </div>
-                    <div class="user-data__block electro">
+                    <div class="user-data__block electro" style="display: none">
                         <p class="user-data__title electro"><?=Loc::GetMessage('USER_DATA_ELECTRO_TITLE')?></p>
                         <input type="text" name="gift_name" placeholder="<?=Loc::GetMessage('USER_DATA_GIFT_NAME')?>">                                                
                         <input type="email" name="gift_email" placeholder="<?=Loc::GetMessage('USER_DATA_GIFT_EMAIL')?>">

@@ -45,10 +45,10 @@ class PdfGenerator
      * 
      * @return void
      */
-    function __construct()
+    function __construct($size = [0,0,440,700])
     {
         $this->pdfOptions = new Options();
-        $this->prepareDefaultParams();
+        $this->prepareDefaultParams($size);
 
         $this->pdfEntity = new Dompdf(
             $this->pdfOptions
@@ -62,11 +62,11 @@ class PdfGenerator
      * 
      * @return void
      */
-    function prepareDefaultParams() : void
+    function prepareDefaultParams($size) : void
     {
         $this->pdfOptions->setIsRemoteEnabled(true);
         $this->pdfOptions->setDefaultPaperSize('portrait');        
-        $this->pdfOptions->setDefaultPaperSize([0,0,440,700]);
+        $this->pdfOptions->setDefaultPaperSize($size);
     }
 
     /**
