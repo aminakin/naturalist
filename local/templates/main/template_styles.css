@@ -433,3 +433,35 @@ h1.page_title {
     line-height: 21px;
   }
 }
+
+.cert-index__seo-text {
+  margin-top: 64px;
+  font-family: "TT Travels Next";
+  font-size: 21px;
+  line-height: 34px;
+  font-weight: 500;
+}
+
+.cert-index__reviews {
+  margin-top: 88px;
+}
+
+@media (max-width: 1024px) {
+  .cert-index__seo-text {
+    margin-top: 48px;
+    font-size: 15px;
+    line-height: 19px;
+    font-weight: 600;
+    letter-spacing: -0.19px;
+  }
+
+  .cert-index__reviews {
+    margin-top: 48px;
+  }
+}
+
+@media (max-width: 480px) {
+  .cert-index__reviews {
+    margin-top: 32px;
+  }
+}
