@@ -1059,9 +1059,7 @@ class Bnovo
         $response = curl_exec($ch);
         $arData = json_decode($response, true);
         curl_close($ch);
-        $arRooms = $arData['rooms'];     
-                
-        xprint($arData);        
+        $arRooms = $arData['rooms'];        
 
         $iE = new CIBlockElement();
 
@@ -1178,14 +1176,23 @@ class Bnovo
 
             $arAgesValues = []; //Возрастные интервалы
             if(isset($arRoom['extra_array']['children_ages']) && !empty($arRoom['extra_array']['children_ages'])) {
+                $elementAppend = '';
                 foreach ($arRoom['extra_array']['children_ages'] as $key => $arAge) {
                     if (is_array($arAge)) {                        
                         $arAgesValues[] = ["VALUE" => $childrenAgesId[$key] ? $childrenAgesId[$key] : 0, "DESCRIPTION" => $arAge[array_key_first($arAge)]['people_count']];
-                        $elementCode .= '_c.'.$arRoom['children'].'.'.$childrenAgesId[$key];
+                        if ($childrenAgesId[$key]) {
+                            $elementCode .= '_c.'.$arAge[array_key_first($arAge)]['people_count'].'.'.$childrenAgesId[$key];
+                        } else {
+                            $elementAppend = '_e.'.$arAge[array_key_first($arAge)]['people_count'];
+                        }                        
                     } else {
                         $arAgesValues[] = ["VALUE" => $childrenAgesId[$key], "DESCRIPTION" => $arAge];
                         $elementCode .= '_c.'.$arRoom['children'].'.'.$childrenAgesId[$key];
                     }
+                }
+                if ($elementAppend != '') {
+                    $elementCode .= $elementAppend;
+                    $elementAppend = '';
                 }
             }
 
