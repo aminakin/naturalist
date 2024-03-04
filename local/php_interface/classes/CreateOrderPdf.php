@@ -143,7 +143,7 @@ class CreateOrderPdf {
         $this->pdfManager->quickRender($this->createHtml());
     
         $processSaveFile = $this->pdfManager->saveFilePdf(
-            '/upload/vaucers'
+            '/upload/vaucers', 'Ваучер_'.$orderId
         );
     
         if ($processSaveFile) {

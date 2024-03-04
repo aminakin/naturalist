@@ -139,7 +139,20 @@ class Events
     {
         $order = $event->getParameter("ENTITY");
         $propertyCollection = $order->getPropertyCollection();
+        $paymentCollection = $order->getPaymentCollection();
         $oldValues = $event->getParameter("VALUES");
+
+        $isNew = $order->isNew();
+        $isCert = $propertyCollection->getItemByOrderPropertyId(ORDER_PROP_IS_CERT)->getValue();
+
+        if ($isNew && $isCert) {
+            foreach ($paymentCollection as $payment) {
+                if ($payment->getPaymentSystemId() == CERT_CASH_PAYSYSTEM_ID) {
+                    self::certCashOrderHandler($order);
+                    return;
+                }
+            }            
+        }
 
         // Если это не оплата заказа
         if(!$order->getField('PAYED') || !$oldValues['PAYED'] || ($order->getField('PAYED') != 'Y') && ($oldValues['PAYED'] != 'N'))
@@ -152,7 +165,6 @@ class Events
         };
 
         // Если это оплата сертификата, запускаем другую функцию        
-        $isCert = $propertyCollection->getItemByOrderPropertyId(ORDER_PROP_IS_CERT)->getValue();
         if ($isCert == 'Y') {
             self::certOrderHandler($order);
             return;
@@ -170,6 +182,20 @@ class Events
             // Отменяем заказ
             $orders->cancel($orderId, "Невозможно забронировать заказ: ".$reservationRes["ERROR"]);
         }
+    }
+
+    private static function certCashOrderHandler($order) {
+        $propertyCollection = $order->getPropertyCollection();
+        $clientEmail = $propertyCollection->getItemByOrderPropertyId(2)->getValue();
+        $address = $propertyCollection->getItemByOrderPropertyId(ORDER_PROP_CERT_ADDRESS)->getValue();
+
+        $fields = [
+            "ORDER_ID" => $order->getId(),
+            "COST" => $order->getPrice().'Р',
+            "ADDRESS" => $address ? $address : 'Самовывоз',
+            "EMAIL" => $clientEmail,            
+        ];
+        Users::sendEmail("NEW_CERT_ORDER_CASH", "67", $fields);
     }
 
     private static function certOrderHandler($order) {

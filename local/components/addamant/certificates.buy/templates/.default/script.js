@@ -131,6 +131,11 @@ class BuyCert {
           _this.deliverySumm = +this.getAttribute("cost");
           _this.calcSumm();
         }
+        if (this.value == 3) {
+          _this.removeRequired(_this.addressInput);
+        } else {
+          _this.setRequired(_this.addressInput);
+        }
       });
     });
   }
@@ -240,11 +245,17 @@ class BuyCert {
     this.pocketSumm = 0;
     this.calcSumm();
 
-    // Убираем чек с физический вариантов
+    // Убираем чек с физических вариантов
     this.certVariants.forEach((element) => {
       element.checked = false;
     });
     this.certPockets.forEach((element) => {
+      element.checked = false;
+    });
+    this.cityRadio.forEach((element) => {
+      element.checked = false;
+    });
+    this.deliveryInput.forEach((element) => {
       element.checked = false;
     });
 

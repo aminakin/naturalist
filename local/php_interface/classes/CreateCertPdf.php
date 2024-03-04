@@ -18,7 +18,7 @@ class CreateCertPdf {
     public function __construct() {
         $documentRoot = Application::getDocumentRoot();
         require $documentRoot . '/local/php_interface/lib/dompdf/autoload.inc.php';
-        $this->pdfManager = new PdfGenerator();
+        $this->pdfManager = new PdfGenerator([0,0,440,623]);
         $this->hlEntity = new HighLoadBlockHelper('Certificates');
     }
 
@@ -58,7 +58,7 @@ class CreateCertPdf {
          global $APPLICATION;
      
          $APPLICATION->IncludeFile(
-             '/ajax/pdf/inc/certpdfHtml.php', 
+             '/ajax/pdf/inc/certPdfHtml.php', 
              [
                  'arResult' => $this->orderData,            
              ], 
@@ -97,7 +97,7 @@ class CreateCertPdf {
         $this->pdfManager->quickRender($this->createHtml());
     
         $processSaveFile = $this->pdfManager->saveFilePdf(
-            '/upload/certs'
+            '/upload/certs', 'Сертификат_'.$orderId
         );
     
         if ($processSaveFile) {

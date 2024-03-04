@@ -12,6 +12,7 @@
 /** @var CBitrixComponent $component */
 $this->setFrameMode(true);
 ?>
+<?if (!empty($arResult["ITEMS"])) : ?>
 <div class="slider cert-index__slider" data-slider-related>
 	<div class="slider__heading">
 		<div class="h3">Отзывы Натуралистов</div>
@@ -64,3 +65,4 @@ $this->setFrameMode(true);
 		<a href="#" class="cert-index__more">Показать ещё</a>
 	</div>
 </div>
+<?endif;?>

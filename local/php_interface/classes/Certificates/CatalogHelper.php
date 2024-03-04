@@ -97,10 +97,7 @@ class CatalogHelper
         $result = [];
         $entity->prepareParamsQuery(
             [
-                "ID",
-                "UF_XML_ID",
-                "UF_FILE",
-                "UF_NAME",                
+                "*"
             ],            
             [
                 "ID" => "ASC"
