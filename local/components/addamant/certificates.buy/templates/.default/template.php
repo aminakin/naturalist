@@ -369,7 +369,7 @@ if ($arResult['ERROR']) {
             "SET_META_KEYWORDS" => "N",
             "SET_META_DESCRIPTION" => "N",
             "SET_LAST_MODIFIED" => "N",
-            "INCLUDE_IBLOCK_INTO_CHAIN" => "Y",
+            "INCLUDE_IBLOCK_INTO_CHAIN" => "N",
             "ADD_SECTIONS_CHAIN" => "Y",
             "HIDE_LINK_WHEN_NO_DETAIL" => "N",
             "PARENT_SECTION" => "",
