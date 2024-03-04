@@ -311,7 +311,8 @@ class Bnovo
                 continue;
             }
             $arDataGrouped[$arItem["UF_TARIFF_ID"] . "-" . $arItem["UF_CATEGORY_ID"]][] = $arItem;
-        }
+        }        
+        
         foreach ($arDataGrouped as $key => $arItems) {
             if (count($arItems) < count($arDates)) {
                 unset($arDataGrouped[$key]);
@@ -1058,7 +1059,9 @@ class Bnovo
         $response = curl_exec($ch);
         $arData = json_decode($response, true);
         curl_close($ch);
-        $arRooms = $arData['rooms'];        
+        $arRooms = $arData['rooms'];     
+                
+        xprint($arData);        
 
         $iE = new CIBlockElement();
 
@@ -1176,8 +1179,13 @@ class Bnovo
             $arAgesValues = []; //Возрастные интервалы
             if(isset($arRoom['extra_array']['children_ages']) && !empty($arRoom['extra_array']['children_ages'])) {
                 foreach ($arRoom['extra_array']['children_ages'] as $key => $arAge) {
-                    $arAgesValues[] = ["VALUE" => $childrenAgesId[$key], "DESCRIPTION" => $arAge];
-                    $elementCode .= '_c.'.$arRoom['children'].'.'.$childrenAgesId[$key];
+                    if (is_array($arAge)) {                        
+                        $arAgesValues[] = ["VALUE" => $childrenAgesId[$key] ? $childrenAgesId[$key] : 0, "DESCRIPTION" => $arAge[array_key_first($arAge)]['people_count']];
+                        $elementCode .= '_c.'.$arRoom['children'].'.'.$childrenAgesId[$key];
+                    } else {
+                        $arAgesValues[] = ["VALUE" => $childrenAgesId[$key], "DESCRIPTION" => $arAge];
+                        $elementCode .= '_c.'.$arRoom['children'].'.'.$childrenAgesId[$key];
+                    }
                 }
             }
 
