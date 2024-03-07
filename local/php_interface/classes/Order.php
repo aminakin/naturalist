@@ -845,7 +845,7 @@ class Orders
         // Кол-во детей
         $propertyValue = $propertyCollection->getItemByOrderPropertyId($this->arPropsIDs['CHILDREN']);
         //$propertyValue->setValue($params["childrenAge"]);
-        $propertyValue->setValue(count(explode(',', $params["childrenAge"])));        
+        $propertyValue->setValue($params["childrenAge"] != '' ? count(explode(',', $params["childrenAge"])) : 0);        
         // Checksum
         $propertyValue = $propertyCollection->getItemByOrderPropertyId($this->arPropsIDs['CHECKSUM']);
         $propertyValue->setValue($params["checksum"]);
