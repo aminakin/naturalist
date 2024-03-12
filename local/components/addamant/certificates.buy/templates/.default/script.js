@@ -114,10 +114,18 @@ class BuyCert {
   pocketSelectHandler() {
     let _this = this;
     this.certPockets.forEach((element) => {
-      element.addEventListener("change", function () {
-        if (this.checked) {
+      element.addEventListener("click", function () {
+        var $box = $(this);
+        if ($box.is(":checked")) {
+          var group = "input:checkbox[name='" + $box.attr("name") + "']";
+          $(group).prop("checked", false);
+          $box.prop("checked", true);
           _this.pocketSumm = +this.getAttribute("cost");
           _this.calcSumm();
+        } else {
+          _this.pocketSumm = 0;
+          _this.calcSumm();
+          $box.prop("checked", false);
         }
       });
     });
@@ -318,6 +326,15 @@ class BuyCert {
       this.deliveryCostElement,
       +this.deliverySumm + +this.variantSumm + +this.pocketSumm
     );
+    if (+this.deliverySumm == 0) {
+      this.deliveryCostElement.parentElement.querySelector(
+        ".summ__text"
+      ).textContent = "Упаковка:";
+    } else {
+      this.deliveryCostElement.parentElement.querySelector(
+        ".summ__text"
+      ).textContent = "Доставка и упаковка:";
+    }
     this.renderPrice(this.summCostElement, this.totalSumm);
   }
 
