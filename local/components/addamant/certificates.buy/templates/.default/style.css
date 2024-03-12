@@ -22,9 +22,6 @@
   top: 50px;
 }
 
-.form__number {
-}
-
 .form__title {
   margin: 8px 0 0 0;
   padding: 8px 0 0 0;
@@ -360,6 +357,7 @@ label:has(input:checked) {
 
 .user-data__block.electro {
   margin-top: 48px;
+  display: none !important;
 }
 
 .user-data__title.electro {

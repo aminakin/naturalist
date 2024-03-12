@@ -93,7 +93,6 @@ class Rest
                     "LAST_REQUEST" => date("d.m.Y H:i:s")
                 );
                 CIBlockElement::SetPropertyValuesEx($arToken["ID"], $this->tokensIBlockID, $arProps);
-
             } else {
                 $el = new CIBlockElement();
                 $el->Add(array(
@@ -154,7 +153,6 @@ class Rest
             } else {
                 return array('code' => 401, 'error' => 'Передан неверный токен.');
             }
-
         } else {
             return array('code' => 401, 'error' => 'Передан пустой токен.');
         }
@@ -194,7 +192,6 @@ class Rest
             CIBlockElement::SetPropertyValuesEx($arRefreshToken["ID"], $this->tokensIBlockID, $arProps);
 
             return $authToken;
-
         } else {
             return array('code' => 401, 'error' => 'Передан неверный токен.');
         }
@@ -230,11 +227,9 @@ class Rest
                 CIBlockElement::SetPropertyValuesEx($arToken["ID"], $this->tokensIBlockID, $arProps);
 
                 return true;
-
             } else {
                 return array('code' => 401, 'description' => 'Время токена истекло.');
             }
-
         } else {
             return array('code' => 401, 'description' => 'Передан неверный токен.');
         }
@@ -301,7 +296,7 @@ class Rest
         $rsSectionObjects = $entity::getList(
             [
                 'filter' => ['IBLOCK_ID' => $this->tariffsIBlockID, 'UF_EXTERNAL_ID' => $arSectionExternalIds[0]],
-                'select' => ['ID', 'NAME', 'TARIF_ID' => 'TariffTable.ID', 'TARIF_NAME' => 'TariffTable.NAME'],    
+                'select' => ['ID', 'NAME', 'TARIF_ID' => 'TariffTable.ID', 'TARIF_NAME' => 'TariffTable.NAME'],
                 'runtime' => [
                     new \Bitrix\Main\Entity\ReferenceField(
                         'TariffTable',
@@ -309,7 +304,7 @@ class Rest
                         ['=this.ID' => 'ref.IBLOCK_SECTION_ID'],
                         ['join_type' => 'RIGHT']
                     )
-                ]            
+                ]
             ]
         );
 
@@ -443,7 +438,7 @@ class Rest
 
         $arTariffs = array();
         $arRoomTypes = array();
-        $arAges = array();        
+        $arAges = array();
         foreach ($arRoomsTariffs as $arElement) {
             $arElementIDs[] = $arElement["ID"];
             $arElementsSectionLinks[$arElement["ID"]] = $arElement["IBLOCK_SECTION_ID"];
@@ -467,8 +462,10 @@ class Rest
 
             // Категории
             foreach ($arElement["PROPERTY_CATEGORY_VALUE"] as $categoryId) {
-                if ((empty($arRoomTypes[$arElement["IBLOCK_SECTION_ID"]]) || !in_array($categoryId,
-                            $arRoomTypes[$arElement["IBLOCK_SECTION_ID"]])) && !empty($arRoomTypesAll[$categoryId])) {
+                if ((empty($arRoomTypes[$arElement["IBLOCK_SECTION_ID"]]) || !in_array(
+                    $categoryId,
+                    $arRoomTypes[$arElement["IBLOCK_SECTION_ID"]]
+                )) && !empty($arRoomTypesAll[$categoryId])) {
                     $arRoomTypes[$arElement["IBLOCK_SECTION_ID"]][$categoryId] = $arRoomTypesAll[$categoryId];
                 }
             }
@@ -503,8 +500,10 @@ class Rest
         // Тарифы
         $arRates = $params["rates"];
         foreach ($arRates as $externalRateId => $arRate) {
-            $arExistElement = CIBlockElement::GetList(array(),
-                array("IBLOCK_ID" => $this->tariffsIBlockID, "ID" => $arRate[0]))->Fetch();
+            $arExistElement = CIBlockElement::GetList(
+                array(),
+                array("IBLOCK_ID" => $this->tariffsIBlockID, "ID" => $arRate[0])
+            )->Fetch();
             if ($arExistElement) {
                 $elementId = $arExistElement["ID"];
                 CIBlockElement::SetPropertyValuesEx($elementId, $this->tariffsIBlockID, array(
@@ -516,8 +515,10 @@ class Rest
         // Категории
         $arRoomTypes = $params["roomtypes"];
         foreach ($arRoomTypes as $externalRoomTypeId => $arRoomType) {
-            $arExistElement = CIBlockElement::GetList(array(),
-                array("IBLOCK_ID" => $this->roomTypesIBlockID, "ID" => $arRoomType[0]))->Fetch();
+            $arExistElement = CIBlockElement::GetList(
+                array(),
+                array("IBLOCK_ID" => $this->roomTypesIBlockID, "ID" => $arRoomType[0])
+            )->Fetch();
             if ($arExistElement) {
                 $elementId = $arExistElement["ID"];
                 CIBlockElement::SetPropertyValuesEx($elementId, $this->roomTypesIBlockID, array(
@@ -528,18 +529,20 @@ class Rest
 
         // Размещение номеров
         $arOccupanciesAll = $params["occupancies"];
-        foreach ($arOccupanciesAll as $externalCategoryId => $arOccupanciesIDs) {
-            $arExistElement = CIBlockElement::GetList(array(),
-                array("IBLOCK_ID" => $this->roomTypesIBlockID, "PROPERTY_EXTERNAL_ID" => $externalCategoryId))->Fetch();
-            if ($arExistElement) {
-                $elementId = $arExistElement["ID"];
-                foreach ($arOccupanciesIDs as $occupancyId) {
-                    CIBlockElement::SetPropertyValuesEx($occupancyId, $this->occupanciesIBlockID, array(
-                        "CATEGORY_ID" => $occupancyId
-                    ));
-                }
-            }
-        }
+        // foreach ($arOccupanciesAll as $externalCategoryId => $arOccupanciesIDs) {
+        //     $arExistElement = CIBlockElement::GetList(
+        //         array(),
+        //         array("IBLOCK_ID" => $this->roomTypesIBlockID, "PROPERTY_EXTERNAL_ID" => $externalCategoryId)
+        //     )->Fetch();
+        //     if ($arExistElement) {
+        //         $elementId = $arExistElement["ID"];
+        //         foreach ($arOccupanciesIDs as $occupancyId) {                    
+        //             CIBlockElement::SetPropertyValuesEx($occupancyId, $this->occupanciesIBlockID, array(
+        //                 "CATEGORY_ID" => $occupancyId
+        //             ));
+        //         }
+        //     }
+        // }
 
         return array('code' => 200, 'message' => 'Ok');
     }
@@ -570,7 +573,7 @@ class Rest
                 foreach ($arCategories as $categoryId => $arCategoryDates) {
                     $res = $bnovo->updateReservationData($externalId, $tariffId, $categoryId, $arCategoryDates);
                 }
-                if(!empty($res)){
+                if (!empty($res)) {
                     $arSend['MESSAGE'] = $res;
                     $this->sendError($arSend);
                     break;
@@ -595,7 +598,6 @@ class Rest
                 $arSend['MESSAGE'] = 'Параметр prices не был передан.';
                 $this->sendError($arSend);
                 return array('code' => 404, 'error' => 'Параметр prices не был передан.');
-
             } else {
                 $arSend['MESSAGE'] = 'Параметр rooms не был передан.';
                 $this->sendError($arSend);
@@ -608,9 +610,8 @@ class Rest
 
     public function setCurrentData($val)
     {
-        if(is_array($val))
-        {
-            $importFilePath = $_SERVER["DOCUMENT_ROOT"].'/import/bnovo/import_hotelid_'.$val["hotel_id"].'_date_'.date("j-m-Y-H-i-s").'.json';
+        if (is_array($val)) {
+            $importFilePath = $_SERVER["DOCUMENT_ROOT"] . '/import/bnovo/import_hotelid_' . $val["hotel_id"] . '_date_' . date("j-m-Y-H-i-s") . '.json';
 
             $fp = fopen($importFilePath, 'w+');
             fwrite($fp, json_encode($val));
@@ -641,12 +642,13 @@ class Rest
      * @return array
      * 
      */
-    private function getCatalogSection($hotelId) {
+    private function getCatalogSection($hotelId)
+    {
         $sectionEntity = \Bitrix\Iblock\Model\Section::compileEntityByIblock(CATALOG_IBLOCK_ID);
         $rsSectionObjects = $sectionEntity::getList(
             [
                 'filter' => ['IBLOCK_ID' => $this->catalogIBlockID, 'UF_EXTERNAL_SERVICE' => $this->bnovoSectionPropEnumId, 'ID' => $hotelId],
-                'select' => ['IBLOCK_ID', 'ID'],        
+                'select' => ['IBLOCK_ID', 'ID'],
             ]
         )->Fetch();
 
