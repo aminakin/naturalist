@@ -1069,7 +1069,7 @@ class Orders
      */
     private function getGuests($item) : string {
         $result = '';
-        $countAdults = new Declension('взрослый', 'взрозлых', 'взрозлых');
+        $countAdults = new Declension('взрослый', 'взрослых', 'взрослых');
         $result = $item['PROPS']['GUESTS_COUNT'] . ' ' . $countAdults->get(intval($item['PROPS']['GUESTS_COUNT']));
     
         if (isset($item['PROPS']['CHILDREN']) && $item['PROPS']['CHILDREN'] != '') {
