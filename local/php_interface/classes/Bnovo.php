@@ -84,10 +84,13 @@ class Bnovo
 
     /* Получение списка свободных объектов в выбранный промежуток */
     public function search($guests, $arChildrenAge, $dateFrom, $dateTo)
-    {        
+    {
         $arDates = array();
-        $period = new DatePeriod(new DateTime($dateFrom), new DateInterval('P1D'),
-            new DateTime(date('d.m.Y', strtotime($dateTo . '+1 day'))));
+        $period = new DatePeriod(
+            new DateTime($dateFrom),
+            new DateInterval('P1D'),
+            new DateTime(date('d.m.Y', strtotime($dateTo . '+1 day')))
+        );
         foreach ($period as $value) {
             $arDates[] = $value->format('d.m.Y');
         }
@@ -95,7 +98,7 @@ class Bnovo
 
         //Проверка на детей без мест и размещения без детей
         $arHotel = CIBlockSection::GetList(false, array("IBLOCK_ID" => CATALOG_IBLOCK_ID, "ID" => $sectionId), false, array("ID", "UF_EXTERNAL_ID", "UF_MIN_AGE", "UF_NO_CHILDREN_PLACE"), false)->Fetch();
-        if(!empty($arHotel['UF_MIN_AGE'])) {
+        if (!empty($arHotel['UF_MIN_AGE'])) {
             $arChildrenAges = $arChildrenAge;
             foreach ($arChildrenAges as $key => $age) {
                 if ($age <= $arHotel['UF_MIN_AGE']) {
@@ -103,7 +106,7 @@ class Bnovo
                 }
             }
         }
-        if($arHotel['UF_NO_CHILDREN_PLACE'] == 1) {
+        if ($arHotel['UF_NO_CHILDREN_PLACE'] == 1) {
             $guests += count($arChildrenAge);
             $children = 0;
         } else {
@@ -202,7 +205,7 @@ class Bnovo
                     foreach ($arOccupancy["PROPERTY_CHILDREN_AGES_VALUE"] as $key => $idAge) {
                         foreach ($arChildrenAge as $age) {
                             if ($arAges[$idAge]['UF_MIN_AGE'] <= $age && $arAges[$idAge]['UF_MAX_AGE'] >= $age && $arOccupancy["PROPERTY_CHILDREN_AGES_DESCRIPTION"][$key] == $children) {
-                                $childrenStatus = true;                                
+                                $childrenStatus = true;
                             }
                         }
 
@@ -210,7 +213,7 @@ class Bnovo
                             break;
                         }
                     }
-                } elseif(!empty($arOccupancy["PROPERTY_CHILDREN_AGES_VALUE"])) {
+                } elseif (!empty($arOccupancy["PROPERTY_CHILDREN_AGES_VALUE"])) {
                     continue;
                 }
 
@@ -220,7 +223,7 @@ class Bnovo
             }
         }
 
-        if(empty($arCategoriesFilterredIDs)) {
+        if (empty($arCategoriesFilterredIDs)) {
             $guests += count($arChildrenAge);
             foreach ($backOccupancies as $arOccupancy) {
                 if ($arOccupancy["PROPERTY_GUESTS_COUNT_VALUE"] >= $guests) {
@@ -250,15 +253,18 @@ class Bnovo
         $error = '';
         $daysDeclension = new Declension('ночь', 'ночи', 'ночей');
         $arDates = array();
-        $period = new DatePeriod(new DateTime($dateFrom), new DateInterval('P1D'),
-            new DateTime(date('d.m.Y', strtotime($dateTo . '+1 day'))));
+        $period = new DatePeriod(
+            new DateTime($dateFrom),
+            new DateInterval('P1D'),
+            new DateTime(date('d.m.Y', strtotime($dateTo . '+1 day')))
+        );
         foreach ($period as $value) {
             $arDates[] = $value->format('d.m.Y');
-        }        
+        }
         $daysCount = count($arDates) - 1;
         //Проверка на детей без мест и размещения без детей
         $arHotel = CIBlockSection::GetList(false, array("IBLOCK_ID" => CATALOG_IBLOCK_ID, "ID" => $sectionId), false, array("ID", "UF_EXTERNAL_ID", "UF_MIN_AGE", "UF_NO_CHILDREN_PLACE"), false)->Fetch();
-        if(!empty($arHotel['UF_MIN_AGE'])) {
+        if (!empty($arHotel['UF_MIN_AGE'])) {
             $arChildrenAges = $arChildrenAge;
             foreach ($arChildrenAges as $key => $age) {
                 if ($age <= $arHotel['UF_MIN_AGE']) {
@@ -266,7 +272,7 @@ class Bnovo
                 }
             }
         }
-        if($arHotel['UF_NO_CHILDREN_PLACE'] == 1) {
+        if ($arHotel['UF_NO_CHILDREN_PLACE'] == 1) {
             $guests += count($arChildrenAge);
             $children = 0;
         } else {
@@ -274,7 +280,7 @@ class Bnovo
         }
 
         // Запрос по выбранным датам в HL
-        $entityClass = $this->getEntityClass();        
+        $entityClass = $this->getEntityClass();
         $rsData = $entityClass::getList([
             "select" => ["*"],
             "filter" => [
@@ -292,11 +298,6 @@ class Bnovo
                     [">=UF_MAX_STAY" => $daysCount],
                     ["=UF_MAX_STAY" => 0],
                 ],
-                // [
-                //     "LOGIC" => "OR",
-                //     ["<=UF_MIN_STAY_ARRIVAL" => $daysCount],
-                //     ["=UF_MIN_STAY_ARRIVAL" => ''],
-                // ],                
                 "=UF_CLOSED_ARRIVAL" => "0",
                 "=UF_CLOSED_DEPARTURE" => "0"
             ],
@@ -306,22 +307,32 @@ class Bnovo
 
         $arDataGrouped = array();
         foreach ($arData as $arItem) {
-            if (intval($arItem['UF_MIN_STAY_ARRIVAL']) > $daysCount) {
-                $error = 'На выбранные даты возможно бронирование минимум на ' . $arItem['UF_MIN_STAY_ARRIVAL'] . ' ' . $daysDeclension->get($arItem['UF_MIN_STAY_ARRIVAL']);
-                continue;
-            }
             $arDataGrouped[$arItem["UF_TARIFF_ID"] . "-" . $arItem["UF_CATEGORY_ID"]][] = $arItem;
-        }        
-        
+        }
+
         foreach ($arDataGrouped as $key => $arItems) {
-            if (count($arItems) < count($arDates)) {
+            foreach ($arItems as $arItem) {
+                if (intval($arItem['UF_MIN_STAY_ARRIVAL']) > $daysCount) {
+                    $error = 'На выбранные даты возможно бронирование минимум на ' . $arItem['UF_MIN_STAY_ARRIVAL'] . ' ' . $daysDeclension->get($arItem['UF_MIN_STAY_ARRIVAL']);
+                    unset($arDataGrouped[$key]);
+                    break;
+                }
+            }
+        }
+
+        unset($key);
+        unset($arItem);
+        unset($arItems);
+
+        foreach ($arDataGrouped as $key => $arItems) {
+            if (count($arItems) + 1 < count($arDates)) {
                 unset($arDataGrouped[$key]);
             }
         }
 
         $arDataGroupedValues = array_reduce($arDataGrouped, 'array_merge', array());
         $arExternalTariffIDs = array_unique(array_column($arDataGroupedValues, 'UF_TARIFF_ID'));
-        $arExternalCategoryIDs = array_unique(array_column($arDataGroupedValues, 'UF_CATEGORY_ID'));        
+        $arExternalCategoryIDs = array_unique(array_column($arDataGroupedValues, 'UF_CATEGORY_ID'));
 
         // Категории номеров
         $rsRoomTypes = CIBlockElement::GetList(
@@ -363,7 +374,7 @@ class Bnovo
             $arTariffsExternalIDs[$arTariff["PROPERTY_EXTERNAL_ID_VALUE"]] = $arTariff["ID"];
             $arTariffsValue[$arTariff["ID"]] = $arTariff;
         }
-        
+
         $arTariffsIDs = array();
         foreach ($arExternalTariffIDs as $externalId) {
             if (isset($arTariffsExternalIDs[$externalId])) {
@@ -405,7 +416,7 @@ class Bnovo
                     foreach ($arOccupancy["PROPERTY_CHILDREN_AGES_VALUE"] as $key => $idAge) {
                         foreach ($arChildrenAge as $age) {
                             if ($arAges[$idAge]['UF_MIN_AGE'] <= $age && $arAges[$idAge]['UF_MAX_AGE'] >= $age && $arOccupancy["PROPERTY_CHILDREN_AGES_DESCRIPTION"][$key] == $children) {
-                                $childrenStatus = true;                                
+                                $childrenStatus = true;
                             }
                         }
 
@@ -413,7 +424,7 @@ class Bnovo
                             break;
                         }
                     }
-                } elseif(!empty($arOccupancy["PROPERTY_CHILDREN_AGES_VALUE"])) {
+                } elseif (!empty($arOccupancy["PROPERTY_CHILDREN_AGES_VALUE"])) {
                     continue;
                 }
 
@@ -423,7 +434,7 @@ class Bnovo
             }
         }
 
-        if(empty($arCategoriesFilterredIDs)) {
+        if (empty($arCategoriesFilterredIDs)) {
             $guests += count($arChildrenAge);
             foreach ($backOccupancies as $arOccupancy) {
                 if ($arOccupancy["PROPERTY_GUESTS_COUNT_VALUE"] >= $guests) {
@@ -441,14 +452,14 @@ class Bnovo
                 array(
                     "IBLOCK_ID" => $this->catalogIBlockID,
                     "ACTIVE" => "Y",
-                    "PROPERTY_CATEGORY" => $arCategoriesFilterredIDs,                    
+                    "PROPERTY_CATEGORY" => $arCategoriesFilterredIDs,
                 ),
                 false,
                 false,
                 array("IBLOCK_ID", "ID", "NAME", "PROPERTY_CATEGORY", "PROPERTY_TARIFF", "PROPERTY_EXTERNAL_ID")
             );
             $arElementsFilterred = array();
-            while ($arElement = $rsElements->Fetch()) {                
+            while ($arElement = $rsElements->Fetch()) {
                 foreach ($arElement["PROPERTY_CATEGORY_VALUE"] as $categoryId) {
                     foreach ($arTariffsIDs as $tariffId) {
                         $arElementsFilterred[$tariffId][$categoryId][] = $arElement["ID"];
@@ -471,7 +482,7 @@ class Bnovo
                             }
                         }
 
-                        if (!empty($arPrices)){
+                        if (!empty($arPrices)) {
                             $arItems[$elementId][] = array(
                                 'tariffId' => array_search($tariffId, $arTariffsExternalIDs),
                                 'categoryId' => array_search($categoryId, $arRoomTypesIDs),
@@ -488,7 +499,7 @@ class Bnovo
                 }
             }
         }
-        
+
         // Сортировка номеров по убыванию цены
         if (!empty($arItems)) {
             uasort($arItems, function ($a, $b) {
@@ -503,17 +514,18 @@ class Bnovo
     }
 
     // HL Возрастные интервалы
-    public static function getAges($sectionId = '') {
+    public static function getAges($sectionId = '')
+    {
         $childrenAgesEntityClass = self::getEntityClass(self::$childrenAgesHLId);
 
-        if($sectionId) {
+        if ($sectionId) {
             $arFilter = [
                 "select" => ["*"],
                 "filter" => [
                     "UF_HOTEL_ID" => $sectionId
                 ]
             ];
-        } else{
+        } else {
             $arFilter = [
                 "select" => ["*"],
             ];
@@ -521,7 +533,7 @@ class Bnovo
 
         $rsData = $childrenAgesEntityClass::getList($arFilter);
 
-        while ($arEntity = $rsData->Fetch()){
+        while ($arEntity = $rsData->Fetch()) {
             $arAges[$arEntity['ID']] = $arEntity;
         }
 
@@ -529,10 +541,11 @@ class Bnovo
     }
 
     /* Установка минимальных цен для объектов Bnovo */
-    public function setMinPrices() {
+    public function setMinPrices()
+    {
         $rsSections = CIBlockSection::GetList(false, array("IBLOCK_ID" => CATALOG_IBLOCK_ID, "ACTIVE" => "Y", "!UF_EXTERNAL_ID" => false, "UF_EXTERNAL_SERVICE" => $this->bnovoSectionPropEnumId), false, array("ID", "UF_EXTERNAL_ID"), false);
         $arSectionExternalIDs = array();
-        while($arSection = $rsSections->Fetch()) {
+        while ($arSection = $rsSections->Fetch()) {
             $arSectionExternalIDs[] = (string)$arSection["UF_EXTERNAL_ID"];
         }
 
@@ -568,15 +581,15 @@ class Bnovo
         $arData = $rsData->FetchAll();
 
         $arMinPrices = array();
-        foreach($arData as $arItem) {
-            if(empty($arMinPrices[$arItem["UF_HOTEL_ID"]]) || $arItem["UF_PRICE"] < $arMinPrices[$arItem["UF_HOTEL_ID"]])
+        foreach ($arData as $arItem) {
+            if (empty($arMinPrices[$arItem["UF_HOTEL_ID"]]) || $arItem["UF_PRICE"] < $arMinPrices[$arItem["UF_HOTEL_ID"]])
                 $arMinPrices[$arItem["UF_HOTEL_ID"]] = $arItem["UF_PRICE"];
         }
 
         $iS = new CIBlockSection();
-        foreach($arMinPrices as $externalSectionId => $price) {
+        foreach ($arMinPrices as $externalSectionId => $price) {
             $arExistSection = CIBlockSection::GetList(array(), array("IBLOCK_ID" => CATALOG_IBLOCK_ID, "UF_EXTERNAL_ID" => $externalSectionId))->Fetch();
-            if($arExistSection) {
+            if ($arExistSection) {
                 $sectionId = $arExistSection["ID"];
                 $iS->Update($sectionId, array(
                     "UF_MIN_PRICE" => $price,
@@ -741,7 +754,6 @@ class Bnovo
                                 "UF_CLOSED_DEPARTURE" => $closedDeparture,
                             );
                             $entityClass::update($entityId, $arFields);
-
                         } else {
                             $arFields = array(
                                 "UF_HOTEL_ID" => $hotelId,
@@ -780,7 +792,7 @@ class Bnovo
 
     /* Получение объекта по UID и дальнейшее получение данных */
     public function updatePublicObject($uid, $onlyRooms = false, $onlyTariffs = false)
-    {        
+    {
         $arSection = [];
         // Отели
         $arSection = CIBlockSection::GetList(
@@ -877,8 +889,8 @@ class Bnovo
         // HL Возрастные интервалы
         $childrenAgesId = array();
         $childrenAgesEntityClass   = self::getEntityClass(self::$childrenAgesHLId);
-        foreach($arSection["children_ages"] as $arElement) {
-            if(!empty($arElement)) {
+        foreach ($arSection["children_ages"] as $arElement) {
+            if (!empty($arElement)) {
                 $rsData = $childrenAgesEntityClass::getList([
                     "select" => ["*"],
                     "filter" => [
@@ -941,7 +953,7 @@ class Bnovo
         $response = curl_exec($ch);
         $arData = json_decode($response, true);
         curl_close($ch);
-        $arTarrifs = $arData['plans'];        
+        $arTarrifs = $arData['plans'];
 
         $iE = new CIBlockElement();
 
@@ -959,7 +971,7 @@ class Bnovo
         )->Fetch();
 
         if (empty($arSectionTarriffs)) {
-            $iS = new CIBlockSection();            
+            $iS = new CIBlockSection();
             $sectionCode = \CUtil::translit($sectionName, "ru");
 
             // Поля раздела
@@ -977,7 +989,7 @@ class Bnovo
                 $isSectionJustCreated = true;
                 // echo "Добавлен раздел тарифов (" . $sectionId . ") \"" . $sectionName . "\"<br>\r\n";
             }
-        } else{
+        } else {
             $sectionId = $arSectionTarriffs['ID'];
         }
 
@@ -989,7 +1001,7 @@ class Bnovo
                 "ACTIVE" => "Y",
                 "IBLOCK_ID" => TARIFFS_IBLOCK_ID,
                 "IBLOCK_SECTION_ID" => $sectionId,
-                "NAME" => "Стандартный тариф",                
+                "NAME" => "Стандартный тариф",
             ];
             $elementId = $iE->Add($arFields);
 
@@ -1016,7 +1028,7 @@ class Bnovo
             if (isset($arElementTariff)) {
                 $elementId = $arElementTariff['ID'];
 
-                $res = CIBlockElement::SetPropertyValuesEx($elementId, TARIFFS_IBLOCK_ID, array(                    
+                $res = CIBlockElement::SetPropertyValuesEx($elementId, TARIFFS_IBLOCK_ID, array(
                     "CANCELLATION_RULES" => nl2br($arTarrif['cancellation_rules']),
                     "CANCELLATION_DEADLINE" => nl2br($arTarrif['cancellation_deadline']),
                     "CANCELLATION_FINE_TYPE" => $arTarrif['cancellation_fine_type'],
@@ -1024,7 +1036,7 @@ class Bnovo
                 ));
 
                 // echo "Обновлен тариф (".$elementId.") \"".$elementName."\" в отеле (".$sectionId.") \"".$sectionName."\"<br>\r\n";
-                
+
             } else {
                 continue;
             }
@@ -1059,7 +1071,7 @@ class Bnovo
         $response = curl_exec($ch);
         $arData = json_decode($response, true);
         curl_close($ch);
-        $arRooms = $arData['rooms'];        
+        $arRooms = $arData['rooms'];
 
         $iE = new CIBlockElement();
 
@@ -1095,7 +1107,7 @@ class Bnovo
             if ($sectionId) {
                 // echo "Добавлен раздел (" . $sectionId . ") \"" . $sectionName . "\"<br>\r\n";
             }
-        } else{
+        } else {
             $sectionId = $arSectionCategory['ID'];
         }
 
@@ -1113,7 +1125,7 @@ class Bnovo
         )->Fetch();
 
         if (empty($arSectionOccupancies)) {
-            $iS = new CIBlockSection();            
+            $iS = new CIBlockSection();
             $sectionCode = \CUtil::translit($sectionName, "ru");
 
             // Поля раздела
@@ -1124,13 +1136,13 @@ class Bnovo
                 "CODE" => $sectionCode,
                 "UF_EXTERNAL_ID" => $arSection["UF_EXTERNAL_ID"],
             );
-            
+
             $sectionIdOccupancies = $iS->Add($arFields);
 
             if ($sectionIdOccupancies) {
                 // echo "Добавлен раздел размещения (" . $sectionIdOccupancies . ") \"" . $sectionName . "\"<br>\r\n";
             }
-        } else{
+        } else {
             $sectionIdOccupancies = $arSectionOccupancies['ID'];
         }
 
@@ -1168,26 +1180,26 @@ class Bnovo
             }
 
             //Элемент размещения
-            $elementName = $arRoom['adults'].' Взросл.';
-            $elementCode = 'a.'.$arRoom['adults'];
-            if(!empty($arRoom['children']) && $arRoom['children'] > 0){
-                $elementName .= '+ '. $arRoom['children'].' детей с местом';
+            $elementName = $arRoom['adults'] . ' Взросл.';
+            $elementCode = 'a.' . $arRoom['adults'];
+            if (!empty($arRoom['children']) && $arRoom['children'] > 0) {
+                $elementName .= '+ ' . $arRoom['children'] . ' детей с местом';
             }
 
             $arAgesValues = []; //Возрастные интервалы
-            if(isset($arRoom['extra_array']['children_ages']) && !empty($arRoom['extra_array']['children_ages'])) {
+            if (isset($arRoom['extra_array']['children_ages']) && !empty($arRoom['extra_array']['children_ages'])) {
                 $elementAppend = '';
                 foreach ($arRoom['extra_array']['children_ages'] as $key => $arAge) {
-                    if (is_array($arAge)) {                        
+                    if (is_array($arAge)) {
                         $arAgesValues[] = ["VALUE" => $childrenAgesId[$key] ? $childrenAgesId[$key] : 0, "DESCRIPTION" => $arAge[array_key_first($arAge)]['people_count']];
                         if ($childrenAgesId[$key]) {
-                            $elementCode .= '_c.'.$arAge[array_key_first($arAge)]['people_count'].'.'.$childrenAgesId[$key];
+                            $elementCode .= '_c.' . $arAge[array_key_first($arAge)]['people_count'] . '.' . $childrenAgesId[$key];
                         } else {
-                            $elementAppend = '_e.'.$arAge[array_key_first($arAge)]['people_count'];
-                        }                        
+                            $elementAppend = '_e.' . $arAge[array_key_first($arAge)]['people_count'];
+                        }
                     } else {
                         $arAgesValues[] = ["VALUE" => $childrenAgesId[$key], "DESCRIPTION" => $arAge];
-                        $elementCode .= '_c.'.$arRoom['children'].'.'.$childrenAgesId[$key];
+                        $elementCode .= '_c.' . $arRoom['children'] . '.' . $childrenAgesId[$key];
                     }
                 }
                 if ($elementAppend != '') {
@@ -1246,19 +1258,19 @@ class Bnovo
             // Amenities
             $arAmenities = array();
             $roomsFeaturesEntityClass   = self::getEntityClass(self::$roomsFeaturesHLId);
-            foreach($arRoom["amenities"] as $key => $arItem) {
+            foreach ($arRoom["amenities"] as $key => $arItem) {
                 if ($key == "1") {
                     continue;
                 }
                 $rsData = $roomsFeaturesEntityClass::getList([
                     "select" => ["*"],
                     "filter" => [
-                        "UF_XML_ID" => "bn_".$key
+                        "UF_XML_ID" => "bn_" . $key
                     ],
                     "order" => ["UF_SORT" => "ASC"],
                 ]);
                 $arEntity = $rsData->Fetch();
-                if($arEntity) {
+                if ($arEntity) {
                     $arAmenities[] = $arEntity["UF_XML_ID"];
                 }
             }
@@ -1288,7 +1300,7 @@ class Bnovo
                     if ($res) {
                         // echo "Обновлен номер (".$elementId.") \"".$elementName."\" в отеле (".$sectionId.") \"".$sectionName."\"<br>\r\n";
                     }
-                }                
+                }
             } else {
                 $arElementImages = array();
                 $arElementImages = self::getImages($arRoom["photos"]);
@@ -1321,14 +1333,15 @@ class Bnovo
 
                 if ($elementId && $onlyRooms) {
                     $this->sendMessage([
-                        'MESSAGE' => "Добавлен номер (".$elementId.") \"".$elementName."\" в отель (".$sectionId.") \"".$sectionName."\"",
-                    ]);                              
+                        'MESSAGE' => "Добавлен номер (" . $elementId . ") \"" . $elementName . "\" в отель (" . $sectionId . ") \"" . $sectionName . "\"",
+                    ]);
                 }
             }
-        }        
+        }
     }
 
-    public static function getImages($arImagesUrl) {
+    public static function getImages($arImagesUrl)
+    {
         $arImages = array();
         foreach ($arImagesUrl as $key => $arImage) {
             $arFile = \CFile::MakeFileArray($arImage["url"]);
@@ -1362,7 +1375,7 @@ class Bnovo
             "roomtypes" => (array)$arCategories
         );
 
-        if($isTest) {
+        if ($isTest) {
             xprint($data);
         }
 
@@ -1372,10 +1385,10 @@ class Bnovo
             CURLOPT_RETURNTRANSFER => 1,
             CURLOPT_HTTPHEADER => $headers
         ));
-        $response = curl_exec($ch);        
+        $response = curl_exec($ch);
         $arData = json_decode($response, true);
 
-        if($isTest) {
+        if ($isTest) {
             xprint($arData);
             die();
         }
@@ -1386,22 +1399,25 @@ class Bnovo
             if ($arData['code'] == 403) {
                 return 'Объект отключен от вашего канала продаж';
             } else {
-                return 'Непредвиденная ошибка. Код ошибки - '.$arData['code'] .'. Сообщение - '. $arData['message'];
+                return 'Непредвиденная ошибка. Код ошибки - ' . $arData['code'] . '. Сообщение - ' . $arData['message'];
             }
         }
 
         if (!empty($arData) && empty($arData["plans_data"])) {
             return 'Пустой массив. По объекту нет доступных тарифов';
         }
-        
+
         curl_close($ch);
-        
+
         $entityClass = new HighLoadBlockHelper(self::$pricesHlCode);
         $arResultRooms = [];
 
         $arDatesFilter = [];
-        $period = new DatePeriod(new DateTime($dateFrom), new DateInterval('P1D'),
-            new DateTime(date('d.m.Y', strtotime($dateTo . '+1 day'))));
+        $period = new DatePeriod(
+            new DateTime($dateFrom),
+            new DateInterval('P1D'),
+            new DateTime(date('d.m.Y', strtotime($dateTo . '+1 day')))
+        );
         foreach ($period as $key => $value) {
             $arDatesFilter[] = $value->format('d.m.Y');
         }
@@ -1419,7 +1435,7 @@ class Bnovo
                 "UF_TARIFF_ID",
                 "UF_CATEGORY_ID",
                 "UF_DATE"
-            ],            
+            ],
             [
                 "ID" => "ASC"
             ],
@@ -1427,14 +1443,14 @@ class Bnovo
                 "UF_HOTEL_ID" => $hotelId,
                 "UF_DATE" => $arDatesFilter
             ],
-        );        
+        );
 
         $arResData = $entityClass->getDataAll();
-        
+
         foreach ($arResData as $key => $arEntity) {
             $arResultRooms[$arEntity['UF_TARIFF_ID']][$arEntity['UF_CATEGORY_ID']][$arEntity['UF_DATE']->format("Y-m-d")] = $arEntity;
         }
-        
+
         foreach ($arData["plans_data"] as $tariffId => $arCategories) {
             foreach ($arCategories as $categoryId => $arCategoryDates) {
                 foreach ($arCategoryDates as $date => $arDate) {
@@ -1464,9 +1480,9 @@ class Bnovo
                         ];
 
                         //if (array_diff($tmpRoom, $arFields)) {
-                            $entityClass->update($entityId, $arFields);
+                        $entityClass->update($entityId, $arFields);
                         //}
-                    } else {                        
+                    } else {
                         $arFields = [
                             "UF_HOTEL_ID" => $hotelId,
                             "UF_TARIFF_ID" => $tariffId,
@@ -1479,7 +1495,7 @@ class Bnovo
                             "UF_CLOSED_ARRIVAL" => $closedArrival,
                             "UF_CLOSED_DEPARTURE" => $closedDeparture,
                             "UF_MIN_STAY_ARRIVAL" => $minStayArrival,
-                        ];                        
+                        ];
                         $entityClass->add($arFields);
                     }
                 }
@@ -1514,15 +1530,15 @@ class Bnovo
             CURLOPT_HTTPHEADER => $headers
         ));
         $response = curl_exec($ch);
-        $arData = json_decode($response, true);    
-        
+        $arData = json_decode($response, true);
+
         // $this->writeToFile($arData, 'updateAvailabilityData', $hotelId);
 
         if (empty($arData) || (isset($arData['code']) && $arData['code'] != 200)) {
             if ($arData['code'] == 403) {
                 return 'Объект отключен от вашего канала продаж';
             } else {
-                return 'Непредвиденная ошибка. Код ошибки - '.$arData['code'] .'. Сообщение - '. $arData['message'];
+                return 'Непредвиденная ошибка. Код ошибки - ' . $arData['code'] . '. Сообщение - ' . $arData['message'];
             }
         }
 
@@ -1539,8 +1555,11 @@ class Bnovo
         $entityClass = new HighLoadBlockHelper(self::$pricesHlCode);
 
         $arDatesFilter = [];
-        $period = new DatePeriod(new DateTime($dateFrom), new DateInterval('P1D'),
-            new DateTime(date('d.m.Y', strtotime($dateTo . '+1 day'))));
+        $period = new DatePeriod(
+            new DateTime($dateFrom),
+            new DateInterval('P1D'),
+            new DateTime(date('d.m.Y', strtotime($dateTo . '+1 day')))
+        );
         foreach ($period as $key => $value) {
             $arDatesFilter[] = $value->format('d.m.Y');
         }
@@ -1556,8 +1575,8 @@ class Bnovo
                 [
                     "ID",
                     "UF_RESERVED",
-                    "UF_DATE",                    
-                ],            
+                    "UF_DATE",
+                ],
                 [
                     "ID" => "ASC"
                 ],
@@ -1566,12 +1585,12 @@ class Bnovo
                     "=UF_CATEGORY_ID" => $categoryId,
                     "UF_DATE" => $arDatesFilter,
                 ],
-            );        
-    
+            );
+
             $arResData = $entityClass->getDataAll();
-            
-            if(empty($arResData)) {
-                return 'Нет данных по объекту bnovoId: ' . $hotelId . ' bnovoCategoryId '.$categoryId.' на переданные в запросе даты';
+
+            if (empty($arResData)) {
+                return 'Нет данных по объекту bnovoId: ' . $hotelId . ' bnovoCategoryId ' . $categoryId . ' на переданные в запросе даты';
             }
             foreach ($arResData as $key => $arEntity) {
                 $arResultRoomsId[$arEntity['UF_DATE']->format("Y-m-d")][] = $arEntity['ID'];
@@ -1591,7 +1610,7 @@ class Bnovo
                                 $arReservedOne[] = $id;
                             } else {
                                 $arReservedNull[] = $id;
-                            }                            
+                            }
                         }
                     }
                 }
@@ -1600,7 +1619,7 @@ class Bnovo
 
         if (!empty($arReservedOne)) {
             foreach ($arReservedOne as $data) {
-                $entityClass->update($data, ["UF_RESERVED" => "1"]);                
+                $entityClass->update($data, ["UF_RESERVED" => "1"]);
             }
         }
 
@@ -1666,8 +1685,11 @@ class Bnovo
             ]
         );
         file_put_contents($_SERVER["DOCUMENT_ROOT"] . '/log_bnovo.txt', json_encode($data) . PHP_EOL, FILE_APPEND);
-        file_put_contents($_SERVER["DOCUMENT_ROOT"] . '/log_bnovo_order.txt', json_encode($arOrder) . PHP_EOL,
-            FILE_APPEND);
+        file_put_contents(
+            $_SERVER["DOCUMENT_ROOT"] . '/log_bnovo_order.txt',
+            json_encode($arOrder) . PHP_EOL,
+            FILE_APPEND
+        );
 
         $ch = curl_init();
         curl_setopt_array($ch, array(
@@ -1696,13 +1718,11 @@ class Bnovo
 
             if ($res->isSuccess()) {
                 return $reservationId;
-
             } else {
                 return [
                     "ERROR" => "Ошибка сохранения ID бронирования."
                 ];
             }
-
         } else {
             return [
                 "ERROR" => "Ошибка запроса бронирования."
@@ -1785,22 +1805,23 @@ class Bnovo
         }
     }
 
-    public static function deleteOldPrices() {
+    public static function deleteOldPrices()
+    {
         $hlEntity = new HighLoadBlockHelper(self::$pricesHlCode);
         $today = \Bitrix\Main\Type\DateTime::createFromTimestamp(strtotime('-1 days'))->format("d.m.Y");
 
         $hlEntity->prepareParamsQuery(
-            ["ID"],            
+            ["ID"],
             ["ID" => "ASC"],
             ["<UF_DATE" => $today],
-        );        
+        );
 
         $rows = $hlEntity->getDataAll();
 
-        if(is_array($rows) && count($rows)) {
+        if (is_array($rows) && count($rows)) {
             foreach ($rows as $key => $row) {
                 $hlEntity->delete($row['ID']);
-            }            
+            }
         }
     }
 
@@ -1820,14 +1841,15 @@ class Bnovo
         return $entity;
     }
 
-    private function sendMessage($arSend) {        
+    private function sendMessage($arSend)
+    {
         \CEvent::Send($this->sendEventName, SITE_ID, $arSend);
     }
 
-    private function writeToFile($data, $function, $hotelId) {
-        if(is_array($data))
-        {
-            $importFilePath = $_SERVER["DOCUMENT_ROOT"].'/import/bnovo/answers/'.$function.'_hotelid_'.$hotelId.'_date_'.date("j-m-Y-H-i-s").'.json';
+    private function writeToFile($data, $function, $hotelId)
+    {
+        if (is_array($data)) {
+            $importFilePath = $_SERVER["DOCUMENT_ROOT"] . '/import/bnovo/answers/' . $function . '_hotelid_' . $hotelId . '_date_' . date("j-m-Y-H-i-s") . '.json';
 
             $fp = fopen($importFilePath, 'w+');
             fwrite($fp, json_encode($data));
