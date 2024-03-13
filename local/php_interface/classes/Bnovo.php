@@ -1342,7 +1342,7 @@ class Bnovo
     }
 
     /* Обновление цен и броней */
-    public function updateReservationData($hotelId, $arTariffs, $arCategories, $arDates)
+    public function updateReservationData($hotelId, $arTariffs, $arCategories, $arDates, $isTest = false)
     {
         $url = $this->bnovoApiURL . '/plans_data';
         $headers = array(
@@ -1362,6 +1362,10 @@ class Bnovo
             "roomtypes" => (array)$arCategories
         );
 
+        if($isTest) {
+            xprint($data);
+        }
+
         $ch = curl_init();
         curl_setopt_array($ch, array(
             CURLOPT_URL => $url . '?' . http_build_query($data),
@@ -1370,6 +1374,11 @@ class Bnovo
         ));
         $response = curl_exec($ch);        
         $arData = json_decode($response, true);
+
+        if($isTest) {
+            xprint($arData);
+            die();
+        }
 
         // $this->writeToFile($arData, 'updateReservationData', $hotelId);
 

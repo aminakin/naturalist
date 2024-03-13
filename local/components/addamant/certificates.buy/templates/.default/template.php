@@ -81,7 +81,7 @@ if ($arResult['ERROR']) {
             <div class="form__format">
                 <div class="format__electro">
                     <label>
-                        <input type="radio" name="cert_format" value="electro" class="visually-hidden" required checked>
+                        <input type="radio" name="cert_format" value="electro" class="visually-hidden" required>
                         <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64" fill="none">
                             <g clip-path="url(#clip0_4879_59206)">
                                 <path d="M32 0C14.3262 0 0 14.3262 0 32C0 49.6738 14.3262 64 32 64C49.6738 64 64 49.6707 64 32C64 14.3293 49.6707 0 32 0Z" fill="#1B2D50"/>
@@ -99,7 +99,7 @@ if ($arResult['ERROR']) {
                 </div>
                 <div class="format__fiz">
                     <label>
-                        <input type="radio" name="cert_format" value="fiz" class="visually-hidden" required>
+                        <input type="radio" name="cert_format" value="fiz" class="visually-hidden" required checked>
                         <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64" fill="none">
                             <g clip-path="url(#clip0_4879_59214)">
                                 <path d="M32 0C14.3262 0 0 14.3262 0 32C0 49.6738 14.3262 64 32 64C49.6738 64 64 49.6707 64 32C64 14.3293 49.6707 0 32 0Z" fill="#E2C189"/>
@@ -121,7 +121,7 @@ if ($arResult['ERROR']) {
                 </div>
             </div>
         </section>
-        <section class="form__block el-variant design">
+        <section class="form__block el-variant design" style="display: none">
             <div class="form__title-block">
                 <span class="form__number">3</span>
                 <p class="form__title"><?=Loc::GetMessage('VARIANT_EL_TITLE')?></p>
@@ -130,7 +130,7 @@ if ($arResult['ERROR']) {
             <div class="form__el-variant">
                 <?php foreach ($arResult['VARIANT_EL'] as $elVariant) {?>
                     <label>
-                        <input type="radio" name="cert_el_variant" value="<?=$arResult['LOCAL_HOST'].CFile::getPath($elVariant['UF_FILE'])?>" class="visually-hidden" required>
+                        <input type="radio" name="cert_el_variant" value="<?=$arResult['LOCAL_HOST'].CFile::getPath($elVariant['UF_FILE'])?>" class="visually-hidden" >
                         <span class="el-variant__title"><?=$elVariant['UF_NAME']?></span>
                         <div class="variant__img-wrap">
                             <img src="<?=CFile::ResizeImageGet($elVariant['UF_FILE'], array('width' => 600, 'height' => 763), BX_RESIZE_IMAGE_EXACT, true)['src']?>" alt="">
@@ -139,7 +139,7 @@ if ($arResult['ERROR']) {
                 <?php } ?>                
             </div>
         </section>
-        <section class="form__block variant design" style="display: none">
+        <section class="form__block variant design">
             <div class="form__title-block">
                 <span class="form__number">3</span>
                 <p class="form__title"><?=Loc::GetMessage('VARIANT_TITLE', ['#COST#' => $arParams['VARIANT_COST']])?></p>
@@ -148,7 +148,7 @@ if ($arResult['ERROR']) {
             <div class="form__el-variant">
                 <?php foreach ($arResult['VARIANT'] as $variant) {?>
                     <label>
-                        <input type="radio" cost="<?=$arParams['VARIANT_COST']?>" name="cert_variant" value="<?=$arResult['LOCAL_HOST'].CFile::getPath($variant['UF_IMG_TO_CERT'])?>" class="visually-hidden">
+                        <input type="radio" cost="<?=$arParams['VARIANT_COST']?>" name="cert_variant" value="<?=$arResult['LOCAL_HOST'].CFile::getPath($variant['UF_IMG_TO_CERT'])?>" class="visually-hidden" required>
                         <span class="el-variant__title"><?=$variant['UF_NAME']?></span>
                         <div class="variant__img-wrap">
                             <img src="<?=CFile::ResizeImageGet($variant['UF_FILE'], array('width' => 600, 'height' => 763), BX_RESIZE_IMAGE_EXACT, true)['src']?>" alt="">
@@ -429,6 +429,7 @@ if ($arResult['ERROR']) {
 
 <script>
     let buyCert = new BuyCert();
+    buyCert.showFiz();
 </script>
 
 <?php } ?>
