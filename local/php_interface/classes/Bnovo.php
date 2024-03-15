@@ -305,15 +305,26 @@ class Bnovo
         ]);
         $arData = $rsData->FetchAll();
 
+        foreach ($arData as $arDataItem) {
+            $arTemp[$arDataItem['ID']] = $arDataItem;
+        }
+        $arData = $arTemp;
+
         $arDataGrouped = array();
         foreach ($arData as $arItem) {
             $arDataGrouped[$arItem["UF_TARIFF_ID"] . "-" . $arItem["UF_CATEGORY_ID"]][] = $arItem;
         }
 
+        // Удаляем из сгруппированного массива цен размещения с ограниченим по минимальному заезду
         foreach ($arDataGrouped as $key => $arItems) {
             foreach ($arItems as $arItem) {
                 if (intval($arItem['UF_MIN_STAY_ARRIVAL']) > $daysCount) {
                     $error = 'На выбранные даты возможно бронирование минимум на ' . $arItem['UF_MIN_STAY_ARRIVAL'] . ' ' . $daysDeclension->get($arItem['UF_MIN_STAY_ARRIVAL']);
+
+                    // Удаляем элементы из первоначального массива дат, т.к. он далее будет использоваться для поиска цен                    
+                    foreach ($arDataGrouped[$key] as $toDel) {
+                        unset($arData[$toDel['ID']]);
+                    }                    
                     unset($arDataGrouped[$key]);
                     break;
                 }
@@ -324,9 +335,22 @@ class Bnovo
         unset($arItem);
         unset($arItems);
 
-        foreach ($arDataGrouped as $key => $arItems) {
-            if (count($arItems) + 1 < count($arDates)) {
-                unset($arDataGrouped[$key]);
+        // Создаём новый массив дат для сравнения по дням с результатами выборки из таблицы цен
+        // Отбрасываем последнюю дату, т.к. она не влияет на возможность заселения
+        $arDatesToCompare = $arDates;
+        array_pop($arDatesToCompare);        
+
+        // Сравниваем дату каждого элемента сгруппированного массива с датой по индексу.
+        // Если будет хотя бы одно несовпадение, удаляем весь массив
+        foreach ($arDataGrouped as $key => $arItems) {            
+            foreach ($arItems as $keyCurDate => $curDate) {
+                if ($keyCurDate == count($arDatesToCompare)) {
+                    break;
+                }
+                if ($curDate['UF_DATE']->format('d.m.Y') != $arDatesToCompare[$keyCurDate]) {
+                    unset($arDataGrouped[$key]);
+                    break;
+                }                
             }
         }
 
@@ -507,6 +531,10 @@ class Bnovo
             });
         }
 
+        if (empty($arItems)) {
+            $error = 'Не найдено номеров на выбранные даты';
+        }
+
         return [
             'arItems' => $arItems,
             'error' => $error,
@@ -555,6 +583,7 @@ class Bnovo
             "filter" => [
                 "UF_DATE" => [date('d.m.Y'), date('d.m.Y', strtotime('+1 day'))],
                 "UF_RESERVED" => 0,
+                "UF_CLOSED" => 0,
                 [
                     "LOGIC" => "OR",
                     ["<=UF_MIN_STAY" => 1],

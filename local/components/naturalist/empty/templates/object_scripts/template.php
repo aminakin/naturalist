@@ -4,6 +4,14 @@ foreach ($arParams['VARS'] as $key => $value) {
 }
 ?>
 <script>
+    $('document').ready(function(){
+        let error = $(".search-error");
+        if (error.length) {
+            console.log(1);
+            window.infoModal("Ну вот....", error.text());
+        }    
+    });
+    
     const mapCenter = [<?=$arSection["COORDS"][0]?>, <?=$arSection["COORDS"][1]?>];
     let isMapLoaded = false
 
