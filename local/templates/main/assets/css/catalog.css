@@ -2058,6 +2058,7 @@
 .filters_features .form__dropdown-body ul {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr;
+  gap: 5px;
 }
 
 @media screen and (max-width: 768px) {
@@ -2840,5 +2841,16 @@
 @media (max-height: 1139px) {
   .mini-balloon {
     width: 31rem;
+  }
+}
+
+.form__dropdown-body .list_checkboxes {
+  display: grid;
+  gap: 5px;
+}
+
+@media screen and (max-width: 768px) {
+  .form__dropdown-body .list_checkboxes {
+    gap: 0;
   }
 }

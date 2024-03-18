@@ -126,7 +126,7 @@ $arReviewsAvg = Reviews::getCampingRating($arCampingIDs);
                         </button>
 
                         <? if ($arItem["IS_DISCOUNT"] == 'Y'): ?>
-                            <div class="tag"><?=Loc::GetMessage('CATALOG_DISCOUNT')?></div>
+                            <div class="tag"><?=$arItem["UF_SALE_LABEL"] != '' ? $arItem["UF_SALE_LABEL"] : Loc::GetMessage('CATALOG_DISCOUNT')?></div>
                         <? endif; ?>
 
                         <? if (!empty($arItem["UF_ACTION"])): ?>

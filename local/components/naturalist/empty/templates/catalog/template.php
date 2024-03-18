@@ -101,7 +101,7 @@ foreach ($arResult as $key => $value) {
                         </button>
 
                         <?php if ($arSection["IS_DISCOUNT"] == 'Y'): ?>
-                            <div class="tag"><?= Loc::GetMessage('CATALOG_DISCOUNT') ?></div>
+                            <div class="tag"><?= $arSection["UF_SALE_LABEL"] != '' ? $arSection["UF_SALE_LABEL"] : Loc::GetMessage('CATALOG_DISCOUNT') ?></div>
                         <?php endif; ?>
 
                         <?php if (!empty($arSection["UF_ACTION"])) : ?>
@@ -281,7 +281,7 @@ foreach ($arResult as $key => $value) {
                                 </button>
 
                                 <?php if ($arSection["IS_DISCOUNT"] == 'Y'): ?>
-                                    <div class="tag"><?= Loc::GetMessage('CATALOG_DISCOUNT') ?></div>
+                                    <div class="tag"><?= $arSection["UF_SALE_LABEL"] != '' ? $arSection["UF_SALE_LABEL"] : Loc::GetMessage('CATALOG_DISCOUNT') ?></div>
                                 <?php endif; ?>
 
                                 <?php if (!empty($arSection["UF_ACTION"])) : ?>

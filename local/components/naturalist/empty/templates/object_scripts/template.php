@@ -6,8 +6,8 @@ foreach ($arParams['VARS'] as $key => $value) {
 <script>
     $('document').ready(function(){
         let error = $(".search-error");
-        if (error.length) {
-            console.log(1);
+        let params = new URLSearchParams(document.location.search);
+        if (error.length && params.get('dateFrom') != null) {
             window.infoModal("Ну вот....", error.text());
         }    
     });
