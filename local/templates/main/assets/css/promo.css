@@ -1,0 +1,35 @@
+.promo-form {
+  margin-top: 29px;
+}
+
+.promo-form form {
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 7px;
+}
+
+.promo-form .form__row {
+  grid-column-gap: 7px;
+}
+
+.promo-form .button_primary {
+  width: 100%;
+}
+
+.quiz {
+  margin-top: 40px;
+}
+
+.promo__seo-text {
+  margin-top: 40px;
+  text-align: center;
+  font-family: "TT Travels Next";
+  font-size: 21px;
+  line-height: 34px;
+  font-weight: 500;
+}
+
+@media (max-width: 768px) {
+  .promo-form form {
+    grid-template-columns: 1fr;
+  }
+}
