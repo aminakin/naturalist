@@ -42,7 +42,7 @@ foreach ($arResult as $key => $value) {
                 $this->AddEditAction($arSection['ID'], $arSection['EDIT_LINK'], CIBlock::GetArrayByID($arSection["IBLOCK_ID"], "ELEMENT_EDIT"));
                 $this->AddDeleteAction($arSection['ID'], $arSection['DELETE_LINK'], CIBlock::GetArrayByID($arSection["IBLOCK_ID"], "ELEMENT_DELETE"), array("CONFIRM" => Loc::GetMessage('CT_BNL_ELEMENT_DELETE_CONFIRM')));
                 ?>
-                <div class="object-row" data-map-id="<?= $arSection["ID"] ?>"
+                <div class="object-row" data-map-id="<?= $arSection["ID"] ?>" href="<?= $arItem["SECTION_PAGE_URL"] ?>" 
                      id="<?= $this->GetEditAreaId($arSection['ID']) ?>">
                     <div class="object-row__images">
                         <div class="swiper slider-gallery" data-slider-object="data-slider-object"
@@ -221,7 +221,7 @@ foreach ($arResult as $key => $value) {
                         $this->AddDeleteAction($arItem['ID'], $arItem['DELETE_LINK'], CIBlock::GetArrayByID($arItem["IBLOCK_ID"], "ELEMENT_DELETE"), array("CONFIRM" => Loc::GetMessage('CT_BNL_ELEMENT_DELETE_CONFIRM')));
                         ?>
 
-                        <div class="object-row" data-map-id="<?= $arSection["ID"] ?>"
+                        <div class="object-row" data-map-id="<?= $arSection["ID"] ?>" href="<?= $arItem["SECTION_PAGE_URL"] ?>" 
                              id="<?= $this->GetEditAreaId($arSection['ID']) ?>">
                             <div class="object-row__images">
                                 <div class="swiper slider-gallery" data-slider-object="data-slider-object"

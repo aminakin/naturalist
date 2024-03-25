@@ -466,7 +466,9 @@ h1.page_title {
   }
 
   .objects__list .swiper-button-next,
-  .objects__list .swiper-button-prev {
+  .objects__list .swiper-button-prev,
+  .catalog__list .swiper-button-next,
+  .catalog__list .swiper-button-prev {
     display: none !important;
   }
 }

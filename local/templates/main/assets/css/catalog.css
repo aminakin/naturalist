@@ -345,7 +345,7 @@
   -webkit-box-flex: 0;
   -ms-flex: none;
   flex: none;
-  height: 17rem;
+  height: auto;
   position: relative;
   width: 35.7%;
 }
@@ -356,9 +356,7 @@
 
 .object-row__images .slider-gallery img {
   display: block;
-  height: 100%;
-  -o-object-fit: cover;
-  object-fit: cover;
+  height: auto;
   width: 100%;
 }
 
