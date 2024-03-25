@@ -18,7 +18,7 @@ Loc::loadMessages(__FILE__);
 					<? endforeach; ?>
 					<? $dataFullGallery = implode(",", $arDataFullGallery); ?>
 				<? endif; ?>
-                <div class="object">
+                <div class="object" href="<?= $arItem["SECTION_PAGE_URL"] ?>">
                     <div class="object__images">
                         <div class="swiper slider-gallery" data-slider-object="data-slider-object" data-fullgallery="[<?= $dataFullGallery;?>]">
                             <div class="swiper-wrapper">

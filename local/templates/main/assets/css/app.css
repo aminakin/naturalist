@@ -3757,7 +3757,7 @@ img.lazy.loaded {
 }
 
 .modal_fullgallery .modal__container .swiper-slide {
-  padding-bottom: 56.25%;
+  padding-bottom: 66.67%;
   position: relative;
 }
 
@@ -5063,10 +5063,6 @@ img.lazy.loaded {
 
   .modal_fullgallery .modal__close svg + svg {
     display: block;
-  }
-
-  .modal_fullgallery .modal__container .swiper-slide {
-    padding-bottom: 66.66%;
   }
 
   .modal_gallery .modal__container .swiper {

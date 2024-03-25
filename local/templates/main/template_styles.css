@@ -464,4 +464,11 @@ h1.page_title {
   .cert-index__reviews {
     margin-top: 32px;
   }
+
+  .objects__list .swiper-button-next,
+  .objects__list .swiper-button-prev,
+  .catalog__list .swiper-button-next,
+  .catalog__list .swiper-button-prev {
+    display: none !important;
+  }
 }
