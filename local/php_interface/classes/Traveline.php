@@ -51,16 +51,17 @@ class Traveline
     private static $campingFoodHLId = 12;
 
     /* Получение списка свободных объектов в выбранный промежуток */
-    public static function search($guests, $arChildrenAge, $dateFrom, $dateTo, $sectionIds = []) {
+    public static function search($guests, $arChildrenAge, $dateFrom, $dateTo, $sectionIds = [])
+    {
         $rsSections = CIBlockSection::GetList(false, array("IBLOCK_ID" => CATALOG_IBLOCK_ID, "ID" => $sectionIds, "ACTIVE" => "Y", "!UF_EXTERNAL_ID" => false, "UF_EXTERNAL_SERVICE" => self::$travelineSectionPropEnumId), false, array("ID", "UF_EXTERNAL_ID"), false);
         $arSectionExternalIDs = array();
-        while($arSection = $rsSections->Fetch()) {
+        while ($arSection = $rsSections->Fetch()) {
             $arSectionExternalIDs[] = (string)$arSection["UF_EXTERNAL_ID"];
         }
 
-        $url = self::$travelineApiURL.'/search/v1/properties/room-stays/search';
+        $url = self::$travelineApiURL . '/search/v1/properties/room-stays/search';
         $headers = array(
-            "X-API-KEY: ".self::$travelineApiKey,
+            "X-API-KEY: " . self::$travelineApiKey,
             "Content-Type: application/json"
         );
         $data = array(
@@ -70,9 +71,9 @@ class Traveline
             "departureDate" => date('Y-m-d', strtotime($dateTo)),
             "include" => ""
         );
-        if(count($arChildrenAge) > 0) {
+        if (count($arChildrenAge) > 0) {
             $data["childAges"] = $arChildrenAge;
-        }        
+        }
 
         $ch = curl_init();
         curl_setopt_array($ch, array(
@@ -87,8 +88,8 @@ class Traveline
         curl_close($ch);
 
         $arHotelsIDs = array();
-        foreach($arResponse["roomStays"] as $arItem) {
-            if(empty($arHotelsIDs[$arItem["propertyId"]]) || $arItem["total"]["priceBeforeTax"] < $arHotelsIDs[$arItem["propertyId"]])
+        foreach ($arResponse["roomStays"] as $arItem) {
+            if (empty($arHotelsIDs[$arItem["propertyId"]]) || $arItem["total"]["priceBeforeTax"] < $arHotelsIDs[$arItem["propertyId"]])
                 $arHotelsIDs[$arItem["propertyId"]] = $arItem["total"]["priceBeforeTax"];
         }
 
@@ -96,7 +97,8 @@ class Traveline
     }
 
     /* Получение списка свободных номеров объекта в выбранный промежуток */
-    public static function searchRooms($sectionId, $externalId, $guests, $arChildrenAge, $dateFrom, $dateTo) {
+    public static function searchRooms($sectionId, $externalId, $guests, $arChildrenAge, $dateFrom, $dateTo)
+    {
         // Номера
         $rsElements = CIBlockElement::GetList(
             array("ID" => "ASC"),
@@ -110,13 +112,13 @@ class Traveline
             array("IBLOCK_ID", "ID", "PROPERTY_EXTERNAL_ID", "PROPERTY_EXTERNAL_CATEGORY_ID")
         );
         $arElementsIDs = array();
-        while($arElement = $rsElements->Fetch()) {
+        while ($arElement = $rsElements->Fetch()) {
             $arElementsIDs[$arElement["PROPERTY_EXTERNAL_ID_VALUE"]][$arElement["PROPERTY_EXTERNAL_CATEGORY_ID_VALUE"]] = $arElement["ID"];
         }
 
-        $url = self::$travelineApiURL.'/search/v1/properties/'.$externalId.'/room-stays/';
+        $url = self::$travelineApiURL . '/search/v1/properties/' . $externalId . '/room-stays/';
         $headers = array(
-            "X-API-KEY: ".self::$travelineApiKey,
+            "X-API-KEY: " . self::$travelineApiKey,
             "Content-Type: application/json"
         );
         $data = array(
@@ -124,13 +126,13 @@ class Traveline
             "arrivalDate" => date('Y-m-d', strtotime($dateFrom)),
             "departureDate" => date('Y-m-d', strtotime($dateTo)),
         );
-        if(count($arChildrenAge) > 0) {
+        if (count($arChildrenAge) > 0) {
             $data["childAges"] = $arChildrenAge;
         }
 
         $ch = curl_init();
         curl_setopt_array($ch, array(
-            CURLOPT_URL            => $url.'?'.http_build_query($data),
+            CURLOPT_URL            => $url . '?' . http_build_query($data),
             CURLOPT_RETURNTRANSFER => 1,
             CURLOPT_HTTPHEADER     => $headers
         ));
@@ -139,7 +141,7 @@ class Traveline
         curl_close($ch);
 
         $arRooms = array();
-        foreach($arItems["roomStays"] as $arItem) {
+        foreach ($arItems["roomStays"] as $arItem) {
             $externalId = $arItem['ratePlan']['id'];
             $externalCategoryId = $arItem['roomType']['id'];
 
@@ -150,7 +152,7 @@ class Traveline
                 'checksum'           => $arItem['checksum'],
                 'fullPlacementsName' => $arItem['fullPlacementsName'],
                 'cancelPossible'     => $arItem['cancellationPolicy']['freeCancellationPossible'],
-                'cancelDate'         => date('d.m.Y H:i', strtotime($arItem['cancellationPolicy']['freeCancellationDeadlineUtc'])+10800),
+                'cancelDate'         => date('d.m.Y H:i', strtotime($arItem['cancellationPolicy']['freeCancellationDeadlineUtc']) + 10800),
                 'cancelAmount'       => $arItem['cancellationPolicy']['penaltyAmount'] ?? 0,
                 'includedServices'   => $arItem['includedServices']
             );
@@ -162,10 +164,11 @@ class Traveline
      * Обновляет активность разделов (отелей)     
      * 
      */
-    public static function updateActivity() {
+    public static function updateActivity()
+    {
         $iS = new CIBlockSection();
         // Получаем разделы сайта и ID отелей от сервиса
-        $arSectionItems = self::getSections();        
+        $arSectionItems = self::getSections();
         $arTravelineItems = self::getResponse(self::$travellineHotelsRequestLink, ["include" => ""]);
 
         // Преобразуем пришедшие данные
@@ -184,20 +187,21 @@ class Traveline
                     $res = $iS->Update($section['ID'], ['ACTIVE' => 'N']);
                 }
             }
-        }        
+        }
     }
 
     /**
      * Загружает картинки для разделов
      * 
      */
-    public static function downloadSectionImages() {
+    public static function downloadSectionImages()
+    {
         $travelineSectionOffset = Option::get("main", "traveline_section_offset");
-        $travelineSectionLimit = Option::get("main", "traveline_section_limit");        
+        $travelineSectionLimit = Option::get("main", "traveline_section_limit");
         $travelineSectionCount = self::getSections(1, 0, 1, true)->getCount();
         $iS = new CIBlockSection();
-            
-        Option::set("main", "traveline_section_count", $travelineSectionCount);        
+
+        Option::set("main", "traveline_section_count", $travelineSectionCount);
 
         if ($travelineSectionOffset == '') {
             $travelineSectionOffset = 0;
@@ -209,17 +213,17 @@ class Traveline
             Option::set("main", "traveline_section_limit", $travelineSectionLimit);
         }
 
-        $sections = self::getSections($travelineSectionLimit, $travelineSectionOffset, 1, true)->fetchAll();                
+        $sections = self::getSections($travelineSectionLimit, $travelineSectionOffset, 1, true)->fetchAll();
 
         foreach ($sections as $section) {
-            if($section["UF_CHECKBOX_1"] != 1) {
-                $arImages = self::getImages(json_decode($section["UF_PHOTO_ARRAY"], true));  
-                if(count($arImages)) {              
+            if ($section["UF_CHECKBOX_1"] != 1) {
+                $arImages = self::getImages(json_decode($section["UF_PHOTO_ARRAY"], true));
+                if (count($arImages)) {
                     $arFields["UF_PHOTOS"] = $arImages;
                     $res = $iS->Update($section['ID'], $arFields);
 
-                    if($res) {
-                        echo date('Y-M-d H:i:s'). " Загружены фото для раздела (".$section['ID'].") \"".$section['NAME']."\"<br>\r\n"; 
+                    if ($res) {
+                        echo date('Y-M-d H:i:s') . " Загружены фото для раздела (" . $section['ID'] . ") \"" . $section['NAME'] . "\"<br>\r\n";
                     }
                 }
             }
@@ -231,20 +235,21 @@ class Traveline
             $nextOffset = 0;
         }
 
-        Option::set("main", "traveline_section_offset", $nextOffset);        
+        Option::set("main", "traveline_section_offset", $nextOffset);
     }
 
     /**
      * Загружает картинки для элементов
      * 
      */
-    public static function downloadElementImages() {
+    public static function downloadElementImages()
+    {
         $travelineElementOffset = Option::get("main", "traveline_element_offset");
-        $travelineElementLimit = Option::get("main", "traveline_element_limit");        
+        $travelineElementLimit = Option::get("main", "traveline_element_limit");
         $travelineElementCount = self::getRooms(1, 0, 1, true)->getCount();
-        $iE = new CIBlockElement();        
+        $iE = new CIBlockElement();
 
-        Option::set("main", "traveline_element_count", $travelineElementCount);        
+        Option::set("main", "traveline_element_count", $travelineElementCount);
 
         if ($travelineElementOffset == '') {
             $travelineElementOffset = 0;
@@ -256,18 +261,18 @@ class Traveline
             Option::set("main", "traveline_element_limit", $travelineElementLimit);
         }
 
-        $rooms = self::getRooms($travelineElementLimit, $travelineElementOffset, 1, true)->fetchAll();           
-        
-        foreach ($rooms as $room) {            
+        $rooms = self::getRooms($travelineElementLimit, $travelineElementOffset, 1, true)->fetchAll();
+
+        foreach ($rooms as $room) {
             $arImages = self::getImages(json_decode(unserialize($room["PHOTO_ARRAY_VALUE"])['TEXT'], true));
 
-            if(count($arImages)) {
-                CIBlockElement::SetPropertyValuesEx($room['ID'], CATALOG_IBLOCK_ID, array(    
-                    "PHOTOS" => $arImages,                                        
+            if (count($arImages)) {
+                CIBlockElement::SetPropertyValuesEx($room['ID'], CATALOG_IBLOCK_ID, array(
+                    "PHOTOS" => $arImages,
                 ));
 
-                echo date('Y-M-d H:i:s'). " Загружены фото для элемента (".$room['ID'].") \"".$room['NAME']."\"<br>\r\n"; 
-            }            
+                echo date('Y-M-d H:i:s') . " Загружены фото для элемента (" . $room['ID'] . ") \"" . $room['NAME'] . "\"<br>\r\n";
+            }
         }
 
         $nextOffset = $travelineElementOffset + $travelineElementLimit;
@@ -280,7 +285,8 @@ class Traveline
     }
 
     /* Выгрузка кемпингов и номеров */
-    public static function update() {
+    public static function update()
+    {
         // Сначала обновляем список возможных удобств
         self::updateAmenities();
 
@@ -297,37 +303,37 @@ class Traveline
         $arTravelineItems = self::getResponse(self::$travellineHotelsRequestLink, ["include" => "all"]);
 
         $iS = new CIBlockSection();
-        $iE = new CIBlockElement();        
-        
-        foreach($arTravelineItems["properties"] as $arSection) {
+        $iE = new CIBlockElement();
+
+        foreach ($arTravelineItems["properties"] as $arSection) {
             $sectionName = $arSection["name"];
             $sectionCode = CUtil::translit($sectionName, "ru");
 
             // Поля раздела
             $arFields = array(
-                "IBLOCK_ID" => CATALOG_IBLOCK_ID,                
+                "IBLOCK_ID" => CATALOG_IBLOCK_ID,
                 "UF_EXTERNAL_ID" => $arSection["id"],
-                "UF_EXTERNAL_SERVICE" => self::$travelineSectionPropEnumId,                
-                "UF_ADDRESS" => $arSection["contactInfo"]["address"]["addressLine"],                
+                "UF_EXTERNAL_SERVICE" => self::$travelineSectionPropEnumId,
+                "UF_ADDRESS" => $arSection["contactInfo"]["address"]["addressLine"],
                 "UF_TIME_FROM" => $arSection["policy"]["checkInTime"],
                 "UF_TIME_TO" => $arSection["policy"]["checkOutTime"],
                 "UF_PHOTO_ARRAY" => json_encode($arSection["images"]),
             );
-            
-            if(array_key_exists($arSection["id"], $arSectionItems)) {
+
+            if (array_key_exists($arSection["id"], $arSectionItems)) {
                 $arExistSection = $arSectionItems[$arSection["id"]];
                 // Проверка чекбоксов полей
-                
-                if($arExistSection["UF_CHECKBOX_2"]) {
+
+                if ($arExistSection["UF_CHECKBOX_2"]) {
                     unset($arFields["UF_SERVICES"]);
                 }
-                if($arExistSection["UF_CHECKBOX_3"]) {
+                if ($arExistSection["UF_CHECKBOX_3"]) {
                     unset($arFields["UF_FEATURES"]);
                 }
-                if($arExistSection["UF_CHECKBOX_4"]) {
+                if ($arExistSection["UF_CHECKBOX_4"]) {
                     unset($arFields["UF_ROOMS_COUNT"]);
                 }
-                if($arExistSection["UF_CHECKBOX_5"]) {
+                if ($arExistSection["UF_CHECKBOX_5"]) {
                     unset($arFields["UF_FOOD"]);
                 }
                 unset($arFields["UF_ADDRESS"]);
@@ -335,56 +341,54 @@ class Traveline
                 $sectionId = $arExistSection["ID"];
                 $res = $iS->Update($sectionId, $arFields);
 
-                if($res)
-                    echo date('Y-M-d H:i:s'). " Обновлен раздел (".$sectionId.") \"".$sectionName."\"<br>\r\n";                    
-
+                if ($res)
+                    echo date('Y-M-d H:i:s') . " Обновлен раздел (" . $sectionId . ") \"" . $sectionName . "\"<br>\r\n";
             } else {
                 $arFields["ACTIVE"] = "N";
                 $arFields["NAME"] = $sectionName;
                 $arFields["CODE"] = $sectionCode;
                 $arFields["DESCRIPTION"] = $arSection["description"];
-                $arFields["UF_COORDS"] = $arSection["contactInfo"]["address"]["latitude"].",".$arSection["contactInfo"]["address"]["longitude"];
+                $arFields["UF_COORDS"] = $arSection["contactInfo"]["address"]["latitude"] . "," . $arSection["contactInfo"]["address"]["longitude"];
                 $arFields["UF_PHOTO_ARRAY"] = json_encode($arSection["images"]);
 
                 $sectionId = $iS->Add($arFields);
 
-                if($sectionId)
-                    echo "Добавлен раздел (".$sectionId.") \"".$sectionName."\"<br>\r\n";                    
+                if ($sectionId)
+                    echo "Добавлен раздел (" . $sectionId . ") \"" . $sectionName . "\"<br>\r\n";
             }
 
             // Номера
-            foreach($arSection["ratePlans"] as $arRatePlan) {
-                foreach($arSection["roomTypes"] as $arRoomType) {
-                    $elementName = $arRatePlan["name"]." (".$arRoomType["name"].")";
+            foreach ($arSection["ratePlans"] as $arRatePlan) {
+                foreach ($arSection["roomTypes"] as $arRoomType) {
+                    $elementName = $arRatePlan["name"] . " (" . $arRoomType["name"] . ")";
                     $elementCode = CUtil::translit($elementName, "ru");
 
                     // Amenities
                     $arAmenities = array();
-                    foreach($arRoomType["amenities"] as $arItem) {                        
+                    foreach ($arRoomType["amenities"] as $arItem) {
                         $arEntity = $arUpdatedAmenities[$arItem["code"]];
-                        if($arEntity) {
+                        if ($arEntity) {
                             $arAmenities[] = $arEntity["UF_XML_ID"];
                         }
                     }
 
                     // Поля элемента                    
-                    $arExistElement = $arCatalogItems[$arRatePlan['id'].'_'.$arRoomType["id"]];
-                    if($arExistElement) {
+                    $arExistElement = $arCatalogItems[$arRatePlan['id'] . '_' . $arRoomType["id"]];
+                    if ($arExistElement) {
                         $elementId = $arExistElement["ID"];
-                        $arFields = array(                            
-                            "CODE" => $elementCode,                            
+                        $arFields = array(
+                            "CODE" => $elementCode,
                         );
 
                         $res = $iE->Update($elementId, $arFields);
-                        CIBlockElement::SetPropertyValuesEx($elementId, CATALOG_IBLOCK_ID, array(    
-                            "PHOTO_ARRAY" => json_encode($arRoomType['images']),                        
+                        CIBlockElement::SetPropertyValuesEx($elementId, CATALOG_IBLOCK_ID, array(
+                            "PHOTO_ARRAY" => json_encode($arRoomType['images']),
                             "FEATURES" => $arAmenities,
                             "SQUARE" => $arRoomType['size']['value'],
                         ));
 
-                        if($res)
-                            echo "Обновлен номер (".$elementId.") \"".$elementName."\" в отеле (".$sectionId.") \"".$sectionName."\"<br>\r\n";                            
-
+                        if ($res)
+                            echo "Обновлен номер (" . $elementId . ") \"" . $elementName . "\" в отеле (" . $sectionId . ") \"" . $sectionName . "\"<br>\r\n";
                     } else {
                         $arFields = array(
                             "ACTIVE" => "Y",
@@ -394,7 +398,7 @@ class Traveline
                             "CODE" => $elementCode,
                             "DETAIL_TEXT" => nl2br($arRoomType["description"]),
                             "DETAIL_TEXT_TYPE" => 'html',
-                            "PROPERTY_VALUES" => array(                             
+                            "PROPERTY_VALUES" => array(
                                 "PHOTO_ARRAY" => json_encode($arRoomType['images']),
                                 "EXTERNAL_ID" => $arRatePlan["id"],
                                 "EXTERNAL_CATEGORY_ID" => $arRoomType["id"],
@@ -405,10 +409,10 @@ class Traveline
                         );
                         $elementId = $iE->Add($arFields);
 
-                        if($elementId) {
+                        if ($elementId) {
                             Products::setQuantity($elementId);
                             Products::setPrice($elementId);
-                            echo date('Y-M-d H:i:s') . " Добавлен номер (".$elementId.") \"".$elementName."\" в отель (".$sectionId.") \"".$sectionName."\"<br>\r\n";                            
+                            echo date('Y-M-d H:i:s') . " Добавлен номер (" . $elementId . ") \"" . $elementName . "\" в отель (" . $sectionId . ") \"" . $sectionName . "\"<br>\r\n";
                         }
                     }
                 }
@@ -429,7 +433,8 @@ class Traveline
      * @return array
      * 
      */
-    private static function getSections($limit = '', $offset = '', $countTotal = '', $raw = false) {
+    private static function getSections($limit = '', $offset = '', $countTotal = '', $raw = false)
+    {
         $entity = \Bitrix\Iblock\Model\Section::compileEntityByIblock(CATALOG_IBLOCK_ID);
         $rsSectionObjects = $entity::getList(
             [
@@ -445,7 +450,7 @@ class Traveline
             return $rsSectionObjects;
         }
 
-        while ($arSectionItem = $rsSectionObjects->Fetch()){
+        while ($arSectionItem = $rsSectionObjects->Fetch()) {
             $arSectionItems[$arSectionItem['UF_EXTERNAL_ID']] = $arSectionItem;
         }
         return $arSectionItems;
@@ -462,9 +467,10 @@ class Traveline
      * @return array
      * 
      */
-    public static function getRooms($limit = '', $offset = '', $countTotal = '', $raw = false) {
+    public static function getRooms($limit = '', $offset = '', $countTotal = '', $raw = false)
+    {
         $arRoomsRequest = \Bitrix\Iblock\Elements\ElementGlampingsTable::getList([
-            'select' => ['ID', 'NAME', 'EXTERNAL_SERVICE_' => 'EXTERNAL_SERVICE', 'EXTERNAL_CATEGORY_ID_'=> 'EXTERNAL_CATEGORY_ID', 'EXTERNAL_ID_' => 'EXTERNAL_ID', 'PHOTO_ARRAY_' => 'PHOTO_ARRAY'],
+            'select' => ['ID', 'NAME', 'EXTERNAL_SERVICE_' => 'EXTERNAL_SERVICE', 'EXTERNAL_CATEGORY_ID_' => 'EXTERNAL_CATEGORY_ID', 'EXTERNAL_ID_' => 'EXTERNAL_ID', 'PHOTO_ARRAY_' => 'PHOTO_ARRAY'],
             'filter' => ['EXTERNAL_SERVICE.VALUE' => self::$travelineElementPropEnumId],
             'limit' => $limit,
             'offset' => $offset,
@@ -476,8 +482,8 @@ class Traveline
         }
 
         // Формируем массив элементов, где ключём будет сочетание значений 2-х свойств
-        while ($room = $arRoomsRequest->Fetch()){
-            $arRooms[$room['EXTERNAL_ID_VALUE'].'_'.$room['EXTERNAL_CATEGORY_ID_VALUE']] = $room;
+        while ($room = $arRoomsRequest->Fetch()) {
+            $arRooms[$room['EXTERNAL_ID_VALUE'] . '_' . $room['EXTERNAL_CATEGORY_ID_VALUE']] = $room;
         }
 
         return $arRooms;
@@ -489,7 +495,8 @@ class Traveline
      * @return array
      * 
      */
-    public static function getAmenities() {
+    public static function getAmenities()
+    {
         $roomsFeaturesEntityClass = self::getEntityClass(self::$roomsFeaturesHLId);
         $rsData = $roomsFeaturesEntityClass::getList(
             [
@@ -498,7 +505,7 @@ class Traveline
                 "order" => ["UF_SORT" => "ASC"],
             ]
         );
-        while ($amenity = $rsData->Fetch()){
+        while ($amenity = $rsData->Fetch()) {
             $arAmenities[$amenity['UF_XML_ID']] = $amenity;
         }
 
@@ -508,7 +515,8 @@ class Traveline
     /**
      * Обновляет все возможные удобства в номерах Travelline      
      */
-    public static function updateAmenities() {
+    public static function updateAmenities()
+    {
         $roomsFeaturesEntityClass = self::getEntityClass(self::$roomsFeaturesHLId);
         $arInternalAmenities = self::getAmenities();
         $apiResponse = self::getResponse(self::$travellineAmenitiesRequestLink);
@@ -518,13 +526,13 @@ class Traveline
             }
         }
 
-        foreach($arAmenitiesExternal as $arItem) {
+        foreach ($arAmenitiesExternal as $arItem) {
             $name = stripslashes($arItem["name"]);
             $code = $arItem["code"];
 
             $arEntity = $arInternalAmenities[$code];
 
-            if(!$arEntity) {
+            if (!$arEntity) {
                 $arValues = array(
                     'UF_NAME' => $name,
                     'UF_XML_ID' => $code,
@@ -532,8 +540,7 @@ class Traveline
                     'UF_TRAVELINE' => true,
                 );
                 $result = $roomsFeaturesEntityClass::add($arValues);
-                $entityId = $result->getId();                
-
+                $entityId = $result->getId();
             } else {
                 $arValues = array(
                     'UF_NAME' => $name,
@@ -554,26 +561,28 @@ class Traveline
      * @return array
      * 
      */
-    private static function getResponse($requestUrl, $params = []) {
-        $url = self::$travelineApiURL.$requestUrl;
+    private static function getResponse($requestUrl, $params = [])
+    {
+        $url = self::$travelineApiURL . $requestUrl;
         $headers = array(
-            "X-API-KEY: ".self::$travelineApiKey,
+            "X-API-KEY: " . self::$travelineApiKey,
             "Content-Type: application/json"
         );
 
         $ch = curl_init();
         curl_setopt_array($ch, array(
-            CURLOPT_URL            => $url.'?'.http_build_query($params),
+            CURLOPT_URL            => $url . '?' . http_build_query($params),
             CURLOPT_RETURNTRANSFER => 1,
             CURLOPT_HTTPHEADER     => $headers,
         ));
         $response = curl_exec($ch);
 
-        return json_decode($response, true);        
+        return json_decode($response, true);
     }
 
-    public static function getImages($arImagesUrl) {
-        $arImages = array();        
+    public static function getImages($arImagesUrl)
+    {
+        $arImages = array();
         foreach ($arImagesUrl as $key => $arImage) {
             $arFile = CFile::MakeFileArray($arImage["url"]);
 
@@ -586,10 +595,11 @@ class Traveline
     }
 
     /* Обновление HL Питание */
-    public static function updateFood() {
-        $url = self::$travelineApiURL.'/content/v1/meal-plans';
+    public static function updateFood()
+    {
+        $url = self::$travelineApiURL . '/content/v1/meal-plans';
         $headers = array(
-            "X-API-KEY: ".self::$travelineApiKey,
+            "X-API-KEY: " . self::$travelineApiKey,
             "Content-Type: application/json"
         );
 
@@ -604,7 +614,7 @@ class Traveline
         curl_close($ch);
 
         $campingFoodEntityClass = self::getEntityClass(self::$campingFoodHLId);
-        foreach($arFood as $arItem) {
+        foreach ($arFood as $arItem) {
             $name = stripslashes($arItem["name"]);
             $code = stripslashes($arItem["code"]);
 
@@ -617,7 +627,7 @@ class Traveline
             ]);
             $arEntity = $rsData->Fetch();
 
-            if(!$arEntity) {
+            if (!$arEntity) {
                 $arValues = array(
                     'UF_NAME' => $name,
                     'UF_CODE' => $code,
@@ -627,7 +637,6 @@ class Traveline
                 );
                 $result = $campingFoodEntityClass::add($arValues);
                 $entityId = $result->getId();
-
             } else {
                 $arValues = array(
                     'UF_NAME' => $name,
@@ -641,11 +650,12 @@ class Traveline
     }
 
     /* Проверка возможности бронирование объекта из заказа */
-    public static function verifyReservation($externalSectionId, $externalElementId, $externalCategoryId, $guests, $arChildrenAge, $dateFrom, $dateTo, $price, $checksum, $arGuestList, $arUser, $adults) {                     
+    public static function verifyReservation($externalSectionId, $externalElementId, $externalCategoryId, $guests, $arChildrenAge, $dateFrom, $dateTo, $price, $checksum, $arGuestList, $arUser, $adults)
+    {
         // Получение объекта номера для запроса бронирования
-        $url = self::$travelineApiURL.'/search/v1/properties/'.$externalSectionId.'/room-stays/';
+        $url = self::$travelineApiURL . '/search/v1/properties/' . $externalSectionId . '/room-stays/';
         $headers = array(
-            "X-API-KEY: ".self::$travelineApiKey,
+            "X-API-KEY: " . self::$travelineApiKey,
             "Content-Type: application/json"
         );
         $data = array(
@@ -653,21 +663,21 @@ class Traveline
             "arrivalDate" => date('Y-m-d', strtotime($dateFrom)),
             "departureDate" => date('Y-m-d', strtotime($dateTo)),
         );
-        if(isset($arChildrenAge) && count($arChildrenAge) > 0) {
+        if (isset($arChildrenAge) && count($arChildrenAge) > 0) {
             $data["childAges"] = $arChildrenAge;
         }
 
         $ch = curl_init();
         curl_setopt_array($ch, array(
-            CURLOPT_URL            => $url.'?'.http_build_query($data),
+            CURLOPT_URL            => $url . '?' . http_build_query($data),
             CURLOPT_RETURNTRANSFER => 1,
             CURLOPT_HTTPHEADER     => $headers
         ));
         $response = curl_exec($ch);
         $arItemsResponse = json_decode($response, true);
-        
+
         curl_close($ch);
-        if($arItemsResponse['roomStays']) {
+        if ($arItemsResponse['roomStays']) {
             $arExternalData = array();
             foreach ($arItemsResponse['roomStays'] as $key => $arItem) {
                 if ($arItem['ratePlan']['id'] == $externalElementId && $arItem['roomType']['id'] == $externalCategoryId && $checksum == $arItem["checksum"]) {
@@ -677,19 +687,19 @@ class Traveline
             }
 
             $arConditionsError['warnings'][0]['code'] = 'ConditionsChanged';
-            if($arExternalData) {
+            if ($arExternalData) {
                 // Проверка на актуальность данных
-                if($arExternalData["checksum"] != $checksum) {
+                if ($arExternalData["checksum"] != $checksum) {
                     return $arConditionsError;
                 }
-                if($arExternalData['total']['priceBeforeTax'] != (int)$price) {
+                if ($arExternalData['total']['priceBeforeTax'] != (int)$price) {
                     return $arConditionsError;
                 }
 
                 // Запрос на возможность бронирования номера
-                $url = self::$travelineApiURL.'/reservation/v1/bookings/verify';
+                $url = self::$travelineApiURL . '/reservation/v1/bookings/verify';
                 $headers = array(
-                    "X-API-KEY: ".self::$travelineApiKey,
+                    "X-API-KEY: " . self::$travelineApiKey,
                     "Content-Type: application/json"
                 );
 
@@ -724,7 +734,7 @@ class Traveline
                             "contacts" => [
                                 "phones" => [
                                     [
-                                        "phoneNumber" => "+".preg_replace('![^0-9]+!', '', $arUser["PERSONAL_PHONE"])
+                                        "phoneNumber" => "+" . preg_replace('![^0-9]+!', '', $arUser["PERSONAL_PHONE"])
                                     ]
                                 ],
                                 "emails" => [
@@ -756,11 +766,9 @@ class Traveline
                 curl_close($ch);
                 file_put_contents($_SERVER["DOCUMENT_ROOT"] . '/log.txt', serialize($arVerifyResponse) . PHP_EOL, FILE_APPEND);
                 $arResponse = $arVerifyResponse;
-
             } else {
                 return $arConditionsError;
             }
-
         } else {
             $arResponse = $arItemsResponse;
         }
@@ -769,11 +777,12 @@ class Traveline
     }
 
     /* Получаем чексумму из сессии, которая хранится в БД */
-    private static function getChecksum($sessionId) {        
+    private static function getChecksum($sessionId)
+    {
         if (!$sessionId) {
             return '';
         }
-        
+
         $session = UserSessionTable::getRow([
             'select' => ['*'],
             'filter' => ['=SESSION_ID' => $sessionId],
@@ -781,15 +790,16 @@ class Traveline
 
         $parsedSessionData = CustomFunctions::unserialize_php(base64_decode($session['SESSION_DATA']));
 
-        if (!is_array($parsedSessionData) && !isset($parsedSessionData['traveline_checksum'])) {            
+        if (!is_array($parsedSessionData) && !isset($parsedSessionData['traveline_checksum'])) {
             return '';
         }
 
-        return $parsedSessionData['traveline_checksum'];     
+        return $parsedSessionData['traveline_checksum'];
     }
 
     /* Бронирование объекта из заказа */
-    public static function makeReservation($orderId, $arOrder, $arUser, $reservationPropId) {
+    public static function makeReservation($orderId, $arOrder, $arUser, $reservationPropId)
+    {
         $externalSectionId = $arOrder['ITEMS'][0]['ITEM']['SECTION']['UF_EXTERNAL_ID'];
         $externalElementId = $arOrder['ITEMS'][0]['ITEM']['PROPERTIES']['EXTERNAL_ID']['VALUE'];
         $externalCategoryId = $arOrder['ITEMS'][0]['ITEM']['PROPERTIES']['EXTERNAL_CATEGORY_ID']['VALUE'];
@@ -803,16 +813,16 @@ class Traveline
         $adults = $arOrder["ITEMS"][0]["ITEM_BAKET_PROPS"]["GUESTS_COUNT"]['VALUE'];
 
         $arVerifyResponse = self::verifyReservation($externalSectionId, $externalElementId, $externalCategoryId, $guests, $arChildrenAge, $dateFrom, $dateTo, $price, $checksum, $arGuestList, $arUser, $adults);
-        if($arVerifyResponse["booking"]) {
-            if($arVerifyResponse["booking"]['roomStays']) {
+        if ($arVerifyResponse["booking"]) {
+            if ($arVerifyResponse["booking"]['roomStays']) {
                 foreach ($arVerifyResponse["booking"]['roomStays'] as $key => &$arItem) {
                     $arItem['services'] = [];
                 }
             }
 
-            $url = self::$travelineApiURL.'/reservation/v1/bookings';
+            $url = self::$travelineApiURL . '/reservation/v1/bookings';
             $headers = array(
-                "X-API-KEY: ".self::$travelineApiKey,
+                "X-API-KEY: " . self::$travelineApiKey,
                 "Content-Type: application/json"
             );
             $data = array(
@@ -831,7 +841,7 @@ class Traveline
             $arResponse = json_decode($response, true);
             curl_close($ch);
             file_put_contents($_SERVER["DOCUMENT_ROOT"] . '/log.txt', serialize($data) . PHP_EOL, FILE_APPEND);
-            if($arResponse['booking']['status'] == "Confirmed" && $arResponse['booking']['number']) {
+            if ($arResponse['booking']['status'] == "Confirmed" && $arResponse['booking']['number']) {
                 // Сохраняем ID бронирования в заказе
                 $reservationId = $arResponse['booking']['number'];
 
@@ -841,39 +851,37 @@ class Traveline
                 $propertyValue->setValue($reservationId);
                 $res = $order->save();
 
-                if($res->isSuccess()) {
+                if ($res->isSuccess()) {
                     return $reservationId;
-
                 } else {
                     return [
                         "ERROR" => "Ошибка сохранения ID бронирования."
                     ];
                 }
-
             } else {
                 $errorText = $arResponse['warnings'][0]['code'] ?? $arResponse['errors'][0]['message'];
                 file_put_contents($_SERVER["DOCUMENT_ROOT"] . '/log.txt', serialize($arResponse) . PHP_EOL, FILE_APPEND);
                 return [
-                    "ERROR" => "Ошибка запроса бронирования. ".$errorText
+                    "ERROR" => "Ошибка запроса бронирования. " . $errorText
                 ];
             }
-
         } else {
             $errorText = $arVerifyResponse['warnings'][0]['code'] ?? $arVerifyResponse['errors'][0]['message'];
             return [
-                "ERROR" => "Ошибка верификации бронирования. ".$errorText
+                "ERROR" => "Ошибка верификации бронирования. " . $errorText
             ];
         }
     }
 
     /* Отмена бронирования объекта из заказа - перед отменой  */
-    public static function beforeCancelReservation($arOrder) {
+    public static function beforeCancelReservation($arOrder)
+    {
         $reservationId = $arOrder['PROPS']['RESERVATION_ID'];
         //file_put_contents($_SERVER["DOCUMENT_ROOT"] . '/log.txt', $reservationId . PHP_EOL, FILE_APPEND);
 
-        $url = self::$travelineApiURL.'/reservation/v1/bookings/'.$reservationId.'/calculate-cancellation-penalty';
+        $url = self::$travelineApiURL . '/reservation/v1/bookings/' . $reservationId . '/calculate-cancellation-penalty';
         $headers = array(
-            "X-API-KEY: ".self::$travelineApiKey,
+            "X-API-KEY: " . self::$travelineApiKey,
             "Content-Type: application/json"
         );
         $data = array(
@@ -882,7 +890,7 @@ class Traveline
 
         $ch = curl_init();
         curl_setopt_array($ch, array(
-            CURLOPT_URL            => $url.'?'.http_build_query($data),
+            CURLOPT_URL            => $url . '?' . http_build_query($data),
             CURLOPT_RETURNTRANSFER => 1,
             CURLOPT_HTTPHEADER     => $headers,
         ));
@@ -894,12 +902,13 @@ class Traveline
     }
 
     /* Отмена бронирования объекта из заказа  */
-    public static function cancelReservation($arOrder) {
+    public static function cancelReservation($arOrder)
+    {
         $reservationId = $arOrder['PROPS']['RESERVATION_ID'];
 
-        $url = self::$travelineApiURL.'/reservation/v1/bookings/'.$reservationId.'/cancel';
+        $url = self::$travelineApiURL . '/reservation/v1/bookings/' . $reservationId . '/cancel';
         $headers = array(
-            "X-API-KEY: ".self::$travelineApiKey,
+            "X-API-KEY: " . self::$travelineApiKey,
             "Content-Type: application/json"
         );
         $data = array(
@@ -918,28 +927,28 @@ class Traveline
         $arResponse = json_decode($response, true);
         curl_close($ch);
 
-        if($arResponse['booking']['cancellation']) {
+        if ($arResponse['booking']['cancellation']) {
             return true;
-
         } else {
             $errorText = $arResponse['errors'][0]['message'];
             return [
-                "ERROR" => "Ошибка запроса отмены бронирования во внешнем сервисе. ".self::$arErrors[$errorText]
+                "ERROR" => "Ошибка запроса отмены бронирования во внешнем сервисе. " . self::$arErrors[$errorText]
             ];
         }
     }
 
     /* Установка минимальных цен для объектов Traveline */
-    public static function setMinPrices() {
+    public static function setMinPrices()
+    {
         $rsSections = CIBlockSection::GetList(array(), array("IBLOCK_ID" => CATALOG_IBLOCK_ID, "ACTIVE" => "Y", "!UF_EXTERNAL_ID" => false, "UF_EXTERNAL_SERVICE" => self::$travelineSectionPropEnumId), false, array("ID", "UF_EXTERNAL_ID"), false);
         $arSectionExternalIDs = array();
-        while($arSection = $rsSections->Fetch()) {
+        while ($arSection = $rsSections->Fetch()) {
             $arSectionExternalIDs[] = (string)$arSection["UF_EXTERNAL_ID"];
         }
 
-        $url = self::$travelineApiURL.'/search/v1/properties/room-stays/search';
+        $url = self::$travelineApiURL . '/search/v1/properties/room-stays/search';
         $headers = array(
-            "X-API-KEY: ".self::$travelineApiKey,
+            "X-API-KEY: " . self::$travelineApiKey,
             "Content-Type: application/json"
         );
         $data = array(
@@ -963,15 +972,15 @@ class Traveline
         curl_close($ch);
 
         $arMinPrices = array();
-        foreach($arResponse["roomStays"] as $arItem) {
-            if(empty($arMinPrices[$arItem["propertyId"]]) || $arItem["total"]["priceBeforeTax"] < $arMinPrices[$arItem["propertyId"]])
+        foreach ($arResponse["roomStays"] as $arItem) {
+            if (empty($arMinPrices[$arItem["propertyId"]]) || $arItem["total"]["priceBeforeTax"] < $arMinPrices[$arItem["propertyId"]])
                 $arMinPrices[$arItem["propertyId"]] = $arItem["total"]["priceBeforeTax"];
         }
 
         $iS = new CIBlockSection();
-        foreach($arMinPrices as $externalSectionId => $price) {
+        foreach ($arMinPrices as $externalSectionId => $price) {
             $arExistSection = CIBlockSection::GetList(array(), array("IBLOCK_ID" => CATALOG_IBLOCK_ID, "UF_EXTERNAL_ID" => $externalSectionId))->Fetch();
-            if($arExistSection) {
+            if ($arExistSection) {
                 $sectionId = $arExistSection["ID"];
                 $iS->Update($sectionId, array(
                     "UF_MIN_PRICE" => $price,
@@ -981,10 +990,11 @@ class Traveline
     }
 
     /* Получение штрафа за отмену */
-    public static function getCancellationAmount($externalId, $guests, $arChildrenAge, $dateFrom, $dateTo, $checksum, $externalElementId, $externalCategoryId) {
-        $url = self::$travelineApiURL.'/search/v1/properties/'.$externalId.'/room-stays/';
+    public static function getCancellationAmount($externalId, $guests, $arChildrenAge, $dateFrom, $dateTo, $checksum, $externalElementId, $externalCategoryId)
+    {
+        $url = self::$travelineApiURL . '/search/v1/properties/' . $externalId . '/room-stays/';
         $headers = array(
-            "X-API-KEY: ".self::$travelineApiKey,
+            "X-API-KEY: " . self::$travelineApiKey,
             "Content-Type: application/json"
         );
         $data = array(
@@ -992,13 +1002,13 @@ class Traveline
             "arrivalDate" => date('Y-m-d', strtotime($dateFrom)),
             "departureDate" => date('Y-m-d', strtotime($dateTo)),
         );
-        if(isset($arChildrenAge) && count($arChildrenAge) > 0) {
+        if (isset($arChildrenAge) && count($arChildrenAge) > 0) {
             $data["childAges"] = $arChildrenAge;
         }
 
         $ch = curl_init();
         curl_setopt_array($ch, array(
-            CURLOPT_URL            => $url.'?'.http_build_query($data),
+            CURLOPT_URL            => $url . '?' . http_build_query($data),
             CURLOPT_RETURNTRANSFER => 1,
             CURLOPT_HTTPHEADER     => $headers
         ));
@@ -1007,11 +1017,11 @@ class Traveline
         curl_close($ch);
 
         date_default_timezone_set('UTC');
-        foreach($arResponse["roomStays"] as $arItem) {
-            if($externalElementId == $arItem['ratePlan']['id'] && $externalCategoryId == $arItem['roomType']['id'] && $checksum == $arItem['checksum']) {
+        foreach ($arResponse["roomStays"] as $arItem) {
+            if ($externalElementId == $arItem['ratePlan']['id'] && $externalCategoryId == $arItem['roomType']['id'] && $checksum == $arItem['checksum']) {
                 return [
                     'possible' => $arItem['cancellationPolicy']['freeCancellationPossible'],
-                    'date' => date('d.m.Y H:i', strtotime($arItem['cancellationPolicy']['freeCancellationDeadlineUtc'])+10800),
+                    'date' => date('d.m.Y H:i', strtotime($arItem['cancellationPolicy']['freeCancellationDeadlineUtc']) + 10800),
                     'cancelAmount' => $arItem['cancellationPolicy']['penaltyAmount'] ?? 0
                 ];
             }
@@ -1021,7 +1031,8 @@ class Traveline
     }
 
     /* Объект HL */
-    private static function getEntityClass($hlId) {
+    private static function getEntityClass($hlId)
+    {
         Loader::IncludeModule('highloadblock');
         $hlblock = HighloadBlockTable::getById($hlId)->fetch();
         $entity = HighloadBlockTable::compileEntity($hlblock);

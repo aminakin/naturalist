@@ -32,4 +32,9 @@
   .promo-form form {
     grid-template-columns: 1fr;
   }
+
+  .promo__seo-text {
+    font-size: 15px;
+    line-height: 19px;
+  }
 }

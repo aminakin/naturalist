@@ -31,28 +31,27 @@ $arFavourites = Users::getFavourites();
 /* Текущий раздел */
 
 $arSection = CIBlockSection::GetList(false, array("ACTIVE" => "Y", "IBLOCK_ID" => CATALOG_IBLOCK_ID, "=CODE" => $arResult["VARIABLES"]["SECTION_CODE"]), false, array("IBLOCK_ID", "ID", "NAME", "CODE", "DESCRIPTION", "SECTION_PAGE_URL", "UF_*"), false)->GetNext();
-if(!$arSection) {
-    include($_SERVER["DOCUMENT_ROOT"].'/404.php');
+if (!$arSection) {
+    include($_SERVER["DOCUMENT_ROOT"] . '/404.php');
     exit;
 }
 
 $arEnum = CUserFieldEnum::GetList(array(), array("CODE" => "UF_EXTERNAL_SERVICE", "ID" => $arSection["UF_EXTERNAL_SERVICE"]))->GetNext();
 $arSection["UF_EXTERNAL_SERVICE"] = $arEnum['XML_ID'];
 $arDataFullGallery = [];
-if($arSection["UF_PHOTOS"]) {
-    foreach($arSection["UF_PHOTOS"] as $photoId) {
+if ($arSection["UF_PHOTOS"]) {
+    foreach ($arSection["UF_PHOTOS"] as $photoId) {
         $imageOriginal = CFile::GetFileArray($photoId);
-        $arDataFullGallery[] = "\"".$imageOriginal["SRC"]."\"";
+        $arDataFullGallery[] = "\"" . $imageOriginal["SRC"] . "\"";
         $arSection["PICTURES"][$photoId] = CFile::ResizeImageGet($photoId, array('width' => 590, 'height' => 390), BX_RESIZE_IMAGE_EXACT, true);
     }
-
 } else {
-    $arSection["PICTURES"][0]["src"] = SITE_TEMPLATE_PATH."/img/big_no_photo.png";
+    $arSection["PICTURES"][0]["src"] = SITE_TEMPLATE_PATH . "/img/big_no_photo.png";
 }
 
 $arSection["FULL_GALLERY"] = implode(",", $arDataFullGallery);
 
-if($arSection["UF_COORDS"]) {
+if ($arSection["UF_COORDS"]) {
     /* Метеоданные */
     $coords = $arSection["UF_COORDS"];
     $arMeteo = Users::getMeteo($coords);
@@ -60,16 +59,16 @@ if($arSection["UF_COORDS"]) {
     $arSection["COORDS"] = explode(',', $arSection["UF_COORDS"]);
 }
 /** Услуги */
-if($arSection["UF_SERVICES"]) {
+if ($arSection["UF_SERVICES"]) {
     $rsServicesSections = CIBlockSection::GetList(false, array("IBLOCK_ID" => SERVICES_IBLOCK_ID, "ACTIVE" => "Y"), false, array("ID", "NAME"), false);
     $arServicesSections = array();
-    while($arServicesSection = $rsServicesSections->Fetch()) {
+    while ($arServicesSection = $rsServicesSections->Fetch()) {
         $arServicesSections[$arServicesSection["ID"]] = $arServicesSection["NAME"];
     }
     $rsServices = CIBlockElement::GetList(false, array("IBLOCK_ID" => SERVICES_IBLOCK_ID, "!IBLOCK_SECTION_ID" => false, "ID" => $arSection["UF_SERVICES"]), false, false, array("IBLOCK_ID", "IBLOCK_SECTION_ID", "ID", "NAME"));
     $arServices = array();
-    while($arService = $rsServices->Fetch()) {
-        if(empty($arServices[$arService["IBLOCK_SECTION_ID"]])) {
+    while ($arService = $rsServices->Fetch()) {
+        if (empty($arServices[$arService["IBLOCK_SECTION_ID"]])) {
             $arServices[$arService["IBLOCK_SECTION_ID"]] = array(
                 "NAME" => $arServicesSections[$arService["IBLOCK_SECTION_ID"]],
                 "ITEMS" => array()
@@ -95,8 +94,8 @@ if ($arSection["UF_FOOD"]) {
         ],
         "order" => ["UF_SORT" => "ASC"],
     ]);
-    while ($arFood = $rsFood->Fetch()){
-        if(empty($arServices["FOOD"])) {
+    while ($arFood = $rsFood->Fetch()) {
+        if (empty($arServices["FOOD"])) {
             $arServices["FOOD"] = array(
                 "NAME" => "Питание",
                 "ITEMS" => array()
@@ -107,8 +106,8 @@ if ($arSection["UF_FOOD"]) {
     }
 }
 
-if(!$arSection) {
-    include($_SERVER["DOCUMENT_ROOT"].'/404.php');
+if (!$arSection) {
+    include($_SERVER["DOCUMENT_ROOT"] . '/404.php');
     exit;
 }
 $APPLICATION->SetTitle($arSection["NAME"]);
@@ -123,7 +122,7 @@ $daysDeclension = new Declension('ночь', 'ночи', 'ночей');
 $reviewsSortType = (!empty($_GET['sort']) && isset($_GET['sort'])) ? strtolower($_GET['sort']) : "date";
 switch ($reviewsSortType) {
     case 'date':
-        $arReviewsSort = array("TIMESTAMP_X" => "DESC");
+        $arReviewsSort = array("ACTIVE_FROM" => "DESC");
         break;
 
     case 'negative':
@@ -134,14 +133,14 @@ switch ($reviewsSortType) {
         $arReviewsSort = array("PROPERTY_RATING" => "DESC");
         break;
 }
-$rsReviews = CIBlockElement::GetList($arReviewsSort, array("IBLOCK_ID" => REVIEWS_IBLOCK_ID, "ACTIVE" => "Y", "PROPERTY_CAMPING_ID" => $arSection["ID"]), false, false, array("ID", "NAME", "DATE_CREATE", "DETAIL_TEXT", "PROPERTY_CAMPING_ID", "PROPERTY_PHOTOS", "PROPERTY_USER_ID", "PROPERTY_CRITERION_1", "PROPERTY_CRITERION_2", "PROPERTY_CRITERION_3", "PROPERTY_CRITERION_4", "PROPERTY_CRITERION_5", "PROPERTY_CRITERION_6", "PROPERTY_CRITERION_7", "PROPERTY_CRITERION_8", "PROPERTY_RATING"));
+$rsReviews = CIBlockElement::GetList($arReviewsSort, array("IBLOCK_ID" => REVIEWS_IBLOCK_ID, "ACTIVE" => "Y", "PROPERTY_CAMPING_ID" => $arSection["ID"]), false, false, array("ID", "NAME", "ACTIVE_FROM", "DATE_CREATE", "DETAIL_TEXT", "PROPERTY_CAMPING_ID", "PROPERTY_PHOTOS", "PROPERTY_USER_ID", "PROPERTY_CRITERION_1", "PROPERTY_CRITERION_2", "PROPERTY_CRITERION_3", "PROPERTY_CRITERION_4", "PROPERTY_CRITERION_5", "PROPERTY_CRITERION_6", "PROPERTY_CRITERION_7", "PROPERTY_CRITERION_8", "PROPERTY_RATING"));
 $arReviews = array();
 $arReviewsUserIDs = array();
 $reviewsCount = 0;
 $reviewsCountNotNullRating = 0;
 $avgRating = 0;
-while($arReview = $rsReviews->GetNext()) {
-    foreach($arReview["PROPERTY_PHOTOS_VALUE"] as $photoId) {
+while ($arReview = $rsReviews->GetNext()) {
+    foreach ($arReview["PROPERTY_PHOTOS_VALUE"] as $photoId) {
         $arReview["PICTURES"][] =  CFile::ResizeImageGet($photoId, array('width' => 1920, 'height' => 1080), BX_RESIZE_IMAGE_PROPORTIONAL_ALT, true, false, false, 80)["src"];
         $arReview["PICTURES_THUMB"][] = CFile::ResizeImageGet($photoId, array('width' => 70, 'height' => 50), BX_RESIZE_IMAGE_EXACT, true, false, false, 80);
     }
@@ -152,38 +151,38 @@ while($arReview = $rsReviews->GetNext()) {
 
     $arReviews[$arReview["ID"]] = $arReview;
 
-    for($i = 1; $i <= 8; $i++) {
-        if($arReview["PROPERTY_CRITERION_".$i."_VALUE"] > 0){
-            $arAvgCriterias[$i][0]['value'] += $arReview["PROPERTY_CRITERION_".$i."_VALUE"];
+    for ($i = 1; $i <= 8; $i++) {
+        if ($arReview["PROPERTY_CRITERION_" . $i . "_VALUE"] > 0) {
+            $arAvgCriterias[$i][0]['value'] += $arReview["PROPERTY_CRITERION_" . $i . "_VALUE"];
             $arAvgCriterias[$i][0]['count'] += 1;
         }
     }
 
     $avgRating += $arReview["PROPERTY_RATING_VALUE"];
     $reviewsCount++;
-    if($arReview["PROPERTY_RATING_VALUE"] != 0) {
+    if ($arReview["PROPERTY_RATING_VALUE"] != 0) {
         $reviewsCountNotNullRating++;
     }
 
-    if(!in_array($arReview["PROPERTY_USER_ID_VALUE"], $arReviewsUserIDs)) {
+    if (!in_array($arReview["PROPERTY_USER_ID_VALUE"], $arReviewsUserIDs)) {
         $arReviewsUserIDs[] = $arReview["PROPERTY_USER_ID_VALUE"];
     }
 }
-if($reviewsCount > 0) {
+if ($reviewsCount > 0) {
     // Средние значения
-    for($i = 1; $i <= 8; $i++) {
-        if(!empty($arAvgCriterias[$i][0]['count'])){
-            $arAvgCriterias[$i][0] = number_format(round($arAvgCriterias[$i][0]['value']/$arAvgCriterias[$i][0]['count'], 1), 1, '.', '');
+    for ($i = 1; $i <= 8; $i++) {
+        if (!empty($arAvgCriterias[$i][0]['count'])) {
+            $arAvgCriterias[$i][0] = number_format(round($arAvgCriterias[$i][0]['value'] / $arAvgCriterias[$i][0]['count'], 1), 1, '.', '');
             $arAvgCriterias[$i][1] = round($arAvgCriterias[$i][0] * 100 / 5);
         }
     }
-    $avgRating = round($avgRating/$reviewsCountNotNullRating, 1);
+    $avgRating = round($avgRating / $reviewsCountNotNullRating, 1);
 
     // Список юзеров в отзывах
     $rsReviewsUsers = CUser::GetList(($by = "ID"), ($order = "ASC"), array("ID" => implode(' | ', $arReviewsUserIDs)), array("FIELDS" => array("ID", "NAME", "PERSONAL_PHOTO")));
     $arReviewsUsers = array();
-    while($arReviewUser = $rsReviewsUsers->Fetch()) {
-        if($arReviewUser["PERSONAL_PHOTO"]) {
+    while ($arReviewUser = $rsReviewsUsers->Fetch()) {
+        if ($arReviewUser["PERSONAL_PHOTO"]) {
             $arReviewUser["PERSONAL_PHOTO"] = CFile::GetFileArray($arReviewUser["PERSONAL_PHOTO"])["SRC"];
         }
 
@@ -200,7 +199,7 @@ if($reviewsCount > 0) {
     // Лайки отзывов
     $arReviewsIDs = array_keys($arReviews);
     $arReviewsLikesData = Reviews::getLikes($arReviewsIDs);
-    foreach($arReviewsLikesData["STATS"] as $reviewId => $arLikes) {
+    foreach ($arReviewsLikesData["STATS"] as $reviewId => $arLikes) {
         $arReviews[$reviewId]["LIKES"] = $arLikes;
     }
 }
@@ -215,13 +214,13 @@ if (isset($_GET['childrenAge'])) {
     if (is_array($_GET['childrenAge'])) {
         $arChildrenAge = $_GET['childrenAge'];
     } else {
-        $arChildrenAge = explode(',' , $_GET['childrenAge']);
+        $arChildrenAge = explode(',', $_GET['childrenAge']);
     }
 } else {
     $arChildrenAge = [];
 }
 if (!empty($arSection) && !empty($dateFrom) && !empty($dateTo) && !empty($_GET['guests'])) {
-    $daysRange = $dateFrom." - ".$dateTo;
+    $daysRange = $dateFrom . " - " . $dateTo;
     $daysCount = abs(strtotime($dateTo) - strtotime($dateFrom)) / 86400;
 
     // Фильтр номеров
@@ -234,26 +233,26 @@ if (!empty($arSection) && !empty($dateFrom) && !empty($dateTo) && !empty($_GET['
     // Запрос в апи на получение списка кемпингов со свободными местами в выбранный промежуток
     $arExternalResult = Products::searchRooms($arSection['ID'], $arSection['UF_EXTERNAL_ID'], $arSection['UF_EXTERNAL_SERVICE'], $guests, $arChildrenAge, $dateFrom, $dateTo);
     $arExternalInfo = $arExternalResult['arRooms'];
-    $searchError = $arExternalResult['error'];    
-    if($arExternalInfo) {
+    $searchError = $arExternalResult['error'];
+    if ($arExternalInfo) {
         $arFilter["ID"] = array_keys($arExternalInfo);
     } else {
         $arFilter["ID"] = false;
-    }    
+    }
 
     // Список номеров
     $rsElements = CIBlockElement::GetList(array("SORT" => "ASC"), $arFilter, false, false, array("IBLOCK_ID", "ID", "IBLOCK_SECTION_ID", "NAME", "DETAIL_TEXT", "PROPERTY_PHOTOS", "PROPERTY_FEATURES", "PROPERTY_EXTERNAL_ID", "PROPERTY_EXTERNAL_CATEGORY_ID", "PROPERTY_SQUARE", "PROPERTY_PARENT_ID"));
     $arElements = array();
-    while($arElement = $rsElements->Fetch()) {
-        if($arElement["PROPERTY_PHOTOS_VALUE"]) {
+    while ($arElement = $rsElements->Fetch()) {
+        if ($arElement["PROPERTY_PHOTOS_VALUE"]) {
             $arDataFullGalleryRoom = [];
-            foreach($arElement["PROPERTY_PHOTOS_VALUE"] as $photoId) {
+            foreach ($arElement["PROPERTY_PHOTOS_VALUE"] as $photoId) {
                 $roomImageOriginal = CFile::GetFileArray($photoId);
-                $arDataFullGalleryRoom[] = "&quot;".$roomImageOriginal["SRC"]."&quot;";
+                $arDataFullGalleryRoom[] = "&quot;" . $roomImageOriginal["SRC"] . "&quot;";
                 $arElement["PICTURES"][$photoId] = CFile::ResizeImageGet($photoId, array('width' => 500, 'height' => 300), BX_RESIZE_IMAGE_EXACT, true);
             }
         } else {
-            $arElement["PICTURES"][0]["src"] = SITE_TEMPLATE_PATH."/img/no_photo.png";
+            $arElement["PICTURES"][0]["src"] = SITE_TEMPLATE_PATH . "/img/no_photo.png";
         }
 
         if (!empty($arDataFullGalleryRoom)) {
@@ -273,30 +272,32 @@ if (!empty($arSection) && !empty($dateFrom) && !empty($dateTo) && !empty($_GET['
         $arElements[$arElement['ID']] = $arElement;
     }
 
-    if($arSection["UF_EXTERNAL_SERVICE"] == "bnovo") {
+    if ($arSection["UF_EXTERNAL_SERVICE"] == "bnovo") {
         foreach ($arElements as $arElement) {
-            if((int)$arElement["PROPERTY_PARENT_ID_VALUE"] > 0 ) {
-                if (!isset($parentExternalIds) || !in_array($arElement["PROPERTY_PARENT_ID_VALUE"],
-                        $parentExternalIds)) {
+            if ((int)$arElement["PROPERTY_PARENT_ID_VALUE"] > 0) {
+                if (!isset($parentExternalIds) || !in_array(
+                    $arElement["PROPERTY_PARENT_ID_VALUE"],
+                    $parentExternalIds
+                )) {
                     $parentExternalIds[] = $arElement["PROPERTY_PARENT_ID_VALUE"];
                 }
             }
         }
 
-        if(isset($parentExternalIds) && !empty($parentExternalIds)){
+        if (isset($parentExternalIds) && !empty($parentExternalIds)) {
             unset($arFilter["ID"]);
-            $arFilter["?PROPERTY_EXTERNAL_ID"] = implode('|', $parentExternalIds);            
+            $arFilter["?PROPERTY_EXTERNAL_ID"] = implode('|', $parentExternalIds);
             $rsElements = CIBlockElement::GetList(false, $arFilter, false, false, array("IBLOCK_ID", "ID", "IBLOCK_SECTION_ID", "NAME", "DETAIL_TEXT", "PROPERTY_PHOTOS", "PROPERTY_FEATURES", "PROPERTY_EXTERNAL_ID", "PROPERTY_EXTERNAL_CATEGORY_ID", "PROPERTY_SQUARE", "PROPERTY_PARENT_ID"));
-            while($arElement = $rsElements->Fetch()) {                
-                if($arElement["PROPERTY_PHOTOS_VALUE"]) {
+            while ($arElement = $rsElements->Fetch()) {
+                if ($arElement["PROPERTY_PHOTOS_VALUE"]) {
                     $arDataFullGalleryRoom = [];
-                    foreach($arElement["PROPERTY_PHOTOS_VALUE"] as $photoId) {
+                    foreach ($arElement["PROPERTY_PHOTOS_VALUE"] as $photoId) {
                         $roomImageOriginal = CFile::GetFileArray($photoId);
-                        $arDataFullGalleryRoom[] = "&quot;".$roomImageOriginal["SRC"]."&quot;";
+                        $arDataFullGalleryRoom[] = "&quot;" . $roomImageOriginal["SRC"] . "&quot;";
                         $arElement["PICTURES"][$photoId] = CFile::ResizeImageGet($photoId, array('width' => 500, 'height' => 300), BX_RESIZE_IMAGE_EXACT, true);
                     }
                 } else {
-                    $arElement["PICTURES"][0]["src"] = SITE_TEMPLATE_PATH."/img/no_photo.png";
+                    $arElement["PICTURES"][0]["src"] = SITE_TEMPLATE_PATH . "/img/no_photo.png";
                 }
 
                 if (!empty($arDataFullGalleryRoom)) {
@@ -309,12 +310,12 @@ if (!empty($arSection) && !empty($dateFrom) && !empty($dateTo) && !empty($_GET['
     }
     //die();
     // Сортировка номеров по убыванию цены
-    usort($arElements, function($a, $b){
+    usort($arElements, function ($a, $b) {
         return ($a['PRICE'] - $b['PRICE']);
     });
     $arElementsJson = $arElements;
-    
-    if($arSection["UF_EXTERNAL_SERVICE"] == "bnovo") {
+
+    if ($arSection["UF_EXTERNAL_SERVICE"] == "bnovo") {
         $arParams["DETAIL_ITEMS_COUNT"] = 999;
     }
     // Пагинация номеров
@@ -323,8 +324,11 @@ if (!empty($arSection) && !empty($dateFrom) && !empty($dateTo) && !empty($_GET['
         $page = $_REQUEST['page'] ?? 1;
         $pageCount = ceil($allCount / $arParams["DETAIL_ITEMS_COUNT"]);
         if ($pageCount > 1) {
-            $arElements = array_slice($arElements, ($page - 1) * $arParams["DETAIL_ITEMS_COUNT"],
-                $arParams["DETAIL_ITEMS_COUNT"]);
+            $arElements = array_slice(
+                $arElements,
+                ($page - 1) * $arParams["DETAIL_ITEMS_COUNT"],
+                $arParams["DETAIL_ITEMS_COUNT"]
+            );
         }
     }
 }
@@ -386,7 +390,7 @@ while ($arEntity = $rsData->Fetch()) {
 // Услуги (для Traveline)
 $rsServices = CIBlockElement::GetList(array(), array("IBLOCK_ID" => SERVICES_IBLOCK_ID, "PROPERTY_TRAVELINE" => getEnumIdByXml(SERVICES_IBLOCK_ID, 'TRAVELINE', 'Y')), false, false, array("ID", "NAME", "CODE"));
 $arServicesTraveline = array();
-while($arService = $rsServices->Fetch()) {
+while ($arService = $rsServices->Fetch()) {
     preg_match_all('/\d+/', $arService["CODE"], $matches);
     $code = $matches[0][0];
     $arServicesTraveline[$code] = $arService;
@@ -398,7 +402,7 @@ $currYear = date('Y');
 $nextYear = $currYear + 1;
 $arDates = Products::getDates();
 
-$currentURL = "https://".$_SERVER["HTTP_HOST"].$_SERVER["REQUEST_URI"];
+$currentURL = "https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
 
 
 /* Генерация SEO */
@@ -416,8 +420,8 @@ if (!empty($fieldsSectionValues)) {
     $descriptionSEO = str_replace("#TYPE#", $typeObject, $fieldsSectionValues["SECTION_META_DESCRIPTION"]);
     $h1SEO = str_replace("#TYPE#", $arHLTypes[$arSection["UF_TYPE"]]["UF_NAME"], $fieldsSectionValues["SECTION_PAGE_TITLE"]);
 } else {
-    $titleSEO = $arSection["NAME"]." - онлайн-сервис бронирования глэмпингов и кемпингов Натуралист";
-    $descriptionSEO = $arSection["NAME"]." | Натуралист - удобный онлайн-сервис поиска и бронирования глэмпинга для отдыха на природе с оплатой на сайте. Вы можете подобрать место для комфортного природного туризма в России по выгодным ценам с моментальной системой бронирования.";
+    $titleSEO = $arSection["NAME"] . " - онлайн-сервис бронирования глэмпингов и кемпингов Натуралист";
+    $descriptionSEO = $arSection["NAME"] . " | Натуралист - удобный онлайн-сервис поиска и бронирования глэмпинга для отдыха на природе с оплатой на сайте. Вы можете подобрать место для комфортного природного туризма в России по выгодным ценам с моментальной системой бронирования.";
     $h1SEO = $arSection["~NAME"];
 }
 
@@ -476,7 +480,7 @@ $APPLICATION->AddHeadString('<meta name="description" content="' . $descriptionS
     </section>
     <!-- section-->
 
-    <?if($arSection["UF_COORDS"] && $arMeteo):?>
+    <? if ($arSection["UF_COORDS"] && $arMeteo) : ?>
         <section class="section section_info">
             <div class="container">
                 <?
@@ -491,7 +495,7 @@ $APPLICATION->AddHeadString('<meta name="description" content="' . $descriptionS
             </div>
         </section>
         <!-- section-->
-    <?endif;?>
+    <? endif; ?>
 
     <section class="section section_about" id="map">
         <div class="container">
@@ -511,7 +515,7 @@ $APPLICATION->AddHeadString('<meta name="description" content="' . $descriptionS
     </section>
     <!-- section-->
 
-    <?if($allCount > 0):?>
+    <? if ($allCount > 0) : ?>
         <section class="section section_room" id="rooms-anchor">
             <div class="container">
                 <?
@@ -548,11 +552,11 @@ $APPLICATION->AddHeadString('<meta name="description" content="' . $descriptionS
             </div>
         </section>
         <!-- section-->
-    <?else:?>
-        <p class="search-error" style="display: none"><?=$searchError != '' ? $searchError : 'Не найдено номеров на выбранные даты'?></p>
-    <?endif;?>
+    <? else : ?>
+        <p class="search-error" style="display: none"><?= $searchError != '' ? $searchError : 'Не найдено номеров на выбранные даты' ?></p>
+    <? endif; ?>
 
-    <?if($arReviews):?>
+    <? if ($arReviews) : ?>
         <section class="section section_reviews" id="reviews-anchor">
             <div class="container">
                 <?
@@ -576,7 +580,7 @@ $APPLICATION->AddHeadString('<meta name="description" content="' . $descriptionS
             </div>
         </section>
         <!-- section-->
-    <?endif;?>
+    <? endif; ?>
 
     <section class="section section_related">
         <div class="container related-projects">
@@ -628,7 +632,7 @@ $APPLICATION->IncludeComponent(
 );
 ?>
 
-<?if($arSection["COORDS"]):?>
+<? if ($arSection["COORDS"]) : ?>
     <?
     $APPLICATION->IncludeComponent(
         "naturalist:empty",
@@ -645,4 +649,4 @@ $APPLICATION->IncludeComponent(
         )
     );
     ?>
-<?endif;?>
+<? endif; ?>

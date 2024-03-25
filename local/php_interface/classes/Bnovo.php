@@ -324,7 +324,7 @@ class Bnovo
                     // Удаляем элементы из первоначального массива дат, т.к. он далее будет использоваться для поиска цен                    
                     foreach ($arDataGrouped[$key] as $toDel) {
                         unset($arData[$toDel['ID']]);
-                    }                    
+                    }
                     unset($arDataGrouped[$key]);
                     break;
                 }
@@ -338,11 +338,11 @@ class Bnovo
         // Создаём новый массив дат для сравнения по дням с результатами выборки из таблицы цен
         // Отбрасываем последнюю дату, т.к. она не влияет на возможность заселения
         $arDatesToCompare = $arDates;
-        array_pop($arDatesToCompare);        
+        array_pop($arDatesToCompare);
 
         // Сравниваем дату каждого элемента сгруппированного массива с датой по индексу.
         // Если будет хотя бы одно несовпадение, удаляем весь массив
-        foreach ($arDataGrouped as $key => $arItems) {            
+        foreach ($arDataGrouped as $key => $arItems) {
             foreach ($arItems as $keyCurDate => $curDate) {
                 if ($keyCurDate == count($arDatesToCompare)) {
                     break;
@@ -350,7 +350,7 @@ class Bnovo
                 if ($curDate['UF_DATE']->format('d.m.Y') != $arDatesToCompare[$keyCurDate]) {
                     unset($arDataGrouped[$key]);
                     break;
-                }                
+                }
             }
         }
 

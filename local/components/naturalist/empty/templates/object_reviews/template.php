@@ -132,7 +132,7 @@ global $arUser, $userId, $isAuthorized;
                         <div class="review__heading">
                             <div class="review__title">
                                 <div class="h3"><?= $arReviewsUsers[$arItem["PROPERTY_USER_ID_VALUE"]]["NAME"] ?></div>
-                                <span><?= FormatDate("d F Y г.", strtotime($arItem["DATE_CREATE"])) ?></span>
+                                <span><?= FormatDate("d F Y г.", strtotime($arItem["ACTIVE_FROM"])) ?></span>
                             </div>
                             <ul class="list list_stars">
                                 <? for ($i = 1; $i <= 5; $i++) : ?>

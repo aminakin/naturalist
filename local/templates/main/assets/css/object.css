@@ -2210,7 +2210,6 @@
 }
 
 @media (max-width: 1024px) {
-
   .room__order {
     position: relative;
   }
@@ -2224,7 +2223,6 @@
   .room__price_cert_price-item {
     padding: 1px 11px;
   }
-
 }
 
 @media (max-width: 600px) {
@@ -2415,6 +2413,7 @@
 
 .review__image img {
   display: block;
+  width: 100%;
 }
 
 .review__content {

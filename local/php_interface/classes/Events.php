@@ -11,6 +11,7 @@ use Bitrix\Main\Loader;
 use Bitrix\Sale\Order;
 use CIBlockSection;
 use CIBlockElement;
+use CFile;
 use Naturalist\Users;
 use Naturalist\Orders;
 use Naturalist\Settings;
@@ -36,15 +37,17 @@ class Events
         $event->addEventHandler('main', 'OnEndBufferContent', [self::class, "deleteKernelJs"]);
         $event->addEventHandler('main', 'OnEndBufferContent', [self::class, "deleteKernelCss"]);
         $event->addEventHandler('sale', 'OnSaleOrderSaved', [self::class, "makeReservation"]);
+        $event->addEventHandler('sale', 'OnSaleOrderSaved', [self::class, "makeOrderCert"]);
         $event->addEventHandler('sale', 'OnSaleOrderSaved', [self::class, "cancelOrder"]);
-        $event->addEventHandler('iblock', 'OnBeforeIBlockSectionDelete', [self::class, "OnBeforeIBlockSectionDeleteHandler"]);        
+        $event->addEventHandler('iblock', 'OnBeforeIBlockSectionDelete', [self::class, "OnBeforeIBlockSectionDeleteHandler"]);
     }
 
-    public static function deleteKernelJs(&$content) {
+    public static function deleteKernelJs(&$content)
+    {
         global $USER, $APPLICATION;
-        if((is_object($USER) && $USER->IsAuthorized()) || strpos($APPLICATION->GetCurDir(), "/bitrix/")!==false) return;
-        if($APPLICATION->GetProperty("save_kernel") == "Y") return;
-        $arPatternsToRemove = Array(
+        if ((is_object($USER) && $USER->IsAuthorized()) || strpos($APPLICATION->GetCurDir(), "/bitrix/") !== false) return;
+        if ($APPLICATION->GetProperty("save_kernel") == "Y") return;
+        $arPatternsToRemove = array(
             '/<script.+?src=".+?kernel_main\/kernel_main_v1\.js\?\d+"><\/script\>/',
             '/<script.+?src=".+?bitrix\/js\/main\/jquery\/jquery[^"]+"><\/script\>/',
             '/<script.+?src=".+?bitrix\/js\/main\/core\/core[^"]+"><\/script\>/',
@@ -61,11 +64,12 @@ class Events
         $content = preg_replace("/\n{2,}/", "\n\n", $content);
     }
 
-    public static function deleteKernelCss(&$content) {
+    public static function deleteKernelCss(&$content)
+    {
         global $USER, $APPLICATION;
-        if((is_object($USER) && $USER->IsAuthorized()) || strpos($APPLICATION->GetCurDir(), "/bitrix/")!==false) return;
-        if($APPLICATION->GetProperty("save_kernel") == "Y") return;
-        $arPatternsToRemove = Array(
+        if ((is_object($USER) && $USER->IsAuthorized()) || strpos($APPLICATION->GetCurDir(), "/bitrix/") !== false) return;
+        if ($APPLICATION->GetProperty("save_kernel") == "Y") return;
+        $arPatternsToRemove = array(
             '/<link.+?href=".+?kernel_main\/kernel_main_v1\.css\?\d+"[^>]+>/',
             '/<link.+?href=".+?bitrix\/js\/main\/core\/css\/core[^"]+"[^>]+>/',
             '/<link.+?href=".+?bitrix\/panel\/main\/popup[^"]+"[^>]+>/',
@@ -77,7 +81,8 @@ class Events
     }
 
     // Установка глобальных переменных для текущего пользователя
-    public static function initGlobals() {
+    public static function initGlobals()
+    {
         global $arUser, $userId, $isAuthorized;
         $arUser = Users::getUser();
         $userId = $arUser['ID'] ?? 0;
@@ -94,8 +99,9 @@ class Events
     }
 
     // Авторизация через Telegram
-    public static function tgAuth() {
-        if($_GET['auth'] == 'tg') {
+    public static function tgAuth()
+    {
+        if ($_GET['auth'] == 'tg') {
             $botToken = ($_SERVER['SERVER_NAME'] == 'naturalistbx.idemcloud.ru') ? '5741433095:AAGiC3egO3Ed8vnUbxc9miA2zbKRyOQA9zA' : '5700016629:AAGVivxrXTE8UNUMGMA2BML6v7APCx4VANA';
 
             $check_hash = $_GET['hash'];
@@ -104,17 +110,17 @@ class Events
 
             $data_check_arr = [];
             foreach ($_GET as $key => $value) {
-                $data_check_arr[] = $key.'='.$value;
+                $data_check_arr[] = $key . '=' . $value;
             }
             sort($data_check_arr);
 
             $data_check_string = implode("\n", $data_check_arr);
             $secret_key = hash('sha256', $botToken, true);
             $hash = hash_hmac('sha256', $data_check_string, $secret_key);
-            if(strcmp($hash, $check_hash) !== 0) {
+            if (strcmp($hash, $check_hash) !== 0) {
                 return false;
             }
-            if((time() - $_GET['auth_date']) > 86400) {
+            if ((time() - $_GET['auth_date']) > 86400) {
                 return false;
             }
 
@@ -128,7 +134,7 @@ class Events
             );
             $res = $users->loginBySocnets($params);
             $arRes = json_decode($res, true);
-            if($arRes && !$arRes['ERROR']) {
+            if ($arRes && !$arRes['ERROR']) {
                 LocalRedirect('/personal/');
             }
         }
@@ -151,11 +157,11 @@ class Events
                     self::certCashOrderHandler($order);
                     return;
                 }
-            }            
+            }
         }
 
         // Если это не оплата заказа
-        if(!$order->getField('PAYED') || !$oldValues['PAYED'] || ($order->getField('PAYED') != 'Y') && ($oldValues['PAYED'] != 'N'))
+        if (!$order->getField('PAYED') || !$oldValues['PAYED'] || ($order->getField('PAYED') != 'Y') && ($oldValues['PAYED'] != 'N'))
             return;
 
         // Если тестовый заказ, выходим        
@@ -175,30 +181,32 @@ class Events
         $reservationRes = $orders->makeReservation($orderId);
 
         // Если успешно забронировано
-        if(!isset($reservationRes["ERROR"])) {
+        if (!isset($reservationRes["ERROR"])) {
             // Выставляем заказу статус "P" (Оплачен)
             $orders->updateStatus($orderId, "P");
         } else {
             // Отменяем заказ
-            $orders->cancel($orderId, "Невозможно забронировать заказ: ".$reservationRes["ERROR"]);
+            $orders->cancel($orderId, "Невозможно забронировать заказ: " . $reservationRes["ERROR"]);
         }
     }
 
-    private static function certCashOrderHandler($order) {
+    private static function certCashOrderHandler($order)
+    {
         $propertyCollection = $order->getPropertyCollection();
         $clientEmail = $propertyCollection->getItemByOrderPropertyId(2)->getValue();
         $address = $propertyCollection->getItemByOrderPropertyId(ORDER_PROP_CERT_ADDRESS)->getValue();
 
         $fields = [
             "ORDER_ID" => $order->getId(),
-            "COST" => $order->getPrice().'Р',
+            "COST" => $order->getPrice() . 'Р',
             "ADDRESS" => $address ? $address : 'Самовывоз',
-            "EMAIL" => $clientEmail,            
+            "EMAIL" => $clientEmail,
         ];
         Users::sendEmail("NEW_CERT_ORDER_CASH", "67", $fields);
     }
 
-    private static function certOrderHandler($order) {
+    private static function certOrderHandler($order, $noMail = false)
+    {
         $orderId = $order->getId();
         $propertyCollection = $order->getPropertyCollection();
         $nominal = $propertyCollection->getItemByOrderPropertyId(ORDER_PROP_CERT_PRICE)->getValue();
@@ -209,30 +217,49 @@ class Events
         $giftEmail = $propertyCollection->getItemByOrderPropertyId(ORDER_PROP_GIFT_EMAIL)->getValue();
 
         $cert = new Certificates\Create();
-        $cert->add($nominal, $orderId);     
-        
+        $cert->add($nominal, $orderId);
+
         // Создание pdf с сертификатом        
         $PDF = new CreateCertPdf();
         $file = json_decode($PDF->getPdfLink($orderId))->SHORT;
 
-        // Отправка писем в зависимости от формата сертификата
-        $fields = [
-            "EMAIL" => $clientEmail,
-            "NAME" => $clientLastName. ' ' . $clientName,
-        ];
-        if ($type == 'fiz') {
-            Users::sendEmail("FIZ_CERT_PURCHASED", "66", $fields, [$_SERVER["DOCUMENT_ROOT"].$file]);
+        if ($noMail) {
+            $certFileProp = $propertyCollection->getItemByOrderPropertyId(ORDER_PROP_CERT_FILE);
+            $arFile = CFile::MakeFileArray($_SERVER['DOCUMENT_ROOT'] . $file);
+            $fileId = CFile::SaveFile($arFile, 'order_certs');
+            $certFileProp->setValue($fileId);
+            unlink($_SERVER['DOCUMENT_ROOT'] . $file);
+            $propertyCollection->save();
         } else {
-            Users::sendEmail("EL_CERT_PURCHASED", "65", $fields, [$_SERVER["DOCUMENT_ROOT"].$file]);
-            if ($giftEmail != '') {
-                $fields['EMAIL'] = $giftEmail;
-                Users::sendEmail("EL_CERT_PURCHASED", "65", $fields, [$_SERVER["DOCUMENT_ROOT"].$file]);
+            // Отправка писем в зависимости от формата сертификата
+            $fields = [
+                "EMAIL" => $clientEmail,
+                "NAME" => $clientLastName . ' ' . $clientName,
+            ];
+            if ($type == 'fiz') {
+                Users::sendEmail("FIZ_CERT_PURCHASED", "66", $fields, [$_SERVER["DOCUMENT_ROOT"] . $file]);
+            } else {
+                Users::sendEmail("EL_CERT_PURCHASED", "65", $fields, [$_SERVER["DOCUMENT_ROOT"] . $file]);
+                if ($giftEmail != '') {
+                    $fields['EMAIL'] = $giftEmail;
+                    Users::sendEmail("EL_CERT_PURCHASED", "65", $fields, [$_SERVER["DOCUMENT_ROOT"] . $file]);
+                }
             }
         }
-        
     }
 
-    public static function cancelOrder($event) {
+    public static function makeOrderCert($event)
+    {
+        $order = $event->getParameter("ENTITY");
+        $propertyCollection = $order->getPropertyCollection();
+        $isCert = $propertyCollection->getItemByOrderPropertyId(ORDER_PROP_IS_CERT)->getValue();
+        if ($isCert == 'Y') {
+            self::certOrderHandler($order, true);
+        }
+    }
+
+    public static function cancelOrder($event)
+    {
         $order = $event->getParameter("ENTITY");
         if ($order->isCanceled()) {
             $orderId = $order->getId();
@@ -252,7 +279,7 @@ class Events
             "UF_EXTERNAL_SERVICE" => '2'
         ), false, array("ID", "UF_EXTERNAL_ID"), false)->Fetch();
 
-        if(!empty($arSection["UF_EXTERNAL_ID"])) {
+        if (!empty($arSection["UF_EXTERNAL_ID"])) {
             $entityClass = self::getEntityClass();
             $rsData = $entityClass::getList([
                 "select" => ["*"],
@@ -265,11 +292,10 @@ class Events
                 $res = $entityClass::delete($arItem['ID']);
 
                 if ($res->isSuccess()) {
-                    echo ' Успешно удален: '.$arItem['ID'];
+                    echo ' Успешно удален: ' . $arItem['ID'];
                 } else {
                     echo 'Ошибка: ' . implode(', ', $res->getErrors()) . "";
                 }
-
             }
         }
     }
