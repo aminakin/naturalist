@@ -70,12 +70,8 @@ $arReviewsAvg = Reviews::getCampingRating($arCampingIDs);
                                     <? $keyPhoto = 1; ?>
                                     <? foreach ($arItem["UF_PHOTOS"] as $keyElement => $photoId) : ?>
                                         <?
-                                        $arPhoto = CFile::ResizeImageGet(
-                                            $photoId,
-                                            array('width' => 600, 'height' => 360),
-                                            BX_RESIZE_IMAGE_EXACT,
-                                            true
-                                        );
+                                        $arPhoto = CFile::ResizeImageGet($photoId,
+                                            array('width' => 600, 'height' => 400), BX_RESIZE_IMAGE_EXACT, true);
                                         ?>
                                         <? if (count($arItem["UF_PHOTOS"]) > 1) : ?>
                                             <?

@@ -3,12 +3,12 @@ require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/header.php");
 $metaTags = getMetaTags();
 $currentURLDir = $APPLICATION->GetCurDir();
 
-if(!empty($metaTags[$currentURLDir])) {
+if (!empty($metaTags[$currentURLDir])) {
     $APPLICATION->SetTitle($metaTags[$currentURLDir]["~PROPERTY_TITLE_VALUE"]["TEXT"]);
-    $APPLICATION->AddHeadString('<meta name="description" content="'.$metaTags[$currentURLDir]["~PROPERTY_DESCRIPTION_VALUE"]["TEXT"].'" />');
+    $APPLICATION->AddHeadString('<meta name="description" content="' . $metaTags[$currentURLDir]["~PROPERTY_DESCRIPTION_VALUE"]["TEXT"] . '" />');
     $h1SEO = $metaTags[$currentURLDir]["~PROPERTY_H1_VALUE"]["TEXT"];
 } else {
-	$APPLICATION->SetTitle("Пользовательское соглашение - онлайн-сервис бронирования глэмпингов и кемпингов Натуралист");
+    $APPLICATION->SetTitle("Пользовательское соглашение - онлайн-сервис бронирования глэмпингов и кемпингов Натуралист");
     $APPLICATION->AddHeadString('<meta name="description" content="Пользовательское соглашение | Натуралист - удобный онлайн-сервис поиска и бронирования глэмпинга для отдыха на природе с оплатой на сайте. Вы можете подобрать место для комфортного природного туризма в России по выгодным ценам с моментальной системой бронирования." />');
     $h1SEO = $arSettings['agreement_title'];
 }
@@ -16,6 +16,7 @@ global $arSettings;
 ?>
 
 <link rel="stylesheet" href="<?= SITE_TEMPLATE_PATH ?>/assets/css/content.min.css?v=1664554795104">
+<link rel="stylesheet" href="<?= SITE_TEMPLATE_PATH ?>/assets/css/contacts.css?v=1664554795104">
 <main class="main">
     <section class="section section_crumbs">
         <div class="container">
@@ -23,8 +24,8 @@ global $arSettings;
                 <ul class="list crumbs__list">
                     <?
                     $APPLICATION->IncludeComponent(
-                        "bitrix:breadcrumb", 
-                        "main", 
+                        "bitrix:breadcrumb",
+                        "main",
                         array(
                             "PATH" => "",
                             "SITE_ID" => "s1",
@@ -45,7 +46,7 @@ global $arSettings;
             <div class="content">
                 <div class="content__sidebar">
                     <div class="sidebar-navigation">
-                        <div class="sidebar-navigation__label" data-navigation-control="data-navigation-control"><span><?=$arSettings['agreement_title']?></span></div>
+                        <div class="sidebar-navigation__label" data-navigation-control="data-navigation-control"><span><?= $arSettings['agreement_title'] ?></span></div>
                         <ul class="list">
                             <?
                             $APPLICATION->IncludeComponent(
@@ -72,9 +73,9 @@ global $arSettings;
                 </div>
 
                 <div class="content__article">
-                    <h1 class="h3"><?=$h1SEO?></h1>
+                    <h1 class="h3"><?= $h1SEO ?></h1>
 
-                    <?=$arSettings['agreement_content']?>
+                    <?= $arSettings['agreement_content'] ?>
                 </div>
             </div>
         </div>
