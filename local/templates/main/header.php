@@ -90,9 +90,6 @@ use Naturalist\Users;
     <? if (CSite::InDir('/impressions')) : ?>
         <link rel="stylesheet" href="<?= SITE_TEMPLATE_PATH ?>/assets/css/impressions.css?v=1664554795104">
     <? endif; ?>
-    <? if (CSite::InDir('/contacts')) : ?>
-        <link rel="stylesheet" href="<?= SITE_TEMPLATE_PATH ?>/assets/css/contacts.css?v=1664554795104">
-    <? endif; ?>
     <? if (CSite::InDir('/map')) : ?>
         <link rel="stylesheet" href="<?= SITE_TEMPLATE_PATH ?>/assets/css/catalog.css?v=1664304519938">
     <? endif; ?>

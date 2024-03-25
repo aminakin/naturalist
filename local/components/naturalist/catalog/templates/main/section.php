@@ -233,7 +233,7 @@ while ($arSection = $rsSections->GetNext()) {
         foreach ($arSection["UF_PHOTOS"] as $photoId) {
             $imageOriginal = CFile::GetFileArray($photoId);
             $arDataFullGallery[] = "&quot;" . $imageOriginal["SRC"] . "&quot;";
-            $arSection["PICTURES"][$photoId] = CFile::ResizeImageGet($photoId, array('width' => 600, 'height' => 360), BX_RESIZE_IMAGE_EXACT, true);
+            $arSection["PICTURES"][$photoId] = CFile::ResizeImageGet($photoId, array('width' => 600, 'height' => 400), BX_RESIZE_IMAGE_EXACT, true);
         }
 
     } else {

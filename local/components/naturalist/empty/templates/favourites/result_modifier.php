@@ -69,7 +69,7 @@ if ($arFavourites) {
     while ($arFavourite = $rsFavourites->GetNext()) {
         if($arFavourite["UF_PHOTOS"]) {
             foreach ($arFavourite["UF_PHOTOS"] as $photoId) {
-                $arFavourite["PICTURES"][$photoId] = CFile::ResizeImageGet($photoId, array('width' => 600, 'height' => 360), BX_RESIZE_IMAGE_EXACT, true);
+                $arFavourite["PICTURES"][$photoId] = CFile::ResizeImageGet($photoId, array('width' => 600, 'height' => 400), BX_RESIZE_IMAGE_EXACT, true);
             }
 
         } else {

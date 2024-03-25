@@ -125,7 +125,7 @@ foreach ($arResult as $key => $value) {
                                 $arOrderSection = $arOrderItem["SECTION"];
                                 if (!empty($arOrderSection["UF_PHOTOS"][0])) {
                                     $photo = CFile::ResizeImageGet($arOrderSection["UF_PHOTOS"][0],
-                                        array('width' => 600, 'height' => 360), BX_RESIZE_IMAGE_EXACT, true)["src"];
+                                        array('width' => 600, 'height' => 400), BX_RESIZE_IMAGE_EXACT, true)["src"];
                                 } else {
                                     $photo = SITE_TEMPLATE_PATH . "/img/no_photo.png";
                                 }
