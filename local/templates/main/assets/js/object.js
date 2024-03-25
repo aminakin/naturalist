@@ -12784,7 +12784,7 @@
 
       if (
         $el.matches("[data-fullgallery-item]") ||
-        $el.closest("[data-fullgallery-item]")
+        ($el.closest("[data-fullgallery-item]") && window.innerWidth > 450)
       ) {
         event.preventDefault();
         var $dataEl = $el.matches("[data-fullgallery-item]")

@@ -177,7 +177,7 @@
 }
 
 .object__images .swiper-slide {
-  padding-bottom: 60%;
+  padding-bottom: 66.7%;
   position: relative;
 }
 
@@ -3415,7 +3415,7 @@
     .object-row__images
     .slider-gallery
     .swiper-slide {
-    padding-bottom: 68%;
+    padding-bottom: 66.7%;
     position: relative;
   }
 

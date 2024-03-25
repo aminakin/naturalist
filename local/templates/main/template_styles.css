@@ -468,7 +468,11 @@ h1.page_title {
   .objects__list .swiper-button-next,
   .objects__list .swiper-button-prev,
   .catalog__list .swiper-button-next,
-  .catalog__list .swiper-button-prev {
+  .catalog__list .swiper-button-prev,
+  .objects .swiper-button-next,
+  .objects .swiper-button-prev,
+  .rooms__list .swiper-button-next,
+  .rooms__list .swiper-button-prev {
     display: none !important;
   }
 }

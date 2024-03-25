@@ -249,7 +249,7 @@ if (!empty($arSection) && !empty($dateFrom) && !empty($dateTo) && !empty($_GET['
             foreach ($arElement["PROPERTY_PHOTOS_VALUE"] as $photoId) {
                 $roomImageOriginal = CFile::GetFileArray($photoId);
                 $arDataFullGalleryRoom[] = "&quot;" . $roomImageOriginal["SRC"] . "&quot;";
-                $arElement["PICTURES"][$photoId] = CFile::ResizeImageGet($photoId, array('width' => 500, 'height' => 300), BX_RESIZE_IMAGE_EXACT, true);
+                $arElement["PICTURES"][$photoId] = CFile::ResizeImageGet($photoId, array('width' => 600, 'height' => 400), BX_RESIZE_IMAGE_EXACT, true);
             }
         } else {
             $arElement["PICTURES"][0]["src"] = SITE_TEMPLATE_PATH . "/img/no_photo.png";
@@ -294,7 +294,7 @@ if (!empty($arSection) && !empty($dateFrom) && !empty($dateTo) && !empty($_GET['
                     foreach ($arElement["PROPERTY_PHOTOS_VALUE"] as $photoId) {
                         $roomImageOriginal = CFile::GetFileArray($photoId);
                         $arDataFullGalleryRoom[] = "&quot;" . $roomImageOriginal["SRC"] . "&quot;";
-                        $arElement["PICTURES"][$photoId] = CFile::ResizeImageGet($photoId, array('width' => 500, 'height' => 300), BX_RESIZE_IMAGE_EXACT, true);
+                        $arElement["PICTURES"][$photoId] = CFile::ResizeImageGet($photoId, array('width' => 600, 'height' => 400), BX_RESIZE_IMAGE_EXACT, true);
                     }
                 } else {
                     $arElement["PICTURES"][0]["src"] = SITE_TEMPLATE_PATH . "/img/no_photo.png";
