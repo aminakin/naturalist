@@ -17,6 +17,7 @@ use Naturalist\Orders;
 use Naturalist\Settings;
 use Naturalist\Certificates;
 use Naturalist\CreateCertPdf;
+use Naturalist\Crest;
 
 defined("B_PROLOG_INCLUDED") && B_PROLOG_INCLUDED === true || die();
 /**
@@ -36,6 +37,7 @@ class Events
         $event->addEventHandler('main', 'OnBeforeProlog', [self::class, "tgAuth"]);
         $event->addEventHandler('main', 'OnEndBufferContent', [self::class, "deleteKernelJs"]);
         $event->addEventHandler('main', 'OnEndBufferContent', [self::class, "deleteKernelCss"]);
+        $event->addEventHandler('sale', 'OnSaleOrderSaved', [self::class, "createB24Deal"]);
         $event->addEventHandler('sale', 'OnSaleOrderSaved', [self::class, "makeReservation"]);
         $event->addEventHandler('sale', 'OnSaleOrderSaved', [self::class, "makeOrderCert"]);
         $event->addEventHandler('sale', 'OnSaleOrderSaved', [self::class, "cancelOrder"]);
@@ -149,7 +151,11 @@ class Events
         $oldValues = $event->getParameter("VALUES");
 
         $isNew = $order->isNew();
-        $isCert = $propertyCollection->getItemByOrderPropertyId(ORDER_PROP_IS_CERT)->getValue();
+        $isCertProp = $propertyCollection->getItemByOrderPropertyId(ORDER_PROP_IS_CERT);
+        $isCert = false;
+        if ($isCertProp !== null) {
+            $isCert = $isCertProp->getValue();
+        }
 
         if ($isNew && $isCert) {
             foreach ($paymentCollection as $payment) {
@@ -252,8 +258,11 @@ class Events
     {
         $order = $event->getParameter("ENTITY");
         $propertyCollection = $order->getPropertyCollection();
-        $isCert = $propertyCollection->getItemByOrderPropertyId(ORDER_PROP_IS_CERT)->getValue();
-        if ($isCert == 'Y') {
+        $isCertProp = $propertyCollection->getItemByOrderPropertyId(ORDER_PROP_IS_CERT);
+        if ($isCertProp == null) {
+            return;
+        }
+        if ($isCertProp->getValue() == 'Y') {
             self::certOrderHandler($order, true);
         }
     }
@@ -266,6 +275,48 @@ class Events
             $orders = new Orders();
             $orders->cancel($orderId, 'Отмена заказа из админки');
         }
+    }
+
+    // Отправка данных в Б24
+    public static function createB24Deal($event)
+    {
+        $order = $event->getParameter("ENTITY");
+        $propertyCollection = $order->getPropertyCollection();
+        $arFields = $propertyCollection->getArray();
+        $basket = $order->getBasket();
+        $basketItems = $basket->getBasketItems();
+
+        foreach ($basketItems as $basketItem) {
+            $roomName = $basketItem->getField('NAME');
+        }
+
+        foreach ($arFields['properties'] as $field) {
+            $arProps[$field['CODE']] = $field;
+        }
+
+        //AddMessage2Log($arProps);
+
+        $result = CRest::call(
+            'crm.deal.add',
+            [
+                'fields' => [
+                    'TITLE' => 'Заказ с сайта №' . $order->getId(),
+                    'UF_CRM_64CC9F9675E53' => $arProps['OBJECT']['VALUE'][0],                    
+                    'UF_CRM_1704886320' => $arProps['CHECKSUM']['VALUE'][0] ? ["ID" => 88] : ["ID" => 86],
+                    'UF_CRM_1711465448624' => $arProps['OBJECT_ADDRESS']['VALUE'][0],
+                    'UF_CRM_1711465517830' => $arProps['ROOM_PHOTO']['VALUE'][0],
+                    'UF_CRM_1711466043420' => $arProps['CHECKIN_TIME']['VALUE'][0],
+                    'UF_CRM_1711466052905' => $arProps['CHECOUT_TIME']['VALUE'][0],
+                    'UF_CRM_1711466190125' => $arProps['DATES_NIGHTS']['VALUE'][0],
+                    'UF_CRM_1711466269179' => $arProps['GUESTS_LINE_UP']['VALUE'][0],
+                    'UF_CRM_1711467509210' => $arProps['GUESTS_PLACE']['VALUE'][0],
+                    'SOURCE_ID' => 'STORE',
+                    'UF_CRM_1711467774213' => $arProps['GUEST_LIST']['VALUE'][0],
+                    'UF_CRM_1691496469' => $arProps['PHONE']['VALUE'][0],
+                    'UF_CRM_1691496489' => $arProps['EMAIL']['VALUE'][0],
+                ]
+            ]
+        );
     }
 
     // Удаление данных по размещениям Биново при удалении объекта
