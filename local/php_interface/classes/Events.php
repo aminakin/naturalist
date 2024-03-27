@@ -288,15 +288,15 @@ class Events
 
         foreach ($basketItems as $basketItem) {
             $roomName = $basketItem->getField('NAME');
+            $prodId = $basketItem->getProductId();
+            $price = $basketItem->getPrice();
         }
 
         foreach ($arFields['properties'] as $field) {
             $arProps[$field['CODE']] = $field;
-        }
+        }        
 
-        //AddMessage2Log($arProps);
-
-        $result = CRest::call(
+        $deal = CRest::call(
             'crm.deal.add',
             [
                 'fields' => [
@@ -317,6 +317,23 @@ class Events
                 ]
             ]
         );
+
+        $dealProds = CRest::call(
+            'crm.deal.productrows.set',
+            [
+                'id' => $deal['result'],
+                'rows' => [
+                    [
+                        // 'PRODUCT_ID' => $prodId,
+                        'PRODUCT_NAME' => $roomName,
+                        'PRICE' => $price,
+                        'QUANTITY' => 1,
+                    ]
+                ]
+            ]
+        );
+
+        AddMessage2Log($dealProds);
     }
 
     // Удаление данных по размещениям Биново при удалении объекта
