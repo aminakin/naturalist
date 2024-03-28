@@ -349,16 +349,7 @@ if ($sortBy == 'price') {
 }
 
 /* Пагинация */
-// Данные из сессии по предыдущему просмотру каталога
-$session = Application::getInstance()->getSession();
-$previousShowenItems = $session['catalog_showen_items'];
-$nextPage = $session['current_catalog_page'];
-
-if ($nextPage) {
-    $page = intval($nextPage) - 1;
-} else {
-    $page = $_REQUEST['page'] ?? 1;
-}
+$page = $_REQUEST['page'] ?? 1;
 
 // Добавляем свойство Скидка, если есть хотя бы 1 элемент со скидкой
 foreach ($arSections as $section) {
@@ -389,7 +380,7 @@ unset($section);
 
 $pageCount = ceil($allCount / $arParams["ITEMS_COUNT"]);
 if ($pageCount > 1) {
-    $arPageSections = array_slice($arSections, $previousShowenItems ? 0 : ($page - 1) * $arParams["ITEMS_COUNT"], $previousShowenItems ? $previousShowenItems : $arParams["ITEMS_COUNT"]);
+    $arPageSections = array_slice($arSections, ($page - 1) * $arParams["ITEMS_COUNT"], $arParams["ITEMS_COUNT"]);
 } else {
     $arPageSections = $arSections;
 }
@@ -798,6 +789,7 @@ $APPLICATION->AddHeadString('<meta name="description" content="' . $descriptionS
                         "children" => $children,
                         "guestsDeclension" => $guestsDeclension,
                         "arChildrenAge" => $arChildrenAge,
+                        "itemsCount" => $arParams["ITEMS_COUNT"],
                     )
                 );
                 ?>
@@ -866,7 +858,3 @@ $APPLICATION->IncludeComponent(
         "map" => $arParams["MAP"]
     )
 );
-
-$session = Application::getInstance()->getSession();
-$session->remove('current_catalog_page');
-$session->remove('catalog_showen_items');
