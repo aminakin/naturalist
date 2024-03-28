@@ -37,6 +37,12 @@ $arUriParams = array(
     'childrenAge' => $_GET['childrenAge'],
 );
 
+if (CSite::InDir('/map')) {
+    $seoFile = 'map';
+} else {
+    $seoFile = 'catalog';
+}
+
 /* Избранное (список ID) */
 $arFavourites = Users::getFavourites();
 
@@ -201,7 +207,7 @@ if (!empty($_GET['impressions']) && isset($_GET['impressions'])) {
     while ($arImpression = $rsImpressions->Fetch()) {
         $arFilterImpressions[] = $arImpression["ID"];
         $arSeoImpressions[] = $arImpression;
-    }
+    }    
 
     $arFilter["UF_IMPRESSIONS"] = $arFilterImpressions;
 }
@@ -797,7 +803,24 @@ $APPLICATION->AddHeadString('<meta name="description" content="' . $descriptionS
                 ?>
             </div>
         </section>
-        <!-- section-->
+        <!-- section-->                
+        <section class="cert-index__seo-text">
+            <div class="container">
+                <?if (!empty($arSeoImpressions) && reset($arSeoImpressions)['PREVIEW_TEXT'] != '') {
+                    echo reset($arSeoImpressions)['PREVIEW_TEXT'];
+                } else {
+                    $APPLICATION->IncludeComponent(
+                        "bitrix:main.include",
+                        "",
+                        Array(
+                            "AREA_FILE_SHOW" => "file", 
+                            "PATH" => '/include/'.$seoFile.'-seo-text.php',
+                            "EDIT_TEMPLATE" => ""
+                        )
+                    );
+                }?>
+            </div>
+        </section>
     </main>
 
     <div class="modal modal_filters" id="filters-modal">
