@@ -452,6 +452,7 @@ class Orders
                 $payment = $paymentCollection[0];
 
                 if (!empty($payment) && !empty($arOrder["FIELDS"]["IS_PAYED"])) {
+                    $this->updateStatus($arOrder["ID"], "F");
                     $this->updatePayment($order);
                 } else {
                     $this->updateStatus($arOrder["ID"], "C");

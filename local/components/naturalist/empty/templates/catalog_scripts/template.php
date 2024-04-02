@@ -70,7 +70,7 @@ foreach($arResult as $key => $value) {
             mapHref: '<?= $arSection["URL"] ?>',
             href: '<?= $arSection["URL"] ?>',
             coords: [<?= $arSection["COORDS"][0] ?>, <?= $arSection["COORDS"][1] ?>]
-        },
+        },        
         <? endif; ?>
         <? endforeach; ?>
     ]
