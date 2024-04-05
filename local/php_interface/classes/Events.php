@@ -280,7 +280,13 @@ class Events
     // Отправка данных в Б24
     public static function createB24Deal($event)
     {
-        $order = $event->getParameter("ENTITY");
+        $order = $event->getParameter("ENTITY");        
+        $oldValues = $event->getParameter("VALUES");
+
+        if (!$order->getField('PAYED') || !$oldValues['PAYED'] || ($order->getField('PAYED') != 'Y') && ($oldValues['PAYED'] != 'N')) {
+            return;
+        }
+
         $propertyCollection = $order->getPropertyCollection();
         $arFields = $propertyCollection->getArray();
         $basket = $order->getBasket();
@@ -332,8 +338,6 @@ class Events
                 ]
             ]
         );
-
-        AddMessage2Log($dealProds);
     }
 
     // Удаление данных по размещениям Биново при удалении объекта
