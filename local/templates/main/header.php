@@ -170,6 +170,33 @@ use Naturalist\Users;
     </noscript>
     <!-- /Top.Mail.Ru counter -->
 
+    <?
+if (!\Bitrix\Main\Engine\CurrentUser::get()->isAdmin()) {
+?>
+
+    <!-- Yandex.Metrika counter -->
+<script type="text/javascript" >
+   (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+   m[i].l=1*new Date();
+   for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+   k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
+   (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
+
+   ym(91071014, "init", {
+        clickmap:true,
+        trackLinks:true,
+        accurateTrackBounce:true,
+        webvisor:true,
+        ecommerce:"dataLayer"
+   });
+</script>
+<noscript><div><img src="https://mc.yandex.ru/watch/91071014" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+<!-- /Yandex.Metrika counter -->
+
+
+
+<? } ?>
+
     <script src="https://dmp.one/sync?stock_key=4dce2e8f5fdd1727a46278cb20b97261" async charset="UTF-8"></script>
 </head>
 
@@ -223,6 +250,14 @@ use Naturalist\Users;
 
                 <div class="header__controls">
                     <ul class="list">
+                        <li class="list__item list__item_phone">                            
+                            <a href="tel:<?= $arSettings['contacts_phone'] ?>">
+                                <span><?= $arSettings['contacts_phone'] ?></span>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 28 28" fill="none">
+                                    <path d="M23.898 4.09901C18.4298 -1.36749 9.56551 -1.36618 4.09901 4.10201C-1.36749 9.57021 -1.36618 18.4345 4.10202 23.901C9.57021 29.3675 18.4345 29.3662 23.901 23.898C26.5263 21.2718 28.0008 17.7103 28 13.997C27.9992 10.2843 26.5237 6.72389 23.898 4.09901ZM21.2025 19.5018C21.2019 19.5024 21.2013 19.5031 21.2006 19.5037V19.499L20.4913 20.2037C19.5739 21.1327 18.2378 21.5149 16.9679 21.2117C15.6885 20.8692 14.4723 20.3241 13.3653 19.597C12.3368 18.9398 11.3838 18.1714 10.5233 17.3057C9.73159 16.5198 9.02033 15.6568 8.39995 14.7297C7.72139 13.7321 7.18431 12.6453 6.80396 11.5003C6.36793 10.1553 6.72925 8.6793 7.73731 7.68771L8.56796 6.85706C8.7989 6.62507 9.17416 6.62425 9.40609 6.8552C9.4067 6.8558 9.40735 6.8564 9.40795 6.85706L12.0306 9.4797C12.2626 9.71065 12.2634 10.0859 12.0325 10.3178C12.0319 10.3184 12.0313 10.319 12.0306 10.3197L10.4906 11.8597C10.0487 12.2968 9.99316 12.9913 10.36 13.493C10.9169 14.2575 11.5333 14.9768 12.2033 15.6444C12.9503 16.3946 13.7623 17.077 14.6299 17.6837C15.1313 18.0334 15.8109 17.9745 16.2446 17.5437L17.7332 16.0317C17.9642 15.7998 18.3394 15.7989 18.5714 16.0299C18.572 16.0305 18.5726 16.0311 18.5732 16.0317L21.2006 18.6637C21.4326 18.8946 21.4334 19.2698 21.2025 19.5018Z" fill="#E6C48E"/>
+                                </svg>
+                            </a>
+                        </li>
                         <li class="list__item list__item_favorite">
                             <a class="list__link" href="<?= $arSettings['header_favourites_link'] ?>">
                                 <div class="list__item-icon">
@@ -231,7 +266,7 @@ use Naturalist\Users;
                                     </svg>
                                     <span><?= ($arFavourites) ? count($arFavourites) : 0 ?></span>
                                 </div>
-                                <span><?= $arSettings['header_favourites_name'] ?></span>
+                                <?/*<span><?= $arSettings['header_favourites_name'] ?></span>*/?>
                             </a>
                         </li>
 
@@ -241,7 +276,7 @@ use Naturalist\Users;
                                     <svg class="icon icon_person" viewbox="0 0 16 16" style="width: 1.6rem; height: 1.6rem;">
                                         <use xlink:href="#person" />
                                     </svg>
-                                    <span><?= $arSettings['header_personal_name'] ?></span>
+                                    <?/*<span><?= $arSettings['header_personal_name'] ?></span>*/?>
                                 </a>
                             </li>
                         <? else : ?>
@@ -258,7 +293,7 @@ use Naturalist\Users;
                                             <use xlink:href="#person" />
                                         </svg>
                                     <? endif; ?>
-                                    <span><?= $arUser["NAME"] ?? $arSettings['header_personal_name'] ?></span>
+                                    <?/*<span><?= $arUser["NAME"] ?? $arSettings['header_personal_name'] ?></span>*/?>
                                 </a>
                             </li>
                         <? endif; ?>

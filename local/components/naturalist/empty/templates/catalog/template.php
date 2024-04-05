@@ -42,7 +42,7 @@ foreach ($arResult as $key => $value) {
                 $this->AddEditAction($arSection['ID'], $arSection['EDIT_LINK'], CIBlock::GetArrayByID($arSection["IBLOCK_ID"], "ELEMENT_EDIT"));
                 $this->AddDeleteAction($arSection['ID'], $arSection['DELETE_LINK'], CIBlock::GetArrayByID($arSection["IBLOCK_ID"], "ELEMENT_DELETE"), array("CONFIRM" => Loc::GetMessage('CT_BNL_ELEMENT_DELETE_CONFIRM')));
                 ?>
-                <div class="object-row" data-map-id="<?= $arSection["ID"] ?>" href="<?= $arItem["SECTION_PAGE_URL"] ?>" 
+                <div class="object-row" data-map-id="<?= $arSection["ID"] ?>" href="<?= $arSection["URL"] ?>" 
                      id="<?= $this->GetEditAreaId($arSection['ID']) ?>">
                     <div class="object-row__images">
                         <div class="swiper slider-gallery" data-slider-object="data-slider-object"
@@ -111,7 +111,7 @@ foreach ($arResult as $key => $value) {
 
                     <div class="object-row__content">
                         <div class="object-row__description">
-                            <a class="object-row__title h3" onclick="setLocalStorageCatalog(event);"
+                            <a class="object-row__title h3"
                                href="<?= $arSection["URL"] ?>"><?= $arSection["NAME"] ?></a>
 
                             <div class="area-info">
@@ -190,19 +190,33 @@ foreach ($arResult as $key => $value) {
                             </div>
 
                             <a class="button button_primary"
-                               onclick="VK.Goal('customize_product');setLocalStorageCatalog(event);"
+                               onclick="VK.Goal('customize_product');"
                                href="<?= $arSection["URL"] ?>">Выбрать</a>
                         </div>
                     </div>
                 </div>
             <?php endforeach; ?>
-        </div>
+        </div>        
 
-        <?php if ($page < $pageCount) : ?>
-            <div class="catalog__more">
-                <a href="#" data-catalog-showmore data-page="<?= $page + 1 ?>">Показать ещё</a>
-            </div>
-        <?php endif; ?>
+        <div class="catalog__more">
+            <?
+                $nav = new \Bitrix\Main\UI\PageNavigation("page");
+                $nav->allowAllRecords(false)
+                    ->setPageSize($arResult['itemsCount'])
+                    ->initFromUri();
+                $nav->setRecordCount($arResult['allCount']);
+
+                $APPLICATION->IncludeComponent(
+                    "bitrix:main.pagenavigation",
+                    "modern",
+                    array(
+                        "NAV_OBJECT" => $nav,
+                        "SEF_MODE" => "N",
+                    ),
+                    false
+                );
+            ?>                
+        </div>
 
         <div id="same_items" style="<?= ($page < $pageCount) ? 'display:none;' : 'margin-top: 24px;' ?>">
 
@@ -221,7 +235,7 @@ foreach ($arResult as $key => $value) {
                         $this->AddDeleteAction($arItem['ID'], $arItem['DELETE_LINK'], CIBlock::GetArrayByID($arItem["IBLOCK_ID"], "ELEMENT_DELETE"), array("CONFIRM" => Loc::GetMessage('CT_BNL_ELEMENT_DELETE_CONFIRM')));
                         ?>
 
-                        <div class="object-row" data-map-id="<?= $arSection["ID"] ?>" href="<?= $arItem["SECTION_PAGE_URL"] ?>" 
+                        <div class="object-row" data-map-id="<?= $arSection["ID"] ?>" href="<?= $arSection["URL"] ?>" 
                              id="<?= $this->GetEditAreaId($arSection['ID']) ?>">
                             <div class="object-row__images">
                                 <div class="swiper slider-gallery" data-slider-object="data-slider-object"
@@ -291,7 +305,7 @@ foreach ($arResult as $key => $value) {
 
                             <div class="object-row__content">
                                 <div class="object-row__description">
-                                    <a class="object-row__title h3" onclick="setLocalStorageCatalog(event);"
+                                    <a class="object-row__title h3"
                                        href="<?= $arSection["URL"] ?>"><?= $arSection["NAME"] ?></a>
 
                                     <div class="area-info">
@@ -362,7 +376,7 @@ foreach ($arResult as $key => $value) {
                                     </div>
 
                                     <a class="button button_primary"
-                                       onclick="VK.Goal('customize_product');setLocalStorageCatalog(event);"
+                                       onclick="VK.Goal('customize_product');"
                                        href="<?= $arSection["URL"] ?>">Выбрать</a>
                                 </div>
                             </div>

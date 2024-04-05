@@ -146,9 +146,9 @@ if ($arResult['ERROR']) {
                 <span class="form__dot"></span>
             </div>
             <div class="form__el-variant">
-                <?php foreach ($arResult['VARIANT'] as $variant) {?>
+                <?php foreach ($arResult['VARIANT'] as $variantKey => $variant) {?>
                     <label>
-                        <input type="radio" cost="<?=$arParams['VARIANT_COST']?>" name="cert_variant" value="<?=$arResult['LOCAL_HOST'].CFile::getPath($variant['UF_IMG_TO_CERT'])?>" class="visually-hidden" required>
+                        <input type="radio" cost="<?=$arParams['VARIANT_COST']?>" name="cert_variant" value="<?=$arResult['LOCAL_HOST'].CFile::getPath($variant['UF_IMG_TO_CERT'])?>" class="visually-hidden" <?$variantKey == 0 ? 'required' : ''?>>
                         <span class="el-variant__title"><?=$variant['UF_NAME']?></span>
                         <div class="variant__img-wrap">
                             <img src="<?=CFile::ResizeImageGet($variant['UF_FILE'], array('width' => 600, 'height' => 763), BX_RESIZE_IMAGE_EXACT, true)['src']?>" alt="">

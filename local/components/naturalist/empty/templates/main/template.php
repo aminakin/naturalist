@@ -335,5 +335,22 @@ foreach($arResult as $key => $value) {
     </section>
     */?>
     <!-- section-->
+
+    <section class="cert-index__seo-text">
+        <div class="container">
+            <?php
+                $APPLICATION->IncludeComponent(
+                    "bitrix:main.include",
+                    "",
+                    Array(
+                        "AREA_FILE_SHOW" => "file", 
+                        "PATH" => '/include/home-seo-text.php',
+                        "EDIT_TEMPLATE" => ""
+                    )
+                );
+            ?>
+        </div>
+    </section>
+
 </main>
 <!-- main-->
