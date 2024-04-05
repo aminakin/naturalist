@@ -5261,3 +5261,26 @@ img.lazy.loaded {
   background: var(--color-black-50);
   z-index: 9999;
 }
+
+.list__item_phone a {
+  font-family: "TT Travels Next";
+  font-size: 1.2rem;
+  font-weight: 600;
+  text-decoration: none;
+  border: none;
+  display: flex;
+}
+
+.list__item_phone a svg {
+  display: none;
+}
+
+@media (max-width: 1024px) {
+  .list__item_phone a span {
+    display: none;
+  }
+
+  .list__item_phone a svg {
+    display: inline-block;
+  }
+}

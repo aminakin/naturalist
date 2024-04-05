@@ -3,9 +3,11 @@
  * Форматированный вывод
  */
 function xprint($a) {
-    echo '<pre>';
-    print_r($a);
-    echo '</pre>';
+    if (\Bitrix\Main\Engine\CurrentUser::get()->getId() == 3) {
+        echo '<pre>';
+        print_r($a);
+        echo '</pre>';
+    }
 }
 
 /*

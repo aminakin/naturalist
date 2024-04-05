@@ -214,7 +214,7 @@ $arMeteo = Users::getMeteo($coords);
             ?>
         </div>
     </section>
-
+    <a name="fortune"></a>
     <section class="promo__wheel" id="wheel"></section>
 
     <section class="section section_offers">
