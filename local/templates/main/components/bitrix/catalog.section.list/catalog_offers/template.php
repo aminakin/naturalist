@@ -7,7 +7,7 @@ Loc::loadMessages(__FILE__);
     <div class="related-projects__mobile">
         <div class="h3">Похожие глэмпинги рядом</div>
         <div class="objects">
-            <? foreach ($arResult["SECTIONS"] as $arItem): ?>
+            <? foreach ($arResult["SECTIONS"] as $arItem): ?>                
 				<? if ($arItem["UF_PHOTOS"]): ?>
 					<? $arDataFullGallery = []; ?>
 					<? foreach ($arItem["UF_PHOTOS"] as $keyElement => $photoId): ?>
@@ -30,12 +30,12 @@ Loc::loadMessages(__FILE__);
                                         ?>
                                         <? if (count((array)$arItem["UF_PHOTOS"]) > 1): ?>
                                             <?
-                                            $alt = $arResult["HL_TYPES"][$arItem["ID"]]["UF_NAME"] . " " . $arItem["NAME"] . " рис." . $keyPhoto;;
+                                            $alt = $arResult["HL_TYPES"][$arItem["UF_TYPE"]]["UF_NAME"] . " " . $arItem["NAME"] . " рис." . $keyPhoto;;
                                             $title = "Фото - " . $arItem["NAME"] . " рис." . $keyPhoto;
                                             ?>
                                         <? else: ?>
                                             <?
-                                            $alt = $arResult["HL_TYPES"][$arItem["ID"]]["UF_NAME"] . " " . $arItem["NAME"];
+                                            $alt = $arResult["HL_TYPES"][$arItem["UF_TYPE"]]["UF_NAME"] . " " . $arItem["NAME"];
                                             $title = "Фото - " . $arItem["NAME"];
                                             ?>
                                         <? endif; ?>
@@ -47,7 +47,7 @@ Loc::loadMessages(__FILE__);
                                     <? endforeach ?>
                                 <? else: ?>
                                     <?
-                                    $alt = $arResult["HL_TYPES"][$arItem["ID"]]["UF_NAME"] . " " . $arItem["NAME"];
+                                    $alt = $arResult["HL_TYPES"][$arItem["UF_TYPE"]]["UF_NAME"] . " " . $arItem["NAME"];
                                     $title = "Фото - " . $arItem["NAME"];
                                     ?>
                                     <div class="swiper-slide">
@@ -160,12 +160,12 @@ Loc::loadMessages(__FILE__);
                                                 ?>
                                                 <? if (count((array)$arItem["UF_PHOTOS"]) > 1): ?>
                                                     <?
-                                                    $alt = $arResult["HL_TYPES"][$arItem["ID"]]["UF_NAME"] . " " . $arItem["NAME"] . " рис." . $keyPhoto;;
+                                                    $alt = $arResult["HL_TYPES"][$arItem["UF_TYPE"]]["UF_NAME"] . " " . $arItem["NAME"] . " рис." . $keyPhoto;;
                                                     $title = "Фото - " . $arItem["NAME"] . " рис." . $keyPhoto;
                                                     ?>
                                                 <? else: ?>
                                                     <?
-                                                    $alt = $arResult["HL_TYPES"][$arItem["ID"]]["UF_NAME"] . " " . $arItem["NAME"];
+                                                    $alt = $arResult["HL_TYPES"][$arItem["UF_TYPE"]]["UF_NAME"] . " " . $arItem["NAME"];
                                                     $title = "Фото - " . $arItem["NAME"];
                                                     ?>
                                                 <? endif; ?>
@@ -178,7 +178,7 @@ Loc::loadMessages(__FILE__);
                                         <?else:?>
                                             <div class="swiper-slide">
                                                 <?
-                                                $alt = $arResult["HL_TYPES"][$arItem["ID"]]["UF_NAME"] . " " . $arItem["NAME"];
+                                                $alt = $arResult["HL_TYPES"][$arItem["UF_TYPE"]]["UF_NAME"] . " " . $arItem["NAME"];
                                                 $title = "Фото - " . $arItem["NAME"];
                                                 ?>
                                                 <img class="swiper-lazy" alt="<?= $alt ?>" title="<?= $title ?>"data-src="<?= SITE_TEMPLATE_PATH ?>/img/no_photo.png"
