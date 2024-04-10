@@ -82,7 +82,7 @@ foreach($arResult as $key => $value) {
     </div>
 
     <div class="reservation__image">
-        <img class="lazy" data-src="<?=CFile::getPath($arResult['arElement']['PROPERTY_PHOTOS_VALUE'][0])?>" alt="<?=$arSection["NAME"]?>">
+        <img class="lazy" data-src="<?=CFile::getPath($arResult['arElement']['PROPERTY_PHOTOS_VALUE'][0])?>" alt="<?=$arResult['arHLTypes'][$arSection['UF_TYPE']]['UF_NAME'] . ' ' . $arSection["NAME"]?>">
     </div>
 </div>
 

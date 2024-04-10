@@ -37,7 +37,7 @@ $arReviewsAvg = Reviews::getCampingRating($arCampingIDs);
 
     <div class="objects__list">
         <? if (!empty($arResult["SECTIONS"])) : ?>
-            <? foreach ($arResult["SECTIONS"] as $arItem) : ?>
+            <? foreach ($arResult["SECTIONS"] as $arItem) : ?>                
                 <?
                 $this->AddEditAction(
                     $arItem['ID'],
@@ -75,12 +75,12 @@ $arReviewsAvg = Reviews::getCampingRating($arCampingIDs);
                                         ?>
                                         <? if (count($arItem["UF_PHOTOS"]) > 1) : ?>
                                             <?
-                                            $alt = $arResult["HL_TYPES"][$arItem["ID"]]["UF_NAME"] . " " . $arItem["NAME"] . " рис." . $keyPhoto;;
+                                            $alt = $arResult["HL_TYPES"][$arItem["UF_TYPE"]]["UF_NAME"] . " " . $arItem["NAME"] . " рис." . $keyPhoto;;
                                             $title = "Фото - " . $arItem["NAME"] . " рис." . $keyPhoto;
                                             ?>
                                         <? else : ?>
                                             <?
-                                            $alt = $arResult["HL_TYPES"][$arItem["ID"]]["UF_NAME"] . " " . $arItem["NAME"];
+                                            $alt = $arResult["HL_TYPES"][$arItem["UF_TYPE"]]["UF_NAME"] . " " . $arItem["NAME"];
                                             $title = "Фото - " . $arItem["NAME"];
                                             ?>
                                         <? endif; ?>
@@ -91,7 +91,7 @@ $arReviewsAvg = Reviews::getCampingRating($arCampingIDs);
                                     <? endforeach ?>
                                 <? else : ?>
                                     <?
-                                    $alt = $arResult["HL_TYPES"][$arItem["ID"]]["UF_NAME"] . " " . $arItem["NAME"];
+                                    $alt = $arResult["HL_TYPES"][$arItem["UF_TYPE"]]["UF_NAME"] . " " . $arItem["NAME"];
                                     $title = "Фото - " . $arItem["NAME"];
                                     ?>
                                     <div class="swiper-slide">
