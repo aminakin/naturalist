@@ -428,9 +428,14 @@ $(function () {
               ".list__item_favorite .list__item-icon span"
             ).text();
             var favoritCountNew = parseInt(favoritCount) + 1;
-            $(".list__item_favorite .list__item-icon span").text(
-              favoritCountNew
-            );
+            console.log(favoritCountNew);
+            if (favoritCountNew != 0) {
+              $(".list__item_favorite .list__item-icon span")
+                .show()
+                .text(favoritCountNew);
+            } else {
+              $(".list__item_favorite .list__item-icon span").hide().text("");
+            }
           }
         } else {
           window.infoModal(ERROR_TITLE, a.ERROR);

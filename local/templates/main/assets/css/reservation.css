@@ -468,7 +468,7 @@
   .reservation-form__price-cert__item:not(:last-child) {
     padding-bottom: 24px;
   }
-  
+
   .reservation-form__price-cert__item:not(:first-child) {
     padding-top: 24px;
   }
@@ -731,14 +731,14 @@
 
   .coupon__success-icon {
     top: 36px;
-    left: 84%;
+    left: 82%;
   }
 
   .reservation-form__pre-final {
     font-size: 16px;
   }
   .coupon__entered .field__input.coupon__input {
-    width: 91%;
+    width: 89%;
   }
   .reservation-form__title {
     font-size: 1.5rem;

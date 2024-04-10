@@ -302,11 +302,22 @@ class Events
             $arProps[$field['CODE']] = $field;
         }        
 
+        // Промокод из заказа
+        $couponList = \Bitrix\Sale\Internals\OrderCouponsTable::getList(array(
+            'select' => array('COUPON'),
+            'filter' => array('=ORDER_ID' => 1000)
+        ));
+        while ($coupon = $couponList->fetch())
+        {
+           $promocode = $coupon['COUPON'];
+        }
+
         $deal = CRest::call(
             'crm.deal.add',
             [
                 'fields' => [
                     'TITLE' => 'Заказ с сайта №' . $order->getId(),
+                    'CATEGORY_ID' => 2,
                     'UF_CRM_64CC9F9675E53' => $arProps['OBJECT']['VALUE'][0],                    
                     'UF_CRM_1704886320' => $arProps['CHECKSUM']['VALUE'][0] ? ["ID" => 88] : ["ID" => 86],
                     'UF_CRM_1711465448624' => $arProps['OBJECT_ADDRESS']['VALUE'][0],
@@ -320,6 +331,7 @@ class Events
                     'UF_CRM_1711467774213' => $arProps['GUEST_LIST']['VALUE'][0],
                     'UF_CRM_1691496469' => $arProps['PHONE']['VALUE'][0],
                     'UF_CRM_1691496489' => $arProps['EMAIL']['VALUE'][0],
+                    'UF_CRM_1712652449037' => $promocode ? $promocode : '',
                 ]
             ]
         );

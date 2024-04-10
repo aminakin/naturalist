@@ -2658,15 +2658,16 @@ span.flatpickr-weekday {
   align-items: center;
   background-color: #e6c48e;
   background-color: var(--color-beige);
-  border-radius: 0.8rem;
+  border-radius: 50%;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
-  min-width: 1.6rem;
-  padding-left: 0.3rem;
+  min-width: 26px;
+  padding: 0 0.3rem;
   -webkit-transition: background-color 0.25s;
   transition: background-color 0.25s;
   width: auto;
+  justify-content: center;
 }
 
 .header__controls .list__item.list__item_favorite .list__item-icon > * {
@@ -2699,9 +2700,9 @@ span.flatpickr-weekday {
   border-radius: 50%;
   -ms-flex: none;
   flex: none;
-  height: 1.6rem;
+  height: 26px;
   overflow: hidden;
-  width: 1.6rem;
+  width: 26px;
 }
 
 .header__controls .list__item + .list__item {
@@ -4791,14 +4792,13 @@ img.lazy.loaded {
   .header__controls .list__item.list__item_favorite .list__item-icon {
     border-radius: 1.4rem;
     min-width: 2.8rem;
-    padding-left: 0.9rem;
     width: auto;
   }
 
   .header__controls .list__item.list__item_favorite .list__item-icon svg {
-    -webkit-transform: scale(1.7);
+    /* -webkit-transform: scale(1.7);
     -ms-transform: scale(1.7);
-    transform: scale(1.7);
+    transform: scale(1.7); */
   }
 
   .header__controls .list__item.list__item_favorite .list__item-icon span {

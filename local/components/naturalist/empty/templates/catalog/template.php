@@ -92,7 +92,7 @@ foreach ($arResult as $key => $value) {
                         </div>
 
                         <button class="favorite"
-                                <?php if ($arFavourites && in_array($arSection["ID"], $arFavourites)) : ?>data-favourite-remove<?php else: ?>data-favourite-add<?php endif; ?>data-id="<?= $arSection["ID"] ?>">
+                                <?php if ($arFavourites && in_array($arSection["ID"], $arFavourites)) : ?>data-favourite-remove<?php else: ?>data-favourite-add<?php endif; ?> data-id="<?= $arSection["ID"] ?>">
                             <?php if ($arFavourites && in_array($arSection["ID"], $arFavourites)) : ?>
                                 <img src="<?= SITE_TEMPLATE_PATH ?>/assets/img/favorite-active.svg" alt>
                             <?php else : ?>
@@ -286,7 +286,7 @@ foreach ($arResult as $key => $value) {
                                 </div>
 
                                 <button class="favorite"
-                                        <?php if ($arFavourites && in_array($arSection["ID"], $arFavourites)) : ?>data-favourite-remove<?php else: ?>data-favourite-add<?php endif; ?>data-id="<?= $arSection["ID"] ?>">
+                                        <?php if ($arFavourites && in_array($arSection["ID"], $arFavourites)) : ?>data-favourite-remove<?php else: ?>data-favourite-add<?php endif; ?> data-id="<?= $arSection["ID"] ?>">
                                     <?php if ($arFavourites && in_array($arSection["ID"], $arFavourites)) : ?>
                                         <img src="<?= SITE_TEMPLATE_PATH ?>/assets/img/favorite-active.svg" alt>
                                     <?php else : ?>

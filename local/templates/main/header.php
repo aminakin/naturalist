@@ -54,50 +54,50 @@ use Naturalist\Users;
     <link rel="preload" href="<?= SITE_TEMPLATE_PATH ?>/assets/fonts/TTTravelsNext-Md.woff2" as="font" type="font/woff2" crossorigin>
     <link rel="preload" href="<?= SITE_TEMPLATE_PATH ?>/assets/fonts/TTTravelsNext-Regular.woff2" as="font" type="font/woff2" crossorigin>
 
-    <link rel="stylesheet" href="<?= SITE_TEMPLATE_PATH ?>/assets/css/app.css?v=1667839051330">
+    <link rel="stylesheet" href="<?= SITE_TEMPLATE_PATH ?>/assets/css/app.css?v=<?=filemtime($_SERVER['DOCUMENT_ROOT'].SITE_TEMPLATE_PATH.'/assets/css/app.css');?>">
     <? if (CSite::InDir('/index.php')) : ?>
-        <link rel="stylesheet" href="<?= SITE_TEMPLATE_PATH ?>/assets/css/index.css?v=1666595102636">
+        <link rel="stylesheet" href="<?= SITE_TEMPLATE_PATH ?>/assets/css/index.css?v=<?=filemtime($_SERVER['DOCUMENT_ROOT'].SITE_TEMPLATE_PATH.'/assets/css/index.css');?>">
     <? endif; ?>
     <? if (CSite::InDir('/catalog')) : ?>
         <? if ($currPage === "/catalog/" || strpos($currPage, "/catalog/vpechatleniya/") !== false) : ?>
-            <link rel="stylesheet" href="<?= SITE_TEMPLATE_PATH ?>/assets/css/catalog.css?v=1664304519938">
+            <link rel="stylesheet" href="<?= SITE_TEMPLATE_PATH ?>/assets/css/catalog.css?v=<?=filemtime($_SERVER['DOCUMENT_ROOT'].SITE_TEMPLATE_PATH.'/assets/css/catalog.css');?>">
         <? else : ?>
-            <link rel="stylesheet" href="<?= SITE_TEMPLATE_PATH ?>/assets/css/object.css?v=1667839051348">
+            <link rel="stylesheet" href="<?= SITE_TEMPLATE_PATH ?>/assets/css/object.css?v=<?=filemtime($_SERVER['DOCUMENT_ROOT'].SITE_TEMPLATE_PATH.'/assets/css/object.css');?>">
         <? endif; ?>
     <? endif; ?>
     <? if (CSite::InDir('/order')) : ?>
-        <link rel="stylesheet" href="<?= SITE_TEMPLATE_PATH ?>/assets/css/reservation.css?v=1664554796110">
+        <link rel="stylesheet" href="<?= SITE_TEMPLATE_PATH ?>/assets/css/reservation.css?v=<?=filemtime($_SERVER['DOCUMENT_ROOT'].SITE_TEMPLATE_PATH.'/assets/css/reservation.css');?>">
     <? endif; ?>
     <? if (CSite::InDir('/personal')) : ?>
-        <link rel="stylesheet" href="<?= SITE_TEMPLATE_PATH ?>/assets/css/lk_person.css?v=1664554795104">
-        <link rel="stylesheet" href="<?= SITE_TEMPLATE_PATH ?>/assets/css/lk_person_values.css?v=1664554795104">
+        <link rel="stylesheet" href="<?= SITE_TEMPLATE_PATH ?>/assets/css/lk_person.css?v=<?=filemtime($_SERVER['DOCUMENT_ROOT'].SITE_TEMPLATE_PATH.'/assets/css/lk_person.css');?>">
+        <link rel="stylesheet" href="<?= SITE_TEMPLATE_PATH ?>/assets/css/lk_person_values.css?v=<?=filemtime($_SERVER['DOCUMENT_ROOT'].SITE_TEMPLATE_PATH.'/assets/css/lk_person_values.css');?>">
     <? endif; ?>
     <? if (CSite::InDir('/personal/reviews')) : ?>
-        <link rel="stylesheet" href="<?= SITE_TEMPLATE_PATH ?>/assets/css/lk_reviews.css?v=1664554795394">
+        <link rel="stylesheet" href="<?= SITE_TEMPLATE_PATH ?>/assets/css/lk_reviews.css?v=<?=filemtime($_SERVER['DOCUMENT_ROOT'].SITE_TEMPLATE_PATH.'/assets/css/lk_reviews.css');?>">
     <? endif; ?>
     <? if (CSite::InDir('/personal/active')) : ?>
-        <link rel="stylesheet" href="<?= SITE_TEMPLATE_PATH ?>/assets/css/lk_active.css?v=1664554794106">
+        <link rel="stylesheet" href="<?= SITE_TEMPLATE_PATH ?>/assets/css/lk_active.css?v=<?=filemtime($_SERVER['DOCUMENT_ROOT'].SITE_TEMPLATE_PATH.'/assets/css/lk_active.css');?>">
     <? endif; ?>
     <? if (CSite::InDir('/personal/history')) : ?>
-        <link rel="stylesheet" href="<?= SITE_TEMPLATE_PATH ?>/assets/css/lk_history.css?v=1664554794775">
+        <link rel="stylesheet" href="<?= SITE_TEMPLATE_PATH ?>/assets/css/lk_history.css?v=<?=filemtime($_SERVER['DOCUMENT_ROOT'].SITE_TEMPLATE_PATH.'/assets/css/lk_history.css');?>">
     <? endif; ?>
     <? if (CSite::InDir('/personal/favourites')) : ?>
-        <link rel="stylesheet" href="<?= SITE_TEMPLATE_PATH ?>/assets/css/lk_favorite.css?v=1664554794433">
+        <link rel="stylesheet" href="<?= SITE_TEMPLATE_PATH ?>/assets/css/lk_favorite.css?v=<?=filemtime($_SERVER['DOCUMENT_ROOT'].SITE_TEMPLATE_PATH.'/assets/css/lk_favorite.css');?>">
     <? endif; ?>
     <? if (CSite::InDir('/about')) : ?>
-        <link rel="stylesheet" href="<?= SITE_TEMPLATE_PATH ?>/assets/css/about.css?v=1664554795104">
+        <link rel="stylesheet" href="<?= SITE_TEMPLATE_PATH ?>/assets/css/about.css?v=<?=filemtime($_SERVER['DOCUMENT_ROOT'].SITE_TEMPLATE_PATH.'/assets/css/about.css');?>">
     <? endif; ?>
     <? if (CSite::InDir('/impressions')) : ?>
-        <link rel="stylesheet" href="<?= SITE_TEMPLATE_PATH ?>/assets/css/impressions.css?v=1664554795104">
+        <link rel="stylesheet" href="<?= SITE_TEMPLATE_PATH ?>/assets/css/impressions.css?v=<?=filemtime($_SERVER['DOCUMENT_ROOT'].SITE_TEMPLATE_PATH.'/assets/css/impressions.css');?>">
     <? endif; ?>
     <? if (CSite::InDir('/map')) : ?>
-        <link rel="stylesheet" href="<?= SITE_TEMPLATE_PATH ?>/assets/css/catalog.css?v=1664304519938">
+        <link rel="stylesheet" href="<?= SITE_TEMPLATE_PATH ?>/assets/css/catalog.css?v=<?=filemtime($_SERVER['DOCUMENT_ROOT'].SITE_TEMPLATE_PATH.'/assets/css/catalog.css');?>">
     <? endif; ?>
     <? if (CSite::InDir('/objects')) : ?>
-        <link rel="stylesheet" href="<?= SITE_TEMPLATE_PATH ?>/assets/css/add_object.css?v=1664304519938">
+        <link rel="stylesheet" href="<?= SITE_TEMPLATE_PATH ?>/assets/css/add_object.css?v=<?=filemtime($_SERVER['DOCUMENT_ROOT'].SITE_TEMPLATE_PATH.'/assets/css/add_object.css');?>">
     <? endif; ?>
 
-    <link rel="stylesheet" href="<?= SITE_TEMPLATE_PATH ?>/assets/css/custom.css?v=1664304519938">
+    <link rel="stylesheet" href="<?= SITE_TEMPLATE_PATH ?>/assets/css/custom.css?v=<?=filemtime($_SERVER['DOCUMENT_ROOT'].SITE_TEMPLATE_PATH.'/assets/css/custom.css');?>">
 
     <? if (CSite::InDir('/promo')) : ?>
         <!-- Marquiz script start --> 
@@ -261,10 +261,12 @@ if (!\Bitrix\Main\Engine\CurrentUser::get()->isAdmin()) {
                         <li class="list__item list__item_favorite">
                             <a class="list__link" href="<?= $arSettings['header_favourites_link'] ?>">
                                 <div class="list__item-icon">
-                                    <svg class="icon icon_heart" viewbox="0 0 10 8" style="width: 1rem; height: 0.8rem;">
+                                    <svg class="icon icon_heart" viewbox="0 0 10 8" style="width: 18px;">
                                         <use xlink:href="#heart" />
                                     </svg>
-                                    <span><?= ($arFavourites) ? count($arFavourites) : 0 ?></span>
+                                    <span <?=!$arFavourites ? 'style="display: none"' : ''?>>                                        
+                                        <?= $arFavourites ? count($arFavourites) : 0?>                                        
+                                    </span>
                                 </div>
                                 <?/*<span><?= $arSettings['header_favourites_name'] ?></span>*/?>
                             </a>
@@ -273,7 +275,7 @@ if (!\Bitrix\Main\Engine\CurrentUser::get()->isAdmin()) {
                         <? if (!$isAuthorized) : ?>
                             <li class="list__item">
                                 <a class="list__link" href="#login-phone" data-modal>
-                                    <svg class="icon icon_person" viewbox="0 0 16 16" style="width: 1.6rem; height: 1.6rem;">
+                                    <svg class="icon icon_person" viewbox="0 0 16 16" style="width: 26px; height: 26px;">
                                         <use xlink:href="#person" />
                                     </svg>
                                     <?/*<span><?= $arSettings['header_personal_name'] ?></span>*/?>
@@ -289,7 +291,7 @@ if (!\Bitrix\Main\Engine\CurrentUser::get()->isAdmin()) {
                                             <img class="lazy" data-src="<?= $arUser["PERSONAL_PHOTO"]["src"] ?>" alt="<?= $arUser["NAME"] ?>">
                                         </div>
                                     <? else : ?>
-                                        <svg class="icon icon_person" viewbox="0 0 16 16" style="width: 1.6rem; height: 1.6rem;">
+                                        <svg class="icon icon_person" viewbox="0 0 16 16" style="width: 26px; height: 26px;">
                                             <use xlink:href="#person" />
                                         </svg>
                                     <? endif; ?>
@@ -308,13 +310,13 @@ if (!\Bitrix\Main\Engine\CurrentUser::get()->isAdmin()) {
                             </li>
                         <? } ?>
 
-                        <li class="list__item list__item_desktop">
+                        <?/*<li class="list__item list__item_desktop">
                             <a class="list__link" href="#feedback" data-modal>
                                 <svg class="icon icon_message" viewbox="0 0 24 24" style="width: 2.4rem; height: 2.4rem;">
                                     <use xlink:href="#message" />
                                 </svg>
                             </a>
-                        </li>
+                        </li>*/?>
                     </ul>
                 </div>
             </div>
