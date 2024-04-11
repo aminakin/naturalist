@@ -14,7 +14,6 @@ if(!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED!==true)
 $component = $this->getComponent();
 
 $this->setFrameMode(true);
-
 ?>
 <div class="modern-page-navigation">	
 <?

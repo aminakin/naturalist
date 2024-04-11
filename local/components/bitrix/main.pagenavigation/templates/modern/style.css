@@ -30,3 +30,10 @@ div.modern-page-navigation a.modern-page-previous,
 span.modern-page-dots {
   border-color: #cdcdcd;
 }
+
+@media (max-width: 500px) {
+  .modern-page-previous,
+  .modern-page-next {
+    display: none;
+  }
+}

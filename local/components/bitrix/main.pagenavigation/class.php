@@ -4,6 +4,8 @@ if(!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true)
 	die();
 }
 
+use \Bitrix\Conversion\Internals\MobileDetect;
+
 class PageNavigationComponent extends CBitrixComponent
 {
 	public function __construct($component = null)
@@ -13,8 +15,14 @@ class PageNavigationComponent extends CBitrixComponent
 
 	public function onPrepareComponentParams($arParams)
 	{
+		$detect = new MobileDetect;
+		if ($detect->isMobile()) {
+			$pageWindow = 3;
+		} else {
+			$pageWindow = 5;
+		}
 		$arParams["PAGE_WINDOW"] =
-			isset($arParams["PAGE_WINDOW"]) && (int)$arParams["PAGE_WINDOW"] > 0 ? (int)$arParams["PAGE_WINDOW"] : 5
+			isset($arParams["PAGE_WINDOW"]) && (int)$arParams["PAGE_WINDOW"] > 0 ? (int)$arParams["PAGE_WINDOW"] : $pageWindow
 		;
 
 		$arParams["SHOW_ALWAYS"] =
