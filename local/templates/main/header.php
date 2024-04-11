@@ -45,6 +45,7 @@ use Naturalist\Users;
     <title><? $APPLICATION->ShowTitle() ?></title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="format-detection" content="telephone=no">
+    <link rel="canonical" href="<?=HTTP_HOST . $APPLICATION->GetCurPage()?>">
     <link rel="icon" href="/favicon.ico" type="image/x-icon">
 
     <link rel="preload" href="<?= SITE_TEMPLATE_PATH ?>/assets/fonts/Montserrat-Bold.woff2" as="font" type="font/woff2" crossorigin>
@@ -321,4 +322,4 @@ if (!\Bitrix\Main\Engine\CurrentUser::get()->isAdmin()) {
                 </div>
             </div>
         </header>
-        <!-- header-->
+        <!-- header-->        
