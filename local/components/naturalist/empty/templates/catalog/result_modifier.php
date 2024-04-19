@@ -193,7 +193,9 @@ if ($arResult['arSearchedRegions']) {
                     'order' => $sortOrder,
                 );
 
-                $arUriParams = array_merge($arUriParams, $arUriParamsSort);
+                if ($dateFrom) {
+                    $arUriParams = array_merge($arUriParams, $arUriParamsSort);
+                }                
 
                 $uri = new Uri($arSection["SECTION_PAGE_URL"]);
                 $uri->addParams($arUriParams);
@@ -210,7 +212,7 @@ if ($arResult['arSearchedRegions']) {
 
         usort($arResult['SECTIONS'], function($a,$b){
             return ($a['DISCTANCE'] - $b['DISCTANCE']);
-        });
+        });        
     }
 }
 

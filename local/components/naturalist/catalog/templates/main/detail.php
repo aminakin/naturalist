@@ -176,7 +176,7 @@ if ($reviewsCount > 0) {
             $arAvgCriterias[$i][1] = round($arAvgCriterias[$i][0] * 100 / 5);
         }
     }
-    $avgRating = round($avgRating / $reviewsCountNotNullRating, 1);
+    $avgRating = round($avgRating / ($reviewsCountNotNullRating ? $reviewsCountNotNullRating : 1), 1);
 
     // Список юзеров в отзывах
     $rsReviewsUsers = CUser::GetList(($by = "ID"), ($order = "ASC"), array("ID" => implode(' | ', $arReviewsUserIDs)), array("FIELDS" => array("ID", "NAME", "PERSONAL_PHOTO")));

@@ -83,8 +83,6 @@ global $arSettings;
 </main>
 <!-- main-->
 
-<script defer src="<?= SITE_TEMPLATE_PATH ?>/assets/js/content.min.js"></script>
-
 <?
 require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/footer.php");
 ?>

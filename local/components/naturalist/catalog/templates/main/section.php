@@ -292,7 +292,9 @@ while ($arSection = $rsSections->GetNext()) {
         'order' => $sortOrder,
     );
 
-    $arUriParams = array_merge($arUriParams, $arUriParamsSort);
+    if ($arUriParams['dateFrom'] != '') {
+        $arUriParams = array_merge($arUriParams, $arUriParamsSort);
+    }    
 
     $uri = new Uri($arSection["SECTION_PAGE_URL"]);
     $uri->addParams($arUriParams);
@@ -463,10 +465,10 @@ if ($page > 1 && isset($_GET["impressions"]) && !empty($_GET['impressions']) && 
     } else {
         $impressionReplace = "";
     }
-    $titleSEO = str_replace(array("#IMPRESSIONS#", "#PAGE#"), array($impressionReplace, $page), $metaTags["/catalog/?impressions"]["~PROPERTY_TITLE_VALUE"]["TEXT"]);
-    $descriptionSEO = str_replace(array("#IMPRESSIONS#", "#PAGE#"), array($impressionReplace, $page), $metaTags["/catalog/?impressions"]["~PROPERTY_DESCRIPTION_VALUE"]["TEXT"]);
-    $h1SEO = str_replace(array("#IMPRESSIONS#", "#PAGE#"), array($impressionReplace, $page), $metaTags["/catalog/?impressions"]["~PROPERTY_H1_VALUE"]["TEXT"]);
-} elseif (isset($_GET["impressions"]) && !empty($_GET['impressions']) && !empty($metaTags["/catalog/?impressions"])) { //переход с раздела "Впечатления"
+    $titleSEO = str_replace(array("#IMPRESSIONS#", "#PAGE#"), array($impressionReplace, $page), $metaTags["/catalog/?page=2&impressions"]["~PROPERTY_TITLE_VALUE"]["TEXT"]);
+    $descriptionSEO = str_replace(array("#IMPRESSIONS#", "#PAGE#"), array($impressionReplace, $page), $metaTags["/catalog/?page=2&impressions"]["~PROPERTY_DESCRIPTION_VALUE"]["TEXT"]);
+    $h1SEO = str_replace(array("#IMPRESSIONS#", "#PAGE#"), array($impressionReplace, $page), $metaTags["/catalog/?page=2&impressions"]["~PROPERTY_H1_VALUE"]["TEXT"]);
+} elseif (isset($_GET["impressions"]) && !empty($_GET['impressions']) && !empty($metaTags["/catalog/?page=2&impressions"])) { //переход с раздела "Впечатления"
     if (!empty($arSeoImpressions)) {
         $impressionReplace = mb_strtolower($arSeoImpressions[0]["NAME"], "UTF-8");
     } else {
