@@ -202,14 +202,18 @@ if (!empty($_GET['features']) && isset($_GET['features'])) {
 if (!empty($_GET['impressions']) && isset($_GET['impressions'])) {
     $arRequestImpressions = explode(',', $_GET['impressions']);
 
-    $rsImpressions = CIBlockElement::GetList(false, array("IBLOCK_ID" => IMPRESSIONS_IBLOCK_ID, "CODE" => $arRequestImpressions));
+    $rsImpressions = CIBlockElement::GetList(false, array("IBLOCK_ID" => IMPRESSIONS_IBLOCK_ID, "ACTIVE" => "Y", "CODE" => $arRequestImpressions));
     $arFilterImpressions = array();
     while ($arImpression = $rsImpressions->Fetch()) {
         $arFilterImpressions[] = $arImpression["ID"];
         $arSeoImpressions[] = $arImpression;
-    }    
+    }
 
     $arFilter["UF_IMPRESSIONS"] = $arFilterImpressions;
+
+    if (empty($arFilterImpressions)) {
+        LocalRedirect("/404/");
+    }
 }
 
 /* Сортировка */
