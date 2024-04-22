@@ -816,9 +816,12 @@ $APPLICATION->AddHeadString('<meta name="description" content="' . $descriptionS
                             "EDIT_TEMPLATE" => ""
                         )
                     );
-                }?>
+                }?>                
             </div>
         </section>
+        <div class="container">
+            <a href="#" class="show-more-seo">Показать ещё</a>
+        </div>
     </main>
 
     <div class="modal modal_filters" id="filters-modal">

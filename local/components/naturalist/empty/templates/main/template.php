@@ -349,8 +349,11 @@ foreach($arResult as $key => $value) {
                     )
                 );
             ?>
-        </div>
+        </div>        
     </section>
+    <div class="container">
+        <a href="#" class="show-more-seo">Показать ещё</a>
+    </div>
 
 </main>
 <!-- main-->

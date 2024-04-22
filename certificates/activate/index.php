@@ -163,8 +163,9 @@ $APPLICATION->SetTitle("Активировать");?>
                             "EDIT_TEMPLATE" => ""
                         )
                     );
-                ?>
+                ?>                
             </section>
+            <a href="#" class="show-more-seo">Показать ещё</a>
 
         </div>
     </section>

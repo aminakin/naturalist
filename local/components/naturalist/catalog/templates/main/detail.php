@@ -626,8 +626,11 @@ $APPLICATION->AddHeadString('<meta name="description" content="' . $descriptionS
         <section class="cert-index__seo-text">
             <div class="container">
                 <?=$arSection['UF_DOP_SEO_TEXT']?>
-            </div>
+            </div>            
         </section>
+        <div class="container">
+            <a href="#" class="show-more-seo">Показать ещё</a>
+        </div>
     <?}?>
 </main>
 
