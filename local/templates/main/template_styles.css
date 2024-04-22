@@ -436,10 +436,28 @@ h1.page_title {
 
 .cert-index__seo-text {
   margin-top: 64px;
-  font-family: "TT Travels Next";
+  font-family: "Montserrat";
   font-size: 21px;
   line-height: 34px;
   font-weight: 500;
+  display: -webkit-box;
+  -webkit-line-clamp: 5;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+}
+
+.show-all-seo {
+  -webkit-line-clamp: 9999;
+}
+
+.show-more-seo {
+  font-family: "TT Travels Next";
+  font-weight: 500;
+  font-size: 15px;
+  line-height: 18px;
+  text-decoration: underline;
+  display: inline-block;
+  margin-top: 10px;
 }
 
 .cert-index__reviews {
@@ -450,9 +468,17 @@ h1.page_title {
   .cert-index__seo-text {
     margin-top: 48px;
     font-size: 15px;
-    line-height: 19px;
-    font-weight: 600;
+    line-height: 19px;    
     letter-spacing: -0.19px;
+    -webkit-line-clamp: 8;
+  }
+
+  .show-more-seo {
+    font-size: 12px;        
+  }
+
+  .show-all-seo {
+    -webkit-line-clamp: 9999;
   }
 
   .cert-index__reviews {

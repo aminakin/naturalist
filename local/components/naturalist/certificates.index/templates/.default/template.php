@@ -213,8 +213,9 @@ $this->setFrameMode(true);
                                 "EDIT_TEMPLATE" => ""
                             )
                         );
-                    ?>
+                    ?>                    
                 </section>
+                <a href="#" class="show-more-seo">Показать ещё</a>
             </div>
         </div>
     </div>

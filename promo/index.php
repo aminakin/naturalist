@@ -211,9 +211,12 @@ $arMeteo = Users::getMeteo($coords);
                     "EDIT_TEMPLATE" => ""
                 )
             );
-            ?>
+            ?>            
         </div>
     </section>
+    <!--<div class="container">
+        <a href="#" class="show-more-seo">Показать ещё</a>
+    </div>-->
     <a name="fortune"></a>
     <section class="promo__wheel" id="wheel"></section>
 

@@ -563,4 +563,10 @@ $(function () {
       });
     }
   });
+
+  $('.show-more-seo').on('click', function(evt){
+    evt.preventDefault();
+    $('.cert-index__seo-text').addClass('show-all-seo');
+    $(this).hide();
+  })
 });
