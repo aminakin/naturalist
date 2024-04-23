@@ -17892,10 +17892,10 @@
                 _this2.elements.$result.value = JSON.stringify({
                   type: $item.dataset.autocompleteType,
                   item: $item.dataset.autocompleteItem,
-                  title: $title.innerHTML,
+                  title: $title.textContent.replace("&", "%26"),
                   footnote: $footnote ? $footnote.innerHTML : "",
                 });
-                _this2.elements.$field.value = $title.innerHTML
+                _this2.elements.$field.value = $title.textContent
                   .replace("<br>", " ")
                   .replace(/<\/?[^>]+(>|$)/g, "")
                   .replace(/\s+/g, " ")
