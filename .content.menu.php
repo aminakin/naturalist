@@ -2,56 +2,63 @@
 $aMenuLinks = Array(
 	Array(
 		"Пользовательское соглашение", 
-		"/agreement/", 
+		SITE_DIR."/agreement/", 
 		Array(), 
 		Array(), 
 		"" 
 	),
 	Array(
 		"Оплата", 
-		"/payment/", 
+		SITE_DIR."/payment/", 
 		Array(), 
 		Array(), 
 		"" 
 	),
 	Array(
 		"Политика отмены заказов", 
-		"/cancel/", 
+		SITE_DIR."/cancel/", 
 		Array(), 
 		Array(), 
 		"" 
 	),
 	Array(
 		"Политика конфиденциальности", 
-		"/policy/", 
+		SITE_DIR."/policy/", 
 		Array(), 
 		Array(), 
 		"" 
 	),
 	Array(
 		"Политика использования cookie-файлов", 
-		"/cookie/", 
+		SITE_DIR."/cookie/", 
 		Array(), 
 		Array(), 
 		"" 
 	),
 	Array(
 		"Контакты НАТУРАЛИСТ", 
-		"/contacts/", 
+		SITE_DIR."/contacts/", 
 		Array(), 
 		Array(), 
 		"" 
 	),
 	Array(
 		"Реквизиты", 
-		"/details/", 
+		SITE_DIR."/details/", 
 		Array(), 
 		Array(), 
 		"" 
 	),
 	Array(
 		"Карта сайта", 
-		"/sitemap/", 
+		SITE_DIR."/sitemap/", 
+		Array(), 
+		Array(), 
+		"" 
+	),
+	Array(
+		"Правила проведения розыгрыша призов \"Колесо фортуны\"", 
+		SITE_DIR."/rules/", 
 		Array(), 
 		Array(), 
 		"" 
