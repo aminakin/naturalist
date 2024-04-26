@@ -42,7 +42,7 @@ if ($REQUEST_METHOD == "POST" && check_bitrix_sessid() && !empty($_REQUEST["obje
         $e = new CAdminException($arMsg);
         $GLOBALS["APPLICATION"]->ThrowException($e);
 
-        $message = new CAdminMessage(GetMessage("MODULE_IMPORT_ERROR"), $e);
+        $message = new CAdminMessage($object["MESSAGE"]["ERRORS"], $e);
     }
 }
 
