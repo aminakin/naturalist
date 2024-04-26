@@ -858,7 +858,7 @@ class Bnovo
         ));
         $response = curl_exec($ch);
         $arData = json_decode($response, true);
-        curl_close($ch);
+        curl_close($ch);        
 
         if (empty($arSection)) {
             $arSection = $arData['account'];
@@ -894,9 +894,13 @@ class Bnovo
 
                 // echo 'Добавлен объект с ID ' . $uid . ': ' . $sectionName;
                 $arResult["MESSAGE"]["SUCCESS"] = 'Добавлен объект с ID ' . $uid . ': ' . $sectionName;
+            } else {
+                $arResult["MESSAGE"]["ERRORS"] = $iS->LAST_ERROR;
             }
         } else {
-            $arSection = array_merge($arData['account'], $arSection);
+            if (is_array($arData['account'])) {
+                $arSection = array_merge($arData['account'], $arSection);
+            }            
             // echo 'Объект с ID = ' . $arSection['ID'] . ' уже существует. Данные по объекту были обновлены.'."<br>\r\n";
             $arResult["MESSAGE"]["ERRORS"] = 'Объект с указанным ID уже существует. Данные по объекту были обновлены.';
         }
@@ -1883,6 +1887,42 @@ class Bnovo
             $fp = fopen($importFilePath, 'w+');
             fwrite($fp, json_encode($data));
             fclose($fp);
+        }
+    }
+
+    /**
+     * Возвращает все разделы (отели) Bnovo
+     *
+     * @return array
+     * 
+     */
+    private function getSections()
+    {
+        $entity = \Bitrix\Iblock\Model\Section::compileEntityByIblock(CATALOG_IBLOCK_ID);
+        $rsSectionObjects = $entity::getList(
+            [
+                'filter' => ['IBLOCK_ID' => CATALOG_IBLOCK_ID, 'UF_EXTERNAL_SERVICE' => $this->bnovoSectionPropEnumId],
+                'select' => ['ID', 'NAME', 'UF_EXTERNAL_UID'],                
+            ]
+        );
+        
+        return $rsSectionObjects->fetchAll();
+    }
+
+    /**
+     * Обновляет тарифы по всем объектам
+     *
+     * @return array
+     * 
+     */
+    public function updateTariffs()
+    {
+        $sections = $this->getSections();
+
+        if (!empty($sections)) {
+            foreach ($sections as $section) {
+                $this->updatePublicObject($section['UF_EXTERNAL_UID'], false, true);
+            }
         }
     }
 }
