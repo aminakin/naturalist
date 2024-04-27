@@ -234,7 +234,11 @@ var Order = function () {
       success: function (data) {
         if (data.STATUS == "SUCCESS") {
           _this.setCookieValuesFromForm();
-          location.reload();
+          if (window.innerWidth < 500) {
+            location.href = "/order#coupon-block";
+          } else {
+            location.reload();
+          }
         } else {
           let elem =
             '<span class="coupon__error-message">' + data.MESSAGE + "</span>";
@@ -243,7 +247,11 @@ var Order = function () {
         }
       },
       error: function (data) {
-        location.reload();
+        if (window.innerWidth < 500) {
+          location.href = "/order#coupon-block";
+        } else {
+          location.reload();
+        }
       },
     });
   };
@@ -287,10 +295,18 @@ var Order = function () {
       data: data,
       dataType: "json",
       success: function (data) {
-        location.reload();
+        if (window.innerWidth < 500) {
+          location.href = "/order#coupon-block";
+        } else {
+          location.reload();
+        }
       },
       error: function (data) {
-        location.reload();
+        if (window.innerWidth < 500) {
+          location.href = "/order#coupon-block";
+        } else {
+          location.reload();
+        }
       },
     });
   };
@@ -370,4 +386,19 @@ $(function () {
       $(".coupon__error-message").hide();
     }
   });
+
+  if (window.location.hash) {
+    var hash = window.location.hash;
+    setTimeout(() => {
+      if ($(hash).length) {
+        console.log(1);
+        $("html, body").animate(
+          {
+            scrollTop: $(hash).offset().top,
+          },
+          500
+        );
+      }
+    }, 1000);
+  }
 });
