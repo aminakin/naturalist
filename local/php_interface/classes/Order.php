@@ -651,7 +651,7 @@ class Orders
 
     public function enterCoupon($coupon)
     {
-        $coupon = htmlspecialchars_decode(trim($coupon));
+        $coupon = htmlspecialchars_decode(trim($coupon));        
         if (!empty($coupon)) {
             $getCoupon = DiscountCouponsManager::getData($coupon);
             if ($getCoupon['ACTIVE'] === 'Y') {

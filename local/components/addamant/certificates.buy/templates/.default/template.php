@@ -133,7 +133,7 @@ if ($arResult['ERROR']) {
                         <input type="radio" name="cert_el_variant" value="<?=$arResult['LOCAL_HOST'].CFile::getPath($elVariant['UF_FILE'])?>" class="visually-hidden" >
                         <span class="el-variant__title"><?=$elVariant['UF_NAME']?></span>
                         <div class="variant__img-wrap">
-                            <img src="<?=CFile::ResizeImageGet($elVariant['UF_FILE'], array('width' => 600, 'height' => 763), BX_RESIZE_IMAGE_EXACT, true)['src']?>" alt="">
+                            <img src="<?=CFile::ResizeImageGet($elVariant['UF_FILE'], array('width' => 600, 'height' => 849), BX_RESIZE_IMAGE_EXACT, true)['src']?>" alt="">
                         </div>                        
                     </label>
                 <?php } ?>                
