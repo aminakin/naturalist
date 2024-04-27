@@ -174,7 +174,7 @@ foreach($arResult as $key => $value) {
             </div>            
         </div>
     </div>    
-    <div class="reservation-form__summary">
+    <div class="reservation-form__summary" id="coupon-block">        
         <div class="reservation-form__summary-holder">
             <p class="reservation-form__right-title"><?=Loc::getMessage('FORM_RIGHT_TITLE')?></p>
             <div class="reservation-form__pre-final">
