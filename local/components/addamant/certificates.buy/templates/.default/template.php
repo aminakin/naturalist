@@ -279,7 +279,8 @@ if ($arResult['ERROR']) {
             </div>
             <div class="payment__content">
                 <div class="payment__list">
-                    <?php foreach ($arResult['PAY_SYSTEMS'] as $key => $paysystem) {?>                        
+                    <?php foreach ($arResult['PAY_SYSTEMS'] as $key => $paysystem) {?>   
+                        <?if ($paysystem['ID'] == CERT_YOOKASSA_PAYSYSTEM_ID && !\Bitrix\Main\Engine\CurrentUser::get()->isAdmin()) {continue;}?>                     
                         <?if ($paysystem['ID'] != CERT_YANDEX_SPLIT_PAYSYSTEM_ID) {?>                                
                             <?$img = CFile::getFileArray($paysystem['LOGOTIP'])?>
                             <label class="checkbox payment-item" <?=$paysystem['IS_CASH'] == 'Y' ? 'style="display:none" cash="Y"' : ''?>>

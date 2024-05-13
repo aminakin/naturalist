@@ -1923,6 +1923,7 @@ class Bnovo
             foreach ($sections as $section) {
                 $this->updatePublicObject($section['UF_EXTERNAL_UID'], false, true);
             }
+            echo 'Тарифы обновлены';
         }
     }
 }

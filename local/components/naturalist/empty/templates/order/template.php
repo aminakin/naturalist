@@ -258,6 +258,7 @@ foreach($arResult as $key => $value) {
                 <div class="payment-methods">
                     <?if (is_array($arResult['paySystems'])) {
                         foreach ($arResult['paySystems'] as $key => $paysystem) {?>
+                            <?if ($paysystem['ID'] == 11 && !\Bitrix\Main\Engine\CurrentUser::get()->isAdmin()) {continue;}?>
                             <?if ($paysystem['ID'] != YANDEX_SPLIT_PAYSYSTEM_ID) {?>                                
                             <?$img = CFile::getFileArray($paysystem['LOGOTIP'])?>
                             <label class="checkbox payment-item">

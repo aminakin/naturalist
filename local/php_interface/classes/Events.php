@@ -305,7 +305,7 @@ class Events
         // Промокод из заказа
         $couponList = \Bitrix\Sale\Internals\OrderCouponsTable::getList(array(
             'select' => array('COUPON'),
-            'filter' => array('=ORDER_ID' => 1000)
+            'filter' => array('=ORDER_ID' => $order->getId())
         ));
         while ($coupon = $couponList->fetch())
         {

@@ -79,7 +79,7 @@ class Orders
         "F" => "Завершён",
         "C" => "Отменён"
     );
-    public $paymentTypeId = 4; // Сбербанк
+    public $paymentTypeId = [4, 11]; // Сбербанк
     public $innerPaymentTypeId = 3; // Внутренний счёт
 
     private $arErrors = [
@@ -916,7 +916,7 @@ class Orders
                 $paymentData = '';
                 if ($params['userbalance'] != 0 && !$doublePayment) {                    
                     $paymentUrl = $this->orderSuccessLink;
-                } elseif (isset($params['paysystem']) && $params['paysystem'] != $this->paymentTypeId) {
+                } elseif (isset($params['paysystem']) && !in_array($params['paysystem'], $this->paymentTypeId)) {
                     $paymentUrl = false;
                     $paymentData = $this->getPaymentUrl($orderId, false, true);
                 } else {

@@ -110,7 +110,7 @@ class CertBuy extends \CBitrixComponent
 
         $order = new Orders;
 
-        if ($this->postList['paysystem'] == CERT_SBER_PAYSYSTEM_ID) {
+        if ($this->postList['paysystem'] == CERT_SBER_PAYSYSTEM_ID || $this->postList['paysystem'] == CERT_YOOKASSA_PAYSYSTEM_ID) {
             $this->arResult['PAYMENT_URL'] = $order->getPaymentUrl($orderId, false);
             return;
         }        
