@@ -43,7 +43,12 @@ label {
   position: relative;
 }
 
-label:has(input:checked) {
+/* label:has(input:checked) {
+  border-color: #f18d3f;
+  box-shadow: inset 0 0 0 3px #f18d3f;
+} */
+
+label.selected {
   border-color: #f18d3f;
   box-shadow: inset 0 0 0 3px #f18d3f;
 }
@@ -142,27 +147,27 @@ label:has(input:checked) {
   font-size: 13px;
 }
 
-.format__electro label:has(input:checked) {
+.format__electro label.selected {
   border-color: transparent;
   box-shadow: none;
   background-color: #1b2d50;
 }
 
-.format__electro label:has(input:checked) .format__title {
+.format__electro label.selected .format__title {
   color: #e6c48e;
 }
 
-.format__electro label:has(input:checked) svg g > path:first-child {
+.format__electro label.selected svg g > path:first-child {
   fill: #fbeed7;
 }
 
-.format__fiz label:has(input:checked) {
+.format__fiz label.selected {
   border-color: transparent;
   box-shadow: none;
   background-color: #e6c48e;
 }
 
-.format__fiz label:has(input:checked) svg g > path:first-child {
+.format__fiz label.selected svg g > path:first-child {
   fill: #fbeed7;
 }
 
@@ -195,16 +200,16 @@ label:has(input:checked) {
   border-radius: 50px;
 }
 
-.design label:has(input:checked) {
+.design label.selected {
   border-color: transparent;
   box-shadow: none;
 }
 
-.design label:has(input:checked) .el-variant__title {
+.design label.selected .el-variant__title {
   background-color: #f18d3f;
 }
 
-.design label:has(input:checked) img {
+.design label.selected img {
   border-color: #f18d3f;
 }
 
