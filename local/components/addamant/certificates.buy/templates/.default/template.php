@@ -418,12 +418,12 @@ if ($arResult['ERROR']) {
 
 <style>
     <?php foreach ($arResult['CERTIFICATES'] as $style) {?>
-        label:has(input:checked).cert--<?=$style['ID']?> {
+        label.selected.cert--<?=$style['ID']?> {
             background-color: <?=$style['BACK_HOVER_COLOR']?>;
             box-shadow: none;
             border-color: transparent;            
         }
-        label:has(input:checked).cert--<?=$style['ID']?> .nominal__price {
+        label.selected.cert--<?=$style['ID']?> .nominal__price {
             color: <?=$style['PRICE_HOVER_COLOR']?> !important
         }
     <?php }?>

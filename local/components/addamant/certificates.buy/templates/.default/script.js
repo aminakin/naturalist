@@ -27,8 +27,17 @@ class BuyCert {
     ".summ__item.del-var .summ__price"
   );
   summCostElement = document.querySelector(".summ__item.all .summ__price");
+  certVariantsLabels = document.querySelectorAll(
+    ".variant .form__el-variant label"
+  );
   certVariants = document.querySelectorAll('input[name="cert_variant"]');
+  certElVariantsLabels = document.querySelectorAll(
+    ".el-variant .form__el-variant label"
+  );
   certElVariants = document.querySelectorAll('input[name="cert_el_variant"]');
+  certPocketsLabels = document.querySelectorAll(
+    ".pocket .form__el-variant label"
+  );
   certPockets = document.querySelectorAll('input[name="cert_pocket"]');
 
   totalSumm = 0;
@@ -56,8 +65,10 @@ class BuyCert {
     let _this = this;
     this.certs.forEach((element) => {
       element.querySelector("input").addEventListener("change", function () {
+        _this.elementsClassListRemove(_this.certs, "selected");
         if (this.checked) {
           _this.refreshSplitBadge(this.getAttribute("cost"));
+          element.classList.add("selected");
         }
         _this.prodSumm = this.getAttribute("cost");
         _this.renderPrice(_this.prodCostElement, this.getAttribute("cost"));
@@ -67,6 +78,16 @@ class BuyCert {
         }
       });
     });
+  }
+
+  elementsClassListRemove(elements, className) {
+    if (NodeList.prototype.isPrototypeOf(elements)) {
+      elements.forEach((element) => {
+        element.classList.remove(className);
+      });
+    } else {
+      elements.classList.remove(className);
+    }
   }
 
   citySelectHandler() {
@@ -90,7 +111,9 @@ class BuyCert {
     let _this = this;
     this.certVariants.forEach((element) => {
       element.addEventListener("change", function () {
+        _this.elementsClassListRemove(_this.certVariantsLabels, "selected");
         if (this.checked) {
+          element.parentElement.classList.add("selected");
           _this.variantSumm = +this.getAttribute("cost");
           _this.calcSumm();
         }
@@ -102,7 +125,9 @@ class BuyCert {
     let _this = this;
     this.certElVariants.forEach((element) => {
       element.addEventListener("change", function () {
+        _this.elementsClassListRemove(_this.certElVariantsLabels, "selected");
         if (this.checked) {
+          element.parentElement.classList.add("selected");
           _this.variantSumm = 0;
           _this.pocketSumm = 0;
           _this.calcSumm();
@@ -115,8 +140,10 @@ class BuyCert {
     let _this = this;
     this.certPockets.forEach((element) => {
       element.addEventListener("click", function () {
+        _this.elementsClassListRemove(_this.certPocketsLabels, "selected");
         var $box = $(this);
         if ($box.is(":checked")) {
+          element.parentElement.classList.add("selected");
           var group = "input:checkbox[name='" + $box.attr("name") + "']";
           $(group).prop("checked", false);
           $box.prop("checked", true);
@@ -177,7 +204,9 @@ class BuyCert {
   customPriceInputHandler() {
     let _this = this;
     this.customPriceInput.addEventListener("focus", function () {
+      _this.elementsClassListRemove(_this.certs, "selected");
       this.previousElementSibling.checked = true;
+      this.parentElement.classList.add("selected");
       _this.setRequired(this);
       this.setAttribute("placeholder", "    ₽");
     });
@@ -238,6 +267,8 @@ class BuyCert {
   }
 
   showElectro() {
+    this.elementsClassListRemove(this.fizSelect.parentElement, "selected");
+    this.electroSelect.parentElement.classList.add("selected");
     // показываем/скрываем нужные блоки
     this.sectionFizVariants.style.display = "none";
     this.sectionFizPockets.style.display = "none";
@@ -279,6 +310,8 @@ class BuyCert {
   }
 
   showFiz() {
+    this.elementsClassListRemove(this.electroSelect.parentElement, "selected");
+    this.fizSelect.parentElement.classList.add("selected");
     // показываем/скрываем нужные блоки
     this.sectionFizVariants.style.display = "block";
     this.sectionFizPockets.style.display = "block";
