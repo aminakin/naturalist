@@ -858,7 +858,7 @@ class Bnovo
         ));
         $response = curl_exec($ch);
         $arData = json_decode($response, true);
-        curl_close($ch);        
+        curl_close($ch);
 
         if (empty($arSection)) {
             $arSection = $arData['account'];
@@ -1106,6 +1106,8 @@ class Bnovo
         curl_close($ch);
         $arRooms = $arData['rooms'];
 
+        //xprint($arData);
+
         $iE = new CIBlockElement();
 
         //Секция объекта для номеров
@@ -1220,7 +1222,7 @@ class Bnovo
             }
 
             $arAgesValues = []; //Возрастные интервалы
-            if (isset($arRoom['extra_array']['children_ages']) && !empty($arRoom['extra_array']['children_ages'])) {
+            if (isset($arRoom['extra_array']['children_ages']) && !empty($arRoom['extra_array']['children_ages']) && !isset($arRoom['extra_array']['people'])) {
                 $elementAppend = '';
                 foreach ($arRoom['extra_array']['children_ages'] as $key => $arAge) {
                     if (is_array($arAge)) {
@@ -1282,6 +1284,10 @@ class Bnovo
                 ));
 
                 $elementIdOccupancies = $arOccupancies['ID'];
+            }
+
+            if (isset($arRoom['extra_array']['people']) && count($arRoom['extra_array']['people'])) {
+                $this->markupHandler($childrenAgesId, $elementIdCat, $sectionIdOccupancies, $arRoom);
             }
 
             //Товары объекта - номера
@@ -1373,6 +1379,20 @@ class Bnovo
         }
     }
 
+    /**
+     * Добавление/обновление размещения в виде наценки
+     *
+     * @return void
+     * 
+     */
+    private function markupHandler($childrenAgesId, $elementIdCat, $sectionIdOccupancies, $arRoom) : void
+    {
+        xprint($childrenAgesId);
+        xprint($elementIdCat);
+        xprint($sectionIdOccupancies);
+        xprint($arRoom);
+    }
+
     public static function getImages($arImagesUrl)
     {
         $arImages = array();
@@ -1388,7 +1408,7 @@ class Bnovo
     }
 
     /* Обновление цен и броней */
-    public function updateReservationData($hotelId, $arTariffs, $arCategories, $arDates, $isTest = false)
+    public function updateReservationData($hotelId, $arTariffs, $arCategories, $arDates)
     {
         $url = $this->bnovoApiURL . '/plans_data';
         $headers = array(
@@ -1420,11 +1440,6 @@ class Bnovo
         ));
         $response = curl_exec($ch);
         $arData = json_decode($response, true);
-
-        if ($isTest) {
-            xprint($arData);
-            die();
-        }
 
         // $this->writeToFile($arData, 'updateReservationData', $hotelId);
 
