@@ -1106,8 +1106,6 @@ class Bnovo
         curl_close($ch);
         $arRooms = $arData['rooms'];
 
-        //xprint($arData);
-
         $iE = new CIBlockElement();
 
         //Секция объекта для номеров
@@ -1400,11 +1398,6 @@ class Bnovo
             2 => 'x',
             3 => 'e'
         ];
-        xprint($childrenAgesId);
-        xprint($elementIdCat);
-        xprint($sectionIdOccupancies);
-        xprint($arRoom);
-        xprint($childrenAges);
         foreach ($arRoom['extra_array']['children_ages'] as $ageId => $arAge) {
             foreach ($arAge as $bedType => $data) {
                 $elementName = $data['people_count'] . ($ageId == 0 ? ' взрослых ' : ' детей (' . $childrenAges[$ageId]['min_age'] . '-' . $childrenAges[$ageId]['max_age'] . ' лет) ') . $seats[$bedType];
@@ -1477,10 +1470,6 @@ class Bnovo
             "plans" => (array)$arTariffs,
             "roomtypes" => (array)$arCategories
         );
-
-        if ($isTest) {
-            xprint($data);
-        }
 
         $ch = curl_init();
         curl_setopt_array($ch, array(
