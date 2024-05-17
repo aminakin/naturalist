@@ -858,7 +858,7 @@ class Bnovo
         ));
         $response = curl_exec($ch);
         $arData = json_decode($response, true);
-        curl_close($ch);        
+        curl_close($ch);
 
         if (empty($arSection)) {
             $arSection = $arData['account'];
@@ -900,7 +900,7 @@ class Bnovo
         } else {
             if (is_array($arData['account'])) {
                 $arSection = array_merge($arData['account'], $arSection);
-            }            
+            }
             // echo 'Объект с ID = ' . $arSection['ID'] . ' уже существует. Данные по объекту были обновлены.'."<br>\r\n";
             $arResult["MESSAGE"]["ERRORS"] = 'Объект с указанным ID уже существует. Данные по объекту были обновлены.';
         }
@@ -1220,7 +1220,7 @@ class Bnovo
             }
 
             $arAgesValues = []; //Возрастные интервалы
-            if (isset($arRoom['extra_array']['children_ages']) && !empty($arRoom['extra_array']['children_ages'])) {
+            if (isset($arRoom['extra_array']['children_ages']) && !empty($arRoom['extra_array']['children_ages']) && !isset($arRoom['extra_array']['people'])) {
                 $elementAppend = '';
                 foreach ($arRoom['extra_array']['children_ages'] as $key => $arAge) {
                     if (is_array($arAge)) {
@@ -1245,6 +1245,7 @@ class Bnovo
             $arOccupancies = CIBlockElement::GetList(false, array(
                 "IBLOCK_ID" => OCCUPANCIES_IBLOCK_ID,
                 "PROPERTY_CATEGORY_ID" => $elementIdCat,
+                "!PROPERTY_IS_MARKUP" => 13,
             ))->Fetch();
 
             if (!$arOccupancies) {
@@ -1282,6 +1283,10 @@ class Bnovo
                 ));
 
                 $elementIdOccupancies = $arOccupancies['ID'];
+            }
+
+            if ($arSection['uid'] == '0b1eaa05-44f9-4cb8-97ca-89e2112cb648' && (isset($arRoom['extra_array']['people']) && count($arRoom['extra_array']['people'])) && (isset($arRoom['extra_array']['children_ages']) && count($arRoom['extra_array']['children_ages']))) {
+                $this->markupHandler($childrenAgesId, $elementIdCat, $sectionIdOccupancies, $arRoom, $arSection['children_ages']);
             }
 
             //Товары объекта - номера
@@ -1373,6 +1378,64 @@ class Bnovo
         }
     }
 
+    /**
+     * Добавление/обновление размещения в виде наценки
+     *
+     * @return void
+     * 
+     */
+    private function markupHandler($childrenAgesId, $elementIdCat, $sectionIdOccupancies, $arRoom, $childrenAges): void
+    {
+        $acc = new CIBlockElement();
+        $seats = [
+            0 => 'на основном месте',
+            1 => 'на доп. месте',
+            2 => 'без места',
+        ];
+        $people = [
+            0 => 'c',
+            1 => 'x',
+            2 => 'x',
+            3 => 'e'
+        ];
+        foreach ($arRoom['extra_array']['children_ages'] as $ageId => $arAge) {
+            foreach ($arAge as $bedType => $data) {
+                $elementName = $data['people_count'] . ($ageId == 0 ? ' взрослых ' : ' детей (' . $childrenAges[$ageId]['min_age'] . '-' . $childrenAges[$ageId]['max_age'] . ' лет) ') . $seats[$bedType];
+                if ($ageId == 0) {
+                    $elementCode = 'e.' . $data['people_count'];
+                } else {
+                    $elementCode = $people[$bedType] . '.' . $data['people_count'] . '.' . $childrenAgesId[$ageId] . ($bedType == 2 ? '.0' : '.1');
+                }
+                $arFields = array(
+                    "ACTIVE" => "Y",
+                    "IBLOCK_ID" => OCCUPANCIES_IBLOCK_ID,
+                    "IBLOCK_SECTION_ID" => $sectionIdOccupancies,
+                    "NAME" => $elementName,
+                    "CODE" => $elementCode,
+                    "PROPERTY_VALUES" => array(
+                        "CATEGORY_ID" => $elementIdCat,
+                        "GUESTS_COUNT" => $data['people_count'],
+                        "CHILDREN_COUNT" => $ageId != 0 ? $data['people_count'] : '',
+                        "CHILDREN_AGES" => $ageId != 0 ? ["VALUE" => $childrenAgesId[$ageId], "DESCRIPTION" => $data['people_count']] : '',
+                        "CHILDREN_MIN_AGE" => $ageId != 0 ? $childrenAges[$ageId]['min_age'] : '',
+                        "CHILDREN_MAX_AGE" => $ageId != 0 ? $childrenAges[$ageId]['max_age'] : '',
+                        "IS_MARKUP" => 13,
+                        "MARKUP_PRICE" => $data['price'],
+                    )
+                );
+                $curAcc = \Bitrix\Iblock\Elements\ElementOccupanciesTable::getList([
+                    'select' => ['ID'],
+                    'filter' => ['=ACTIVE' => 'Y', '=CODE' => $elementCode, '=CATEGORY_ID.VALUE' => $elementIdCat],
+                ])->fetch();
+                if (!$curAcc) {
+                    $newId = $acc->Add($arFields);
+                } else {
+                    $oldId = $acc->Update($curAcc['ID'], $arFields);
+                }
+            }
+        }
+    }
+
     public static function getImages($arImagesUrl)
     {
         $arImages = array();
@@ -1388,7 +1451,7 @@ class Bnovo
     }
 
     /* Обновление цен и броней */
-    public function updateReservationData($hotelId, $arTariffs, $arCategories, $arDates, $isTest = false)
+    public function updateReservationData($hotelId, $arTariffs, $arCategories, $arDates)
     {
         $url = $this->bnovoApiURL . '/plans_data';
         $headers = array(
@@ -1408,10 +1471,6 @@ class Bnovo
             "roomtypes" => (array)$arCategories
         );
 
-        if ($isTest) {
-            xprint($data);
-        }
-
         $ch = curl_init();
         curl_setopt_array($ch, array(
             CURLOPT_URL => $url . '?' . http_build_query($data),
@@ -1420,11 +1479,6 @@ class Bnovo
         ));
         $response = curl_exec($ch);
         $arData = json_decode($response, true);
-
-        if ($isTest) {
-            xprint($arData);
-            die();
-        }
 
         // $this->writeToFile($arData, 'updateReservationData', $hotelId);
 
@@ -1902,10 +1956,10 @@ class Bnovo
         $rsSectionObjects = $entity::getList(
             [
                 'filter' => ['IBLOCK_ID' => CATALOG_IBLOCK_ID, 'UF_EXTERNAL_SERVICE' => $this->bnovoSectionPropEnumId],
-                'select' => ['ID', 'NAME', 'UF_EXTERNAL_UID'],                
+                'select' => ['ID', 'NAME', 'UF_EXTERNAL_UID'],
             ]
         );
-        
+
         return $rsSectionObjects->fetchAll();
     }
 
