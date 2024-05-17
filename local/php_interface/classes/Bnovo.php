@@ -1285,7 +1285,7 @@ class Bnovo
                 $elementIdOccupancies = $arOccupancies['ID'];
             }
 
-            if ((isset($arRoom['extra_array']['people']) && count($arRoom['extra_array']['people'])) && (isset($arRoom['extra_array']['children_ages']) && count($arRoom['extra_array']['children_ages']))) {
+            if ($arSection['uid'] == '0b1eaa05-44f9-4cb8-97ca-89e2112cb648' && (isset($arRoom['extra_array']['people']) && count($arRoom['extra_array']['people'])) && (isset($arRoom['extra_array']['children_ages']) && count($arRoom['extra_array']['children_ages']))) {
                 $this->markupHandler($childrenAgesId, $elementIdCat, $sectionIdOccupancies, $arRoom, $arSection['children_ages']);
             }
 
