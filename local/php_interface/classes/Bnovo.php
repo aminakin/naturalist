@@ -1404,7 +1404,15 @@ class Bnovo
                 if ($ageId == 0) {
                     $elementCode = 'e.' . $data['people_count'];
                 } else {
-                    $elementCode = $people[$bedType] . '.' . $data['people_count'] . '.' . $childrenAgesId[$ageId] . ($bedType == 2 ? '.0' : '.1');
+                    if ($bedType == 2) {
+                        $append = '.0';
+                    } else if ($bedType == 1) {
+                        $append = '.1';
+                    } else {
+                        $append = '';
+                    }
+
+                    $elementCode = $people[$bedType] . '.' . $data['people_count'] . '.' . $childrenAgesId[$ageId] . $append;
                 }
                 $arFields = array(
                     "ACTIVE" => "Y",
@@ -1419,7 +1427,7 @@ class Bnovo
                         "CHILDREN_AGES" => $ageId != 0 ? ["VALUE" => $childrenAgesId[$ageId], "DESCRIPTION" => $data['people_count']] : '',
                         "CHILDREN_MIN_AGE" => $ageId != 0 ? $childrenAges[$ageId]['min_age'] : '',
                         "CHILDREN_MAX_AGE" => $ageId != 0 ? $childrenAges[$ageId]['max_age'] : '',
-                        "IS_MARKUP" => 13,
+                        "IS_MARKUP" => 17,
                         "MARKUP_PRICE" => $data['price'],
                     )
                 );

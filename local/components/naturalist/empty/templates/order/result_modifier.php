@@ -172,7 +172,8 @@ $paySystemResult = \Bitrix\Sale\PaySystem\Manager::getList(array(
         'ACTIVE' => 'Y',
         '!ACTION_FILE' => 'inner',
         '!CODE' => 'CERT',
-    )
+    ),
+    'order' => ['sort' => 'asc']
 ))->fetchAll();
 
 $arResult = array(
