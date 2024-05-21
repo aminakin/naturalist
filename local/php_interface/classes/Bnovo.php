@@ -427,12 +427,34 @@ class Bnovo
                 "PROPERTY_CHILDREN_COUNT",
                 "PROPERTY_CHILDREN_AGES",
                 "PROPERTY_CHILDREN_MIN_AGE",
-                "PROPERTY_CHILDREN_MAX_AGE"
+                "PROPERTY_CHILDREN_MAX_AGE",
+                "PROPERTY_MAIN_BEDS",
+                "PROPERTY_MARKUP_EXTERNAL_ID",
+                "PROPERTY_IS_MARKUP",
             )
-        );
+        );        
         $arCategoriesFilterredIDs = array();
         $backOccupancies = [];
-        while ($arOccupancy = $rsOccupancies->Fetch()) {
+        $markups = [];
+        $filteredChildrenAgesId = [];
+
+        // Вычисляем возрастные интервалы согласно возрасту детей из поискового запроса
+        if (!empty($children)) {
+            foreach ($arAges as $arAge) {
+                foreach ($arChildrenAge as $age) {
+                    if ($arAge['UF_MIN_AGE'] <= $age && $arAge['UF_MAX_AGE'] >= $age) {
+                        $filteredChildrenAgesId[$arAge['ID']] = $arAge;
+                    }
+                }
+            }
+        }
+
+        while ($arOccupancy = $rsOccupancies->Fetch()) {            
+            // Складываем в отедльный массив все наценки
+            if (!empty($children) && $arOccupancy['PROPERTY_IS_MARKUP_VALUE'] == 'Да' &&  isset($filteredChildrenAgesId[$arOccupancy["PROPERTY_CHILDREN_AGES_VALUE"][0]])) {
+                $markups[] = $arOccupancy;
+                continue;
+            }
             $backOccupancies[] = $arOccupancy;
             if ($arOccupancy["PROPERTY_GUESTS_COUNT_VALUE"] >= $guests) {
                 if (!empty($children)) {
@@ -457,6 +479,8 @@ class Bnovo
                 }
             }
         }
+
+        xprint($markups);        
 
         if (empty($arCategoriesFilterredIDs)) {
             $guests += count($arChildrenAge);
