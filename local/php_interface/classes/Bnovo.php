@@ -591,11 +591,14 @@ class Bnovo
             if(empty($result)){
                 $result=$list;     
             } else{
-                foreach ($result as $line) {
-                    if ($line['PROPERTY_MAIN_BEDS'] == $guests - $children) {
+                foreach ($result as $line) {                    
+                    if ($line['PROPERTY_MAIN_BEDS_VALUE'] == $guests - $children && str_contains($line['CODE'], 'c.1')) {
                         continue;
                     }
                     foreach ($list as $row) {
+                        if ($row['PROPERTY_MAIN_BEDS_VALUE'] == $guests - $children && str_contains($row['CODE'], 'c.1')) {
+                            continue;
+                        }
                         $newline=(string) $line['ID'].' | '.(string)$row['ID'];
                         $prevRes[]=$newline;
                     }
