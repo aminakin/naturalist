@@ -286,7 +286,7 @@ class Bnovo
             "filter" => [
                 "UF_HOTEL_ID" => $externalId,
                 "UF_DATE" => $arDates,
-                "UF_RESERVED" => 0,
+                "!UF_RESERVED" => 1,
                 "!UF_CLOSED" => "1",
                 [
                     "LOGIC" => "OR",
@@ -422,6 +422,7 @@ class Bnovo
             array(
                 "ID",
                 "NAME",
+                "CODE",
                 "PROPERTY_CATEGORY_ID",
                 "PROPERTY_GUESTS_COUNT",
                 "PROPERTY_CHILDREN_COUNT",
@@ -435,8 +436,12 @@ class Bnovo
         );        
         $arCategoriesFilterredIDs = array();
         $backOccupancies = [];
+        // наценки
         $markups = [];
+        // отфильтрованные категории возрастов детей (согласно поисковому запросу)
         $filteredChildrenAgesId = [];
+        // необходимы для вычисления наценок данные по размещению
+        $occupancySeatsSettings = [];
 
         // Вычисляем возрастные интервалы согласно возрасту детей из поискового запроса
         if (!empty($children)) {
@@ -451,8 +456,8 @@ class Bnovo
 
         while ($arOccupancy = $rsOccupancies->Fetch()) {            
             // Складываем в отедльный массив все наценки
-            if (!empty($children) && $arOccupancy['PROPERTY_IS_MARKUP_VALUE'] == 'Да' &&  isset($filteredChildrenAgesId[$arOccupancy["PROPERTY_CHILDREN_AGES_VALUE"][0]])) {
-                $markups[] = $arOccupancy;
+            if (!empty($children) && $arOccupancy['PROPERTY_IS_MARKUP_VALUE'] == 'Да' &&  isset($filteredChildrenAgesId[$arOccupancy["PROPERTY_CHILDREN_AGES_VALUE"][0]])) {                
+                $markups[$arOccupancy["PROPERTY_CATEGORY_ID_VALUE"]][$arOccupancy["PROPERTY_CHILDREN_AGES_VALUE"][0]][] = $arOccupancy;                
                 continue;
             }
             $backOccupancies[] = $arOccupancy;
@@ -476,22 +481,22 @@ class Bnovo
 
                 if (!isset($childrenStatus) || $childrenStatus != false) {
                     $arCategoriesFilterredIDs[] = $arOccupancy["PROPERTY_CATEGORY_ID_VALUE"];
+                    $occupancySeatsSettings[$arOccupancy["PROPERTY_CATEGORY_ID_VALUE"]] = $arOccupancy;
                 }
             }
         }
-
-        xprint($markups);        
 
         if (empty($arCategoriesFilterredIDs)) {
             $guests += count($arChildrenAge);
             foreach ($backOccupancies as $arOccupancy) {
                 if ($arOccupancy["PROPERTY_GUESTS_COUNT_VALUE"] >= $guests) {
-                    $arCategoriesFilterredIDs[] = $arOccupancy["PROPERTY_CATEGORY_ID_VALUE"];
+                    $arCategoriesFilterredIDs[] = $arOccupancy["PROPERTY_CATEGORY_ID_VALUE"];       
+                    $occupancySeatsSettings[$arOccupancy["PROPERTY_CATEGORY_ID_VALUE"]] = $arOccupancy;             
                 }
             }
-        }
+        }        
 
-        $arCategoriesFilterredIDs = array_unique($arCategoriesFilterredIDs);
+        $arCategoriesFilterredIDs = array_unique($arCategoriesFilterredIDs);        
 
         // Номера        
         if ($arCategoriesFilterredIDs && $arTariffsIDs) {
@@ -518,8 +523,8 @@ class Bnovo
             array_pop($arDates);
             $arItems = array();
             foreach ($arElementsFilterred as $tariffId => $arCategories) {
-                foreach ($arCategories as $categoryId => $arRooms) {
-                    foreach ($arRooms as $elementId) {
+                foreach ($arCategories as $categoryId => $arRooms) {                    
+                    foreach ($arRooms as $elementId) {                        
                         $arPrices = array();
                         foreach ($arDates as $date) {
                             foreach ($arData as $arEntity) {
@@ -529,6 +534,17 @@ class Bnovo
                                 }
                             }
                         }
+
+                        // Если по номеру присутствуют наценки
+                        if (isset($markups[$categoryId])) {
+                            $markupVariants = [];
+                            // вычисление мест
+                            xprint($markups[$categoryId]);
+                            xprint($this->multiply($markups[$categoryId], $guests, count($arChildrenAge)));
+                            //xprint($occupancySeatsSettings[$categoryId]);
+                            //xprint($filteredChildrenAgesId);
+                        }
+
 
                         if (!empty($arPrices)) {
                             $arItems[$elementId][] = array(
@@ -559,10 +575,37 @@ class Bnovo
             $error = 'Не найдено номеров на выбранные даты';
         }
 
+        //xprint($arItems);
+
         return [
             'arItems' => $arItems,
             'error' => $error,
         ];
+    }
+
+    private function multiply ($inputarray, $guests, $children) {
+        $result=array();     
+        $prevRes=array();
+     
+        foreach ($inputarray as $column=> $list) {
+            if(empty($result)){
+                $result=$list;     
+            } else{
+                foreach ($result as $line) {
+                    if ($line['PROPERTY_MAIN_BEDS'] == $guests - $children) {
+                        continue;
+                    }
+                    foreach ($list as $row) {
+                        $newline=(string) $line['ID'].' | '.(string)$row['ID'];
+                        $prevRes[]=$newline;
+                    }
+                }
+                $result=$prevRes;
+                $prevRes=array();
+            }
+        }
+     
+        return $result;
     }
 
     // HL Возрастные интервалы
@@ -1284,7 +1327,7 @@ class Bnovo
                         "GUESTS_COUNT" => $arRoom['adults'],
                         "CHILDREN_COUNT" => $arRoom['children'],
                         "CHILDREN_AGES" => $arAgesValues,
-                        "CHILDREN_MIN_AGE" => $arRoom['children'] > 0 ? 3 : '',
+                        "CHILDREN_MIN_AGE" => $arRoom['children'] > 0 ? 0 : '',
                         "CHILDREN_MAX_AGE" => $arRoom['children'] > 0 ? 17 : '',
                     )
                 );
@@ -1302,7 +1345,7 @@ class Bnovo
                 $res = $iE->Update($elementId, $arFields);
                 CIBlockElement::SetPropertyValuesEx($elementId, OCCUPANCIES_IBLOCK_ID, array(
                     "CHILDREN_AGES" => $arAgesValues,
-                    "CHILDREN_MIN_AGE" => $arRoom['children'] > 0 ? 3 : '',
+                    "CHILDREN_MIN_AGE" => $arRoom['children'] > 0 ? 0 : '',
                     "CHILDREN_MAX_AGE" => $arRoom['children'] > 0 ? 17 : '',
                 ));
 
