@@ -17244,6 +17244,24 @@
         window.modal.open("more");
       }
     });
+    window.markupSelectHandler = function (input) {
+      let price = input.value;
+      let priceText = new Intl.NumberFormat("ru-RU", {
+        style: "currency",
+        currency: "RUB",
+        maximumFractionDigits: 0,
+      }).format(price);
+      let reservButton = input
+        .closest(".room__content")
+        .querySelector(".button.button_primary");
+      let priceElement = input
+        .closest(".room__content")
+        .querySelector(".room__final-price");
+
+      reservButton.setAttribute("data-price", price);
+
+      priceElement.textContent = priceText;
+    };
   })();
   /******/
 })();

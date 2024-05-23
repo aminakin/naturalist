@@ -3643,3 +3643,9 @@
     width: 31rem;
   }
 }
+
+.room__variant-check {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+}

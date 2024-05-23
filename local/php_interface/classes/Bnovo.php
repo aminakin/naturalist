@@ -456,8 +456,10 @@ class Bnovo
 
         while ($arOccupancy = $rsOccupancies->Fetch()) {            
             // Складываем в отедльный массив все наценки
-            if (!empty($children) && $arOccupancy['PROPERTY_IS_MARKUP_VALUE'] == 'Да' &&  isset($filteredChildrenAgesId[$arOccupancy["PROPERTY_CHILDREN_AGES_VALUE"][0]])) {                
-                $markups[$arOccupancy["PROPERTY_CATEGORY_ID_VALUE"]][$arOccupancy["PROPERTY_CHILDREN_AGES_VALUE"][0]][] = $arOccupancy;                
+            if ($arOccupancy['PROPERTY_IS_MARKUP_VALUE'] == 'Да') {                
+                if (!empty($children) && isset($filteredChildrenAgesId[$arOccupancy["PROPERTY_CHILDREN_AGES_VALUE"][0]])) {
+                    $markups[$arOccupancy["PROPERTY_CATEGORY_ID_VALUE"]][$arOccupancy["PROPERTY_CHILDREN_AGES_VALUE"][0]][] = $arOccupancy;
+                }                
                 continue;
             }
             $backOccupancies[] = $arOccupancy;
@@ -535,24 +537,58 @@ class Bnovo
                             }
                         }
 
+                        $variantsSummary = [];       
+                        $markupVariants = [];                 
+
                         // Если по номеру присутствуют наценки
                         if (isset($markups[$categoryId])) {
-                            $markupVariants = [];
-                            // вычисление мест
-                            xprint($markups[$categoryId]);
-                            xprint($this->multiply($markups[$categoryId], $guests, count($arChildrenAge)));
+                            if (count($markups[$categoryId]) > 1) {
+                                $markupVariants = $this->multiply($markups[$categoryId], $guests, count($arChildrenAge));
+                            } else {                                
+                                foreach ($markups[$categoryId][array_key_first($markups[$categoryId])] as $tempVariant) {
+                                    $markupVariants[] = [
+                                        0 => $tempVariant,
+                                    ];
+                                }                                
+                            }               
+                            
+                            //xprint($markupVariants);
+
+                            // вычисление мест                            
+                            foreach ($markupVariants as $variant) {
+                                $arMarkupPrices = [];
+                                $variantName = '';
+                                foreach ($variant as $markup) {
+                                    $variantName .= $markup['NAME'] . ', ';
+                                    foreach ($arDates as $date) {
+                                        foreach ($arData as $arEntity) {
+                                            if ($arEntity["UF_DATE"]->format('d.m.Y') == $date && $arTariffsExternalIDs[$arEntity["UF_TARIFF_ID"]] == $tariffId && $arEntity["UF_CATEGORY_ID"] == $markup['PROPERTY_MARKUP_EXTERNAL_ID_VALUE']) {
+                                                $arMarkupPrices[$arEntity["UF_DATE"]->format('Y-m-d').'-'.$markup['ID']] = (float)$arEntity["UF_PRICE"];
+                                                break;
+                                            }
+                                        }
+                                    }
+                                }
+                                
+                                $variantsSummary[] = [
+                                    'NAME' => mb_substr($variantName, 0, mb_strlen($variantName) - 2),
+                                    'PRICE' => array_sum($arMarkupPrices) + array_sum($arPrices)
+                                ];
+                            }
                             //xprint($occupancySeatsSettings[$categoryId]);
                             //xprint($filteredChildrenAgesId);
                         }
 
+                        //xprint($variantsSummary);
 
                         if (!empty($arPrices)) {
                             $arItems[$elementId][] = array(
                                 'tariffId' => array_search($tariffId, $arTariffsExternalIDs),
                                 'categoryId' => array_search($categoryId, $arRoomTypesIDs),
                                 'prices' => $arPrices,
-                                'price' => array_sum($arPrices),
-                                'value' => $arTariffsValue[$tariffId]
+                                'price' => count($variantsSummary) ? $variantsSummary[0]['PRICE'] : array_sum($arPrices),
+                                'value' => $arTariffsValue[$tariffId],
+                                'variants' => $variantsSummary
                             );
 
                             if (empty($arItems[$elementId]['minPrice']) || array_sum($arPrices) < $arItems[$elementId]['minPrice']) {
@@ -583,6 +619,16 @@ class Bnovo
         ];
     }
 
+    /**
+     * Поиск всех сочетаний элементов массива друг с другом
+     *
+     * @param array $inputarray
+     * @param int $guests
+     * @param int $children
+     * 
+     * @return [type]
+     * 
+     */
     private function multiply ($inputarray, $guests, $children) {
         $result=array();     
         $prevRes=array();
@@ -599,7 +645,10 @@ class Bnovo
                         if ($row['PROPERTY_MAIN_BEDS_VALUE'] == $guests - $children && str_contains($row['CODE'], 'c.1')) {
                             continue;
                         }
-                        $newline=(string) $line['ID'].' | '.(string)$row['ID'];
+                        $newline= [
+                            $line,
+                            $row
+                        ];
                         $prevRes[]=$newline;
                     }
                 }
