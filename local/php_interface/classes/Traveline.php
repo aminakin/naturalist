@@ -288,7 +288,7 @@ class Traveline
     public static function update()
     {
         // Сначала обновляем список возможных удобств
-        self::updateAmenities();
+        // self::updateAmenities();
 
         // Все отели Travelline
         $arSectionItems = self::getSections();
@@ -297,7 +297,7 @@ class Traveline
         $arCatalogItems = self::getRooms();
 
         // Все удобства в номерах
-        $arUpdatedAmenities = self::getAmenities();
+        // $arUpdatedAmenities = self::getAmenities();
 
         // Ответ от эндпоинта
         $arTravelineItems = self::getResponse(self::$travellineHotelsRequestLink, ["include" => "all"]);
@@ -364,13 +364,13 @@ class Traveline
                     $elementCode = CUtil::translit($elementName, "ru");
 
                     // Amenities
-                    $arAmenities = array();
-                    foreach ($arRoomType["amenities"] as $arItem) {
-                        $arEntity = $arUpdatedAmenities[$arItem["code"]];
-                        if ($arEntity) {
-                            $arAmenities[] = $arEntity["UF_XML_ID"];
-                        }
-                    }
+                    // $arAmenities = array();
+                    // foreach ($arRoomType["amenities"] as $arItem) {
+                    //     $arEntity = $arUpdatedAmenities[$arItem["code"]];
+                    //     if ($arEntity) {
+                    //         $arAmenities[] = $arEntity["UF_XML_ID"];
+                    //     }
+                    // }
 
                     // Поля элемента                    
                     $arExistElement = $arCatalogItems[$arRatePlan['id'] . '_' . $arRoomType["id"]];
@@ -383,7 +383,7 @@ class Traveline
                         $res = $iE->Update($elementId, $arFields);
                         CIBlockElement::SetPropertyValuesEx($elementId, CATALOG_IBLOCK_ID, array(
                             "PHOTO_ARRAY" => json_encode($arRoomType['images']),
-                            "FEATURES" => $arAmenities,
+                            // "FEATURES" => $arAmenities,
                             "SQUARE" => $arRoomType['size']['value'],
                         ));
 
@@ -403,7 +403,7 @@ class Traveline
                                 "EXTERNAL_ID" => $arRatePlan["id"],
                                 "EXTERNAL_CATEGORY_ID" => $arRoomType["id"],
                                 "EXTERNAL_SERVICE" => self::$travelineElementPropEnumId,
-                                "FEATURES" => $arAmenities,
+                                // "FEATURES" => $arAmenities,
                                 "SQUARE" => $arRoomType['size']['value'],
                             )
                         );

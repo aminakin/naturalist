@@ -1294,24 +1294,24 @@ class Bnovo
             $elementCode = \CUtil::translit($elementName, "ru");
 
             // Amenities
-            $arAmenities = array();
-            $roomsFeaturesEntityClass   = self::getEntityClass(self::$roomsFeaturesHLId);
-            foreach ($arRoom["amenities"] as $key => $arItem) {
-                if ($key == "1") {
-                    continue;
-                }
-                $rsData = $roomsFeaturesEntityClass::getList([
-                    "select" => ["*"],
-                    "filter" => [
-                        "UF_XML_ID" => "bn_" . $key
-                    ],
-                    "order" => ["UF_SORT" => "ASC"],
-                ]);
-                $arEntity = $rsData->Fetch();
-                if ($arEntity) {
-                    $arAmenities[] = $arEntity["UF_XML_ID"];
-                }
-            }
+            // $arAmenities = array();
+            // $roomsFeaturesEntityClass   = self::getEntityClass(self::$roomsFeaturesHLId);
+            // foreach ($arRoom["amenities"] as $key => $arItem) {
+            //     if ($key == "1") {
+            //         continue;
+            //     }
+            //     $rsData = $roomsFeaturesEntityClass::getList([
+            //         "select" => ["*"],
+            //         "filter" => [
+            //             "UF_XML_ID" => "bn_" . $key
+            //         ],
+            //         "order" => ["UF_SORT" => "ASC"],
+            //     ]);
+            //     $arEntity = $rsData->Fetch();
+            //     if ($arEntity) {
+            //         $arAmenities[] = $arEntity["UF_XML_ID"];
+            //     }
+            // }
 
             // Поля элемента
             $arExistElement = CIBlockElement::GetList(false, array("IBLOCK_ID" => CATALOG_IBLOCK_ID, "PROPERTY_EXTERNAL_ID" => $arRoom['id']))->Fetch();
@@ -1327,10 +1327,10 @@ class Bnovo
 
                     $res = $iE->Update($elementId, $arFields);
                     CIBlockElement::SetPropertyValuesEx($elementId, CATALOG_IBLOCK_ID, array(
-                        //"PHOTOS" => $arElementImages,
+                        // "PHOTOS" => $arElementImages,
                         "CATEGORY" => $elementIdCat,
                         "TARIFF" => $tariffsIds,
-                        "FEATURES" => $arAmenities,
+                        // "FEATURES" => $arAmenities,
                         "PARENT_ID" => $arRoom["parent_id"],
                         "SQUARE" => $arRoom["amenities"]["1"]["value"],
                     ));
@@ -1357,7 +1357,7 @@ class Bnovo
                         "CATEGORY" => $elementIdCat,
                         "TARIFF" => $tariffsIds,
                         "EXTERNAL_SERVICE" => 6,
-                        "FEATURES" => $arAmenities,
+                        // "FEATURES" => $arAmenities,
                         "PARENT_ID" => $arRoom["parent_id"],
                         "SQUARE" => $arRoom["amenities"]["1"]["value"],
                     )
