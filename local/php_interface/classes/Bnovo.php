@@ -459,7 +459,10 @@ class Bnovo
             if ($arOccupancy['PROPERTY_IS_MARKUP_VALUE'] == 'Да') {                
                 if (!empty($children) && isset($filteredChildrenAgesId[$arOccupancy["PROPERTY_CHILDREN_AGES_VALUE"][0]])) {
                     $markups[$arOccupancy["PROPERTY_CATEGORY_ID_VALUE"]][$arOccupancy["PROPERTY_CHILDREN_AGES_VALUE"][0]][] = $arOccupancy;
-                }                
+                }
+                if (str_contains($arOccupancy['CODE'], 'e.') && $arOccupancy['PROPERTY_MAIN_BEDS_VALUE'] < $guests) {
+                    $markups[$arOccupancy["PROPERTY_CATEGORY_ID_VALUE"]][0][] = $arOccupancy;
+                }
                 continue;
             }
             $backOccupancies[] = $arOccupancy;
@@ -477,7 +480,7 @@ class Bnovo
                             break;
                         }
                     }
-                } elseif (!empty($arOccupancy["PROPERTY_CHILDREN_AGES_VALUE"])) {
+                } elseif (!empty($arOccupancy["PROPERTY_CHILDREN_AGES_VALUE"]) && empty($arOccupancy['PROPERTY_MAIN_BEDS_VALUE'])) {                    
                     continue;
                 }
 
@@ -538,10 +541,19 @@ class Bnovo
                         }
 
                         $variantsSummary = [];       
-                        $markupVariants = [];                 
+                        $markupVariants = [];    
+                        $seatDispence = [];             
 
                         // Если по номеру присутствуют наценки
-                        if (isset($markups[$categoryId])) {
+                        if (isset($markups[$categoryId])) { 
+                            $seatDispence['main'] = $guests;
+                            $extraSeats = $occupancySeatsSettings[$categoryId]['PROPERTY_MAIN_BEDS_VALUE'] - $guests;
+                            if ($extraSeats < 0) {
+                                $seatDispence['extra'] = 0 - $extraSeats;
+                            }
+                            
+                            xprint($occupancySeatsSettings[$categoryId]);                            
+                            
                             if (count($markups[$categoryId]) > 1) {
                                 $markupVariants = $this->multiply($markups[$categoryId], $guests, count($arChildrenAge));
                             } else {                                
@@ -559,11 +571,18 @@ class Bnovo
                                 $arMarkupPrices = [];
                                 $variantName = '';
                                 foreach ($variant as $markup) {
+                                    if ($extraSeats < 0) {
+                                        $extraAdultsMultiplicator = $seatDispence['extra'];
+                                    } else {
+                                        $extraAdultsMultiplicator = 1;
+                                    }                                    
+                                    $extraChildMultiplicator = 1;
+                                    
                                     $variantName .= $markup['NAME'] . ', ';
                                     foreach ($arDates as $date) {
                                         foreach ($arData as $arEntity) {
                                             if ($arEntity["UF_DATE"]->format('d.m.Y') == $date && $arTariffsExternalIDs[$arEntity["UF_TARIFF_ID"]] == $tariffId && $arEntity["UF_CATEGORY_ID"] == $markup['PROPERTY_MARKUP_EXTERNAL_ID_VALUE']) {
-                                                $arMarkupPrices[$arEntity["UF_DATE"]->format('Y-m-d').'-'.$markup['ID']] = (float)$arEntity["UF_PRICE"];
+                                                $arMarkupPrices[$arEntity["UF_DATE"]->format('Y-m-d').'-'.$markup['ID']] = (float)$arEntity["UF_PRICE"] * (str_contains($markup['CODE'], 'e.') ? $extraAdultsMultiplicator : $extraChildMultiplicator);
                                                 break;
                                             }
                                         }
@@ -575,11 +594,8 @@ class Bnovo
                                     'PRICE' => array_sum($arMarkupPrices) + array_sum($arPrices)
                                 ];
                             }
-                            //xprint($occupancySeatsSettings[$categoryId]);
-                            //xprint($filteredChildrenAgesId);
+                            
                         }
-
-                        //xprint($variantsSummary);
 
                         if (!empty($arPrices)) {
                             $arItems[$elementId][] = array(
@@ -588,7 +604,8 @@ class Bnovo
                                 'prices' => $arPrices,
                                 'price' => count($variantsSummary) ? $variantsSummary[0]['PRICE'] : array_sum($arPrices),
                                 'value' => $arTariffsValue[$tariffId],
-                                'variants' => $variantsSummary
+                                'variants' => $variantsSummary,
+                                'seatDispence' => $seatDispence,
                             );
 
                             if (empty($arItems[$elementId]['minPrice']) || array_sum($arPrices) < $arItems[$elementId]['minPrice']) {
@@ -1605,7 +1622,7 @@ class Bnovo
             CURLOPT_HTTPHEADER => $headers
         ));
         $response = curl_exec($ch);
-        $arData = json_decode($response, true);
+        $arData = json_decode($response, true);        
 
         // $this->writeToFile($arData, 'updateReservationData', $hotelId);
 
