@@ -449,12 +449,13 @@ class Bnovo
                 foreach ($arChildrenAge as $age) {
                     if ($arAge['UF_MIN_AGE'] <= $age && $arAge['UF_MAX_AGE'] >= $age) {
                         $filteredChildrenAgesId[$arAge['ID']] = $arAge;
+
                     }
                 }
             }
         }
 
-        while ($arOccupancy = $rsOccupancies->Fetch()) {            
+        while ($arOccupancy = $rsOccupancies->Fetch()) {
             // Складываем в отедльный массив все наценки
             if ($arOccupancy['PROPERTY_IS_MARKUP_VALUE'] == 'Да') {                
                 if (!empty($children) && isset($filteredChildrenAgesId[$arOccupancy["PROPERTY_CHILDREN_AGES_VALUE"][0]])) {
@@ -491,10 +492,9 @@ class Bnovo
             }
         }
 
-        if (empty($arCategoriesFilterredIDs)) {
-            $guests += count($arChildrenAge);
+        if (empty($arCategoriesFilterredIDs)) {            
             foreach ($backOccupancies as $arOccupancy) {
-                if ($arOccupancy["PROPERTY_GUESTS_COUNT_VALUE"] >= $guests) {
+                if ($arOccupancy["PROPERTY_GUESTS_COUNT_VALUE"] >= $guests += count($arChildrenAge)) {
                     $arCategoriesFilterredIDs[] = $arOccupancy["PROPERTY_CATEGORY_ID_VALUE"];       
                     $occupancySeatsSettings[$arOccupancy["PROPERTY_CATEGORY_ID_VALUE"]] = $arOccupancy;             
                 }
@@ -552,19 +552,20 @@ class Bnovo
                                 $seatDispence['extra'] = 0 - $extraSeats;
                             }
                             
-                            xprint($occupancySeatsSettings[$categoryId]);                            
+                            //xprint($filteredChildrenAgesId);
                             
                             if (count($markups[$categoryId]) > 1) {
-                                $markupVariants = $this->multiply($markups[$categoryId], $guests, count($arChildrenAge));
+                                $markupVariants = $this->multiply($markups[$categoryId], $guests, $children);
                             } else {                                
                                 foreach ($markups[$categoryId][array_key_first($markups[$categoryId])] as $tempVariant) {
-                                    $markupVariants[] = [
-                                        0 => $tempVariant,
-                                    ];
-                                }                                
+                                    if ($tempVariant['PROPERTY_MAIN_BEDS_VALUE'] <= $guests && str_contains($tempVariant['CODE'], 'c.1')) {
+                                        continue;
+                                    }
+                                    $markupVariants[0][] = $tempVariant;
+                                }                              
                             }               
                             
-                            //xprint($markupVariants);
+                            //xprint($guests);
 
                             // вычисление мест                            
                             foreach ($markupVariants as $variant) {
@@ -655,11 +656,11 @@ class Bnovo
                 $result=$list;     
             } else{
                 foreach ($result as $line) {                    
-                    if ($line['PROPERTY_MAIN_BEDS_VALUE'] == $guests - $children && str_contains($line['CODE'], 'c.1')) {
+                    if ($line['PROPERTY_MAIN_BEDS_VALUE'] <= $guests && str_contains($line['CODE'], 'c.1')) {
                         continue;
                     }
                     foreach ($list as $row) {
-                        if ($row['PROPERTY_MAIN_BEDS_VALUE'] == $guests - $children && str_contains($row['CODE'], 'c.1')) {
+                        if ($row['PROPERTY_MAIN_BEDS_VALUE'] <= $guests && str_contains($row['CODE'], 'c.1')) {
                             continue;
                         }
                         $newline= [
