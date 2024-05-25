@@ -42,7 +42,7 @@ foreach ($arParams['VARS'] as $key => $value) {
                     $arElement["PROPERTY_EXTERNAL_ID_VALUE"] = $arElementsTariffs[$idNumber]["PROPERTY_EXTERNAL_ID_VALUE"];
                 }
                 ?>
-                <div class="room">
+                <div class="room">                    
                     <?if($arElement["PICTURES"]):?>
                         <div class="room__images">
                             <div class="swiper slider-gallery" data-slider-object="data-slider-object" data-fullgallery="[<?= $arElement["FULL_GALLERY_ROOM"];?>]">
@@ -92,8 +92,26 @@ foreach ($arParams['VARS'] as $key => $value) {
                             <?if(!empty($arElement["PROPERTY_SQUARE_VALUE"])):?>
                                 <div class="room__features">Площадь: <?=$arElement["PROPERTY_SQUARE_VALUE"]?></div>
                             <?endif;?>
-                            <?
-                            $text = plural_form($guests, array('взрослый на основном месте', 'взрослых на основных местах', 'взрослых на основных местах'));
+                            <?$text = plural_form($guests, array('взрослый на основном месте', 'взрослых на основных местах', 'взрослых на основных местах'));?>
+                            <?if (count($arTariff['variants'])) {?>
+                                <div class="room__variants">
+                                    <p class="room__variants-title">Выберите вариант размещения</p>
+                                    <?foreach ($arTariff['variants'] as $key => $variant) {?>
+                                        <div class="room__variant">
+                                            <label class="checkbox room__variant-check">
+                                                <input onchange="markupSelectHandler(this);" type="radio" class="checkbox" value="<?=$variant['PRICE']?>" name="<?=$arElement["PROPERTY_EXTERNAL_ID_VALUE"]?>" <?=$key == 0 ? 'checked' : ''?>>
+                                                <span></span>                                                
+                                                <p>
+                                                    <?=$text?><br>
+                                                    <?=$variant['NAME']?><br>
+                                                    <b><?= number_format($variant['PRICE'], 0, '.', ' ') ?> ₽</b>
+                                                </p>
+                                            </label>
+                                        </div>          
+                                    <?}?>
+                                </div>
+                            <?}?>
+                            <?                            
                             if($children > 0){
                                 if(!empty($arSection['UF_MIN_AGE'])) {
                                     $miniChildren = 0;
@@ -119,7 +137,9 @@ foreach ($arParams['VARS'] as $key => $value) {
                             }
                             $text .= '.';
                             ?>
-                            <div class="room__features"><?=$text; ?></div>
+                            <?if (!count($arTariff['variants'])) {?>
+                                <div class="room__features"><?=$text; ?></div>
+                            <?}?>
                             <?if(!empty($arElement["DETAIL_TEXT"])):?>
                                 <div class="room__features"><?=$arElement["DETAIL_TEXT"]?></div>
                             <?endif;?>
