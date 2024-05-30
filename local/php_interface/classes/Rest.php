@@ -6,6 +6,7 @@ use Bitrix\Highloadblock\HighloadBlockTable;
 use Bitrix\Main\Application;
 use Bitrix\Main\Context;
 use Bitrix\Main\Loader;
+use Bitrix\Main\Diag\Debug;
 use CIBlockSection;
 use CIBlockElement;
 
@@ -483,6 +484,7 @@ class Rest
     /* Изменение каталога */
     public function updateCatalog($params)
     {
+        //Debug::writeToFile($params, '', '__bx_log.log');
         $hotelId = $params["hotel_id"];
         $externalId = $params["account_id"];
 
@@ -529,20 +531,20 @@ class Rest
 
         // Размещение номеров
         $arOccupanciesAll = $params["occupancies"];
-        // foreach ($arOccupanciesAll as $externalCategoryId => $arOccupanciesIDs) {
-        //     $arExistElement = CIBlockElement::GetList(
-        //         array(),
-        //         array("IBLOCK_ID" => $this->roomTypesIBlockID, "PROPERTY_EXTERNAL_ID" => $externalCategoryId)
-        //     )->Fetch();
-        //     if ($arExistElement) {
-        //         $elementId = $arExistElement["ID"];
-        //         foreach ($arOccupanciesIDs as $occupancyId) {                    
-        //             CIBlockElement::SetPropertyValuesEx($occupancyId, $this->occupanciesIBlockID, array(
-        //                 "CATEGORY_ID" => $occupancyId
-        //             ));
-        //         }
-        //     }
-        // }
+        foreach ($arOccupanciesAll as $externalCategoryId => $arOccupanciesIDs) {
+            $arExistElement = CIBlockElement::GetList(
+                array(),
+                array("IBLOCK_ID" => $this->roomTypesIBlockID, "PROPERTY_EXTERNAL_ID" => $externalCategoryId)
+            )->Fetch();
+            if ($arExistElement) {
+                $elementId = $arExistElement["ID"];
+                foreach ($arOccupanciesIDs as $occupancyId) {                    
+                    CIBlockElement::SetPropertyValuesEx($occupancyId, $this->occupanciesIBlockID, array(
+                        "CATEGORY_ID" => $occupancyId
+                    ));
+                }
+            }
+        }
 
         return array('code' => 200, 'message' => 'Ok');
     }

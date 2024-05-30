@@ -435,28 +435,29 @@ class Orders
 
                 if (!empty($payment) && !empty($arOrder["FIELDS"]["IS_PAYED"])) {
                     $this->updateStatus($arOrder["ID"], "F");
-                    $this->updatePayment($order);
+                    // $this->updatePayment($order);
                 } else {
                     $this->updateStatus($arOrder["ID"], "C");
                 }
-            } elseif (time() >= strtotime("+4 day", $arOrder["FIELDS"]["DATE_INSERT"]->getTimestamp()) && $arOrder["FIELDS"]["STATUS_ID"] != "F" && $arOrder["FIELDS"]["STATUS_ID"] != "C") {
-                $order = Order::load($arOrder["ID"]);
-                if (!$order) {
-                    return json_encode([
-                        "ERROR" => "Заказ не найден."
-                    ]);
-                }
+            } 
+            // elseif (time() >= strtotime("+4 day", $arOrder["FIELDS"]["DATE_INSERT"]->getTimestamp()) && $arOrder["FIELDS"]["STATUS_ID"] != "F" && $arOrder["FIELDS"]["STATUS_ID"] != "C") {
+            //     $order = Order::load($arOrder["ID"]);
+            //     if (!$order) {
+            //         return json_encode([
+            //             "ERROR" => "Заказ не найден."
+            //         ]);
+            //     }
 
-                $paymentCollection = $order->getPaymentCollection();
-                $payment = $paymentCollection[0];
+            //     $paymentCollection = $order->getPaymentCollection();
+            //     $payment = $paymentCollection[0];
 
-                if (!empty($payment) && !empty($arOrder["FIELDS"]["IS_PAYED"])) {
-                    //$this->updateStatus($arOrder["ID"], "F");
-                    $this->updatePayment($order);
-                } else {
-                    $this->updateStatus($arOrder["ID"], "C");
-                }
-            }
+            //     if (!empty($payment) && !empty($arOrder["FIELDS"]["IS_PAYED"])) {
+            //         //$this->updateStatus($arOrder["ID"], "F");
+            //         $this->updatePayment($order);
+            //     } else {
+            //         $this->updateStatus($arOrder["ID"], "C");
+            //     }
+            // }
         }
     }
 

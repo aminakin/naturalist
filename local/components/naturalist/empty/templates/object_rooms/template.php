@@ -101,11 +101,13 @@ foreach ($arParams['VARS'] as $key => $value) {
                                             <label class="checkbox room__variant-check">
                                                 <input onchange="markupSelectHandler(this);" type="radio" class="checkbox" value="<?=$variant['PRICE']?>" name="<?=$arElement["PROPERTY_EXTERNAL_ID_VALUE"]?>" <?=$key == 0 ? 'checked' : ''?>>
                                                 <span></span>                                                
-                                                <p>
-                                                    <?=$text?><br>
-                                                    <?=$variant['NAME']?><br>
+                                                <div class="room__variant-text">
+                                                    <div>
+                                                        <?=isset($arTariff['seatDispence']['extra']) ?  plural_form($guests - $arTariff['seatDispence']['extra'], array('взрослый на основном месте', 'взрослых на основных местах', 'взрослых на основных местах')) : $text?><br>
+                                                        <?=$variant['NAME']?><br>                                                    
+                                                    </div>
                                                     <b><?= number_format($variant['PRICE'], 0, '.', ' ') ?> ₽</b>
-                                                </p>
+                                                </div>
                                             </label>
                                         </div>          
                                     <?}?>
