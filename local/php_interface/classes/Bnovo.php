@@ -672,7 +672,7 @@ class Bnovo
                                             $markup['NAME'] = str_replace('1 детей', $start, $markup['NAME']);
                                         } else {
                                             $start = plural_form($extraAdultsMultiplicator, array('взрослый', 'взрослых', 'взрослых'));
-                                            $markup['NAME'] = str_replace('взросл.', $start, $markup['NAME']);
+                                            $markup['NAME'] = str_replace('1 взрослых', $start, $markup['NAME']);
                                         }                                        
                                     }
                                     
@@ -1465,6 +1465,25 @@ class Bnovo
                     $elementCode .= $elementAppend;
                     $elementAppend = '';
                 }
+            } elseif (isset($arRoom['extra_array']['children_ages']) && !empty($arRoom['extra_array']['children_ages']) && isset($arRoom['extra_array']['people'])) {
+                $childrenCount = 0;
+                $childrenMinAge = 100;
+                $childrenMaxAge = -10;
+                foreach ($arRoom['extra_array']['children_ages'] as $key => $arAge) {
+                    if ($key == 0) {
+                        continue;
+                    }
+                    if (is_array($arAge)) {
+                        $arAgesValues[] = ["VALUE" => $childrenAgesId[$key], "DESCRIPTION" => $arAge[array_key_first($arAge)]['people_count']];         
+                        $childrenCount = $arRoom['extra_array']['people']['max_adults'] - $arRoom['extra_array']['people']['main_beds'];
+                        if ($arSection['children_ages'][$key]['min_age'] < $childrenMinAge) {
+                            $childrenMinAge = $arSection['children_ages'][$key]['min_age'];
+                        }
+                        if ($arSection['children_ages'][$key]['max_age'] > $childrenMaxAge) {
+                            $childrenMaxAge = $arSection['children_ages'][$key]['max_age'];
+                        }
+                    }
+                }
             }
 
             // Поля элемента
@@ -1490,6 +1509,13 @@ class Bnovo
                         "CHILDREN_MAX_AGE" => $arRoom['children'] > 0 ? 17 : '',
                     )
                 );
+                if (isset($arRoom['extra_array']['people'])) {
+                    $arFields["PROPERTY_VALUES"]['MAIN_BEDS'] = $arRoom['extra_array']['people']['main_beds'];
+                    $arFields["PROPERTY_VALUES"]['GUESTS_COUNT'] = $arRoom['extra_array']['people']['max_adults'];
+                    $arFields["PROPERTY_VALUES"]['CHILDREN_COUNT'] = $childrenCount;
+                    $arFields["PROPERTY_VALUES"]['CHILDREN_MIN_AGE'] = $childrenMinAge != 100 ? $childrenMinAge : '';
+                    $arFields["PROPERTY_VALUES"]['CHILDREN_MAX_AGE'] = $childrenMaxAge != -10 ? $childrenMaxAge : '';
+                }
                 $elementIdOccupancies = $iE->Add($arFields);
 
                 if ($elementIdOccupancies) {
@@ -1511,7 +1537,7 @@ class Bnovo
                 $elementIdOccupancies = $arOccupancies['ID'];
             }
 
-            if ($arSection['uid'] == '0b1eaa05-44f9-4cb8-97ca-89e2112cb648' && (isset($arRoom['extra_array']['people']) && count($arRoom['extra_array']['people'])) && (isset($arRoom['extra_array']['children_ages']) && count($arRoom['extra_array']['children_ages']))) {
+            if ((isset($arRoom['extra_array']['people']) && count($arRoom['extra_array']['people'])) && (isset($arRoom['extra_array']['children_ages']) && count($arRoom['extra_array']['children_ages']))) {
                 $this->markupHandler($childrenAgesId, $elementIdCat, $sectionIdOccupancies, $arRoom, $arSection['children_ages']);
             }
 
@@ -1626,9 +1652,9 @@ class Bnovo
         ];
         foreach ($arRoom['extra_array']['children_ages'] as $ageId => $arAge) {
             foreach ($arAge as $bedType => $data) {
-                $elementName = $data['people_count'] . ($ageId == 0 ? ' взрослых ' : ' детей (' . $childrenAges[$ageId]['min_age'] . '-' . $childrenAges[$ageId]['max_age'] . ' лет) ') . $seats[$bedType];
+                $elementName = '1' . ($ageId == 0 ? ' взрослых ' : ' детей (' . $childrenAges[$ageId]['min_age'] . '-' . $childrenAges[$ageId]['max_age'] . ' лет) ') . $seats[$bedType];
                 if ($ageId == 0) {
-                    $elementCode = 'e.' . $data['people_count'];
+                    $elementCode = 'e.1';
                 } else {
                     if ($bedType == 2) {
                         $append = '.0';
@@ -1638,7 +1664,7 @@ class Bnovo
                         $append = '';
                     }
 
-                    $elementCode = $people[$bedType] . '.' . $data['people_count'] . '.' . $childrenAgesId[$ageId] . $append;
+                    $elementCode = $people[$bedType] . '.1.' . $childrenAgesId[$ageId] . $append;
                 }
                 $arFields = array(
                     "ACTIVE" => "Y",
@@ -1655,6 +1681,7 @@ class Bnovo
                         "CHILDREN_MAX_AGE" => $ageId != 0 ? $childrenAges[$ageId]['max_age'] : '',
                         "IS_MARKUP" => 17,
                         "MARKUP_PRICE" => $data['price'],
+                        'MAIN_BEDS' => $arRoom['extra_array']['people']['main_beds'],
                     )
                 );
                 $curAcc = \Bitrix\Iblock\Elements\ElementOccupanciesTable::getList([
