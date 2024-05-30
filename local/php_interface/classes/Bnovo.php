@@ -423,6 +423,7 @@ class Bnovo
                 "ID",
                 "NAME",
                 "CODE",
+                "SORT",
                 "PROPERTY_CATEGORY_ID",
                 "PROPERTY_GUESTS_COUNT",
                 "PROPERTY_CHILDREN_COUNT",
@@ -440,34 +441,44 @@ class Bnovo
         $markups = [];
         // отфильтрованные категории возрастов детей (согласно поисковому запросу)
         $filteredChildrenAgesId = [];
-        // необходимы для вычисления наценок данные по размещению
-        $occupancySeatsSettings = [];
+        // массив категорий номеров, где есть размещения детей без предосатвления места
+        $roomsWithNoSeatForChild = [];
 
         // Вычисляем возрастные интервалы согласно возрасту детей из поискового запроса
         if (!empty($children)) {
             foreach ($arAges as $arAge) {
                 foreach ($arChildrenAge as $age) {
                     if ($arAge['UF_MIN_AGE'] <= $age && $arAge['UF_MAX_AGE'] >= $age) {
-                        $filteredChildrenAgesId[$arAge['ID']] = $arAge;
-
+                        if (isset($filteredChildrenAgesId[$arAge['ID']]['COUNT'])) {
+                            $filteredChildrenAgesId[$arAge['ID']]['COUNT'] += $filteredChildrenAgesId[$arAge['ID']]['COUNT'];
+                        } else {
+                            $filteredChildrenAgesId[$arAge['ID']] = $arAge;                                               
+                            $filteredChildrenAgesId[$arAge['ID']]['COUNT'] = 1;
+                        }                         
                     }
-                }
+                }                
             }
         }
 
         while ($arOccupancy = $rsOccupancies->Fetch()) {
-            // Складываем в отедльный массив все наценки
+            // Складываем в отедльный массив все наценки            
             if ($arOccupancy['PROPERTY_IS_MARKUP_VALUE'] == 'Да') {                
                 if (!empty($children) && isset($filteredChildrenAgesId[$arOccupancy["PROPERTY_CHILDREN_AGES_VALUE"][0]])) {
-                    $markups[$arOccupancy["PROPERTY_CATEGORY_ID_VALUE"]][$arOccupancy["PROPERTY_CHILDREN_AGES_VALUE"][0]][] = $arOccupancy;
+                    $markups[$arOccupancy["PROPERTY_CATEGORY_ID_VALUE"]][$arOccupancy["CODE"]] = $arOccupancy;
                 }
                 if (str_contains($arOccupancy['CODE'], 'e.') && $arOccupancy['PROPERTY_MAIN_BEDS_VALUE'] < $guests) {
-                    $markups[$arOccupancy["PROPERTY_CATEGORY_ID_VALUE"]][0][] = $arOccupancy;
+                    $markups[$arOccupancy["PROPERTY_CATEGORY_ID_VALUE"]][$arOccupancy["CODE"]] = $arOccupancy;
+                }                
+                if (str_contains($arOccupancy['CODE'], $arOccupancy["PROPERTY_CHILDREN_AGES_VALUE"][0].'.0') && isset($filteredChildrenAgesId[$arOccupancy["PROPERTY_CHILDREN_AGES_VALUE"][0]])) {
+                    $roomsWithNoSeatForChild[$arOccupancy["PROPERTY_CATEGORY_ID_VALUE"]] = 'Y';
                 }
                 continue;
+            }            
+            if (isset($roomsWithNoSeatForChild[$arOccupancy["PROPERTY_CATEGORY_ID_VALUE"]])) {
+                $arOccupancy["PROPERTY_GUESTS_COUNT_VALUE"] += 1;                
             }
             $backOccupancies[] = $arOccupancy;
-            if ($arOccupancy["PROPERTY_GUESTS_COUNT_VALUE"] >= $guests) {
+            if ($arOccupancy["PROPERTY_GUESTS_COUNT_VALUE"] >= $guests + count($arChildrenAge)) {
                 if (!empty($children)) {
                     $childrenStatus = false;
                     foreach ($arOccupancy["PROPERTY_CHILDREN_AGES_VALUE"] as $key => $idAge) {
@@ -485,7 +496,7 @@ class Bnovo
                     continue;
                 }
 
-                if (!isset($childrenStatus) || $childrenStatus != false) {
+                if (!isset($childrenStatus) || $childrenStatus != false) {                    
                     $arCategoriesFilterredIDs[] = $arOccupancy["PROPERTY_CATEGORY_ID_VALUE"];
                     $occupancySeatsSettings[$arOccupancy["PROPERTY_CATEGORY_ID_VALUE"]] = $arOccupancy;
                 }
@@ -494,7 +505,7 @@ class Bnovo
 
         if (empty($arCategoriesFilterredIDs)) {            
             foreach ($backOccupancies as $arOccupancy) {
-                if ($arOccupancy["PROPERTY_GUESTS_COUNT_VALUE"] >= $guests += count($arChildrenAge)) {
+                if ($arOccupancy["PROPERTY_GUESTS_COUNT_VALUE"] >= $guests + count($arChildrenAge)) {                       
                     $arCategoriesFilterredIDs[] = $arOccupancy["PROPERTY_CATEGORY_ID_VALUE"];       
                     $occupancySeatsSettings[$arOccupancy["PROPERTY_CATEGORY_ID_VALUE"]] = $arOccupancy;             
                 }
@@ -540,46 +551,132 @@ class Bnovo
                             }
                         }
 
-                        $variantsSummary = [];       
-                        $markupVariants = [];    
-                        $seatDispence = [];             
+                        if ($occupancySeatsSettings[$categoryId]['PROPERTY_CHILDREN_COUNT_VALUE'] === '0' && $children) {
+                            continue;
+                        }
+
+                        $variantsSummary = [];
+                        $markupVariants = [];
+                        $seatDispence = [];
+                        $filteredChildrenVariants = [];
 
                         // Если по номеру присутствуют наценки
-                        if (isset($markups[$categoryId])) { 
+                        if (isset($markups[$categoryId])) {
                             $seatDispence['main'] = $guests;
                             $extraSeats = $occupancySeatsSettings[$categoryId]['PROPERTY_MAIN_BEDS_VALUE'] - $guests;
                             if ($extraSeats < 0) {
                                 $seatDispence['extra'] = 0 - $extraSeats;
                             }
+
+                            foreach ($filteredChildrenAgesId as $arAge => $value) {
+                                if ($extraSeats > 0) {
+                                    $filteredChildrenVariants[] = 'c.1.'.$arAge;
+                                }                                  
+                                
+                                $filteredChildrenVariants[] = 'x.1.'.$arAge.'.1';
+                                $filteredChildrenVariants[] = 'x.1.'.$arAge.'.0';
+                                                           
+                            }
+
+                            $test = $this->combine($filteredChildrenVariants, $children);                            
                             
-                            //xprint($filteredChildrenAgesId);
-                            
-                            if (count($markups[$categoryId]) > 1) {
-                                $markupVariants = $this->multiply($markups[$categoryId], $guests, $children);
-                            } else {                                
-                                foreach ($markups[$categoryId][array_key_first($markups[$categoryId])] as $tempVariant) {
-                                    if ($tempVariant['PROPERTY_MAIN_BEDS_VALUE'] <= $guests && str_contains($tempVariant['CODE'], 'c.1')) {
-                                        continue;
+                            foreach ($test as $key => $var) {
+                                foreach ($var as $acc) {
+                                    if (!isset($markups[$categoryId][$acc]) && !str_contains($acc, 'c.1')) {
+                                        unset($test[$key]);
+                                        break;
                                     }
-                                    $markupVariants[0][] = $tempVariant;
-                                }                              
-                            }               
+                                }
+                            }
+
+                            foreach ($filteredChildrenAgesId as $value) {
+                                foreach ($test as $key => $var) {
+                                    $countDouble = 0;
+                                    $countMainBed = 0;
+                                    $countExtraBed = 0;
+                                    foreach ($var as $acc) {   
+                                        if ($occupancySeatsSettings[$categoryId]['PROPERTY_GUESTS_COUNT_VALUE'] == $guests) {
+                                            unset($test[$key]);
+                                            break;
+                                        }
+                                        // убираем дубли                                    
+                                        if (str_contains($acc, $value['ID'])) {                                            
+                                            $countDouble += 1;                                            
+                                            if ($countDouble > $value['COUNT']) {
+                                                unset($test[$key]);
+                                                break;
+                                            }
+                                        }
+                                        // убираем основные места, если все заняты
+                                        if ($extraSeats > 0 && str_contains($acc, 'c.1')) {
+                                            $countMainBed += 1;
+                                            if ($countMainBed > $extraSeats) {
+                                                unset($test[$key]);
+                                                break;
+                                            }
+                                        }
+                                        // убираем варианты с лишними доп. местами
+                                        if (str_contains($acc, 'x.1') && !str_contains($acc, '.0')) {                                            
+                                            $countExtraBed += 1;                                            
+                                            if ($countExtraBed > $occupancySeatsSettings[$categoryId]['PROPERTY_CHILDREN_COUNT_VALUE']) {
+                                                unset($test[$key]);
+                                                break;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+
+                            if (count($test)) {
+                                $markupVariants = $test;
+                            } else if (isset($seatDispence['extra'])) {
+                                $markupVariants[] = ['e.1'];
+                            }
+
+                            if (empty($test) && $children) {
+                                continue;
+                            }
                             
-                            //xprint($guests);
+                            foreach ($markups[$categoryId] as $tempVariant) {
+                                if ($tempVariant['PROPERTY_MAIN_BEDS_VALUE'] <= $guests && str_contains($tempVariant['CODE'], 'c.1')) {
+                                    continue;
+                                }                                
+                            }                            
 
                             // вычисление мест                            
                             foreach ($markupVariants as $variant) {
                                 $arMarkupPrices = [];
-                                $variantName = '';
-                                foreach ($variant as $markup) {
+                                $variantName = '';                                
+                                if ($extraSeats < 0 && array_search('e.1', $variant) !== 0) {
+                                    $variant[] = 'e.1';
+                                }                                
+                                foreach ($variant as $markupCode) {
+                                    $markup = $markups[$categoryId][$markupCode];
+
                                     if ($extraSeats < 0) {
                                         $extraAdultsMultiplicator = $seatDispence['extra'];
                                     } else {
                                         $extraAdultsMultiplicator = 1;
-                                    }                                    
+                                    }
                                     $extraChildMultiplicator = 1;
+
+                                    if (empty($markup) && str_contains($markupCode, 'c.1')) {
+                                        $ageCode = str_replace('c.1.', '', $markupCode);                                        
+                                        $markup = [
+                                            'NAME' => plural_form($extraChildMultiplicator, array('ребёнок', 'детей', 'детей')).' ('.$filteredChildrenAgesId[$ageCode]['UF_MIN_AGE'].'-'.$filteredChildrenAgesId[$ageCode]['UF_MAX_AGE'].' лет) на основном месте',
+                                            'PRICE' => 0,
+                                        ];
+                                    } else {
+                                        if (!str_contains($markupCode, 'e.1')) {
+                                            $start = plural_form($extraChildMultiplicator, array('ребёнок', 'детей', 'детей'));                                                                                        
+                                            $markup['NAME'] = str_replace('1 детей', $start, $markup['NAME']);
+                                        } else {
+                                            $start = plural_form($extraAdultsMultiplicator, array('взрослый', 'взрослых', 'взрослых'));
+                                            $markup['NAME'] = str_replace('взросл.', $start, $markup['NAME']);
+                                        }                                        
+                                    }
                                     
-                                    $variantName .= $markup['NAME'] . ', ';
+                                    $variantName .= $markup['NAME'] . '<br> ';
                                     foreach ($arDates as $date) {
                                         foreach ($arData as $arEntity) {
                                             if ($arEntity["UF_DATE"]->format('d.m.Y') == $date && $arTariffsExternalIDs[$arEntity["UF_TARIFF_ID"]] == $tariffId && $arEntity["UF_CATEGORY_ID"] == $markup['PROPERTY_MARKUP_EXTERNAL_ID_VALUE']) {
@@ -591,11 +688,16 @@ class Bnovo
                                 }
                                 
                                 $variantsSummary[] = [
-                                    'NAME' => mb_substr($variantName, 0, mb_strlen($variantName) - 2),
-                                    'PRICE' => array_sum($arMarkupPrices) + array_sum($arPrices)
+                                    'NAME' => mb_substr($variantName, 0, mb_strlen($variantName) - 5),                                    
+                                    'PRICE' => array_sum($arMarkupPrices) + array_sum($arPrices),                                    
                                 ];
                             }
-                            
+
+                            uasort($variantsSummary, function ($a, $b) {
+                                return ($a['PRICE'] - $b['PRICE']);
+                            });
+
+                            $variantsSummary = array_values($variantsSummary);
                         }
 
                         if (!empty($arPrices)) {
@@ -637,46 +739,33 @@ class Bnovo
         ];
     }
 
-    /**
-     * Поиск всех сочетаний элементов массива друг с другом
-     *
-     * @param array $inputarray
-     * @param int $guests
-     * @param int $children
-     * 
-     * @return [type]
-     * 
-     */
-    private function multiply ($inputarray, $guests, $children) {
-        $result=array();     
-        $prevRes=array();
-     
-        foreach ($inputarray as $column=> $list) {
-            if(empty($result)){
-                $result=$list;     
-            } else{
-                foreach ($result as $line) {                    
-                    if ($line['PROPERTY_MAIN_BEDS_VALUE'] <= $guests && str_contains($line['CODE'], 'c.1')) {
-                        continue;
-                    }
-                    foreach ($list as $row) {
-                        if ($row['PROPERTY_MAIN_BEDS_VALUE'] <= $guests && str_contains($row['CODE'], 'c.1')) {
-                            continue;
-                        }
-                        $newline= [
-                            $line,
-                            $row
-                        ];
-                        $prevRes[]=$newline;
-                    }
-                }
-                $result=$prevRes;
-                $prevRes=array();
-            }
-        }
-     
-        return $result;
+    private function mb_str_replace($search, $replace, $string) {
+        $charset = mb_detect_encoding($string);
+        $unicodeString = iconv($charset, "UTF-8", $string);        
+        return str_replace($search, $replace, $unicodeString);
     }
+
+    private function combine($arr, $k) {
+        $combs = [];
+        $comb = range(0, $k - 1);
+        
+        while($comb) {
+           $combs[] = array_map(function($i) use($arr) {return $arr[$i];}, $comb);
+           
+           for($i = $k - 1, $max = count($arr) - 1; $i > -1; $i--, $max--) {
+              if($comb[$i] < $max) {
+                 $comb[$i] ++;
+                 for($j = $i + 1; $j < $k; $j++) {
+                    $comb[$j] = $comb[$j - 1] + 1;
+                 }
+                 break;
+              } 
+           }
+           if($i < 0) $comb = null;
+        }
+        
+        return $combs;
+     }
 
     // HL Возрастные интервалы
     public static function getAges($sectionId = '')

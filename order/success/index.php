@@ -13,10 +13,10 @@ if(!empty($metaTags[$currentURLDir])) {
     $APPLICATION->AddHeadString('<meta name="description" content="Оплата заказа | Натуралист - удобный онлайн-сервис поиска и бронирования глэмпинга для отдыха на природе с оплатой на сайте. Вы можете подобрать место для комфортного природного туризма в России по выгодным ценам с моментальной системой бронирования." />');
 }
 
-$orderId = $_REQUEST['orderId'];
-if (empty($orderId)){
-    LocalRedirect('/personal/active/');
-}
+// $orderId = $_REQUEST['orderId'];
+// if (empty($orderId)){
+//     LocalRedirect('/personal/active/');
+// }
 ?>
 
 <main class="main">
@@ -46,9 +46,8 @@ if (empty($orderId)){
     <section class="section section_content">
         <div class="container">
             <div class="content">
-                <h1 class="h3">Заказ №<?=$orderId?> успешно оплачен</h1>
-				<?/*<a href="/personal/order/<?=$orderId?>/">Перейти на страницу заказа</a>*/?>
-                <a href="/personal/active/">Перейти на страницу заказа</a>
+                <h1 class="h3">Заказ успешно оплачен</h1>				
+                <a href="/personal/active/">Перейти на страницу заказов</a>
             </div>
         </div>
     </section>
