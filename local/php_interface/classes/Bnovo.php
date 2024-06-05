@@ -648,9 +648,10 @@ class Bnovo
                                 $arMarkupPrices = [];
                                 $variantName = '';                                
                                 if ($extraSeats < 0 && array_search('e.1', $variant) !== 0) {
-                                    $variant[] = 'e.1';
-                                }                                
-                                foreach ($variant as $markupCode) {
+                                    array_unshift($variant, 'e.1');
+                                }
+                                $sortedVar = $this->sortVariant($variant);
+                                foreach ($sortedVar as $markupCode) {
                                     $markup = $markups[$categoryId][$markupCode];
 
                                     if ($extraSeats < 0) {
@@ -739,10 +740,30 @@ class Bnovo
         ];
     }
 
-    private function mb_str_replace($search, $replace, $string) {
-        $charset = mb_detect_encoding($string);
-        $unicodeString = iconv($charset, "UTF-8", $string);        
-        return str_replace($search, $replace, $unicodeString);
+    private function sortVariant($var) {          
+        $sortedVar = [];
+        $sortedVar = array_merge($sortedVar, $this->getElementFromArray('e.1', $var, false));        
+        $sortedVar = array_merge($sortedVar, $this->getElementFromArray('c.1', $var, false));        
+        $sortedVar = array_merge($sortedVar, $this->getElementFromArray('x.1', $var, true));        
+        $sortedVar = array_merge($sortedVar, $this->getElementFromArray('.0', $var, false));                
+        return $sortedVar;
+    }
+
+    private function getElementFromArray($acc, $arr, $removeNoSeat) {
+        $result = [];        
+        foreach ($arr as $value) {
+            if ($removeNoSeat) {
+                if (str_contains($value, $acc) && !str_contains($value, '.0')) {
+                    $result[] = $value;                
+                }
+            } else {
+                if (str_contains($value, $acc)) {
+                    $result[] = $value;
+                }
+            }             
+        }
+
+        return $result;
     }
 
     private function combine($arr, $k) {

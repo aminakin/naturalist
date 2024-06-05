@@ -65,6 +65,7 @@ $(function () {
     var order = $(this).data("type");
 
     var params = getUrlParams();
+    delete params["page"];
     params["sort"] = sort;
     params["order"] = order;
     var url = setUrlParams(params);

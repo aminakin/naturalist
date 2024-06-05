@@ -532,6 +532,19 @@ class Rest
         // Размещение номеров
         $arOccupanciesAll = $params["occupancies"];
         foreach ($arOccupanciesAll as $externalCategoryId => $arOccupanciesIDs) {
+            if (!is_numeric($externalCategoryId)) {
+                foreach ($arOccupanciesIDs as $occupancyId) {
+                    $markup = explode('_', $occupancyId);                    
+                    $curAcc = \Bitrix\Iblock\Elements\ElementOccupanciesTable::getList([
+                        'select' => ['ID'],
+                        'filter' => ['=ACTIVE' => 'Y', '=CODE' => $markup[1], '=CATEGORY_ID.VALUE' => $markup[0]],
+                    ])->fetch();
+                    CIBlockElement::SetPropertyValuesEx($curAcc['ID'], $this->occupanciesIBlockID, array(
+                        "MARKUP_EXTERNAL_ID" => $externalCategoryId
+                    ));                    
+                }                
+            }
+
             $arExistElement = CIBlockElement::GetList(
                 array(),
                 array("IBLOCK_ID" => $this->roomTypesIBlockID, "PROPERTY_EXTERNAL_ID" => $externalCategoryId)
