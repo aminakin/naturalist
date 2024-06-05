@@ -1067,7 +1067,7 @@ class Bnovo
     }
 
     /* Получение объекта по UID и дальнейшее получение данных */
-    public function updatePublicObject($uid, $onlyRooms = false, $onlyTariffs = false)
+    public function updatePublicObject($uid, $onlyRooms = false, $onlyTariffs = false, $onlyData = false)
     {
         $arSection = [];
         // Отели
@@ -1106,6 +1106,10 @@ class Bnovo
         $response = curl_exec($ch);
         $arData = json_decode($response, true);
         curl_close($ch);
+
+        if ($onlyData) {
+            return $arData;
+        }
 
         if (empty($arSection)) {
             $arSection = $arData['account'];
@@ -2237,8 +2241,8 @@ class Bnovo
         $entity = \Bitrix\Iblock\Model\Section::compileEntityByIblock(CATALOG_IBLOCK_ID);
         $rsSectionObjects = $entity::getList(
             [
-                'filter' => ['IBLOCK_ID' => CATALOG_IBLOCK_ID, 'UF_EXTERNAL_SERVICE' => $this->bnovoSectionPropEnumId],
-                'select' => ['ID', 'NAME', 'UF_EXTERNAL_UID'],
+                'filter' => ['IBLOCK_ID' => CATALOG_IBLOCK_ID, 'ACTIVE' => 'Y', 'UF_EXTERNAL_SERVICE' => $this->bnovoSectionPropEnumId],
+                'select' => ['ID', 'NAME', 'UF_EXTERNAL_UID', 'UF_EXTERNAL_ID'],
             ]
         );
 
@@ -2261,5 +2265,84 @@ class Bnovo
             }
             echo 'Тарифы обновлены';
         }
+    }
+
+    /**
+     * Загружает цены за 3 ближайших месяца
+     *
+     * @return void
+     * 
+     */
+    public function getNearPrices() : void {
+        $now = new DateTime();
+        $startDate = FormatDate("Y-m-d", $now->getTimeStamp());
+
+        $future = new DateTime(date('Y-m-d', strtotime($startDate . '+90 day')));
+        $endDate = FormatDate("Y-m-d", $future->getTimeStamp());
+        
+        $sections = $this->getSections();  
+        
+        if (!empty($sections)) {
+            foreach ($sections as $section) {
+                $this->updateReservationData($section['UF_EXTERNAL_ID'], [], [], [$startDate, $endDate]);
+                $this->updateAvailabilityData($section['UF_EXTERNAL_ID'], [], [$startDate, $endDate]);
+            }
+        }        
+    }
+
+    /**
+     * Проверяет наличие наценок для номеров объекта
+     *
+     * @return void
+     * 
+     */
+    public function checkMarkups() : void {
+        $sections = $this->getSections();        
+
+        if (!empty($sections)) {
+            foreach ($sections as $section) {
+                $rooms = $this->getRoomsFromApi($section['UF_EXTERNAL_ID']);        
+                if (!empty($rooms)) {
+                    foreach ($rooms as $room) {
+                        if (isset($room['extra_array']['people']) && count($room['extra_array']['people'])) {
+                            echo 'У объекта ' . $section['NAME'] . ' для номера ' . $room['name'] . ' доступны наценки <br>\r\n';
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Возвращает массив номеров объекта
+     *
+     * @param int $hotelId
+     * 
+     * @return array
+     * 
+     */
+    private function getRoomsFromApi(int $hotelId) : array {
+        $result = [];
+        $url = $this->bnovoApiPublicURL . '/roomtypes';
+        $headers = array(
+            "Content-Type: application/json"
+        );
+
+        $data = array(
+            "account_id" => $hotelId,
+        );
+
+        $ch = curl_init();
+        curl_setopt_array($ch, array(
+            CURLOPT_URL => $url . '?' . http_build_query($data),
+            CURLOPT_RETURNTRANSFER => 1,
+            CURLOPT_HTTPHEADER => $headers
+        ));
+        $response = curl_exec($ch);
+        $arData = json_decode($response, true);
+        $result = $arData['rooms'];
+        curl_close($ch);
+
+        return $result;
     }
 }
