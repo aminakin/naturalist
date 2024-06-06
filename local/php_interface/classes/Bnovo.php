@@ -16,6 +16,7 @@ use DateInterval;
 use http\Params;
 use Naturalist\Products;
 use Bitrix\Main\Grid\Declension;
+use Bitrix\Main\Config\Option;
 
 Loader::IncludeModule("iblock");
 Loader::IncludeModule("catalog");
@@ -2232,19 +2233,31 @@ class Bnovo
 
     /**
      * Возвращает все разделы (отели) Bnovo
-     *
+     * 
+     * @param string $limit Ограничение элементов.
+     * @param string $offset С какого элемента выбирать.
+     * @param string $countTotal Подсчёт общего количества.
+     * @param boolean $raw Вернуть не обработанный объект.
+     * 
      * @return array
      * 
      */
-    private function getSections()
+    private function getSections($limit = '', $offset = '', $countTotal = '', $raw = false)
     {
         $entity = \Bitrix\Iblock\Model\Section::compileEntityByIblock(CATALOG_IBLOCK_ID);
         $rsSectionObjects = $entity::getList(
             [
                 'filter' => ['IBLOCK_ID' => CATALOG_IBLOCK_ID, 'ACTIVE' => 'Y', 'UF_EXTERNAL_SERVICE' => $this->bnovoSectionPropEnumId],
                 'select' => ['ID', 'NAME', 'UF_EXTERNAL_UID', 'UF_EXTERNAL_ID'],
+                'limit' => $limit,
+                'offset' => $offset,
+                'count_total' => $countTotal
             ]
         );
+
+        if ($raw) {
+            return $rsSectionObjects;
+        }
 
         return $rsSectionObjects->fetchAll();
     }
@@ -2279,8 +2292,38 @@ class Bnovo
 
         $future = new DateTime(date('Y-m-d', strtotime($startDate . '+90 day')));
         $endDate = FormatDate("Y-m-d", $future->getTimeStamp());
+
+        $lastDownLoad = Option::get("main", "bnovo_last_download");
+        if ($lastDownLoad == 'Y') {
+            return;
+        }
+
+        $bnovoElementOffset = Option::get("main", "bnovo_element_offset");
+        $bnovoElementLimit = Option::get("main", "bnovo_element_limit");
+        $bnovoElementCount = $this->getSections(1, 0, 1, true)->getCount();
+
+        Option::set("main", "bnovo_element_count", $bnovoElementCount);
+
+        if ($bnovoElementOffset == '') {            
+            $bnovoElementOffset = 0;
+            Option::set("main", "bnovo_element_offset", $bnovoElementOffset);
+        }
+
+        if ($bnovoElementLimit == '') {
+            $bnovoElementLimit = 10;
+            Option::set("main", "bnovo_element_limit", $bnovoElementLimit);
+        }        
         
-        $sections = $this->getSections();  
+        $sections = $this->getSections($bnovoElementLimit, $bnovoElementOffset, 1);        
+
+        $nextOffset = $bnovoElementOffset + $bnovoElementLimit;
+
+        if ($nextOffset >= $bnovoElementCount) {
+            $nextOffset = 0;
+            Option::set("main", "bnovo_last_download", 'Y');
+        }
+
+        Option::set("main", "bnovo_element_offset", $nextOffset);
         
         if (!empty($sections)) {
             foreach ($sections as $section) {
@@ -2297,15 +2340,31 @@ class Bnovo
      * 
      */
     public function checkMarkups() : void {
-        $sections = $this->getSections();        
+        $sections = $this->getSections();
+        $message = '';
 
         if (!empty($sections)) {
-            foreach ($sections as $section) {
+            foreach ($sections as $section) {                
                 $rooms = $this->getRoomsFromApi($section['UF_EXTERNAL_ID']);        
                 if (!empty($rooms)) {
-                    foreach ($rooms as $room) {
+                    foreach ($rooms as $room) {                        
                         if (isset($room['extra_array']['people']) && count($room['extra_array']['people'])) {
-                            echo 'У объекта ' . $section['NAME'] . ' для номера ' . $room['name'] . ' доступны наценки <br>\r\n';
+                            $arRoomsRequest = \Bitrix\Iblock\Elements\ElementCategoriesTable::getList([
+                                'select' => ['ID', 'NAME', 'EXTERNAL_ID_' => 'EXTERNAL_ID'],
+                                'filter' => ['=EXTERNAL_ID.VALUE' => $room['id']],                                
+                            ])->fetch();                            
+
+                            if ($arRoomsRequest['ID']) {
+                                $arAccRequest = \Bitrix\Iblock\Elements\ElementOccupanciesTable::getList([
+                                    'select' => ['ID', 'NAME', 'CATEGORY_ID'],
+                                    'filter' => ['CATEGORY_ID.VALUE' => $arRoomsRequest['ID'], 'IS_MARKUP.VALUE' => 17],      
+                                ])->fetch();
+
+                                if (!$arAccRequest['ID']) {
+                                    $message .= 'У объекта ' . $section['NAME'] . ' доступны наценки <br>';
+                                    break;
+                                }
+                            }                            
                         }
                     }
                 }
