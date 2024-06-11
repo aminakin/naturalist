@@ -95,16 +95,18 @@ foreach ($arParams['VARS'] as $key => $value) {
                             <?$text = plural_form($guests, array('взрослый на основном месте', 'взрослых на основных местах', 'взрослых на основных местах'));?>
                             <?if (count($arTariff['variants'])) {?>
                                 <div class="room__variants">
-                                    <p class="room__variants-title">Выберите вариант размещения</p>
-                                    <?foreach ($arTariff['variants'] as $key => $variant) {?>
-                                        <div class="room__variant">
+                                    <?if (count($arTariff['variants']) > 1) {?>
+                                        <p class="room__variants-title">Выберите вариант размещения</p>
+                                    <?}?>
+                                    <?foreach ($arTariff['variants'] as $key => $variant) {?>                                        
+                                        <?$variantName = (isset($arTariff['seatDispence']['extra']) ?  plural_form($guests - $arTariff['seatDispence']['extra'], array('взрослый на основном месте', 'взрослых на основных местах', 'взрослых на основных местах')) : $text) . '<br>' . $variant['NAME'];?>
+                                        <div class="room__variant <?=count($arTariff['variants']) == 1 ? 'single' : ''?>">
                                             <label class="checkbox room__variant-check">
                                                 <input onchange="markupSelectHandler(this);" type="radio" class="checkbox" value="<?=$variant['PRICE']?>" name="<?=$arElement["PROPERTY_EXTERNAL_ID_VALUE"]?>" <?=$key == 0 ? 'checked' : ''?>>
                                                 <span></span>                                                
                                                 <div class="room__variant-text">
                                                     <div>
-                                                        <?=isset($arTariff['seatDispence']['extra']) ?  plural_form($guests - $arTariff['seatDispence']['extra'], array('взрослый на основном месте', 'взрослых на основных местах', 'взрослых на основных местах')) : $text?><br>
-                                                        <?=$variant['NAME']?><br>                                                    
+                                                        <?=count($arTariff['variants']) > 1 ? $variantName : str_replace('<br>', ', ', $variantName)?><br>                                                    
                                                     </div>
                                                     <b><?= number_format($variant['PRICE'], 0, '.', ' ') ?> ₽</b>
                                                 </div>

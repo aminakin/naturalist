@@ -3660,3 +3660,14 @@
 .room__variant-text b {
   flex-shrink: 0;
 }
+
+.room__variant.single .checkbox input,
+.room__variant.single .checkbox span,
+.room__variant.single b {
+  display: none;
+}
+
+.room__variant.single {
+  padding-right: 3.6rem;
+  margin-top: 1.6rem;
+}

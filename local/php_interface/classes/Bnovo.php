@@ -1906,7 +1906,9 @@ class Bnovo
         $response = curl_exec($ch);
         $arData = json_decode($response, true);
 
-        // $this->writeToFile($arData, 'updateAvailabilityData', $hotelId);
+        if ($hotelId == 11712) {
+            $this->writeToFile($arData, 'updateAvailabilityData', $hotelId);
+        }        
 
         if (empty($arData) || (isset($arData['code']) && $arData['code'] != 200)) {
             if ($arData['code'] == 403) {
@@ -2290,13 +2292,13 @@ class Bnovo
         $now = new DateTime();
         $startDate = FormatDate("Y-m-d", $now->getTimeStamp());
 
-        $future = new DateTime(date('Y-m-d', strtotime($startDate . '+90 day')));
+        $future = new DateTime(date('Y-m-d', strtotime($startDate . '+60 day')));
         $endDate = FormatDate("Y-m-d", $future->getTimeStamp());
 
         $lastDownLoad = Option::get("main", "bnovo_last_download");
-        if ($lastDownLoad == 'Y') {
+        if ($lastDownLoad == 'Y') {            
             return;
-        }
+        }        
 
         $bnovoElementOffset = Option::get("main", "bnovo_element_offset");
         $bnovoElementLimit = Option::get("main", "bnovo_element_limit");
@@ -2325,8 +2327,11 @@ class Bnovo
 
         Option::set("main", "bnovo_element_offset", $nextOffset);
         
-        if (!empty($sections)) {
+        if (!empty($sections)) {            
             foreach ($sections as $section) {
+                if ($section['UF_EXTERNAL_ID'] == 11712) {
+                    continue;
+                }
                 $this->updateReservationData($section['UF_EXTERNAL_ID'], [], [], [$startDate, $endDate]);
                 $this->updateAvailabilityData($section['UF_EXTERNAL_ID'], [], [$startDate, $endDate]);
             }
@@ -2341,7 +2346,7 @@ class Bnovo
      */
     public function checkMarkups() : void {
         $sections = $this->getSections();
-        $message = '';
+        $message = '';        
 
         if (!empty($sections)) {
             foreach ($sections as $section) {                
@@ -2361,7 +2366,7 @@ class Bnovo
                                 ])->fetch();
 
                                 if (!$arAccRequest['ID']) {
-                                    $message .= 'У объекта ' . $section['NAME'] . ' доступны наценки <br>';
+                                    $message .= "У объекта " . $section['NAME'] . " доступны наценки \r\n";
                                     break;
                                 }
                             }                            
@@ -2369,7 +2374,15 @@ class Bnovo
                     }
                 }
             }
+        }        
+
+        if ($message != '') {
+            \CEvent::Send('BNOVO_MARKUP', 's1', [
+                'MESSAGE' => $message,
+            ]);
         }
+
+        Option::set("main", "bnovo_last_download", 'N');
     }
 
     /**
