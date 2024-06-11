@@ -206,6 +206,8 @@ if (!empty($_GET['impressions']) && isset($_GET['impressions'])) {
     $arFilterImpressions = array();
     while ($arImpression = $rsImpressions->Fetch()) {
         $arFilterImpressions[] = $arImpression["ID"];
+        $meta = new \Bitrix\Iblock\InheritedProperty\ElementValues(IMPRESSIONS_IBLOCK_ID, $arImpression['ID']);
+        $arImpression['META'] = $meta->getValues();
         $arSeoImpressions[] = $arImpression;
     }
 
@@ -461,22 +463,22 @@ $currentURLDir = $APPLICATION->GetCurDir();
 
 if ($page > 1 && isset($_GET["impressions"]) && !empty($_GET['impressions']) && !empty($metaTags["/catalog/?page=2&impressions"])) { //переход с раздела "Впечатления" с пагинацией
     if (!empty($arSeoImpressions)) {
-        $impressionReplace = mb_strtolower($arSeoImpressions[0]["NAME"], "UTF-8");
+        $impressionReplace = $arSeoImpressions[0]["META"]['ELEMENT_PAGE_TITLE'] ? $arSeoImpressions[0]["META"]['ELEMENT_PAGE_TITLE'] : $arSeoImpressions[0]["NAME"];
     } else {
         $impressionReplace = "";
     }
-    $titleSEO = str_replace(array("#IMPRESSIONS#", "#PAGE#"), array($impressionReplace, $page), $metaTags["/catalog/?page=2&impressions"]["~PROPERTY_TITLE_VALUE"]["TEXT"]);
+    $titleSEO = $arSeoImpressions[0]["META"]['ELEMENT_META_TITLE'] . ' Страница - ' . $page;
     $descriptionSEO = str_replace(array("#IMPRESSIONS#", "#PAGE#"), array($impressionReplace, $page), $metaTags["/catalog/?page=2&impressions"]["~PROPERTY_DESCRIPTION_VALUE"]["TEXT"]);
-    $h1SEO = str_replace(array("#IMPRESSIONS#", "#PAGE#"), array($impressionReplace, $page), $metaTags["/catalog/?page=2&impressions"]["~PROPERTY_H1_VALUE"]["TEXT"]);
+    $h1SEO = $impressionReplace;
 } elseif (isset($_GET["impressions"]) && !empty($_GET['impressions']) && !empty($metaTags["/catalog/?page=2&impressions"])) { //переход с раздела "Впечатления"
     if (!empty($arSeoImpressions)) {
-        $impressionReplace = mb_strtolower($arSeoImpressions[0]["NAME"], "UTF-8");
+        $impressionReplace = $arSeoImpressions[0]["META"]['ELEMENT_PAGE_TITLE'] ? $arSeoImpressions[0]["META"]['ELEMENT_PAGE_TITLE'] : $arSeoImpressions[0]["NAME"];
     } else {
         $impressionReplace = "";
     }
-    $titleSEO = str_replace("#IMPRESSIONS#", $impressionReplace, $metaTags["/catalog/?impressions"]["~PROPERTY_TITLE_VALUE"]["TEXT"]);
+    $titleSEO = $arSeoImpressions[0]["META"]['ELEMENT_META_TITLE'];
     $descriptionSEO = str_replace("#IMPRESSIONS#", $impressionReplace, $metaTags["/catalog/?impressions"]["~PROPERTY_DESCRIPTION_VALUE"]["TEXT"]);
-    $h1SEO = str_replace("#IMPRESSIONS#", $impressionReplace, $metaTags["/catalog/?impressions"]["~PROPERTY_H1_VALUE"]["TEXT"]);
+    $h1SEO = $impressionReplace;
 } elseif ($page > 1 && !empty($metaTags["/catalog/?page=2"])) { //страницы пагинации
     $titleSEO = str_replace("#PAGE#", $page, $metaTags["/catalog/?page=2"]["~PROPERTY_TITLE_VALUE"]["TEXT"]);
     $descriptionSEO = str_replace("#PAGE#", $page, $metaTags["/catalog/?page=2"]["~PROPERTY_DESCRIPTION_VALUE"]["TEXT"]);
