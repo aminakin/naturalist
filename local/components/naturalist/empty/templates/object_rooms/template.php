@@ -99,7 +99,18 @@ foreach ($arParams['VARS'] as $key => $value) {
                                         <p class="room__variants-title">Выберите вариант размещения</p>
                                     <?}?>
                                     <?foreach ($arTariff['variants'] as $key => $variant) {?>                                        
-                                        <?$variantName = (isset($arTariff['seatDispence']['extra']) ?  plural_form($guests - $arTariff['seatDispence']['extra'], array('взрослый на основном месте', 'взрослых на основных местах', 'взрослых на основных местах')) : $text) . '<br>' . $variant['NAME'];?>
+                                        <?
+                                            if (isset($arTariff['seatDispence']['childrenIsAdults'])) {
+                                                if (($arTariff['seatDispence']['main'] - $arTariff['seatDispence']['childrenIsAdults'] - $arTariff['seatDispence']['extra']) != 0) {
+                                                    $variantName = plural_form($arTariff['seatDispence']['main'] - $arTariff['seatDispence']['childrenIsAdults'] - $arTariff['seatDispence']['extra'], array('взрослый на основном месте', 'взрослых на основных местах', 'взрослых на основных местах')) . ', ' . plural_form($arTariff['seatDispence']['childrenIsAdults'], array('ребёнок на основном месте', 'детей на основных местах', 'детей на основных местах')) . '<br>' . $variant['NAME'];
+                                                } else {
+                                                    $variantName = plural_form($arTariff['seatDispence']['childrenIsAdults'], array('ребёнок на основном месте', 'детей на основных местах', 'детей на основных местах')) . '<br>' . $variant['NAME'];
+                                                }
+                                                
+                                            } else {
+                                                $variantName = (isset($arTariff['seatDispence']['extra']) ? plural_form($guests - $arTariff['seatDispence']['extra'], array('взрослый на основном месте', 'взрослых на основных местах', 'взрослых на основных местах')) : $text) . '<br>' . $variant['NAME'];
+                                            }
+                                        ?>
                                         <div class="room__variant <?=count($arTariff['variants']) == 1 ? 'single' : ''?>">
                                             <label class="checkbox room__variant-check">
                                                 <input onchange="markupSelectHandler(this);" type="radio" class="checkbox" value="<?=$variant['PRICE']?>" name="<?=$arElement["PROPERTY_EXTERNAL_ID_VALUE"]?>" <?=$key == 0 ? 'checked' : ''?>>

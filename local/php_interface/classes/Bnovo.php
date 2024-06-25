@@ -251,6 +251,9 @@ class Bnovo
     /* Получение списка свободных номеров объекта в выбранный промежуток */
     public function searchRooms($sectionId, $externalId, $guests, $arChildrenAge, $dateFrom, $dateTo)
     {
+        // Приравниваются ли дети к взрослым
+        $childrenIsAdults = false;
+
         $error = '';
         $daysDeclension = new Declension('ночь', 'ночи', 'ночей');
         $arDates = array();
@@ -273,11 +276,19 @@ class Bnovo
                 }
             }
         }
+
         if ($arHotel['UF_NO_CHILDREN_PLACE'] == 1) {
             $guests += count($arChildrenAge);
+            $childrenIsAdults = true;
             $children = 0;
         } else {
             $children = count($arChildrenAge);
+        }
+
+        if ($childrenIsAdults) {
+            $totalPeople = $guests;
+        } else {
+            $totalPeople = $guests + count($arChildrenAge);
         }
 
         // Запрос по выбранным датам в HL
@@ -316,7 +327,7 @@ class Bnovo
             $arDataGrouped[$arItem["UF_TARIFF_ID"] . "-" . $arItem["UF_CATEGORY_ID"]][] = $arItem;
         }
 
-        // Удаляем из сгруппированного массива цен размещения с ограниченим по минимальному заезду
+        // Удаляем из сгруппированного массива цен размещения с ограничением по минимальному заезду
         foreach ($arDataGrouped as $key => $arItems) {
             foreach ($arItems as $arItem) {
                 if (intval($arItem['UF_MIN_STAY_ARRIVAL']) > $daysCount) {
@@ -344,6 +355,10 @@ class Bnovo
         // Сравниваем дату каждого элемента сгруппированного массива с датой по индексу.
         // Если будет хотя бы одно несовпадение, удаляем весь массив
         foreach ($arDataGrouped as $key => $arItems) {
+            if (count($arItems) < count($arDatesToCompare)) {
+                unset($arDataGrouped[$key]);
+                continue;
+            }
             foreach ($arItems as $keyCurDate => $curDate) {
                 if ($keyCurDate == count($arDatesToCompare)) {
                     break;
@@ -351,7 +366,7 @@ class Bnovo
                 if ($curDate['UF_DATE']->format('d.m.Y') != $arDatesToCompare[$keyCurDate]) {
                     unset($arDataGrouped[$key]);
                     break;
-                }
+                }                
             }
         }
 
@@ -479,7 +494,7 @@ class Bnovo
                 $arOccupancy["PROPERTY_GUESTS_COUNT_VALUE"] += 1;                
             }
             $backOccupancies[] = $arOccupancy;
-            if ($arOccupancy["PROPERTY_GUESTS_COUNT_VALUE"] >= $guests + count($arChildrenAge)) {
+            if ($arOccupancy["PROPERTY_GUESTS_COUNT_VALUE"] >= $totalPeople) {
                 if (!empty($children)) {
                     $childrenStatus = false;
                     foreach ($arOccupancy["PROPERTY_CHILDREN_AGES_VALUE"] as $key => $idAge) {
@@ -506,7 +521,7 @@ class Bnovo
 
         if (empty($arCategoriesFilterredIDs)) {            
             foreach ($backOccupancies as $arOccupancy) {
-                if ($arOccupancy["PROPERTY_GUESTS_COUNT_VALUE"] >= $guests + count($arChildrenAge)) {                       
+                if ($arOccupancy["PROPERTY_GUESTS_COUNT_VALUE"] >= $totalPeople) {                       
                     $arCategoriesFilterredIDs[] = $arOccupancy["PROPERTY_CATEGORY_ID_VALUE"];       
                     $occupancySeatsSettings[$arOccupancy["PROPERTY_CATEGORY_ID_VALUE"]] = $arOccupancy;             
                 }
@@ -567,6 +582,9 @@ class Bnovo
                             $extraSeats = $occupancySeatsSettings[$categoryId]['PROPERTY_MAIN_BEDS_VALUE'] - $guests;
                             if ($extraSeats < 0) {
                                 $seatDispence['extra'] = 0 - $extraSeats;
+                            }
+                            if ($childrenIsAdults) {
+                                $seatDispence['childrenIsAdults'] = count($arChildrenAge);
                             }
 
                             foreach ($filteredChildrenAgesId as $arAge => $value) {
@@ -2345,26 +2363,46 @@ class Bnovo
      * 
      */
     public function checkMarkups() : void {
-        $sections = $this->getSections();
+        //$sections = $this->getSections();
         $message = '';        
+
+        $sections = [
+            0 => [
+                'ID' => 1150,
+                'NAME' => 'Константа',
+                'UF_EXTERNAL_UID' => 'ad9b3385-2dfc-4494-8ac8-d6d9ddac3cf4',
+                'UF_EXTERNAL_ID' => 35834,
+            ],
+            1 => [
+                'ID' => 1183,
+                'NAME' => '"Marmar"',
+                'UF_EXTERNAL_UID' => '6552dc70-39bd-4774-ac67-f2c12b24cb81',
+                'UF_EXTERNAL_ID' => 31545,
+            ],
+            2 => [
+                'ID' => 1190,
+                'NAME' => 'Огонёк',
+                'UF_EXTERNAL_UID' => '83d9197e-483f-4aac-8899-5b8f711e33ed',
+                'UF_EXTERNAL_ID' => 39125,
+            ]
+        ];        
 
         if (!empty($sections)) {
             foreach ($sections as $section) {                
-                $rooms = $this->getRoomsFromApi($section['UF_EXTERNAL_ID']);        
+                $rooms = $this->getRoomsFromApi($section['UF_EXTERNAL_ID']);                        
                 if (!empty($rooms)) {
-                    foreach ($rooms as $room) {                        
-                        if (isset($room['extra_array']['people']) && count($room['extra_array']['people'])) {
+                    foreach ($rooms as $room) {                
+                        if (isset($room['extra_array']['people']) && count($room['extra_array']['people']) && isset($room['extra_array']['children_ages']) && count($room['extra_array']['children_ages'])) {                            
                             $arRoomsRequest = \Bitrix\Iblock\Elements\ElementCategoriesTable::getList([
                                 'select' => ['ID', 'NAME', 'EXTERNAL_ID_' => 'EXTERNAL_ID'],
                                 'filter' => ['=EXTERNAL_ID.VALUE' => $room['id']],                                
-                            ])->fetch();                            
+                            ])->fetch();
 
                             if ($arRoomsRequest['ID']) {
                                 $arAccRequest = \Bitrix\Iblock\Elements\ElementOccupanciesTable::getList([
                                     'select' => ['ID', 'NAME', 'CATEGORY_ID'],
                                     'filter' => ['CATEGORY_ID.VALUE' => $arRoomsRequest['ID'], 'IS_MARKUP.VALUE' => 17],      
-                                ])->fetch();
-
+                                ])->fetch();                                
                                 if (!$arAccRequest['ID']) {
                                     $message .= "У объекта " . $section['NAME'] . " доступны наценки \r\n";
                                     break;
@@ -2374,7 +2412,7 @@ class Bnovo
                     }
                 }
             }
-        }        
+        }
 
         if ($message != '') {
             \CEvent::Send('BNOVO_MARKUP', 's1', [

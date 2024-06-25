@@ -468,7 +468,7 @@ if ($page > 1 && isset($_GET["impressions"]) && !empty($_GET['impressions']) && 
         $impressionReplace = "";
     }
     $titleSEO = $arSeoImpressions[0]["META"]['ELEMENT_META_TITLE'] . ' Страница - ' . $page;
-    $descriptionSEO = str_replace(array("#IMPRESSIONS#", "#PAGE#"), array($impressionReplace, $page), $metaTags["/catalog/?page=2&impressions"]["~PROPERTY_DESCRIPTION_VALUE"]["TEXT"]);
+    $descriptionSEO = $arSeoImpressions[0]["META"]['ELEMENT_META_DESCRIPTION'] . ' Страница - ' . $page;;
     $h1SEO = $impressionReplace;
 } elseif (isset($_GET["impressions"]) && !empty($_GET['impressions']) && !empty($metaTags["/catalog/?page=2&impressions"])) { //переход с раздела "Впечатления"
     if (!empty($arSeoImpressions)) {
@@ -477,7 +477,7 @@ if ($page > 1 && isset($_GET["impressions"]) && !empty($_GET['impressions']) && 
         $impressionReplace = "";
     }
     $titleSEO = $arSeoImpressions[0]["META"]['ELEMENT_META_TITLE'];
-    $descriptionSEO = str_replace("#IMPRESSIONS#", $impressionReplace, $metaTags["/catalog/?impressions"]["~PROPERTY_DESCRIPTION_VALUE"]["TEXT"]);
+    $descriptionSEO = $arSeoImpressions[0]["META"]['ELEMENT_META_DESCRIPTION'];
     $h1SEO = $impressionReplace;
 } elseif ($page > 1 && !empty($metaTags["/catalog/?page=2"])) { //страницы пагинации
     $titleSEO = str_replace("#PAGE#", $page, $metaTags["/catalog/?page=2"]["~PROPERTY_TITLE_VALUE"]["TEXT"]);

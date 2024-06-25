@@ -10,7 +10,7 @@ foreach($arResult as $key => $value) {
     window.mapOptions = {
         center: [55.757207, 37.623915],
         zoom: 7,
-        maxZoom: 16,
+        maxZoom: 20,
         imageAssetsPath: '<?= SITE_TEMPLATE_PATH ?>/',
     }
     window.mapItems = [

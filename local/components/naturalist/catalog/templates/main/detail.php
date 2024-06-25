@@ -231,7 +231,7 @@ if (!empty($arSection) && !empty($dateFrom) && !empty($dateTo) && !empty($_GET['
     );
 
     // Запрос в апи на получение списка кемпингов со свободными местами в выбранный промежуток
-    $arExternalResult = Products::searchRooms($arSection['ID'], $arSection['UF_EXTERNAL_ID'], $arSection['UF_EXTERNAL_SERVICE'], $guests, $arChildrenAge, $dateFrom, $dateTo);
+    $arExternalResult = Products::searchRooms($arSection['ID'], $arSection['UF_EXTERNAL_ID'], $arSection['UF_EXTERNAL_SERVICE'], $guests, $arChildrenAge, $dateFrom, $dateTo, $arSection['UF_MIN_CHIELD_AGE']);
     $arExternalInfo = $arExternalResult['arRooms'];
     $searchError = $arExternalResult['error'];
     if ($arExternalInfo) {

@@ -2,56 +2,56 @@
 $aMenuLinks = Array(
 	Array(
 		"Карта", 
-		"/map/", 
+		SITE_DIR."/map/", 
 		Array(), 
 		Array(), 
 		"" 
 	),
 	Array(
 		"Каталог", 
-		"/catalog/", 
+		SITE_DIR."/catalog/", 
 		Array(), 
 		Array(), 
 		"" 
 	),
 	Array(
-		"Впечатления", 
-		"/impressions/", 
+		"Подборки", 
+		SITE_DIR."/collections/", 
 		Array(), 
 		Array(), 
 		"" 
 	),
 	Array(
 		"О проекте", 
-		"/about/", 
+		SITE_DIR."/about/", 
 		Array(), 
 		Array(), 
 		"" 
 	),
 	Array(
 		"Политика конфиденциальности", 
-		"/policy/", 
+		SITE_DIR."/policy/", 
 		Array(), 
 		Array(), 
 		"" 
 	),
 	Array(
 		"Политика отмены заказов", 
-		"/cancel/", 
+		SITE_DIR."/cancel/", 
 		Array(), 
 		Array(), 
 		"" 
 	),
 	Array(
 		"Объектам размещения", 
-		"/objects/", 
+		SITE_DIR."/objects/", 
 		Array(), 
 		Array(), 
 		"" 
 	),
 	Array(
 		"Контакты", 
-		"/contacts/", 
+		SITE_DIR."/contacts/", 
 		Array(), 
 		Array(), 
 		"" 

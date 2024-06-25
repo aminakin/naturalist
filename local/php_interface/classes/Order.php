@@ -763,8 +763,8 @@ class Orders
             $bnovo = new Bnovo();
             $response = $bnovo->updateAvailabilityData($externalSectionId, [$categoryId], [date('Y-m-d', strtotime($params["dateFrom"])), date('Y-m-d', strtotime($params["dateTo"]))], true);                        
             if (is_array($response) && isset($response[$categoryId])) {
-                foreach ($response[$categoryId] as $date) {
-                    if ($date == 0) {
+                foreach ($response[$categoryId] as $key => $date) {
+                    if ($date == 0 && $key != date('Y-m-d', strtotime($params["dateTo"]))) {
                         return json_encode([
                             "ERROR" => "Невозможно бронирование на выбранные даты.",
                         ]);

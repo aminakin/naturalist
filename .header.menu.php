@@ -22,8 +22,8 @@ $aMenuLinks = Array(
 		"" 
 	),
 	Array(
-		"Впечатления", 
-		SITE_DIR."/impressions/", 
+		"Подборки", 
+		SITE_DIR."/collections/", 
 		Array(), 
 		Array(), 
 		"" 
@@ -40,7 +40,7 @@ $aMenuLinks = Array(
 		SITE_DIR."/certificates/", 
 		Array(), 
 		Array("ALWAYS_ORANGE"=>"Y"), 
-		//"CSite::InGroup(array(1))" 
+		"" 
 	)
 );
 ?>

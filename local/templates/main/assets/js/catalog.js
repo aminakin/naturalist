@@ -18004,8 +18004,9 @@
                 clusterDisableClickZoom: false,
                 clusterHideIconOnBalloonOpen: true,
                 geoObjectHideIconOnBalloonOpen: false,
-                gridSize: 120,
+                gridSize: 128,
                 clusterOpenBalloonOnClick: false,
+                maxZoom: 16,
               });
             },
           },

@@ -14,6 +14,9 @@ class CustomFunctions
 {
     private static $ufFolder = '/upload/uf/';
     private static $amenitiesHlCode = 'CampingFeatures';
+    private static $certvarHlCode = 'Certvar';
+    private static $certpocketHlCode = 'Certpocket';
+    private static $certelvarHlCode = 'Certelvar';
 
     /**
      * Удаляет неиспользуемые файлы из папки /upload/uf/
@@ -40,25 +43,12 @@ class CustomFunctions
             }    
         }
 
-        // Получаем все фото из HL блока особенностей объектов
-        $hlEntity = new HighLoadBlockHelper(self::$amenitiesHlCode);
-
-        $hlEntity->prepareParamsQuery(
-            ["ID", "UF_ICON"],            
-            ["ID" => "ASC"],
-            [],
-        );        
-
-        $rows = $hlEntity->getDataAll();
-        
-        if (is_array($rows) && count($rows)) {
-            foreach ($rows as $HlPhoto) {
-                if ($HlPhoto['UF_ICON']) {
-                    $filePath = $_SERVER['DOCUMENT_ROOT'].\CFile::getPath($HlPhoto['UF_ICON']);                    
-                    $photoPaths[] = $filePath;                                
-                }                
-            }
-        }        
+        // Получаем все фото из HL блоков особенностей объектов и сертификатов
+        array_merge($photoPaths, self::addPhotosToArray(self::$amenitiesHlCode, 'UF_ICON'));
+        array_merge($photoPaths, self::addPhotosToArray(self::$certvarHlCode, 'UF_FILE'));
+        array_merge($photoPaths, self::addPhotosToArray(self::$certvarHlCode, 'UF_IMG_TO_CERT'));
+        array_merge($photoPaths, self::addPhotosToArray(self::$certpocketHlCode, 'UF_FILE'));
+        array_merge($photoPaths, self::addPhotosToArray(self::$certelvarHlCode, 'UF_FILE'));
 
         $photoPaths = array_unique($photoPaths);
         $uf = scandir($_SERVER['DOCUMENT_ROOT'].self::$ufFolder);
@@ -91,6 +81,31 @@ class CustomFunctions
                 unlink($photo);
             }
         }
+    }
+
+    private static function addPhotosToArray($entity, $field)
+    {
+        $result = [];
+        $hlEntity = new HighLoadBlockHelper($entity);
+
+        $hlEntity->prepareParamsQuery(
+            ["ID", $field],            
+            ["ID" => "ASC"],
+            [],
+        );        
+
+        $rows = $hlEntity->getDataAll();
+        
+        if (is_array($rows) && count($rows)) {
+            foreach ($rows as $HlPhoto) {
+                if ($HlPhoto[$field]) {
+                    $filePath = $_SERVER['DOCUMENT_ROOT'].\CFile::getPath($HlPhoto[$field]);                    
+                    $result[] = $filePath;                                
+                }                
+            }
+        }
+
+        return $result;
     }
 
     // Парсит строку сесии в массив

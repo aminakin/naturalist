@@ -53,10 +53,21 @@ class Traveline
     /* Получение списка свободных объектов в выбранный промежуток */
     public static function search($guests, $arChildrenAge, $dateFrom, $dateTo, $sectionIds = [])
     {
-        $rsSections = CIBlockSection::GetList(false, array("IBLOCK_ID" => CATALOG_IBLOCK_ID, "ID" => $sectionIds, "ACTIVE" => "Y", "!UF_EXTERNAL_ID" => false, "UF_EXTERNAL_SERVICE" => self::$travelineSectionPropEnumId), false, array("ID", "UF_EXTERNAL_ID"), false);
+        $rsSections = CIBlockSection::GetList(false, array("IBLOCK_ID" => CATALOG_IBLOCK_ID, "ID" => $sectionIds, "ACTIVE" => "Y", "!UF_EXTERNAL_ID" => false, "UF_EXTERNAL_SERVICE" => self::$travelineSectionPropEnumId), false, array("ID", "UF_EXTERNAL_ID", 'UF_MIN_CHIELD_AGE'), false);
         $arSectionExternalIDs = array();
         while ($arSection = $rsSections->Fetch()) {
-            $arSectionExternalIDs[] = (string)$arSection["UF_EXTERNAL_ID"];
+            $noChield = false;
+            if (is_array($arChildrenAge) && count($arChildrenAge) && $arSection['UF_MIN_CHIELD_AGE'] != '') {
+                foreach ($arChildrenAge as $age) {
+                    if ($age < $arSection['UF_MIN_CHIELD_AGE']) {                        
+                        $noChield = true;
+                    }
+                }
+            }   
+
+            if (!$noChield) {
+                $arSectionExternalIDs[] = (string)$arSection["UF_EXTERNAL_ID"];            
+            }
         }
 
         $url = self::$travelineApiURL . '/search/v1/properties/room-stays/search';
@@ -71,6 +82,7 @@ class Traveline
             "departureDate" => date('Y-m-d', strtotime($dateTo)),
             "include" => ""
         );
+        
         if (count($arChildrenAge) > 0) {
             $data["childAges"] = $arChildrenAge;
         }
@@ -97,8 +109,19 @@ class Traveline
     }
 
     /* Получение списка свободных номеров объекта в выбранный промежуток */
-    public static function searchRooms($sectionId, $externalId, $guests, $arChildrenAge, $dateFrom, $dateTo)
-    {
+    public static function searchRooms($sectionId, $externalId, $guests, $arChildrenAge, $dateFrom, $dateTo, $minChildAge = 0)
+    {        
+        $error = '';
+
+        // Проверка на минимально разрешённый возраст детей
+        if (is_array($arChildrenAge) && count($arChildrenAge) && $minChildAge != 0) {
+            foreach ($arChildrenAge as $age) {
+                if ($age < $minChildAge) {
+                    $error = 'Заезд возможен только с детьми от '.$minChildAge.' лет';
+                }
+            }
+        }        
+
         // Номера
         $rsElements = CIBlockElement::GetList(
             array("ID" => "ASC"),
@@ -157,7 +180,15 @@ class Traveline
                 'includedServices'   => $arItem['includedServices']
             );
         }
-        return $arRooms;
+
+        if ($error != '') {
+            $arRooms = [];
+        }
+
+        return [
+            'arItems' => $arRooms,
+            'error' => $error,
+        ];
     }
 
     /**

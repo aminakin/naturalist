@@ -115,7 +115,7 @@ class Products
     }
 
     /* Получение списка свободных номеров объекта в выбранный промежуток */
-    public static function searchRooms($sectionId, $externalId, $serviceType, $guests, $arChildrenAge, $dateFrom, $dateTo) {
+    public static function searchRooms($sectionId, $externalId, $serviceType, $guests, $arChildrenAge, $dateFrom, $dateTo, $minChildAge = 0) {
         if(!$externalId) {
             return false;
         }
@@ -123,7 +123,9 @@ class Products
         $error = '';
 
         if($serviceType == self::$travelinePropEnumXmlId) { // Traveline
-            $arRooms = Traveline::searchRooms($sectionId, $externalId, $guests, $arChildrenAge, $dateFrom, $dateTo);            
+            $arResult = Traveline::searchRooms($sectionId, $externalId, $guests, $arChildrenAge, $dateFrom, $dateTo, $minChildAge);
+            $arRooms = $arResult['arItems'];
+            $error = $arResult['error'];
 
         } elseif($serviceType == self::$bnovoPropEnumXmlId) { // Bnovo
             $bnovo = new Bnovo();

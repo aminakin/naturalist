@@ -18,6 +18,8 @@ use Naturalist\Settings;
 use Naturalist\Certificates;
 use Naturalist\CreateCertPdf;
 use Naturalist\Crest;
+use Bitrix\Main\Diag\Debug;
+use Naturalist\HighLoadBlockHelper;
 
 defined("B_PROLOG_INCLUDED") && B_PROLOG_INCLUDED === true || die();
 /**
@@ -222,14 +224,16 @@ class Events
         $clientEmail = $propertyCollection->getItemByOrderPropertyId(2)->getValue();
         $giftEmail = $propertyCollection->getItemByOrderPropertyId(ORDER_PROP_GIFT_EMAIL)->getValue();
 
-        $cert = new Certificates\Create();
-        $cert->add($nominal, $orderId);
+        if (!self::checkCert($orderId)) {
+            $cert = new Certificates\Create();
+            $cert->add($nominal, $orderId);
+        }        
 
         // Создание pdf с сертификатом        
         $PDF = new CreateCertPdf();
         $file = json_decode($PDF->getPdfLink($orderId))->SHORT;
 
-        if ($noMail) {
+        if ($noMail) {            
             $certFileProp = $propertyCollection->getItemByOrderPropertyId(ORDER_PROP_CERT_FILE);
             $arFile = CFile::MakeFileArray($_SERVER['DOCUMENT_ROOT'] . $file);
             $fileId = CFile::SaveFile($arFile, 'order_certs');
@@ -252,6 +256,18 @@ class Events
                 }
             }
         }
+    }
+
+    private static function checkCert($orderId) 
+    {
+        $hlEntity = new HighLoadBlockHelper('Certificates');
+        $hlEntity->prepareParamsQuery(['*'], [], ['UF_ORDER_ID' => $orderId]);
+
+        if ($hlEntity->getData()) {
+            return true;
+        }
+
+        return false;
     }
 
     public static function makeOrderCert($event)

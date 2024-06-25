@@ -30,6 +30,7 @@ if(!empty($metaTags[$currentURLDir])) {
 $entity = \Bitrix\Iblock\Model\Section::compileEntityByIblock(IMPRESSIONS_IBLOCK_ID);
 $rsSectionObjects = $entity::getList(
 	[
+		'order' => ['SORT' => 'ASC'],
 		'filter' => ['IBLOCK_ID' => IMPRESSIONS_IBLOCK_ID, 'ACTIVE' => 'Y', 'META'],
 		'select' => ['ID', 'NAME', 'PICTURE', 'CODE'],		
 	]
