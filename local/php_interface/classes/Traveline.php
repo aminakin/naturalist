@@ -783,7 +783,8 @@ class Traveline
                     ]
                 );
 
-                file_put_contents($_SERVER["DOCUMENT_ROOT"] . '/log.txt', serialize($data) . PHP_EOL, FILE_APPEND);
+                Debug::writeToFile($data, 'TRAVELINE DATA BEFORE BOOKING VERIFY ' . date('Y-m-d H:i:s'), '__bx_log.log');
+                
                 $ch = curl_init();
                 curl_setopt_array($ch, array(
                     CURLOPT_URL            => $url,
@@ -795,7 +796,9 @@ class Traveline
                 $response = curl_exec($ch);
                 $arVerifyResponse = json_decode($response, true);
                 curl_close($ch);
-                file_put_contents($_SERVER["DOCUMENT_ROOT"] . '/log.txt', serialize($arVerifyResponse) . PHP_EOL, FILE_APPEND);
+
+                Debug::writeToFile($arVerifyResponse, 'TRAVELINE DATA AFTER BOOKING VERIFY ' . date('Y-m-d H:i:s'), '__bx_log.log');
+                
                 $arResponse = $arVerifyResponse;
             } else {
                 return $arConditionsError;
@@ -871,7 +874,9 @@ class Traveline
             $response = curl_exec($ch);
             $arResponse = json_decode($response, true);
             curl_close($ch);
-            file_put_contents($_SERVER["DOCUMENT_ROOT"] . '/log.txt', serialize($data) . PHP_EOL, FILE_APPEND);
+
+            Debug::writeToFile($data, 'TRAVELINE DATA BEFORE BOOKING ' . date('Y-m-d H:i:s'), '__bx_log.log');            
+            
             if ($arResponse['booking']['status'] == "Confirmed" && $arResponse['booking']['number']) {
                 // Сохраняем ID бронирования в заказе
                 $reservationId = $arResponse['booking']['number'];
@@ -891,7 +896,9 @@ class Traveline
                 }
             } else {
                 $errorText = $arResponse['warnings'][0]['code'] ?? $arResponse['errors'][0]['message'];
-                file_put_contents($_SERVER["DOCUMENT_ROOT"] . '/log.txt', serialize($arResponse) . PHP_EOL, FILE_APPEND);
+
+                Debug::writeToFile($arResponse, 'TRAVELINE DATA AFTER BOOKING ' . date('Y-m-d H:i:s'), '__bx_log.log');
+                
                 return [
                     "ERROR" => "Ошибка запроса бронирования. " . $errorText
                 ];

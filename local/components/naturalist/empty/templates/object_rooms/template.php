@@ -158,7 +158,7 @@ foreach ($arParams['VARS'] as $key => $value) {
                             <?if(!empty($arElement["DETAIL_TEXT"])):?>
                                 <div class="room__features"><?=$arElement["DETAIL_TEXT"]?></div>
                             <?endif;?>
-                            <?if($arElement["PROPERTY_FEATURES_VALUE"]):?>
+                            <?if(is_array($arElement["PROPERTY_FEATURES_VALUE"]) && count($arElement["PROPERTY_FEATURES_VALUE"])):?>                                
                                 <div class="room__features" data-room-features>
                                     <ul class="list">
                                         <? $arSlicedFeatures = array_slice($arElement["PROPERTY_FEATURES_VALUE"], 0, 6);
