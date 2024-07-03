@@ -110,7 +110,7 @@ class CertBuy extends \CBitrixComponent
 
         $order = new Orders;
 
-        if ($this->postList['paysystem'] == CERT_SBER_PAYSYSTEM_ID || $this->postList['paysystem'] == CERT_YOOKASSA_PAYSYSTEM_ID) {
+        if ($this->postList['paysystem'] != CERT_YANDEX_PAYSYSTEM_ID && $this->postList['paysystem'] != CERT_YANDEX_SPLIT_PAYSYSTEM_ID) {
             $this->arResult['PAYMENT_URL'] = $order->getPaymentUrl($orderId, false);
             return;
         }        
@@ -133,7 +133,6 @@ class CertBuy extends \CBitrixComponent
             $this->arResult['ERROR'] = "Ошибка при отправке запроса.";
         } else {
             $result = json_decode($response, true);
-
             if ($result['status'] === "success") {
                 $this->arResult['PAYMENT_URL'] = $result['data']['paymentUrl'];
             } else {

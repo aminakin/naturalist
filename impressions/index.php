@@ -29,7 +29,7 @@ global $arSettings;
     </section>
     <!-- section-->
     
-    <?if (Bitrix\Main\Engine\CurrentUser::get()->isAdmin()) {?>
+    <?if (false/*Bitrix\Main\Engine\CurrentUser::get()->isAdmin()*/) {?>
         <?
             $APPLICATION->IncludeComponent(
                 "bitrix:news", 

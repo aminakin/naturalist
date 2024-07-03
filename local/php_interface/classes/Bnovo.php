@@ -298,7 +298,7 @@ class Bnovo
             "filter" => [
                 "UF_HOTEL_ID" => $externalId,
                 "UF_DATE" => $arDates,
-                "!UF_RESERVED" => 1,
+                "!UF_RESERVED" => '1',
                 "!UF_CLOSED" => "1",
                 [
                     "LOGIC" => "OR",
@@ -359,6 +359,10 @@ class Bnovo
                 unset($arDataGrouped[$key]);
                 continue;
             }
+            if (strpos($key, '_')) {
+                unset($arDataGrouped[$key]);
+            }
+            
             foreach ($arItems as $keyCurDate => $curDate) {
                 if ($keyCurDate == count($arDatesToCompare)) {
                     break;
@@ -1975,7 +1979,7 @@ class Bnovo
                     "ID" => "ASC"
                 ],
                 [
-                    "UF_HOTEL_ID" => $hotelId,
+                    "=UF_HOTEL_ID" => $hotelId,
                     "=UF_CATEGORY_ID" => $categoryId,
                     "UF_DATE" => $arDatesFilter,
                 ],

@@ -79,7 +79,7 @@ class Orders
         "F" => "Завершён",
         "C" => "Отменён"
     );
-    public $paymentTypeId = [4, 11]; // Сбербанк
+    public $paymentTypeId = [4, 11, 14]; // Сбербанк
     public $innerPaymentTypeId = 3; // Внутренний счёт
 
     private $arErrors = [

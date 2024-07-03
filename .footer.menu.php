@@ -16,7 +16,7 @@ $aMenuLinks = Array(
 	),
 	Array(
 		"Подборки", 
-		SITE_DIR."/collections/", 
+		SITE_DIR."/impressions/", 
 		Array(), 
 		Array(), 
 		"" 
