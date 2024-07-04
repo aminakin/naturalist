@@ -1506,7 +1506,7 @@ class Bnovo
                         }
                     } else {
                         $arAgesValues[] = ["VALUE" => $childrenAgesId[$key], "DESCRIPTION" => $arAge];
-                        $elementCode .= '_c.' . $arRoom['children'] . '.' . $childrenAgesId[$key];
+                        $elementCode .= '_c.' . $arAge . '.' . $childrenAgesId[$key];
                     }
                 }
                 if ($elementAppend != '') {

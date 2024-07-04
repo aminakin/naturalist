@@ -707,6 +707,8 @@ class Traveline
         $response = curl_exec($ch);
         $arItemsResponse = json_decode($response, true);
 
+        Debug::writeToFile($arItemsResponse, 'TRAVELINE SEARCH RESPONSE VERIFY ' . date('Y-m-d H:i:s'), '__bx_log.log');
+
         curl_close($ch);
         if ($arItemsResponse['roomStays']) {
             $arExternalData = array();
@@ -715,15 +717,17 @@ class Traveline
                     $arExternalData = $arItem;
                     break;
                 }
-            }
+            }            
 
             $arConditionsError['warnings'][0]['code'] = 'ConditionsChanged';
             if ($arExternalData) {
                 // Проверка на актуальность данных
                 if ($arExternalData["checksum"] != $checksum) {
+                    Debug::writeToFile('Не та чексумма', 'TRAVELINE VERIFY ERROR ' . date('Y-m-d H:i:s'), '__bx_log.log');
                     return $arConditionsError;
                 }
                 if ($arExternalData['total']['priceBeforeTax'] != (int)$price) {
+                    Debug::writeToFile('Не совпадает цена', 'TRAVELINE VERIFY ERROR ' . date('Y-m-d H:i:s'), '__bx_log.log');
                     return $arConditionsError;
                 }
 
@@ -797,10 +801,11 @@ class Traveline
                 $arVerifyResponse = json_decode($response, true);
                 curl_close($ch);
 
-                Debug::writeToFile($arVerifyResponse, 'TRAVELINE DATA AFTER BOOKING VERIFY ' . date('Y-m-d H:i:s'), '__bx_log.log');
+                Debug::writeToFile($arVerifyResponse, 'TRAVELINE RESPONSE AFTER BOOKING VERIFY ' . date('Y-m-d H:i:s'), '__bx_log.log');
                 
                 $arResponse = $arVerifyResponse;
             } else {
+                Debug::writeToFile('Что-то не то с ответом по апи', 'TRAVELINE VERIFY ERROR ' . date('Y-m-d H:i:s'), '__bx_log.log');
                 return $arConditionsError;
             }
         } else {
@@ -863,6 +868,8 @@ class Traveline
                 "booking" => $arVerifyResponse["booking"]
             );
 
+            Debug::writeToFile($data, 'TRAVELINE DATA BEFORE BOOKING ' . date('Y-m-d H:i:s'), '__bx_log.log');            
+
             $ch = curl_init();
             curl_setopt_array($ch, array(
                 CURLOPT_URL            => $url,
@@ -873,9 +880,9 @@ class Traveline
             ));
             $response = curl_exec($ch);
             $arResponse = json_decode($response, true);
-            curl_close($ch);
-
-            Debug::writeToFile($data, 'TRAVELINE DATA BEFORE BOOKING ' . date('Y-m-d H:i:s'), '__bx_log.log');            
+            curl_close($ch);        
+            
+            Debug::writeToFile($arResponse, 'TRAVELINE DATA AFTER BOOKING ' . date('Y-m-d H:i:s'), '__bx_log.log');
             
             if ($arResponse['booking']['status'] == "Confirmed" && $arResponse['booking']['number']) {
                 // Сохраняем ID бронирования в заказе
@@ -890,21 +897,21 @@ class Traveline
                 if ($res->isSuccess()) {
                     return $reservationId;
                 } else {
+                    Debug::writeToFile('Не записался ID бронирования', 'TRAVELINE BOOKING ERROR ' . date('Y-m-d H:i:s'), '__bx_log.log');
                     return [
                         "ERROR" => "Ошибка сохранения ID бронирования."
                     ];
                 }
             } else {
                 $errorText = $arResponse['warnings'][0]['code'] ?? $arResponse['errors'][0]['message'];
-
-                Debug::writeToFile($arResponse, 'TRAVELINE DATA AFTER BOOKING ' . date('Y-m-d H:i:s'), '__bx_log.log');
-                
+                Debug::writeToFile("Ошибка запроса бронирования. " . $errorText, 'TRAVELINE BOOKING ERROR ' . date('Y-m-d H:i:s'), '__bx_log.log');
                 return [
                     "ERROR" => "Ошибка запроса бронирования. " . $errorText
                 ];
             }
         } else {
             $errorText = $arVerifyResponse['warnings'][0]['code'] ?? $arVerifyResponse['errors'][0]['message'];
+            Debug::writeToFile('Что-то не так с верификацией', 'TRAVELINE BOOKING ERROR ' . date('Y-m-d H:i:s'), '__bx_log.log');
             return [
                 "ERROR" => "Ошибка верификации бронирования. " . $errorText
             ];
