@@ -45,8 +45,6 @@ class Events
         $event->addEventHandler('sale', 'OnSaleOrderSaved', [self::class, "makeOrderCert"]);
         $event->addEventHandler('sale', 'OnSaleOrderSaved', [self::class, "cancelOrder"]);
         $event->addEventHandler('iblock', 'OnBeforeIBlockSectionDelete', [self::class, "OnBeforeIBlockSectionDeleteHandler"]);
-
-        //$event->addEventHandler('main', 'OnUserTypeBuildList', ['CatalogCustomProp', 'GetUserTypeDescription']);
     }
 
     public static function deleteKernelJs(&$content)

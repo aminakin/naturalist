@@ -32,8 +32,7 @@ Loader::registerAutoLoadClasses(null, array(
     'Naturalist\Certificates\Activate' => '/local/php_interface/classes/Certificates/Activate.php',
     'Naturalist\Certificates\CatalogHelper' => '/local/php_interface/classes/Certificates/CatalogHelper.php',
     'Naturalist\Certificates\OrderHelper' => '/local/php_interface/classes/Certificates/OrderHelper.php',
-    'Naturalist\Crest' => '/local/php_interface/classes/Crest.php',
-    'Naturalist\CatalogCustomProp' => '/local/php_interface/classes/CatalogCustomProp.php',
+    'Naturalist\Crest' => '/local/php_interface/classes/Crest.php',    
 ));
 
 // Константы
