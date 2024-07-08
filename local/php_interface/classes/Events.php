@@ -18,6 +18,7 @@ use Naturalist\Settings;
 use Naturalist\Certificates;
 use Naturalist\CreateCertPdf;
 use Naturalist\Crest;
+use Naturalist\CatalogCustomProp;
 use Bitrix\Main\Diag\Debug;
 use Naturalist\HighLoadBlockHelper;
 
@@ -44,6 +45,8 @@ class Events
         $event->addEventHandler('sale', 'OnSaleOrderSaved', [self::class, "makeOrderCert"]);
         $event->addEventHandler('sale', 'OnSaleOrderSaved', [self::class, "cancelOrder"]);
         $event->addEventHandler('iblock', 'OnBeforeIBlockSectionDelete', [self::class, "OnBeforeIBlockSectionDeleteHandler"]);
+
+        //$event->addEventHandler('main', 'OnUserTypeBuildList', ['CatalogCustomProp', 'GetUserTypeDescription']);
     }
 
     public static function deleteKernelJs(&$content)

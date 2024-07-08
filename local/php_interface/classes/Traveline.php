@@ -97,7 +97,7 @@ class Traveline
         ));
         $response = curl_exec($ch);
         $arResponse = json_decode($response, true);
-        curl_close($ch);
+        curl_close($ch);        
 
         $arHotelsIDs = array();
         foreach ($arResponse["roomStays"] as $arItem) {
@@ -164,6 +164,7 @@ class Traveline
         curl_close($ch);
 
         $arRooms = array();
+        
         foreach ($arItems["roomStays"] as $arItem) {
             $externalId = $arItem['ratePlan']['id'];
             $externalCategoryId = $arItem['roomType']['id'];
@@ -845,7 +846,7 @@ class Traveline
         $dateFrom = $arOrder['PROPS']['DATE_FROM'];
         $dateTo = $arOrder['PROPS']['DATE_TO'];
         $guests = $arOrder['PROPS']['GUESTS_COUNT'];
-        $arChildrenAge = $arOrder['PROPS']['CHILDREN_AGE'];
+        $arChildrenAge = $arOrder["ITEMS"][0]["ITEM_BAKET_PROPS"]["CHILDREN"]['VALUE'] ? explode(',', $arOrder["ITEMS"][0]["ITEM_BAKET_PROPS"]["CHILDREN"]['VALUE']) : [];
         $price = $arOrder['FIELDS']['BASE_PRICE'];
         $checksum = self::getChecksum($arOrder["ITEMS"][0]["ITEM_BAKET_PROPS"]["SESSION_ID"]['VALUE']);
         $arGuestList = $arOrder['PROPS']['GUEST_LIST'];

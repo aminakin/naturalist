@@ -1926,11 +1926,7 @@ class Bnovo
             CURLOPT_HTTPHEADER => $headers
         ));
         $response = curl_exec($ch);
-        $arData = json_decode($response, true);
-
-        if ($hotelId == 11712) {
-            $this->writeToFile($arData, 'updateAvailabilityData', $hotelId);
-        }        
+        $arData = json_decode($response, true);        
 
         if (empty($arData) || (isset($arData['code']) && $arData['code'] != 200)) {
             if ($arData['code'] == 403) {
@@ -2015,15 +2011,28 @@ class Bnovo
             }
         }
 
-        if (!empty($arReservedOne)) {
-            foreach ($arReservedOne as $data) {
-                $entityClass->update($data, ["UF_RESERVED" => "1"]);
+        if ($hotelId == 11712) {            
+            $connection = \Bitrix\Main\Application::getConnection();
+            $this->writeToFile($arReservedOne, 'updateReservationData_1', $hotelId);
+            $this->writeToFile($arReservedNull, 'updateReservationData_0', $hotelId);            
+            if (!empty($arReservedOne)) {
+                $result = $connection->query('UPDATE b_hlbd_room_offers SET UF_RESERVED=1 WHERE id IN ('.implode(',', $arReservedOne).')');                
             }
-        }
-
-        if (!empty($arReservedNull)) {
-            foreach ($arReservedNull as $data) {
-                $entityClass->update($data, ["UF_RESERVED" => "0"]);
+    
+            if (!empty($arReservedNull)) {
+                $result = $connection->query('UPDATE b_hlbd_room_offers SET UF_RESERVED=0 WHERE id IN ('.implode(',', $arReservedNull).')');                
+            }
+        } else {
+            if (!empty($arReservedOne)) {
+                foreach ($arReservedOne as $data) {
+                    $entityClass->update($data, ["UF_RESERVED" => "1"]);
+                }
+            }
+    
+            if (!empty($arReservedNull)) {
+                foreach ($arReservedNull as $data) {
+                    $entityClass->update($data, ["UF_RESERVED" => "0"]);
+                }
             }
         }
     }

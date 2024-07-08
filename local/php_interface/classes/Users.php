@@ -156,7 +156,7 @@ class Users
                     "MESSAGE" => "Вы успешно вошли",
                     "NO_RELOAD" => $auth_from_order,
                     "USER_ID" => $userId,
-                    "REDIRECT_URL" => ($page == "/order/") ? "/order/" : "/personal/"
+                    "REDIRECT_URL" => $page
                 ]);
 
             } else {

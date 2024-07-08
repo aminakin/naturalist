@@ -1,0 +1,16 @@
+.section_auth {
+  height: 100%;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+}
+
+.section_auth p {
+  font-size: 24px;
+  font-weight: 600;
+  text-transform: uppercase;
+  font-family: "TT Travels Next";
+  margin: 0 auto 20px auto;
+  color: var(--color-black);
+}

@@ -15,11 +15,20 @@ if(!empty($metaTags[$currentURLDir])) {
 ?>
 
 <?
-$APPLICATION->IncludeComponent(
-    "naturalist:empty", 
-    "history", 
-    array()
-);
+global $isAuthorized;
+if (!$isAuthorized) {
+    $APPLICATION->IncludeComponent(
+        "naturalist:empty", 
+        "auth", 
+        array()
+    );
+} else {
+    $APPLICATION->IncludeComponent(
+        "naturalist:empty", 
+        "history", 
+        array()
+    );
+}
 ?>
 
 <?

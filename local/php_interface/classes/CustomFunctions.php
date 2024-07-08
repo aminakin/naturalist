@@ -3,8 +3,11 @@
 namespace Naturalist;
 use \Bitrix\Iblock\Model\Section;
 use \Bitrix\Main\Loader;
+use \Bitrix\Sale\Order;
+use \DateTime;
 
 Loader::includeModule("iblock");
+Loader::IncludeModule('sale');
 
 /**
  * Товары каталога.
@@ -125,5 +128,62 @@ class CustomFunctions
             $offset += strlen(serialize($data));
         }
         return $return_data;
+    }
+
+    /**
+     * Отправка просьбы оставить отзыв на следующий день после выезда
+     */
+    public static function sendReviewInvite()
+    {
+        $today = new DateTime();
+        $yesterday = new DateTime(date('d.m.Y', strtotime($today->format("d.m.Y") . '-1 day')));
+
+        $dbRes = Order::getList([
+            'select' => [
+                "ID",        
+                "CHECKOUT_DATE.VALUE",		
+            ],
+            'filter' => [                
+                '=STATUS_ID' => 'F',
+                '=CHECKOUT_DATE.CODE' => 'DATE_TO',
+                '=CHECKOUT_DATE.VALUE' => $yesterday->format("d.m.Y"),
+            ],
+            'runtime' => [
+                new \Bitrix\Main\Entity\ReferenceField(
+                    'CHECKOUT_DATE',
+                    '\Bitrix\sale\Internals\OrderPropsValueTable',
+                    ["=this.ID" => "ref.ORDER_ID"],
+                    ["join_type"=>"left"]
+                ),		
+            ]
+        ]);
+        while ($order = $dbRes->fetch())
+        {
+            $objectType = '';
+
+            $orderClass = new Orders;
+            $orderData = $orderClass->get($order['ID']);	
+
+            $hlEntity = new HighLoadBlockHelper('CampingTypes');
+            $hlEntity->prepareParamsQuery(['*'], [], ['ID' => $orderData['ITEMS'][0]['ITEM']['SECTION']['UF_TYPE']]);
+
+            if ($hlEntity->getData()) {
+                $objectType = $hlEntity->getData()['UF_NAME'];
+            }
+
+            $objectPhoto = \CFile::getPath($orderData['ITEMS'][0]['ITEM']['PROPERTIES']['PHOTOS']['VALUE'][0]);            
+
+            $objectName = $orderData['PROPS']['OBJECT'];
+            
+            $email = $orderData['PROPS']['EMAIL'];
+
+            $fields = [
+                "OBJECT_TYPE" => $objectType,
+                "OBJECT_NAME" => $orderData['PROPS']['OBJECT'],
+                "ROOM_PHOTO" => $objectPhoto ? $objectPhoto : $orderData['PROPS']['ROOM_PHOTO'],
+                "EMAIL" => $orderData['PROPS']['EMAIL'],                
+            ];
+            Users::sendEmail("REVIEW_INVITE", "69", $fields);    
+        }
     }
 }
