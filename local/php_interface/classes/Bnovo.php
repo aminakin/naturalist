@@ -17,6 +17,7 @@ use http\Params;
 use Naturalist\Products;
 use Bitrix\Main\Grid\Declension;
 use Bitrix\Main\Config\Option;
+use Bitrix\Main\Diag\Debug;
 
 Loader::IncludeModule("iblock");
 Loader::IncludeModule("catalog");
@@ -2011,30 +2012,41 @@ class Bnovo
             }
         }
 
-        if ($hotelId == 11712) {            
-            $connection = \Bitrix\Main\Application::getConnection();
-            $this->writeToFile($arReservedOne, 'updateReservationData_1', $hotelId);
-            $this->writeToFile($arReservedNull, 'updateReservationData_0', $hotelId);            
-            if (!empty($arReservedOne)) {
-                $result = $connection->query('UPDATE b_hlbd_room_offers SET UF_RESERVED=1 WHERE id IN ('.implode(',', $arReservedOne).')');                
-            }
-    
-            if (!empty($arReservedNull)) {
-                $result = $connection->query('UPDATE b_hlbd_room_offers SET UF_RESERVED=0 WHERE id IN ('.implode(',', $arReservedNull).')');                
-            }
-        } else {
-            if (!empty($arReservedOne)) {
-                foreach ($arReservedOne as $data) {
-                    $entityClass->update($data, ["UF_RESERVED" => "1"]);
-                }
-            }
-    
-            if (!empty($arReservedNull)) {
-                foreach ($arReservedNull as $data) {
-                    $entityClass->update($data, ["UF_RESERVED" => "0"]);
-                }
-            }
+        if ($hotelId == 11712) {
+            $this->writeToFile($arData, 'recievedData', $hotelId);
         }
+            $connection = \Bitrix\Main\Application::getConnection();
+            // $this->writeToFile($arReservedOne, 'updateReservationData_1', $hotelId);
+            // $this->writeToFile($arReservedNull, 'updateReservationData_0', $hotelId);              
+
+            if (!empty($arReservedOne)) {
+                $query = 'UPDATE b_hlbd_room_offers SET UF_RESERVED=1 WHERE id IN ('.implode(',', $arReservedOne).')';
+                if ($hotelId == 11712) {
+                    Debug::writeToFile($query, 'BNOVO_RESERVED_' . $hotelId . date('Y-m-d H:i:s'), '__BNOVO_log.log');
+                }
+                $result = $connection->query($query);              
+            }
+    
+            if (!empty($arReservedNull)) {
+                $query = 'UPDATE b_hlbd_room_offers SET UF_RESERVED=0 WHERE id IN ('.implode(',', $arReservedNull).')';
+                if ($hotelId == 11712) {
+                    Debug::writeToFile($query, 'BNOVO_UNRESERVED_' . $hotelId . date('Y-m-d H:i:s'), '__BNOVO_log.log');
+                }
+                $result = $connection->query($query);                
+            }
+        // } else {
+        //     if (!empty($arReservedOne)) {
+        //         foreach ($arReservedOne as $data) {
+        //             $entityClass->update($data, ["UF_RESERVED" => "1"]);
+        //         }
+        //     }
+    
+        //     if (!empty($arReservedNull)) {
+        //         foreach ($arReservedNull as $data) {
+        //             $entityClass->update($data, ["UF_RESERVED" => "0"]);
+        //         }
+        //     }
+        // }
     }
 
     /* Бронирование объекта из заказа */
@@ -2045,8 +2057,8 @@ class Bnovo
         $sectionName = $arOrder['ITEMS'][0]['ITEM']['SECTION']['NAME'];
         $dateFrom = $arOrder['PROPS']['DATE_FROM'];
         $dateTo = $arOrder['PROPS']['DATE_TO'];
-        $guests = $arOrder['PROPS']['GUESTS_COUNT'];
-        $children = !empty($arOrder['PROPS']['CHILDREN_AGE']) ? count($arOrder['PROPS']['CHILDREN_AGE']) : 0;
+        $guests = $arOrder["ITEMS"][0]["ITEM_BAKET_PROPS"]["GUESTS_COUNT"]['VALUE'];
+        $children = !empty($arOrder['PROPS']['CHILDREN']) ? $arOrder['PROPS']['CHILDREN'] : 0;
 
         $url = $this->bnovoApiURL . '/channel_manager_bookings';
         $headers = array(
@@ -2314,7 +2326,7 @@ class Bnovo
     }
 
     /**
-     * Загружает цены за 3 ближайших месяца
+     * Загружает цены за 2 ближайших месяца
      *
      * @return void
      * 
@@ -2376,29 +2388,8 @@ class Bnovo
      * 
      */
     public function checkMarkups() : void {
-        //$sections = $this->getSections();
-        $message = '';        
-
-        $sections = [
-            0 => [
-                'ID' => 1150,
-                'NAME' => 'Константа',
-                'UF_EXTERNAL_UID' => 'ad9b3385-2dfc-4494-8ac8-d6d9ddac3cf4',
-                'UF_EXTERNAL_ID' => 35834,
-            ],
-            1 => [
-                'ID' => 1183,
-                'NAME' => '"Marmar"',
-                'UF_EXTERNAL_UID' => '6552dc70-39bd-4774-ac67-f2c12b24cb81',
-                'UF_EXTERNAL_ID' => 31545,
-            ],
-            2 => [
-                'ID' => 1190,
-                'NAME' => 'Огонёк',
-                'UF_EXTERNAL_UID' => '83d9197e-483f-4aac-8899-5b8f711e33ed',
-                'UF_EXTERNAL_ID' => 39125,
-            ]
-        ];        
+        $sections = $this->getSections();
+        $message = '';
 
         if (!empty($sections)) {
             foreach ($sections as $section) {                
@@ -2425,7 +2416,7 @@ class Bnovo
                     }
                 }
             }
-        }
+        }        
 
         if ($message != '') {
             \CEvent::Send('BNOVO_MARKUP', 's1', [

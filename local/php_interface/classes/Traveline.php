@@ -170,16 +170,19 @@ class Traveline
             $externalCategoryId = $arItem['roomType']['id'];
 
             $elementId = $arElementsIDs[$externalId][$externalCategoryId];
-            date_default_timezone_set('UTC');
-            $arRooms[$elementId][$arItem['checksum']] = array(
-                'price'              => $arItem['total']['priceBeforeTax'],
-                'checksum'           => $arItem['checksum'],
-                'fullPlacementsName' => $arItem['fullPlacementsName'],
-                'cancelPossible'     => $arItem['cancellationPolicy']['freeCancellationPossible'],
-                'cancelDate'         => date('d.m.Y H:i', strtotime($arItem['cancellationPolicy']['freeCancellationDeadlineUtc']) + 10800),
-                'cancelAmount'       => $arItem['cancellationPolicy']['penaltyAmount'] ?? 0,
-                'includedServices'   => $arItem['includedServices']
-            );
+
+            if ($elementId) {
+                date_default_timezone_set('UTC');
+                $arRooms[$elementId][$arItem['checksum']] = array(
+                    'price'              => $arItem['total']['priceBeforeTax'],
+                    'checksum'           => $arItem['checksum'],
+                    'fullPlacementsName' => $arItem['fullPlacementsName'],
+                    'cancelPossible'     => $arItem['cancellationPolicy']['freeCancellationPossible'],
+                    'cancelDate'         => date('d.m.Y H:i', strtotime($arItem['cancellationPolicy']['freeCancellationDeadlineUtc']) + 10800),
+                    'cancelAmount'       => $arItem['cancellationPolicy']['penaltyAmount'] ?? 0,
+                    'includedServices'   => $arItem['includedServices']
+                );
+            }
         }
 
         if ($error != '') {
