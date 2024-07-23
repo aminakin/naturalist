@@ -39,12 +39,15 @@ class BuyCert {
     ".pocket .form__el-variant label"
   );
   certPockets = document.querySelectorAll('input[name="cert_pocket"]');
+  submitForm = document.querySelector(".cert-buy__form");
 
   totalSumm = 0;
   prodSumm = 0;
   deliverySumm = 0;
   variantSumm = 0;
   pocketSumm = 0;
+
+  ecommerceSend = false;
 
   innerDeliveries = [3, 6];
   outerDeliveries = [3, 4, 5];
@@ -59,6 +62,34 @@ class BuyCert {
     this.pocketSelectHandler();
     this.elVariantSelectHandler();
     this.deliverySelectHandler();
+    this.submitHandler();
+  }
+
+  submitHandler() {
+    let _this = this;
+    this.submitForm.addEventListener("submit", function (evt) {
+      if (!_this.ecommerceSend) {
+        evt.preventDefault();
+        dataLayer.push({
+          ecommerce: {
+            currencyCode: "RUB",
+            purchase: {
+              products: [
+                {
+                  id: "cert",
+                  name: "Сертификат на " + _this.prodSumm,
+                  price: _this.prodSumm,
+                  category: "Сертификат",
+                  quantity: 1,
+                },
+              ],
+            },
+          },
+        });
+        _this.ecommerceSend = true;
+        _this.submitForm.submit();
+      }
+    });
   }
 
   certsSelectHandler() {

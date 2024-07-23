@@ -376,6 +376,25 @@ $(function () {
     var people = $(this).data("people");
     var title = $(this).data("room-title");
     var photo = $(this).data("room-photo");
+    var objectTItle = $(this).data("object-title");
+
+    dataLayer.push({
+      ecommerce: {
+        currencyCode: "RUB",
+        add: {
+          products: [
+            {
+              id: productId,
+              name: title,
+              price: price,
+              brand: externalService,
+              category: objectTItle,
+              quantity: 1,
+            },
+          ],
+        },
+      },
+    });
 
     order.addBasket(
       productId,
@@ -564,9 +583,9 @@ $(function () {
     }
   });
 
-  $('.show-more-seo').on('click', function(evt){
+  $(".show-more-seo").on("click", function (evt) {
     evt.preventDefault();
-    $('.cert-index__seo-text').addClass('show-all-seo');
+    $(".cert-index__seo-text").addClass("show-all-seo");
     $(this).hide();
-  })
+  });
 });
