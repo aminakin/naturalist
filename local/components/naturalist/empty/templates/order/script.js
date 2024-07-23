@@ -60,6 +60,24 @@ var Order = function () {
         params: params,
       };
 
+      dataLayer.push({
+        ecommerce: {
+          currencyCode: "RUB",
+          purchase: {
+            products: [
+              {
+                id: orderData.prodID,
+                name: orderData.prodName,
+                price: orderData.price,
+                category: orderData.sectionName,
+                quantity: 1,
+                position: 1,
+              },
+            ],
+          },
+        },
+      });
+
       jQuery.ajax({
         type: "POST",
         url: "/ajax/handlers/addOrder.php",

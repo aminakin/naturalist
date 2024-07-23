@@ -292,3 +292,21 @@ foreach ($arResult as $key => $value) {
         </div>
     </div>
 </div>
+
+<script>
+    dataLayer.push({
+        "ecommerce": {
+            "currencyCode": "RUB",
+            "detail": {
+                "products": [
+                    {
+                        "id": "<?=$arSection['ID']?>",
+                        "name": "<?=$arSection['NAME']?>",
+                        "price": <?=$arSection['UF_MIN_PRICE']?>,
+                        "brand": "<?=$arSection['UF_EXTERNAL_SERVICE']?>",                        
+                    }
+                ]
+            }
+        }
+    });
+</script>
