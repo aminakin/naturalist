@@ -66,10 +66,10 @@ var Order = function () {
           purchase: {
             products: [
               {
-                id: orderData.prodID,
-                name: orderData.prodName,
-                price: orderData.price,
-                category: orderData.sectionName,
+                id: window.orderData.prodID,
+                name: window.orderData.prodName,
+                price: window.orderData.price,
+                category: window.orderData.sectionName,
                 quantity: 1,
                 position: 1,
               },

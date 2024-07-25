@@ -371,10 +371,10 @@ foreach($arResult as $key => $value) {
 
 <script>
     window.orderData = {
-        prodName: "<?=$arResult['arElement']['NAME']?>",
+        prodName: '<?=$arResult['arElement']['NAME']?>',
         price: <?=$arResult['finalPrice']['REAL_PRICE']?>,
         prodID: <?=$arResult['arElement']['ID']?>,
-        sectionName: "<?=$arResult['arSection']['NAME']?>"
+        sectionName: '<?=$arResult['arSection']['NAME']?>'
     };
 
     const autocomplete = [
