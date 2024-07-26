@@ -371,9 +371,9 @@ foreach($arResult as $key => $value) {
 
 <script>
     window.orderData = {
-        prodName: '<?=$arResult['arElement']['NAME']?>',
+        prodName: '<?=$arSection['NAME']?>',
         price: <?=$arResult['finalPrice']['REAL_PRICE']?>,
-        prodID: <?=$arResult['arElement']['ID']?>,
+        prodID: <?=$arSection["UF_EXTERNAL_ID"]?>,
         sectionName: '<?=$arResult['arSection']['NAME']?>'
     };
 

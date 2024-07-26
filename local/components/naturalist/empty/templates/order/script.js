@@ -60,24 +60,6 @@ var Order = function () {
         params: params,
       };
 
-      dataLayer.push({
-        ecommerce: {
-          currencyCode: "RUB",
-          purchase: {
-            products: [
-              {
-                id: window.orderData.prodID,
-                name: window.orderData.prodName,
-                price: window.orderData.price,
-                category: window.orderData.sectionName,
-                quantity: 1,
-                position: 1,
-              },
-            ],
-          },
-        },
-      });
-
       jQuery.ajax({
         type: "POST",
         url: "/ajax/handlers/addOrder.php",
@@ -90,6 +72,27 @@ var Order = function () {
         success: function (a) {
           window.preloader.hide();
           if (!a.ERROR) {
+            dataLayer.push({
+              ecommerce: {
+                currencyCode: "RUB",
+                purchase: {
+                  actionField: {
+                    id: a.ID.toString(),
+                  },
+                  products: [
+                    {
+                      id: window.orderData.prodID,
+                      name: window.orderData.prodName,
+                      price: window.orderData.price,
+                      category: window.orderData.sectionName,
+                      quantity: 1,
+                      position: 1,
+                    },
+                  ],
+                },
+              },
+            });
+
             if (a.REDIRECT_URL && a.REDIRECT_URL != false) {
               location.href = a.REDIRECT_URL;
             } else if (a.PAYMENT_DATA) {

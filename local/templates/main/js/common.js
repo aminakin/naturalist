@@ -377,6 +377,7 @@ $(function () {
     var title = $(this).data("room-title");
     var photo = $(this).data("room-photo");
     var objectTItle = $(this).data("object-title");
+    var sectionExternalId = $(this).data("section-external-id");
 
     dataLayer.push({
       ecommerce: {
@@ -384,11 +385,10 @@ $(function () {
         add: {
           products: [
             {
-              id: productId,
-              name: title,
+              id: sectionExternalId,
+              name: objectTItle,
               price: price,
               brand: externalService,
-              category: objectTItle,
               quantity: 1,
             },
           ],

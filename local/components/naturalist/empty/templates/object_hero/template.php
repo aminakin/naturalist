@@ -300,7 +300,7 @@ foreach ($arResult as $key => $value) {
             "detail": {
                 "products": [
                     {
-                        "id": "<?=$arSection['ID']?>",
+                        "id": "<?=$arSection['UF_EXTERNAL_ID']?>",
                         "name": "<?=$arSection['NAME']?>",
                         "price": <?=$arSection['UF_MIN_PRICE']?>,
                         "brand": "<?=$arSection['UF_EXTERNAL_SERVICE']?>",                        

@@ -226,6 +226,7 @@ foreach ($arParams['VARS'] as $key => $value) {
 
                                 <a class="button button_primary"
                                    onclick="VK.Goal('customize_product')"
+                                   data-section-external-id="<?=$arSection['UF_EXTERNAL_ID']?>"
                                    data-add-basket
                                    data-object-title="<?=$arSection['NAME']?>"
                                    data-id="<?=$arElement["ID"]?>"
@@ -382,6 +383,7 @@ foreach ($arParams['VARS'] as $key => $value) {
 
                                         <a class="button button_primary"
                                            onclick="VK.Goal('customize_product')"
+                                           data-section-external-id="<?=$arSection['UF_EXTERNAL_ID']?>"
                                            data-add-basket
                                            data-object-title="<?=$arSection['NAME']?>"
                                            data-id="<?=$arElement["ID"]?>"
