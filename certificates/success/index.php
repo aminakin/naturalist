@@ -1,6 +1,14 @@
 <?php
 require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/header.php");
-$APPLICATION->SetTitle("Подтверждение заказа");?>
+use Naturalist\Orders;
+$APPLICATION->SetTitle("Подтверждение заказа");
+
+$orderId = $_REQUEST['orderId'];
+$orders = new Orders;
+if ($orderId) {
+    $order = $orders->get($orderId);    
+}
+?>
 <main class="main">
     <section class="section section_crumbs">
         <div class="container">
@@ -44,6 +52,30 @@ $APPLICATION->SetTitle("Подтверждение заказа");?>
         </div>        
     </section>    
 </main>
+
+<?if ($orderId) {?>
+    <script>
+        dataLayer.push({
+          ecommerce: {
+            currencyCode: "RUB",
+            purchase: {
+                actionField: {
+                        id: '<?= $orderId ?>',
+                    },
+              products: [
+                {
+                  id: "cert",
+                  name: "Сертификат на " + "<?=$order['PROPS']['PROP_CERT_PRICE']?>",
+                  price: <?= $order['FIELDS']['PRICE'] ?>,
+                  category: "Сертификат",
+                  quantity: 1,
+                },
+              ],
+            },
+          },
+        });
+    </script>
+<?}?>
 
 <?php
 require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/footer.php");?>

@@ -62,7 +62,7 @@ class BuyCert {
     this.pocketSelectHandler();
     this.elVariantSelectHandler();
     this.deliverySelectHandler();
-    this.submitHandler();
+    //this.submitHandler();
   }
 
   submitHandler() {

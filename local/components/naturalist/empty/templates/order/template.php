@@ -370,13 +370,6 @@ foreach($arResult as $key => $value) {
 </div>
 
 <script>
-    window.orderData = {
-        prodName: '<?=$arSection['NAME']?>',
-        price: <?=$arResult['finalPrice']['REAL_PRICE']?>,
-        prodID: <?=$arSection["UF_EXTERNAL_ID"]?>,
-        sectionName: '<?=$arResult['arSection']['NAME']?>'
-    };
-
     const autocomplete = [
         <?foreach($arUser["UF_GUESTS_DATA"] as $key => $arItem):?>
         {

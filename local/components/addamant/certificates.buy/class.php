@@ -104,7 +104,7 @@ class CertBuy extends \CBitrixComponent
     private function getPaymentUrl(int $orderId) : void
     {
         if ($this->postList['paysystem'] == CERT_CASH_PAYSYSTEM_ID) {
-            $this->arResult['PAYMENT_URL'] = '/certificates/success/';
+            $this->arResult['PAYMENT_URL'] = '/certificates/success/?orderId='.$orderId;
             return;
         }
 

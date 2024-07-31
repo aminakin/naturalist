@@ -228,13 +228,13 @@ class Events
         if (!self::checkCert($orderId)) {
             $cert = new Certificates\Create();
             $cert->add($nominal, $orderId);
-        }        
+        }
 
         // Создание pdf с сертификатом        
         $PDF = new CreateCertPdf();
         $file = json_decode($PDF->getPdfLink($orderId))->SHORT;
 
-        if ($noMail) {            
+        if ($noMail) {
             $certFileProp = $propertyCollection->getItemByOrderPropertyId(ORDER_PROP_CERT_FILE);
             $arFile = CFile::MakeFileArray($_SERVER['DOCUMENT_ROOT'] . $file);
             $fileId = CFile::SaveFile($arFile, 'order_certs');
@@ -259,7 +259,7 @@ class Events
         }
     }
 
-    private static function checkCert($orderId) 
+    private static function checkCert($orderId)
     {
         $hlEntity = new HighLoadBlockHelper('Certificates');
         $hlEntity->prepareParamsQuery(['*'], [], ['UF_ORDER_ID' => $orderId]);
@@ -297,7 +297,7 @@ class Events
     // Отправка данных в Б24
     public static function createB24Deal($event)
     {
-        $order = $event->getParameter("ENTITY");        
+        $order = $event->getParameter("ENTITY");
         $oldValues = $event->getParameter("VALUES");
 
         if (!$order->getField('PAYED') || !$oldValues['PAYED'] || ($order->getField('PAYED') != 'Y') && ($oldValues['PAYED'] != 'N')) {
@@ -317,16 +317,15 @@ class Events
 
         foreach ($arFields['properties'] as $field) {
             $arProps[$field['CODE']] = $field;
-        }        
+        }
 
         // Промокод из заказа
         $couponList = \Bitrix\Sale\Internals\OrderCouponsTable::getList(array(
             'select' => array('COUPON'),
             'filter' => array('=ORDER_ID' => $order->getId())
         ));
-        while ($coupon = $couponList->fetch())
-        {
-           $promocode = $coupon['COUPON'];
+        while ($coupon = $couponList->fetch()) {
+            $promocode = $coupon['COUPON'];
         }
 
         $deal = CRest::call(
@@ -335,7 +334,7 @@ class Events
                 'fields' => [
                     'TITLE' => 'Заказ с сайта №' . $order->getId(),
                     'CATEGORY_ID' => 2,
-                    'UF_CRM_64CC9F9675E53' => $arProps['OBJECT']['VALUE'][0],                    
+                    'UF_CRM_64CC9F9675E53' => $arProps['OBJECT']['VALUE'][0],
                     'UF_CRM_1704886320' => $arProps['CHECKSUM']['VALUE'][0] ? ["ID" => 88] : ["ID" => 86],
                     'UF_CRM_1711465448624' => $arProps['OBJECT_ADDRESS']['VALUE'][0],
                     'UF_CRM_1711465517830' => $arProps['ROOM_PHOTO']['VALUE'][0],

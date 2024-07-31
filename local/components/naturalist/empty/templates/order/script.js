@@ -72,27 +72,6 @@ var Order = function () {
         success: function (a) {
           window.preloader.hide();
           if (!a.ERROR) {
-            dataLayer.push({
-              ecommerce: {
-                currencyCode: "RUB",
-                purchase: {
-                  actionField: {
-                    id: a.ID.toString(),
-                  },
-                  products: [
-                    {
-                      id: window.orderData.prodID,
-                      name: window.orderData.prodName,
-                      price: window.orderData.price,
-                      category: window.orderData.sectionName,
-                      quantity: 1,
-                      position: 1,
-                    },
-                  ],
-                },
-              },
-            });
-
             if (a.REDIRECT_URL && a.REDIRECT_URL != false) {
               location.href = a.REDIRECT_URL;
             } else if (a.PAYMENT_DATA) {

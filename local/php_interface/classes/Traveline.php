@@ -59,14 +59,14 @@ class Traveline
             $noChield = false;
             if (is_array($arChildrenAge) && count($arChildrenAge) && $arSection['UF_MIN_CHIELD_AGE'] != '') {
                 foreach ($arChildrenAge as $age) {
-                    if ($age < $arSection['UF_MIN_CHIELD_AGE']) {                        
+                    if ($age < $arSection['UF_MIN_CHIELD_AGE']) {
                         $noChield = true;
                     }
                 }
-            }   
+            }
 
             if (!$noChield) {
-                $arSectionExternalIDs[] = (string)$arSection["UF_EXTERNAL_ID"];            
+                $arSectionExternalIDs[] = (string)$arSection["UF_EXTERNAL_ID"];
             }
         }
 
@@ -82,7 +82,7 @@ class Traveline
             "departureDate" => date('Y-m-d', strtotime($dateTo)),
             "include" => ""
         );
-        
+
         if (count($arChildrenAge) > 0) {
             $data["childAges"] = $arChildrenAge;
         }
@@ -97,7 +97,7 @@ class Traveline
         ));
         $response = curl_exec($ch);
         $arResponse = json_decode($response, true);
-        curl_close($ch);        
+        curl_close($ch);
 
         $arHotelsIDs = array();
         foreach ($arResponse["roomStays"] as $arItem) {
@@ -110,17 +110,17 @@ class Traveline
 
     /* Получение списка свободных номеров объекта в выбранный промежуток */
     public static function searchRooms($sectionId, $externalId, $guests, $arChildrenAge, $dateFrom, $dateTo, $minChildAge = 0)
-    {        
+    {
         $error = '';
 
         // Проверка на минимально разрешённый возраст детей
         if (is_array($arChildrenAge) && count($arChildrenAge) && $minChildAge != 0) {
             foreach ($arChildrenAge as $age) {
                 if ($age < $minChildAge) {
-                    $error = 'Заезд возможен только с детьми от '.$minChildAge.' лет';
+                    $error = 'Заезд возможен только с детьми от ' . $minChildAge . ' лет';
                 }
             }
-        }        
+        }
 
         // Номера
         $rsElements = CIBlockElement::GetList(
@@ -164,7 +164,7 @@ class Traveline
         curl_close($ch);
 
         $arRooms = array();
-        
+
         foreach ($arItems["roomStays"] as $arItem) {
             $externalId = $arItem['ratePlan']['id'];
             $externalCategoryId = $arItem['roomType']['id'];
@@ -711,8 +711,6 @@ class Traveline
         $response = curl_exec($ch);
         $arItemsResponse = json_decode($response, true);
 
-        Debug::writeToFile($arItemsResponse, 'TRAVELINE SEARCH RESPONSE VERIFY ' . date('Y-m-d H:i:s'), '__bx_log.log');
-
         curl_close($ch);
         if ($arItemsResponse['roomStays']) {
             $arExternalData = array();
@@ -721,7 +719,7 @@ class Traveline
                     $arExternalData = $arItem;
                     break;
                 }
-            }            
+            }
 
             $arConditionsError['warnings'][0]['code'] = 'ConditionsChanged';
             if ($arExternalData) {
@@ -791,8 +789,6 @@ class Traveline
                     ]
                 );
 
-                Debug::writeToFile($data, 'TRAVELINE DATA BEFORE BOOKING VERIFY ' . date('Y-m-d H:i:s'), '__bx_log.log');
-                
                 $ch = curl_init();
                 curl_setopt_array($ch, array(
                     CURLOPT_URL            => $url,
@@ -805,8 +801,6 @@ class Traveline
                 $arVerifyResponse = json_decode($response, true);
                 curl_close($ch);
 
-                Debug::writeToFile($arVerifyResponse, 'TRAVELINE RESPONSE AFTER BOOKING VERIFY ' . date('Y-m-d H:i:s'), '__bx_log.log');
-                
                 $arResponse = $arVerifyResponse;
             } else {
                 Debug::writeToFile('Что-то не то с ответом по апи', 'TRAVELINE VERIFY ERROR ' . date('Y-m-d H:i:s'), '__bx_log.log');
@@ -872,8 +866,6 @@ class Traveline
                 "booking" => $arVerifyResponse["booking"]
             );
 
-            Debug::writeToFile($data, 'TRAVELINE DATA BEFORE BOOKING ' . date('Y-m-d H:i:s'), '__bx_log.log');            
-
             $ch = curl_init();
             curl_setopt_array($ch, array(
                 CURLOPT_URL            => $url,
@@ -884,10 +876,8 @@ class Traveline
             ));
             $response = curl_exec($ch);
             $arResponse = json_decode($response, true);
-            curl_close($ch);        
-            
-            Debug::writeToFile($arResponse, 'TRAVELINE DATA AFTER BOOKING ' . date('Y-m-d H:i:s'), '__bx_log.log');
-            
+            curl_close($ch);
+
             if ($arResponse['booking']['status'] == "Confirmed" && $arResponse['booking']['number']) {
                 // Сохраняем ID бронирования в заказе
                 $reservationId = $arResponse['booking']['number'];
