@@ -5,7 +5,6 @@ use Bitrix\Iblock\Elements\ElementGlampingsTable;
 // Избранное
 global $arFavourites;
 $arResult["FAVOURITES"] = $arFavourites;
-
 // Тип объекта
 $hlId = 2;
 $hlblock = HighloadBlockTable::getById($hlId)->fetch();
@@ -21,7 +20,6 @@ while ($arEntity = $rsData->Fetch()) {
 }
 
 $arResult["HL_TYPES"] = $arHLTypes;
-
 $allCount = count($arResult["SECTIONS"]);
 $page = $_REQUEST['page'] ?? 1;
 $pageCount = ceil($allCount / $arParams["ITEMS_COUNT"]);
@@ -35,6 +33,17 @@ foreach ($arResult["SECTIONS"] as $section) {
     $arSectionIds[] = $section['ID'];
 }
 unset($section);
+
+/* Отзывы */
+$rsReviews = CIBlockElement::GetList(array("SORT" => "ASC"), array("IBLOCK_ID" => REVIEWS_IBLOCK_ID, "ACTIVE" => "Y"), false, false, array("ID", "PROPERTY_CAMPING_ID", "PROPERTY_RATING"));
+$arReviews = array();
+while ($arReview = $rsReviews->Fetch()) {
+    $arReviews[$arReview["PROPERTY_CAMPING_ID_VALUE"]][$arReview["ID"]] = $arReview["PROPERTY_RATING_VALUE"];
+}
+
+$arReviewsAvg = array_map(function ($a) {
+    return round(array_sum($a) / count($a), 1);
+}, $arReviews);
 
 $elements = ElementGlampingsTable::getList([
     'select' => ['ID', 'NAME', 'IBLOCK_SECTION_ID'],

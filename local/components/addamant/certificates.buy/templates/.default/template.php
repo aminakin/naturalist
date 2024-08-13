@@ -409,7 +409,7 @@ if ($arResult['ERROR']) {
             );
         ?>        
     </section>
-    <a href="#" class="show-more-seo">Показать ещё</a>
+    <a href="#" class="show-more-seo">Раскрыть</a>
 
 </section>
 

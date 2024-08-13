@@ -363,6 +363,23 @@
 .object-row .favorite {
   right: 0.8rem;
   top: 0.9rem;
+  width: 34px;
+  height: 34px;
+  padding: 8px;
+  background-color: var(--color-white);
+  border-radius: 34px;
+  display: flex;
+  align-items: center;
+}
+
+.object-row .favorite svg path{
+  stroke: var( --color-black)!important;
+  fill: var( --color-white)!important;
+}
+
+.object-row .favorite.active svg path{
+  stroke: var( --color-orange)!important;
+  fill: var( --color-orange)!important;
 }
 
 .object-row .tag {

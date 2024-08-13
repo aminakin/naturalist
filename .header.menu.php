@@ -8,13 +8,6 @@ $aMenuLinks = Array(
 		"" 
 	),
 	Array(
-		"Карта", 
-		SITE_DIR."/map/", 
-		Array(), 
-		Array(), 
-		"" 
-	),
-	Array(
 		"Каталог", 
 		SITE_DIR."/catalog/", 
 		Array(), 
@@ -22,15 +15,16 @@ $aMenuLinks = Array(
 		"" 
 	),
 	Array(
-		"Подборки", 
-		SITE_DIR."/impressions/", 
+		"Карта", 
+		SITE_DIR."/map/", 
 		Array(), 
 		Array(), 
 		"" 
 	),
+	
 	Array(
-		"О проекте", 
-		SITE_DIR."/about/", 
+		"Подборки", 
+		SITE_DIR."/impressions/", 
 		Array(), 
 		Array(), 
 		"" 
@@ -41,6 +35,13 @@ $aMenuLinks = Array(
 		Array(), 
 		Array("ALWAYS_ORANGE"=>"Y"), 
 		"" 
-	)
+	),
+	Array(
+		"О проекте", 
+		SITE_DIR."/about/", 
+		Array(), 
+		Array(), 
+		"" 
+	),
 );
 ?>

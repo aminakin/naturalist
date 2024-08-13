@@ -822,7 +822,7 @@ $APPLICATION->AddHeadString('<meta name="description" content="' . $descriptionS
             </div>
         </section>
         <div class="container">
-            <a href="#" class="show-more-seo">Показать ещё</a>
+            <a href="#" class="show-more-seo">Раскрыть</a>
         </div>
     </main>
 

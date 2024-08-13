@@ -4,7 +4,7 @@
 }
 
 .form__title-block {
-  font-family: "TT Travels Next";
+  font-family: "Lato";
   font-size: 28px;
   letter-spacing: -1pt;
   line-height: 34px;
@@ -71,7 +71,7 @@ label.selected {
 }
 
 .nominal__price {
-  font-family: "TT Travels Next";
+  font-family: "Lato";
   font-size: 36px;
   line-height: 34px;
   letter-spacing: -1pt;
@@ -121,7 +121,7 @@ label.selected {
 
 .format__title {
   text-transform: uppercase;
-  font-family: "TT Travels Next";
+  font-family: "Lato";
   font-weight: 600;
   font-size: 28px;
   line-height: 34px;
@@ -323,7 +323,7 @@ label.selected {
 }
 
 .form__submit {
-  font-family: "TT Travels Next";
+  font-family: "Lato";
   font-size: 28px;
   line-height: 34px;
   letter-spacing: 5pt;
@@ -397,14 +397,14 @@ label.selected {
 }
 
 .summ__text {
-  font-family: "TT Travels Next";
+  font-family: "Lato";
   font-size: 23px;
   line-height: 25px;
   font-weight: 600;
 }
 
 .summ__price {
-  font-family: "TT Travels Next";
+  font-family: "Lato";
   font-size: 28px;
   line-height: 29px;
   font-weight: 600;

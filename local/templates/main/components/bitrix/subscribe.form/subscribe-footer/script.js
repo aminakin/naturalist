@@ -63,7 +63,8 @@ $('document').ready(function(){
           window.modal.open('subscribe_result');
         } else {
             $(inputMail).addClass("error");
-            $(errorElem).text('Вы уже подписаны на нашу рассылку. Если вы хотите получать новости по другому адресу, \nпожалуйста, введите другой e-mail').show();
+            $(errorElem).text('Вы уже подписаны на нашу рассылку.').show();
+            //$(errorElem).text('Вы уже подписаны на нашу рассылку. Если вы хотите получать новости по другому адресу, \nпожалуйста, введите другой e-mail').show();
         }
       });
       request.fail(function (jqXHR, textStatus, errorThrown) {

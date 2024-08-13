@@ -215,7 +215,7 @@ $this->setFrameMode(true);
                         );
                     ?>                    
                 </section>
-                <a href="#" class="show-more-seo">Показать ещё</a>
+                <a href="#" class="show-more-seo">Раскрыть</a>
             </div>
         </div>
     </div>

@@ -17,7 +17,7 @@
     border-top: .1rem solid var(--color-black);
     cursor: pointer;
     display: none;
-    font-family: TT Travels Next;
+    font-family: Lato;
     font-family: var(--header-text-font-family);
     font-weight: 700;
     line-height: 1.6rem;
@@ -43,7 +43,7 @@
 }
 
 .sidebar-navigation .list__link {
-    font-family: TT Travels Next;
+    font-family: Lato;
     font-family: var(--header-text-font-family);
     font-weight: 500;
     line-height: 2rem;
@@ -236,7 +236,7 @@
 }
 
 .profile__empty {
-    font-family: TT Travels Next;
+    font-family: Lato;
     font-family: var(--header-text-font-family)
 }
 
@@ -277,7 +277,7 @@
     -webkit-box-flex: 1;
     -ms-flex: 1;
     flex: 1;
-    font-family: TT Travels Next;
+    font-family: Lato;
     font-family: var(--header-text-font-family);
     font-weight: 500;
     padding-right: 4rem
@@ -326,7 +326,7 @@
     -webkit-box-flex: 1;
     -ms-flex: 1;
     flex: 1;
-    font-family: TT Travels Next;
+    font-family: Lato;
     font-family: var(--header-text-font-family);
     font-size: 1.5rem;
     font-weight: 600;
@@ -783,7 +783,7 @@
 
 .profile-reviews__controls a {
     display: block;
-    font-family: TT Travels Next;
+    font-family: Lato;
     font-family: var(--header-text-font-family);
     font-weight: 500;
     line-height: 1.6rem
