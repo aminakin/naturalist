@@ -93,7 +93,7 @@ class Orders
     public function __construct()
     {
         Loader::includeModule("sale");
-    }    
+    }
 
     /* авторегистрация пользователя */
 
@@ -198,7 +198,6 @@ class Orders
             return json_encode([
                 "PENALTY" => $penaltyAmount
             ]);
-
         } else {
             return json_encode([
                 "ERROR" => "Произошла ошибка при получении информации о штрафе."
@@ -206,7 +205,7 @@ class Orders
         }
     }
 
-    /* Получение заказа по ID */    
+    /* Получение заказа по ID */
 
     public function get($orderId)
     {
@@ -296,7 +295,7 @@ class Orders
         return $arOrder;
     }
 
-    /* Отменить заказ */    
+    /* Отменить заказ */
 
     public function cancel($orderId, $reason = "")
     {
@@ -324,11 +323,9 @@ class Orders
                     "MESSAGE" => "Заказ отменен.",
                     "RELOAD" => true
                 ]);
-
             } else {
                 return json_encode($updStatusRes);
             }
-
         } else {
             return json_encode([
                 "ERROR" => "Произошла ошибка при отмене заказа."
@@ -350,7 +347,6 @@ class Orders
         if ($service == $this->bnovoSectionPropEnumId) {
             $bnovo = new Bnovo();
             $res = $bnovo->cancelReservation($arOrder);
-
         } elseif ($service == $this->travelineSectionPropEnumId) {
             $res = Traveline::cancelReservation($arOrder);
         }
@@ -375,7 +371,6 @@ class Orders
             }
 
             return $res;
-
         } else {
             return [
                 "ERROR" => "Ошибка получения кода внешнего сервиса из заказа."
@@ -402,7 +397,6 @@ class Orders
 
         if ($res->isSuccess()) {
             return true;
-
         } else {
             return [
                 "ERROR" => "Ошибка при смене статуса заказа."
@@ -439,7 +433,7 @@ class Orders
                 } else {
                     $this->updateStatus($arOrder["ID"], "C");
                 }
-            } 
+            }
             // elseif (time() >= strtotime("+4 day", $arOrder["FIELDS"]["DATE_INSERT"]->getTimestamp()) && $arOrder["FIELDS"]["STATUS_ID"] != "F" && $arOrder["FIELDS"]["STATUS_ID"] != "C") {
             //     $order = Order::load($arOrder["ID"]);
             //     if (!$order) {
@@ -487,7 +481,7 @@ class Orders
         return $arOrdersList;
     }
 
-    
+
 
     public function updatePayment($order)
     {
@@ -564,15 +558,14 @@ class Orders
         if ($service == $this->bnovoSectionPropEnumId) {
             $bnovo = new Bnovo();
             $reservationRes = $bnovo->makeReservation($orderId, $arOrder, $arUser, $reservationPropId);
-
         } elseif ($service == $this->travelineSectionPropEnumId) {
             $reservationRes = Traveline::makeReservation($orderId, $arOrder, $arUser, $reservationPropId);
         }
 
         if ($reservationRes) {
             // Списываем баланс со счёта, если свойство не пустое
-            if ($arOrder['PROPS']['CERT_VALUE'] != '') {                
-                \CSaleUserAccount::UpdateAccount($arUser['ID'], -intval($arOrder['PROPS']['CERT_VALUE']), 'RUB', 'Оплата заказа ', $orderId);                
+            if ($arOrder['PROPS']['CERT_VALUE'] != '') {
+                \CSaleUserAccount::UpdateAccount($arUser['ID'], -intval($arOrder['PROPS']['CERT_VALUE']), 'RUB', 'Оплата заказа ', $orderId);
             }
 
             /* Устанавливаем свойства заказа (пользовательские) */
@@ -599,10 +592,17 @@ class Orders
                 $sendRes = Users::sendEmail("USER_RESERVATION", "55", array(
                     "EMAIL" => $clientEmail,
                     "ORDER_ID" => $orderId,
-                    "NAME" => $clientLastName. ' ' . $clientName,
+                    "NAME" => $clientLastName . ' ' . $clientName,
                     "RESERVATION_ID" => $reservationRes,
                     "LINK" => 'https://' . $_SERVER['SERVER_NAME'] . '/personal/active/'
-                ), [$_SERVER["DOCUMENT_ROOT"].$file]);
+                ), [$_SERVER["DOCUMENT_ROOT"] . $file]);
+
+                $sendMAnagerRes = Users::sendEmail("MANAGER_MAIL", "70", array(
+                    "ORDER_ID" => $orderId,
+                    "ORDER_DATE" => $arOrder['FIELDS']['DATE_INSERT']->toString(),
+                    "COMMENT" => $arOrder['FIELDS']['USER_DESCRIPTION'],
+                    "LINK" => 'https://' . $_SERVER['SERVER_NAME'] . '/bitrix/admin/sale_order_view.php?ID=' . $orderId
+                ));
 
                 // Отсылка уведомления на СМС
                 if ($arUser["UF_SUBSCRIBE_SMS_1"]) {
@@ -610,7 +610,6 @@ class Orders
             }
 
             return $reservationRes;
-
         } else {
             return [
                 "ERROR" => "Ошибка получения кода внешнего сервиса из заказа."
@@ -640,7 +639,6 @@ class Orders
                 "DATE" => $arData['date'],
                 "PENALTY" => $arData['cancelAmount']
             ]);
-
         } else {
             return json_encode([
                 "ERROR" => "Произошла ошибка при получении информации о штрафе."
@@ -648,11 +646,11 @@ class Orders
         }
     }
 
-    /* Добавляет купон к заказу */    
+    /* Добавляет купон к заказу */
 
     public function enterCoupon($coupon)
     {
-        $coupon = htmlspecialchars_decode(trim($coupon));        
+        $coupon = htmlspecialchars_decode(trim($coupon));
         if (!empty($coupon)) {
             $getCoupon = DiscountCouponsManager::getData($coupon);
             if ($getCoupon['ACTIVE'] === 'Y') {
@@ -688,7 +686,7 @@ class Orders
         $payment->setField("CURRENCY", $order->getCurrency());
         if ($isPayed) {
             $payment->setPaid("Y");
-        }        
+        }
     }
 
     /* Добавление нового заказа */
@@ -725,7 +723,7 @@ class Orders
         $externalService = $arBasketItems["ITEMS"][0]["ITEM"]["SECTION"]["UF_EXTERNAL_SERVICE"];
 
         // Проверка возможности бронирования перед созданием заказа и отмена создания заказа в случае невозможности бронирования для Traveline
-        if($externalService == $this->travelineSectionPropEnumId) {
+        if ($externalService == $this->travelineSectionPropEnumId) {
             $externalSectionId = $arBasketItems['ITEMS'][0]['ITEM']['SECTION']['UF_EXTERNAL_ID'];
             $sectionName = $arBasketItems['ITEMS'][0]['ITEM']['SECTION']['NAME'];
             $sectionCommission = $arBasketItems['ITEMS'][0]['ITEM']['SECTION']['UF_AGENT'];
@@ -739,10 +737,10 @@ class Orders
             $checksum = $params['SESSION_CHECKSUM'] ? $params['SESSION_CHECKSUM'] : $params['checksum'];
             $arChildrenAge = ($params['childrenAge']) ? explode(',', $params['childrenAge']) : [];
 
-            if(empty($arUser["EMAIL"])) {
+            if (empty($arUser["EMAIL"])) {
                 $arUser["EMAIL"] = $params["email"];
             }
-            if(empty($arUser["PERSONAL_PHONE"])) {
+            if (empty($arUser["PERSONAL_PHONE"])) {
                 $arUser["PERSONAL_PHONE"] = $params["phone"];
             }
 
@@ -757,11 +755,11 @@ class Orders
         }
 
         // Проверка возможности бронирования перед созданием заказа и отмена создания заказа в случае невозможности бронирования для Bnovo
-        if($externalService == $this->bnovoSectionPropEnumId) {            
+        if ($externalService == $this->bnovoSectionPropEnumId) {
             $categoryId = $arBasketItems['ITEMS'][0]['PROPS']['CATEGORY_ID'];
-            $externalSectionId = $arBasketItems['ITEMS'][0]['ITEM']['SECTION']['UF_EXTERNAL_ID'];            
+            $externalSectionId = $arBasketItems['ITEMS'][0]['ITEM']['SECTION']['UF_EXTERNAL_ID'];
             $bnovo = new Bnovo();
-            $response = $bnovo->updateAvailabilityData($externalSectionId, [$categoryId], [date('Y-m-d', strtotime($params["dateFrom"])), date('Y-m-d', strtotime($params["dateTo"]))], true);                        
+            $response = $bnovo->updateAvailabilityData($externalSectionId, [$categoryId], [date('Y-m-d', strtotime($params["dateFrom"])), date('Y-m-d', strtotime($params["dateTo"]))], true);
             if (is_array($response) && isset($response[$categoryId])) {
                 foreach ($response[$categoryId] as $key => $date) {
                     if ($date == 0 && $key != date('Y-m-d', strtotime($params["dateTo"]))) {
@@ -774,7 +772,7 @@ class Orders
                 return json_encode([
                     "ERROR" => "В процессе подтверждения бронирования произошла ошибка. Пожалуйста, попробуйте позднее или свяжитесь с нами",
                 ]);
-            }            
+            }
         }
 
         // Создание корзины
@@ -804,19 +802,19 @@ class Orders
             if ($difference <= 0) {
                 $this->setOrderPayment($order, $this->innerPaymentTypeId, $order->getPrice(), true);
             } else {
-                $doublePayment = true;                
+                $doublePayment = true;
                 $basketItems = $basket->getBasketItems();
                 $item = $basketItems[0];
                 $item->setFields(array(
                     'PRICE' => $difference,
                     'CUSTOM_PRICE' => 'Y',
                 ));
-                $basket->save();                
+                $basket->save();
                 $this->setOrderPayment($order, $params['paysystem'], $difference, false);
             }
-        } else {            
-            $this->setOrderPayment($order, $params['paysystem'], $order->getPrice(), false);            
-        }        
+        } else {
+            $this->setOrderPayment($order, $params['paysystem'], $order->getPrice(), false);
+        }
 
         /* Устанавливаем свойства заказа (пользовательские) */
         $propertyCollection = $order->getPropertyCollection();
@@ -846,7 +844,7 @@ class Orders
         // Кол-во детей
         $propertyValue = $propertyCollection->getItemByOrderPropertyId($this->arPropsIDs['CHILDREN']);
         //$propertyValue->setValue($params["childrenAge"]);
-        $propertyValue->setValue($params["childrenAge"] != '' ? count(explode(',', $params["childrenAge"])) : 0);        
+        $propertyValue->setValue($params["childrenAge"] != '' ? count(explode(',', $params["childrenAge"])) : 0);
         // Checksum
         $propertyValue = $propertyCollection->getItemByOrderPropertyId($this->arPropsIDs['CHECKSUM']);
         $propertyValue->setValue($params["checksum"]);
@@ -858,7 +856,7 @@ class Orders
         $propertyValue->setValue($sectionCommission);
         // Фото номера
         $propertyValue = $propertyCollection->getItemByOrderPropertyId($this->arPropsIDs['ROOM_PHOTO']);
-        $propertyValue->setValue(HTTP_HOST.$arBasketItems['ITEMS'][0]['PROPS']['PHOTO']);
+        $propertyValue->setValue(HTTP_HOST . $arBasketItems['ITEMS'][0]['PROPS']['PHOTO']);
         // Время заезда
         $propertyValue = $propertyCollection->getItemByOrderPropertyId($this->arPropsIDs['CHECKIN_TIME']);
         $propertyValue->setValue($arBasketItems['ITEMS'][0]['ITEM']['SECTION']['UF_TIME_FROM']);
@@ -873,11 +871,11 @@ class Orders
         $propertyValue->setValue($arBasketItems['ITEMS'][0]['ITEM']['SECTION']['UF_ADDRESS']);
         // Состав гостей
         $propertyValue = $propertyCollection->getItemByOrderPropertyId($this->arPropsIDs['GUESTS_LINE_UP']);
-        $propertyValue->setValue($this->getGuests($arBasketItems['ITEMS'][0]));    
+        $propertyValue->setValue($this->getGuests($arBasketItems['ITEMS'][0]));
         // Дни, ночи
         $propertyValue = $propertyCollection->getItemByOrderPropertyId($this->arPropsIDs['DATES_NIGHTS']);
-        $propertyValue->setValue($params["dateFrom"] . ' - ' . $params["dateTo"] . ' / ' . $arBasketItems['ITEMS'][0]['PROPS']['DAYS_COUNT']);         
-        
+        $propertyValue->setValue($params["dateFrom"] . ' - ' . $params["dateTo"] . ' / ' . $arBasketItems['ITEMS'][0]['PROPS']['DAYS_COUNT']);
+
         // Сумма оплаты по сертификату, если была частичная оплата
         if ($doublePayment) {
             $propertyValue = $propertyCollection->getItemByOrderPropertyId($this->arPropsIDs['CERT_VALUE']);
@@ -915,7 +913,7 @@ class Orders
 
                 // Ссылка на оплату
                 $paymentData = '';
-                if ($params['userbalance'] != 0 && !$doublePayment) {                    
+                if ($params['userbalance'] != 0 && !$doublePayment) {
                     $paymentUrl = $this->orderSuccessLink;
                 } elseif (isset($params['paysystem']) && !in_array($params['paysystem'], $this->paymentTypeId)) {
                     $paymentUrl = false;
@@ -964,13 +962,11 @@ class Orders
                     "REDIRECT_URL" => $paymentUrl,
                     "PAYMENT_DATA" => $paymentData,
                 ]);
-
             } else {
                 return json_encode([
                     "ERROR" => "Произошла ошибка при создании заказа."
                 ]);
             }
-
         } else {
             return json_encode([
                 "ERROR" => "Произошла ошибка при создании заказа: " . implode(", ", $orderRes->getErrorMessages())
@@ -995,13 +991,13 @@ class Orders
 
         $paymentCollection = $order->getPaymentCollection();
 
-        foreach($paymentCollection as $payment) {
-            $paymentId = $payment->getPaymentSystemId();                    
+        foreach ($paymentCollection as $payment) {
+            $paymentId = $payment->getPaymentSystemId();
             if ($paymentId == $this->innerPaymentTypeId) {
                 continue;
-            }            
+            }
             $service = PaySystem\Manager::getObjectById($paymentId);
-            $initResult = $service->initiatePay($payment, $request, PaySystem\BaseServiceHandler::STRING);            
+            $initResult = $service->initiatePay($payment, $request, PaySystem\BaseServiceHandler::STRING);
             if ($initResult->isSuccess()) {
                 $link = $initResult->getTemplate();
                 if ($isYaPay) {
@@ -1010,7 +1006,6 @@ class Orders
                 return ($isJSON) ? json_encode([
                     "LINK" => $link
                 ]) : $link;
-
             } else {
                 return ($isJSON) ? json_encode($initResult->getErrorMessages()) : $initResult->getErrorMessages();
             }
@@ -1068,11 +1063,12 @@ class Orders
      * @return string
      * 
      */
-    private function getGuests($item) : string {
+    private function getGuests($item): string
+    {
         $result = '';
         $countAdults = new Declension('взрослый', 'взрослых', 'взрослых');
         $result = $item['PROPS']['GUESTS_COUNT'] . ' ' . $countAdults->get(intval($item['PROPS']['GUESTS_COUNT']));
-    
+
         if (isset($item['PROPS']['CHILDREN']) && $item['PROPS']['CHILDREN'] != '') {
             $countChildren = new Declension('ребёнок', 'детей', 'детей');
             $children = count(explode(',', $item['PROPS']['CHILDREN']));

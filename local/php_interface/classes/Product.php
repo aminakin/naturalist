@@ -27,18 +27,19 @@ class Products
     private static $bnovoPropEnumXmlId = 'bnovo';
 
     /* Получение товаров */
-    public function getList($arSort = false, $arFilter = false, $arSelect = false) {
-        if(!$arSort) {
+    public function getList($arSort = false, $arFilter = false, $arSelect = false)
+    {
+        if (!$arSort) {
             $arSort = array("SORT" => "ASC");
         }
 
-        if(!$arFilter) {
+        if (!$arFilter) {
             $arFilter = array("IBLOCK_ID" => CATALOG_IBLOCK_ID, "ACTIVE" => "Y");
         } else {
             $arFilter = array_merge(array("IBLOCK_ID" => CATALOG_IBLOCK_ID, "ACTIVE" => "Y"), $arFilter);
         }
 
-        if(!$arSelect) {
+        if (!$arSelect) {
             $arSelect = array("IBLOCK_ID", "ID", "IBLOCK_SECTION_ID", "NAME", "CATALOG_PRICE_1");
         }
 
@@ -51,7 +52,7 @@ class Products
         );
 
         $arProducts = array();
-        while($obItem = $rsItems->GetNextElement()) {
+        while ($obItem = $rsItems->GetNextElement()) {
             $arProduct = $obItem->GetFields();
             $arProduct['PROPERTIES'] = $obItem->GetProperties();
 
@@ -62,8 +63,9 @@ class Products
     }
 
     /* Получение товара по Id */
-    public function get($productId, $arSelect = false) {
-        if(!$arSelect) {
+    public function get($productId, $arSelect = false)
+    {
+        if (!$arSelect) {
             $arSelect = array("IBLOCK_ID", "ID", "IBLOCK_SECTION_ID", "NAME", "CATALOG_PRICE_1");
         }
 
@@ -78,7 +80,7 @@ class Products
             $arSelect
         )->GetNextElement();
 
-        if($obItem) {
+        if ($obItem) {
             $arProduct = $obItem->GetFields();
             $arProduct['PROPERTIES'] = $obItem->GetProperties();
 
@@ -89,7 +91,8 @@ class Products
     }
 
     /* Генерация массива месяцев для фильтра */
-    public static function getDates() {
+    public static function getDates()
+    {
         $arDates = array();
 
         $currMonth = date('m');
@@ -104,30 +107,31 @@ class Products
     }
 
     /* Получение списка свободных объектов в выбранный промежуток */
-    public static function search($guests, $arChildrenAge, $dateFrom, $dateTo, $isGroup = true, $sectionIds = []) {
+    public static function search($guests, $arChildrenAge, $dateFrom, $dateTo, $isGroup = true, $sectionIds = [])
+    {
         // Traveline
         $arResultIDs["traveline"] = Traveline::search($guests, $arChildrenAge, $dateFrom, $dateTo, $sectionIds);
         // Bnovo
         $bnovo = new Bnovo();
-        $arResultIDs["bnovo"] = $bnovo->search($guests, $arChildrenAge, $dateFrom, $dateTo);
+        $arResultIDs["bnovo"] = $bnovo->search($guests, $arChildrenAge, $dateFrom, $dateTo, $sectionIds);
 
         return ($isGroup) ? $arResultIDs : $arResultIDs["traveline"] + $arResultIDs["bnovo"];
     }
 
     /* Получение списка свободных номеров объекта в выбранный промежуток */
-    public static function searchRooms($sectionId, $externalId, $serviceType, $guests, $arChildrenAge, $dateFrom, $dateTo, $minChildAge = 0) {
-        if(!$externalId) {
+    public static function searchRooms($sectionId, $externalId, $serviceType, $guests, $arChildrenAge, $dateFrom, $dateTo, $minChildAge = 0)
+    {
+        if (!$externalId) {
             return false;
         }
 
         $error = '';
 
-        if($serviceType == self::$travelinePropEnumXmlId) { // Traveline
+        if ($serviceType == self::$travelinePropEnumXmlId) { // Traveline
             $arResult = Traveline::searchRooms($sectionId, $externalId, $guests, $arChildrenAge, $dateFrom, $dateTo, $minChildAge);
             $arRooms = $arResult['arItems'];
             $error = $arResult['error'];
-
-        } elseif($serviceType == self::$bnovoPropEnumXmlId) { // Bnovo
+        } elseif ($serviceType == self::$bnovoPropEnumXmlId) { // Bnovo
             $bnovo = new Bnovo();
             $arResult = $bnovo->searchRooms($sectionId, $externalId, $guests, $arChildrenAge, $dateFrom, $dateTo);
             $arRooms = $arResult['arItems'];
@@ -139,7 +143,7 @@ class Products
             'error' => $error,
         ];
     }
-    
+
     /**
      * Возвращает данные по скидке
      *
@@ -148,11 +152,12 @@ class Products
      * @return array Массив данных о скидке на товар
      * 
      */
-    public static function getDiscount ($prodId, $price) {
+    public static function getDiscount($prodId, $price)
+    {
         global $USER;
 
-        $arDiscounts = CCatalogDiscount::GetDiscountByProduct($prodId, $USER->GetUserGroupArray(), "N");        
-        
+        $arDiscounts = CCatalogDiscount::GetDiscountByProduct($prodId, $USER->GetUserGroupArray(), "N");
+
         if (count($arDiscounts)) {
             $discountPrice = CCatalogProduct::CountPriceWithDiscount(
                 $price,
@@ -175,10 +180,11 @@ class Products
      * @param mixed $prodId ID товара     
      * 
      */
-    public static function setQuantity($prodId) {
+    public static function setQuantity($prodId)
+    {
         $arFields = [
             "ID" => $prodId,
-            "QUANTITY" => 999,	    
+            "QUANTITY" => 999,
         ];
         CCatalogProduct::Add($arFields);
     }
@@ -189,18 +195,19 @@ class Products
      * @param mixed $prodId ID товара     
      * 
      */
-    public static function setPrice($prodId) {
+    public static function setPrice($prodId)
+    {
         $arFields = [
             "PRODUCT_ID" => $prodId,
             "CATALOG_GROUP_ID" => 1,
             "PRICE" => 10000,
-            "CURRENCY" => "RUB",	    
+            "CURRENCY" => "RUB",
         ];
         $res = CPrice::GetList([], ["PRODUCT_ID" => $prodId, "CATALOG_GROUP_ID" => 1]);
         if ($arr = $res->Fetch()) {
             CPrice::Update($arr["ID"], $arFields);
         } else {
             CPrice::Add($arFields);
-        }	
+        }
     }
 }

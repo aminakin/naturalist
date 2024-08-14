@@ -1,5 +1,6 @@
 <?php
 require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/header.php");
+LocalRedirect('/404.php');
 $APPLICATION->SetTitle("Промо");
 $APPLICATION->SetAdditionalCSS(SITE_TEMPLATE_PATH . '/assets/css/index.css');
 $APPLICATION->SetAdditionalCSS(SITE_TEMPLATE_PATH . '/assets/css/promo.css');
@@ -211,7 +212,7 @@ $arMeteo = Users::getMeteo($coords);
                     "EDIT_TEMPLATE" => ""
                 )
             );
-            ?>            
+            ?>
         </div>
     </section>
     <!--<div class="container">

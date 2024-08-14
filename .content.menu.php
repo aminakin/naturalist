@@ -55,13 +55,6 @@ $aMenuLinks = Array(
 		Array(), 
 		Array(), 
 		"" 
-	),
-	Array(
-		"Правила проведения розыгрыша призов \"Колесо фортуны\"", 
-		SITE_DIR."/rules/", 
-		Array(), 
-		Array(), 
-		"" 
 	)
 );
 ?>
