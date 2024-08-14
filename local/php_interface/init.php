@@ -32,7 +32,12 @@ Loader::registerAutoLoadClasses(null, array(
     'Naturalist\Certificates\Activate' => '/local/php_interface/classes/Certificates/Activate.php',
     'Naturalist\Certificates\CatalogHelper' => '/local/php_interface/classes/Certificates/CatalogHelper.php',
     'Naturalist\Certificates\OrderHelper' => '/local/php_interface/classes/Certificates/OrderHelper.php',
-    'Naturalist\Crest' => '/local/php_interface/classes/Crest.php',    
+    'Naturalist\Crest' => '/local/php_interface/classes/Crest.php',
+    'Naturalist\Filters\EventsHandler' => '/local/php_interface/classes/Filters/EventsHandler.php',
+    'Naturalist\Filters\UrlHandler' => '/local/php_interface/classes/Filters/UrlHandler.php',
+    'Naturalist\Filters\AutoCreate' => '/local/php_interface/classes/Filters/AutoCreate.php',
+    'Naturalist\Filters\Sitemap' => '/local/php_interface/classes/Filters/Sitemap.php',
+
 ));
 
 // Константы

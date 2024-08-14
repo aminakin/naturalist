@@ -21,6 +21,7 @@ use Naturalist\Crest;
 use Naturalist\CatalogCustomProp;
 use Bitrix\Main\Diag\Debug;
 use Naturalist\HighLoadBlockHelper;
+use Naturalist\Filters\EventsHandler;
 
 defined("B_PROLOG_INCLUDED") && B_PROLOG_INCLUDED === true || die();
 /**
@@ -36,6 +37,8 @@ class Events
     {
         $event = EventManager::getInstance();
 
+        $event->addEventHandler("main", "OnPageStart", [EventsHandler::class, 'PageStart']);
+        $event->addEventHandler("main", "OnEpilog", [EventsHandler::class, 'OnEpilog']);
         $event->addEventHandler('main', 'OnBeforeProlog', [self::class, "initGlobals"]);
         $event->addEventHandler('main', 'OnBeforeProlog', [self::class, "tgAuth"]);
         $event->addEventHandler('main', 'OnEndBufferContent', [self::class, "deleteKernelJs"]);
