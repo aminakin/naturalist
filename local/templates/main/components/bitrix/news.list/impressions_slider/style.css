@@ -5,8 +5,11 @@
 }
 
 .impressions-slider.container{
-    position: relative;
     padding-top: 7.6rem;
+}
+
+.impressions-slider.container .impressions-slider__wrap{
+    position: relative;
 }
 
 .impressions-slider__title{
@@ -71,11 +74,11 @@
 }
 
 .impressions-slider .swiper-button-prev {
-    left: 34px;
+    left: -19px;
 }
 
 .impressions-slider .swiper-button-next {
-    right: 34px;
+    right: -19px;
 }
 
 .impressions-slider .impressions-slider__more{

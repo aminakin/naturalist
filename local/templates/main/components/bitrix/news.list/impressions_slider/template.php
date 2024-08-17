@@ -5,6 +5,7 @@ Loc::loadMessages(__FILE__);
 
 <?if(count($arResult["ITEMS"]) > 0):?>
     <div class="impressions-slider container">  
+	<div class="impressions-slider__wrap">  
 		<div class="impressions-slider__title">
 			<span><?= Loc::getMessage('IMPRESSIONS_TITLE');?></span>
 			<a href="/impressions/" class="all-link"><?= Loc::getMessage('IMPRESSIONS_WATCH_ALL');?></a>
@@ -62,6 +63,7 @@ Loc::loadMessages(__FILE__);
 				</defs>
 			</svg>
         </div>
+		</div>
 		<a href="/impressions/" class="impressions-slider__more button"><?= Loc::getMessage('IMPRESSIONS_MORE');?></a>
 	</div>
 <?endif;?>

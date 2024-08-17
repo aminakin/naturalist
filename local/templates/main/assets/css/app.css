@@ -4301,11 +4301,11 @@ img.lazy.loaded {
   width: auto;
   display: inline-block;
   border-radius: 9px;
-  background-color: #00000099;
+  background-color: #00000060;
 }
 
 .slider-gallery .swiper-pagination-bullets .swiper-pagination-bullet {
-  background-color: #00000020;
+  background-color: #ffffff20;
   border-radius: 50%;
   height: 5px;
   opacity: 1;
@@ -4351,6 +4351,10 @@ img.lazy.loaded {
 
 .slider-gallery_large .swiper-button-next {
   right: 3.2rem;
+}
+
+.modal__container .slider-gallery_large .swiper-pagination-bullets {
+  position: absolute;
 }
 
 .slider-gallery_large .swiper-pagination-bullets {

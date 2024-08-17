@@ -59,8 +59,10 @@ use Bitrix\Main\Localization\Loc;
                                 <div class="autocomplete-dropdown" data-autocomplete-dropdown>
                                     
                                 </div>
+                                <div class="autocomplete-dropdown-close-wrap">
                                 <div class="autocomplete-dropdown-close">
                                     Закрыть
+                                </div>
                                 </div>
                             </div>
                         </div>
