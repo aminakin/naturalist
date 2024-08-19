@@ -26,14 +26,17 @@ class AutoCreate
             ?->fetchAll();
 
         foreach ($query as $value) {
-            $links[] = [
-                'UF_NEW_URL' => '/catalog/' . self::getNewUrl($value['UF_SKLON']),
-                'UF_REAL_URL' => '/catalog/?types=' . $value['ID'],
-                'UF_ACTIVE' => 1,
-                'UF_H1' => $value['UF_SKLON'] . ' России',
-                'UF_TITLE' => $value['UF_SKLON'] . TITLE_PATTERN,
-                'UF_DESCRIPTION' => DESCRIPTION_START_PATTERN . mb_strtolower($value['UF_SKLON']) . DESCRIPTION_END_PATTERN,
-            ];
+            if ($value['UF_SKLON'] != '') {
+                $links[] = [
+                    'UF_NEW_URL' => '/catalog/' . self::getNewUrl($value['UF_SKLON']),
+                    'UF_REAL_URL' => '/catalog/?types=' . $value['ID'],
+                    'UF_ACTIVE' => 1,
+                    'UF_H1' => $value['UF_SKLON'] . ' России',
+                    'UF_TITLE' => $value['UF_SKLON'] . TITLE_PATTERN,
+                    'UF_DESCRIPTION' => DESCRIPTION_START_PATTERN . mb_strtolower($value['UF_SKLON']) . DESCRIPTION_END_PATTERN,
+                    'UF_FILTER_ID' => TYPES_HL_ENTITY . '_' . $value['ID'],
+                ];
+            }
         }
 
         if (isset($links) && is_array($links)) {
@@ -56,14 +59,17 @@ class AutoCreate
             ?->fetchAll();
 
         foreach ($query as $value) {
-            $links[] = [
-                'UF_NEW_URL' => '/catalog/' . self::getNewUrl($value['UF_SKLON']),
-                'UF_REAL_URL' => '/catalog/?name={"type":"area","item":"' . $value['UF_NAME'] . '","title":"' . $value['UF_NAME'] . '","footnote":""}',
-                'UF_ACTIVE' => 1,
-                'UF_H1' => 'Отдых на природе ' . $value['UF_SKLON'],
-                'UF_TITLE' => 'Отдых на природе ' . $value['UF_SKLON'] . ': цены, рейтинг, отзывы | Натуралист',
-                'UF_DESCRIPTION' => 'Отдых на природе ' . $value['UF_SKLON'] . '. Аренда домиков по лучшей цене с быстрым бронированием.',
-            ];
+            if ($value['UF_SKLON'] != '') {
+                $links[] = [
+                    'UF_NEW_URL' => '/catalog/' . self::getNewUrl($value['UF_SKLON']),
+                    'UF_REAL_URL' => '/catalog/?name={"type":"area","item":"' . $value['UF_NAME'] . '","title":"' . $value['UF_NAME'] . '","footnote":""}',
+                    'UF_ACTIVE' => 1,
+                    'UF_H1' => 'Отдых на природе ' . $value['UF_SKLON'],
+                    'UF_TITLE' => 'Отдых на природе ' . $value['UF_SKLON'] . ': цены, рейтинг, отзывы | Натуралист',
+                    'UF_DESCRIPTION' => 'Отдых на природе ' . $value['UF_SKLON'] . '. Аренда домиков по лучшей цене с быстрым бронированием.',
+                    'UF_FILTER_ID' => REGIONS_HL_ENTITY . '_' . $value['ID'],
+                ];
+            }
         }
 
         if (isset($links) && is_array($links)) {
