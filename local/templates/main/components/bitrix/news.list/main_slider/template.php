@@ -1,0 +1,21 @@
+<?
+use Bitrix\Main\Localization\Loc;
+Loc::loadMessages(__FILE__);
+\Bitrix\Main\Loader::includeModule('iblock');
+?>
+
+<?if(count($arResult["ITEMS"]) > 0):?>
+    <div class="main-slider container">  
+		<div class="swiper-container"  data-speed="<?= CIBlock::GetArrayByID($arResult["ITEMS"][0]["IBLOCK_ID"], "DESCRIPTION");?>">
+			<ul class="swiper-wrapper">
+				<?foreach($arResult["ITEMS"] as $arItem):?>
+					<?
+					$this->AddEditAction($arItem['ID'], $arItem['EDIT_LINK'], CIBlock::GetArrayByID($arItem["IBLOCK_ID"], "ELEMENT_EDIT"));
+					$this->AddDeleteAction($arItem['ID'], $arItem['DELETE_LINK'], CIBlock::GetArrayByID($arItem["IBLOCK_ID"], "ELEMENT_DELETE"), array("CONFIRM" => Loc::GetMessage('CT_BNL_ELEMENT_DELETE_CONFIRM')));
+					?>
+					<li class="swiper-slide" id="<?=$this->GetEditAreaId($arItem['ID'])?>" style="background-image: url('<?=$arItem["PREVIEW_PICTURE"]["SRC"]?>')"></li>
+				<?endforeach;?>
+			</ul>
+		</div>
+	</div>
+<?endif;?>

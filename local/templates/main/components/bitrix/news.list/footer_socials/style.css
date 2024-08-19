@@ -1,0 +1,10 @@
+.footer__social .list{
+    margin: 32px auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.footer__social .list li:not(:last-child){
+    margin-right: 16px;
+}

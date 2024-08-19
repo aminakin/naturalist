@@ -1,41 +1,27 @@
-.subscribe-form {
-  background-color: var(--color-beige);
-  border-top: 1.5px solid var(--color-black);
-  border-bottom: 1.5px solid var(--color-black);
-  position: relative;
+.subscribe-form{
+  padding-top: 7.6rem;
 }
 
-.subscribe-form::before {
-  content: "";
-  position: absolute;
-  width: 50%;
-  top: 0;
-  right: 0;
-  height: 100%;
-  background-image: url("img/back-desc.jpg");
+.subscribe-form__wrap {
+  background-color: var(--color-beige);
+  position: relative;
+  background-image: url("img/background.png");
   background-position: center;
   background-size: cover;
   background-repeat: no-repeat;
-  border-left: 1.5px solid var(--color-black);
-}
-
-.subscribe-form .container {
-  display: grid;
-  grid-template-columns: 50% 50%;
-}
-
-.subscribe-form__left {
-  padding: 43px 0;
-}
-
-.subscribe-form__right {
+  padding: 48px 16px;
+  border-radius: 16px;
+  width: 100%;
+  text-align: center;
 }
 
 .subscribe-form form {
   text-align: center;
-  margin: 0.78rem auto 0 auto;
+  margin: 32px auto 8px;
   display: flex;
-  flex-wrap: wrap;
+  justify-content: center;
+  max-width: 560px;
+  position: relative;
 }
 
 .subscribe__label {
@@ -48,82 +34,81 @@
 
 .input__error {
   display: none;
-  text-align: left;
-  margin-top: 6px;
+  text-align: center;
   color: var(--color-red);
-  font-size: 0.6rem;
+  font-size: 14px;
   font-weight: 500;
   line-height: 120%;
+  position: absolute;
+  top: -22px;
 }
 
 .subscribe-form__title {
-  font-size: 24px;
-  font-weight: 600;
-  text-transform: uppercase;
-  font-family: "TT Travels Next";
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 36px;
   margin: 0 auto;
   color: var(--color-black);
+  margin-bottom: 12px;
 }
 
 .subscribe-form__subtitle {
-  margin: 9px 0 0 0;
-  font-family: "TT Travels Next";
-  font-size: 11px;
-  color: var(--color-black);
-  font-weight: 500;
-  line-height: normal;
+  font-size: 16px;
+  line-height: 22px;
+  color: #434956;
+  font-weight: 400;
 }
 
 .subscribe__input {
-  width: 70%;
-  max-width: 485px;
-  padding: 0.5rem 0.5rem;
+  padding: 11px;
+  width: 100%;
   font-weight: 500;
-  line-height: 142%;
-  border: none;
-  height: 40px;
-  font-size: 11px;
+  border: 1px solid transparent;
+  height: 42px;
+  font-size: 16px;
+  line-height: 22px;
+  background-color: var(--color-beige-light);
+  box-sizing: border-box;
+  margin-right: 12px;
+  border-radius: 12px;
 }
 
 .subscribe__input.error {
   color: var(--color-red);
+  border: 1px solid var(--color-red);
 }
 
 .subscribe__input::placeholder {
-  color: #adadad;
+  color: #80899C;
 }
 
 .subscribe__submit {
-  height: 40px;
-  padding: 0.52rem 1.5rem;
-  font-size: 11px;
-  color: var(--color-black);
-  font-weight: 700;
-  line-height: 143%;
-  text-transform: uppercase;
+  height: 44px;
+  padding: 0 20px;
+  font-size: 16px;
+  color: var(--color-white);
+  font-weight: 600;
   background-color: var(--color-orange);
   border: none;
-  border-radius: 2px;
+  border-radius: 12px;
 }
 
 .subscribe-form__agree {
-  margin-top: 6px;
-  font-size: 9px;
-  color: var(--color-black);
+  font-size: 13px;
+  line-height: 18px;
+  color: #434956;
   font-weight: 500;
-  line-height: normal;
 }
 
 #subscribe_result .modal__title {
   font-size: 21px;
   font-weight: 600;
   line-height: normal;
-  font-family: "TT Travels Next";
   text-align: center;
 }
 
 #subscribe_result .modal__subtitle {
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 500;
   line-height: normal;
   text-align: center;
@@ -133,164 +118,43 @@
   max-width: 404px;
 }
 
-@media (max-width: 1200px) {
-  .subscribe-form__title {
-    font-size: 20px;
-    font-style: normal;
-    font-weight: 600;
-    line-height: normal;
-    text-align: left;
-    max-width: 400px;
-    margin: 0;
+@media (max-width: 768px) {
+  .subscribe-form__wrap{
+    padding: 20px 16px;
   }
 
-  .subscribe-form__subtitle {
-    margin-top: 9px;
-    font-size: 11px;
-    max-width: 350px;
+  .subscribe-form{
+    padding-top: 40px;
   }
 
-  .subscribe-form form {
-    margin-top: 15px;
-    justify-content: flex-start;
+  .subscribe-form__title{
+    font-size: 18px;
+    line-height: 24px;
+  }
+  
+  .subscribe-form__subtitle{
+    font-size: 14px;
+    line-height: 20px;
   }
 
-  .subscribe__input {
-    max-width: 320px;
-    height: 40px;
-    width: 305px;
-    padding: 8px 12px;
-    line-height: initial;
+  .subscribe-form form{
+    flex-wrap: wrap;
+    flex-direction: column;
   }
 
-  .subscribe__submit {
-    font-size: 7px;
-    line-height: 9px;
-    font-weight: bold;
-    width: 85px;
-    padding: 11px 0;
-    height: 40px;
+  .subscribe__input{
+    max-width: 100%;
+    margin-right: 0;
   }
 
-  .input__error {
-    width: 100%;
-    margin-top: 6px;
-    font-size: 9px;
-    line-height: normal;
-    white-space: normal;
+  .subscribe__submit{
+    max-width: 100%;
+    margin-top: 12px;
   }
-
-  .subscribe-form__agree {
-    text-align: left;
-    line-height: normal;
-  }
-
-  #subscribe_result .modal__container {
-    min-height: unset;
-  }
-
-  #subscribe_result {
-    z-index: 9999;
-  }
-
-  .subscribe-form::before {
-    width: 33%;
-    background-image: url("img/back-tab.jpg");
-  }
-
-  .subscribe-form .container {
-    grid-template-columns: 67% 33%;
-  }
-
-  .subscribe-form__left {
-    padding: 30px 0;
-  }
-}
-
-@media (max-width: 450px) {
-  .subscribe-form__title {
-    font-size: 20px;
-    font-style: normal;
-    font-weight: 600;
-    line-height: normal;
-    text-align: left;
-  }
-
-  .subscribe-form__subtitle {
-    display: none;
-  }
-
-  .subscribe-form form {
-    margin-top: 15px;
-    justify-content: space-between;
-  }
-
-  .subscribe__input {
-    height: 40px;
-    width: 50%;
-    padding: 8px 12px;
-    font-size: 13px;
-    line-height: 180%;
-    -webkit-border-radius: 3px;
-    -moz-border-radius: 3px;
-    border-radius: 3px;
-  }
-
-  .subscribe__submit {
-    width: calc(50% - 7px);
-    margin-left: 7px;
-    padding: 11px 18px;
-    height: 40px;
-    font-size: 13px;
-    letter-spacing: 0.52px;
-    line-height: 17.979px;
-    font-weight: 600;
-    text-transform: none;
-
-    -webkit-appearance: none;
-    -webkit-border-radius: 3px;
-    -moz-border-radius: 3px;
-    border-radius: 3px;
-  }
-
-  .input__error {
-    width: 100%;
-    margin-top: 10px;
-    font-size: 10px;
-    line-height: normal;
-    white-space: normal;
-  }
-
-  .subscribe-form__agree {
-    text-align: left;
+  
+  .input__error{
     font-size: 12px;
-    line-height: normal;
-  }
-
-  #subscribe_result .modal__container {
-    min-height: unset;
-  }
-
-  #subscribe_result {
-    z-index: 9999;
-  }
-
-  .subscribe-form::before {
-    display: none;
-  }
-
-  .subscribe-form {
-    background-image: url("img/back-mob.jpg");
-    background-position: center;
-    background-size: cover;
-    background-repeat: no-repeat;
-  }
-
-  .subscribe-form .container {
-    display: block;
-  }
-
-  .subscribe-form__left {
-    padding: 30px 0;
+    line-height: 16px;
+    top: -33px;
   }
 }

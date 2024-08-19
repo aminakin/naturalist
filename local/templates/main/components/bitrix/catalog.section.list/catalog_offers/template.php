@@ -74,39 +74,41 @@ Loc::loadMessages(__FILE__);
                             <? endif; ?>
                         </div>
 
-                        <button class="favorite"
-                                <? if ($arResult["FAVOURITES"] && in_array($arItem["ID"], $arResult["FAVOURITES"])) : ?>data-favourite-remove<? else: ?>data-favourite-add<? endif; ?>
-                                data-id="<?= $arItem["ID"] ?>">
-                            <? if ($arResult["FAVOURITES"] && in_array($arItem["ID"], $arResult["FAVOURITES"])) : ?>
-                                <img src="<?= SITE_TEMPLATE_PATH ?>/assets/img/favorite-active.svg" alt>
-                            <? else : ?>
-                                <img src="<?= SITE_TEMPLATE_PATH ?>/assets/img/favorite.svg" alt>
-                            <? endif; ?>
+                        <button class="favorite<?= ($arFavourites && in_array($arItem["ID"], $arFavourites))?' active':''?>"
+                            <? if ($arResult["FAVOURITES"] && in_array($arItem["ID"], $arResult["FAVOURITES"])) : ?>data-favourite-remove<? else: ?>data-favourite-add<? endif; ?>
+                            data-id="<?= $arItem["ID"] ?>">
+                            <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd" clip-rule="evenodd" d="M3.77566 2.51612C6.01139 1.14472 8.01707 1.69128 9.22872 2.60121C9.42805 2.75091 9.56485 2.85335 9.6667 2.92254C9.76854 2.85335 9.90535 2.75091 10.1047 2.60121C11.3163 1.69128 13.322 1.14472 15.5577 2.51612C17.1037 3.4644 17.9735 5.44521 17.6683 7.72109C17.3616 10.008 15.8814 12.5944 12.7467 14.9146C12.7205 14.934 12.6945 14.9533 12.6687 14.9724C11.5801 15.7786 10.8592 16.3125 9.6667 16.3125C8.47415 16.3125 7.75326 15.7786 6.66473 14.9724C6.63893 14.9533 6.61292 14.934 6.5867 14.9146C3.452 12.5944 1.97181 10.008 1.6651 7.72109C1.35986 5.44521 2.22973 3.4644 3.77566 2.51612ZM9.54914 2.99503C9.54673 2.99611 9.54716 2.99576 9.55019 2.99454L9.54914 2.99503ZM9.78321 2.99454C9.78624 2.99576 9.78667 2.99611 9.78426 2.99503L9.78321 2.99454Z" fill="#E39250"/>
+                            </svg>
                         </button>
                     </div>
-
-                    <div class="object__heading">
-                        <a class="object__title" href="<?= $arItem["URL"] ?>"><?= $arItem["NAME"] ?></a>
-                        <a href="<?=$arItem["URL"]?>#reviews-anchor" style="display: flex;font-size: 1.3rem;margin-left: 0;" class="score">
-                            <img src="<?= SITE_TEMPLATE_PATH ?>/assets/img/score.svg" alt>
-                            <span><?= $arItem["RATING"] ?></span>
-                        </a>
-                    </div>
-
-                    <div class="object__marker">
-                        <div class="area-info">
-                            <img src="<?= SITE_TEMPLATE_PATH ?>/assets/img/marker.svg" alt>
-                            <div><span><?= $arItem["UF_ADDRESS"] ?></span></div>
+                    <div class="object__info">            
+                        <div class="object__heading">
+                            <a class="object__title" href="<?= $arItem["URL"] ?>"><?= $arItem["NAME"] ?></a>
+                            <a href="<?=$arItem["URL"]?>#reviews-anchor" style="display: flex;font-size: 1.3rem;margin-left: 0;" class="score">
+                                <img src="<?= SITE_TEMPLATE_PATH ?>/assets/img/score.svg" alt>
+                                <span><?= $arItem["RATING"] ?></span>
+                            </a>
                         </div>
 
-                        <div class="object__marker-map">
-                            <a href="<?= $arItem["URL"] ?>#map">На карте</a>
+                        <div class="object__marker">
+                            <div class="area-info">
+                                <img src="<?= SITE_TEMPLATE_PATH ?>/assets/img/marker.svg" alt>
+                                <div><span><?= $arItem["UF_ADDRESS"] ?></span></div>
+                            </div>
+
+                            <div class="object__marker-map">
+                                <a href="<?= $arItem["URL"] ?>#map">На карте</a>
+                            </div>
+                        </div>
+
+                        <div class="object__price">
+                            <?= number_format($arItem["UF_MIN_PRICE"], 0, '.', ' ') ?> ₽
                         </div>
                     </div>
 
                     <a class="button button_transparent" onclick="VK.Goal('customize_product')"
-                       href="<?= $arItem["URL"] ?>"><?= number_format($arItem["UF_MIN_PRICE"], 0, '.', ' ') ?>
-                        ₽</a>
+                       href="<?= $arItem["URL"] ?>"><?= Loc::getMessage('FILTER_CHOOSE')?></a>
                 </div>
             <? endforeach; ?>
         </div>
@@ -203,53 +205,54 @@ Loc::loadMessages(__FILE__);
                                     <? endif; ?>
                                 </div>
 
-                                <button class="favorite" data-favourite-add data-id="<?= $arItem["ID"] ?>">
-                                    <? if ($arResult["FAVOURITES"] && in_array($arItem["ID"], $arResult["FAVOURITES"])): ?>
-                                        <img src="<?= SITE_TEMPLATE_PATH ?>/assets/img/favorite-active.svg" alt>
-                                    <? else: ?>
-                                        <img src="<?= SITE_TEMPLATE_PATH ?>/assets/img/favorite.svg" alt>
-                                    <? endif; ?>
+                                <button class="favorite <?= ($arFavourites && in_array($arItem["ID"], $arFavourites))?' active':''?>" data-favourite-add data-id="<?= $arItem["ID"] ?>">
+                                    <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M3.77566 2.51612C6.01139 1.14472 8.01707 1.69128 9.22872 2.60121C9.42805 2.75091 9.56485 2.85335 9.6667 2.92254C9.76854 2.85335 9.90535 2.75091 10.1047 2.60121C11.3163 1.69128 13.322 1.14472 15.5577 2.51612C17.1037 3.4644 17.9735 5.44521 17.6683 7.72109C17.3616 10.008 15.8814 12.5944 12.7467 14.9146C12.7205 14.934 12.6945 14.9533 12.6687 14.9724C11.5801 15.7786 10.8592 16.3125 9.6667 16.3125C8.47415 16.3125 7.75326 15.7786 6.66473 14.9724C6.63893 14.9533 6.61292 14.934 6.5867 14.9146C3.452 12.5944 1.97181 10.008 1.6651 7.72109C1.35986 5.44521 2.22973 3.4644 3.77566 2.51612ZM9.54914 2.99503C9.54673 2.99611 9.54716 2.99576 9.55019 2.99454L9.54914 2.99503ZM9.78321 2.99454C9.78624 2.99576 9.78667 2.99611 9.78426 2.99503L9.78321 2.99454Z" fill="#E39250"/>
+                                    </svg>
                                 </button>
 
                                 <? if (!empty($arItem["UF_ACTION"])): ?>
                                     <div class="tag"><?= $arItem["UF_ACTION"] ?></div>
                                 <? endif; ?>
                             </div>
-
-                            <div class="object__heading">
-                                <a class="object__title"
-                                   href="<?= $arItem["URL"] ?>"><?= $arItem["NAME"] ?></a>
-                                <a href="<?=$arItem["URL"]?>#reviews-anchor" style="display: flex;font-size: 1.3rem;margin-left: 0;" class="score">
-                                    <img src="<?= SITE_TEMPLATE_PATH ?>/assets/img/score.svg" alt>
-                                    <span><?= $arItem["RATING"] ?></span>
-                                </a>
-                            </div>
-
-                            <div class="object__marker">
-                                <div class="area-info">
-                                    <img src="<?= SITE_TEMPLATE_PATH ?>/assets/img/marker.svg" alt>
-                                    <div><span><?= $arItem["UF_ADDRESS"] ?></span></div>
+                            <div class="object__info">  
+                                <div class="object__heading">
+                                    <a class="object__title"
+                                       href="<?= $arItem["URL"] ?>"><?= $arItem["NAME"] ?></a>
+                                    <a href="<?=$arItem["URL"]?>#reviews-anchor" style="display: flex;font-size: 1.3rem;margin-left: 0;" class="score">
+                                        <img src="<?= SITE_TEMPLATE_PATH ?>/assets/img/score.svg" alt>
+                                        <span><?= $arItem["RATING"] ?></span>
+                                    </a>
                                 </div>
 
-                                <div class="object__marker-map">
-                                    <a href="<?= $arItem["URL"] ?>#map">На карте</a>
+                                <div class="object__marker">
+                                    <div class="area-info">
+                                        <img src="<?= SITE_TEMPLATE_PATH ?>/assets/img/marker.svg" alt>
+                                        <div><span><?= $arItem["UF_ADDRESS"] ?></span></div>
+                                    </div>
+
+                                    <div class="object__marker-map">
+                                        <a href="<?= $arItem["URL"] ?>#map">На карте</a>
+                                    </div>
                                 </div>
-                            </div>
-                            <?
-                            if(isset($arResult["SECTIONS_EXTERNAL"][$arItem["UF_EXTERNAL_ID"]]) && !empty($arResult["SECTIONS_EXTERNAL"][$arItem["UF_EXTERNAL_ID"]])) {
-                                $sectionPrice = $arResult["SECTIONS_EXTERNAL"][$arItem["UF_EXTERNAL_ID"]];
-                                // Если это Traveline, то делим цену на кол-во дней
-                                if($arItem["UF_EXTERNAL_SERVICE"] == 1) {
-                                    $sectionPrice = round($sectionPrice / $arResult["DAYS_COUNT"]);
+                                <?
+                                if(isset($arResult["SECTIONS_EXTERNAL"][$arItem["UF_EXTERNAL_ID"]]) && !empty($arResult["SECTIONS_EXTERNAL"][$arItem["UF_EXTERNAL_ID"]])) {
+                                    $sectionPrice = $arResult["SECTIONS_EXTERNAL"][$arItem["UF_EXTERNAL_ID"]];
+                                    // Если это Traveline, то делим цену на кол-во дней
+                                    if($arItem["UF_EXTERNAL_SERVICE"] == 1) {
+                                        $sectionPrice = round($sectionPrice / $arResult["DAYS_COUNT"]);
+                                    }
+                                } else {
+                                    $sectionPrice = $arItem["UF_MIN_PRICE"];
                                 }
-                            } else {
-                                $sectionPrice = $arItem["UF_MIN_PRICE"];
-                            }
-                            $arItem["PRICE"] = $sectionPrice;?>
+                                $arItem["PRICE"] = $sectionPrice;?>
+                                <div class="object__price">
+                                    <?= number_format($arItem["PRICE"], 0, '.', ' ') ?> ₽
+                                </div>
+                            </div>
 
                             <a class="button button_transparent" onclick="VK.Goal('customize_product')"
-                               href="<?= $arItem["URL"] ?>"><?= number_format($arItem["PRICE"], 0, '.', ' ') ?>
-                                ₽</a>
+                               href="<?= $arItem["URL"] ?>"><?= Loc::getMessage('FILTER_CHOOSE')?></a>
                         </div>
                     </div>
                 <? endforeach; ?>

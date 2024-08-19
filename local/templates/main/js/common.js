@@ -434,12 +434,7 @@ $(function () {
       success: function (a) {
         if (!a.ERROR) {
           if (a.RELOAD) {
-            element
-              .children("img")
-              .attr(
-                "src",
-                "/local/templates/main/assets/img/favorite-active.svg"
-              );
+            element.addClass("active");
             element.removeAttr("data-favourite-add");
             element.attr("data-favourite-remove", "");
 
@@ -480,9 +475,7 @@ $(function () {
       success: function (a) {
         if (!a.ERROR) {
           if (a.RELOAD) {
-            element
-              .children("img")
-              .attr("src", "/local/templates/main/assets/img/favorite.svg");
+            element.removeClass("active");;
             element.removeAttr("data-favourite-remove");
             element.attr("data-favourite-add", "");
 

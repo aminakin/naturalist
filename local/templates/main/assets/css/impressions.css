@@ -3,7 +3,7 @@
   border-bottom: 0.1rem solid var(--color-black);
   border-top: 0.1rem solid #000;
   border-top: 0.1rem solid var(--color-black);
-  font-family: TT Travels Next;
+  font-family: Lato;
   font-family: var(--header-text-font-family);
   font-size: 2.1rem;
   font-weight: 500;
@@ -88,7 +88,7 @@
 .list_impressions .list__item-title {
   border-top: 0.1rem solid #000;
   border-top: 0.1rem solid var(--color-black);
-  font-family: TT Travels Next;
+  font-family: Lato;
   font-family: var(--header-text-font-family);
   font-size: 2.1rem;
   font-weight: 700;

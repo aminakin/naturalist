@@ -1,6 +1,6 @@
 .cert-review__user-name {
   margin-top: 16px;
-  font-family: "TT Travels Next";
+  font-family: "Lato";
   font-size: 21px;
   line-height: 19px;
   font-weight: 600;
@@ -36,7 +36,7 @@
     display: block;
     width: max-content;
     margin: 24px auto 0 auto;
-    font-family: "TT Travels Next";
+    font-family: "Lato";
     font-size: 13px;
     line-height: 19px;
     font-weight: 500;

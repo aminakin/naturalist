@@ -1,0 +1,60 @@
+<?
+$aMenuLinks = Array(
+	Array(
+		"Карта", 
+		SITE_DIR."/map/", 
+		Array(), 
+		Array(), 
+		"" 
+	),
+	Array(
+		"Каталог", 
+		SITE_DIR."/catalog/", 
+		Array(), 
+		Array(), 
+		"" 
+	),
+	Array(
+		"Подборки", 
+		SITE_DIR."/impressions/", 
+		Array(), 
+		Array(), 
+		"" 
+	),
+	Array(
+		"О проекте", 
+		SITE_DIR."/about/", 
+		Array(), 
+		Array(), 
+		"" 
+	),
+	Array(
+		"Политика конфиденциальности", 
+		SITE_DIR."/policy/", 
+		Array(), 
+		Array(), 
+		"" 
+	),
+	Array(
+		"Политика отмены заказов", 
+		SITE_DIR."/cancel/", 
+		Array(), 
+		Array(), 
+		"" 
+	),
+	Array(
+		"Объектам размещения", 
+		SITE_DIR."/objects/", 
+		Array(), 
+		Array(), 
+		"" 
+	),
+	Array(
+		"Контакты", 
+		SITE_DIR."/contacts/", 
+		Array(), 
+		Array(), 
+		"" 
+	)
+);
+?>

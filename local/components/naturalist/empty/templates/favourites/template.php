@@ -1,4 +1,6 @@
 <?
+
+use Bitrix\Main\Localization\Loc;
 use Bitrix\Main\Web\Uri;
 
 foreach($arResult as $key => $value) {
@@ -263,31 +265,34 @@ foreach($arResult as $key => $value) {
                                                 <div class="tag"><?= $arSection["UF_ACTION"] ?></div>
                                             <? endif; ?>
                                         </div>
-
-                                        <div class="object__heading">
-                                            <a class="object__title" href="<?=$arSection["URL"]?>"><?= $arSection["NAME"] ?></a>
-                                            <div class="score">
-                                                <img src="<?= SITE_TEMPLATE_PATH ?>/assets/img/score.svg" alt="Рейтинг">
-                                                <span><?= $arSection["RATING"] ?></span>
-                                            </div>
-                                        </div>
-
-                                        <div class="object__marker">
-                                            <div class="area-info">
-                                                <img src="<?= SITE_TEMPLATE_PATH ?>/assets/img/marker.svg" alt="Маркер">
-                                                <div>
-                                                    <? if (isset($arHLTypes[$arSection["UF_TYPE"]])) : ?><span><?= $arHLTypes[$arSection["UF_TYPE"]]["UF_NAME"] ?></span><? endif; ?>
-                                                    <? if (!empty($arSection["UF_DISTANCE"])) : ?><span><?= $arSection["UF_DISTANCE"] ?></span><? endif; ?>
-                                                    <? if (!empty($arSection["UF_ADDRESS"])) : ?><span><?= $arSection["UF_ADDRESS"] ?></span><? endif; ?>
+                                        <div class="object__info">
+                                            <div class="object__heading">
+                                                <a class="object__title" href="<?=$arSection["URL"]?>"><?= $arSection["NAME"] ?></a>
+                                                <div class="score">
+                                                    <img src="<?= SITE_TEMPLATE_PATH ?>/assets/img/score.svg" alt="Рейтинг">
+                                                    <span><?= $arSection["RATING"] ?></span>
                                                 </div>
                                             </div>
 
-                                            <div class="object__marker-map">
-                                                <a href="<?=$arSection["URL"]?>#map">На карте</a>
+                                            <div class="object__marker">
+                                                <div class="area-info">
+                                                    <img src="<?= SITE_TEMPLATE_PATH ?>/assets/img/marker.svg" alt="Маркер">
+                                                    <div>
+                                                        <? if (isset($arHLTypes[$arSection["UF_TYPE"]])) : ?><span><?= $arHLTypes[$arSection["UF_TYPE"]]["UF_NAME"] ?></span><? endif; ?>
+                                                        <? if (!empty($arSection["UF_DISTANCE"])) : ?><span><?= $arSection["UF_DISTANCE"] ?></span><? endif; ?>
+                                                        <? if (!empty($arSection["UF_ADDRESS"])) : ?><span><?= $arSection["UF_ADDRESS"] ?></span><? endif; ?>
+                                                    </div>
+                                                </div>
+
+                                                <div class="object__marker-map">
+                                                    <a href="<?=$arSection["URL"]?>#map">На карте</a>
+                                                </div>
+                                            </div>
+                                            <div class="object__price">
+                                                <?= number_format($arSection["PRICE"], 0, '.', ' ') ?> ₽
                                             </div>
                                         </div>
-
-                                        <a class="button button_transparent" href="<?=$arSection["URL"]?>"><?= number_format($arSection["PRICE"], 0, '.', ' ') ?> ₽</a>
+                                        <a class="button button_transparent" href="<?=$arSection["URL"]?>"><?= Loc::getMessage('FILTER_CHOOSE')?></a>
                                     </div>
                                 <? endforeach; ?>
                             </div>

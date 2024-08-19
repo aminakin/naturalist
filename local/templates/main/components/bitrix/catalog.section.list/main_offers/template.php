@@ -2,6 +2,7 @@
 
 use Naturalist\Reviews;
 use Bitrix\Main\Localization\Loc;
+use Bitrix\Main\Grid\Declension;
 
 Loc::loadMessages(__FILE__);
 
@@ -23,17 +24,18 @@ $arCampingIDs = array_map(function ($a) {
     return $a["ID"];
 }, $arResult["SECTIONS"]);
 $arReviewsAvg = Reviews::getCampingRating($arCampingIDs);
-?>
 
+$reviewsDeclension = new Declension('отзыв', 'отзыва', 'отзывов');
+?>
 <div class="objects" data-offers-container>
-    <div class="objects__heading" data-tab-mobile>
+    <?/*div class="objects__heading" data-tab-mobile>
         <button class="objects__heading-control h1" data-tab-mobile-control type="button">Все предложения</button>
         <ul class="list">
             <? foreach ($arParams["TABS"] as $code => $tab) : ?>
                 <li class="list__item <?= ($code == "all" ? "list__item_active" : ""); ?>"><a class="list__link" data-offers-tab-switch="<?= $tab['CODE']; ?>"><?= $tab['NAME']; ?></a></li>
             <? endforeach; ?>
         </ul>
-    </div>
+    </div*/?>
 
     <div class="objects__list">
         <? if (!empty($arResult["SECTIONS"])) : ?>
@@ -111,55 +113,61 @@ $arReviewsAvg = Reviews::getCampingRating($arCampingIDs);
                                         <use xlink:href="#arrow-small" />
                                     </svg>
                                 </div>
-                                <div class="swiper-pagination"></div>
+                                <div class="swiper-pagination-wrapper">
+                                    <div class="swiper-pagination"></div>
+                                </div>
                             <? endif; ?>
                         </div>
 
-                        <button class="favorite" <? if ($arFavourites && in_array(
+                        <button class="favorite<?= ($arFavourites && in_array($arItem["ID"], $arFavourites))?' active':''?>" <? if ($arFavourites && in_array(
                                                         $arItem["ID"],
                                                         $arFavourites
                                                     )) : ?>data-favourite-remove<? else : ?>data-favourite-add<? endif; ?> data-id="<?= $arItem["ID"] ?>">
-                            <? if ($arFavourites && in_array($arItem["ID"], $arFavourites)) : ?>
-                                <img src="<?= SITE_TEMPLATE_PATH ?>/assets/img/favorite-active.svg" alt="Добавлен в избранное">
-                            <? else : ?>
-                                <img src="<?= SITE_TEMPLATE_PATH ?>/assets/img/favorite.svg" alt="Добавить в избранное">
-                            <? endif; ?>
+                            <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd" clip-rule="evenodd" d="M3.77566 2.51612C6.01139 1.14472 8.01707 1.69128 9.22872 2.60121C9.42805 2.75091 9.56485 2.85335 9.6667 2.92254C9.76854 2.85335 9.90535 2.75091 10.1047 2.60121C11.3163 1.69128 13.322 1.14472 15.5577 2.51612C17.1037 3.4644 17.9735 5.44521 17.6683 7.72109C17.3616 10.008 15.8814 12.5944 12.7467 14.9146C12.7205 14.934 12.6945 14.9533 12.6687 14.9724C11.5801 15.7786 10.8592 16.3125 9.6667 16.3125C8.47415 16.3125 7.75326 15.7786 6.66473 14.9724C6.63893 14.9533 6.61292 14.934 6.5867 14.9146C3.452 12.5944 1.97181 10.008 1.6651 7.72109C1.35986 5.44521 2.22973 3.4644 3.77566 2.51612ZM9.54914 2.99503C9.54673 2.99611 9.54716 2.99576 9.55019 2.99454L9.54914 2.99503ZM9.78321 2.99454C9.78624 2.99576 9.78667 2.99611 9.78426 2.99503L9.78321 2.99454Z" fill="#E39250"/>
+                            </svg>
                         </button>
-
-                        <? if ($arItem["IS_DISCOUNT"] == 'Y') : ?>
-                            <div class="tag"><?= $arItem["UF_SALE_LABEL"] != '' ? $arItem["UF_SALE_LABEL"] : Loc::GetMessage('CATALOG_DISCOUNT') ?></div>
-                        <? endif; ?>
-
-                        <? if (!empty($arItem["UF_ACTION"])) : ?>
-                            <div class="tag"><?= $arItem["UF_ACTION"] ?></div>
-                        <? endif; ?>
                     </div>
+                    <? if ($arItem["IS_DISCOUNT"] == 'Y') : ?>
+                        <div class="tag"><?= $arItem["UF_SALE_LABEL"] != '' ? $arItem["UF_SALE_LABEL"] : Loc::GetMessage('CATALOG_DISCOUNT') ?></div>
+                    <? endif; ?>
 
-                    <div class="object__heading">
-                        <a class="object__title" href="<?= $arItem["SECTION_PAGE_URL"] ?>"><?= $arItem["NAME"] ?></a>
-                        <a href="<?= $arItem["SECTION_PAGE_URL"] ?>#reviews-anchor" style="display: flex;font-size: 1.3rem;margin-left: 0;" class="score" data-score="[{&quot;label&quot;:&quot;Удобство расположения&quot;,&quot;value&quot;:<?= $arReviewsAvg[$arItem["ID"]]["criterials"][1][0] ?? '0.0' ?>},{&quot;label&quot;:&quot;Питание&quot;,&quot;value&quot;:<?= $arReviewsAvg[$arItem["ID"]]["criterials"][2][0] ?? '0.0' ?>},{&quot;label&quot;:&quot;Уют&quot;,&quot;value&quot;:<?= $arReviewsAvg[$arItem["ID"]]["criterials"][3][0] ?? '0.0' ?>},{&quot;label&quot;:&quot;Сервис&quot;,&quot;value&quot;:<?= $arReviewsAvg[$arItem["ID"]]["criterials"][4][0] ?? '0.0' ?>},{&quot;label&quot;:&quot;Чистота&quot;,&quot;value&quot;:<?= $arReviewsAvg[$arItem["ID"]]["criterials"][5][0] ?? '0.0' ?>},{&quot;label&quot;:&quot;Эстетика окружения&quot;,&quot;value&quot;:<?= $arReviewsAvg[$arItem["ID"]]["criterials"][6][0] ?? '0.0' ?>},{&quot;label&quot;:&quot;Разнообразие досуга&quot;,&quot;value&quot;:<?= $arReviewsAvg[$arItem["ID"]]["criterials"][7][0] ?? '0.0' ?>},{&quot;label&quot;:&quot;Соотношение цена/качество&quot;,&quot;value&quot;:<?= $arReviewsAvg[$arItem["ID"]]["criterials"][8][0] ?? '0.0' ?>}]">
-                            <img src="<?= SITE_TEMPLATE_PATH ?>/assets/img/score.svg" alt="Рейтинг"><span><?= $arReviewsAvg[$arItem["ID"]]["avg"] ?? 0 ?></span>
-                        </a>
-                    </div>
-
-                    <div class="object__marker">
-                        <div class="area-info">
-                            <img src="<?= SITE_TEMPLATE_PATH ?>/assets/img/marker.svg" alt="Маркер">
-                            <div><span><?= $arItem["UF_ADDRESS"] ?></span></div>
+                    <? if (!empty($arItem["UF_ACTION"])) : ?>
+                        <div class="tag"><?= $arItem["UF_ACTION"] ?></div>
+                    <? endif; ?>
+                    <div class="object__info"> 
+                        <div class="object__heading">
+                            <a class="object__title" href="<?= $arItem["SECTION_PAGE_URL"] ?>"><?= $arItem["NAME"] ?></a>
+                            <a href="<?= $arItem["SECTION_PAGE_URL"] ?>#reviews-anchor" class="score" data-score="[{&quot;label&quot;:&quot;Удобство расположения&quot;,&quot;value&quot;:<?= $arReviewsAvg[$arItem["ID"]]["criterials"][1][0] ?? '0.0' ?>},{&quot;label&quot;:&quot;Питание&quot;,&quot;value&quot;:<?= $arReviewsAvg[$arItem["ID"]]["criterials"][2][0] ?? '0.0' ?>},{&quot;label&quot;:&quot;Уют&quot;,&quot;value&quot;:<?= $arReviewsAvg[$arItem["ID"]]["criterials"][3][0] ?? '0.0' ?>},{&quot;label&quot;:&quot;Сервис&quot;,&quot;value&quot;:<?= $arReviewsAvg[$arItem["ID"]]["criterials"][4][0] ?? '0.0' ?>},{&quot;label&quot;:&quot;Чистота&quot;,&quot;value&quot;:<?= $arReviewsAvg[$arItem["ID"]]["criterials"][5][0] ?? '0.0' ?>},{&quot;label&quot;:&quot;Эстетика окружения&quot;,&quot;value&quot;:<?= $arReviewsAvg[$arItem["ID"]]["criterials"][6][0] ?? '0.0' ?>},{&quot;label&quot;:&quot;Разнообразие досуга&quot;,&quot;value&quot;:<?= $arReviewsAvg[$arItem["ID"]]["criterials"][7][0] ?? '0.0' ?>},{&quot;label&quot;:&quot;Соотношение цена/качество&quot;,&quot;value&quot;:<?= $arReviewsAvg[$arItem["ID"]]["criterials"][8][0] ?? '0.0' ?>}]">
+                                <img src="<?= SITE_TEMPLATE_PATH ?>/assets/img/star-score.svg" alt="Рейтинг">
+                                <? if($arReviewsAvg[$arItem["ID"]]["count"] > 0){?>
+                                    <span><?= $arReviewsAvg[$arItem["ID"]]["avg"] ?? 0 ?></span>
+                                    <span class="dot"></span>
+                                    <?= $arReviewsAvg[$arItem["ID"]]["count"] ?? 0 ?>
+                                    <?= $reviewsDeclension->get($arReviewsAvg[$arItem["ID"]]["count"]) ?>
+                                <?}else{?>
+                                    <?= Loc::getMessage('NO_REVIEW')?>
+                                <?}?>
+                            </a>
                         </div>
 
-                        <div class="object__marker-map">
-                            <a href="<?= $arItem["SECTION_PAGE_URL"] ?>#map">На карте</a>
+                        <div class="object__marker">
+                            <div class="area-info">
+                                <img src="<?= SITE_TEMPLATE_PATH ?>/assets/img/location.svg" alt="Маркер">
+                                <div><span><?= $arItem["UF_ADDRESS"] ?></span></div>
+                            </div>
+
+                            <?/*div class="object__marker-map">
+                                <a href="<?= $arItem["SECTION_PAGE_URL"] ?>#map">На карте</a>
+                            </div*/?>
+                        </div>
+                        <div class="object__price">
+                            <span><?= number_format( $arItem["UF_MIN_PRICE"], 0, '.', ' ' ) ?> ₽</span>
+                            <span class="dot"></span>
+                            <span><?= Loc::getMessage('PRICE_ONE_NIGHT')?></span>
                         </div>
                     </div>
-
-                    <a class="button button_transparent" onclick="VK.Goal('customize_product')" href="<?= $arItem["SECTION_PAGE_URL"] ?>"><?= number_format(
-                                                                                                                                                $arItem["UF_MIN_PRICE"],
-                                                                                                                                                0,
-                                                                                                                                                '.',
-                                                                                                                                                ' '
-                                                                                                                                            ) ?>
-                        ₽</a>
+                    <a class="button button_transparent" onclick="VK.Goal('customize_product')" href="<?= $arItem["SECTION_PAGE_URL"] ?>"><?= Loc::getMessage('FILTER_CHOOSE');?></a>
                 </div>
             <? endforeach; ?>
         <? else : ?>

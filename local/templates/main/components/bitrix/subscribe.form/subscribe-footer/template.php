@@ -16,9 +16,9 @@ if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED!==true) {
 /** @var string $componentPath */
 /** @var CBitrixComponent $component */
 ?>
-<section class="subscribe-form"  id="subscribe-form">
+<section class="subscribe-form" id="subscribe-form">
 	<div class="container">
-		<div class="subscribe-form__left">
+		<div class="subscribe-form__wrap">
 			<p class="subscribe-form__title"><?=$arParams['~FORM_TITLE']?></p>
 			<p class="subscribe-form__subtitle"><?=$arParams['FORM_SUBTITLE']?></p>
 			<form action="<?=$arResult["FORM_ACTION"]?>">
@@ -32,9 +32,6 @@ if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED!==true) {
 				<span class="input__error"></span>
 			</form>
 			<p class="subscribe-form__agree"><?=GetMessage("SUBSCRIBE_FORM_POLITICS", Array ("#LINK#" => $arParams['FORM_POLITICS_LINK']))?></p>
-		</div>
-		<div class="subscribe-form__right">
-			
 		</div>
 	</div>	
 </section>
