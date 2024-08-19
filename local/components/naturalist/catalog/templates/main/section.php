@@ -198,6 +198,18 @@ if (!empty($_GET['features']) && isset($_GET['features'])) {
     $arFilter["UF_FEATURES"] = $arFilterFeatures;
 }
 
+// Тип дома
+if (!empty($_GET['housetypes']) && isset($_GET['housetypes'])) {
+    $arFilterHousetypes = explode(',', $_GET['housetypes']);
+    $arFilter["UF_SUIT_TYPE"] = $arFilterHousetypes;
+}
+
+// Водоём
+if (!empty($_GET['water']) && isset($_GET['water'])) {
+    $arFilterWater = explode(',', $_GET['water']);
+    $arFilter["UF_WATER"] = $arFilterWater;
+}
+
 // Впечатления
 if (!empty($_GET['impressions']) && isset($_GET['impressions'])) {
     $arRequestImpressions = explode(',', $_GET['impressions']);
@@ -420,6 +432,12 @@ $arHLFood = array();
 while ($arEntity = $rsData->Fetch()) {
     $arHLFood[$arEntity["ID"]] = $arEntity;
 }
+
+// Типы домов
+$houseTypesDataClass = HighloadBlockTable::compileEntity(SUIT_TYPES_HL_ENTITY)->getDataClass();
+$houseTypes = $houseTypesDataClass::query()
+    ->addSelect('*')
+    ?->fetchAll();
 
 // Особенности объекта
 $hlId = 5;
@@ -854,7 +872,9 @@ $APPLICATION->SetPageProperty("description", $descriptionSEO);
                 "arFilterFood" => $arFilterFood,
                 "arHLFeatures" => $arHLFeatures,
                 "arFilterFeatures" => $arFilterFeatures,
-                "arFilterServices" => $arFilterServices
+                "arFilterServices" => $arFilterServices,
+                "houseTypes" => $houseTypes,
+                "arFilterHouseTypes" => $arFilterHousetypes,
             )
         );
         ?>
