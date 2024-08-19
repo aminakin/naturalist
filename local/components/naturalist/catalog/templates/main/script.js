@@ -137,6 +137,19 @@ $(function () {
       delete params["features"];
     }
 
+    if ($('input[name="housetypes"]:checked', parentFrom).length > 0) {
+      var arHousetypes = [];
+      $('input[name="housetypes"]:checked', parentFrom).each(function (
+        indx,
+        element
+      ) {
+        arHousetypes.push($(element).val());
+      });
+      params["housetypes"] = arHousetypes.join(",");
+    } else {
+      delete params["housetypes"];
+    }
+
     var name = $("input[data-autocomplete-result]", parentFrom).val()
       ? $("input[data-autocomplete-result]", parentFrom).val()
       : $('input[name="name"]', parentFrom).val();

@@ -8,7 +8,7 @@ use Petrovich;
 
 class Utils
 {
-    CONST EARTH_RADIUS = 6372795;
+    const EARTH_RADIUS = 6372795;
 
     /**
      * $latitudeFirstPoint, $longitudeFirstPoint - широта, долгота 1-й точки,
@@ -16,7 +16,7 @@ class Utils
      *
      * Возвращает км
      */
-    public static function calculateTheDistance ($latitudeFirstPoint, $longitudeFirstPoint, $latitudeSecondPoint, $longitudeSecondPoint)
+    public static function calculateTheDistance($latitudeFirstPoint, $longitudeFirstPoint, $latitudeSecondPoint, $longitudeSecondPoint)
     {
 
         // перевести координаты в радианы
@@ -31,7 +31,7 @@ class Utils
         $cosLatitudeFirstPoint = cos($latitudeFirstPointToRad);
         $cosLatitudeSecondPoint = cos($latitudeSecondPointToRad);
         $sinLatitudeFirstPoint = sin($latitudeFirstPointToRad);
-        $sinLatitudeSecondPoint= sin($latitudeSecondPointToRad);
+        $sinLatitudeSecondPoint = sin($latitudeSecondPointToRad);
         $delta = $longitudeSecondPointToRad - $longitudeFirstPointToRad;
         $cosDelta = cos($delta);
         $sinDelta = sin($delta);
@@ -42,7 +42,7 @@ class Utils
 
         $y = sqrt(
             pow($cosLatitudeSecondPoint * $sinDelta, 2) +
-            pow($cosLatitudeFirstPoint * $sinLatitudeSecondPoint - $sinLatitudeFirstPoint * $cosLatitudeSecondPoint * $cosDelta, 2)
+                pow($cosLatitudeFirstPoint * $sinLatitudeSecondPoint - $sinLatitudeFirstPoint * $cosLatitudeSecondPoint * $cosDelta, 2)
         );
 
         return round(((atan2($y, $x) * self::EARTH_RADIUS) / 1000));
@@ -58,4 +58,14 @@ class Utils
         return $Morpher->title($word, $case);
     }
 
+    /**
+     * Функция добавления svg файла в html
+     *     
+     * @param string $base     Папка с фалом относительно корня сайта.
+     * @return string Добавление содержимого файла.
+     */
+    public static function buildSVG(string $base = 'image')
+    {
+        return file_get_contents($_SERVER['DOCUMENT_ROOT'] . $base);
+    }
 }
