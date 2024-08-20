@@ -29,4 +29,14 @@ window.addEventListener("DOMContentLoaded", () => {
             }
         });
     }
+
+    if (window.innerWidth < 620){
+        locationGroup.forEach(group => {
+            group.querySelectorAll('.location__item').forEach((item, index) => {
+                if(index > 5){
+                    item.style.display = 'none';
+                }
+            });
+        });
+    }
 });
