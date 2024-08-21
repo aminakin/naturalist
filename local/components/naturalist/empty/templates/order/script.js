@@ -77,7 +77,7 @@ var Order = function () {
             } else if (a.PAYMENT_DATA) {
               _this.getYaPayUrl(a.PAYMENT_DATA);
             } else {
-              console.log(a);
+              alert(a);
             }
           } else {
             window.infoModal(ERROR_TITLE, a.ERROR);
@@ -91,6 +91,9 @@ var Order = function () {
               }
             );
           }
+        },
+        error: function (data) {
+          alert(data);
         },
       });
     } else {

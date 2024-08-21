@@ -85,7 +85,7 @@ class Bnovo
     }
 
     /* Получение списка свободных объектов в выбранный промежуток */
-    public function search($guests, $arChildrenAge, $dateFrom, $dateTo)
+    public function search($guests, $arChildrenAge, $dateFrom, $dateTo, $sectionIds = [])
     {
         $arDates = array();
         $period = new DatePeriod(
@@ -99,20 +99,23 @@ class Bnovo
         $daysCount = count($arDates) - 1;
 
         //Проверка на детей без мест и размещения без детей
-        $arHotel = CIBlockSection::GetList(false, array("IBLOCK_ID" => CATALOG_IBLOCK_ID, "ID" => $sectionId), false, array("ID", "UF_EXTERNAL_ID", "UF_MIN_AGE", "UF_NO_CHILDREN_PLACE"), false)->Fetch();
-        if (!empty($arHotel['UF_MIN_AGE'])) {
-            $arChildrenAges = $arChildrenAge;
-            foreach ($arChildrenAges as $key => $age) {
-                if ($age <= $arHotel['UF_MIN_AGE']) {
-                    unset($arChildrenAge[$key]);
+        $arHotel = CIBlockSection::GetList(false, array("IBLOCK_ID" => CATALOG_IBLOCK_ID), false, array("ID", "UF_EXTERNAL_ID", "UF_MIN_AGE", "UF_NO_CHILDREN_PLACE"), false);
+
+        while ($hotelRes = $arHotel->Fetch()) {
+            if (!empty($hotelRes['UF_MIN_AGE'])) {
+                $arChildrenAges = $arChildrenAge;
+                foreach ($arChildrenAges as $key => $age) {
+                    if ($age <= $hotelRes['UF_MIN_AGE']) {
+                        unset($arChildrenAge[$key]);
+                    }
                 }
             }
-        }
-        if ($arHotel['UF_NO_CHILDREN_PLACE'] == 1) {
-            $guests += count($arChildrenAge);
-            $children = 0;
-        } else {
-            $children = count($arChildrenAge);
+            if ($hotelRes['UF_NO_CHILDREN_PLACE'] == 1) {
+                $guests += count($arChildrenAge);
+                $children = 0;
+            } else {
+                $children = count($arChildrenAge);
+            }
         }
 
         $entityClass = $this->getEntityClass();
@@ -182,7 +185,7 @@ class Bnovo
             }
         }
 
-        // Размещение номеро
+        // Размещение номеров
         $rsOccupancies = CIBlockElement::GetList(
             array("ID" => "ASC"),
             array(
@@ -1916,11 +1919,11 @@ class Bnovo
         $dateFrom = $arDates[0];
         $dateTo = $arDates[count($arDates) - 1];
 
-        if ($hotelId == 11712) {
-            $roomTypes = [];
-        } else {
-            $roomTypes = (array)$arCategories;
-        }
+        //if ($hotelId == 11712) {
+        $roomTypes = [];
+        // } else {
+        //     $roomTypes = (array)$arCategories;
+        // }
 
         $data = array(
             "token" => $this->token,
@@ -2022,26 +2025,26 @@ class Bnovo
             }
         }
 
-        if ($hotelId == 11712) {
-            $this->writeToFile($arData, 'recievedData', $hotelId);
-        }
+        // if ($hotelId == 11712) {
+        //     $this->writeToFile($arData, 'recievedData', $hotelId);
+        // }
         $connection = \Bitrix\Main\Application::getConnection();
         // $this->writeToFile($arReservedOne, 'updateReservationData_1', $hotelId);
         // $this->writeToFile($arReservedNull, 'updateReservationData_0', $hotelId);              
 
         if (!empty($arReservedOne)) {
             $query = 'UPDATE b_hlbd_room_offers SET UF_RESERVED=1 WHERE id IN (' . implode(',', $arReservedOne) . ')';
-            if ($hotelId == 11712) {
-                Debug::writeToFile($query, 'BNOVO_UNRESERVED_' . $hotelId . date('Y-m-d H:i:s'), '__BNOVO_UNRESERVED_log.log');
-            }
+            // if ($hotelId == 11712) {
+            //     Debug::writeToFile($query, 'BNOVO_UNRESERVED_' . $hotelId . date('Y-m-d H:i:s'), '__BNOVO_UNRESERVED_log.log');
+            // }
             $result = $connection->query($query);
         }
 
         if (!empty($arReservedNull)) {
             $query = 'UPDATE b_hlbd_room_offers SET UF_RESERVED=0 WHERE id IN (' . implode(',', $arReservedNull) . ')';
-            if ($hotelId == 11712) {
-                Debug::writeToFile($query, 'BNOVO_RESERVED_' . $hotelId . date('Y-m-d H:i:s'), '__BNOVO_RESERVED__log.log');
-            }
+            // if ($hotelId == 11712) {
+            //     Debug::writeToFile($query, 'BNOVO_RESERVED_' . $hotelId . date('Y-m-d H:i:s'), '__BNOVO_RESERVED__log.log');
+            // }
             $result = $connection->query($query);
         }
         // } else {
@@ -2069,6 +2072,7 @@ class Bnovo
         $dateTo = $arOrder['PROPS']['DATE_TO'];
         $guests = $arOrder["ITEMS"][0]["ITEM_BAKET_PROPS"]["GUESTS_COUNT"]['VALUE'];
         $children = !empty($arOrder['PROPS']['CHILDREN']) ? $arOrder['PROPS']['CHILDREN'] : 0;
+        $price = $arOrder['FIELDS']['BASE_PRICE'];
 
         $url = $this->bnovoApiURL . '/channel_manager_bookings';
         $headers = array(
@@ -2106,7 +2110,9 @@ class Bnovo
                             "Ota info" => [
                                 "info" => "Hotel info",
                                 "Hotel id" => $sectionId,
-                                "Hotel name" => $sectionName
+                                "Hotel name" => $sectionName,
+                                "Paid sum" => (int)$price,
+                                "prepay" => 1,
                             ]
                         ]
                     ]
@@ -2343,6 +2349,7 @@ class Bnovo
      */
     public function getNearPrices(): void
     {
+        //return;
         $now = new DateTime();
         $startDate = FormatDate("Y-m-d", $now->getTimeStamp());
 
