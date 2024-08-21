@@ -13495,8 +13495,8 @@
           slidesPerView: 'auto',
           loop: true,
           navigation: {
-            nextEl: ".swiper-button-next",
-            prevEl: ".swiper-button-prev",
+            nextEl: ".house-type .swiper-button-next",
+            prevEl: ".house-type .swiper-button-prev",
           },
       });
     }
@@ -13522,8 +13522,8 @@
         spaceBetween: 20,
         loop: true,
         navigation: {
-          nextEl: ".swiper-button-next",
-          prevEl: ".swiper-button-prev",
+          nextEl: ".impressions-slider .swiper-button-next",
+          prevEl: ".impressions-slider .swiper-button-prev",
         },
         breakpoints: {
           310: {
