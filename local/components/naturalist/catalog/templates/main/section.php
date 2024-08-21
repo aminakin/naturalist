@@ -61,6 +61,7 @@ $arReviewsAvg = array_map(function ($a) {
     return round(array_sum($a) / count($a), 1);
 }, $arReviews);*/
 
+$isSeoText = false;
 
 /* Фильтрация */
 $arFilter = array(
@@ -829,7 +830,8 @@ $APPLICATION->SetPageProperty("description", $descriptionSEO);
         <div class="container">
             <? if (!empty($arSeoImpressions) && reset($arSeoImpressions)['PREVIEW_TEXT'] != '') {
                 echo reset($arSeoImpressions)['PREVIEW_TEXT'];
-            } else {
+                $isSeoText = true;
+            } else if (empty($_GET)) {
                 $APPLICATION->IncludeComponent(
                     "bitrix:main.include",
                     "",
@@ -839,12 +841,15 @@ $APPLICATION->SetPageProperty("description", $descriptionSEO);
                         "EDIT_TEMPLATE" => ""
                     )
                 );
+                $isSeoText = true;
             } ?>
         </div>
     </section>
-    <div class="container">
-        <a href="#" class="show-more-seo">Показать ещё</a>
-    </div>
+    <? if ($isSeoText) { ?>
+        <div class="container">
+            <a href="#" class="show-more-seo">Показать ещё</a>
+        </div>
+    <? } ?>
 </main>
 
 <div class="modal modal_filters" id="filters-modal">

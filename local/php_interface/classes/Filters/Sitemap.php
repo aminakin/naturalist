@@ -23,7 +23,7 @@ class Sitemap
     {
         $sitemap = new SitemapIndex('/sitemap.xml', ['SITE_ID' => 's1', 'PROTOCOL' => self::PROTOCOL, 'DOMAIN' => self::DOMAIN]);
 
-        $fileUrlEnc = self::PROTOCOL . '//' . self::DOMAIN . '/' . self::FILE_NAME;
+        $fileUrlEnc = self::PROTOCOL . '://' . self::DOMAIN . '/' . self::FILE_NAME;
 
         $contents = $sitemap->getContents();
 
@@ -68,7 +68,7 @@ class Sitemap
         if (is_array($chpys) && !empty($chpys)) {
             foreach ($chpys as $chpy) {
                 $file->addEntry([
-                    'XML_LOC' => self::PROTOCOL . '//' . self::DOMAIN . $chpy['UF_NEW_URL'],
+                    'XML_LOC' => self::PROTOCOL . '://' . self::DOMAIN . $chpy['UF_NEW_URL'],
                     'XML_LASTMOD' => (new DateTime(date('Y-m-d H:i:s'), 'Y-m-d H:i:s'))->format('Y-m-d\TH:i:sP'),
                 ]);
             }

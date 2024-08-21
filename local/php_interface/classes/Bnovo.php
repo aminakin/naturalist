@@ -219,7 +219,7 @@ class Bnovo
                         }
                     }
                 } elseif (!empty($arOccupancy["PROPERTY_CHILDREN_AGES_VALUE"])) {
-                    continue;
+                    //continue;
                 }
 
                 if (!isset($childrenStatus) || $childrenStatus != false) {
