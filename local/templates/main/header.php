@@ -54,6 +54,7 @@ use Naturalist\Users;
     <link rel="preload" href="<?= SITE_TEMPLATE_PATH ?>/assets/fonts/TTTravelsNext-DmBd.woff2" as="font" type="font/woff2" crossorigin>
     <link rel="preload" href="<?= SITE_TEMPLATE_PATH ?>/assets/fonts/TTTravelsNext-Md.woff2" as="font" type="font/woff2" crossorigin>
     <link rel="preload" href="<?= SITE_TEMPLATE_PATH ?>/assets/fonts/TTTravelsNext-Regular.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="<?= SITE_TEMPLATE_PATH ?>/assets/fonts/Lato-Regular.woff2" as="font" type="font/woff2" crossorigin>
 
     <link rel="stylesheet" href="<?= SITE_TEMPLATE_PATH ?>/assets/css/app.css?v=<?= filemtime($_SERVER['DOCUMENT_ROOT'] . SITE_TEMPLATE_PATH . '/assets/css/app.css'); ?>">
     <? if (CSite::InDir('/index.php')) : ?>
@@ -228,7 +229,14 @@ use Naturalist\Users;
                     <a class="logotype" href="/"><img src="<?= $arSettings['header_logo'] ?>" alt="<?= $arSettings['header_logo_name'] ?>"></a>
                 </div>
 
-                <button class="header__toggler" data-menu-open type="button"><span></span></button>
+                <button class="header__toggler" data-menu-open type="button">
+                <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="40" height="40" rx="8" fill="#E0C695"/>
+                    <path fill-rule="evenodd" clip-rule="evenodd" d="M12.5 14.1667C12.5 13.8216 12.7798 13.5417 13.125 13.5417L23.125 13.5417C23.4702 13.5417 23.75 13.8216 23.75 14.1667C23.75 14.5119 23.4702 14.7917 23.125 14.7917L13.125 14.7917C12.7798 14.7917 12.5 14.5119 12.5 14.1667Z" fill="black"/>
+                    <path fill-rule="evenodd" clip-rule="evenodd" d="M12.5 20C12.5 19.6548 12.7798 19.375 13.125 19.375L26.4583 19.375C26.8035 19.375 27.0833 19.6548 27.0833 20C27.0833 20.3452 26.8035 20.625 26.4583 20.625L13.125 20.625C12.7798 20.625 12.5 20.3452 12.5 20Z" fill="black"/>
+                    <path fill-rule="evenodd" clip-rule="evenodd" d="M12.5 25.8335C12.5 25.4883 12.7798 25.2085 13.125 25.2085L19.7917 25.2085C20.1368 25.2085 20.4167 25.4883 20.4167 25.8335C20.4167 26.1787 20.1368 26.4585 19.7917 26.4585L13.125 26.4585C12.7798 26.4585 12.5 26.1787 12.5 25.8335Z" fill="black"/>
+                </svg>
+                </button>
                 <div class="header__menu">
                     <nav class="navigation" data-menu>
                         <button class="navigation__close" data-menu-close type="button">
@@ -265,16 +273,23 @@ use Naturalist\Users;
                         <li class="list__item list__item_phone">
                             <a href="tel:<?= $arSettings['contacts_phone'] ?>">
                                 <span><?= $arSettings['contacts_phone'] ?></span>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 28 28" fill="none">
-                                    <path d="M23.898 4.09901C18.4298 -1.36749 9.56551 -1.36618 4.09901 4.10201C-1.36749 9.57021 -1.36618 18.4345 4.10202 23.901C9.57021 29.3675 18.4345 29.3662 23.901 23.898C26.5263 21.2718 28.0008 17.7103 28 13.997C27.9992 10.2843 26.5237 6.72389 23.898 4.09901ZM21.2025 19.5018C21.2019 19.5024 21.2013 19.5031 21.2006 19.5037V19.499L20.4913 20.2037C19.5739 21.1327 18.2378 21.5149 16.9679 21.2117C15.6885 20.8692 14.4723 20.3241 13.3653 19.597C12.3368 18.9398 11.3838 18.1714 10.5233 17.3057C9.73159 16.5198 9.02033 15.6568 8.39995 14.7297C7.72139 13.7321 7.18431 12.6453 6.80396 11.5003C6.36793 10.1553 6.72925 8.6793 7.73731 7.68771L8.56796 6.85706C8.7989 6.62507 9.17416 6.62425 9.40609 6.8552C9.4067 6.8558 9.40735 6.8564 9.40795 6.85706L12.0306 9.4797C12.2626 9.71065 12.2634 10.0859 12.0325 10.3178C12.0319 10.3184 12.0313 10.319 12.0306 10.3197L10.4906 11.8597C10.0487 12.2968 9.99316 12.9913 10.36 13.493C10.9169 14.2575 11.5333 14.9768 12.2033 15.6444C12.9503 16.3946 13.7623 17.077 14.6299 17.6837C15.1313 18.0334 15.8109 17.9745 16.2446 17.5437L17.7332 16.0317C17.9642 15.7998 18.3394 15.7989 18.5714 16.0299C18.572 16.0305 18.5726 16.0311 18.5732 16.0317L21.2006 18.6637C21.4326 18.8946 21.4334 19.2698 21.2025 19.5018Z" fill="#E6C48E" />
+                                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <g clip-path="url(#clip0_3293_4462)">
+                                    <path d="M3.14786 9.95205C2.35784 8.5745 1.97638 7.44965 1.74637 6.30943C1.40619 4.62306 2.18468 2.97575 3.47432 1.92464C4.01938 1.4804 4.6442 1.63218 4.96651 2.21041L5.69416 3.51584C6.27091 4.55055 6.55929 5.06791 6.50209 5.61641C6.44489 6.16491 6.05598 6.61163 5.27815 7.50509L3.14786 9.95205ZM3.14786 9.95205C4.74693 12.7403 7.25637 15.2511 10.0479 16.8521M10.0479 16.8521C11.4254 17.6421 12.5503 18.0235 13.6905 18.2536C15.3769 18.5937 17.0242 17.8152 18.0753 16.5256C18.5195 15.9805 18.3677 15.3557 17.7895 15.0334L16.4841 14.3058C15.4494 13.729 14.932 13.4406 14.3835 13.4978C13.835 13.555 13.3883 13.9439 12.4948 14.7218L10.0479 16.8521Z" stroke="black" stroke-width="1.5" stroke-linejoin="round"/>
+                                    </g>
+                                    <defs>
+                                    <clipPath id="clip0_3293_4462">
+                                    <rect width="20" height="20" fill="white"/>
+                                    </clipPath>
+                                    </defs>
                                 </svg>
                             </a>
                         </li>
                         <li class="list__item list__item_favorite">
                             <a class="list__link" href="<?= $arSettings['header_favourites_link'] ?>">
                                 <div class="list__item-icon">
-                                    <svg class="icon icon_heart" viewbox="0 0 10 8" style="width: 18px;">
-                                        <use xlink:href="#heart" />
+                                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path fill-rule="evenodd" clip-rule="evenodd" d="M3.45441 2.79572C5.93855 1.27194 8.16707 1.87923 9.51335 2.89026C9.73484 3.05659 9.88684 3.17042 10 3.24729C10.1132 3.17042 10.2652 3.05659 10.4866 2.89026C11.8329 1.87923 14.0615 1.27194 16.5456 2.79572C18.2633 3.84936 19.2298 6.05026 18.8907 8.57902C18.5499 11.12 16.9052 13.9938 13.4222 16.5718C13.3931 16.5934 13.3642 16.6148 13.3355 16.636C12.126 17.5318 11.3251 18.125 10 18.125C8.67495 18.125 7.87396 17.5318 6.66447 16.636C6.63581 16.6148 6.60691 16.5934 6.57778 16.5718C3.09478 13.9938 1.45012 11.12 1.10933 8.57902C0.770179 6.05026 1.7367 3.84936 3.45441 2.79572ZM9.86938 3.32783C9.8667 3.32904 9.86718 3.32865 9.87054 3.3273C9.87011 3.3275 9.86972 3.32768 9.86938 3.32783ZM10.1295 3.32729C10.1328 3.32864 10.1333 3.32904 10.1306 3.32783C10.1303 3.32768 10.1299 3.3275 10.1295 3.32729ZM8.76273 3.88979C7.76562 3.14099 6.09326 2.64347 4.10799 3.86123C2.89289 4.60658 2.0612 6.27264 2.34824 8.41286C2.63365 10.5409 4.0396 13.138 7.32144 15.5671C8.63991 16.543 9.12114 16.875 10 16.875C10.8789 16.875 11.3601 16.543 12.6786 15.5671C15.9604 13.138 17.3664 10.5409 17.6518 8.41286C17.9388 6.27264 17.1071 4.60658 15.892 3.86123C13.9067 2.64347 12.2344 3.14099 11.2373 3.88979L11.2198 3.90288C10.9945 4.0721 10.801 4.21746 10.6462 4.31882C10.5657 4.3715 10.4766 4.42514 10.3841 4.46693C10.2963 4.50659 10.1615 4.55621 10 4.55621C9.83847 4.55621 9.70365 4.50659 9.61589 4.46693C9.52341 4.42514 9.43431 4.3715 9.35384 4.31882C9.19901 4.21745 9.00546 4.07209 8.78012 3.90285L8.76273 3.88979Z" fill="black"/>
                                     </svg>
                                     <span <?= !$arFavourites ? 'style="display: none"' : '' ?>>
                                         <?= $arFavourites ? count($arFavourites) : 0 ?>
@@ -285,34 +300,36 @@ use Naturalist\Users;
                         </li>
 
                         <? if (!$isAuthorized) : ?>
-                            <li class="list__item">
-                                <a class="list__link" href="#login-phone" data-modal>
-                                    <svg class="icon icon_person" viewbox="0 0 16 16" style="width: 26px; height: 26px;">
+                            <li class="list__item list__item_login">
+                                <a class="list__link" href="#login-phone" data-modal><?= GetMessage('LOGIN_HEADER') ?>
+                                    <?/*svg class="icon icon_person" viewbox="0 0 16 16" style="width: 26px; height: 26px;">
                                         <use xlink:href="#person" />
-                                    </svg>
+                                    </svg*/ ?>
                                     <?/*<span><?= $arSettings['header_personal_name'] ?></span>*/ ?>
+
                                 </a>
                             </li>
                         <? else : ?>
-                            <li class="list__item">
-                                <a class="list__link" href="<?= $arSettings['header_personal_link'] ?>">
-                                    <? if ($arUser["PERSONAL_PHOTO"]) :
+                            <li class="list__item list__item_login">
+                                <a class="list__link is-authorized" href="<?= $arSettings['header_personal_link'] ?>">
+                                    <?/* if ($arUser["PERSONAL_PHOTO"]) :
                                         $arUser["PERSONAL_PHOTO"] = CFile::ResizeImageGet($arUser["PERSONAL_PHOTO"]["ID"], array('width' => 96, 'height' => 96), BX_RESIZE_IMAGE_EXACT, true);
                                     ?>
                                         <div class="list__item-icon">
                                             <img class="lazy" data-src="<?= $arUser["PERSONAL_PHOTO"]["src"] ?>" alt="<?= $arUser["NAME"] ?>">
                                         </div>
-                                    <? else : ?>
-                                        <svg class="icon icon_person" viewbox="0 0 16 16" style="width: 26px; height: 26px;">
-                                            <use xlink:href="#person" />
-                                        </svg>
-                                    <? endif; ?>
+                                    <? else : */?>
+                                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path fill-rule="evenodd" clip-rule="evenodd" d="M14.1991 13.4384C11.6314 11.9095 8.36886 11.9095 5.80122 13.4384C5.6613 13.5217 5.50798 13.6087 5.34738 13.6998C4.75355 14.0367 4.06019 14.4301 3.57679 14.9032C3.27668 15.197 3.14875 15.4393 3.12829 15.6265C3.11204 15.7752 3.14962 16.0203 3.52514 16.378C4.38835 17.2004 5.2655 17.7084 6.32587 17.7084H13.6744C14.7348 17.7084 15.6119 17.2004 16.4751 16.378C16.8507 16.0203 16.8883 15.7752 16.872 15.6265C16.8515 15.4393 16.7236 15.197 16.4235 14.9032C15.9401 14.4301 15.2467 14.0367 14.6529 13.6998C14.4923 13.6087 14.339 13.5217 14.1991 13.4384ZM14.8386 12.3644L14.5188 12.9014L14.8386 12.3644C14.9355 12.4221 15.0553 12.4897 15.1908 12.5661C15.7848 12.9013 16.6827 13.4078 17.2979 14.0099C17.6826 14.3865 18.0481 14.8828 18.1146 15.4907C18.1853 16.1373 17.9032 16.744 17.3374 17.2831C16.3612 18.2131 15.1897 18.9584 13.6744 18.9584H6.32587C4.81061 18.9584 3.63913 18.2131 2.66292 17.2831C2.09707 16.744 1.81502 16.1373 1.88569 15.4907C1.95215 14.8828 2.31769 14.3865 2.70241 14.0099C3.31755 13.4078 4.21548 12.9013 4.80949 12.5661C4.94504 12.4897 5.06477 12.4221 5.1617 12.3644C8.12341 10.6009 11.8769 10.6009 14.8386 12.3644Z" fill="black"/>
+                                        <path fill-rule="evenodd" clip-rule="evenodd" d="M10 2.29175C8.27411 2.29175 6.875 3.69086 6.875 5.41675C6.875 7.14264 8.27411 8.54175 10 8.54175C11.7259 8.54175 13.125 7.14264 13.125 5.41675C13.125 3.69086 11.7259 2.29175 10 2.29175ZM5.625 5.41675C5.625 3.0005 7.58375 1.04175 10 1.04175C12.4162 1.04175 14.375 3.0005 14.375 5.41675C14.375 7.83299 12.4162 9.79175 10 9.79175C7.58375 9.79175 5.625 7.83299 5.625 5.41675Z" fill="black"/>
+                                    </svg>
+                                    <?// endif; ?>
                                     <?/*<span><?= $arUser["NAME"] ?? $arSettings['header_personal_name'] ?></span>*/ ?>
                                 </a>
                             </li>
                         <? endif; ?>
 
-                        <? if (intval(Users::getInnerScore()) != 0) { ?>
+                        <?/* if (intval(Users::getInnerScore()) != 0) { ?>
                             <li class="list__item highlight_orange cert_balance">
                                 <span class="list__link">
                                     <?= $arSettings['header_balance_certification'] ?>
@@ -320,7 +337,7 @@ use Naturalist\Users;
                                     ₽
                                 </span>
                             </li>
-                        <? } ?>
+                        <? } */?>
 
                         <?/*<li class="list__item list__item_desktop">
                             <a class="list__link" href="#feedback" data-modal>

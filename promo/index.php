@@ -30,8 +30,7 @@ $arMeteo = Users::getMeteo($coords);
         <div class="container">
             <div class="hero">
                 <img class="hero__name" src="/upload/iblock/a1b/yp6wa960urh02aqkadh1j0yu0al1pmmm.svg" alt="">
-                <span class="hero__footnote"><span>П</span><span>О</span><span>Д</span><span>О</span><span>Б</span><span>Р</span><span>А</span><span>Т</span><span>Ь</span><span>&nbsp;</span><span>Г</span><span>Л</span><span>Э</span><span>М</span><span>П</span><span>И</span><span>Н</span><span>Г</span><span>&nbsp;</span><span>И</span><span>Л</span><span>И</span><span>&nbsp;</span><span>Э</span><span>К</span><span>О</span><span>-</span><span>О</span><span>Т</span><span>Е</span><span>Л</span><span>Ь</span>
-                </span>
+                <span class="hero__footnote">БРОНИРОВАНИЕ ГЛЭМПИНГОВ И ЭКО-ОТЕЛЕЙ</span>
             </div>
         </div>
     </section>
@@ -216,7 +215,7 @@ $arMeteo = Users::getMeteo($coords);
         </div>
     </section>
     <!--<div class="container">
-        <a href="#" class="show-more-seo">Показать ещё</a>
+        <a href="#" class="show-more-seo">Раскрыть</a>
     </div>-->
     <a name="fortune"></a>
     <section class="promo__wheel" id="wheel"></section>

@@ -9118,7 +9118,7 @@
 
         if (params.hide) {
           clearTimeout(dragTimeout);
-          dragTimeout = nextTick(() => {
+          dragTimeout = utils_nextTick(() => {
             $el.css("opacity", 0);
             $el.transition(400);
           }, 1000);
@@ -11557,7 +11557,7 @@
         }
 
         clearTimeout(timeout);
-        timeout = nextTick(() => {
+        timeout = utils_nextTick(() => {
           let autoplayResult;
 
           if (swiper.params.autoplay.reverseDirection) {
@@ -11648,7 +11648,7 @@
       }
 
       function onVisibilityChange() {
-        const document = getDocument();
+        const document = ssr_window_esm_getDocument();
 
         if (document.visibilityState === "hidden" && swiper.autoplay.running) {
           pause();
@@ -11713,7 +11713,7 @@
       on("init", () => {
         if (swiper.params.autoplay.enabled) {
           start();
-          const document = getDocument();
+          const document = ssr_window_esm_getDocument();
           document.addEventListener("visibilitychange", onVisibilityChange);
           attachMouseEvents();
         }
@@ -13283,7 +13283,7 @@
      * Released on: September 15, 2022
      */
 
-    core.use([Navigation, Pagination, Lazy, EffectFade]);
+    core.use([Navigation, Pagination, Lazy, EffectFade, Autoplay]);
     /* HEADING
    -------------------------------------------------- */
 
@@ -13487,6 +13487,60 @@
         }
       }
     });
+
+    const houseType = document.querySelector('.house-type__wrapper .swiper-container');
+
+    if(houseType !== null) {
+      new core(houseType, {
+          slidesPerView: 'auto',
+          loop: true,
+          navigation: {
+            nextEl: ".house-type .swiper-button-next",
+            prevEl: ".house-type .swiper-button-prev",
+          },
+      });
+    }
+
+    const mainSliderWrap = document.querySelector('.main-slider .swiper-container');
+    const mainSliderSpeed = mainSliderWrap.getAttribute('data-speed');
+
+    if(mainSliderWrap !== null) {
+      new core(mainSliderWrap, {
+          slidesPerView: 1,
+          spaceBetween: 20,
+          autoplay: {
+            delay: mainSliderSpeed,
+          },
+          loop: true,
+      });
+    }
+
+    const impressionsSliderWrap = document.querySelector('.impressions-slider .swiper-container');
+    if(impressionsSliderWrap !== null) {
+      new core(impressionsSliderWrap, {
+        slidesPerView: 4,
+        spaceBetween: 20,
+        loop: true,
+        navigation: {
+          nextEl: ".impressions-slider .swiper-button-next",
+          prevEl: ".impressions-slider .swiper-button-prev",
+        },
+        breakpoints: {
+          310: {
+              slidesPerView: 2,
+              centeredSlides: true
+          },
+          640: {
+              slidesPerView: 3,
+              centeredSlides: false
+          },
+          1024: {
+              slidesPerView: 4,
+          },
+        },
+      });
+    }
+
     window.addEventListener("modalAfterClose", function (event) {
       if (event.detail.id === "fullgallery") {
         document.getElementById("fullgallery").remove();
@@ -13625,6 +13679,12 @@
           $guests.classList.remove("guests_show");
         }
       });
+
+      document.querySelector(".guests__dropdown-close").addEventListener("click", function (event) {
+          $guests.classList.remove("guests_show");
+          document.querySelector(".main-form__shadow").style.display = "none";
+      });
+
       $guestsControl.addEventListener("click", function () {
         $guests.classList.toggle("guests_show");
       });
@@ -17491,8 +17551,24 @@
             var _this = this;
 
             document.addEventListener("click", function (event) {
+
+              if( event.target.closest('.main-form') !== null && 
+                  event.target.classList.contains('calendar__dropdown-close') !== true && 
+                  event.target.classList.contains('guests__dropdown-close') !== true && 
+                  event.target.classList.contains('autocomplete-dropdown-close') !== true 
+                ){
+                document.querySelector(".main-form__shadow").style.display = "block";
+              }else{
+                document.querySelector(".main-form__shadow").style.display = "none";
+              }
               var $el = event.target;
 
+              if($el.getAttribute('data-calendar-label') == 'data-calendar-label'){
+                document.querySelectorAll("[data-calendar-label]").forEach(function (item){
+                  item.previousElementSibling.style.bottom = '30px';
+                });
+              }
+               
               if (
                 !$el.matches("[data-calendar-dropdown]") &&
                 !$el.closest("[data-calendar-dropdown]") &&
@@ -17504,6 +17580,13 @@
                 );
               }
             });
+
+            document.querySelector(".calendar__dropdown-close").addEventListener("click", function (event) {
+              _this.$elements.dropdown.classList.remove(
+                "calendar__dropdown_show"
+              );
+            });
+
             window.addEventListener("resize", function () {
               _this.$elements.dropdown.classList.remove(
                 "calendar__dropdown_show"
@@ -17535,7 +17618,7 @@
           key: "handleLabelClick",
           value: function handleLabelClick() {
             var _this3 = this;
-
+            
             this.$elements.labels.forEach(function ($item) {
               $item.addEventListener("click", function () {
                 _this3.$elements.dropdown.classList.toggle(
@@ -17770,10 +17853,13 @@
         this.elements = {
           $root: document.querySelector("[data-autocomplete]"),
           $field: document.querySelector("[data-autocomplete-field]"),
+          $fieldMobile: document.querySelector("[data-autocomplete-field-mobile]"),
           $result: document.querySelector("[data-autocomplete-result]"),
           $dropdown: document.querySelector("[data-autocomplete-dropdown]"),
         };
       }
+
+      
 
       _createClass(SearchAutocomplete, [
         {
@@ -17877,9 +17963,24 @@
                 _this2.handleRequest(event.target.value);
               }, 500)
             );
+
+            this.elements.$fieldMobile.addEventListener(
+              "keyup",
+              debounce_default()(function (event) {
+                _this2.handleRequest(event.target.value);
+              }, 500)
+            );
+
+            this.elements.$field.addEventListener( "click", function (event) {
+               this.previousElementSibling.style.bottom = '30px';
+            });
+
+            this.elements.$fieldMobile.addEventListener( "click", function (event) {
+              this.previousElementSibling.style.bottom = '30px';
+           });
+
             document.addEventListener("click", function (event) {
               var $el = event.target;
-
               if (
                 $el.matches("[data-autocomplete-item]") ||
                 $el.closest("[data-autocomplete-item]")
@@ -17895,7 +17996,14 @@
                   title: $title.textContent.replace("&", "%26"),
                   footnote: $footnote ? $footnote.innerHTML : "",
                 });
+                
                 _this2.elements.$field.value = $title.textContent
+                  .replace("<br>", " ")
+                  .replace(/<\/?[^>]+(>|$)/g, "")
+                  .replace(/\s+/g, " ")
+                  .trim();
+
+                _this2.elements.$fieldMobile.value = $title.textContent
                   .replace("<br>", " ")
                   .replace(/<\/?[^>]+(>|$)/g, "")
                   .replace(/\s+/g, " ")
@@ -17910,8 +18018,14 @@
               ) {
                 _this2.handleHide();
               }
+              if($el.classList.contains('autocomplete-dropdown-close')){
+                _this2.handleHide();
+              }
             });
             this.elements.$field.addEventListener("focusin", function (event) {
+              _this2.handleRequest(event.target.value);
+            });
+            this.elements.$fieldMobile.addEventListener("focusin", function (event) {
               _this2.handleRequest(event.target.value);
             });
           },

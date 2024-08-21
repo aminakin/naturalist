@@ -19,4 +19,6 @@ $arResult = array(
     "arHLFeatures" => $arParams['arHLFeatures'],
     "arFilterFeatures" => $arParams['arFilterFeatures'],
     "arFilterServices" => $arParams['arFilterServices'],
+    "houseTypes" => $arParams['houseTypes'],
+    "arFilterHouseTypes" => $arParams['arFilterHouseTypes'],
 );

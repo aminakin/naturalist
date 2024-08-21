@@ -75,7 +75,7 @@ if (!empty($_GET['name']) && isset($_GET['name'])) {
     if ($decodeSearch['type']) {
         switch ($decodeSearch['type']) {
             case 'area':
-//                $arFilter["%UF_REGION_NAME"] = $decodeSearch['item'];
+                //                $arFilter["%UF_REGION_NAME"] = $decodeSearch['item'];
                 $searchName = $decodeSearch['item'];
                 $arRegionIds = Regions::RegionFilterSearcher($searchName);
 
@@ -102,30 +102,30 @@ if (!empty($_GET['name']) && isset($_GET['name'])) {
         $arFilterValues["SEARCH_TEXT"] = strip_tags($decodeSearch['title']);
     } else {
 
-//        CModule::IncludeModule('search');
-//        $obSearch = new CSearch;
-//        $obSearch->SetOptions(array(
-//            'ERROR_ON_EMPTY_STEM' => false,
-//        ));
-//        $obSearch->Search(array(
-//            'QUERY' => trim($search),
-//            'MODULE_ID' => 'iblock',
-//            'PARAM1' => 'catalog',
-//            'PARAM2' => CATALOG_IBLOCK_ID
-//        ));
-//        if (!$obSearch->selectedRowsCount()) {//и делаем резапрос, если не найдено с морфологией...
-//            $obSearch->Search(array(
-//                'QUERY' => trim($search),
-//                'MODULE_ID' => 'iblock',
-//                'PARAM1' => 'catalog',
-//                'PARAM2' => CATALOG_IBLOCK_ID
-//            ), array(), array('STEMMING' => false));//... уже с отключенной морфологией
-//        }
-//        while ($row = $obSearch->fetch()) {
-//            if($row['ITEM_ID'][0] == 'S'){
-//                $arSectionIDs[] = substr($row['ITEM_ID'],1);
-//            }
-//        }
+        //        CModule::IncludeModule('search');
+        //        $obSearch = new CSearch;
+        //        $obSearch->SetOptions(array(
+        //            'ERROR_ON_EMPTY_STEM' => false,
+        //        ));
+        //        $obSearch->Search(array(
+        //            'QUERY' => trim($search),
+        //            'MODULE_ID' => 'iblock',
+        //            'PARAM1' => 'catalog',
+        //            'PARAM2' => CATALOG_IBLOCK_ID
+        //        ));
+        //        if (!$obSearch->selectedRowsCount()) {//и делаем резапрос, если не найдено с морфологией...
+        //            $obSearch->Search(array(
+        //                'QUERY' => trim($search),
+        //                'MODULE_ID' => 'iblock',
+        //                'PARAM1' => 'catalog',
+        //                'PARAM2' => CATALOG_IBLOCK_ID
+        //            ), array(), array('STEMMING' => false));//... уже с отключенной морфологией
+        //        }
+        //        while ($row = $obSearch->fetch()) {
+        //            if($row['ITEM_ID'][0] == 'S'){
+        //                $arSectionIDs[] = substr($row['ITEM_ID'],1);
+        //            }
+        //        }
 
         $arRegionIds = Regions::RegionFilterSearcher($search);
         $arFilter["UF_REGION"] = $arRegionIds;
@@ -144,7 +144,7 @@ if (!empty($_GET['name']) && isset($_GET['name'])) {
             unset($arFilter["UF_REGION"]);
         }
 
-//        $arFilter["ID"] = $arSectionIDs;
+        //        $arFilter["ID"] = $arSectionIDs;
         $arFilterValues["SEARCH_TEXT"] = strip_tags($search);
     }
 }
@@ -198,6 +198,18 @@ if (!empty($_GET['features']) && isset($_GET['features'])) {
     $arFilter["UF_FEATURES"] = $arFilterFeatures;
 }
 
+// Тип дома
+if (!empty($_GET['housetypes']) && isset($_GET['housetypes'])) {
+    $arFilterHousetypes = explode(',', $_GET['housetypes']);
+    $arFilter["UF_SUIT_TYPE"] = $arFilterHousetypes;
+}
+
+// Водоём
+if (!empty($_GET['water']) && isset($_GET['water'])) {
+    $arFilterWater = explode(',', $_GET['water']);
+    $arFilter["UF_WATER"] = $arFilterWater;
+}
+
 // Впечатления
 if (!empty($_GET['impressions']) && isset($_GET['impressions'])) {
     $arRequestImpressions = explode(',', $_GET['impressions']);
@@ -247,7 +259,6 @@ while ($arSection = $rsSections->GetNext()) {
             $arDataFullGallery[] = "&quot;" . $imageOriginal["SRC"] . "&quot;";
             $arSection["PICTURES"][$photoId] = CFile::ResizeImageGet($photoId, array('width' => 600, 'height' => 400), BX_RESIZE_IMAGE_EXACT, true);
         }
-
     } else {
         $arSection["PICTURES"][0]["src"] = SITE_TEMPLATE_PATH . "/img/no_photo.png";
     }
@@ -268,7 +279,7 @@ while ($arSection = $rsSections->GetNext()) {
 
         $arSection['DISCTANCE'] = Utils::calculateTheDistance($searchedRegionData['COORDS'][0], $searchedRegionData['COORDS'][1], $arSection['COORDS'][0], $arSection['COORDS'][1]);
         $arSection['DISCTANCE_TO_REGION'] = $searchedRegionData['UF_CENTER_NAME_RU'] ?? $searchedRegionData['CENTER_UF_NAME'];
-//        $arSection['DISCTANCE_TO_REGION'] = Utils::morpher($searchedRegionData['CENTER_UF_NAME'], Morpher::CASE_GENITIVE);
+        //        $arSection['DISCTANCE_TO_REGION'] = Utils::morpher($searchedRegionData['CENTER_UF_NAME'], Morpher::CASE_GENITIVE);
 
         $arSection['DISCTANCE_TO_REGION'] = ucfirst($arSection['DISCTANCE_TO_REGION']);
     } else {
@@ -283,7 +294,6 @@ while ($arSection = $rsSections->GetNext()) {
         if ($arSection["UF_EXTERNAL_SERVICE"] == 1) {
             $sectionPrice = round($sectionPrice / $daysCount);
         }
-
     } else {
         $sectionPrice = $arSection["UF_MIN_PRICE"];
     }
@@ -296,7 +306,7 @@ while ($arSection = $rsSections->GetNext()) {
 
     if ($arUriParams['dateFrom'] != '') {
         $arUriParams = array_merge($arUriParams, $arUriParamsSort);
-    }    
+    }
 
     $uri = new Uri($arSection["SECTION_PAGE_URL"]);
     $uri->addParams($arUriParams);
@@ -423,6 +433,12 @@ while ($arEntity = $rsData->Fetch()) {
     $arHLFood[$arEntity["ID"]] = $arEntity;
 }
 
+// Типы домов
+$houseTypesDataClass = HighloadBlockTable::compileEntity(SUIT_TYPES_HL_ENTITY)->getDataClass();
+$houseTypes = $houseTypesDataClass::query()
+    ->addSelect('*')
+    ?->fetchAll();
+
 // Особенности объекта
 $hlId = 5;
 $hlblock = HighloadBlockTable::getById($hlId)->fetch();
@@ -494,345 +510,303 @@ if ($page > 1 && isset($_GET["impressions"]) && !empty($_GET['impressions']) && 
 }
 
 $APPLICATION->SetTitle($titleSEO);
-$APPLICATION->AddHeadString('<meta name="description" content="' . $descriptionSEO . '" />');
+$APPLICATION->SetPageProperty("custom_title", $h1SEO);
+$APPLICATION->SetPageProperty("description", $descriptionSEO);
 /**/
 ?>
 
-    <main class="main  <?php if (CSite::InDir('/map')): ?>main__on_map<?php endif; ?>">
-        <section class="section section_crumbs section_crumbs_catalog_new">
-            <div class="container">
-                <?
-                $APPLICATION->IncludeComponent(
-                    "naturalist:empty",
-                    "catalog_breadcrumbs",
-                    array(
-                        "map" => $arParams["MAP"]
-                    )
-                );
-                ?>
-                <div class="wrapper_title_catalog_page">
-                    <h1 class="page_title" <? if ($arParams["MAP"]): ?> style="visibility: hidden;"<? endif; ?>><?= $h1SEO; ?></h1>
-                    <div class="crumbs__controls">
-                        <!--<a class="crumbs__controls-mobile" href="#" data-map-full="data-map-full">Смотреть на карте</a>-->
-<!--                        <a class="button button_transparent" target="_blank"-->
-<!--                           href="https://yandex.ru/maps/?mode=routes&rtext=" data-route="data-route">Маршрут</a>-->
+<main class="main  <?php if (CSite::InDir('/map')): ?>main__on_map<?php endif; ?>">
+    <section class="section section_crumbs section_crumbs_catalog_new">
+        <div class="container">
+            <?
+            $APPLICATION->IncludeComponent(
+                "naturalist:empty",
+                "catalog_breadcrumbs",
+                array(
+                    "map" => $arParams["MAP"]
+                )
+            );
+            ?>
+            <div class="wrapper_title_catalog_page">
+                <h1 class="page_title" <? if ($arParams["MAP"]): ?> style="visibility: hidden;" <? endif; ?>><? $APPLICATION->ShowProperty("custom_title") ?></h1>
+                <div class="crumbs__controls">
+                    <!--<a class="crumbs__controls-mobile" href="#" data-map-full="data-map-full">Смотреть на карте</a>-->
+                    <!--                        <a class="button button_transparent" target="_blank"-->
+                    <!--                           href="https://yandex.ru/maps/?mode=routes&rtext=" data-route="data-route">Маршрут</a>-->
 
-                    </div>
                 </div>
+            </div>
 
-                <div class="catalog_filter">
-                    <form class="form filters" id="form-catalog-filter-front">
-                        <div class="form__group">
+            <div class="catalog_filter">
+                <form class="form filters" id="form-catalog-filter-front">
+                    <div class="form__group">
 
-                            <div class="form_group_wrapper">
-                                <div class="form__item item_name">
-                                    <div class="field field_autocomplete" data-autocomplete="/ajax/autocomplete.php">
-                                        <input type="hidden" data-autocomplete-result
-                                               value='<?= ($arFilterValues["SEARCH"]) ? $arFilterValues["SEARCH"] : null ?>'>
-                                        <input class="field__input" type="text" name="name"
-                                               placeholder="Укажите место или глэмпинг" data-autocomplete-field
-                                               value='<?= ($arFilterValues["SEARCH_TEXT"]) ? $arFilterValues["SEARCH_TEXT"] : null ?>'>
-                                        <div class="autocomplete-dropdown" data-autocomplete-dropdown></div>
-                                    </div>
-                                </div>
-
-                                <div class="form_group_wrapper-filter_items">
-
-                                    <div class="form__row calendar" data-calendar="data-calendar"
-                                         data-calendar-min="today" data-calendar-max="365">
-                                        <div class="form__item">
-                                            <div class="field field_icon field_calendar">
-                                                <div class="field__input" data-calendar-label="data-calendar-label"
-                                                     data-date-from><?php if ($dateFrom): ?><?= $dateFrom ?><?php else: ?>
-                                                        <span>Заезд</span><?php endif; ?></div>
-                                            </div>
-                                        </div>
-
-                                        <div class="form__item">
-                                            <div class="field field_icon field_calendar">
-                                                <div class="field__input" data-calendar-label="data-calendar-label"
-                                                     data-date-to><?php if ($dateTo): ?><?= $dateTo ?><?php else: ?>
-                                                        <span>Выезд</span><?php endif; ?></div>
-                                            </div>
-                                        </div>
-
-                                        <div class="calendar__dropdown" data-calendar-dropdown="data-calendar-dropdown">
-                                            <div class="calendar__navigation">
-                                                <div class="calendar__navigation-item calendar__navigation-item_months">
-                                                    <div class="calendar__navigation-label"
-                                                         data-calendar-navigation="data-calendar-navigation">
-                                                        <span><?= $currMonthName ?></span></div>
-                                                    <ul class="list">
-                                                        <?php
-                                                        $k = 0;
-                                                        ?>
-                                                        <?php foreach ($arDates[0] as $monthName) : ?>
-                                                            <li class="list__item<?php if ($k == 0) : ?> list__item_active<?php endif; ?>">
-                                                                <button data-calendar-year="<?= $currYear ?>"
-                                                                        class="list__item-month"
-                                                                        data-calendar-month-select="<?= $k ?>"
-                                                                        type="button"><?= $monthName ?></button>
-                                                            </li>
-                                                            <?php $k++; ?>
-                                                        <?php endforeach ?>
-                                                        <li class="list__item"
-                                                            data-calendar-delimiter="data-calendar-delimiter">
-                                                            <div class="list__item-year"><?= $nextYear ?></div>
-                                                        </li>
-                                                        <?php foreach ($arDates[1] as $monthName) : ?>
-                                                            <li class="list__item">
-                                                                <button data-calendar-year="<?= $nextYear ?>"
-                                                                        class="list__item-month"
-                                                                        data-calendar-month-select="<?= $k ?>"
-                                                                        type="button"><?= $monthName ?></button>
-                                                            </li>
-                                                            <?php $k++; ?>
-                                                        <?php endforeach ?>
-                                                    </ul>
-                                                </div>
-
-                                                <div class="calendar__navigation-item calendar__navigation-item_years">
-                                                    <div class="calendar__navigation-label"
-                                                         data-calendar-navigation="data-calendar-navigation">
-                                                        <span><?= $currYear ?></span></div>
-                                                    <ul class="list">
-                                                        <li class="list__item list__item_active">
-                                                            <button data-calendar-year-select="<?= $currYear ?>"
-                                                                    type="button"><?= $currYear ?></button>
-                                                        </li>
-                                                        <li class="list__item">
-                                                            <button data-calendar-year-select="<?= $nextYear ?>"
-                                                                    type="button"><?= $nextYear ?></button>
-                                                        </li>
-                                                    </ul>
-                                                </div>
-                                            </div>
-
-                                            <div class="calendar__month">
-                                                <input type="hidden" data-calendar-value="data-calendar-value">
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="form__item guest">
-                                        <div class="field field_icon guests" data-guests="data-guests">
-                                            <div class="field__input"
-                                                 data-guests-control="data-guests-control"><?= $guests + $children ?> <?= $guestsDeclension->get($guests + $children) ?></div>
-
-                                            <div class="guests__dropdown">
-                                                <div class="guests__guests">
-                                                    <div class="guests__item">
-                                                        <div class="guests__label">
-                                                            <div><?= GetMessage('FILTER_ADULTS') ?></div>
-                                                            <span><?= GetMessage('FILTER_ADULTS_AGE') ?></span>
-                                                        </div>
-                                                        <div class="counter">
-                                                            <button class="counter__minus" type="button"></button>
-                                                            <input type="text" disabled="disabled"
-                                                                   data-guests-adults-count="data-guests-adults-count"
-                                                                   name="guests-adults-count" value="<?= $guests ?>"
-                                                                   data-min="1">
-                                                            <button class="counter__plus" type="button"></button>
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="guests__item">
-                                                        <div class="guests__label">
-                                                            <div><?= GetMessage('FILTER_CHILDREN') ?></div>
-                                                            <span><?= GetMessage('FILTER_CHILDREN_AGE') ?></span>
-                                                        </div>
-                                                        <div class="counter">
-                                                            <button class="counter__minus" type="button"></button>
-                                                            <input type="text" disabled="disabled"
-                                                                   data-guests-children-count="data-guests-children-count"
-                                                                   name="guests-children-count" value="<?= $children ?>"
-                                                                   data-min="0">
-                                                            <button class="counter__plus" type="button"></button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-                                                <div class="guests__children"
-                                                     data-guests-children="data-guests-children">
-                                                    <?php if ($arChildrenAge): ?>
-                                                        <?php foreach ($arChildrenAge as $keyAge => $valueAge): ?>
-                                                            <div class="guests__item">
-                                                                <div class="guests__label">
-                                                                    <div><?= GetMessage('FILTER_CHILD_AGE') ?></div>
-                                                                    <span><?= getChildrenOrderTitle($keyAge + 1) ?> <?= GetMessage('FILTER_CHILD') ?></span>
-                                                                </div>
-                                                                <div class="counter">
-                                                                    <button class="counter__minus" type="button">
-                                                                        <svg class="icon icon_arrow-small"
-                                                                             viewBox="0 0 16 16"
-                                                                             style="width: 1.6rem; height: 1.6rem;">
-                                                                            <use xlink:href="#arrow-small"></use>
-                                                                        </svg>
-                                                                    </button>
-                                                                    <input type="text" disabled=""
-                                                                           data-guests-children=""
-                                                                           name="guests-children-<?= $keyAge ?>"
-                                                                           value="<?= $valueAge ?>"
-                                                                           data-min="0" data-max="17">
-                                                                    <button class="counter__plus" type="button">
-                                                                        <svg class="icon icon_arrow-small"
-                                                                             viewBox="0 0 16 16"
-                                                                             style="width: 1.6rem; height: 1.6rem;">
-                                                                            <use xlink:href="#arrow-small"></use>
-                                                                        </svg>
-                                                                    </button>
-                                                                </div>
-                                                            </div>
-                                                        <?php endforeach; ?>
-                                                    <?php endif; ?>
-                                                </div>
-                                            </div>
-                                        </div>
-
-
-                                        <button class="button button_primary" data-filter-set
-                                                data-filter-catalog-front-btn="true">Найти
-                                        </button>
-                                    </div>
+                        <div class="form_group_wrapper">
+                            <div class="form__item item_name">
+                                <div class="field field_autocomplete" data-autocomplete="/ajax/autocomplete.php">
+                                    <input type="hidden" data-autocomplete-result
+                                        value='<?= ($arFilterValues["SEARCH"]) ? $arFilterValues["SEARCH"] : null ?>'>
+                                    <input class="field__input" type="text" name="name"
+                                        placeholder="Укажите место или глэмпинг" data-autocomplete-field
+                                        value='<?= ($arFilterValues["SEARCH_TEXT"]) ? $arFilterValues["SEARCH_TEXT"] : null ?>'>
+                                    <div class="autocomplete-dropdown" data-autocomplete-dropdown></div>
                                 </div>
                             </div>
 
-                            <div class="filters__controls">
-                                <!--                    <button class="button button_clear" data-filter-reset>Сбросить всё</button>-->
-                                <button class="button button_primary" data-filter-set
+                            <div class="form_group_wrapper-filter_items">
+
+                                <div class="form__row calendar" data-calendar="data-calendar"
+                                    data-calendar-min="today" data-calendar-max="365">
+                                    <div class="form__item">
+                                        <div class="field field_icon field_calendar">
+                                            <div class="field__input" data-calendar-label="data-calendar-label"
+                                                data-date-from><?php if ($dateFrom): ?><?= $dateFrom ?><?php else: ?>
+                                                <span>Заезд</span><?php endif; ?>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form__item">
+                                        <div class="field field_icon field_calendar">
+                                            <div class="field__input" data-calendar-label="data-calendar-label"
+                                                data-date-to><?php if ($dateTo): ?><?= $dateTo ?><?php else: ?>
+                                                <span>Выезд</span><?php endif; ?>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="calendar__dropdown" data-calendar-dropdown="data-calendar-dropdown">
+                                        <div class="calendar__navigation">
+                                            <div class="calendar__navigation-item calendar__navigation-item_months">
+                                                <div class="calendar__navigation-label"
+                                                    data-calendar-navigation="data-calendar-navigation">
+                                                    <span><?= $currMonthName ?></span>
+                                                </div>
+                                                <ul class="list">
+                                                    <?php
+                                                    $k = 0;
+                                                    ?>
+                                                    <?php foreach ($arDates[0] as $monthName) : ?>
+                                                        <li class="list__item<?php if ($k == 0) : ?> list__item_active<?php endif; ?>">
+                                                            <button data-calendar-year="<?= $currYear ?>"
+                                                                class="list__item-month"
+                                                                data-calendar-month-select="<?= $k ?>"
+                                                                type="button"><?= $monthName ?></button>
+                                                        </li>
+                                                        <?php $k++; ?>
+                                                    <?php endforeach ?>
+                                                    <li class="list__item"
+                                                        data-calendar-delimiter="data-calendar-delimiter">
+                                                        <div class="list__item-year"><?= $nextYear ?></div>
+                                                    </li>
+                                                    <?php foreach ($arDates[1] as $monthName) : ?>
+                                                        <li class="list__item">
+                                                            <button data-calendar-year="<?= $nextYear ?>"
+                                                                class="list__item-month"
+                                                                data-calendar-month-select="<?= $k ?>"
+                                                                type="button"><?= $monthName ?></button>
+                                                        </li>
+                                                        <?php $k++; ?>
+                                                    <?php endforeach ?>
+                                                </ul>
+                                            </div>
+
+                                            <div class="calendar__navigation-item calendar__navigation-item_years">
+                                                <div class="calendar__navigation-label"
+                                                    data-calendar-navigation="data-calendar-navigation">
+                                                    <span><?= $currYear ?></span>
+                                                </div>
+                                                <ul class="list">
+                                                    <li class="list__item list__item_active">
+                                                        <button data-calendar-year-select="<?= $currYear ?>"
+                                                            type="button"><?= $currYear ?></button>
+                                                    </li>
+                                                    <li class="list__item">
+                                                        <button data-calendar-year-select="<?= $nextYear ?>"
+                                                            type="button"><?= $nextYear ?></button>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+
+                                        <div class="calendar__month">
+                                            <input type="hidden" data-calendar-value="data-calendar-value">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form__item guest">
+                                    <div class="field field_icon guests" data-guests="data-guests">
+                                        <div class="field__input"
+                                            data-guests-control="data-guests-control"><?= $guests + $children ?> <?= $guestsDeclension->get($guests + $children) ?></div>
+
+                                        <div class="guests__dropdown">
+                                            <div class="guests__guests">
+                                                <div class="guests__item">
+                                                    <div class="guests__label">
+                                                        <div><?= GetMessage('FILTER_ADULTS') ?></div>
+                                                        <span><?= GetMessage('FILTER_ADULTS_AGE') ?></span>
+                                                    </div>
+                                                    <div class="counter">
+                                                        <button class="counter__minus" type="button"></button>
+                                                        <input type="text" disabled="disabled"
+                                                            data-guests-adults-count="data-guests-adults-count"
+                                                            name="guests-adults-count" value="<?= $guests ?>"
+                                                            data-min="1">
+                                                        <button class="counter__plus" type="button"></button>
+                                                    </div>
+                                                </div>
+
+                                                <div class="guests__item">
+                                                    <div class="guests__label">
+                                                        <div><?= GetMessage('FILTER_CHILDREN') ?></div>
+                                                        <span><?= GetMessage('FILTER_CHILDREN_AGE') ?></span>
+                                                    </div>
+                                                    <div class="counter">
+                                                        <button class="counter__minus" type="button"></button>
+                                                        <input type="text" disabled="disabled"
+                                                            data-guests-children-count="data-guests-children-count"
+                                                            name="guests-children-count" value="<?= $children ?>"
+                                                            data-min="0">
+                                                        <button class="counter__plus" type="button"></button>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="guests__children"
+                                                data-guests-children="data-guests-children">
+                                                <?php if ($arChildrenAge): ?>
+                                                    <?php foreach ($arChildrenAge as $keyAge => $valueAge): ?>
+                                                        <div class="guests__item">
+                                                            <div class="guests__label">
+                                                                <div><?= GetMessage('FILTER_CHILD_AGE') ?></div>
+                                                                <span><?= getChildrenOrderTitle($keyAge + 1) ?> <?= GetMessage('FILTER_CHILD') ?></span>
+                                                            </div>
+                                                            <div class="counter">
+                                                                <button class="counter__minus" type="button">
+                                                                    <svg class="icon icon_arrow-small"
+                                                                        viewBox="0 0 16 16"
+                                                                        style="width: 1.6rem; height: 1.6rem;">
+                                                                        <use xlink:href="#arrow-small"></use>
+                                                                    </svg>
+                                                                </button>
+                                                                <input type="text" disabled=""
+                                                                    data-guests-children=""
+                                                                    name="guests-children-<?= $keyAge ?>"
+                                                                    value="<?= $valueAge ?>"
+                                                                    data-min="0" data-max="17">
+                                                                <button class="counter__plus" type="button">
+                                                                    <svg class="icon icon_arrow-small"
+                                                                        viewBox="0 0 16 16"
+                                                                        style="width: 1.6rem; height: 1.6rem;">
+                                                                        <use xlink:href="#arrow-small"></use>
+                                                                    </svg>
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    <?php endforeach; ?>
+                                                <?php endif; ?>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                    <button class="button button_primary" data-filter-set
                                         data-filter-catalog-front-btn="true">Найти
-                                </button>
+                                    </button>
+                                </div>
                             </div>
                         </div>
 
-                    </form>
-                </div>
-
-                <div class="catalog_sorter">
-                    <div class="filter_btn">
-                        <a class="button" href="#filters-modal" data-modal="data-modal">
-                            <svg class="icon icon_filters" viewbox="0 0 16 16" style="width: 1.6rem; height: 1.6rem;">
-                                <use xlink:href="#filters"/>
-                            </svg>
-                            <span>Фильтры</span>
-                        </a>
+                        <div class="filters__controls">
+                            <!--                    <button class="button button_clear" data-filter-reset>Сбросить всё</button>-->
+                            <button class="button button_primary" data-filter-set
+                                data-filter-catalog-front-btn="true">Найти
+                            </button>
+                        </div>
                     </div>
 
-                    <div class="sort">
-                        <span>Сортировать по:</span>
-                        <ul class="list">
-                            <li class="list__item">
-                                <?php if ($sortBy == "sort"): ?>
-                                    <span class="list__link" data-sort="sort"
-                                          data-type="<?= $orderReverse ?>"><span>По</span> <span>Наитию</span></span>
-                                <?php else: ?>
-                                    <a class="list__link" href="#" data-sort="sort" data-type="asc"><span>По</span>
-                                        <span>Наитию</span></a>
-                                <?php endif; ?>
-                            </li>
-                            <!--<li class="list__item">
+                </form>
+            </div>
+
+            <div class="catalog_sorter">
+                <div class="filter_btn">
+                    <a class="button" href="#filters-modal" data-modal="data-modal">
+                        <svg class="icon icon_filters" viewbox="0 0 16 16" style="width: 1.6rem; height: 1.6rem;">
+                            <use xlink:href="#filters" />
+                        </svg>
+                        <span>Фильтры</span>
+                    </a>
+                </div>
+
+                <div class="sort">
+                    <span>Сортировать по:</span>
+                    <ul class="list">
+                        <li class="list__item">
+                            <?php if ($sortBy == "sort"): ?>
+                                <span class="list__link" data-sort="sort"
+                                    data-type="<?= $orderReverse ?>"><span>По</span> <span>Наитию</span></span>
+                            <?php else: ?>
+                                <a class="list__link" href="#" data-sort="sort" data-type="asc"><span>По</span>
+                                    <span>Наитию</span></a>
+                            <?php endif; ?>
+                        </li>
+                        <!--<li class="list__item">
                     <?php /*if($sortBy == "popular"):*/ ?>
                         <span class="list__link" data-sort="popular" data-type="<?php /*=$orderReverse*/ ?>"><span>По</span> <span>Популярности</span></span>
                     <?php /*else:*/ ?>
                         <a class="list__link" href="#" data-sort="popular" data-type="<?php /*=$orderReverse*/ ?>"><span>По</span> <span>Популярности</span></a>
                     <?php /*endif;*/ ?>
                 </li>-->
-                            <li class="list__item">
-                                <?php if ($sortBy == "price"): ?>
-                                    <span class="list__link" data-sort="price"
-                                          data-type="<?= $orderReverse ?>"><span>По</span> <span>Цене</span></span>
-                                <?php else: ?>
-                                    <a class="list__link" href="#" data-sort="price" data-type="asc"><span>По</span>
-                                        <span>Цене</span></a>
-                                <?php endif; ?>
-                            </li>
-                            <li class="list__item">
-                                <?php if ($sortBy == "rating"): ?>
-                                    <span class="list__link" data-sort="rating"
-                                          data-type="<?= $orderReverse ?>"><span>По</span> <span>Рейтингу</span></span>
-                                <?php else: ?>
-                                    <a class="list__link" href="#" data-sort="rating" data-type="desc"><span>По</span>
-                                        <span>Рейтингу</span></a>
-                                <?php endif; ?>
-                            </li>
-                        </ul>
-                    </div>
+                        <li class="list__item">
+                            <?php if ($sortBy == "price"): ?>
+                                <span class="list__link" data-sort="price"
+                                    data-type="<?= $orderReverse ?>"><span>По</span> <span>Цене</span></span>
+                            <?php else: ?>
+                                <a class="list__link" href="#" data-sort="price" data-type="asc"><span>По</span>
+                                    <span>Цене</span></a>
+                            <?php endif; ?>
+                        </li>
+                        <li class="list__item">
+                            <?php if ($sortBy == "rating"): ?>
+                                <span class="list__link" data-sort="rating"
+                                    data-type="<?= $orderReverse ?>"><span>По</span> <span>Рейтингу</span></span>
+                            <?php else: ?>
+                                <a class="list__link" href="#" data-sort="rating" data-type="desc"><span>По</span>
+                                    <span>Рейтингу</span></a>
+                            <?php endif; ?>
+                        </li>
+                    </ul>
                 </div>
+            </div>
 
-            </div>
-        </section>
-        <!-- section-->
-
-        <section class="section section_catalog">
-            <div class="container">
-                <?
-                $APPLICATION->IncludeComponent(
-                    "naturalist:empty",
-                    "catalog",
-                    array(
-                        "sortBy" => $sortBy,
-                        "orderReverse" => $orderReverse,
-                        "page" => $arParams["REAL_PAGE"] ? $arParams["REAL_PAGE"] : $page,
-                        "pageCount" => $pageCount,
-                        "allCount" => $allCount,
-                        "countDeclension" => $countDeclension,
-                        "reviewsDeclension" => $reviewsDeclension,
-                        "arPageSections" => $arPageSections,
-                        "arReviewsAvg" => $arReviewsAvg,
-                        "arFavourites" => $arFavourites,
-                        "arHLTypes" => $arHLTypes,
-                        "arHLFeatures" => $arHLFeatures,
-                        "arServices" => $arServices,
-                        "arSearchedRegions" => is_array($arRegionIds) ? array_unique($arRegionIds) : '',
-                        "searchedRegionData" => $searchedRegionData,
-                        "searchName" => $searchName ?? $search,
-                        "arFilterValues" => $arFilterValues,
-                        "dateFrom" => $dateFrom,
-                        "dateTo" => $dateTo,
-                        "arDates" => $arDates,
-                        "currMonthName" => $currMonthName,
-                        "currYear" => $currYear,
-                        "nextYear" => $nextYear,
-                        "guests" => $guests,
-                        "children" => $children,
-                        "guestsDeclension" => $guestsDeclension,
-                        "arChildrenAge" => $arChildrenAge,
-                        "itemsCount" => $arParams["ITEMS_COUNT"],
-                    )
-                );
-                ?>
-            </div>
-        </section>
-        <!-- section-->                
-        <section class="cert-index__seo-text">
-            <div class="container">
-                <?if (!empty($arSeoImpressions) && reset($arSeoImpressions)['PREVIEW_TEXT'] != '') {
-                    echo reset($arSeoImpressions)['PREVIEW_TEXT'];
-                } else {
-                    $APPLICATION->IncludeComponent(
-                        "bitrix:main.include",
-                        "",
-                        Array(
-                            "AREA_FILE_SHOW" => "file", 
-                            "PATH" => '/include/'.$seoFile.'-seo-text.php',
-                            "EDIT_TEMPLATE" => ""
-                        )
-                    );
-                }?>                
-            </div>
-        </section>
-        <div class="container">
-            <a href="#" class="show-more-seo">Показать ещё</a>
         </div>
-    </main>
+    </section>
+    <!-- section-->
 
-    <div class="modal modal_filters" id="filters-modal">
-        <div class="modal__container">
+    <section class="section section_catalog">
+        <div class="container">
             <?
             $APPLICATION->IncludeComponent(
                 "naturalist:empty",
-                "catalog_filters",
+                "catalog",
                 array(
+                    "sortBy" => $sortBy,
+                    "orderReverse" => $orderReverse,
+                    "page" => $arParams["REAL_PAGE"] ? $arParams["REAL_PAGE"] : $page,
+                    "pageCount" => $pageCount,
+                    "allCount" => $allCount,
+                    "countDeclension" => $countDeclension,
+                    "reviewsDeclension" => $reviewsDeclension,
+                    "arPageSections" => $arPageSections,
+                    "arReviewsAvg" => $arReviewsAvg,
+                    "arFavourites" => $arFavourites,
+                    "arHLTypes" => $arHLTypes,
+                    "arHLFeatures" => $arHLFeatures,
+                    "arServices" => $arServices,
+                    "arSearchedRegions" => is_array($arRegionIds) ? array_unique($arRegionIds) : '',
+                    "searchedRegionData" => $searchedRegionData,
+                    "searchName" => $searchName ?? $search,
                     "arFilterValues" => $arFilterValues,
                     "dateFrom" => $dateFrom,
                     "dateTo" => $dateTo,
@@ -844,19 +818,68 @@ $APPLICATION->AddHeadString('<meta name="description" content="' . $descriptionS
                     "children" => $children,
                     "guestsDeclension" => $guestsDeclension,
                     "arChildrenAge" => $arChildrenAge,
-                    "arHLTypes" => $arHLTypes,
-                    "arFilterTypes" => $arFilterTypes,
-                    "arServices" => $arServices,
-                    "arHLFood" => $arHLFood,
-                    "arFilterFood" => $arFilterFood,
-                    "arHLFeatures" => $arHLFeatures,
-                    "arFilterFeatures" => $arFilterFeatures,
-                    "arFilterServices" => $arFilterServices
+                    "itemsCount" => $arParams["ITEMS_COUNT"],
                 )
             );
             ?>
         </div>
+    </section>
+    <!-- section-->
+    <section class="cert-index__seo-text">
+        <div class="container">
+            <? if (!empty($arSeoImpressions) && reset($arSeoImpressions)['PREVIEW_TEXT'] != '') {
+                echo reset($arSeoImpressions)['PREVIEW_TEXT'];
+            } else {
+                $APPLICATION->IncludeComponent(
+                    "bitrix:main.include",
+                    "",
+                    array(
+                        "AREA_FILE_SHOW" => "file",
+                        "PATH" => '/include/' . $seoFile . '-seo-text.php',
+                        "EDIT_TEMPLATE" => ""
+                    )
+                );
+            } ?>
+        </div>
+    </section>
+    <div class="container">
+        <a href="#" class="show-more-seo">Показать ещё</a>
     </div>
+</main>
+
+<div class="modal modal_filters" id="filters-modal">
+    <div class="modal__container">
+        <?
+        $APPLICATION->IncludeComponent(
+            "naturalist:empty",
+            "catalog_filters",
+            array(
+                "arFilterValues" => $arFilterValues,
+                "dateFrom" => $dateFrom,
+                "dateTo" => $dateTo,
+                "arDates" => $arDates,
+                "currMonthName" => $currMonthName,
+                "currYear" => $currYear,
+                "nextYear" => $nextYear,
+                "guests" => $guests,
+                "children" => $children,
+                "guestsDeclension" => $guestsDeclension,
+                "arChildrenAge" => $arChildrenAge,
+                "arHLTypes" => $arHLTypes,
+                "arFilterTypes" => $arFilterTypes,
+                "arServices" => $arServices,
+                "arHLFood" => $arHLFood,
+                "arFilterFood" => $arFilterFood,
+                "arHLFeatures" => $arHLFeatures,
+                "arFilterFeatures" => $arFilterFeatures,
+                "arFilterServices" => $arFilterServices,
+                "houseTypes" => $houseTypes,
+                "arFilterHouseTypes" => $arFilterHousetypes,
+            )
+        );
+        ?>
+    </div>
+</div>
 
 <?
 $APPLICATION->IncludeComponent(

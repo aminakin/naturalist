@@ -12,7 +12,7 @@
   line-height: 34px;
   letter-spacing: -1pt;
   font-weight: 600;
-  font-family: "TT Travels Next";
+  font-family: "Lato";
 }
 
 .step__number {
@@ -37,7 +37,7 @@
 }
 
 .pers-cert__title {
-  font-family: "TT Travels Next";
+  font-family: "Lato";
   font-size: 28px;
   line-height: 34px;
   letter-spacing: -1pt;
@@ -55,7 +55,7 @@
   padding: 20px;
   border-radius: 83px;
   text-align: center;
-  font-family: "TT Travels Next";
+  font-family: "Lato";
   font-weight: 600;
 }
 
@@ -134,7 +134,7 @@
 }
 
 .object-row__price {
-  font-family: "TT Travels Next";
+  font-family: "Lato";
   font-size: 35px;
   line-height: 35px;
   font-weight: 600;
@@ -152,7 +152,7 @@
   background-color: var(--color-orange);
   color: white;
   text-transform: uppercase;
-  font-family: "TT Travels Next";
+  font-family: "Lato";
   font-size: 14px;
   line-height: 21px;
   font-weight: 600;
@@ -163,7 +163,7 @@
 }
 
 .cart-order__get-pdf {
-  font-family: "TT Travels Next";
+  font-family: "Lato";
   font-size: 14px;
   line-height: 18px;
   font-weight: 600;
@@ -185,7 +185,7 @@
   border-radius: 100px;
   border: none;
   background: var(--color-beige);
-  font-family: "TT Travels Next";
+  font-family: "Lato";
   font-size: 15px;
   line-height: 21px;
   width: 100%;
@@ -200,7 +200,7 @@
 .cert-order__to-catalog {
   background-color: var(--color-beige);
   padding: 13px 10px;
-  font-family: "TT Travels Next";
+  font-family: "Lato";
   font-size: 17px;
   line-height: 23px;
   letter-spacing: -0.17px;

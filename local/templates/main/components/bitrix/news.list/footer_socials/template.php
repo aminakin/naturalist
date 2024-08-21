@@ -19,12 +19,7 @@ Loc::loadMessages(__FILE__);
 
         <li class="list__item list__item_<?= $arItem["CODE"] ?>" id="<?=$this->GetEditAreaId($arItem['ID'])?>">
             <a class="list__link" href="<?= $arItem["PROPERTIES"]["LINK"]["VALUE"] ?>" <?= $onclick; ?> target="_blank">
-                <svg class="icon icon_<?= $arItem["CODE"] ?>"
-                     viewbox="0 0 <?= $arItem["PROPERTIES"]["WIDTH"]["VALUE"] ?> <?= $arItem["PROPERTIES"]["HEIGHT"]["VALUE"] ?>"
-                     style="width: <?= round($arItem["PROPERTIES"]["WIDTH"]["VALUE"] / 10, 1) ?>rem; height: <?= round($arItem["PROPERTIES"]["HEIGHT"]["VALUE"] / 10, 1) ?>rem;">
-                    <use xlink:href="#<?= $arItem["CODE"] ?>"/>
-                </svg>
-                <? if (!$arParams["NO_TEXT"]): ?><span><?= $arItem["NAME"] ?></span><? endif; ?>
+                <img src="<?=$arItem['PREVIEW_PICTURE']["SRC"]?>" alt="" title="<?= $arItem["NAME"] ?>">
             </a>
         </li>
     <? endforeach; ?>
