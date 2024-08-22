@@ -174,6 +174,7 @@
 .object__images {
   margin-bottom: 0.8rem;
   position: relative;
+  text-align: center;
 }
 
 .object__images .swiper-slide {
@@ -1631,6 +1632,7 @@
   -ms-flex: none;
   flex: none;
   width: 55.66%;
+  text-align: center;
 }
 
 .object-hero__gallery img {

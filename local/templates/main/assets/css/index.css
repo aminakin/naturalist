@@ -1571,9 +1571,9 @@
   border: none;
 }
 
-.house-type__wrapper .swiper-slide:hover a svg path {
+/*.house-type__wrapper .swiper-slide:hover a svg path {
   fill: var(--color-orange);
-}
+}*/
 
 .house-type__wrapper .swiper-slide:hover a .house-type__text {
   color: var(--color-orange);
@@ -1615,7 +1615,9 @@
 .house-type__wrapper .swiper-button-next {
   right: -14px;
 }
-
+.slider-gallery .swiper-pagination-bullets{
+  top: -6px;
+}
 @media (max-width: 1023px) {
   .house-type__wrapper .swiper-button-prev,
   .house-type__wrapper .swiper-button-next,

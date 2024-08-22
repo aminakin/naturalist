@@ -348,10 +348,11 @@
   height: auto;
   position: relative;
   width: 35.7%;
+  text-align: center;
 }
 
 .object-row__images .slider-gallery {
-  height: 100%;
+  /*height: 100%;*/
 }
 
 .object-row__images .slider-gallery img {

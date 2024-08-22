@@ -4281,11 +4281,16 @@ img.lazy.loaded {
 
 .slider-gallery .swiper-pagination-wrapper{
   position: absolute;
-  bottom: 8px;
+  bottom: 0px;
   left: 0;
   text-align: center;
   z-index: 10;
   width: 100%;
+}
+
+.modal__container .slider-gallery .swiper-pagination-bullets{
+  top: auto;
+  bottom: 30px;
 }
 
 .modal__container .slider-gallery .swiper-pagination-bullets{
@@ -4297,11 +4302,13 @@ img.lazy.loaded {
 .slider-gallery .swiper-pagination-bullets {
   height: 9px;
   padding: 2px;
-  position: static;
+  position: relative;
   width: auto;
   display: inline-block;
   border-radius: 9px;
   background-color: #00000060;
+  top: -30px;
+  margin: 0 auto;
 }
 
 .slider-gallery .swiper-pagination-bullets .swiper-pagination-bullet {
