@@ -3925,9 +3925,9 @@ img.lazy.loaded {
   -webkit-box-pack: center;
   -ms-flex-pack: center;
   align-items: center;
-  border: 0.1rem solid #000;
+  /*border: 0.1rem solid #000;
   border: 0.1rem solid var(--color-black);
-  border-radius: 50%;
+  border-radius: 50%;*/
   color: #1c2d50;
   color: var(--color-deep-blue);
   display: -webkit-box;
