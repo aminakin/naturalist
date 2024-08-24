@@ -103,7 +103,7 @@ $this->setFrameMode(true);
                 <? endif; ?>
                 <div class="certificates_index__btns">
                     <div class="certificates_index__btn orange">
-                        <a href="buy/">Купить</a>
+                        <a href="buy/">Выбрать</a>
                     </div>
                     <div class="certificates_index__btn blue">
                         <a href="activate/">Активировать</a>

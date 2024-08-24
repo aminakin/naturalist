@@ -91,7 +91,7 @@ class AutoCreate
 
         foreach ($query as $value) {
             $links[] = [
-                'UF_NEW_URL' => '/catalog/' . self::getNewUrl($value['UF_NAME']),
+                'UF_NEW_URL' => '/catalog/tip-' . self::getNewUrl($value['UF_NAME']),
                 'UF_REAL_URL' => '/catalog/?housetypes=' . $value['ID'],
                 'UF_ACTIVE' => 1,
                 'UF_H1' => 'Отдых на природе в домах типа ' . $value['UF_NAME'],

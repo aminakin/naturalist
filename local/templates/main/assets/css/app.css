@@ -1031,10 +1031,10 @@ textarea {
   right: auto;
 }
 
-.swiper-button-prev:after,
+/*.swiper-button-prev:after,
 .swiper-rtl .swiper-button-next:after {
   content: "prev";
-}
+}*/
 
 .swiper-button-next,
 .swiper-rtl .swiper-button-prev {
@@ -1042,10 +1042,10 @@ textarea {
   right: 10px;
 }
 
-.swiper-button-next:after,
+/*.swiper-button-next:after,
 .swiper-rtl .swiper-button-prev:after {
   content: "next";
-}
+}*/
 
 .swiper-button-lock {
   display: none;

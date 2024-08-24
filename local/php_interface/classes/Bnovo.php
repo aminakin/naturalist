@@ -2349,7 +2349,7 @@ class Bnovo
      */
     public function getNearPrices(): void
     {
-        //return;
+        return;
         $now = new DateTime();
         $startDate = FormatDate("Y-m-d", $now->getTimeStamp());
 

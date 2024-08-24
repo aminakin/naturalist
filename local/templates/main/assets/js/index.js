@@ -13493,7 +13493,7 @@
     if(houseType !== null) {
       new core(houseType, {
           slidesPerView: 'auto',
-          loop: true,
+          loop: false,
           navigation: {
             nextEl: ".house-type .swiper-button-next",
             prevEl: ".house-type .swiper-button-prev",
@@ -13520,7 +13520,7 @@
       new core(impressionsSliderWrap, {
         slidesPerView: 4,
         spaceBetween: 20,
-        loop: true,
+        loop: false,
         navigation: {
           nextEl: ".impressions-slider .swiper-button-next",
           prevEl: ".impressions-slider .swiper-button-prev",
