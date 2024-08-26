@@ -1,4 +1,8 @@
 @charset "UTF-8";
+*{
+  font-family: 'Lato', sans-serif!important;
+}
+
 .favorite {
   background: none;
   border: none;

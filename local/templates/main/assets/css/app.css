@@ -1,13 +1,13 @@
 @charset "UTF-8";
 :root {
   --base-font-size: 10px;
-  --base-font-family: "Lato"; /*"Montserrat";*/
+  --base-font-family: "Montserrat"; /*"Montserrat";*/
   --base-text-color: #000;
   --base-text-line-height: 1.3;
   --header-height: 56px;
   --container-max-width: 1200px;
   --container-gap: 4rem;
-  --header-text-font-family: "Lato";
+  --header-text-font-family: TT Travels Next;
   --header-text-color: inherit;
   --header-text-line-height: 1.3;
   --header-text-bottom-offset: 2rem;
@@ -183,7 +183,7 @@ body {
   color: #000;
   color: var(--base-text-color);
   direction: ltr;
-  font-family: "Lato";
+  font-family: TT Travels Next;
   font-size: 1.3rem;
   font-size: var(--content-text-font-size);
   line-height: 1.3;
