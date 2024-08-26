@@ -33,7 +33,7 @@ global $arSettings;
                 <div class="location-alphabet regions">
                     <?= $arResult['HTML']($arResult['REGIONS_FULL'], 'UF_NAME')?>
                 </div>
-                <div class="location-section hidden regions">
+                <div class="location-section regions">
                     <? foreach ($arResult['REGIONS_FULL'] as $region) { ?>
                         <a href="<?= $region['URL'] ?>" class="location-full__item hidden"><?= $region['UF_NAME'] ?></a>
                     <? } ?> 
@@ -51,7 +51,7 @@ global $arSettings;
                 <div class="location-alphabet reservoirs">
                 <?= $arResult['HTML']($arResult['WATER_FULL'], 'UF_NAME')?>
                 </div>
-                <div class="location-section hidden reservoirs">
+                <div class="location-section reservoirs">
                     <? foreach ($arResult['WATER_FULL'] as $water) { ?>
                         <a href="<?= $water['URL'] ?>" class="location-full__item hidden"><?= $water['UF_NAME'] ?></a>
                     <? } ?>

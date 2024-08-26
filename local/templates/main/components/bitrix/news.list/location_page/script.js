@@ -43,12 +43,12 @@ window.addEventListener("DOMContentLoaded", () => {
     const locationAlphabetLetter = document.querySelectorAll('.location-alphabet__letter');
 
     locationAlphabetLetter.forEach(letterBtn => {
-        letterBtn.addEventListener("click", function () {
-            const letter = letterBtn.getAttribute("data-letter").toLowerCase();
-            const lettersContainer = letterBtn.parentNode.parentNode; 
-            const locationContainer = lettersContainer.querySelector('.location-section');
-            const locations = locationContainer.querySelectorAll('.location-full__item');
+        const letter = letterBtn.getAttribute("data-letter").toLowerCase();
+        const lettersContainer = letterBtn.parentNode.parentNode; 
+        const locationContainer = lettersContainer.querySelector('.location-section');
+        const locations = locationContainer.querySelectorAll('.location-full__item');
 
+        letterBtn.addEventListener("click", function () {
             locationContainer.classList.remove('hidden');
             lettersContainer.querySelectorAll('.location-alphabet__letter').forEach(letterBTN => {
                 letterBTN.classList.remove('active')
@@ -57,7 +57,9 @@ window.addEventListener("DOMContentLoaded", () => {
 
             locations.forEach((location) =>{
                 let text = location.textContent.toLowerCase();
-                text = text.replace('республика', '');    
+                text = text.replace('республика', '');   
+                text = text.replace('озеро ', ''); 
+                text = text.replace('река ', '');  
 
                 if(text[0] == letter){
                     location.classList.remove('hidden');
@@ -68,4 +70,12 @@ window.addEventListener("DOMContentLoaded", () => {
             })
         });
     });
+
+    initAlphabet();
+
+    function initAlphabet(){
+        document.querySelectorAll('.location-alphabet').forEach(alphabet =>{
+            alphabet.querySelector('.location-alphabet__letter:not(.disabled)').click();
+        })
+    }
 });

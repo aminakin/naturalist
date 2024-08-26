@@ -102,7 +102,9 @@ function checkLetterHasLocations(string $letter, array $locations, string $locat
     $flag = false;
     foreach($locations as $location) {
         $locationName = mb_strtolower($location[$locationsKey]);
-        $locationName= str_replace('республика', "", $locationName);
+        $locationName= str_replace('республика ', "", $locationName);
+        $locationName= str_replace('озеро ', "", $locationName);
+        $locationName= str_replace('река ', "", $locationName);
         $locationFirstChar = mb_substr($locationName, 0, 1);
         if($locationFirstChar === mb_strtolower($letter)) {
             $flag = true;
