@@ -7,7 +7,7 @@ Loc::loadMessages(__FILE__);
 global $arSettings;
 ?>
 
-<section class="location__wrapper 1">
+<section class="location__wrapper">
     <div class="container">
         <div class="location__title-wrap">
             <span><?= Loc::getMessage('LOCATION_TITLE') ?></span>
@@ -19,7 +19,7 @@ global $arSettings;
                     <?= Loc::getMessage('LOCATION_RESERVOIR') ?>
                 </a>
             </div>
-            <a href="/catalog/" class="link-all"><?= Loc::getMessage('LINK_ALL') ?></a>
+            <a href="/regions/" class="link-all"><?= Loc::getMessage('LINK_ALL') ?></a>
         </div>
         <div class="location__items-wrap">
             <div class="location__group active" data-group="regions">
@@ -39,6 +39,6 @@ global $arSettings;
                 <? } ?>
             </div>
         </div>
-        <a href="/catalog/" class="btn-all"><?= Loc::getMessage('BTN_ALL') ?></a>
+        <a href="/regions/" class="btn-all"><?= Loc::getMessage('BTN_ALL') ?></a>
     </div>
 </section>

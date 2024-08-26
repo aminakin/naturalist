@@ -1600,6 +1600,15 @@
   position: absolute;
   top: 0;
   z-index: 2;
+  transition: 0.3s;
+}
+
+
+.house-type__wrapper:hover .house-type__shadow.left {
+  left: -100px;
+}
+.house-type__wrapper:hover .house-type__shadow.right {
+  right: -100px;
 }
 
 .house-type__wrapper .house-type__shadow.left {
