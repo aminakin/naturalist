@@ -1,3 +1,8 @@
+.impressions-slider,
+.impressions-slider__wrap,
+.impressions-slider__title,
+.house-type,
+.house-type__wrapper,
 .swiper-container,
 .swiper-container *{
     user-select: none;

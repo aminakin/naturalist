@@ -166,6 +166,12 @@
     line-height: 24px;
     text-align: left;
     padding: 12px;
+    display: inline-block;
+    width: 30%;
+}
+
+.location-full__item:hover{
+    color: var(--color-orange);
 }
 
 .location-section{
@@ -211,6 +217,23 @@
 
 .location-alphabet__letter.disabled:hover .no-location{
     display: block;
+}
+
+.location__common-water {
+    margin-top: 32px;
+}
+
+.location__common-water-list {
+    list-style: none;
+    display: flex;
+    gap: 16px;    
+}
+
+.location__common-water-item a {
+    text-decoration: none;
+    font-size: 16px;
+    line-height: 22px;
+    border-color: var(--color-orange);
 }
 
 @media (max-width: 1200px) {
@@ -312,5 +335,21 @@
 
     .location__title-wrap span{
         margin-bottom: 12px;
+    }
+
+    .location__common-water {
+        margin-top: 20px;
+        overflow: scroll;
+        width: calc(100% + 16px);
+    }
+
+    .location__common-water-list {
+        width: max-content;
+        padding-right: 16px;
+    }
+
+    .location__common-water-item a {        
+        font-size: 14px;
+        line-height: 20px;
     }
 }

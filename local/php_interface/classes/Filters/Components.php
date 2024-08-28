@@ -24,4 +24,17 @@ class Components
             ->where('UF_FILTER_ID', $filter)
             ?->fetch() ?? '';
     }
+
+    /**
+     * Поиск ЧПУ ссылок по коду ссылки
+     */
+    public static function getChpyLinkByUrl($filter)
+    {
+        $chpyDataClass = HighloadBlockTable::compileEntity(FILTER_HL_ENTITY)->getDataClass();
+
+        return $chpyDataClass::query()
+            ->addSelect('UF_SEO_TEXT')
+            ->where('UF_NEW_URL', $filter)
+            ?->fetch() ?? '';
+    }
 }

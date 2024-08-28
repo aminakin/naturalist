@@ -56,6 +56,15 @@ global $arSettings;
                         <a href="<?= $water['URL'] ?>" class="location-full__item hidden"><?= $water['UF_NAME'] ?></a>
                     <? } ?>
                 </div>
+                <?if (isset($arResult['COMMON_WATER']) && !empty($arResult['COMMON_WATER'])) {?>
+                    <div class="location__common-water">
+                        <ul class="location__common-water-list">
+                            <?foreach ($arResult['COMMON_WATER'] as $key => $commonWater) {?>
+                                <li class="location__common-water-item"><a href="<?=$commonWater['URL']?>"><?=$commonWater['UF_NAME']?></a></li>
+                            <?}?>
+                        </ul>
+                    </div>
+                <?}?>
             </div>
         </div>
         

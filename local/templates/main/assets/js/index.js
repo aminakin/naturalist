@@ -13488,35 +13488,42 @@
       }
     });
 
-    const houseType = document.querySelector('.house-type__wrapper .swiper-container');
+    const houseType = document.querySelector(
+      ".house-type__wrapper .swiper-container"
+    );
 
-    if(houseType !== null) {
+    if (houseType !== null) {
       new core(houseType, {
-          slidesPerView: 'auto',
-          loop: false,
-          navigation: {
-            nextEl: ".house-type .swiper-button-next",
-            prevEl: ".house-type .swiper-button-prev",
-          },
+        slidesPerView: "auto",
+        loop: false,
+        navigation: {
+          nextEl: ".house-type .swiper-button-next",
+          prevEl: ".house-type .swiper-button-prev",
+        },
       });
     }
 
-    const mainSliderWrap = document.querySelector('.main-slider .swiper-container');
-    const mainSliderSpeed = mainSliderWrap.getAttribute('data-speed');
+    const mainSliderWrap = document.querySelector(
+      ".main-slider .swiper-container"
+    );
+    const mainSliderSpeed = mainSliderWrap.getAttribute("data-speed");
 
-    if(mainSliderWrap !== null) {
+    if (mainSliderWrap !== null) {
       new core(mainSliderWrap, {
-          slidesPerView: 1,
-          spaceBetween: 20,
-          autoplay: {
-            delay: mainSliderSpeed,
-          },
-          loop: true,
+        slidesPerView: 1,
+        spaceBetween: 20,
+        speed: 500,
+        autoplay: {
+          delay: mainSliderSpeed,
+        },
+        loop: true,
       });
     }
 
-    const impressionsSliderWrap = document.querySelector('.impressions-slider .swiper-container');
-    if(impressionsSliderWrap !== null) {
+    const impressionsSliderWrap = document.querySelector(
+      ".impressions-slider .swiper-container"
+    );
+    if (impressionsSliderWrap !== null) {
       new core(impressionsSliderWrap, {
         slidesPerView: 4,
         spaceBetween: 20,
@@ -13527,15 +13534,15 @@
         },
         breakpoints: {
           310: {
-              slidesPerView: 2,
-              centeredSlides: true
+            slidesPerView: 2,
+            centeredSlides: true,
           },
           640: {
-              slidesPerView: 3,
-              centeredSlides: false
+            slidesPerView: 3,
+            centeredSlides: false,
           },
           1024: {
-              slidesPerView: 4,
+            slidesPerView: 4,
           },
         },
       });
@@ -13677,16 +13684,21 @@
 
         if (!$el.matches("[data-guests]") && !$el.closest("[data-guests]")) {
           $guests.classList.remove("guests_show");
+          $(".b24-widget-button-wrapper").show();
         }
       });
 
-      document.querySelector(".guests__dropdown-close").addEventListener("click", function (event) {
+      document
+        .querySelector(".guests__dropdown-close")
+        .addEventListener("click", function (event) {
           $guests.classList.remove("guests_show");
+          $(".b24-widget-button-wrapper").show();
           document.querySelector(".main-form__shadow").style.display = "none";
-      });
+        });
 
       $guestsControl.addEventListener("click", function () {
         $guests.classList.toggle("guests_show");
+        $(".b24-widget-button-wrapper").toggle();
       });
 
       var countGuests = function countGuests() {
@@ -17551,24 +17563,36 @@
             var _this = this;
 
             document.addEventListener("click", function (event) {
-
-              if( event.target.closest('.main-form') !== null && 
-                  event.target.classList.contains('calendar__dropdown-close') !== true && 
-                  event.target.classList.contains('guests__dropdown-close') !== true && 
-                  event.target.classList.contains('autocomplete-dropdown-close') !== true 
-                ){
-                document.querySelector(".main-form__shadow").style.display = "block";
-              }else{
-                document.querySelector(".main-form__shadow").style.display = "none";
+              if (
+                event.target.closest(".main-form") !== null &&
+                event.target.classList.contains("calendar__dropdown-close") !==
+                  true &&
+                event.target.classList.contains("guests__dropdown-close") !==
+                  true &&
+                event.target.classList.contains(
+                  "autocomplete-dropdown-close"
+                ) !== true
+              ) {
+                document.querySelector(".main-form__shadow").style.display =
+                  "block";
+                $(".b24-widget-button-wrapper").hide();
+              } else {
+                document.querySelector(".main-form__shadow").style.display =
+                  "none";
+                $(".b24-widget-button-wrapper").show();
               }
               var $el = event.target;
 
-              if($el.getAttribute('data-calendar-label') == 'data-calendar-label'){
-                document.querySelectorAll("[data-calendar-label]").forEach(function (item){
-                  item.previousElementSibling.style.bottom = '30px';
-                });
+              if (
+                $el.getAttribute("data-calendar-label") == "data-calendar-label"
+              ) {
+                document
+                  .querySelectorAll("[data-calendar-label]")
+                  .forEach(function (item) {
+                    item.previousElementSibling.style.bottom = "30px";
+                  });
               }
-               
+
               if (
                 !$el.matches("[data-calendar-dropdown]") &&
                 !$el.closest("[data-calendar-dropdown]") &&
@@ -17581,11 +17605,13 @@
               }
             });
 
-            document.querySelector(".calendar__dropdown-close").addEventListener("click", function (event) {
-              _this.$elements.dropdown.classList.remove(
-                "calendar__dropdown_show"
-              );
-            });
+            document
+              .querySelector(".calendar__dropdown-close")
+              .addEventListener("click", function (event) {
+                _this.$elements.dropdown.classList.remove(
+                  "calendar__dropdown_show"
+                );
+              });
 
             window.addEventListener("resize", function () {
               _this.$elements.dropdown.classList.remove(
@@ -17618,7 +17644,7 @@
           key: "handleLabelClick",
           value: function handleLabelClick() {
             var _this3 = this;
-            
+
             this.$elements.labels.forEach(function ($item) {
               $item.addEventListener("click", function () {
                 _this3.$elements.dropdown.classList.toggle(
@@ -17853,13 +17879,13 @@
         this.elements = {
           $root: document.querySelector("[data-autocomplete]"),
           $field: document.querySelector("[data-autocomplete-field]"),
-          $fieldMobile: document.querySelector("[data-autocomplete-field-mobile]"),
+          $fieldMobile: document.querySelector(
+            "[data-autocomplete-field-mobile]"
+          ),
           $result: document.querySelector("[data-autocomplete-result]"),
           $dropdown: document.querySelector("[data-autocomplete-dropdown]"),
         };
       }
-
-      
 
       _createClass(SearchAutocomplete, [
         {
@@ -17971,13 +17997,16 @@
               }, 500)
             );
 
-            this.elements.$field.addEventListener( "click", function (event) {
-               this.previousElementSibling.style.bottom = '30px';
+            this.elements.$field.addEventListener("click", function (event) {
+              this.previousElementSibling.style.bottom = "30px";
             });
 
-            this.elements.$fieldMobile.addEventListener( "click", function (event) {
-              this.previousElementSibling.style.bottom = '30px';
-           });
+            this.elements.$fieldMobile.addEventListener(
+              "click",
+              function (event) {
+                this.previousElementSibling.style.bottom = "30px";
+              }
+            );
 
             document.addEventListener("click", function (event) {
               var $el = event.target;
@@ -17996,7 +18025,7 @@
                   title: $title.textContent.replace("&", "%26"),
                   footnote: $footnote ? $footnote.innerHTML : "",
                 });
-                
+
                 _this2.elements.$field.value = $title.textContent
                   .replace("<br>", " ")
                   .replace(/<\/?[^>]+(>|$)/g, "")
@@ -18018,16 +18047,19 @@
               ) {
                 _this2.handleHide();
               }
-              if($el.classList.contains('autocomplete-dropdown-close')){
+              if ($el.classList.contains("autocomplete-dropdown-close")) {
                 _this2.handleHide();
               }
             });
             this.elements.$field.addEventListener("focusin", function (event) {
               _this2.handleRequest(event.target.value);
             });
-            this.elements.$fieldMobile.addEventListener("focusin", function (event) {
-              _this2.handleRequest(event.target.value);
-            });
+            this.elements.$fieldMobile.addEventListener(
+              "focusin",
+              function (event) {
+                _this2.handleRequest(event.target.value);
+              }
+            );
           },
         },
       ]);

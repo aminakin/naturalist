@@ -1,4 +1,13 @@
 <?php
+
+use \Bitrix\Conversion\Internals\MobileDetect;
+
+\Bitrix\Main\Loader::includeModule('conversion');
+
+$detect = new MobileDetect;
+global $isMobile;
+$isMobile = $detect->isMobile();
+
 /*
  * Форматированный вывод
  */

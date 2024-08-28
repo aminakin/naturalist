@@ -183,7 +183,7 @@ body {
   color: #000;
   color: var(--base-text-color);
   direction: ltr;
-  font-family: TT Travels Next;
+  font-family: var(--base-font-family);
   font-size: 1.3rem;
   font-size: var(--content-text-font-size);
   line-height: 1.3;

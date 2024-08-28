@@ -3000,3 +3000,7 @@
     width: calc(100% - 0.8rem);
   }
 }
+
+.b24-widget-button-wrapper.hide {
+  display: none !important;
+}

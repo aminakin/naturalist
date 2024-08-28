@@ -50,6 +50,23 @@ if (!empty($waterData)) {
     });
 }
 
+// Общие водоёмы
+$commonWaterDataClass = HighloadBlockTable::compileEntity(COMMON_WATER_HL_ENTITY)->getDataClass();
+$commonWaterData = $commonWaterDataClass::query()
+    ->addSelect('ID')
+    ->addSelect('UF_NAME')    
+    ->addSelect('UF_SORT')    
+    ?->fetchAll();
+
+if (!empty($commonWaterData)) {
+    foreach ($commonWaterData as $key => &$commonWater) {
+        $commonWater['URL'] = Components::getChpyLink(COMMON_WATER_HL_ENTITY . '_' . $commonWater['ID'])['UF_NEW_URL'];
+    }
+    usort($commonWaterData, function ($a, $b) {
+        return ($a['UF_SORT'] - $b['UF_SORT']);
+    });
+}
+
 //Все элементы водоёмы
 $waterFullDataClass = HighloadBlockTable::compileEntity(WATER_HL_ENTITY)->getDataClass();
 $waterFullData = $waterFullDataClass::query()
@@ -116,6 +133,7 @@ function checkLetterHasLocations(string $letter, array $locations, string $locat
 
 $arResult['REGIONS'] = $regionsData;
 $arResult['WATER'] = $waterData;
+$arResult['COMMON_WATER'] = $commonWaterData;
 
 $arResult['REGIONS_FULL'] = $regionsFullData;
 $arResult['WATER_FULL'] = $waterFullData;

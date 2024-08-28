@@ -23,6 +23,7 @@ use Naturalist\Products;
 use Naturalist\Reviews;
 use Bitrix\Iblock\Elements\ElementGlampingsTable;
 use Naturalist\Utils;
+use Naturalist\Filters\Components;
 
 global $arUser, $userId, $isAuthorized;
 
@@ -42,6 +43,8 @@ if (CSite::InDir('/map')) {
 } else {
     $seoFile = 'catalog';
 }
+
+$chySeoText = Components::getChpyLinkByUrl($_SERVER['SCRIPT_NAME'])['UF_SEO_TEXT'];
 
 /* Избранное (список ID) */
 $arFavourites = Users::getFavourites();
@@ -209,6 +212,12 @@ if (!empty($_GET['housetypes']) && isset($_GET['housetypes'])) {
 if (!empty($_GET['water']) && isset($_GET['water'])) {
     $arFilterWater = explode(',', $_GET['water']);
     $arFilter["UF_WATER"] = $arFilterWater;
+}
+
+// Общий водоём
+if (!empty($_GET['commonwater']) && isset($_GET['commonwater'])) {
+    $arFilterCommonWater = explode(',', $_GET['commonwater']);
+    $arFilter["UF_COMMON_WATER"] = $arFilterCommonWater;
 }
 
 // Впечатления
@@ -841,6 +850,9 @@ $APPLICATION->SetPageProperty("description", $descriptionSEO);
                         "EDIT_TEMPLATE" => ""
                     )
                 );
+                $isSeoText = true;
+            } else if ($chySeoText) {
+                echo $chySeoText;
                 $isSeoText = true;
             } ?>
         </div>

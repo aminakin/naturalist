@@ -138,6 +138,38 @@ class AutoCreate
         }
     }
 
+    /**
+     * Создание ссылок Общие водоёмы
+     */
+    public static function createCommonWaterLinks()
+    {
+        $chpyDataClass = HighloadBlockTable::compileEntity(COMMON_WATER_HL_ENTITY)->getDataClass();
+
+        $query =  $chpyDataClass::query()
+            ->addSelect('ID')
+            ->addSelect('UF_NAME')
+            ->addSelect('UF_SKLON')
+            ?->fetchAll();
+
+        foreach ($query as $value) {
+            if ($value['UF_SKLON'] != '') {
+                $links[] = [
+                    'UF_NEW_URL' => '/catalog/' . self::getNewUrl($value['UF_SKLON']),
+                    'UF_REAL_URL' => '/catalog/?commonwater=' . $value['ID'],
+                    'UF_ACTIVE' => 1,
+                    'UF_H1' => 'Отдых на природе ' . $value['UF_SKLON'],
+                    'UF_TITLE' => 'Отдых на природе ' . $value['UF_SKLON'] . ': цены, рейтинг, отзывы | Натуралист',
+                    'UF_DESCRIPTION' => 'Отдых на природе ' . $value['UF_SKLON'] . '. Аренда домиков по лучшей цене с быстрым бронированием.',
+                    'UF_FILTER_ID' => COMMON_WATER_HL_ENTITY . '_' . $value['ID'],
+                ];
+            }
+        }
+
+        if (isset($links) && is_array($links)) {
+            self::addUrls($links);
+        }
+    }
+
     private static function getNewUrl($path)
     {
         return Cutil::translit($path, 'ru', ['replace_space' => '-', 'replace_other' => '-']) . '/';
