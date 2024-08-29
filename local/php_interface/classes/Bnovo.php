@@ -1918,12 +1918,7 @@ class Bnovo
         sort($arDates);
         $dateFrom = $arDates[0];
         $dateTo = $arDates[count($arDates) - 1];
-
-        //if ($hotelId == 11712) {
         $roomTypes = [];
-        // } else {
-        //     $roomTypes = (array)$arCategories;
-        // }
 
         $data = array(
             "token" => $this->token,
@@ -2025,12 +2020,7 @@ class Bnovo
             }
         }
 
-        // if ($hotelId == 11712) {
-        //     $this->writeToFile($arData, 'recievedData', $hotelId);
-        // }
         $connection = \Bitrix\Main\Application::getConnection();
-        // $this->writeToFile($arReservedOne, 'updateReservationData_1', $hotelId);
-        // $this->writeToFile($arReservedNull, 'updateReservationData_0', $hotelId);              
 
         if (!empty($arReservedOne)) {
             $query = 'UPDATE b_hlbd_room_offers SET UF_RESERVED=1 WHERE id IN (' . implode(',', $arReservedOne) . ')';
@@ -2047,19 +2037,6 @@ class Bnovo
             // }
             $result = $connection->query($query);
         }
-        // } else {
-        //     if (!empty($arReservedOne)) {
-        //         foreach ($arReservedOne as $data) {
-        //             $entityClass->update($data, ["UF_RESERVED" => "1"]);
-        //         }
-        //     }
-
-        //     if (!empty($arReservedNull)) {
-        //         foreach ($arReservedNull as $data) {
-        //             $entityClass->update($data, ["UF_RESERVED" => "0"]);
-        //         }
-        //     }
-        // }
     }
 
     /* Бронирование объекта из заказа */

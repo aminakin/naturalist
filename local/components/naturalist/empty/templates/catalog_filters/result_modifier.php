@@ -21,4 +21,8 @@ $arResult = array(
     "arFilterServices" => $arParams['arFilterServices'],
     "houseTypes" => $arParams['houseTypes'],
     "arFilterHouseTypes" => $arParams['arFilterHouseTypes'],
+    "restVariants" => $arParams['restVariants'],
+    "arFilterRestVariants" => $arParams['arFilterRestVariants'],
+    "objectComforts" => $arParams['objectComforts'],
+    "arFilterObjectComforts" => $arParams['arFilterObjectComforts'],
 );

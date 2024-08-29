@@ -6,6 +6,8 @@ use Bitrix\Seo\SitemapIndex;
 use Bitrix\Seo\SitemapFile;
 use Bitrix\Main\Type\DateTime;
 use Bitrix\Highloadblock\HighloadBlockTable;
+use Bitrix\Main\XmlWriter;
+
 
 /**
  * Карта сайта
@@ -15,6 +17,7 @@ class Sitemap
     private const PROTOCOL = 'https';
     private const DOMAIN = 'naturalist.travel';
     private const FILE_NAME = 'chpy.xml';
+    private const IBLOCK_SITEMAP_FILE_NAME = '/sitemap-iblock-1.xml';
 
     /**
      * Добавление файла с ЧПУ ссылоками в карту сайта
@@ -46,6 +49,9 @@ class Sitemap
         $sitemap->putContents($contents);
     }
 
+    /**
+     * Возвращает все ЧПУ
+     */
     public static function getChpys()
     {
         $chpyDataClass = HighloadBlockTable::compileEntity(FILTER_HL_ENTITY)->getDataClass();
@@ -55,6 +61,9 @@ class Sitemap
             ?->fetchAll();
     }
 
+    /**
+     * Добавляет ЧПУ в файл
+     */
     public static function addChpyToFile()
     {
         file_put_contents('/' . self::FILE_NAME, '');
@@ -75,5 +84,60 @@ class Sitemap
         }
 
         $file->addFooter();
+    }
+
+    /**
+     * Возвращает все активные объекты
+     */
+    private static function getAllObjects()
+    {
+        $entity = \Bitrix\Iblock\Model\Section::compileEntityByIblock(CATALOG_IBLOCK_ID);
+        $rsSectionObjects = $entity::getList(
+            [
+                'filter' => ['IBLOCK_ID' => CATALOG_IBLOCK_ID, 'ACTIVE' => 'Y'],
+                'select' => ['ID', 'NAME', 'CODE', 'UF_PHOTOS', 'TIMESTAMP_X'],
+            ]
+        );
+
+        return $rsSectionObjects->fetchAll();
+    }
+
+    /**
+     * Добавляет фото в карту сайта по объектам, переписывая исходный файл
+     */
+    public static function addImagesToSitemap()
+    {
+        $export = new XmlWriter(array(
+            'file' => self::IBLOCK_SITEMAP_FILE_NAME,
+            'create_file' => true,
+            'charset' => SITE_CHARSET,
+            'lowercase' => true
+        ));
+
+        $export->openFile();
+
+        $export->writeBeginTag('urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"');
+
+        $objects = self::getAllObjects();
+
+        foreach ($objects as $object) {
+            $export->writeBeginTag('url');
+
+            $export->writeFullTag('loc', self::PROTOCOL . '://' . self::DOMAIN . '/catalog/' . $object['CODE'] . '/');
+            $export->writeFullTag('lastmod', $object['TIMESTAMP_X']->format('Y-m-d\TH:i:sP'));
+
+            if (!empty($object['UF_PHOTOS'])) {
+                foreach ($object['UF_PHOTOS'] as $photo) {
+                    $export->writeBeginTag('image:image');
+                    $export->writeFullTag('image:loc', self::PROTOCOL . '://' . self::DOMAIN  . \CFile::getPath($photo));
+                    $export->writeEndTag('image:image');
+                }
+            }
+
+            $export->writeEndTag('url');
+        }
+
+        $export->writeEndTag('urlset');
+        $export->closeFile();
     }
 }

@@ -44,7 +44,7 @@ if (CSite::InDir('/map')) {
     $seoFile = 'catalog';
 }
 
-$chySeoText = Components::getChpyLinkByUrl($_SERVER['SCRIPT_NAME'])['UF_SEO_TEXT'];
+$chySeoText = Components::getChpyLinkByUrl($_SERVER['REDIRECT_URL'])['UF_SEO_TEXT'];
 
 /* Избранное (список ID) */
 $arFavourites = Users::getFavourites();
@@ -200,6 +200,18 @@ if (!empty($_GET['food']) && isset($_GET['food'])) {
 if (!empty($_GET['features']) && isset($_GET['features'])) {
     $arFilterFeatures = explode(',', $_GET['features']);
     $arFilter["UF_FEATURES"] = $arFilterFeatures;
+}
+
+// Варианты отдыха
+if (!empty($_GET['restvariants']) && isset($_GET['restvariants'])) {
+    $arFilterRestVariants = explode(',', $_GET['restvariants']);
+    $arFilter["UF_REST_VARIANTS"] = $arFilterRestVariants;
+}
+
+// Удобства
+if (!empty($_GET['objectcomforts']) && isset($_GET['objectcomforts'])) {
+    $arFilterObjectComforts = explode(',', $_GET['objectcomforts']);
+    $arFilter["UF_OBJECT_COMFORTS"] = $arFilterObjectComforts;
 }
 
 // Тип дома
@@ -423,6 +435,7 @@ $entityClass = $entity->getDataClass();
 $rsData = $entityClass::getList([
     "select" => ["*"],
     "order" => ["UF_SORT" => "ASC"],
+    "filter" => ["UF_SHOW_FILTER" => "1"],
 ]);
 $arHLTypes = array();
 while ($arEntity = $rsData->Fetch()) {
@@ -447,6 +460,21 @@ while ($arEntity = $rsData->Fetch()) {
 $houseTypesDataClass = HighloadBlockTable::compileEntity(SUIT_TYPES_HL_ENTITY)->getDataClass();
 $houseTypes = $houseTypesDataClass::query()
     ->addSelect('*')
+    ->setOrder(['UF_SORT' => 'ASC'])
+    ?->fetchAll();
+
+// Варианты отдыха
+$restVariantsDataClass = HighloadBlockTable::compileEntity(REST_VARS_HL_ENTITY)->getDataClass();
+$restVariants = $restVariantsDataClass::query()
+    ->addSelect('*')
+    ->setOrder(['UF_SORT' => 'ASC'])
+    ?->fetchAll();
+
+// Удобства
+$objectComfortsDataClass = HighloadBlockTable::compileEntity(OBJECT_COMFORT_HL_ENTITY)->getDataClass();
+$objectComforts = $objectComfortsDataClass::query()
+    ->addSelect('*')
+    ->setOrder(['UF_SORT' => 'ASC'])
     ?->fetchAll();
 
 // Особенности объекта
@@ -892,6 +920,10 @@ $APPLICATION->SetPageProperty("description", $descriptionSEO);
                 "arFilterServices" => $arFilterServices,
                 "houseTypes" => $houseTypes,
                 "arFilterHouseTypes" => $arFilterHousetypes,
+                "restVariants" => $restVariants,
+                "arFilterRestVariants" => $arFilterRestVariants,
+                "objectComforts" => $objectComforts,
+                "arFilterObjectComforts" => $arFilterObjectComforts,
             )
         );
         ?>
