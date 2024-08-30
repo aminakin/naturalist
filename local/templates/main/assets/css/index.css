@@ -1,6 +1,6 @@
 @charset "UTF-8";
-*{
-  font-family: 'Lato', sans-serif!important;
+* {
+  font-family: "Lato", sans-serif !important;
 }
 
 .favorite {
@@ -767,6 +767,9 @@
   line-height: 24px;
   width: 52px;
   text-align: center;
+  color: black;
+  -webkit-text-fill-color: black;
+  opacity: 1;
 }
 
 .guests__item {
@@ -1603,7 +1606,6 @@
   transition: 0.3s;
 }
 
-
 .house-type__wrapper:hover .house-type__shadow.left {
   left: -100px;
 }
@@ -1628,7 +1630,7 @@
 .house-type__wrapper .swiper-button-next {
   right: -14px;
 }
-.slider-gallery .swiper-pagination-bullets{
+.slider-gallery .swiper-pagination-bullets {
   top: -6px;
 }
 @media (max-width: 1023px) {

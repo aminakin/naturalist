@@ -1,6 +1,6 @@
 <?php
 require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/header.php");
-$APPLICATION->SetTitle("Купить");?>
+$APPLICATION->SetTitle("Купить"); ?>
 <script src="https://pay.yandex.ru/sdk/v1/pay.js" onload="onYaPayLoad()" async></script>
 <main class="main">
     <section class="section section_crumbs">
@@ -24,18 +24,18 @@ $APPLICATION->SetTitle("Купить");?>
             </div>
         </div>
     </section>
-    <?$APPLICATION->IncludeComponent(
+    <? $APPLICATION->IncludeComponent(
         "addamant:certificates.buy",
         "",
-        Array(
+        array(
             "CACHE_TIME" => "36000000",
             "CACHE_TYPE" => "A",
             "POCKET_COST" => "690",
-            "MIN_COST" => "5000",
+            "MIN_COST" => "500",
             "VARIANT_COST" => "300"
         )
-    );?>
+    ); ?>
 </main>
 
 <?php
-require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/footer.php");?>
+require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/footer.php"); ?>
