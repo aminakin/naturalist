@@ -1367,6 +1367,8 @@ class Bnovo
     {
         $sectionName = $arSection["NAME"] ?? $arSection["name"];
 
+        $noCildren = true;
+
         // Номера
         $url = $this->bnovoApiPublicURL . '/roomtypes';
         $headers = array(
@@ -1499,6 +1501,7 @@ class Bnovo
             $elementCode = 'a.' . $arRoom['adults'];
             if (!empty($arRoom['children']) && $arRoom['children'] > 0) {
                 $elementName .= '+ ' . $arRoom['children'] . ' детей с местом';
+                $noCildren = false;
             }
 
             $arAgesValues = []; //Возрастные интервалы
@@ -1509,12 +1512,14 @@ class Bnovo
                         $arAgesValues[] = ["VALUE" => $childrenAgesId[$key] ? $childrenAgesId[$key] : 0, "DESCRIPTION" => $arAge[array_key_first($arAge)]['people_count']];
                         if ($childrenAgesId[$key]) {
                             $elementCode .= '_c.' . $arAge[array_key_first($arAge)]['people_count'] . '.' . $childrenAgesId[$key];
+                            $noCildren = false;
                         } else {
                             $elementAppend = '_e.' . $arAge[array_key_first($arAge)]['people_count'];
                         }
                     } else {
                         $arAgesValues[] = ["VALUE" => $childrenAgesId[$key], "DESCRIPTION" => $arAge];
                         $elementCode .= '_c.' . $arAge . '.' . $childrenAgesId[$key];
+                        $noCildren = false;
                     }
                 }
                 if ($elementAppend != '') {
@@ -1538,6 +1543,7 @@ class Bnovo
                         if ($arSection['children_ages'][$key]['max_age'] > $childrenMaxAge) {
                             $childrenMaxAge = $arSection['children_ages'][$key]['max_age'];
                         }
+                        $noCildren = false;
                     }
                 }
             }
@@ -1683,6 +1689,13 @@ class Bnovo
                     ]);
                 }
             }
+        }
+
+        if ($noCildren) {
+            $iS = new CIBlockSection();
+            $iS->Update($arSection['ID'], array(
+                "UF_NO_CHILDREN_PLACE" => 1,
+            ));
         }
     }
 
