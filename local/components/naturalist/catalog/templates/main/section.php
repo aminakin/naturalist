@@ -379,8 +379,15 @@ if ($sortBy == 'price') {
 /* Пагинация */
 $page = $_REQUEST['page'] ?? 1;
 
+$pageCount = ceil($allCount / $arParams["ITEMS_COUNT"]);
+if ($pageCount > 1) {
+    $arPageSections = array_slice($arSections, ($page - 1) * $arParams["ITEMS_COUNT"], $arParams["ITEMS_COUNT"]);
+} else {
+    $arPageSections = $arSections;
+}
+
 // Добавляем свойство Скидка, если есть хотя бы 1 элемент со скидкой
-foreach ($arSections as $section) {
+foreach ($arPageSections as $section) {
     $arSectionIds[] = $section['ID'];
 }
 unset($section);
@@ -395,24 +402,17 @@ foreach ($elements as $element) {
 }
 unset($element);
 
-foreach ($arSections as &$section) {
+foreach ($arPageSections as &$section) {
     foreach ($arElementsBySection[$section['ID']] as $element) {
         $arPrice = CCatalogProduct::GetOptimalPrice($element['ID'], 1, $USER->GetUserGroupArray(), 'N');
         if (is_array($arPrice['DISCOUNT']) && count($arPrice['DISCOUNT'])) {
             $section['IS_DISCOUNT'] = 'Y';
+            $section['DISCOUNT_PERCENT'] = $arPrice['RESULT_PRICE']['PERCENT'];
             break;
         }
     }
 }
 unset($section);
-
-$pageCount = ceil($allCount / $arParams["ITEMS_COUNT"]);
-if ($pageCount > 1) {
-    $arPageSections = array_slice($arSections, ($page - 1) * $arParams["ITEMS_COUNT"], $arParams["ITEMS_COUNT"]);
-} else {
-    $arPageSections = $arSections;
-}
-
 
 /* HL Blocks */
 // Тип объекта
