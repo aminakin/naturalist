@@ -45,7 +45,9 @@ use Naturalist\Users;
     <title><? $APPLICATION->ShowTitle() ?></title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="format-detection" content="telephone=no">
-    <link rel="canonical" href="<?= HTTP_HOST . $APPLICATION->GetCurPage() ?>">
+    <? if ($APPLICATION->GetCurPage() != '/catalog/') { ?>
+        <link rel="canonical" href="<?= HTTP_HOST . $APPLICATION->GetCurPage() ?>">
+    <? } ?>
     <link rel="icon" href="/favicon.ico" type="image/x-icon">
 
     <link rel="preload" href="<?= SITE_TEMPLATE_PATH ?>/assets/fonts/Montserrat-Bold.woff2" as="font" type="font/woff2" crossorigin>
@@ -210,7 +212,7 @@ use Naturalist\Users;
     <?  }
     ?>
 
-    <?/*<script src="https://dmp.one/sync?stock_key=4dce2e8f5fdd1727a46278cb20b97261" async charset="UTF-8"></script>*/?>
+    <?/*<script src="https://dmp.one/sync?stock_key=4dce2e8f5fdd1727a46278cb20b97261" async charset="UTF-8"></script>*/ ?>
 </head>
 
 <body class=" <?php if (CSite::InDir('/map')) : ?>body__on_map<?php endif; ?>">

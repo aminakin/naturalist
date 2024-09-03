@@ -44,7 +44,9 @@ if (CSite::InDir('/map')) {
     $seoFile = 'catalog';
 }
 
-$chySeoText = Components::getChpyLinkByUrl($_SERVER['REDIRECT_URL'])['UF_SEO_TEXT'];
+$requestUrl = $_SERVER['REDIRECT_URL'] ? $_SERVER['REDIRECT_URL'] : $_SERVER['SCRIPT_NAME'];
+$chpy = Components::getChpyLinkByUrl($requestUrl);
+$chySeoText = $chpy['UF_SEO_TEXT'];
 
 /* Избранное (список ID) */
 $arFavourites = Users::getFavourites();
@@ -550,6 +552,14 @@ if ($page > 1 && isset($_GET["impressions"]) && !empty($_GET['impressions']) && 
 $APPLICATION->SetTitle($titleSEO);
 $APPLICATION->SetPageProperty("custom_title", $h1SEO);
 $APPLICATION->SetPageProperty("description", $descriptionSEO);
+
+if (!count($arPageSections)) {
+    $APPLICATION->AddHeadString('<meta name="robots" content="noindex">', true);
+}
+
+if (empty($chpy)) {
+    $APPLICATION->AddHeadString('<link rel="canonical" href="' . HTTP_HOST . $APPLICATION->GetCurPage() . '">', true);
+}
 /**/
 ?>
 

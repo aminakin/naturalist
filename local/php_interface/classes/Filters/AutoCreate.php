@@ -365,6 +365,41 @@ class AutoCreate
         }
     }
 
+    /**
+     * Водоём + параметр фильтрации
+     */
+    public static function createWaterAndFilterLinks()
+    {
+        $chpyDataClass = HighloadBlockTable::compileEntity(WATER_HL_ENTITY)->getDataClass();
+        $first =  $chpyDataClass::query()
+            ->addSelect('ID')
+            ->addSelect('UF_NAME')
+            ->addSelect('UF_SKLON')
+            ?->fetchAll();
+
+        $second = self::getAllFiltersArray();
+
+        foreach ($first as $firstElement) {
+            foreach ($second as $secondKey => $secondArray) {
+                foreach ($secondArray as $secondElement) {
+                    $h1 = $firstElement['UF_SKLON'] . ' ' . $secondElement['UF_SKLON'];
+                    $links[] = [
+                        'UF_NEW_URL' => '/catalog/' . self::getNewUrl($firstElement['UF_SKLON']) . self::getNewUrl($secondElement['UF_SKLON']),
+                        'UF_REAL_URL' => '/catalog/?water=' . $firstElement['ID'] . '&' . $secondKey . '=' . $secondElement['ID'],
+                        'UF_ACTIVE' => 1,
+                        'UF_H1' => $h1,
+                        'UF_TITLE' => $h1 . TITLE_PATTERN,
+                        'UF_DESCRIPTION' => DESCRIPTION_START_PATTERN . mb_strtolower($h1) . DESCRIPTION_END_PATTERN,
+                    ];
+                }
+            }
+        }
+
+        if (isset($links) && is_array($links)) {
+            self::addUrls($links);
+        }
+    }
+
     private static function getFilterArray($entity)
     {
         $entity = HighloadBlockTable::compileEntity($entity)->getDataClass();
