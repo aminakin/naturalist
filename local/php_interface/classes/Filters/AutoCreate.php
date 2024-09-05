@@ -3,6 +3,7 @@
 namespace Naturalist\Filters;
 
 use Bitrix\Iblock\Elements\ElementServicesTable;
+use Bitrix\Iblock\Elements\ElementImpressionsTable;
 use Bitrix\Highloadblock\HighloadBlockTable;
 use Bitrix\Main\Loader;
 use \Cutil;
@@ -205,14 +206,14 @@ class AutoCreate
         foreach ($first as $firstElement) {
             foreach ($second as $secondKey => $secondArray) {
                 foreach ($secondArray as $secondElement) {
-                    $h1 = $firstElement['UF_SKLON'] . ' ' . $secondElement['UF_SKLON'];
+                    $h1 = $firstElement['UF_SKLON'] . ' России ' . mb_strtolower($secondElement['UF_SKLON']);
                     $links[] = [
                         'UF_NEW_URL' => '/catalog/' . self::getNewUrl($firstElement['UF_SKLON']) . self::getNewUrl($secondElement['UF_SKLON']),
                         'UF_REAL_URL' => '/catalog/?types=' . $firstElement['ID'] . '&' . $secondKey . '=' . $secondElement['ID'],
                         'UF_ACTIVE' => 1,
                         'UF_H1' => $h1,
                         'UF_TITLE' => $h1 . TITLE_PATTERN,
-                        'UF_DESCRIPTION' => DESCRIPTION_START_PATTERN . mb_strtolower($h1) . DESCRIPTION_END_PATTERN,
+                        'UF_DESCRIPTION' => DESCRIPTION_START_PATTERN . $h1 . DESCRIPTION_END_PATTERN,
                     ];
                 }
             }
@@ -400,6 +401,269 @@ class AutoCreate
         }
     }
 
+    /**
+     * Sitemap
+     */
+    public static function createSitemapLinks()
+    {
+        $chpyDataClass = HighloadBlockTable::compileEntity(SITEMAP_LINKS_HL_ENTITY)->getDataClass();
+        $query =  $chpyDataClass::query()
+            ->addSelect('ID')
+            ->addSelect('UF_NAME')
+            ->addSelect('UF_SKLON')
+            ?->fetchAll();
+
+        foreach ($query as $value) {
+            if ($value['UF_SKLON'] != '') {
+                $links[] = [
+                    'UF_NEW_URL' => '/catalog/' . self::getNewUrl($value['UF_SKLON']),
+                    'UF_REAL_URL' => '/catalog/?sitemap=' . $value['ID'],
+                    'UF_ACTIVE' => 1,
+                    'UF_H1' => PODBOR_H1_PATTERTN . $value['UF_SKLON'],
+                    'UF_TITLE' => PODBOR_H1_PATTERTN . $value['UF_SKLON'] . PODBOR_TITLE_PATTERTN,
+                    'UF_DESCRIPTION' => PODBOR_H1_PATTERTN . $value['UF_SKLON'] . PODBOR_DESCRIPTION_PATTERTN,
+                ];
+            }
+        }
+
+        if (isset($links) && is_array($links)) {
+            self::addUrls($links);
+        }
+    }
+
+    /**
+     * Подборки
+     */
+    public static function createSelectionLinks()
+    {
+        $query = self::getAllSelectionsArray();
+
+        foreach ($query as $value) {
+            if ($value['UF_SKLON'] != '') {
+                $links[] = [
+                    'UF_NEW_URL' => '/catalog/' . self::getNewUrl($value['UF_NAME']),
+                    'UF_REAL_URL' => '/catalog/?selection=' . $value['ID'],
+                    'UF_ACTIVE' => 1,
+                    'UF_H1' => PODBOR_H1_PATTERTN . $value['UF_SKLON'],
+                    'UF_TITLE' => PODBOR_H1_PATTERTN . $value['UF_SKLON'] . PODBOR_TITLE_PATTERTN,
+                    'UF_DESCRIPTION' => PODBOR_H1_PATTERTN . $value['UF_SKLON'] . PODBOR_DESCRIPTION_PATTERTN,
+                ];
+            }
+        }
+
+        if (isset($links) && is_array($links)) {
+            self::addUrls($links);
+        }
+    }
+
+    /**
+     * Тип размещения + подборка
+     */
+    public static function createAccomodationAndSelectionLinks()
+    {
+        $first = self::getFilterArray(TYPES_HL_ENTITY);
+        $second = self::getMiniSelectionsArray();
+
+        foreach ($first as $firstElement) {
+            foreach ($second as $secondElement) {
+                $h1 = $firstElement['UF_SKLON'] . ' России ' . mb_strtolower($secondElement['UF_SKLON']);
+                $links[] = [
+                    'UF_NEW_URL' => '/catalog/' . self::getNewUrl($firstElement['UF_SKLON']) . self::getNewUrl($secondElement['UF_SKLON']),
+                    'UF_REAL_URL' => '/catalog/?types=' . $firstElement['ID'] . '&selection=' . $secondElement['ID'],
+                    'UF_ACTIVE' => 1,
+                    'UF_H1' => $h1,
+                    'UF_TITLE' => $h1 . TITLE_PATTERN,
+                    'UF_DESCRIPTION' => DESCRIPTION_START_PATTERN . $h1 . DESCRIPTION_END_PATTERN,
+                ];
+            }
+        }
+
+        if (isset($links) && is_array($links)) {
+            self::addUrls($links);
+        }
+    }
+
+    /**
+     * Тип размещения + регион + подборка
+     */
+    public static function createAccomodationAndRegionAndSelectionLinks()
+    {
+        $first = self::getFilterArray(TYPES_HL_ENTITY);
+        $chpyDataClass = HighloadBlockTable::compileEntity(REGIONS_HL_ENTITY)->getDataClass();
+        $second =  $chpyDataClass::query()
+            ->addSelect('ID')
+            ->addSelect('UF_NAME')
+            ->addSelect('UF_SKLON')
+            ->whereNotNull('UF_SKLON')
+            ?->fetchAll();
+
+        $third = self::getMiniSelectionsArray();
+
+        foreach ($first as $firstElement) {
+            foreach ($second as $secondElement) {
+                foreach ($third as $thirdElement) {
+                    $h1 = $firstElement['UF_SKLON'] . ' ' . $secondElement['UF_SKLON'] . ' ' . $thirdElement['UF_SKLON'];
+                    $links[] = [
+                        'UF_NEW_URL' => '/catalog/' . self::getNewUrl($firstElement['UF_SKLON']) . self::getNewUrl($secondElement['UF_SKLON']) . self::getNewUrl($thirdElement['UF_SKLON']),
+                        'UF_REAL_URL' => '/catalog/?types=' . $firstElement['ID'] . '&name={"type":"area","item":"' . $secondElement['UF_NAME'] . '","title":"' . $secondElement['UF_NAME'] . '","footnote":""}&selection=' . $thirdElement['ID'],
+                        'UF_ACTIVE' => 1,
+                        'UF_H1' => $h1,
+                        'UF_TITLE' => $h1 . TITLE_PATTERN,
+                        'UF_DESCRIPTION' => DESCRIPTION_START_PATTERN . mb_strtolower($h1) . DESCRIPTION_END_PATTERN,
+                    ];
+                }
+            }
+        }
+
+        if (isset($links) && is_array($links)) {
+            self::addUrls($links);
+        }
+    }
+
+    /**
+     * Тип размещения + подборка + параметр фильтрации
+     */
+    public static function createAccomodationAndSelectionAndFiltersLinks()
+    {
+        $first = self::getFilterArray(TYPES_HL_ENTITY);
+        $second = self::getMiniSelectionAndMiniFiltersArray();
+
+        foreach ($first as $firstElement) {
+            foreach ($second as $secondElement) {
+                $h1 = $firstElement['UF_SKLON'] . ' России ' . mb_strtolower($secondElement[0]['UF_SKLON'])  . ' ' . mb_strtolower($secondElement[1]['UF_SKLON']);
+                $links[] = [
+                    'UF_NEW_URL' => '/catalog/' . self::getNewUrl($firstElement['UF_SKLON']) . self::getNewUrl($secondElement[0]['UF_SKLON']) . self::getNewUrl($secondElement[1]['UF_SKLON']),
+                    'UF_REAL_URL' => '/catalog/?types=' . $firstElement['ID'] . '&' . $secondElement[0]['GET'] . '=' . $secondElement[0]['ID'] . '&' . $secondElement[1]['GET'] . '=' . $secondElement[1]['ID'],
+                    'UF_ACTIVE' => 1,
+                    'UF_H1' => $h1,
+                    'UF_TITLE' => $h1 . TITLE_PATTERN,
+                    'UF_DESCRIPTION' => DESCRIPTION_START_PATTERN . $h1 . DESCRIPTION_END_PATTERN,
+                ];
+            }
+        }
+
+        if (isset($links) && is_array($links)) {
+            self::addUrls($links);
+        }
+    }
+
+    /**
+     * Тип размещения + регион + подборка + параметр фильтрации
+     */
+    public static function createAccomodationAndRegionAndSelectionAndFiltersLinks()
+    {
+        $first = self::getFilterArray(TYPES_HL_ENTITY);
+        $chpyDataClass = HighloadBlockTable::compileEntity(REGIONS_HL_ENTITY)->getDataClass();
+        $middle =  $chpyDataClass::query()
+            ->addSelect('ID')
+            ->addSelect('UF_NAME')
+            ->addSelect('UF_SKLON')
+            ->whereNotNull('UF_SKLON')
+            ?->fetchAll();
+        $second = self::getMiniSelectionAndMiniFiltersArray();
+
+        foreach ($first as $firstElement) {
+            foreach ($middle as $middleElement) {
+                foreach ($second as $secondElement) {
+                    $h1 = $firstElement['UF_SKLON'] . ' ' . $middleElement['UF_SKLON'] . ' ' . $secondElement[0]['UF_SKLON']  . ' ' . $secondElement[1]['UF_SKLON'];
+                    $links[] = [
+                        'UF_NEW_URL' => '/catalog/' . self::getNewUrl($firstElement['UF_SKLON']) . self::getNewUrl($middleElement['UF_SKLON']) . self::getNewUrl($secondElement[0]['UF_SKLON']) . self::getNewUrl($secondElement[1]['UF_SKLON']),
+                        'UF_REAL_URL' => '/catalog/?types=' . $firstElement['ID'] . '&name={"type":"area","item":"' . $middleElement['UF_NAME'] . '","title":"' . $middleElement['UF_NAME'] . '","footnote":""}&' . $secondElement[0]['GET'] . '=' . $secondElement[0]['ID'] . '&' . $secondElement[1]['GET'] . '=' . $secondElement[1]['ID'],
+                        'UF_ACTIVE' => 1,
+                        'UF_H1' => $h1,
+                        'UF_TITLE' => $h1 . TITLE_PATTERN,
+                        'UF_DESCRIPTION' => DESCRIPTION_START_PATTERN . mb_strtolower($h1) . DESCRIPTION_END_PATTERN,
+                    ];
+                }
+            }
+        }
+
+        if (isset($links) && is_array($links)) {
+            self::addUrls($links);
+        }
+    }
+
+    /**
+     * Тип размещения + параметр фильтрации + параметр фильтрации
+     */
+    public static function createAccomodationAndFiltersAndFiltersLinks()
+    {
+        $first = self::getFilterArray(TYPES_HL_ENTITY);
+        $second = self::getFiltersAndFiltersArray();
+
+        foreach ($first as $firstElement) {
+            foreach ($second as $secondElement) {
+                $h1 = $firstElement['UF_SKLON'] . ' России ' . mb_strtolower($secondElement[0]['UF_SKLON'])  . ' ' . mb_strtolower($secondElement[1]['UF_SKLON']);
+
+                if ($secondElement[0]['GET'] == $secondElement[1]['GET']) {
+                    $filter = $secondElement[0]['GET'] . '=' . $secondElement[0]['ID'] . ',' . $secondElement[1]['ID'];
+                } else {
+                    $filter = $secondElement[0]['GET'] . '=' . $secondElement[0]['ID'] . '&' . $secondElement[1]['GET'] . '=' . $secondElement[1]['ID'];
+                }
+
+                $links[] = [
+                    'UF_NEW_URL' => '/catalog/' . self::getNewUrl($firstElement['UF_SKLON']) . self::getNewUrl($secondElement[0]['UF_SKLON']) . self::getNewUrl($secondElement[1]['UF_SKLON']),
+                    'UF_REAL_URL' => '/catalog/?types=' . $firstElement['ID'] . '&' . $filter,
+                    'UF_ACTIVE' => 1,
+                    'UF_H1' => $h1,
+                    'UF_TITLE' => $h1 . TITLE_PATTERN,
+                    'UF_DESCRIPTION' => DESCRIPTION_START_PATTERN . $h1 . DESCRIPTION_END_PATTERN,
+                ];
+            }
+        }
+
+        if (isset($links) && is_array($links)) {
+            xprint($links);
+            self::addUrls($links);
+        }
+    }
+
+    /**
+     * Тип размещения + регион + параметр фильтрации + параметр фильтрации
+     */
+    public static function createAccomodationRegionAndAndFiltersAndFiltersLinks()
+    {
+        $first = self::getFilterArray(TYPES_HL_ENTITY);
+        $chpyDataClass = HighloadBlockTable::compileEntity(REGIONS_HL_ENTITY)->getDataClass();
+        $middle =  $chpyDataClass::query()
+            ->addSelect('ID')
+            ->addSelect('UF_NAME')
+            ->addSelect('UF_SKLON')
+            ->whereNotNull('UF_SKLON')
+            ?->fetchAll();
+        $second = self::getFiltersAndFiltersArray();
+
+        foreach ($first as $firstElement) {
+            foreach ($middle as $middleElement) {
+                foreach ($second as $secondElement) {
+                    $h1 = $firstElement['UF_SKLON'] . ' ' . $middleElement['UF_SKLON'] . ' ' . $secondElement[0]['UF_SKLON']  . ' ' . $secondElement[1]['UF_SKLON'];
+
+                    if ($secondElement[0]['GET'] == $secondElement[1]['GET']) {
+                        $filter = $secondElement[0]['GET'] . '=' . $secondElement[0]['ID'] . ',' . $secondElement[1]['ID'];
+                    } else {
+                        $filter = $secondElement[0]['GET'] . '=' . $secondElement[0]['ID'] . '&' . $secondElement[1]['GET'] . '=' . $secondElement[1]['ID'];
+                    }
+
+                    $links[] = [
+                        'UF_NEW_URL' => '/catalog/' . self::getNewUrl($firstElement['UF_SKLON']) . self::getNewUrl($middleElement['UF_SKLON']) . self::getNewUrl($secondElement[0]['UF_SKLON']) . self::getNewUrl($secondElement[1]['UF_SKLON']),
+                        'UF_REAL_URL' => '/catalog/?types=' . $firstElement['ID'] . '&name={"type":"area","item":"' . $middleElement['UF_NAME'] . '","title":"' . $middleElement['UF_NAME'] . '","footnote":""}&' . $filter,
+                        'UF_ACTIVE' => 1,
+                        'UF_H1' => $h1,
+                        'UF_TITLE' => $h1 . TITLE_PATTERN,
+                        'UF_DESCRIPTION' => DESCRIPTION_START_PATTERN . mb_strtolower($h1) . DESCRIPTION_END_PATTERN,
+                    ];
+                }
+            }
+        }
+
+        if (isset($links) && is_array($links)) {
+            self::addUrls($links);
+        }
+    }
+
+    /**
+     * Возвращает массив из записей HL блока
+     */
     private static function getFilterArray($entity)
     {
         $entity = HighloadBlockTable::compileEntity($entity)->getDataClass();
@@ -410,6 +674,9 @@ class AutoCreate
             ?->fetchAll();
     }
 
+    /**
+     * Возвращает все параметры фильтрации
+     */
     private static function getAllFiltersArray()
     {
         $result = [];
@@ -442,6 +709,237 @@ class AutoCreate
         }
 
         return $result;
+    }
+
+    /**
+     * Возвращает подборки
+     */
+    private static function getAllSelectionsArray()
+    {
+        $elements = ElementImpressionsTable::getList([
+            'order' => ['SORT' => 'ASC'],
+            'select' => ['NAME', 'ID', 'PREVIEW_TEXT'],
+            'filter' => ["=IS_CHPY.VALUE" => 21],
+        ])->fetchAll();
+
+        if (!empty($elements)) {
+            foreach ($elements as $element) {
+                $result[] = [
+                    'ID' => $element['ID'],
+                    'UF_NAME' => $element['NAME'],
+                    'UF_SKLON' => $element['PREVIEW_TEXT'],
+                ];
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * Возвращает мини подборки
+     */
+    private static function getMiniSelectionsArray()
+    {
+        $elements = ElementImpressionsTable::getList([
+            'order' => ['SORT' => 'ASC'],
+            'select' => ['NAME', 'ID', 'PREVIEW_TEXT'],
+            'filter' => ["=MINI.VALUE" => 22],
+        ])->fetchAll();
+
+        if (!empty($elements)) {
+            foreach ($elements as $element) {
+                $result[] = [
+                    'ID' => $element['ID'],
+                    'UF_NAME' => $element['NAME'],
+                    'UF_SKLON' => $element['PREVIEW_TEXT'],
+                ];
+            }
+        }
+
+        $chpyDataClass = HighloadBlockTable::compileEntity(COMMON_WATER_HL_ENTITY)->getDataClass();
+
+        $query = $chpyDataClass::query()
+            ->addSelect('ID')
+            ->addSelect('UF_NAME')
+            ->addSelect('UF_SKLON')
+            ->where('UF_MINI', 1)
+            ?->fetchAll();
+
+        return array_merge($result, $query);
+    }
+
+    /**
+     * Возвращает массив с выборочными подборками и фильтрами
+     */
+    private static function getMiniSelectionAndMiniFiltersArray()
+    {
+        $second = self::getMiniSelectionsArray();
+        $third = self::getAllFiltersArray();
+
+        foreach ($second as &$value) {
+            $value['GET'] = 'selection';
+            $miniSelections[] = $value;
+        }
+
+        foreach ($third as $key => $thirdArray) {
+            foreach ($thirdArray as &$value) {
+                $value['GET'] = $key;
+                $filters[$key . '_' . $value['ID']] = $value;
+            }
+        }
+
+        return [
+            0 => [
+                $miniSelections[1],
+                $filters['features_47'],
+            ],
+            1 => [
+                $miniSelections[1],
+                $filters['food_154'],
+            ],
+            2 => [
+                $miniSelections[1],
+                $filters['food_1'],
+            ],
+            3 => [
+                $miniSelections[1],
+                $filters['objectcomforts_2'],
+            ],
+            4 => [
+                $miniSelections[1],
+                $filters['restvariants_4'],
+            ],
+            5 => [
+                $miniSelections[1],
+                $filters['food_155'],
+            ],
+            6 => [
+                $miniSelections[1],
+                $filters['features_48'],
+            ],
+            7 => [
+                $miniSelections[1],
+                $filters['features_76'],
+            ],
+            8 => [
+                $filters['services_2569'],
+                $miniSelections[1],
+            ],
+            9 => [
+                $filters['services_2569'],
+                $miniSelections[3],
+            ],
+            10 => [
+                $filters['services_2569'],
+                $miniSelections[4],
+            ],
+            11 => [
+                $filters['objectcomforts_4'],
+                $miniSelections[1],
+            ],
+            12 => [
+                $filters['restvariants_2'],
+                $miniSelections[1],
+            ],
+            13 => [
+                $miniSelections[0],
+                $filters['food_154'],
+            ],
+            14 => [
+                $miniSelections[0],
+                $filters['features_51'],
+            ],
+            15 => [
+                $filters['restvariants_1'],
+                $miniSelections[1],
+            ],
+            16 => [
+                $filters['services_2576'],
+                $miniSelections[1],
+            ],
+            17 => [
+                $filters['services_2576'],
+                $miniSelections[3],
+            ],
+            18 => [
+                $filters['services_2576'],
+                $miniSelections[4],
+            ],
+            19 => [
+                $filters['services_2576'],
+                $miniSelections[5],
+            ],
+            20 => [
+                $miniSelections[4],
+                $filters['features_47'],
+            ],
+            21 => [
+                $filters['features_51'],
+                $miniSelections[1],
+            ],
+            22 => [
+                $miniSelections[2],
+                $filters['food_154'],
+            ],
+        ];
+    }
+
+    /**
+     * Возвращает массив с сочетанием фильтров            
+     */
+    private static function getFiltersAndFiltersArray()
+    {
+        $third = self::getAllFiltersArray();
+
+        foreach ($third as $key => $thirdArray) {
+            foreach ($thirdArray as &$value) {
+                $value['GET'] = $key;
+                $filters[$key . '_' . $value['ID']] = $value;
+            }
+        }
+
+        return [
+            0 => [
+                $filters['features_47'],
+                $filters['objectcomforts_2'],
+            ],
+            1 => [
+                $filters['features_47'],
+                $filters['features_48'],
+            ],
+            2 => [
+                $filters['food_154'],
+                $filters['restvariants_4'],
+            ],
+            3 => [
+                $filters['services_2569'],
+                $filters['services_2576'],
+            ],
+            4 => [
+                $filters['services_2569'],
+                $filters['features_51'],
+            ],
+            5 => [
+                $filters['services_2576'],
+                $filters['features_47'],
+            ],
+            6 => [
+                $filters['services_2576'],
+                $filters['features_76'],
+            ],
+            7 => [
+                $filters['features_51'],
+                $filters['features_47'],
+            ],
+            8 => [
+                $filters['features_51'],
+                $filters['food_154'],
+            ],
+            9 => [
+                $filters['features_51'],
+                $filters['features_76'],
+            ],
+        ];
     }
 
     private static function getNewUrl($path)
@@ -500,5 +998,14 @@ class AutoCreate
         self::createAccomodationAndRegionAndFilterLinks();
         self::createAccomodationAndWaterLinks();
         self::createAccomodationAndWaterAndFilterLinks();
+        self::createWaterAndFilterLinks();
+        self::createSitemapLinks();
+        self::createSelectionLinks();
+        self::createAccomodationAndSelectionLinks();
+        self::createAccomodationAndRegionAndSelectionLinks();
+        self::createAccomodationAndSelectionAndFiltersLinks();
+        self::createAccomodationAndRegionAndSelectionAndFiltersLinks();
+        self::createAccomodationAndFiltersAndFiltersLinks();
+        self::createAccomodationRegionAndAndFiltersAndFiltersLinks();
     }
 }

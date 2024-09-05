@@ -234,6 +234,18 @@ if (!empty($_GET['commonwater']) && isset($_GET['commonwater'])) {
     $arFilter["UF_COMMON_WATER"] = $arFilterCommonWater;
 }
 
+// Sitemap
+if (!empty($_GET['sitemap']) && isset($_GET['sitemap'])) {
+    $arFilterSitemap = explode(',', $_GET['sitemap']);
+    $arFilter["UF_SITEMAP"] = $arFilterSitemap;
+}
+
+// Sitemap
+if (!empty($_GET['selection']) && isset($_GET['selection'])) {
+    $arFilterImpressions = explode(',', $_GET['selection']);
+    $arFilter["UF_IMPRESSIONS"] = $arFilterImpressions;
+}
+
 // Впечатления
 if (!empty($_GET['impressions']) && isset($_GET['impressions'])) {
     $arRequestImpressions = explode(',', $_GET['impressions']);
@@ -888,7 +900,7 @@ if (empty($chpy)) {
                         "EDIT_TEMPLATE" => ""
                     )
                 );
-                $isSeoText = true;
+                $isSeoText = false;
             } else if ($chySeoText) {
                 echo $chySeoText;
                 $isSeoText = true;
