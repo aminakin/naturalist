@@ -1,9 +1,10 @@
 {
     "require": {
-        "andreyryabin/sprint.migration": "dev-master"
+        "andreyryabin/sprint.migration": "dev-master",
+        "webonyx/graphql-php": "^15.13"
     },
     "autoload": {
-        "psr-4": {"Local\\" : "local/php_interface/lib/"}
+        "psr-4": {"Local\\" : "lib/"}
     },
     "extra": {
         "installer-paths": {

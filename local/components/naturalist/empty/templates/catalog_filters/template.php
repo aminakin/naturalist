@@ -258,7 +258,7 @@ foreach ($arResult as $key => $value) {
                             <? foreach ($houseTypes as $houseType) : ?>
                                 <li class="list__item">
                                     <label class="checkbox">
-                                        <input type="radio" name="housetypes" value="<?= $houseType["ID"] ?>"
+                                        <input type="checkbox" name="housetypes" value="<?= $houseType["ID"] ?>"
                                             <? if ($arFilterHouseTypes && in_array($houseType["ID"], $arFilterHouseTypes)) : ?>checked<? endif; ?>><span><?= $houseType["UF_NAME"] ?></span>
                                     </label>
                                 </li>
