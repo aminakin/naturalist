@@ -146,7 +146,6 @@ if ($arResult['arSearchedRegions']) {
                         $arDataFullGallery[] = "&quot;" . $imageOriginal["SRC"] . "&quot;";
                         $arSection["PICTURES"][$photoId] = CFile::ResizeImageGet($photoId, array('width' => 600, 'height' => 400), BX_RESIZE_IMAGE_EXACT, true);
                     }
-
                 } else {
                     $arSection["PICTURES"][0]["src"] = SITE_TEMPLATE_PATH . "/img/no_photo.png";
                 }
@@ -182,7 +181,6 @@ if ($arResult['arSearchedRegions']) {
                     if ($arSection["UF_EXTERNAL_SERVICE"] == 1) {
                         $sectionPrice = round($sectionPrice / $daysCount);
                     }
-
                 } else {
                     $sectionPrice = $arSection["UF_MIN_PRICE"];
                 }
@@ -195,7 +193,7 @@ if ($arResult['arSearchedRegions']) {
 
                 if ($dateFrom) {
                     $arUriParams = array_merge($arUriParams, $arUriParamsSort);
-                }                
+                }
 
                 $uri = new Uri($arSection["SECTION_PAGE_URL"]);
                 $uri->addParams($arUriParams);
@@ -210,10 +208,8 @@ if ($arResult['arSearchedRegions']) {
             }
         }
 
-        usort($arResult['SECTIONS'], function($a,$b){
+        usort($arResult['SECTIONS'], function ($a, $b) {
             return ($a['DISCTANCE'] - $b['DISCTANCE']);
-        });        
+        });
     }
 }
-
-

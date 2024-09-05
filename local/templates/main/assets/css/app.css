@@ -2845,6 +2845,7 @@ span.flatpickr-weekday {
   background-color: var(--color-beige-light);
   padding-bottom: 9.2rem;
   padding-top: 7.6rem;
+  font-family: "lato";
 }
 
 .footer .container {

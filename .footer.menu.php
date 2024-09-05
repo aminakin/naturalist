@@ -1,54 +1,60 @@
 <?
-$aMenuLinks = Array(
-	Array(
-		"Каталог", 
-		SITE_DIR."/catalog/", 
-		Array(), 
-		Array(), 
-		"" 
+$aMenuLinks = array(
+	array(
+		"Каталог",
+		SITE_DIR . "/catalog/",
+		array(),
+		array(),
+		""
 	),
-	Array(
-		"Карта", 
-		SITE_DIR."/map/", 
-		Array(), 
-		Array(), 
-		"" 
+	array(
+		"Карта",
+		SITE_DIR . "/map/",
+		array(),
+		array(),
+		""
 	),
-	
-	Array(
-		"Подборки", 
-		SITE_DIR."/impressions/", 
-		Array(), 
-		Array(), 
-		"" 
+
+	array(
+		"Подборки",
+		SITE_DIR . "/impressions/",
+		array(),
+		array(),
+		""
 	),
-	Array(
-		"О проекте", 
-		SITE_DIR."/about/", 
-		Array(), 
-		Array(), 
-		"" 
+	array(
+		"О проекте",
+		SITE_DIR . "/about/",
+		array(),
+		array(),
+		""
 	),
-	Array(
-		"Контакты", 
-		SITE_DIR."/contacts/", 
-		Array(), 
-		Array(), 
-		"" 
+	array(
+		"Контакты",
+		SITE_DIR . "/contacts/",
+		array(),
+		array(),
+		""
 	),
-	Array(
-		"Сертификат", 
-		SITE_DIR."/certificates/", 
-		Array(), 
-		Array("ALWAYS_ORANGE"=>"Y"), 
-		"" 
+	array(
+		"Сертификат",
+		SITE_DIR . "/certificates/",
+		array(),
+		array("ALWAYS_ORANGE" => "Y"),
+		""
 	),
-	Array(
-		"Карта сайта", 
-		SITE_DIR."/sitemap/", 
-		Array(), 
-		Array(), 
-		"" 
-	)
+	array(
+		"Карта сайта",
+		SITE_DIR . "/sitemap/",
+		array(),
+		array(),
+		""
+	),
+	array(
+		"Объектам размещения",
+		SITE_DIR . "/objects/",
+		array(),
+		array(),
+		""
+	),
 );
-?>
