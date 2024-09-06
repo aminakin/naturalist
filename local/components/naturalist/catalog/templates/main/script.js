@@ -150,6 +150,32 @@ $(function () {
       delete params["housetypes"];
     }
 
+    if ($('input[name="restvariants"]:checked', parentFrom).length > 0) {
+      var arHousetypes = [];
+      $('input[name="restvariants"]:checked', parentFrom).each(function (
+        indx,
+        element
+      ) {
+        arHousetypes.push($(element).val());
+      });
+      params["restvariants"] = arHousetypes.join(",");
+    } else {
+      delete params["restvariants"];
+    }
+
+    if ($('input[name="objectcomforts"]:checked', parentFrom).length > 0) {
+      var arHousetypes = [];
+      $('input[name="objectcomforts"]:checked', parentFrom).each(function (
+        indx,
+        element
+      ) {
+        arHousetypes.push($(element).val());
+      });
+      params["objectcomforts"] = arHousetypes.join(",");
+    } else {
+      delete params["objectcomforts"];
+    }
+
     var name = $("input[data-autocomplete-result]", parentFrom).val()
       ? $("input[data-autocomplete-result]", parentFrom).val()
       : $('input[name="name"]', parentFrom).val();

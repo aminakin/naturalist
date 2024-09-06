@@ -373,14 +373,14 @@
   align-items: center;
 }
 
-.object-row .favorite svg path{
-  stroke: var( --color-black)!important;
-  fill: var( --color-white)!important;
+.object-row .favorite svg path {
+  stroke: var(--color-black) !important;
+  fill: var(--color-white) !important;
 }
 
-.object-row .favorite.active svg path{
-  stroke: var( --color-orange)!important;
-  fill: var( --color-orange)!important;
+.object-row .favorite.active svg path {
+  stroke: var(--color-orange) !important;
+  fill: var(--color-orange) !important;
 }
 
 .object-row .tag {
@@ -1881,10 +1881,23 @@
 }
 
 .filters__heading .modal__close {
-  margin: -2rem -1.4rem -2rem 0;
-  position: relative;
-  right: auto;
-  top: auto;
+  margin-left: auto;
+  width: auto;
+  gap: 6px;
+  height: auto;
+  position: static;
+  border-bottom: 1px solid var(--color-orange);
+}
+
+.filters__heading .modal__close svg {
+  width: 16px;
+  height: 16px;
+}
+
+.filters__heading .modal__close span {
+  font-family: "Lato";
+  font-size: 14px;
+  line-height: 20px;
 }
 
 /* фильтры в каталоге */
@@ -1903,9 +1916,7 @@
 #form-catalog-filter-front .filters__controls button {
   padding: 0 5rem;
 }
-#popup_filter_body li.list__item {
-  margin: 0.2rem 0;
-}
+
 /**/
 
 #popup_filter_body .form__group {
@@ -2045,7 +2056,7 @@
 .filters_attrs {
   display: flex;
   justify-content: space-between;
-  max-width: 70rem;
+  gap: 20px;
 }
 .filters_attrs .form__dropdown-body {
   padding: 0;
@@ -2127,16 +2138,12 @@
     gap: 1px;
   }
 
-  #form-catalog-filter .filters__heading,
-  #form-catalog-filter .mainsearch {
-    /*margin-top: -20px !important;*/
-    /*margin-left: -20px !important;*/
-  }
   #form-catalog-filter .mainsearch {
     margin-top: 1.5rem !important;
   }
   #form-catalog-filter .filters__form {
-    padding: 0 2rem 3.4rem;
+    padding: 0 15px 30px 15px;
+    margin: 0;
   }
   #form-catalog-filter .filters__heading {
     letter-spacing: normal;
@@ -2158,7 +2165,7 @@
     margin-top: 1.5rem;
   }
   .filters_attrs .form__dropdown_show .form__dropdown-heading:after {
-    display: block;
+    display: none;
   }
   .filters_attrs .form__dropdown-body {
     padding-bottom: 0;
@@ -2189,9 +2196,7 @@
     margin-top: 15px;
   }
   #popup_filter_body .form__dropdown-heading {
-    padding-top: 3rem;
-    border-top: 1px solid #000;
-    border-top: 1px solid var(--color-black);
+    padding-top: 0;
   }
 
   #filters-modal .filters__controls {
@@ -2203,11 +2208,6 @@
     width: 100%;
     margin: 0 auto;
     text-align: center;
-  }
-
-  #filters-modal .filters__controls button {
-    margin: 0 auto !important;
-    border: none;
   }
 
   /*map*/
@@ -2869,5 +2869,178 @@
 @media screen and (max-width: 768px) {
   .form__dropdown-body .list_checkboxes {
     gap: 0;
+  }
+}
+
+#popup_filter_body .form__group.mainsearch {
+  display: none;
+}
+
+#form-catalog-filter .filters__controls {
+  justify-content: center;
+  gap: 12px;
+  height: auto;
+  padding: 24px 0;
+}
+
+#filters-modal.modal:before {
+  display: none;
+}
+
+#filters-modal .filters__heading .h3 {
+  display: none;
+}
+
+.filters__heading .modal__close {
+  margin-left: auto;
+}
+
+#form-catalog-filter {
+  max-width: 1118px;
+  margin: 0 auto;
+  padding: 0 15px;
+}
+
+#filters-modal .filters__heading {
+  padding-top: 16px;
+  padding-right: 20px;
+  width: 100%;
+  position: absolute;
+}
+
+#filters-modal {
+  font-family: "Lato";
+}
+
+#popup_filter_body {
+  margin-top: 16px;
+  padding: 0 0 24px 0;
+}
+
+.filters-attrs__block {
+  display: grid;
+  gap: 20px;
+  align-content: start;
+}
+
+#form-catalog-filter .form__dropdown-heading {
+  margin-bottom: 12px;
+  font-family: "Lato";
+  font-size: 18px;
+  line-height: 24px;
+  font-weight: 600;
+}
+
+#form-catalog-filter .checkbox span {
+  font-size: 14px;
+  line-height: 20px;
+  font-family: "Lato";
+  padding-left: 28px;
+}
+
+#form-catalog-filter .form__dropdown-body .list_checkboxes {
+  gap: 12px;
+}
+
+#popup_filter_body li.list__item {
+  margin: 0;
+}
+
+#form-catalog-filter .checkbox span:before {
+  border: 1px solid #e0c695;
+  border-radius: 6px;
+  content: "";
+  display: block;
+  height: 20px;
+  left: 0;
+  position: absolute;
+  top: calc(50% - 10px);
+  -webkit-transition: background-color 0.25s, border-color 0.25s;
+  transition: background-color 0.25s, border-color 0.25s;
+  width: 20px;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.08);
+  background-color: var(--color-beige-light);
+}
+
+#form-catalog-filter .checkbox input:checked + span:before {
+  background-color: var(--color-orange);
+  border-color: var(--color-orange);
+}
+
+#form-catalog-filter .checkbox input:checked + span:after {
+  content: "";
+  width: 18px;
+  height: 18px;
+  position: absolute;
+  top: calc(50% - 9px);
+  left: 1px;
+  background-image: url("../img/tick.svg");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-color: transparent;
+}
+
+.button.button-clear {
+  padding: 10px 20px;
+  border-radius: 8px;
+  border: none;
+  background-color: var(--color-btn);
+  font-size: 14px;
+  line-height: 20px;
+  font-family: "Lato";
+  font-weight: 400;
+}
+
+.button.button-accept {
+  padding: 10px 20px;
+  border-radius: 8px;
+  border: none;
+  background-color: var(--color-orange);
+  font-size: 14px;
+  line-height: 20px;
+  font-family: "Lato";
+  font-weight: 400;
+}
+
+@media (max-width: 1200px) {
+  #filters-modal .filters__heading {
+    position: static;
+  }
+}
+
+@media (max-width: 767px) {
+  #form-catalog-filter {
+    padding: 0;
+  }
+
+  #filters-modal .filters__heading {
+    padding: 16px;
+  }
+
+  #filters-modal {
+    padding-top: 64px;
+  }
+
+  #filters-modal .filters__heading .h3 {
+    display: block;
+    font-size: 18px;
+    line-height: 24px;
+    font-family: "Lato";
+    font-weight: 600;
+    letter-spacing: normal;
+  }
+
+  .modal_filters .modal__container {
+    border-radius: 20px 20px 0 0;
+    background-color: #f4e6cb;
+  }
+
+  #form-catalog-filter .filters__controls {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    padding: 12px 16px;
+    background-color: var(--color-beige-light);
+    border: none;
   }
 }

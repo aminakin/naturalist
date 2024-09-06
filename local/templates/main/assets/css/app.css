@@ -3217,15 +3217,15 @@ img.lazy.loaded {
 }
 
 .form__dropdown-heading {
-  cursor: pointer;
+  /* cursor: pointer; */
   margin-bottom: 1.8rem;
   position: relative;
 }
 
-.form__dropdown-heading:hover {
+/* .form__dropdown-heading:hover {
   color: #696969;
   color: var(--color-dark-grey-2);
-}
+} */
 
 .form__dropdown-heading:after {
   background: url(../img/dropdown.svg) no-repeat 50% 50%/100% 100%;

@@ -44,7 +44,9 @@ if (CSite::InDir('/map')) {
     $seoFile = 'catalog';
 }
 
-$chySeoText = Components::getChpyLinkByUrl($_SERVER['SCRIPT_NAME'])['UF_SEO_TEXT'];
+$requestUrl = $_SERVER['REDIRECT_URL'] ? $_SERVER['REDIRECT_URL'] : $_SERVER['SCRIPT_NAME'];
+$chpy = Components::getChpyLinkByUrl($requestUrl);
+$chySeoText = $chpy['UF_SEO_TEXT'];
 
 /* Избранное (список ID) */
 $arFavourites = Users::getFavourites();
@@ -202,6 +204,18 @@ if (!empty($_GET['features']) && isset($_GET['features'])) {
     $arFilter["UF_FEATURES"] = $arFilterFeatures;
 }
 
+// Варианты отдыха
+if (!empty($_GET['restvariants']) && isset($_GET['restvariants'])) {
+    $arFilterRestVariants = explode(',', $_GET['restvariants']);
+    $arFilter["UF_REST_VARIANTS"] = $arFilterRestVariants;
+}
+
+// Удобства
+if (!empty($_GET['objectcomforts']) && isset($_GET['objectcomforts'])) {
+    $arFilterObjectComforts = explode(',', $_GET['objectcomforts']);
+    $arFilter["UF_OBJECT_COMFORTS"] = $arFilterObjectComforts;
+}
+
 // Тип дома
 if (!empty($_GET['housetypes']) && isset($_GET['housetypes'])) {
     $arFilterHousetypes = explode(',', $_GET['housetypes']);
@@ -218,6 +232,18 @@ if (!empty($_GET['water']) && isset($_GET['water'])) {
 if (!empty($_GET['commonwater']) && isset($_GET['commonwater'])) {
     $arFilterCommonWater = explode(',', $_GET['commonwater']);
     $arFilter["UF_COMMON_WATER"] = $arFilterCommonWater;
+}
+
+// Sitemap
+if (!empty($_GET['sitemap']) && isset($_GET['sitemap'])) {
+    $arFilterSitemap = explode(',', $_GET['sitemap']);
+    $arFilter["UF_SITEMAP"] = $arFilterSitemap;
+}
+
+// Sitemap
+if (!empty($_GET['selection']) && isset($_GET['selection'])) {
+    $arFilterImpressions = explode(',', $_GET['selection']);
+    $arFilter["UF_IMPRESSIONS"] = $arFilterImpressions;
 }
 
 // Впечатления
@@ -423,6 +449,7 @@ $entityClass = $entity->getDataClass();
 $rsData = $entityClass::getList([
     "select" => ["*"],
     "order" => ["UF_SORT" => "ASC"],
+    "filter" => ["UF_SHOW_FILTER" => "1"],
 ]);
 $arHLTypes = array();
 while ($arEntity = $rsData->Fetch()) {
@@ -447,6 +474,21 @@ while ($arEntity = $rsData->Fetch()) {
 $houseTypesDataClass = HighloadBlockTable::compileEntity(SUIT_TYPES_HL_ENTITY)->getDataClass();
 $houseTypes = $houseTypesDataClass::query()
     ->addSelect('*')
+    ->setOrder(['UF_SORT' => 'ASC'])
+    ?->fetchAll();
+
+// Варианты отдыха
+$restVariantsDataClass = HighloadBlockTable::compileEntity(REST_VARS_HL_ENTITY)->getDataClass();
+$restVariants = $restVariantsDataClass::query()
+    ->addSelect('*')
+    ->setOrder(['UF_SORT' => 'ASC'])
+    ?->fetchAll();
+
+// Удобства
+$objectComfortsDataClass = HighloadBlockTable::compileEntity(OBJECT_COMFORT_HL_ENTITY)->getDataClass();
+$objectComforts = $objectComfortsDataClass::query()
+    ->addSelect('*')
+    ->setOrder(['UF_SORT' => 'ASC'])
     ?->fetchAll();
 
 // Особенности объекта
@@ -522,6 +564,14 @@ if ($page > 1 && isset($_GET["impressions"]) && !empty($_GET['impressions']) && 
 $APPLICATION->SetTitle($titleSEO);
 $APPLICATION->SetPageProperty("custom_title", $h1SEO);
 $APPLICATION->SetPageProperty("description", $descriptionSEO);
+
+if (!count($arPageSections)) {
+    $APPLICATION->AddHeadString('<meta name="robots" content="noindex">', true);
+}
+
+if (empty($chpy)) {
+    $APPLICATION->AddHeadString('<link rel="canonical" href="' . HTTP_HOST . $APPLICATION->GetCurPage() . '">', true);
+}
 /**/
 ?>
 
@@ -850,7 +900,7 @@ $APPLICATION->SetPageProperty("description", $descriptionSEO);
                         "EDIT_TEMPLATE" => ""
                     )
                 );
-                $isSeoText = true;
+                $isSeoText = false;
             } else if ($chySeoText) {
                 echo $chySeoText;
                 $isSeoText = true;
@@ -892,6 +942,10 @@ $APPLICATION->SetPageProperty("description", $descriptionSEO);
                 "arFilterServices" => $arFilterServices,
                 "houseTypes" => $houseTypes,
                 "arFilterHouseTypes" => $arFilterHousetypes,
+                "restVariants" => $restVariants,
+                "arFilterRestVariants" => $arFilterRestVariants,
+                "objectComforts" => $objectComforts,
+                "arFilterObjectComforts" => $arFilterObjectComforts,
             )
         );
         ?>

@@ -3,15 +3,16 @@ foreach ($arResult as $key => $value) {
     ${$key} = $value;
 }
 ?>
+<div class="filters__heading">
+    <div class="h3">Фильтры</div>
+    <button class="modal__close" data-modal-close>
+        <span>Скрыть</span>
+        <svg class="icon icon_cross" viewbox="0 0 18 18">
+            <use xlink:href="#cross" />
+        </svg>
+    </button>
+</div>
 <form class="form filters <?php if (CSite::InDir('/map')): ?>filter__on_map<?php endif; ?>" id="form-catalog-filter">
-    <div class="filters__heading">
-        <div class="h3">Фильтры</div>
-        <button class="modal__close" data-modal-close>
-            <svg class="icon icon_cross" viewbox="0 0 18 18" style="width: 1.8rem; height: 1.8rem;">
-                <use xlink:href="#cross" />
-            </svg>
-        </button>
-    </div>
 
     <div class="filters__form" id="popup_filter_body">
         <div class="form__group mainsearch">
@@ -175,133 +176,165 @@ foreach ($arResult as $key => $value) {
                                 </div>
                             </div>
                         </div>
-
-
                         <button class="button button_primary" data-filter-set>Найти</button>
                     </div>
                 </div>
             </div>
-
-            <div class="filters__controls">
-                <button class="button button_primary" data-filter-set>Найти</button>
-            </div>
-
         </div>
 
         <div class="filters_attrs">
-
-            <div class="form__dropdown form__dropdown_show">
-                <div class="form__dropdown-heading h6">Тип размещения</div>
-                <div class="form__dropdown-body">
-                    <ul class="list list_checkboxes">
-                        <? foreach ($arHLTypes as $arType) : ?>
-                            <? $onclick = ""; ?>
-                            <? if ($arType["UF_NAME"] === "Кемпинг"): ?>
-                                <? $onclick = "onclick=\"ym(91071014, 'reachGoal', 'camping'); return true;\""; ?>
-                            <? elseif ($arType["UF_NAME"] === "Глэмпинг"): ?>
-                                <? $onclick = "onclick=\"ym(91071014, 'reachGoal', 'glamping'); return true;\""; ?>
-                            <? elseif ($arType["UF_NAME"] === "Отель"): ?>
-                                <? $onclick = "onclick=\"ym(91071014, 'reachGoal', 'hotel'); return true;\""; ?>
-                            <? endif; ?>
-                            <li class="list__item">
-                                <label class="checkbox">
-                                    <input type="checkbox" name="type" <?= $onclick; ?> value="<?= $arType["ID"] ?>"
-                                        <? if ($arFilterTypes && in_array($arType["ID"], $arFilterTypes)) : ?>checked<? endif; ?>><span><?= $arType["UF_NAME"] ?></span>
-                                </label>
-                            </li>
-                        <? endforeach; ?>
-                    </ul>
+            <div class="filters-attrs__block">
+                <div class="form__dropdown form__dropdown_show">
+                    <div class="form__dropdown-heading h6">Тип размещения</div>
+                    <div class="form__dropdown-body">
+                        <ul class="list list_checkboxes">
+                            <? foreach ($arHLTypes as $arType) : ?>
+                                <? $onclick = ""; ?>
+                                <? if ($arType["UF_NAME"] === "Кемпинг"): ?>
+                                    <? $onclick = "onclick=\"ym(91071014, 'reachGoal', 'camping'); return true;\""; ?>
+                                <? elseif ($arType["UF_NAME"] === "Глэмпинг"): ?>
+                                    <? $onclick = "onclick=\"ym(91071014, 'reachGoal', 'glamping'); return true;\""; ?>
+                                <? elseif ($arType["UF_NAME"] === "Отель"): ?>
+                                    <? $onclick = "onclick=\"ym(91071014, 'reachGoal', 'hotel'); return true;\""; ?>
+                                <? endif; ?>
+                                <li class="list__item">
+                                    <label class="checkbox">
+                                        <input type="checkbox" name="type" <?= $onclick; ?> value="<?= $arType["ID"] ?>"
+                                            <? if ($arFilterTypes && in_array($arType["ID"], $arFilterTypes)) : ?>checked<? endif; ?>><span><?= $arType["UF_NAME"] ?></span>
+                                    </label>
+                                </li>
+                            <? endforeach; ?>
+                        </ul>
+                    </div>
                 </div>
+
+                <? if ($restVariants): ?>
+                    <div class="form__dropdown form__dropdown_show">
+                        <div class="form__dropdown-heading h6">Варианты отдыха</div>
+                        <div class="form__dropdown-body">
+                            <ul class="list list_checkboxes">
+                                <? foreach ($restVariants as $restVariant) : ?>
+                                    <li class="list__item">
+                                        <label class="checkbox">
+                                            <input type="checkbox" name="restvariants" value="<?= $restVariant["ID"] ?>"
+                                                <? if ($arFilterRestVariants && in_array($restVariant["ID"], $arFilterRestVariants)) : ?>checked<? endif; ?>><span><?= $restVariant["UF_NAME"] ?></span>
+                                        </label>
+                                    </li>
+                                <? endforeach; ?>
+                            </ul>
+                        </div>
+                    </div>
+                <? endif; ?>
             </div>
 
-            <? if ($arServices): ?>
-                <div class="form__dropdown form__dropdown_show">
-                    <div class="form__dropdown-heading h6">Окружение</div>
-                    <div class="form__dropdown-body">
-                        <ul class="list list_checkboxes">
-                            <? foreach ($arServices as $arService) : ?>
-                                <li class="list__item">
-                                    <label class="checkbox">
-                                        <input type="checkbox" name="services" value="<?= $arService["ID"] ?>"
-                                            <? if ($arFilterServices && in_array($arService["ID"], $arFilterServices)) : ?>checked<? endif; ?>><span><?= $arService["NAME"] ?></span>
-                                    </label>
-                                </li>
-                            <? endforeach; ?>
-                        </ul>
+            <div class="filters-attrs__block">
+                <? if ($houseTypes) { ?>
+                    <div class="form__dropdown form__dropdown_show">
+                        <div class="form__dropdown-heading h6">Типы домов</div>
+                        <div class="form__dropdown-body">
+                            <ul class="list list_checkboxes">
+                                <? foreach ($houseTypes as $houseType) : ?>
+                                    <li class="list__item">
+                                        <label class="checkbox">
+                                            <input type="checkbox" name="housetypes" value="<?= $houseType["ID"] ?>"
+                                                <? if ($arFilterHouseTypes && in_array($houseType["ID"], $arFilterHouseTypes)) : ?>checked<? endif; ?>><span><?= $houseType["UF_NAME"] ?></span>
+                                        </label>
+                                    </li>
+                                <? endforeach; ?>
+                            </ul>
+                        </div>
                     </div>
-                </div>
-            <? endif; ?>
+                <? } ?>
 
-            <? if ($arHLFood): ?>
-                <div class="form__dropdown form__dropdown_show">
-                    <div class="form__dropdown-heading h6">Питание</div>
-                    <div class="form__dropdown-body">
-                        <ul class="list list_checkboxes">
-                            <? foreach ($arHLFood as $arFoodItem) : ?>
-                                <li class="list__item">
-                                    <label class="checkbox">
-                                        <input type="checkbox" name="food" value="<?= $arFoodItem["ID"] ?>"
-                                            <? if ($arFilterFood && in_array($arFoodItem["ID"], $arFilterFood)) : ?>checked<? endif; ?>><span><?= $arFoodItem["UF_NAME"] ?></span>
-                                    </label>
-                                </li>
-                            <? endforeach; ?>
-                        </ul>
+                <? if ($arServices): ?>
+                    <div class="form__dropdown form__dropdown_show">
+                        <div class="form__dropdown-heading h6">Окружение</div>
+                        <div class="form__dropdown-body">
+                            <ul class="list list_checkboxes">
+                                <? foreach ($arServices as $arService) : ?>
+                                    <li class="list__item">
+                                        <label class="checkbox">
+                                            <input type="checkbox" name="services" value="<?= $arService["ID"] ?>"
+                                                <? if ($arFilterServices && in_array($arService["ID"], $arFilterServices)) : ?>checked<? endif; ?>><span><?= $arService["NAME"] ?></span>
+                                        </label>
+                                    </li>
+                                <? endforeach; ?>
+                            </ul>
+                        </div>
                     </div>
-                </div>
-            <? endif; ?>
+                <? endif; ?>
+            </div>
 
-            <? if ($houseTypes) { ?>
-                <div class="form__dropdown form__dropdown_show">
-                    <div class="form__dropdown-heading h6">Типы домов</div>
-                    <div class="form__dropdown-body">
-                        <ul class="list list_checkboxes">
-                            <? foreach ($houseTypes as $houseType) : ?>
-                                <li class="list__item">
-                                    <label class="checkbox">
-                                        <input type="checkbox" name="housetypes" value="<?= $houseType["ID"] ?>"
-                                            <? if ($arFilterHouseTypes && in_array($houseType["ID"], $arFilterHouseTypes)) : ?>checked<? endif; ?>><span><?= $houseType["UF_NAME"] ?></span>
-                                    </label>
-                                </li>
-                            <? endforeach; ?>
-                        </ul>
+            <div class="filters-attrs__block">
+                <? if ($arHLFood): ?>
+                    <div class="form__dropdown form__dropdown_show">
+                        <div class="form__dropdown-heading h6">Питание</div>
+                        <div class="form__dropdown-body">
+                            <ul class="list list_checkboxes">
+                                <? foreach ($arHLFood as $arFoodItem) : ?>
+                                    <li class="list__item">
+                                        <label class="checkbox">
+                                            <input type="checkbox" name="food" value="<?= $arFoodItem["ID"] ?>"
+                                                <? if ($arFilterFood && in_array($arFoodItem["ID"], $arFilterFood)) : ?>checked<? endif; ?>><span><?= $arFoodItem["UF_NAME"] ?></span>
+                                        </label>
+                                    </li>
+                                <? endforeach; ?>
+                            </ul>
+                        </div>
                     </div>
-                </div>
-            <? } ?>
+                <? endif; ?>
 
-
-        </div>
-
-        <div class="filters_features">
-            <? if ($arHLFeatures): ?>
-                <div class="form__dropdown form__dropdown_show">
-                    <div class="form__dropdown-heading h6">Особенности</div>
-                    <div class="form__dropdown-body">
-                        <ul class="list list_checkboxes">
-                            <? foreach ($arHLFeatures as $arFeature) : ?>
-                                <?
-                                if ($arFeature["UF_SHOW_FILTER"] != 1) {
-                                    continue;
-                                }
-                                ?>
-                                <li class="list__item">
-                                    <label class="checkbox">
-                                        <input type="checkbox" name="features" value="<?= $arFeature["ID"] ?>"
-                                            <? if ($arFilterFeatures && in_array(
-                                                $arFeature["ID"],
-                                                $arFilterFeatures
-                                            )) : ?>checked<? endif; ?>><span><?= $arFeature["UF_NAME"] ?></span>
-                                    </label>
-                                </li>
-                            <? endforeach; ?>
-                        </ul>
+                <? if ($objectComforts) { ?>
+                    <div class="form__dropdown form__dropdown_show">
+                        <div class="form__dropdown-heading h6">Удобства</div>
+                        <div class="form__dropdown-body">
+                            <ul class="list list_checkboxes">
+                                <? foreach ($objectComforts as $objectComfort) : ?>
+                                    <li class="list__item">
+                                        <label class="checkbox">
+                                            <input type="checkbox" name="objectcomforts" value="<?= $objectComfort["ID"] ?>"
+                                                <? if ($arFilterObjectComforts && in_array($objectComfort["ID"], $arFilterObjectComforts)) : ?>checked<? endif; ?>><span><?= $objectComfort["UF_NAME"] ?></span>
+                                        </label>
+                                    </li>
+                                <? endforeach; ?>
+                            </ul>
+                        </div>
                     </div>
-                </div>
-            <? endif; ?>
+                <? } ?>
+            </div>
+
+            <div class="filters-attrs__block">
+                <? if ($arHLFeatures): ?>
+                    <div class="form__dropdown form__dropdown_show">
+                        <div class="form__dropdown-heading h6">Впечатления</div>
+                        <div class="form__dropdown-body">
+                            <ul class="list list_checkboxes">
+                                <? foreach ($arHLFeatures as $arFeature) : ?>
+                                    <?
+                                    if ($arFeature["UF_SHOW_FILTER"] != 1) {
+                                        continue;
+                                    }
+                                    ?>
+                                    <li class="list__item">
+                                        <label class="checkbox">
+                                            <input type="checkbox" name="features" value="<?= $arFeature["ID"] ?>"
+                                                <? if ($arFilterFeatures && in_array(
+                                                    $arFeature["ID"],
+                                                    $arFilterFeatures
+                                                )) : ?>checked<? endif; ?>><span><?= $arFeature["UF_NAME"] ?></span>
+                                        </label>
+                                    </li>
+                                <? endforeach; ?>
+                            </ul>
+                        </div>
+                    </div>
+                <? endif; ?>
+            </div>
         </div>
     </div>
 
     <div class="filters__controls">
-        <button class="button" style="margin-left: auto" data-filter-reset>Сбросить всё</button>
-        <!--        <button class="button button_primary" data-filter-set>Подобрать</button>-->
+        <button class="button button-clear" data-filter-reset>Сбросить</button>
+        <button class="button button_primary button-accept" data-filter-set>Применить</button>
     </div>
 </form>
