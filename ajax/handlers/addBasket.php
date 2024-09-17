@@ -1,4 +1,5 @@
 <?
+
 /**
  * @global CMain $APPLICATION
  * @var array    $arParams
@@ -7,6 +8,7 @@
 
 use Naturalist\Baskets;
 use Bitrix\Main\Application;
+use Bitrix\Highloadblock\HighloadBlockTable;
 
 if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) {
 	include_once $_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_before.php";
@@ -24,20 +26,33 @@ $title = $_REQUEST["title"];
 $photo = isset($_REQUEST["photo"]) ? $_REQUEST["photo"] : '';
 
 $externalService = $_REQUEST["externalService"];
-if($externalService == "bnovo") {
+if ($externalService == "bnovo") {
 	$tariffId = $_REQUEST["tariffId"];
 	$categoryId = $_REQUEST["categoryId"];
 	$prices = $_REQUEST["prices"];
-
 } else {
 	$checksum = $_REQUEST["checksum"];
-	$session = Application::getInstance()->getSession();	
-	$session->set('traveline_checksum', $checksum);	
+	$session = Application::getInstance()->getSession();
 	$sessionId = $session->getId();
+
+	$checksummDataClass = HighloadBlockTable::compileEntity(TRAVELINE_CHECKSUMM_HL_ENTITY)->getDataClass();
+	$query = $checksummDataClass::query()
+		->addSelect('ID')
+		->where('UF_SESSION_ID', $sessionId)
+		?->fetch();
+
+	if (!empty($query)) {
+		$checksummDataClass::update($query['ID'], ['UF_CHECKSUMM' => $checksum]);
+	} else {
+		$checksummDataClass::add([
+			'UF_SESSION_ID' => $sessionId,
+			'UF_CHECKSUMM' => $checksum,
+		]);
+	}
 }
 
 $count = 1;
-$daysCount = (strtotime($dateTo) - strtotime($dateFrom)) / (60*60*24);
+$daysCount = (strtotime($dateTo) - strtotime($dateFrom)) / (60 * 60 * 24);
 $arProps = array(
 	[
 		'CODE' => 'DATE_FROM',
@@ -52,12 +67,12 @@ $arProps = array(
 	[
 		'CODE' => 'GUESTS_COUNT',
 		'NAME' => 'Количество гостей',
-		'VALUE' => $guests,		
+		'VALUE' => $guests,
 	],
 	[
 		'CODE' => 'CHILDREN',
 		'NAME' => 'Возраст детей',
-		'VALUE' => $childrenAge,		
+		'VALUE' => $childrenAge,
 	],
 	[
 		'CODE' => 'DAYS_COUNT',
@@ -67,7 +82,7 @@ $arProps = array(
 	[
 		'CODE' => 'EXTERNAL_ID',
 		'NAME' => 'Внешний ID',
-		'VALUE' => $externalId,		
+		'VALUE' => $externalId,
 	],
 	[
 		'CODE' => 'EXTERNAL_SERVICE',
@@ -82,7 +97,7 @@ $arProps = array(
 	[
 		'CODE' => 'PEOPLE',
 		'NAME' => 'Размещение гостей',
-		'VALUE' => $people,		
+		'VALUE' => $people,
 	],
 	[
 		'CODE' => 'SESSION_ID',
@@ -100,7 +115,7 @@ $arProps = array(
 		'VALUE' => $photo,
 	]
 );
-if($externalService == 'bnovo') {
+if ($externalService == 'bnovo') {
 	$arProps = array_merge($arProps, array(
 		[
 			'CODE' => 'TARIFF_ID',
@@ -117,14 +132,13 @@ if($externalService == 'bnovo') {
 			'VALUE' => $prices
 		]
 	));
-
 } else {
-	$arProps = array_merge($arProps, array(
-		[
-			'CODE' => 'CHECKSUM',
-			'VALUE' => $checksum
-		]		
-	));
+	// $arProps = array_merge($arProps, array(
+	// 	[
+	// 		'CODE' => 'CHECKSUM',
+	// 		'VALUE' => $checksum
+	// 	]
+	// ));
 }
 
 $basket = new Baskets();

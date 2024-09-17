@@ -431,7 +431,7 @@ class Orders
                     $this->updateStatus($arOrder["ID"], "F");
                     // $this->updatePayment($order);
                 } else {
-                    $this->updateStatus($arOrder["ID"], "C");
+                    //$this->updateStatus($arOrder["ID"], "C");
                 }
             }
             // elseif (time() >= strtotime("+4 day", $arOrder["FIELDS"]["DATE_INSERT"]->getTimestamp()) && $arOrder["FIELDS"]["STATUS_ID"] != "F" && $arOrder["FIELDS"]["STATUS_ID"] != "C") {

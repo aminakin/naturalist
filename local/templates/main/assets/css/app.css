@@ -4195,9 +4195,9 @@ img.lazy.loaded {
 
 .slider-gallery,
 .slider-gallery .swiper-lazy {
-  opacity: 0;
+  /* opacity: 0;
   -webkit-transition: opacity 0.25s;
-  transition: opacity 0.25s;
+  transition: opacity 0.25s; */
 }
 
 .slider-gallery .swiper-lazy.swiper-lazy-loaded,
@@ -4304,8 +4304,9 @@ img.lazy.loaded {
   height: 9px;
   padding: 2px;
   position: relative;
-  width: auto;
-  display: inline-block;
+  width: max-content;
+  max-width: 100%;
+  display: block;
   border-radius: 9px;
   background-color: #00000060;
   top: -30px;

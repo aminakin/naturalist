@@ -17,12 +17,20 @@
   overflow: hidden;
   background-position: center;
   background-size: cover;
+  position: relative;
+}
+
+.main-slider ul li img {
+  position: absolute;
+  top: 0;
+  left: 0;
 }
 
 .main-slider ul li a {
   display: block;
   height: 100%;
   border: none;
+  position: relative;
 }
 
 @media (max-width: 768px) {

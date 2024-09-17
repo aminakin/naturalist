@@ -712,6 +712,9 @@ class Traveline
         $arItemsResponse = json_decode($response, true);
 
         curl_close($ch);
+
+        Debug::writeToFile($arItemsResponse, 'TRAVELINE VERIFY RESPONSE ' . date('Y-m-d H:i:s'), '__bx_log.log');
+
         if ($arItemsResponse['roomStays']) {
             $arExternalData = array();
             foreach ($arItemsResponse['roomStays'] as $key => $arItem) {
@@ -820,18 +823,18 @@ class Traveline
             return '';
         }
 
-        $session = UserSessionTable::getRow([
-            'select' => ['*'],
-            'filter' => ['=SESSION_ID' => $sessionId],
-        ]);
+        $checksummDataClass = HighloadBlockTable::compileEntity(TRAVELINE_CHECKSUMM_HL_ENTITY)->getDataClass();
+        $query = $checksummDataClass::query()
+            ->addSelect('ID')
+            ->addSelect('UF_CHECKSUMM')
+            ->where('UF_SESSION_ID', $sessionId)
+            ?->fetch();
 
-        $parsedSessionData = CustomFunctions::unserialize_php(base64_decode($session['SESSION_DATA']));
-
-        if (!is_array($parsedSessionData) && !isset($parsedSessionData['traveline_checksum'])) {
-            return '';
+        if (!empty($query)) {
+            return $query['UF_CHECKSUMM'];
         }
 
-        return $parsedSessionData['traveline_checksum'];
+        return '';
     }
 
     /* Бронирование объекта из заказа */
@@ -846,6 +849,7 @@ class Traveline
         $arChildrenAge = $arOrder["ITEMS"][0]["ITEM_BAKET_PROPS"]["CHILDREN"]['VALUE'] ? explode(',', $arOrder["ITEMS"][0]["ITEM_BAKET_PROPS"]["CHILDREN"]['VALUE']) : [];
         $price = $arOrder['FIELDS']['BASE_PRICE'];
         $checksum = self::getChecksum($arOrder["ITEMS"][0]["ITEM_BAKET_PROPS"]["SESSION_ID"]['VALUE']);
+        //$checksum = $arOrder["ITEMS"][0]["ITEM_BAKET_PROPS"]["CHECKSUM"]['VALUE'];
         $arGuestList = $arOrder['PROPS']['GUEST_LIST'];
         $adults = $arOrder["ITEMS"][0]["ITEM_BAKET_PROPS"]["GUESTS_COUNT"]['VALUE'];
 

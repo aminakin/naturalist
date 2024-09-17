@@ -65,6 +65,7 @@ class AutoCreate
         }
 
         if (isset($links) && is_array($links)) {
+            xprint(count($links));
             self::addUrls($links);
         }
     }
@@ -98,6 +99,7 @@ class AutoCreate
         }
 
         if (isset($links) && is_array($links)) {
+            xprint(count($links));
             self::addUrls($links);
         }
     }
@@ -127,6 +129,7 @@ class AutoCreate
         }
 
         if (isset($links) && is_array($links)) {
+            xprint(count($links));
             self::addUrls($links);
         }
     }
@@ -159,6 +162,7 @@ class AutoCreate
         }
 
         if (isset($links) && is_array($links)) {
+            xprint(count($links));
             self::addUrls($links);
         }
     }
@@ -191,6 +195,7 @@ class AutoCreate
         }
 
         if (isset($links) && is_array($links)) {
+            xprint(count($links));
             self::addUrls($links);
         }
     }
@@ -220,6 +225,7 @@ class AutoCreate
         }
 
         if (isset($links) && is_array($links)) {
+            xprint(count($links));
             self::addUrls($links);
         }
     }
@@ -253,6 +259,7 @@ class AutoCreate
         }
 
         if (isset($links) && is_array($links)) {
+            xprint(count($links));
             self::addUrls($links);
         }
     }
@@ -292,6 +299,7 @@ class AutoCreate
         }
 
         if (isset($links) && is_array($links)) {
+            xprint(count($links));
             self::addUrls($links);
         }
     }
@@ -324,6 +332,7 @@ class AutoCreate
         }
 
         if (isset($links) && is_array($links)) {
+            xprint(count($links));
             self::addUrls($links);
         }
     }
@@ -362,6 +371,7 @@ class AutoCreate
         }
 
         if (isset($links) && is_array($links)) {
+            xprint(count($links));
             self::addUrls($links);
         }
     }
@@ -397,6 +407,7 @@ class AutoCreate
         }
 
         if (isset($links) && is_array($links)) {
+            xprint(count($links));
             self::addUrls($links);
         }
     }
@@ -427,6 +438,7 @@ class AutoCreate
         }
 
         if (isset($links) && is_array($links)) {
+            xprint(count($links));
             self::addUrls($links);
         }
     }
@@ -452,6 +464,7 @@ class AutoCreate
         }
 
         if (isset($links) && is_array($links)) {
+            xprint(count($links));
             self::addUrls($links);
         }
     }
@@ -479,6 +492,7 @@ class AutoCreate
         }
 
         if (isset($links) && is_array($links)) {
+            xprint(count($links));
             self::addUrls($links);
         }
     }
@@ -516,6 +530,7 @@ class AutoCreate
         }
 
         if (isset($links) && is_array($links)) {
+            xprint(count($links));
             self::addUrls($links);
         }
     }
@@ -543,6 +558,7 @@ class AutoCreate
         }
 
         if (isset($links) && is_array($links)) {
+            xprint(count($links));
             self::addUrls($links);
         }
     }
@@ -579,6 +595,7 @@ class AutoCreate
         }
 
         if (isset($links) && is_array($links)) {
+            xprint(count($links));
             self::addUrls($links);
         }
     }
@@ -613,7 +630,7 @@ class AutoCreate
         }
 
         if (isset($links) && is_array($links)) {
-            xprint($links);
+            xprint(count($links));
             self::addUrls($links);
         }
     }
@@ -657,6 +674,7 @@ class AutoCreate
         }
 
         if (isset($links) && is_array($links)) {
+            xprint(count($links));
             self::addUrls($links);
         }
     }

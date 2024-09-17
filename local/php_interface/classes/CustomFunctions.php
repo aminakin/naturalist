@@ -1,6 +1,7 @@
 <?php
 
 namespace Naturalist;
+
 use \Bitrix\Iblock\Model\Section;
 use \Bitrix\Main\Loader;
 use \Bitrix\Sale\Order;
@@ -25,25 +26,27 @@ class CustomFunctions
      * Удаляет неиспользуемые файлы из папки /upload/uf/
      *     
      */
-    public static function deleteOldUfFiles() {
+    public static function deleteOldUfFiles()
+    {
+        return;
         // Получаем все фото из доп. полей разделов каталога
         $entity = Section::compileEntityByIblock(CATALOG_IBLOCK_ID);
         $rsSectionObjects = $entity::getList(
             [
                 'filter' => ['IBLOCK_ID' => CATALOG_IBLOCK_ID],
-                'select' => ['NAME', 'UF_PHOTOS'],        
+                'select' => ['NAME', 'UF_PHOTOS'],
             ]
         );
 
-        while ($arSectionItem = $rsSectionObjects->Fetch()){
+        while ($arSectionItem = $rsSectionObjects->Fetch()) {
             if (is_array($arSectionItem['UF_PHOTOS']) && count($arSectionItem['UF_PHOTOS'])) {
                 foreach ($arSectionItem['UF_PHOTOS'] as $photo) {
-                    $filePath = $_SERVER['DOCUMENT_ROOT'].\CFile::getPath($photo);
+                    $filePath = $_SERVER['DOCUMENT_ROOT'] . \CFile::getPath($photo);
                     if (str_contains($filePath, '/uf')) {
                         $photoPaths[] = $filePath;
-                    }            
+                    }
                 }
-            }    
+            }
         }
 
         // Получаем все фото из HL блоков особенностей объектов и сертификатов
@@ -54,32 +57,32 @@ class CustomFunctions
         array_merge($photoPaths, self::addPhotosToArray(self::$certelvarHlCode, 'UF_FILE'));
 
         $photoPaths = array_unique($photoPaths);
-        $uf = scandir($_SERVER['DOCUMENT_ROOT'].self::$ufFolder);
+        $uf = scandir($_SERVER['DOCUMENT_ROOT'] . self::$ufFolder);
 
         foreach ($uf as $ufFolder) {
-            if ($ufFolder != '.' && $ufFolder != '..') {        
-                $ufInnerFolder = scandir($_SERVER['DOCUMENT_ROOT'].self::$ufFolder.$ufFolder);
+            if ($ufFolder != '.' && $ufFolder != '..') {
+                $ufInnerFolder = scandir($_SERVER['DOCUMENT_ROOT'] . self::$ufFolder . $ufFolder);
 
                 foreach ($ufInnerFolder as $innerFolder) {
                     if ($innerFolder != '.' && $innerFolder != '..') {
-                        $ufInnerFiles = scandir($_SERVER['DOCUMENT_ROOT'].self::$ufFolder.$ufFolder.'/'.$innerFolder);
+                        $ufInnerFiles = scandir($_SERVER['DOCUMENT_ROOT'] . self::$ufFolder . $ufFolder . '/' . $innerFolder);
 
                         foreach ($ufInnerFiles as $lastFile) {
-                            if (is_file($_SERVER['DOCUMENT_ROOT'].self::$ufFolder.$ufFolder.'/'.$innerFolder.'/'.$lastFile)) {
-                                $ufAllFiles[] = $_SERVER['DOCUMENT_ROOT'].self::$ufFolder.$ufFolder.'/'.$innerFolder.'/'.$lastFile;
-                            }    
+                            if (is_file($_SERVER['DOCUMENT_ROOT'] . self::$ufFolder . $ufFolder . '/' . $innerFolder . '/' . $lastFile)) {
+                                $ufAllFiles[] = $_SERVER['DOCUMENT_ROOT'] . self::$ufFolder . $ufFolder . '/' . $innerFolder . '/' . $lastFile;
+                            }
                         }
                         unset($lastFile);
                     }
-                    if (is_file($_SERVER['DOCUMENT_ROOT'].self::$ufFolder.$ufFolder.'/'.$innerFolder)) {
-                        $ufAllFiles[] = $_SERVER['DOCUMENT_ROOT'].self::$ufFolder.$ufFolder.'/'.$innerFolder;
-                    }            
+                    if (is_file($_SERVER['DOCUMENT_ROOT'] . self::$ufFolder . $ufFolder . '/' . $innerFolder)) {
+                        $ufAllFiles[] = $_SERVER['DOCUMENT_ROOT'] . self::$ufFolder . $ufFolder . '/' . $innerFolder;
+                    }
                 }
                 unset($innerFolder);
-            }    
+            }
         }
 
-        foreach ($ufAllFiles as $photo) {    
+        foreach ($ufAllFiles as $photo) {
             if (array_search($photo, $photoPaths) === false) {
                 unlink($photo);
             }
@@ -92,19 +95,19 @@ class CustomFunctions
         $hlEntity = new HighLoadBlockHelper($entity);
 
         $hlEntity->prepareParamsQuery(
-            ["ID", $field],            
+            ["ID", $field],
             ["ID" => "ASC"],
             [],
-        );        
+        );
 
         $rows = $hlEntity->getDataAll();
-        
+
         if (is_array($rows) && count($rows)) {
             foreach ($rows as $HlPhoto) {
                 if ($HlPhoto[$field]) {
-                    $filePath = $_SERVER['DOCUMENT_ROOT'].\CFile::getPath($HlPhoto[$field]);                    
-                    $result[] = $filePath;                                
-                }                
+                    $filePath = $_SERVER['DOCUMENT_ROOT'] . \CFile::getPath($HlPhoto[$field]);
+                    $result[] = $filePath;
+                }
             }
         }
 
@@ -112,7 +115,8 @@ class CustomFunctions
     }
 
     // Парсит строку сесии в массив
-    public static function unserialize_php($session_data) {
+    public static function unserialize_php($session_data)
+    {
         $return_data = array();
         $offset = 0;
         while ($offset < strlen($session_data)) {
@@ -140,10 +144,10 @@ class CustomFunctions
 
         $dbRes = Order::getList([
             'select' => [
-                "ID",        
-                "CHECKOUT_DATE.VALUE",		
+                "ID",
+                "CHECKOUT_DATE.VALUE",
             ],
-            'filter' => [                
+            'filter' => [
                 '=STATUS_ID' => 'F',
                 '=CHECKOUT_DATE.CODE' => 'DATE_TO',
                 '=CHECKOUT_DATE.VALUE' => $yesterday->format("d.m.Y"),
@@ -153,16 +157,15 @@ class CustomFunctions
                     'CHECKOUT_DATE',
                     '\Bitrix\sale\Internals\OrderPropsValueTable',
                     ["=this.ID" => "ref.ORDER_ID"],
-                    ["join_type"=>"left"]
-                ),		
+                    ["join_type" => "left"]
+                ),
             ]
         ]);
-        while ($order = $dbRes->fetch())
-        {
+        while ($order = $dbRes->fetch()) {
             $objectType = '';
 
             $orderClass = new Orders;
-            $orderData = $orderClass->get($order['ID']);	
+            $orderData = $orderClass->get($order['ID']);
 
             $hlEntity = new HighLoadBlockHelper('CampingTypes');
             $hlEntity->prepareParamsQuery(['*'], [], ['ID' => $orderData['ITEMS'][0]['ITEM']['SECTION']['UF_TYPE']]);
@@ -171,19 +174,19 @@ class CustomFunctions
                 $objectType = $hlEntity->getData()['UF_NAME'];
             }
 
-            $objectPhoto = \CFile::getPath($orderData['ITEMS'][0]['ITEM']['PROPERTIES']['PHOTOS']['VALUE'][0]);            
+            $objectPhoto = \CFile::getPath($orderData['ITEMS'][0]['ITEM']['PROPERTIES']['PHOTOS']['VALUE'][0]);
 
             $objectName = $orderData['PROPS']['OBJECT'];
-            
+
             $email = $orderData['PROPS']['EMAIL'];
 
             $fields = [
                 "OBJECT_TYPE" => $objectType,
                 "OBJECT_NAME" => $orderData['PROPS']['OBJECT'],
                 "ROOM_PHOTO" => $objectPhoto ? $objectPhoto : $orderData['PROPS']['ROOM_PHOTO'],
-                "EMAIL" => $orderData['PROPS']['EMAIL'],                
+                "EMAIL" => $orderData['PROPS']['EMAIL'],
             ];
-            Users::sendEmail("REVIEW_INVITE", "69", $fields);    
+            Users::sendEmail("REVIEW_INVITE", "69", $fields);
         }
     }
 }

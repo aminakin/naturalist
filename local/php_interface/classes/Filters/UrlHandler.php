@@ -31,6 +31,7 @@ class UrlHandler
             ->AddSelect('UF_H1')
             ->AddSelect('UF_TITLE')
             ->AddSelect('UF_DESCRIPTION')
+            ->addSelect('UF_SEO_TEXT')
             ->where('UF_REAL_URL', $url)
             ->where('UF_ACTIVE', 1)
             ?->fetch();

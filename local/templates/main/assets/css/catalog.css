@@ -2648,7 +2648,6 @@
     border-bottom: none;
     -ms-flex-direction: column;
     flex-direction: column;
-    padding-bottom: 0;
   }
 
   .object-row:not(.object-row_profile) + .object-row {

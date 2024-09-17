@@ -24,6 +24,7 @@ use Naturalist\Reviews;
 use Bitrix\Iblock\Elements\ElementGlampingsTable;
 use Naturalist\Utils;
 use Naturalist\Filters\Components;
+use Naturalist\Filters\UrlHandler;
 
 global $arUser, $userId, $isAuthorized;
 
@@ -47,6 +48,17 @@ if (CSite::InDir('/map')) {
 $requestUrl = $_SERVER['REDIRECT_URL'] ? $_SERVER['REDIRECT_URL'] : $_SERVER['SCRIPT_NAME'];
 $chpy = Components::getChpyLinkByUrl($requestUrl);
 $chySeoText = $chpy['UF_SEO_TEXT'];
+
+if ($_GET['page'] && count($_GET) > 1) {
+    $urlWithPage = '/catalog/?';
+    foreach ($_GET as $getName => $getValue) {
+        if ($getName !== 'page') {
+            $urlWithPage .= $getName . '=' . $getValue . '&';
+        }
+    }
+    $urlWithPage = substr($urlWithPage, 0, -1);
+    $pageSeoData = UrlHandler::getByRealUrl($urlWithPage, SITE_ID);
+}
 
 /* Избранное (список ID) */
 $arFavourites = Users::getFavourites();
@@ -356,14 +368,6 @@ while ($arSection = $rsSections->GetNext()) {
     $arSections[$arSection["ID"]] = $arSection;
 }
 
-if ($searchedRegionData) {
-
-    usort($arSections, function ($a, $b) {
-        return ($a['DISCTANCE'] - $b['DISCTANCE']);
-    });
-}
-$allCount = count($arSections);
-
 /* Отзывы */
 $arCampingIDs = array_map(function ($a) {
     return $a["ID"];
@@ -374,6 +378,13 @@ if (isset($arCampingIDs) && !empty($arCampingIDs)) {
         $arSections[$id]["RATING"] = $review["avg"];
     }
 }
+
+if ($searchedRegionData) {
+    usort($arSections, function ($a, $b) {
+        return ($a['DISCTANCE'] - $b['DISCTANCE']);
+    });
+}
+$allCount = count($arSections);
 
 /* Кастомная сортировка по рейтингу */
 if ($sortBy == 'rating') {
@@ -561,9 +572,21 @@ if ($page > 1 && isset($_GET["impressions"]) && !empty($_GET['impressions']) && 
     $h1SEO = "Каталог";
 }
 
-$APPLICATION->SetTitle($titleSEO);
-$APPLICATION->SetPageProperty("custom_title", $h1SEO);
-$APPLICATION->SetPageProperty("description", $descriptionSEO);
+if ($pageSeoData) {
+    if ($pageSeoData['UF_H1']) {
+        $APPLICATION->SetPageProperty("custom_title", $pageSeoData['UF_H1']);
+    }
+    if ($pageSeoData['UF_TITLE']) {
+        $APPLICATION->SetTitle($pageSeoData['UF_TITLE']);
+    }
+    if ($pageSeoData['UF_DESCRIPTION']) {
+        $APPLICATION->SetPageProperty("description", $pageSeoData['UF_DESCRIPTION']);
+    }
+} else {
+    $APPLICATION->SetTitle($titleSEO);
+    $APPLICATION->SetPageProperty("custom_title", $h1SEO);
+    $APPLICATION->SetPageProperty("description", $descriptionSEO);
+}
 
 if (!count($arPageSections)) {
     $APPLICATION->AddHeadString('<meta name="robots" content="noindex">', true);
@@ -903,6 +926,9 @@ if (empty($chpy)) {
                 $isSeoText = false;
             } else if ($chySeoText) {
                 echo $chySeoText;
+                $isSeoText = true;
+            } else if (isset($pageSeoData) && isset($pageSeoData['UF_SEO_TEXT'])) {
+                echo $pageSeoData['UF_SEO_TEXT'];
                 $isSeoText = true;
             } ?>
         </div>

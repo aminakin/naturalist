@@ -17,7 +17,11 @@ global $isMobile;
 					$this->AddEditAction($arItem['ID'], $arItem['EDIT_LINK'], CIBlock::GetArrayByID($arItem["IBLOCK_ID"], "ELEMENT_EDIT"));
 					$this->AddDeleteAction($arItem['ID'], $arItem['DELETE_LINK'], CIBlock::GetArrayByID($arItem["IBLOCK_ID"], "ELEMENT_DELETE"), array("CONFIRM" => Loc::GetMessage('CT_BNL_ELEMENT_DELETE_CONFIRM')));
 					?>
-					<li class="swiper-slide" id="<?= $this->GetEditAreaId($arItem['ID']) ?>" style="background-image: url('<?= $isMobile ? $arItem["PREVIEW_PICTURE"]["SRC"] : $arItem['FIELDS']["DETAIL_PICTURE"]["SRC"] ?>')">
+					<li class="swiper-slide" id="<?= $this->GetEditAreaId($arItem['ID']) ?>">
+						<picture>
+							<source loading="lazy" srcset="<?= $arItem["DESKTOP_IMG"] ?>" media="(min-width: 450px)" />
+							<img loading="lazy" src="<?= $arItem["MOBILE_IMG"] ?>" alt="">
+						</picture>
 						<? if ($arItem['DISPLAY_PROPERTIES']['LINK']['VALUE']) { ?>
 							<a href="<?= $arItem['DISPLAY_PROPERTIES']['LINK']['VALUE'] ?>"></a>
 						<? } ?>

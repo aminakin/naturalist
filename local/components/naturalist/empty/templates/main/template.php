@@ -564,7 +564,7 @@ use Bitrix\Main\Localization\Loc;
             "SORT_ORDER2" => "DESC",
             "FILTER_NAME" => "",
             "FIELD_CODE" => [],
-            "PROPERTY_CODE" => [],
+            "PROPERTY_CODE" => ['LINK'],
             "CHECK_DATES" => "Y",
             "DETAIL_URL" => "",
             "PREVIEW_TRUNCATE_LEN" => "",

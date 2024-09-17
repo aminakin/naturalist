@@ -17916,6 +17916,7 @@
                       );
 
                     _this.elements.$root.classList.add(_this.classes.show);
+                    _this.elements.$fieldMobile.focus();
 
                     return false;
                   }
@@ -17965,6 +17966,7 @@
                       );
 
                     _this.elements.$root.classList.add(_this.classes.show);
+                    _this.elements.$fieldMobile.focus();
                   } else {
                     _this.handleHide();
                   }
