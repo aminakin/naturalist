@@ -17202,6 +17202,15 @@
           key: "handleHide",
           value: function handleHide() {
             var _this = this;
+            
+
+              document
+                .querySelectorAll(".catalog_map [data-calendar-label]")
+                .forEach(function (item) {
+                    if(item.innerText !== ''){
+                      item.previousElementSibling.style.bottom = "30px";
+                    }
+                });
 
             document.addEventListener("click", function (event) {
               if (
@@ -17230,6 +17239,8 @@
                 document
                   .querySelectorAll(".catalog_map [data-calendar-label]")
                   .forEach(function (item) {
+                    console.log(item);
+                    
                       item.previousElementSibling.style.bottom = "30px";
                   });
               }
@@ -18640,6 +18651,9 @@
             );
 
             _this2.elements.$field.forEach(($item) => {
+              if($item.value !== ''){
+                $item.previousElementSibling.style.bottom = "30px";
+              }
               $item.addEventListener("click", function (event) {
                 this.previousElementSibling.style.bottom = "30px";
               });
