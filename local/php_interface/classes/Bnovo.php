@@ -484,6 +484,12 @@ class Bnovo
             }
         }
 
+        if (empty($filteredChildrenAgesId) && !empty($children)) {
+            $guests += $children;
+            $childrenIsAdults = true;
+            $children = 0;
+        }
+
         while ($arOccupancy = $rsOccupancies->Fetch()) {
             // Складываем в отедльный массив все наценки            
             if ($arOccupancy['PROPERTY_IS_MARKUP_VALUE'] == 'Да') {
@@ -1810,6 +1816,8 @@ class Bnovo
         $response = curl_exec($ch);
         $arData = json_decode($response, true);
 
+        //xprint($arData);
+
         // $this->writeToFile($arData, 'updateReservationData', $hotelId);
 
         if (empty($arData) || (isset($arData['code']) && $arData['code'] != 200)) {
@@ -2040,7 +2048,7 @@ class Bnovo
             // if ($hotelId == 11712) {
             //     Debug::writeToFile($query, 'BNOVO_UNRESERVED_' . $hotelId . date('Y-m-d H:i:s'), '__BNOVO_UNRESERVED_log.log');
             // }
-            $result = $connection->query($query);
+            $result = $connection->queryExecute($query);
         }
 
         if (!empty($arReservedNull)) {
@@ -2048,7 +2056,7 @@ class Bnovo
             // if ($hotelId == 11712) {
             //     Debug::writeToFile($query, 'BNOVO_RESERVED_' . $hotelId . date('Y-m-d H:i:s'), '__BNOVO_RESERVED__log.log');
             // }
-            $result = $connection->query($query);
+            $result = $connection->queryExecute($query);
         }
     }
 
@@ -2339,7 +2347,7 @@ class Bnovo
      */
     public function getNearPrices(): void
     {
-        return;
+        //return;
         $now = new DateTime();
         $startDate = FormatDate("Y-m-d", $now->getTimeStamp());
 

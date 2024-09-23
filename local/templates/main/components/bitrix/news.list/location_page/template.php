@@ -31,12 +31,12 @@ global $arSettings;
                     <? } ?>
                 </div>
                 <div class="location-alphabet regions">
-                    <?= $arResult['HTML']($arResult['REGIONS_FULL'], 'UF_NAME')?>
+                    <?= $arResult['HTML']($arResult['REGIONS_FULL'], 'UF_NAME') ?>
                 </div>
                 <div class="location-section regions">
                     <? foreach ($arResult['REGIONS_FULL'] as $region) { ?>
                         <a href="<?= $region['URL'] ?>" class="location-full__item hidden"><?= $region['UF_NAME'] ?></a>
-                    <? } ?> 
+                    <? } ?>
                 </div>
             </div>
             <div class="location__group" data-group="reservoirs">
@@ -49,24 +49,24 @@ global $arSettings;
                     <? } ?>
                 </div>
                 <div class="location-alphabet reservoirs">
-                <?= $arResult['HTML']($arResult['WATER_FULL'], 'UF_NAME')?>
+                    <?= $arResult['HTML']($arResult['WATER_FULL'], 'UF_NAME') ?>
                 </div>
                 <div class="location-section reservoirs">
                     <? foreach ($arResult['WATER_FULL'] as $water) { ?>
                         <a href="<?= $water['URL'] ?>" class="location-full__item hidden"><?= $water['UF_NAME'] ?></a>
                     <? } ?>
                 </div>
-                <?if (isset($arResult['COMMON_WATER']) && !empty($arResult['COMMON_WATER'])) {?>
+                <? if (isset($arResult['COMMON_WATER']) && !empty($arResult['COMMON_WATER'])) { ?>
                     <div class="location__common-water">
                         <ul class="location__common-water-list">
-                            <?foreach ($arResult['COMMON_WATER'] as $key => $commonWater) {?>
-                                <li class="location__common-water-item"><a href="<?=$commonWater['URL']?>"><?=$commonWater['UF_NAME']?></a></li>
-                            <?}?>
+                            <? foreach ($arResult['COMMON_WATER'] as $key => $commonWater) { ?>
+                                <li class="location__common-water-item"><a href="<?= $commonWater['URL'] ?>"><?= $commonWater['UF_NAME'] ?></a></li>
+                            <? } ?>
                         </ul>
                     </div>
-                <?}?>
+                <? } ?>
             </div>
         </div>
-        
+
     </div>
 </section>
