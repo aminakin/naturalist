@@ -25,6 +25,7 @@ use Bitrix\Iblock\Elements\ElementGlampingsTable;
 use Naturalist\Utils;
 use Naturalist\Filters\Components;
 use Naturalist\Filters\UrlHandler;
+use Bitrix\Main\Localization\Loc;
 
 global $arUser, $userId, $isAuthorized;
 
@@ -569,7 +570,7 @@ if ($page > 1 && isset($_GET["impressions"]) && !empty($_GET['impressions']) && 
 } else {
     $titleSEO = "Каталог - онлайн-сервис бронирования глэмпингов и кемпингов Натуралист";
     $descriptionSEO = "Каталог | Натуралист - удобный онлайн-сервис поиска и бронирования глэмпинга для отдыха на природе с оплатой на сайте. Вы можете подобрать место для комфортного природного туризма в России по выгодным ценам с моментальной системой бронирования.";
-    $h1SEO = "Каталог";
+    $h1SEO = "Карта глэмпингов в России";
 }
 
 if ($pageSeoData) {
@@ -611,7 +612,7 @@ if (empty($chpy)) {
             );
             ?>
             <div class="wrapper_title_catalog_page">
-                <h1 class="page_title" <? if ($arParams["MAP"]): ?> style="visibility: hidden;" <? endif; ?>><? $APPLICATION->ShowProperty("custom_title") ?></h1>
+                <h1 class="page_title"><? $APPLICATION->ShowProperty("custom_title") ?></h1>
                 <div class="crumbs__controls">
                     <!--<a class="crumbs__controls-mobile" href="#" data-map-full="data-map-full">Смотреть на карте</a>-->
                     <!--                        <a class="button button_transparent" target="_blank"-->
@@ -619,110 +620,99 @@ if (empty($chpy)) {
 
                 </div>
             </div>
-
-            <div class="catalog_filter">
-                <form class="form filters" id="form-catalog-filter-front">
-                    <div class="form__group">
-
+            <?php if (CSite::InDir('/map')): ?>
+                <div class="catalog_filter catalog_map">
+                    <form class="form filters" id="form-catalog-filter-front">
                         <div class="form_group_wrapper">
                             <div class="form__item item_name">
                                 <div class="field field_autocomplete" data-autocomplete="/ajax/autocomplete.php">
-                                    <input type="hidden" data-autocomplete-result
-                                        value='<?= ($arFilterValues["SEARCH"]) ? $arFilterValues["SEARCH"] : null ?>'>
-                                    <input class="field__input" type="text" name="name"
-                                        placeholder="Укажите место или глэмпинг" data-autocomplete-field
-                                        value='<?= ($arFilterValues["SEARCH_TEXT"]) ? $arFilterValues["SEARCH_TEXT"] : null ?>'>
-                                    <div class="autocomplete-dropdown" data-autocomplete-dropdown></div>
+                                    <input type="hidden" data-autocomplete-result  value='<?= ($arFilterValues["SEARCH"]) ? $arFilterValues["SEARCH"] : null ?>'>
+                                    <label for="field-place"><?= Loc::getMessage('FILTER_PLACE') ?></label>
+                                    <input class="field__input" type="text" name="name" placeholder="" data-autocomplete-field value='<?= ($arFilterValues["SEARCH_TEXT"]) ? $arFilterValues["SEARCH_TEXT"] : null ?>'>
+                                    <div class="autocomplete-dropdown-wrap">
+                                        <div class="autocomplete-dropdown-search"> 
+                                            <input class="field__input" id="field-place" type="text" name="name" placeholder="Регионы или локации" data-autocomplete-field-mobile>
+                                        </div>
+                                        <div class="autocomplete-dropdown" data-autocomplete-dropdown>
+                                        </div>
+                                        <div class="autocomplete-dropdown-close-wrap">
+                                            <div class="autocomplete-dropdown-close">
+                                                Закрыть
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-
                             <div class="form_group_wrapper-filter_items">
-
-                                <div class="form__row calendar" data-calendar="data-calendar"
-                                    data-calendar-min="today" data-calendar-max="365">
+                                <div class="form__row calendar" data-calendar="data-calendar" data-calendar-min="today" data-calendar-max="365">
                                     <div class="form__item">
                                         <div class="field field_icon field_calendar">
-                                            <div class="field__input" data-calendar-label="data-calendar-label"
-                                                data-date-from><?php if ($dateFrom): ?><?= $dateFrom ?><?php else: ?>
-                                                <span>Заезд</span><?php endif; ?>
+                                        <label><?= Loc::getMessage('FILTER_FROM') ?></label>
+                                            <div class="field__input" data-calendar-label="data-calendar-label" data-date-from><?php if ($dateFrom): ?><?= $dateFrom ?><?php else: ?><span></span><?php endif; ?>
                                             </div>
                                         </div>
                                     </div>
-
                                     <div class="form__item">
                                         <div class="field field_icon field_calendar">
-                                            <div class="field__input" data-calendar-label="data-calendar-label"
-                                                data-date-to><?php if ($dateTo): ?><?= $dateTo ?><?php else: ?>
-                                                <span>Выезд</span><?php endif; ?>
+                                            <label><?= Loc::getMessage('FILTER_TO') ?></label>
+                                            <div class="field__input" data-calendar-label="data-calendar-label" data-date-to><?php if ($dateTo): ?><?= $dateTo ?><?php else: ?><span></span><?php endif; ?>
                                             </div>
                                         </div>
                                     </div>
-
                                     <div class="calendar__dropdown" data-calendar-dropdown="data-calendar-dropdown">
                                         <div class="calendar__navigation">
                                             <div class="calendar__navigation-item calendar__navigation-item_months">
-                                                <div class="calendar__navigation-label"
-                                                    data-calendar-navigation="data-calendar-navigation">
-                                                    <span><?= $currMonthName ?></span>
-                                                </div>
+                                                <div class="calendar__navigation-label" data-calendar-navigation="data-calendar-navigation"><span><?= $currMonthName ?></span></div>
                                                 <ul class="list">
-                                                    <?php
+                                                    <?
                                                     $k = 0;
                                                     ?>
-                                                    <?php foreach ($arDates[0] as $monthName) : ?>
-                                                        <li class="list__item<?php if ($k == 0) : ?> list__item_active<?php endif; ?>">
-                                                            <button data-calendar-year="<?= $currYear ?>"
-                                                                class="list__item-month"
-                                                                data-calendar-month-select="<?= $k ?>"
-                                                                type="button"><?= $monthName ?></button>
+                                                    <? foreach ($arDates[0] as $monthName) : ?>
+                                                        <li class="list__item<? if ($k == 0) : ?> list__item_active<? endif; ?>">
+                                                            <button data-calendar-year="<?= $currYear ?>" data-calendar-month-select="<?= $k ?>" type="button"><?= $monthName ?></button>
                                                         </li>
-                                                        <?php $k++; ?>
-                                                    <?php endforeach ?>
-                                                    <li class="list__item"
-                                                        data-calendar-delimiter="data-calendar-delimiter">
-                                                        <div class="list__item-year"><?= $nextYear ?></div>
-                                                    </li>
-                                                    <?php foreach ($arDates[1] as $monthName) : ?>
+                                                        <? $k++; ?>
+                                                    <? endforeach ?>
+                                                        
+                                                    <? foreach ($arDates[1] as $key => $monthName) : ?>
+                                                    
                                                         <li class="list__item">
-                                                            <button data-calendar-year="<?= $nextYear ?>"
-                                                                class="list__item-month"
-                                                                data-calendar-month-select="<?= $k ?>"
-                                                                type="button"><?= $monthName ?></button>
+                                                            <button data-calendar-year="<?= $nextYear ?>" data-calendar-month-select="<?= $k ?>" type="button"><?= $monthName ?></button>
+                                                            <? if ($key === 0): ?>
+                                                                <div class="list__item-year"><?= $nextYear ?></div>
+                                                            <? endif; ?>
                                                         </li>
-                                                        <?php $k++; ?>
-                                                    <?php endforeach ?>
+                                                        <? $k++; ?>
+                                                    <? endforeach ?>
                                                 </ul>
                                             </div>
-
+                                                            
                                             <div class="calendar__navigation-item calendar__navigation-item_years">
-                                                <div class="calendar__navigation-label"
-                                                    data-calendar-navigation="data-calendar-navigation">
-                                                    <span><?= $currYear ?></span>
-                                                </div>
+                                                <div class="calendar__navigation-label" data-calendar-navigation="data-calendar-navigation"><span><?= $currYear ?></span></div>
                                                 <ul class="list">
                                                     <li class="list__item list__item_active">
-                                                        <button data-calendar-year-select="<?= $currYear ?>"
-                                                            type="button"><?= $currYear ?></button>
+                                                        <button data-calendar-year-select="<?= $currYear ?>" type="button"><?= $currYear ?></button>
                                                     </li>
                                                     <li class="list__item">
-                                                        <button data-calendar-year-select="<?= $nextYear ?>"
-                                                            type="button"><?= $nextYear ?></button>
+                                                        <button data-calendar-year-select="<?= $nextYear ?>" type="button"><?= $nextYear ?></button>
                                                     </li>
                                                 </ul>
                                             </div>
                                         </div>
-
+                                                            
                                         <div class="calendar__month">
                                             <input type="hidden" data-calendar-value="data-calendar-value">
                                         </div>
+                                                            
+                                        <div class="calendar__dropdown-close">
+                                            Закрыть
+                                        </div>
                                     </div>
                                 </div>
-
                                 <div class="form__item guest">
                                     <div class="field field_icon guests" data-guests="data-guests">
                                         <div class="field__input"
                                             data-guests-control="data-guests-control"><?= $guests + $children ?> <?= $guestsDeclension->get($guests + $children) ?></div>
-
                                         <div class="guests__dropdown">
                                             <div class="guests__guests">
                                                 <div class="guests__item">
@@ -739,7 +729,6 @@ if (empty($chpy)) {
                                                         <button class="counter__plus" type="button"></button>
                                                     </div>
                                                 </div>
-
                                                 <div class="guests__item">
                                                     <div class="guests__label">
                                                         <div><?= GetMessage('FILTER_CHILDREN') ?></div>
@@ -755,7 +744,6 @@ if (empty($chpy)) {
                                                     </div>
                                                 </div>
                                             </div>
-
                                             <div class="guests__children"
                                                 data-guests-children="data-guests-children">
                                                 <?php if ($arChildrenAge): ?>
@@ -790,39 +778,235 @@ if (empty($chpy)) {
                                                     <?php endforeach; ?>
                                                 <?php endif; ?>
                                             </div>
+                                            <div class="guests__dropdown-close">
+                                                Закрыть
+                                            </div>
                                         </div>
                                     </div>
-
-
-                                    <button class="button button_primary" data-filter-set
-                                        data-filter-catalog-front-btn="true">Найти
+                                    <button class="button button_primary" data-filter-set data-filter-catalog-front-btn="true"> 
+                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path fill-rule="evenodd" clip-rule="evenodd" d="M16.9697 16.9697C17.2626 16.6768 17.7374 16.6768 18.0303 16.9697L22.5303 21.4697C22.8232 21.7626 22.8232 22.2374 22.5303 22.5303C22.2374 22.8232 21.7626 22.8232 21.4697 22.5303L16.9697 18.0303C16.6768 17.7374 16.6768 17.2626 16.9697 16.9697Z" fill="white" />
+                                            <path fill-rule="evenodd" clip-rule="evenodd" d="M1.25 11C1.25 5.61522 5.61522 1.25 11 1.25C16.3848 1.25 20.75 5.61522 20.75 11C20.75 16.3848 16.3848 20.75 11 20.75C5.61522 20.75 1.25 16.3848 1.25 11ZM11 2.75C6.44365 2.75 2.75 6.44365 2.75 11C2.75 15.5563 6.44365 19.25 11 19.25C15.5563 19.25 19.25 15.5563 19.25 11C19.25 6.44365 15.5563 2.75 11 2.75Z" fill="white" />
+                                        </svg>
                                     </button>
                                 </div>
                             </div>
                         </div>
-
                         <div class="filters__controls">
-                            <!--                    <button class="button button_clear" data-filter-reset>Сбросить всё</button>-->
-                            <button class="button button_primary" data-filter-set
-                                data-filter-catalog-front-btn="true">Найти
+                            <button class="button button_primary" data-filter-set data-filter-catalog-front-btn="true">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M16.9697 16.9697C17.2626 16.6768 17.7374 16.6768 18.0303 16.9697L22.5303 21.4697C22.8232 21.7626 22.8232 22.2374 22.5303 22.5303C22.2374 22.8232 21.7626 22.8232 21.4697 22.5303L16.9697 18.0303C16.6768 17.7374 16.6768 17.2626 16.9697 16.9697Z" fill="white" />
+                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M1.25 11C1.25 5.61522 5.61522 1.25 11 1.25C16.3848 1.25 20.75 5.61522 20.75 11C20.75 16.3848 16.3848 20.75 11 20.75C5.61522 20.75 1.25 16.3848 1.25 11ZM11 2.75C6.44365 2.75 2.75 6.44365 2.75 11C2.75 15.5563 6.44365 19.25 11 19.25C15.5563 19.25 19.25 15.5563 19.25 11C19.25 6.44365 15.5563 2.75 11 2.75Z" fill="white" />
+                                </svg>
                             </button>
                         </div>
-                    </div>
+                    </form>
+                </div>
+            <?php else:?>
+                <div class="catalog_filter">
+                    <form class="form filters" id="form-catalog-filter-front">
+                        <div class="form__group">
 
-                </form>
-            </div>
+                            <div class="form_group_wrapper">
+                                <div class="form__item item_name">
+                                    <div class="field field_autocomplete" data-autocomplete="/ajax/autocomplete.php">
+                                        <input type="hidden" data-autocomplete-result
+                                            value='<?= ($arFilterValues["SEARCH"]) ? $arFilterValues["SEARCH"] : null ?>'>
+                                        <input class="field__input" type="text" name="name"
+                                            placeholder="Укажите место или глэмпинг" data-autocomplete-field
+                                            value='<?= ($arFilterValues["SEARCH_TEXT"]) ? $arFilterValues["SEARCH_TEXT"] : null ?>'>
+                                        <div class="autocomplete-dropdown" data-autocomplete-dropdown></div>
+                                    </div>
+                                </div>
 
+                                <div class="form_group_wrapper-filter_items">
+
+                                    <div class="form__row calendar" data-calendar="data-calendar"
+                                        data-calendar-min="today" data-calendar-max="365">
+                                        <div class="form__item">
+                                            <div class="field field_icon field_calendar">
+                                                <div class="field__input" data-calendar-label="data-calendar-label"
+                                                    data-date-from><?php if ($dateFrom): ?><?= $dateFrom ?><?php else: ?>
+                                                    <span>Заезд</span><?php endif; ?>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="form__item">
+                                            <div class="field field_icon field_calendar">
+                                                <div class="field__input" data-calendar-label="data-calendar-label"
+                                                    data-date-to><?php if ($dateTo): ?><?= $dateTo ?><?php else: ?>
+                                                    <span>Выезд</span><?php endif; ?>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="calendar__dropdown" data-calendar-dropdown="data-calendar-dropdown">
+                                            <div class="calendar__navigation">
+                                                <div class="calendar__navigation-item calendar__navigation-item_months">
+                                                    <div class="calendar__navigation-label"
+                                                        data-calendar-navigation="data-calendar-navigation">
+                                                        <span><?= $currMonthName ?></span>
+                                                    </div>
+                                                    <ul class="list">
+                                                        <?php
+                                                        $k = 0;
+                                                        ?>
+                                                        <?php foreach ($arDates[0] as $monthName) : ?>
+                                                            <li class="list__item<?php if ($k == 0) : ?> list__item_active<?php endif; ?>">
+                                                                <button data-calendar-year="<?= $currYear ?>"
+                                                                    class="list__item-month"
+                                                                    data-calendar-month-select="<?= $k ?>"
+                                                                    type="button"><?= $monthName ?></button>
+                                                            </li>
+                                                            <?php $k++; ?>
+                                                        <?php endforeach ?>
+                                                        <li class="list__item"
+                                                            data-calendar-delimiter="data-calendar-delimiter">
+                                                            <div class="list__item-year"><?= $nextYear ?></div>
+                                                        </li>
+                                                        <?php foreach ($arDates[1] as $monthName) : ?>
+                                                            <li class="list__item">
+                                                                <button data-calendar-year="<?= $nextYear ?>"
+                                                                    class="list__item-month"
+                                                                    data-calendar-month-select="<?= $k ?>"
+                                                                    type="button"><?= $monthName ?></button>
+                                                            </li>
+                                                            <?php $k++; ?>
+                                                        <?php endforeach ?>
+                                                    </ul>
+                                                </div>
+
+                                                <div class="calendar__navigation-item calendar__navigation-item_years">
+                                                    <div class="calendar__navigation-label"
+                                                        data-calendar-navigation="data-calendar-navigation">
+                                                        <span><?= $currYear ?></span>
+                                                    </div>
+                                                    <ul class="list">
+                                                        <li class="list__item list__item_active">
+                                                            <button data-calendar-year-select="<?= $currYear ?>"
+                                                                type="button"><?= $currYear ?></button>
+                                                        </li>
+                                                        <li class="list__item">
+                                                            <button data-calendar-year-select="<?= $nextYear ?>"
+                                                                type="button"><?= $nextYear ?></button>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+
+                                            <div class="calendar__month">
+                                                <input type="hidden" data-calendar-value="data-calendar-value">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form__item guest">
+                                        <div class="field field_icon guests" data-guests="data-guests">
+                                            <div class="field__input"
+                                                data-guests-control="data-guests-control"><?= $guests + $children ?> <?= $guestsDeclension->get($guests + $children) ?></div>
+
+                                            <div class="guests__dropdown">
+                                                <div class="guests__guests">
+                                                    <div class="guests__item">
+                                                        <div class="guests__label">
+                                                            <div><?= GetMessage('FILTER_ADULTS') ?></div>
+                                                            <span><?= GetMessage('FILTER_ADULTS_AGE') ?></span>
+                                                        </div>
+                                                        <div class="counter">
+                                                            <button class="counter__minus" type="button"></button>
+                                                            <input type="text" disabled="disabled"
+                                                                data-guests-adults-count="data-guests-adults-count"
+                                                                name="guests-adults-count" value="<?= $guests ?>"
+                                                                data-min="1">
+                                                            <button class="counter__plus" type="button"></button>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="guests__item">
+                                                        <div class="guests__label">
+                                                            <div><?= GetMessage('FILTER_CHILDREN') ?></div>
+                                                            <span><?= GetMessage('FILTER_CHILDREN_AGE') ?></span>
+                                                        </div>
+                                                        <div class="counter">
+                                                            <button class="counter__minus" type="button"></button>
+                                                            <input type="text" disabled="disabled"
+                                                                data-guests-children-count="data-guests-children-count"
+                                                                name="guests-children-count" value="<?= $children ?>"
+                                                                data-min="0">
+                                                            <button class="counter__plus" type="button"></button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="guests__children"
+                                                    data-guests-children="data-guests-children">
+                                                    <?php if ($arChildrenAge): ?>
+                                                        <?php foreach ($arChildrenAge as $keyAge => $valueAge): ?>
+                                                            <div class="guests__item">
+                                                                <div class="guests__label">
+                                                                    <div><?= GetMessage('FILTER_CHILD_AGE') ?></div>
+                                                                    <span><?= getChildrenOrderTitle($keyAge + 1) ?> <?= GetMessage('FILTER_CHILD') ?></span>
+                                                                </div>
+                                                                <div class="counter">
+                                                                    <button class="counter__minus" type="button">
+                                                                        <svg class="icon icon_arrow-small"
+                                                                            viewBox="0 0 16 16"
+                                                                            style="width: 1.6rem; height: 1.6rem;">
+                                                                            <use xlink:href="#arrow-small"></use>
+                                                                        </svg>
+                                                                    </button>
+                                                                    <input type="text" disabled=""
+                                                                        data-guests-children=""
+                                                                        name="guests-children-<?= $keyAge ?>"
+                                                                        value="<?= $valueAge ?>"
+                                                                        data-min="0" data-max="17">
+                                                                    <button class="counter__plus" type="button">
+                                                                        <svg class="icon icon_arrow-small"
+                                                                            viewBox="0 0 16 16"
+                                                                            style="width: 1.6rem; height: 1.6rem;">
+                                                                            <use xlink:href="#arrow-small"></use>
+                                                                        </svg>
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                        <?php endforeach; ?>
+                                                    <?php endif; ?>
+                                                </div>
+
+                                                <div class="guests__dropdown-close">
+                                                    Закрыть
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                        <button class="button button_primary" data-filter-set
+                                            data-filter-catalog-front-btn="true">Найти
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="filters__controls">
+                                <!--                    <button class="button button_clear" data-filter-reset>Сбросить всё</button>-->
+                                <button class="button button_primary" data-filter-set
+                                    data-filter-catalog-front-btn="true">Найти
+                                </button>
+                            </div>
+                        </div>
+
+                    </form>
+                </div>   
+            <?php endif;?>
             <div class="catalog_sorter">
                 <div class="filter_btn">
                     <a class="button" href="#filters-modal" data-modal="data-modal">
-                        <svg class="icon icon_filters" viewbox="0 0 16 16" style="width: 1.6rem; height: 1.6rem;">
-                            <use xlink:href="#filters" />
-                        </svg>
                         <span>Фильтры</span>
                     </a>
                 </div>
 
-                <div class="sort">
+                <div class="sort <?= (CSite::InDir('/map'))? 'hidden' : ''?>" >
                     <span>Сортировать по:</span>
                     <ul class="list">
                         <li class="list__item">
@@ -835,12 +1019,12 @@ if (empty($chpy)) {
                             <?php endif; ?>
                         </li>
                         <!--<li class="list__item">
-                    <?php /*if($sortBy == "popular"):*/ ?>
-                        <span class="list__link" data-sort="popular" data-type="<?php /*=$orderReverse*/ ?>"><span>По</span> <span>Популярности</span></span>
-                    <?php /*else:*/ ?>
-                        <a class="list__link" href="#" data-sort="popular" data-type="<?php /*=$orderReverse*/ ?>"><span>По</span> <span>Популярности</span></a>
-                    <?php /*endif;*/ ?>
-                </li>-->
+                            <?php /*if($sortBy == "popular"):*/ ?>
+                                <span class="list__link" data-sort="popular" data-type="<?php /*=$orderReverse*/ ?>"><span>По</span> <span>Популярности</span></span>
+                            <?php /*else:*/ ?>
+                                <a class="list__link" href="#" data-sort="popular" data-type="<?php /*=$orderReverse*/ ?>"><span>По</span> <span>Популярности</span></a>
+                            <?php /*endif;*/ ?>
+                        </li>-->
                         <li class="list__item">
                             <?php if ($sortBy == "price"): ?>
                                 <span class="list__link" data-sort="price"
@@ -908,36 +1092,38 @@ if (empty($chpy)) {
         </div>
     </section>
     <!-- section-->
-    <section class="cert-index__seo-text">
-        <div class="container">
-            <? if (!empty($arSeoImpressions) && reset($arSeoImpressions)['PREVIEW_TEXT'] != '') {
-                echo reset($arSeoImpressions)['PREVIEW_TEXT'];
-                $isSeoText = true;
-            } else if (empty($_GET)) {
-                $APPLICATION->IncludeComponent(
-                    "bitrix:main.include",
-                    "",
-                    array(
-                        "AREA_FILE_SHOW" => "file",
-                        "PATH" => '/include/' . $seoFile . '-seo-text.php',
-                        "EDIT_TEMPLATE" => ""
-                    )
-                );
-                $isSeoText = false;
-            } else if ($chySeoText) {
-                echo $chySeoText;
-                $isSeoText = true;
-            } else if (isset($pageSeoData) && isset($pageSeoData['UF_SEO_TEXT'])) {
-                echo $pageSeoData['UF_SEO_TEXT'];
-                $isSeoText = true;
-            } ?>
-        </div>
-    </section>
-    <? if ($isSeoText) { ?>
-        <div class="container">
-            <a href="#" class="show-more-seo">Показать ещё</a>
-        </div>
-    <? } ?>
+    <?php if (CSite::InDir('/map') == false): ?>
+        <section class="cert-index__seo-text">
+            <div class="container">
+                <? if (!empty($arSeoImpressions) && reset($arSeoImpressions)['PREVIEW_TEXT'] != '') {
+                    echo reset($arSeoImpressions)['PREVIEW_TEXT'];
+                    $isSeoText = true;
+                } else if (empty($_GET)) {
+                    $APPLICATION->IncludeComponent(
+                        "bitrix:main.include",
+                        "",
+                        array(
+                            "AREA_FILE_SHOW" => "file",
+                            "PATH" => '/include/' . $seoFile . '-seo-text.php',
+                            "EDIT_TEMPLATE" => ""
+                        )
+                    );
+                    $isSeoText = false;
+                } else if ($chySeoText) {
+                    echo $chySeoText;
+                    $isSeoText = true;
+                } else if (isset($pageSeoData) && isset($pageSeoData['UF_SEO_TEXT'])) {
+                    echo $pageSeoData['UF_SEO_TEXT'];
+                    $isSeoText = true;
+                } ?>
+            </div>
+        </section>
+        <? if ($isSeoText) { ?>
+            <div class="container">
+                <a href="#" class="show-more-seo">Показать ещё</a>
+            </div>
+        <? } ?>
+    <? endif;?>
 </main>
 
 <div class="modal modal_filters" id="filters-modal">
