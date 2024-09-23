@@ -484,7 +484,9 @@ class Rest
     /* Изменение каталога */
     public function updateCatalog($params)
     {
-        //Debug::writeToFile($params, '', '__bx_log.log');
+        if ($params["hotel_id"] == 34) {
+            Debug::writeToFile($params, '', '__bx_sopostav_log.log');
+        }
         $hotelId = $params["hotel_id"];
         $externalId = $params["account_id"];
 
@@ -534,15 +536,15 @@ class Rest
         foreach ($arOccupanciesAll as $externalCategoryId => $arOccupanciesIDs) {
             if (!is_numeric($externalCategoryId)) {
                 foreach ($arOccupanciesIDs as $occupancyId) {
-                    $markup = explode('_', $occupancyId);                    
+                    $markup = explode('_', $occupancyId);
                     $curAcc = \Bitrix\Iblock\Elements\ElementOccupanciesTable::getList([
                         'select' => ['ID'],
                         'filter' => ['=ACTIVE' => 'Y', '=CODE' => $markup[1], '=CATEGORY_ID.VALUE' => $markup[0]],
                     ])->fetch();
                     CIBlockElement::SetPropertyValuesEx($curAcc['ID'], $this->occupanciesIBlockID, array(
                         "MARKUP_EXTERNAL_ID" => $externalCategoryId
-                    ));                    
-                }                
+                    ));
+                }
             }
 
             $arExistElement = CIBlockElement::GetList(
@@ -551,7 +553,7 @@ class Rest
             )->Fetch();
             if ($arExistElement) {
                 $elementId = $arExistElement["ID"];
-                foreach ($arOccupanciesIDs as $occupancyId) {                    
+                foreach ($arOccupanciesIDs as $occupancyId) {
                     CIBlockElement::SetPropertyValuesEx($occupancyId, $this->occupanciesIBlockID, array(
                         "CATEGORY_ID" => $occupancyId
                     ));

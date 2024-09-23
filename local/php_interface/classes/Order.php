@@ -354,6 +354,15 @@ class Orders
         if ($res) {
             if (!isset($res["ERROR"])) {
                 // Отсылка уведомлений на почту
+
+                $sendRes = Users::sendEmail("USER_RESERVATION_CANCEL", "71", array(
+                    "EMAIL" => $arOrder['PROPS']['EMAIL'],
+                    "ORDER_ID" => $orderId,
+                    "PENALTY_AMOUNT" => $penaltyAmount,
+                    "RESERVATION_ID" => $reservationId,
+                    "LINK" => 'https://' . $_SERVER['SERVER_NAME'] . '/personal/history/?status=C'
+                ));
+
                 if ($arUser["UF_SUBSCRIBE_EMAIL_1"]) {
                     $penaltyAmount = Traveline::beforeCancelReservation($arOrder);
 
