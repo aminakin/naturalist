@@ -13557,14 +13557,26 @@
         if (!$el.matches("[data-guests]") && !$el.closest("[data-guests]")) {
           $guests.forEach(($item) => {
             $item.classList.remove("guests_show");
+            $(".b24-widget-button-wrapper").show();
           });
         }
       });
+
+      document
+        .querySelector(".guests__dropdown-close")
+        .addEventListener("click", function (event) {
+          $guests.forEach(($item) => {
+            $item.classList.remove("guests_show");
+            $(".b24-widget-button-wrapper").show();
+          });
+          document.querySelector(".main-form__shadow").style.display = "none";
+        });
 
       $guestsControl.forEach(($guestsControlItem) => {
         $guestsControlItem.addEventListener("click", function () {
           $guests.forEach(($item) => {
             $item.classList.toggle("guests_show");
+            $(".b24-widget-button-wrapper").toggle();
           });
         });
       });
@@ -17192,7 +17204,35 @@
             var _this = this;
 
             document.addEventListener("click", function (event) {
+              if (
+                event.target.closest(".catalog_filter") !== null &&
+                event.target.classList.contains("calendar__dropdown-close") !==
+                  true &&
+                event.target.classList.contains("guests__dropdown-close") !==
+                  true &&
+                event.target.classList.contains(
+                  "autocomplete-dropdown-close"
+                ) !== true
+              ) {
+                document.querySelector(".main-form__shadow").style.display =
+                  "block";
+                $(".b24-widget-button-wrapper").hide();
+              } else {
+                document.querySelector(".main-form__shadow").style.display =
+                  "none";
+                $(".b24-widget-button-wrapper").show();
+              }
               var $el = event.target;
+
+              if (
+                $el.getAttribute("data-calendar-label") == "data-calendar-label"
+              ) {
+                document
+                  .querySelectorAll(".catalog_map [data-calendar-label]")
+                  .forEach(function (item) {
+                      item.previousElementSibling.style.bottom = "30px";
+                  });
+              }
 
               if (
                 !$el.matches("[data-calendar-dropdown]") &&
@@ -17206,6 +17246,13 @@
                 });
               }
             });
+            document
+              .querySelector(".calendar__dropdown-close")
+              .addEventListener("click", function (event) {
+                _this.$elements.dropdown.forEach(function ($item) {
+                  $item.classList.remove("calendar__dropdown_show");
+                });
+              });
             window.addEventListener("resize", function () {
               // _this.$elements.dropdown.classList.remove('calendar__dropdown_show');
               _this.$elements.dropdown.forEach(function ($item) {
@@ -17792,12 +17839,12 @@
       if (window.scrollLocked === 1) {
         scrollPosition = window.scrollY;
         var scrollbarWidth = window.innerWidth - document.body.clientWidth;
-        $body.style.paddingRight = "".concat(scrollbarWidth, "px");
-        $body.style.overflowY = "hidden";
-        $body.style.position = "fixed";
-        $body.style.top = "-".concat(scrollPosition, "px");
+        //$body.style.paddingRight = "".concat(scrollbarWidth, "px");
+        //$body.style.overflowY = "hidden";
+        //$body.style.position = "fixed";
+        //$body.style.top = "-".concat(scrollPosition, "px");
         $body.style.width = "100%";
-        $body.classList.add("-scroll-lock");
+        //$body.classList.add("-scroll-lock");
 
         if ($fixedItems.length) {
           $fixedItems.forEach(function ($item) {
@@ -18200,10 +18247,10 @@
           {
             key: "handleChangeView",
             value: function handleChangeView() {
-              this.$elements.overlay.classList.toggle(
-                "catalog__map_fullscreen",
-                this.fullscreen
-              );
+              //this.$elements.overlay.classList.toggle(
+              //  "catalog__map_fullscreen",
+              //  this.fullscreen
+              //);
               this.$elements.catalog.classList.toggle(
                 "catalog_map",
                 this.fullscreen
@@ -18220,10 +18267,10 @@
                   "crumbs__controls-mobile_hide",
                   this.fullscreen
                 );
-              this.$elements.route.classList.toggle(
+              /*this.$elements.route.classList.toggle(
                 "route_show",
                 this.fullscreen
-              );
+              );*/
               if (this.map) this.map.container.fitToViewport();
             },
           },
@@ -18350,12 +18397,10 @@
                 }
 
                 var mapCreate = function mapCreate() {
-                  if (window.innerWidth >= 1024) {
                     var mapCreateTimeout = setTimeout(function () {
                       if (!_this3.map) CatalogMap.handleCreateMap();
                       clearTimeout(mapCreateTimeout);
                     }, 0);
-                  }
                 };
 
                 if (
@@ -18460,6 +18505,9 @@
           $field: document.querySelectorAll("[data-autocomplete-field]"),
           $result: document.querySelector("[data-autocomplete-result]"),
           $dropdown: document.querySelectorAll("[data-autocomplete-dropdown]"),
+          $fieldMobile: document.querySelector(
+            "[data-autocomplete-field-mobile]"
+          ),
         };
       }
 
@@ -18507,6 +18555,7 @@
                       .closest("[data-autocomplete]")
                       .classList.add(_this.classes.show);
                     // _this.elements.$root.classList.add(_this.classes.show);
+                      _this.elements.$fieldMobile.focus();
 
                     return false;
                   }
@@ -18553,10 +18602,11 @@
                       );
                     });
 
-                    $inputElement
-                      .closest("[data-autocomplete]")
-                      .classList.add(_this.classes.show);
+                    if($inputElement !== undefined) {
+                      $inputElement.closest("[data-autocomplete]").classList.add(_this.classes.show);
+                    }
                     // _this.elements.$root.classList.add(_this.classes.show);
+                    _this.elements.$fieldMobile.focus();
                   } else {
                     _this.handleHide();
                   }
@@ -18581,6 +18631,26 @@
                 }, 500)
               );
             });
+
+            _this2.elements.$fieldMobile.addEventListener(
+              "keyup",
+              debounce_default()(function (event) {
+                _this2.handleRequest(event.target.value);
+              }, 500)
+            );
+
+            _this2.elements.$field.forEach(($item) => {
+              $item.addEventListener("click", function (event) {
+                this.previousElementSibling.style.bottom = "30px";
+              });
+            });
+
+            _this2.elements.$fieldMobile.addEventListener(
+              "click",
+              function (event) {
+                this.previousElementSibling.style.bottom = "30px";
+              }
+            );
 
             document.addEventListener("click", function (event) {
               var $el = event.target;
@@ -18609,6 +18679,12 @@
                     .trim();
                 });
 
+                _this2.elements.$fieldMobile.value = $title.textContent
+                  .replace("<br>", " ")
+                  .replace(/<\/?[^>]+(>|$)/g, "")
+                  .replace(/\s+/g, " ")
+                  .trim();
+
                 _this2.handleHide();
               }
 
@@ -18618,6 +18694,10 @@
               ) {
                 _this2.handleHide();
               }
+
+              if ($el.classList.contains("autocomplete-dropdown-close")) {
+                _this2.handleHide();
+              }
             });
 
             this.elements.$field.forEach(($item) => {
@@ -18625,6 +18705,13 @@
                 _this2.handleRequest(event.target.value, $item);
               });
             });
+
+            this.elements.$fieldMobile.addEventListener(
+              "focusin",
+              function (event) {
+                _this2.handleRequest(event.target.value);
+              }
+            );
           },
         },
       ]);
