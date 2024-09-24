@@ -17239,8 +17239,6 @@
                 document
                   .querySelectorAll(".catalog_map [data-calendar-label]")
                   .forEach(function (item) {
-                    console.log(item);
-                    
                       item.previousElementSibling.style.bottom = "30px";
                   });
               }
@@ -17257,13 +17255,13 @@
                 });
               }
             });
-            document
-              .querySelector(".calendar__dropdown-close")
-              .addEventListener("click", function (event) {
+            if(document.querySelector(".calendar__dropdown-close") != null) {
+              document.querySelector(".calendar__dropdown-close").addEventListener("click", function (event) {
                 _this.$elements.dropdown.forEach(function ($item) {
                   $item.classList.remove("calendar__dropdown_show");
                 });
               });
+            }
             window.addEventListener("resize", function () {
               // _this.$elements.dropdown.classList.remove('calendar__dropdown_show');
               _this.$elements.dropdown.forEach(function ($item) {
@@ -18069,6 +18067,25 @@
             },
           },
           {
+            key: "handleCreateMarkersCenter",
+            value: function handleCreateMarkersCenter(points) {
+
+              let pointsCount = points.length;
+              let lat = 0;
+              let lon = 0;
+              points.forEach(function(point){
+                lat += parseInt(point[0]);
+                lon += parseInt(point[1]);
+              });
+
+              let averageLat = lat/pointsCount;
+              let averageLon = lon/pointsCount;
+
+              this.options.center = [averageLat, averageLon];
+              return this.options.center;
+            }
+          },
+          {
             key: "handleCreateMarkers",
             value: function handleCreateMarkers() {
               var _this = this;
@@ -18207,6 +18224,7 @@
                     }
                   });
               });
+
             },
           },
           {
@@ -18295,12 +18313,23 @@
           {
             key: "handleInitMap",
             value: function handleInitMap() {
+              
+              var urlParam = window.location.search;
+              if (Array.from(urlParam)[0] === "?") {
+                let itemCoords = [];
+                this.items.forEach(function(item){
+                   itemCoords.push(item.coords);
+                });
+
+                this.handleCreateMarkersCenter(itemCoords);
+              }
+
               this.map = new ymaps.Map(
                 "map",
                 {
                   center: this.options.center,
                   zoom: this.options.zoom,
-                  controls: [],
+                  controls: ['fullscreenControl'],
                 },
                 {
                   minZoom: 5,
@@ -18354,6 +18383,7 @@
                   },
                 },
               });
+              
               this.map.controls.add(zoomControl);
               this.handleCreateClusters();
               this.handleCreateMarkers();
@@ -18419,6 +18449,7 @@
                     "catalog__map_fullscreen"
                   )
                 ) {
+                  
                   var mapCreateTimeout = setTimeout(function () {
                     if (!_this3.map) CatalogMap.handleCreateMap();
                     clearTimeout(mapCreateTimeout);
@@ -18643,12 +18674,14 @@
               );
             });
 
-            _this2.elements.$fieldMobile.addEventListener(
-              "keyup",
-              debounce_default()(function (event) {
-                _this2.handleRequest(event.target.value);
-              }, 500)
-            );
+            if(_this2.elements.$fieldMobile !== null){
+              _this2.elements.$fieldMobile.addEventListener(
+                "keyup",
+                debounce_default()(function (event) {
+                  _this2.handleRequest(event.target.value);
+                }, 500)
+              );
+            }
 
             _this2.elements.$field.forEach(($item) => {
               if($item.value !== ''){
@@ -18659,12 +18692,14 @@
               });
             });
 
-            _this2.elements.$fieldMobile.addEventListener(
-              "click",
-              function (event) {
-                this.previousElementSibling.style.bottom = "30px";
-              }
-            );
+            if(_this2.elements.$fieldMobile !== null){
+              _this2.elements.$fieldMobile.addEventListener(
+                "click",
+                function (event) {
+                  this.previousElementSibling.style.bottom = "30px";
+                }
+              );
+            }
 
             document.addEventListener("click", function (event) {
               var $el = event.target;
@@ -18719,13 +18754,14 @@
                 _this2.handleRequest(event.target.value, $item);
               });
             });
-
-            this.elements.$fieldMobile.addEventListener(
-              "focusin",
-              function (event) {
-                _this2.handleRequest(event.target.value);
-              }
-            );
+            if(this.elements.$fieldMobile !== null){
+              this.elements.$fieldMobile.addEventListener(
+                "focusin",
+                function (event) {
+                  _this2.handleRequest(event.target.value);
+                }
+              );
+            }
           },
         },
       ]);

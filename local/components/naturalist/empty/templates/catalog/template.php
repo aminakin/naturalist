@@ -403,14 +403,14 @@ foreach ($arResult as $key => $value) {
                 </a>
                 <?/*a class="button button_primary  link_route" target="_blank"
                     href="https://yandex.ru/maps/?mode=routes&rtext=" data-route="data-route">Маршрут</a*/?>
-            <?php else: ?>
+            <?php endif; /*?>
                 <button class="button button_primary catalog__map-halfscreen" data-map-half type="button">
                     <svg class="icon icon_arrow-text" viewbox="0 0 12 8" style="width: 1.2rem; height: 0.8rem;">
                         <use xlink:href="#arrow-text" />
                     </svg>
                     <span>Перейти к списку</span>
                 </button>
-            <?php endif; ?>
+            <?php endif; */?>
             <div class="catalog__map-more" data-map-more-wrapper></div>
         </div>
     </div>

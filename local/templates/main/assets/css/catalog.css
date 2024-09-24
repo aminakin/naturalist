@@ -1726,16 +1726,6 @@
   overflow: hidden;
 }
 
-.catalog__map-halfscreen {
-  -webkit-box-sizing: border-box;
-  box-sizing: border-box;
-  display: none;
-  left: calc(50% - 53rem);
-  left: calc(50% - var(--container-max-width) / 2);
-  position: absolute;
-  top: 2rem;
-}
-
 .catalog__map-fullscreen {
   -webkit-box-pack: center;
   -ms-flex-pack: center;
@@ -1792,7 +1782,7 @@
   box-shadow: 0 0.8rem 2.2rem rgba(0, 0, 0, 0.15);
   -webkit-box-shadow: var(--shadow);
   box-shadow: var(--shadow);
-  display: none;
+  display: block;
   height: 3.2rem;
   padding: 0;
   position: absolute;
@@ -1831,10 +1821,6 @@
   -webkit-transform: rotate(90deg);
   -ms-transform: rotate(90deg);
   transform: rotate(90deg);
-}
-
-.catalog__map-control_zoom-out {
-  margin-top: 0.5rem;
 }
 
 .catalog__map-control_zoom-out:after {
@@ -2414,11 +2400,6 @@
     position: absolute;
     right: 0;
   }
-
-  .catalog__map-halfscreen {
-    left: 4rem;
-    left: var(--container-gap);
-  }
 }
 
 @media (max-width: 1023px) {
@@ -2593,20 +2574,8 @@
     top: 0;
   }
 
-  .catalog__map-halfscreen {
-    top: 40px;
-    -webkit-transform: translateY(-100%);
-    -ms-transform: translateY(-100%);
-    transform: translateY(-100%);
-  }
-
   .catalog__map-fullscreen {
     display: none;
-  }
-
-  .catalog__map-control {
-    right: calc(4rem - 50px);
-    right: calc(var(--container-gap) - 50px);
   }
 }
 
@@ -2821,12 +2790,6 @@
     margin-top: 3.2rem;
   }
 
-  .catalog__map-halfscreen {
-    top: 2.4rem;
-    -webkit-transform: none;
-    -ms-transform: none;
-    transform: none;
-  }
 }
 
 @media (max-width: 599px) {
@@ -4068,9 +4031,15 @@
 
 .body__on_map .catalog_sorter{
   margin: 12px 0 0 16px;
+
 }
 
-.body__on_map .catalog_sorter a{
+.body__on_map .filter_btn{
+  display: flex;
+}
+
+.body__on_map .catalog_sorter a.filter,
+.body__on_map .catalog_sorter a.link__to_catalog{
   font-size: 14px;
   font-weight: 400;
   line-height: 40px;
@@ -4085,6 +4054,21 @@
   max-width: 116px;
 }
 
+.body__on_map .catalog_sorter a.filter:hover,
+.body__on_map .catalog_sorter a.link__to_catalog:hover{
+  background-color: var(--color-btn-h);
+  border-color: var(--color-btn-h);
+}
+
+.body__on_map .catalog_sorter a.link__to_catalog{
+  background-image:none;
+  max-width: fit-content;
+  padding: 0 16px; 
+  position: static;
+  display: block;
+  margin-left: 8px;
+}
+
 .main-form__shadow {
   background-color: #0000001f;
   position: fixed;
@@ -4094,6 +4078,71 @@
   height: 100%;
   z-index: 1;
   display: none;
+}
+
+.catalog__map-control{
+  background-color: #00000099;
+  height: 38px;
+  width: 38px;
+}
+
+.catalog__map-control:hover{
+  background-color: #00000099;
+}
+
+.catalog__map-control:after, 
+.catalog__map-control:before{
+  width: 12px;
+  height: 2px;
+  margin: 0px -6px;
+  background-color: #FFFFFF;
+}
+
+.ymaps-2-1-79-controls__control{
+  inset: 0px 12px auto auto!important;
+}
+
+.ymaps-2-1-79-controls__control_toolbar.ymaps-2-1-79-user-selection-none{
+  margin-right: 0px !important;
+  position: absolute !important;
+  right: 12px !important;
+}
+
+.ymaps-2-1-79-float-button.ymaps-2-1-79-_hidden-text{
+  background-color: #00000099;
+  height: 38px!important;
+  width: 100%!important;
+  max-width: 38px!important;
+  border-radius: 38px!important;
+  border: none;
+  padding-left: 38px!important;
+}
+
+.ymaps-2-1-79-float-button.ymaps-2-1-79-_pressed, 
+.ymaps-2-1-79-float-button:active,
+.ymaps-2-1-79-float-button.ymaps-2-1-79-_checked{
+  background-color: #00000099!important;
+}
+
+.ymaps-2-1-79-float-button.ymaps-2-1-79-_checked .ymaps-2-1-79-float-button-icon.ymaps-2-1-79-float-button-icon_icon_collapse,
+.ymaps-2-1-79-float-button-icon.ymaps-2-1-79-float-button-icon_icon_expand{
+  width: 38px!important;
+  height: 38px!important;
+  background-image: url('../img/arrow-shrink.png')!important;
+  background-position: center center;
+  border: none!important;
+}
+
+.ymaps-2-1-79-controls__toolbar{
+  position: absolute;
+  right: 0;
+  top: calc(50vh - 6.15rem);
+  margin-top: -9rem !important;
+  margin-bottom: 10px;
+}
+
+.catalog__map-control_zoom-in{
+  margin-top: -4.5rem !important;
 }
 
 @media (min-width: 1280px) {
@@ -4282,6 +4331,19 @@
 }
 
 @media (max-width: 768px) {
+  .body__on_map .catalog_sorter{
+    width: 100%;
+  }
+
+  .body__on_map .filter_btn{
+    flex-direction: column;
+  }
+
+  .body__on_map .catalog_sorter a.link__to_catalog{
+    margin-top: 8px;
+    margin-left: 0;
+  }
+
   .body__on_map .catalog_map .field_autocomplete-show .autocomplete-dropdown-wrap{
     top: auto;
     left: 0;

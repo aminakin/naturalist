@@ -989,7 +989,6 @@ if (empty($chpy)) {
                             </div>
 
                             <div class="filters__controls">
-                                <!--                    <button class="button button_clear" data-filter-reset>Сбросить всё</button>-->
                                 <button class="button button_primary" data-filter-set
                                     data-filter-catalog-front-btn="true">Найти
                                 </button>
@@ -1001,9 +1000,17 @@ if (empty($chpy)) {
             <?php endif;?>
             <div class="catalog_sorter">
                 <div class="filter_btn">
-                    <a class="button" href="#filters-modal" data-modal="data-modal">
+                    <a class="button filter" href="#filters-modal" data-modal="data-modal">
                         <span>Фильтры</span>
                     </a>
+                    <?php if (CSite::InDir('/map')): ?>
+                        <a href="/catalog/<?= ($_SERVER['QUERY_STRING'] !== '')? '?' . $_SERVER['QUERY_STRING'] : '';?>" class="button button_primary catalog__map-halfscreen link__to_catalog">
+                            <svg class="icon icon_arrow-text" viewbox="0 0 12 8" style="width: 1.2rem; height: 0.8rem;">
+                                <use xlink:href="#arrow-text" />
+                            </svg>
+                            <span>Перейти к списку</span>
+                        </a>
+                    <?php endif;?>
                 </div>
 
                 <div class="sort <?= (CSite::InDir('/map'))? 'hidden' : ''?>" >
