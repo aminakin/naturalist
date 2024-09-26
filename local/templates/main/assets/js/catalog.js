@@ -18314,6 +18314,9 @@
             key: "handleInitMap",
             value: function handleInitMap() {
               
+              /*let urlParams = new URLSearchParams(window.location.search);
+              urlParams.get('name');*/
+
               var urlParam = window.location.search;
               if (Array.from(urlParam)[0] === "?") {
                 let itemCoords = [];
