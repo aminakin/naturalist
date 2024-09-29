@@ -3,6 +3,7 @@
 use Naturalist\CustomFunctions;
 use Naturalist\Filters\AutoCreate;
 use Naturalist\Filters\Sitemap;
+use Naturalist\BnovoDataFilesHandler;
 
 function checkReviewInvites()
 {
@@ -23,4 +24,14 @@ function updateSitemap()
     Sitemap::addChpyToFile();
 
     return 'updateSitemap();';
+}
+
+function handleBnovoFiles()
+{
+    if (!$GLOBALS['BNOVO_FILES_WORKING']) {
+        $BnovoDataFilesHandler = new BnovoDataFilesHandler();
+        $BnovoDataFilesHandler->handleFile();
+    }
+
+    return 'handleBnovoFiles();';
 }

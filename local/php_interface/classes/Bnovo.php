@@ -166,6 +166,7 @@ class Bnovo
         foreach ($arData as $arItem) {
             $arDataGrouped[$arItem["UF_TARIFF_ID"] . "-" . $arItem["UF_CATEGORY_ID"]][] = $arItem;
         }
+
         foreach ($arDataGrouped as $key => $arItems) {
             if (count($arItems) < count($arDates)) {
                 unset($arDataGrouped[$key]);
@@ -568,6 +569,7 @@ class Bnovo
 
             array_pop($arDates);
             $arItems = array();
+
             foreach ($arElementsFilterred as $tariffId => $arCategories) {
                 foreach ($arCategories as $categoryId => $arRooms) {
                     foreach ($arRooms as $elementId) {
@@ -1787,8 +1789,12 @@ class Bnovo
     }
 
     /* Обновление цен и броней */
-    public function updateReservationData($hotelId, $arTariffs, $arCategories, $arDates)
+    public function updateReservationData($hotelId, $arTariffs, $arCategories, $arDates, $newLogic = false)
     {
+        if ($hotelId == 11712 && $newLogic == false) {
+            return;
+        }
+
         $url = $this->bnovoApiURL . '/plans_data';
         $headers = array(
             "Content-Type: application/json"
@@ -1815,10 +1821,6 @@ class Bnovo
         ));
         $response = curl_exec($ch);
         $arData = json_decode($response, true);
-
-        //xprint($arData);
-
-        // $this->writeToFile($arData, 'updateReservationData', $hotelId);
 
         if (empty($arData) || (isset($arData['code']) && $arData['code'] != 200)) {
             if ($arData['code'] == 403) {
@@ -1929,8 +1931,12 @@ class Bnovo
     }
 
     /* Обновление наличия */
-    public function updateAvailabilityData($hotelId, $arCategories, $arDates, $fromOrder = false)
+    public function updateAvailabilityData($hotelId, $arCategories, $arDates, $fromOrder = false, $newLogic = false)
     {
+        if ($hotelId == 11712 && $newLogic == false) {
+            return;
+        }
+
         $url = $this->bnovoApiURL . '/availability';
         $headers = array(
             "Content-Type: application/json"
@@ -1939,7 +1945,12 @@ class Bnovo
         sort($arDates);
         $dateFrom = $arDates[0];
         $dateTo = $arDates[count($arDates) - 1];
-        $roomTypes = [];
+        if (is_array($arCategories)) {
+            $roomTypes = $arCategories;
+        } else {
+            $roomTypes = [$arCategories];
+        }
+
 
         $data = array(
             "token" => $this->token,
@@ -1949,6 +1960,8 @@ class Bnovo
             "roomtypes" => $roomTypes
         );
 
+        //Debug::writeToFile($data, 'BNOVO_REQUEST_' . $hotelId . date('Y-m-d H:i:s'), '__BNOVO_REQUEST.log');
+
         $ch = curl_init();
         curl_setopt_array($ch, array(
             CURLOPT_URL => $url . '?' . http_build_query($data),
@@ -1957,6 +1970,8 @@ class Bnovo
         ));
         $response = curl_exec($ch);
         $arData = json_decode($response, true);
+
+        //Debug::writeToFile($arData, 'BNOVO_RESPONSE_' . $hotelId . date('Y-m-d H:i:s'), '__BNOVO_RESPONSE.log');
 
         if (empty($arData) || (isset($arData['code']) && $arData['code'] != 200)) {
             if ($arData['code'] == 403) {
@@ -2045,17 +2060,17 @@ class Bnovo
 
         if (!empty($arReservedOne)) {
             $query = 'UPDATE b_hlbd_room_offers SET UF_RESERVED=1 WHERE id IN (' . implode(',', $arReservedOne) . ')';
-            // if ($hotelId == 11712) {
-            //     Debug::writeToFile($query, 'BNOVO_UNRESERVED_' . $hotelId . date('Y-m-d H:i:s'), '__BNOVO_UNRESERVED_log.log');
-            // }
+
+            //Debug::writeToFile($query, 'BNOVO_UNRESERVED_' . $hotelId . date('Y-m-d H:i:s'), '__BNOVO_UNRESERVED_log.log');
+
             $result = $connection->queryExecute($query);
         }
 
         if (!empty($arReservedNull)) {
             $query = 'UPDATE b_hlbd_room_offers SET UF_RESERVED=0 WHERE id IN (' . implode(',', $arReservedNull) . ')';
-            // if ($hotelId == 11712) {
-            //     Debug::writeToFile($query, 'BNOVO_RESERVED_' . $hotelId . date('Y-m-d H:i:s'), '__BNOVO_RESERVED__log.log');
-            // }
+
+            //Debug::writeToFile($query, 'BNOVO_RESERVED_' . $hotelId . date('Y-m-d H:i:s'), '__BNOVO_RESERVED__log.log');
+
             $result = $connection->queryExecute($query);
         }
     }

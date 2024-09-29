@@ -38,6 +38,7 @@ Loader::registerAutoLoadClasses(null, array(
     'Naturalist\Filters\AutoCreate' => '/local/php_interface/classes/Filters/AutoCreate.php',
     'Naturalist\Filters\Sitemap' => '/local/php_interface/classes/Filters/Sitemap.php',
     'Naturalist\Filters\Components' => '/local/php_interface/classes/Filters/Components.php',
+    'Naturalist\BnovoDataFilesHandler' => '/local/php_interface/classes/BnovoDataFilesHandler.php',
 
 ));
 
