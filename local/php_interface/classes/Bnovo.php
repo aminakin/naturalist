@@ -1376,6 +1376,8 @@ class Bnovo
         $sectionName = $arSection["NAME"] ?? $arSection["name"];
 
         $noCildren = true;
+        $isMarkup = false;
+        $childAgeWithNoSeat = 0;
 
         // Номера
         $url = $this->bnovoApiPublicURL . '/roomtypes';
@@ -1516,6 +1518,7 @@ class Bnovo
             if (isset($arRoom['extra_array']['children_ages']) && !empty($arRoom['extra_array']['children_ages']) && !isset($arRoom['extra_array']['people'])) {
                 $elementAppend = '';
                 foreach ($arRoom['extra_array']['children_ages'] as $key => $arAge) {
+                    $realChildrenAgesIds[$key] = $key;
                     if (is_array($arAge)) {
                         $arAgesValues[] = ["VALUE" => $childrenAgesId[$key] ? $childrenAgesId[$key] : 0, "DESCRIPTION" => $arAge[array_key_first($arAge)]['people_count']];
                         if ($childrenAgesId[$key]) {
@@ -1542,6 +1545,7 @@ class Bnovo
                     if ($key == 0) {
                         continue;
                     }
+                    $realChildrenAgesIds[$key] = $key;
                     if (is_array($arAge)) {
                         $arAgesValues[] = ["VALUE" => $childrenAgesId[$key], "DESCRIPTION" => $arAge[array_key_first($arAge)]['people_count']];
                         $childrenCount = $arRoom['extra_array']['people']['max_adults'] - $arRoom['extra_array']['people']['main_beds'];
@@ -1609,6 +1613,7 @@ class Bnovo
 
             if ((isset($arRoom['extra_array']['people']) && count($arRoom['extra_array']['people'])) && (isset($arRoom['extra_array']['children_ages']) && count($arRoom['extra_array']['children_ages']))) {
                 $this->markupHandler($childrenAgesId, $elementIdCat, $sectionIdOccupancies, $arRoom, $arSection['children_ages']);
+                $isMarkup = true;
             }
 
             //Товары объекта - номера
@@ -1704,6 +1709,31 @@ class Bnovo
             $iS->Update($arSection['ID'], array(
                 "UF_NO_CHILDREN_PLACE" => 1,
             ));
+        }
+
+        if (!$noCildren && !$isMarkup &&  is_array($realChildrenAgesIds) && !empty($realChildrenAgesIds)) {
+            $realChildrenAgesIds = array_unique($realChildrenAgesIds);
+            foreach ($childrenAgesId as $ageKey => $ageValue) {
+                if (isset($realChildrenAgesIds[$ageKey])) {
+                    continue;
+                }
+                $minChildInterval = $ageValue;
+            }
+            if (isset($minChildInterval)) {
+                $entity =  HighloadBlockTable::compileEntity('ChildrenAges')->getDataClass();
+
+                $query =  $entity::query()
+                    ->addSelect('UF_MAX_AGE')
+                    ->where('ID', $minChildInterval)
+                    ?->fetch();
+
+                if (isset($query['UF_MAX_AGE'])) {
+                    $iS = new CIBlockSection();
+                    $iS->Update($arSection['ID'], array(
+                        "UF_MIN_AGE" => $query['UF_MAX_AGE'],
+                    ));
+                }
+            }
         }
     }
 
