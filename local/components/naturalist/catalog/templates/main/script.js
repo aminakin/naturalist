@@ -72,7 +72,7 @@ $(function () {
 
     location.href = url;
   });
-
+  
   // Фильтр - применение
   $(document).on("click", "[data-filter-set]", function (event) {
     event.preventDefault();
@@ -237,7 +237,7 @@ $(function () {
     if (Object.keys(params).length > 0) {
       window.preloader.show();
       var url = setUrlParams(params);
-      window.location = "/catalog/" + url;
+      window.location = location.pathname + url;
     }
   });
 
@@ -405,8 +405,6 @@ $(function () {
       var url = setUrlParams(params);
       var ajaxContainer = "section.section_room";
       var ajaxContainerRelated = "section.section_related";
-
-      console.log(url);
 
       jQuery.ajax({
         type: "POST",

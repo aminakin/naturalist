@@ -1,5 +1,5 @@
 <?
-$sSectionName = "Карта";
+$sSectionName = "Карта глэмпингов в России";
 $arDirProperties = Array(
 
 );

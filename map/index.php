@@ -1,6 +1,6 @@
 <?
 require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/header.php");
-//$APPLICATION->SetTitle("Карта");
+//$APPLICATION->SetTitle("Карта глэмпингов в России");
 ?>
 
 <?
@@ -27,7 +27,22 @@ $APPLICATION->IncludeComponent(
 	)
 );
 ?>
-
+<div class="container">
+	<section class="cert-index__seo-text catalog_map">
+	    <?php
+	        $APPLICATION->IncludeComponent(
+	            "bitrix:main.include",
+	            "",
+	            Array(
+	                "AREA_FILE_SHOW" => "file", 
+	                "PATH" => '/include/home-seo-text.php',
+	                "EDIT_TEMPLATE" => ""
+	            )
+	        );
+	    ?>     
+	</section>	
+	<a href="#" class="show-more-seo">Раскрыть</a>
+</div>
 <?
 require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/footer.php");
 ?>

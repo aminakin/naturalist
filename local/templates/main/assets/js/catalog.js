@@ -13557,14 +13557,26 @@
         if (!$el.matches("[data-guests]") && !$el.closest("[data-guests]")) {
           $guests.forEach(($item) => {
             $item.classList.remove("guests_show");
+            $(".b24-widget-button-wrapper").show();
           });
         }
       });
+
+      document
+        .querySelector(".guests__dropdown-close")
+        .addEventListener("click", function (event) {
+          $guests.forEach(($item) => {
+            $item.classList.remove("guests_show");
+            $(".b24-widget-button-wrapper").show();
+          });
+          document.querySelector(".main-form__shadow").style.display = "none";
+        });
 
       $guestsControl.forEach(($guestsControlItem) => {
         $guestsControlItem.addEventListener("click", function () {
           $guests.forEach(($item) => {
             $item.classList.toggle("guests_show");
+            $(".b24-widget-button-wrapper").toggle();
           });
         });
       });
@@ -17190,9 +17202,46 @@
           key: "handleHide",
           value: function handleHide() {
             var _this = this;
+            
+
+              document
+                .querySelectorAll(".catalog_map [data-calendar-label]")
+                .forEach(function (item) {
+                    if(item.innerText !== ''){
+                      item.previousElementSibling.style.bottom = "30px";
+                    }
+                });
 
             document.addEventListener("click", function (event) {
+              if (
+                event.target.closest(".catalog_filter") !== null &&
+                event.target.classList.contains("calendar__dropdown-close") !==
+                  true &&
+                event.target.classList.contains("guests__dropdown-close") !==
+                  true &&
+                event.target.classList.contains(
+                  "autocomplete-dropdown-close"
+                ) !== true
+              ) {
+                document.querySelector(".main-form__shadow").style.display =
+                  "block";
+                $(".b24-widget-button-wrapper").hide();
+              } else {
+                document.querySelector(".main-form__shadow").style.display =
+                  "none";
+                $(".b24-widget-button-wrapper").show();
+              }
               var $el = event.target;
+
+              if (
+                $el.getAttribute("data-calendar-label") == "data-calendar-label"
+              ) {
+                document
+                  .querySelectorAll(".catalog_map [data-calendar-label]")
+                  .forEach(function (item) {
+                      item.previousElementSibling.style.bottom = "30px";
+                  });
+              }
 
               if (
                 !$el.matches("[data-calendar-dropdown]") &&
@@ -17206,6 +17255,13 @@
                 });
               }
             });
+            if(document.querySelector(".calendar__dropdown-close") != null) {
+              document.querySelector(".calendar__dropdown-close").addEventListener("click", function (event) {
+                _this.$elements.dropdown.forEach(function ($item) {
+                  $item.classList.remove("calendar__dropdown_show");
+                });
+              });
+            }
             window.addEventListener("resize", function () {
               // _this.$elements.dropdown.classList.remove('calendar__dropdown_show');
               _this.$elements.dropdown.forEach(function ($item) {
@@ -17792,12 +17848,12 @@
       if (window.scrollLocked === 1) {
         scrollPosition = window.scrollY;
         var scrollbarWidth = window.innerWidth - document.body.clientWidth;
-        $body.style.paddingRight = "".concat(scrollbarWidth, "px");
-        $body.style.overflowY = "hidden";
-        $body.style.position = "fixed";
-        $body.style.top = "-".concat(scrollPosition, "px");
+        //$body.style.paddingRight = "".concat(scrollbarWidth, "px");
+        //$body.style.overflowY = "hidden";
+        //$body.style.position = "fixed";
+        //$body.style.top = "-".concat(scrollPosition, "px");
         $body.style.width = "100%";
-        $body.classList.add("-scroll-lock");
+        //$body.classList.add("-scroll-lock");
 
         if ($fixedItems.length) {
           $fixedItems.forEach(function ($item) {
@@ -17933,12 +17989,7 @@
                   .concat(data.id, '" data-favourite-')
                   .concat(
                     data.favorite ? "remove" : "add",
-                    '>\n\t\t\t\t\t\t<img src="'
-                  )
-                  .concat(this.options.imageAssetsPath, "assets/img/favorite")
-                  .concat(
-                    data.favorite ? "-active" : "",
-                    '.svg" alt="">\n\t\t\t\t\t</button>\n\t\t\t\t\t'
+                    '>\n\t\t\t\t\t\t<svg width="19" height="18" viewBox="0 0 19 18" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M3.77566 2.51612C6.01139 1.14472 8.01707 1.69128 9.22872 2.60121C9.42805 2.75091 9.56485 2.85335 9.6667 2.92254C9.76854 2.85335 9.90535 2.75091 10.1047 2.60121C11.3163 1.69128 13.322 1.14472 15.5577 2.51612C17.1037 3.4644 17.9735 5.44521 17.6683 7.72109C17.3616 10.008 15.8814 12.5944 12.7467 14.9146C12.7205 14.934 12.6945 14.9533 12.6687 14.9724C11.5801 15.7786 10.8592 16.3125 9.6667 16.3125C8.47415 16.3125 7.75326 15.7786 6.66473 14.9724C6.63893 14.9533 6.61292 14.934 6.5867 14.9146C3.452 12.5944 1.97181 10.008 1.6651 7.72109C1.35986 5.44521 2.22973 3.4644 3.77566 2.51612ZM9.54914 2.99503C9.54673 2.99611 9.54716 2.99576 9.55019 2.99454L9.54914 2.99503ZM9.78321 2.99454C9.78624 2.99576 9.78667 2.99611 9.78426 2.99503L9.78321 2.99454Z" fill="#E39250"></path></svg>\n\t\t\t\t\t</button>\n\t\t\t\t\t'
                   )
                   .concat(
                     data.tag
@@ -17961,28 +18012,17 @@
                           )
                           .concat(
                             this.options.imageAssetsPath,
-                            'assets/img/score.svg" alt="">\n\t\t\t\t\t\t\t\t<span>'
+                            'assets/img/star-score.svg" alt="">\n\t\t\t\t\t\t\t\t<span>'
                           )
                           .concat(data.score, "</span>\n\t\t\t\t\t\t\t</a>")
                       : "",
-                    '\n\t\t\t\t</div>\n\n\t\t\t\t<div class="object__marker">\n\t\t\t\t\t'
+                    '\n\t\t\t\t</div>\n\n\t\t\t\t<div class="object__marker">\n\t\t\t\t\t<div class="area-info"><span>'
                   )
                   .concat(
-                    data.marker
-                      ? '\n\t\t\t\t\t\t\t\t<div class="area-info">\n\t\t\t\t\t\t\t\t\t<img src="'
-                          .concat(
-                            this.options.imageAssetsPath,
-                            'assets/img/marker.svg" alt="">\n\t\t\t\t\t\t\t\t\t<div>\n\t\t\t\t\t\t\t\t\t\t<span>'
-                          )
-                          .concat(
-                            data.marker,
-                            "</span>\n\t\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t"
-                          )
-                      : "",
-                    '\n\t\t\t\t</div>\n\n\t\t\t\t<a class="button button_transparent" onclick="setLocalStorageCatalog(event);" href="'
+                    data.price,
+                       '</span><span class="dot"></span><span>Цена за одну ночь </span></div></div><a class="button button_transparent" onclick="setLocalStorageCatalog(event);" href="'
                   )
-                  .concat(data.href, '">')
-                  .concat(data.price, "</a>\n\t\t\t</div>\n\t\t");
+                  .concat(data.href, '">Выбрать</a>\n\t\t\t</div>\n\t\t');
               window.objectsGallery();
               window.scoreCreate();
             },
@@ -18011,6 +18051,25 @@
             },
           },
           {
+            key: "handleCreateMarkersCenter",
+            value: function handleCreateMarkersCenter(points) {
+
+              let pointsCount = points.length;
+              let lat = 0;
+              let lon = 0;
+              points.forEach(function(point){
+                lat += parseInt(point[0]);
+                lon += parseInt(point[1]);
+              });
+
+              let averageLat = lat/pointsCount;
+              let averageLon = lon/pointsCount;
+
+              this.options.center = [averageLat, averageLon];
+              return this.options.center;
+            }
+          },
+          {
             key: "handleCreateMarkers",
             value: function handleCreateMarkers() {
               var _this = this;
@@ -18019,14 +18078,10 @@
                 '<div class="object-placemark[if properties.active || properties.hover] object-placemark_active[endif]">$[properties.markerData.price]</div>'
               );
               var balloonLayout = ymaps.templateLayoutFactory.createClass(
-                '\n\t\t\t<div class="mini-balloon">\n\t\t\t\t<div class="mini-balloon__image">\n\t\t\t\t\t<img src="$[properties.markerData.preview]" alt="">\n\t\t\t\t</div>\n\t\t\t\t<div class="mini-balloon__content">\n\t\t\t\t\t<div class="h6">$[properties.markerData.title]</div>\n\t\t\t\t\t<div class="score"><img src="'
+                '\n\t\t\t<div class="mini-balloon">\n\t\t\t\t<div class="mini-balloon__image" style="background-image:url($[properties.markerData.preview])"></div>\n\t\t\t\t<div class="mini-balloon__content">\n\t\t\t\t\t<div class="h6">$[properties.markerData.title]</div>\n\t\t\t\t\t<div class="score"><img src="'
                   .concat(
                     this.options.imageAssetsPath,
-                    'assets/img/score.svg" alt=""><span>$[properties.markerData.score]</span></div>\n\t\t\t\t\t<div class="area-info"><img src="'
-                  )
-                  .concat(
-                    this.options.imageAssetsPath,
-                    'assets/img/marker.svg" alt=""><div><span>$[properties.markerData.marker]</span></div></div>\n\t\t\t\t</div>\n\t\t\t</div>\n\t\t'
+                    'assets/img/star-score.svg" alt=""><span>$[properties.markerData.score]</span></div>\n\t\t\t\t\t<div class="area-info"><div><span>$[properties.markerData.price]</span><span class="dot"></span><span>Цена за одну ночь</span></div></div>\n\t\t\t\t</div>\n\t\t\t</div>\n\t\t'
                   )
               );
               this.items.forEach(function (marker, index) {
@@ -18149,6 +18204,7 @@
                     }
                   });
               });
+
             },
           },
           {
@@ -18200,10 +18256,10 @@
           {
             key: "handleChangeView",
             value: function handleChangeView() {
-              this.$elements.overlay.classList.toggle(
-                "catalog__map_fullscreen",
-                this.fullscreen
-              );
+              //this.$elements.overlay.classList.toggle(
+              //  "catalog__map_fullscreen",
+              //  this.fullscreen
+              //);
               this.$elements.catalog.classList.toggle(
                 "catalog_map",
                 this.fullscreen
@@ -18220,10 +18276,10 @@
                   "crumbs__controls-mobile_hide",
                   this.fullscreen
                 );
-              this.$elements.route.classList.toggle(
+              /*this.$elements.route.classList.toggle(
                 "route_show",
                 this.fullscreen
-              );
+              );*/
               if (this.map) this.map.container.fitToViewport();
             },
           },
@@ -18237,12 +18293,27 @@
           {
             key: "handleInitMap",
             value: function handleInitMap() {
+              
+              /*let urlParams = new URLSearchParams(window.location.search);
+              urlParams.get('name');*/
+
+              var urlParam = window.location.search;
+              if (Array.from(urlParam)[0] === "?") {
+                let itemCoords = [];
+                this.items.forEach(function(item){
+                   itemCoords.push(item.coords);
+                });
+
+                this.options.zoom = 6;
+                this.handleCreateMarkersCenter(itemCoords);
+              }
+
               this.map = new ymaps.Map(
                 "map",
                 {
                   center: this.options.center,
                   zoom: this.options.zoom,
-                  controls: [],
+                  controls: ['fullscreenControl'],
                 },
                 {
                   minZoom: 5,
@@ -18296,6 +18367,7 @@
                   },
                 },
               });
+              
               this.map.controls.add(zoomControl);
               this.handleCreateClusters();
               this.handleCreateMarkers();
@@ -18350,12 +18422,10 @@
                 }
 
                 var mapCreate = function mapCreate() {
-                  if (window.innerWidth >= 1024) {
                     var mapCreateTimeout = setTimeout(function () {
                       if (!_this3.map) CatalogMap.handleCreateMap();
                       clearTimeout(mapCreateTimeout);
                     }, 0);
-                  }
                 };
 
                 if (
@@ -18363,6 +18433,7 @@
                     "catalog__map_fullscreen"
                   )
                 ) {
+                  
                   var mapCreateTimeout = setTimeout(function () {
                     if (!_this3.map) CatalogMap.handleCreateMap();
                     clearTimeout(mapCreateTimeout);
@@ -18460,6 +18531,9 @@
           $field: document.querySelectorAll("[data-autocomplete-field]"),
           $result: document.querySelector("[data-autocomplete-result]"),
           $dropdown: document.querySelectorAll("[data-autocomplete-dropdown]"),
+          $fieldMobile: document.querySelector(
+            "[data-autocomplete-field-mobile]"
+          ),
         };
       }
 
@@ -18507,6 +18581,7 @@
                       .closest("[data-autocomplete]")
                       .classList.add(_this.classes.show);
                     // _this.elements.$root.classList.add(_this.classes.show);
+                      _this.elements.$fieldMobile.focus();
 
                     return false;
                   }
@@ -18553,10 +18628,11 @@
                       );
                     });
 
-                    $inputElement
-                      .closest("[data-autocomplete]")
-                      .classList.add(_this.classes.show);
+                    if($inputElement !== undefined) {
+                      $inputElement.closest("[data-autocomplete]").classList.add(_this.classes.show);
+                    }
                     // _this.elements.$root.classList.add(_this.classes.show);
+                    _this.elements.$fieldMobile.focus();
                   } else {
                     _this.handleHide();
                   }
@@ -18581,6 +18657,33 @@
                 }, 500)
               );
             });
+
+            if(_this2.elements.$fieldMobile !== null){
+              _this2.elements.$fieldMobile.addEventListener(
+                "keyup",
+                debounce_default()(function (event) {
+                  _this2.handleRequest(event.target.value);
+                }, 500)
+              );
+            }
+
+            _this2.elements.$field.forEach(($item) => {
+              if($item.value !== ''){
+                $item.previousElementSibling.style.bottom = "30px";
+              }
+              $item.addEventListener("click", function (event) {
+                this.previousElementSibling.style.bottom = "30px";
+              });
+            });
+
+            if(_this2.elements.$fieldMobile !== null){
+              _this2.elements.$fieldMobile.addEventListener(
+                "click",
+                function (event) {
+                  this.previousElementSibling.style.bottom = "30px";
+                }
+              );
+            }
 
             document.addEventListener("click", function (event) {
               var $el = event.target;
@@ -18609,6 +18712,12 @@
                     .trim();
                 });
 
+                _this2.elements.$fieldMobile.value = $title.textContent
+                  .replace("<br>", " ")
+                  .replace(/<\/?[^>]+(>|$)/g, "")
+                  .replace(/\s+/g, " ")
+                  .trim();
+
                 _this2.handleHide();
               }
 
@@ -18618,6 +18727,10 @@
               ) {
                 _this2.handleHide();
               }
+
+              if ($el.classList.contains("autocomplete-dropdown-close")) {
+                _this2.handleHide();
+              }
             });
 
             this.elements.$field.forEach(($item) => {
@@ -18625,6 +18738,14 @@
                 _this2.handleRequest(event.target.value, $item);
               });
             });
+            if(this.elements.$fieldMobile !== null){
+              this.elements.$fieldMobile.addEventListener(
+                "focusin",
+                function (event) {
+                  _this2.handleRequest(event.target.value);
+                }
+              );
+            }
           },
         },
       ]);
