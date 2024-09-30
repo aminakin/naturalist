@@ -484,9 +484,6 @@ class Rest
     /* Изменение каталога */
     public function updateCatalog($params)
     {
-        if ($params["hotel_id"] == 34) {
-            Debug::writeToFile($params, '', '__bx_sopostav_log.log');
-        }
         $hotelId = $params["hotel_id"];
         $externalId = $params["account_id"];
 
@@ -565,7 +562,7 @@ class Rest
     }
 
     /* Изменение цен, наличия, ограничений */
-    public function updatePrices($params, $fileName = '')
+    public function updatePrices($params, $fileName = '', $newLogic = false)
     {
         $hotelId = $params["hotel_id"];
         $externalId = $params["account_id"];
@@ -588,7 +585,7 @@ class Rest
         if ($arPrices) {
             foreach ($arPrices as $tariffId => $arCategories) {
                 foreach ($arCategories as $categoryId => $arCategoryDates) {
-                    $res = $bnovo->updateReservationData($externalId, $tariffId, $categoryId, $arCategoryDates);
+                    $res = $bnovo->updateReservationData($externalId, $tariffId, $categoryId, $arCategoryDates, $newLogic);
                 }
                 if (!empty($res)) {
                     $arSend['MESSAGE'] = $res;
@@ -601,7 +598,7 @@ class Rest
         $arRooms = $params["data"]["rooms"];
         if ($arRooms) {
             foreach ($arRooms as $categoryId => $arCategoryDates) {
-                $res = $bnovo->updateAvailabilityData($externalId, $categoryId, $arCategoryDates);
+                $res = $bnovo->updateAvailabilityData($externalId, $categoryId, $arCategoryDates, false, $newLogic);
                 if (!empty($res)) {
                     $arSend['MESSAGE'] = $res;
                     $this->sendError($arSend);
@@ -629,6 +626,13 @@ class Rest
     {
         if (is_array($val)) {
             $importFilePath = $_SERVER["DOCUMENT_ROOT"] . '/import/bnovo/import_hotelid_' . $val["hotel_id"] . '_date_' . date("j-m-Y-H-i-s") . '.json';
+
+            if ($val["hotel_id"] == 508) {
+                $filesDataClass = HighloadBlockTable::compileEntity(BNOVO_FILES_HL_ENTITY)->getDataClass();
+                $filesDataClass::add([
+                    'UF_FILE_NAME' => $importFilePath,
+                ]);
+            }
 
             $fp = fopen($importFilePath, 'w+');
             fwrite($fp, json_encode($val));

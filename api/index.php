@@ -1,13 +1,17 @@
 <?php
+
 use Naturalist\Rest;
+use Bitrix\Main\Diag\Debug;
 
 define("STOP_STATISTICS", true);
 define("NO_AGENT_CHECK", true);
-$_SERVER["DOCUMENT_ROOT"] = realpath(dirname(__FILE__)."/../");
-require($_SERVER["DOCUMENT_ROOT"]."/bitrix/modules/main/include/prolog_before.php");
+$_SERVER["DOCUMENT_ROOT"] = realpath(dirname(__FILE__) . "/../");
+require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_before.php");
 
 $method   = $_SERVER['REQUEST_METHOD'];
 $resource = $_REQUEST['resource'];
+
+//Debug::writeToFile($_REQUEST, 'BNOVO_REQUEST_' . date('Y-m-d H:i:s'), '__BNOVO_REQUEST.log');
 
 $api = new Rest();
 $arOutput = array();
@@ -17,32 +21,29 @@ $params    = json_decode($inputJSON, true);
 $filePath = $api->setCurrentData($params);
 $arSend['FILE'] = $filePath;
 
-if($method == 'POST' && $resource == 'auth') {
+if ($method == 'POST' && $resource == 'auth') {
     $clientId     = $params['client_id'];
     $clientSecret = $params['client_secret'];
 
     $arOutput = $api->getToken($clientId, $clientSecret);
     $responseCode = (!empty($arOutput['code'])) ? 401 : 200;
     unset($arOutput['code']);
-
-} elseif($argv[1] == 'prices' && !empty($argv[2])) {
-    $inputJSON = file_get_contents($argv[2]);
+} elseif ($resource == 'prices') {
     $params    = json_decode($inputJSON, true);
-
-    $arOutput = $api->updatePrices($params, $argv[2]);
+    $arOutput = $api->updatePrices($params, $filePath);
     $responseCode = $arOutput['code'];
 } else {
     $arHeaders = getallheaders();
     list($authType, $token) = explode(' ', $arHeaders["Authorization"]);
 
     $validation = $api->login($token);
-    if($validation === TRUE) {
+    if ($validation === TRUE) {
         $isExist = false;
 
-        if(isset($resource) && !empty($resource)) {
-            switch($method) {
+        if (isset($resource) && !empty($resource)) {
+            switch ($method) {
                 case 'GET':
-                    switch($resource) {
+                    switch ($resource) {
                         case 'catalog':
                             $hotelId = $_GET['hotel_id'];
                             $arOutput = $api->getCatalog($hotelId);
@@ -50,20 +51,20 @@ if($method == 'POST' && $resource == 'auth') {
                             //unset($arOutput['code']);
 
                             $isExist = true;
-                        break;
+                            break;
                     }
 
-                break;
+                    break;
 
                 case 'POST':
-                    switch($resource) {
+                    switch ($resource) {
                         case 'catalog':
                             $arOutput = $api->updateCatalog($params);
                             $responseCode = $arOutput['code'];
                             //unset($arOutput['code']);
 
                             $isExist = true;
-                        break;
+                            break;
 
                         case 'prices':
                             $hotelId = $params["hotel_id"];
@@ -116,26 +117,24 @@ if($method == 'POST' && $resource == 'auth') {
                             }
 
                             $isExist = true;
-                        break;
+                            break;
                     }
 
-                break;
+                    break;
             }
 
-            if(!$isExist) {
+            if (!$isExist) {
                 $arSend['MESSAGE'] = 'Ресурс не найден.';
                 $api->sendError($arSend);
                 $arOutput     = array('code' => 404, 'error' => 'Ресурс не найден.');
                 $responseCode = 404;
             }
-
         } else {
             $arSend['MESSAGE'] = 'Ошибка в запросе.';
             $api->sendError($arSend);
             $arOutput     = array('code' => 400, 'error' => 'Ошибка в запросе.');
             $responseCode = 400;
         }
-
     } else {
         $arOutput = $validation;
         //$arSend['MESSAGE'] = $arOutput;
@@ -147,18 +146,33 @@ if($method == 'POST' && $resource == 'auth') {
 header('Content-Type: application/json; charset=utf-8');
 
 switch ($responseCode) {
-    case 200: $responseText = 'OK'; break;
-    case 400: $responseText = 'Bad Request'; break;
-    case 401: $responseText = 'Unauthorized'; break;
-    case 402: $responseText = 'Payment Required'; break;
-    case 403: $responseText = 'Forbidden'; break;
-    case 404: $responseText = 'Not Found'; break;
-    case 405: $responseText = 'Method Not Allowed'; break;
-    case 406: $responseText = 'Not Acceptable'; break;
+    case 200:
+        $responseText = 'OK';
+        break;
+    case 400:
+        $responseText = 'Bad Request';
+        break;
+    case 401:
+        $responseText = 'Unauthorized';
+        break;
+    case 402:
+        $responseText = 'Payment Required';
+        break;
+    case 403:
+        $responseText = 'Forbidden';
+        break;
+    case 404:
+        $responseText = 'Not Found';
+        break;
+    case 405:
+        $responseText = 'Method Not Allowed';
+        break;
+    case 406:
+        $responseText = 'Not Acceptable';
+        break;
 }
-header("HTTP/1.1 ".$responseCode." ".$responseText);
+header("HTTP/1.1 " . $responseCode . " " . $responseText);
 
 $APPLICATION->RestartBuffer();
 echo json_encode($arOutput, JSON_UNESCAPED_UNICODE);
 die();
-?>

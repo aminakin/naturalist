@@ -196,10 +196,14 @@ use Bitrix\Main\Localization\Loc;
                     <div class="house-type__shadow left"></div>
                     <div class="swiper-container">
                         <ul class="swiper-wrapper">
-                            <? foreach ($arHouseTypes as $houseType) { ?>
+                            <? foreach ($arHouseTypes as $houseType) {
+                                if (!$houseType['UF_IMG']) {
+                                    continue;
+                                }
+                            ?>
                                 <li class="swiper-slide">
                                     <a href="<?= $houseType['URL'] ?>">
-                                        <?= Utils::buildSVG(CFile::getPath($houseType['UF_IMG'])); ?>
+                                        <?= Utils::buildSVG(CFile::getPath($houseType['UF_IMG'])) ?>
                                         <p class="house-type__text"><?= $houseType['UF_NAME'] ?></p>
                                     </a>
                                 </li>
