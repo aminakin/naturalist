@@ -469,7 +469,7 @@ class AutoCreate
                 $h1 = $firstElement['UF_SKLON'] . ' России ' . mb_strtolower($secondElement['UF_SKLON']);
                 $links[] = [
                     'UF_NEW_URL' => '/catalog/' . self::getNewUrl($firstElement['UF_SKLON']) . self::getNewUrl($secondElement['UF_SKLON']),
-                    'UF_REAL_URL' => '/catalog/?types=' . $firstElement['ID'] . '&selection=' . $secondElement['ID'],
+                    'UF_REAL_URL' => '/catalog/?types=' . $firstElement['ID'] . '&miniselection=' . $secondElement['ID'],
                     'UF_ACTIVE' => 1,
                     'UF_H1' => $h1,
                     'UF_TITLE' => $h1 . TITLE_PATTERN,
@@ -505,7 +505,7 @@ class AutoCreate
                     $h1 = $firstElement['UF_SKLON'] . ' ' . $secondElement['UF_SKLON'] . ' ' . $thirdElement['UF_SKLON'];
                     $links[] = [
                         'UF_NEW_URL' => '/catalog/' . self::getNewUrl($firstElement['UF_SKLON']) . self::getNewUrl($secondElement['UF_SKLON']) . self::getNewUrl($thirdElement['UF_SKLON']),
-                        'UF_REAL_URL' => '/catalog/?types=' . $firstElement['ID'] . '&name={"type":"area","item":"' . $secondElement['UF_NAME'] . '","title":"' . $secondElement['UF_NAME'] . '","footnote":""}&selection=' . $thirdElement['ID'],
+                        'UF_REAL_URL' => '/catalog/?types=' . $firstElement['ID'] . '&name={"type":"area","item":"' . $secondElement['UF_NAME'] . '","title":"' . $secondElement['UF_NAME'] . '","footnote":""}&miniselection=' . $thirdElement['ID'],
                         'UF_ACTIVE' => 1,
                         'UF_H1' => $h1,
                         'UF_TITLE' => $h1 . TITLE_PATTERN,
@@ -764,7 +764,13 @@ class AutoCreate
             ->where('UF_MINI', 1)
             ?->fetchAll();
 
-        return array_merge($result, $query);
+        $result = array_merge($result, $query);
+
+        foreach ($result as $key => &$value) {
+            $value['ID'] = $key + 1;
+        }
+
+        return $result;
     }
 
     /**

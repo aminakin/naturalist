@@ -1,7 +1,6 @@
 <?php
 
 use Naturalist\Rest;
-use Bitrix\Main\Diag\Debug;
 
 define("STOP_STATISTICS", true);
 define("NO_AGENT_CHECK", true);
@@ -10,8 +9,6 @@ require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_before.
 
 $method   = $_SERVER['REQUEST_METHOD'];
 $resource = $_REQUEST['resource'];
-
-//Debug::writeToFile($_REQUEST, 'BNOVO_REQUEST_' . date('Y-m-d H:i:s'), '__BNOVO_REQUEST.log');
 
 $api = new Rest();
 $arOutput = array();
@@ -28,9 +25,11 @@ if ($method == 'POST' && $resource == 'auth') {
     $arOutput = $api->getToken($clientId, $clientSecret);
     $responseCode = (!empty($arOutput['code'])) ? 401 : 200;
     unset($arOutput['code']);
-} elseif ($resource == 'prices') {
+} elseif ($argv[1] == 'prices' && !empty($argv[2])) {
+    $inputJSON = file_get_contents($argv[2]);
     $params    = json_decode($inputJSON, true);
-    $arOutput = $api->updatePrices($params, $filePath);
+
+    $arOutput = $api->updatePrices($params, $argv[2]);
     $responseCode = $arOutput['code'];
 } else {
     $arHeaders = getallheaders();
@@ -109,7 +108,7 @@ if ($method == 'POST' && $resource == 'auth') {
                                         $arOutput = array('code' => 404, 'error' => 'Параметр rooms не был передан.');
                                     }
                                 } else {
-                                    exec("php " . $_SERVER["DOCUMENT_ROOT"] . "/api/index.php prices " . $filePath . " > /dev/null 2>&1 &");
+                                    exec("php8.0 " . $_SERVER["DOCUMENT_ROOT"] . "/api/index.php prices " . $filePath . " > /dev/null 2>&1 &");
 
                                     $responseCode = 200;
                                     $arOutput = array('code' => 200, 'message' => 'Ok');

@@ -626,11 +626,11 @@ if (empty($chpy)) {
                         <div class="form_group_wrapper">
                             <div class="form__item item_name">
                                 <div class="field field_autocomplete" data-autocomplete="/ajax/autocomplete.php">
-                                    <input type="hidden" data-autocomplete-result  value='<?= ($arFilterValues["SEARCH"]) ? $arFilterValues["SEARCH"] : null ?>'>
+                                    <input type="hidden" data-autocomplete-result value='<?= ($arFilterValues["SEARCH"]) ? $arFilterValues["SEARCH"] : null ?>'>
                                     <label for="field-place"><?= Loc::getMessage('FILTER_PLACE') ?></label>
                                     <input class="field__input" type="text" name="name" placeholder="" data-autocomplete-field value='<?= ($arFilterValues["SEARCH_TEXT"]) ? $arFilterValues["SEARCH_TEXT"] : null ?>'>
                                     <div class="autocomplete-dropdown-wrap">
-                                        <div class="autocomplete-dropdown-search"> 
+                                        <div class="autocomplete-dropdown-search">
                                             <input class="field__input" id="field-place" type="text" name="name" placeholder="Регионы или локации" data-autocomplete-field-mobile>
                                         </div>
                                         <div class="autocomplete-dropdown" data-autocomplete-dropdown>
@@ -647,7 +647,7 @@ if (empty($chpy)) {
                                 <div class="form__row calendar" data-calendar="data-calendar" data-calendar-min="today" data-calendar-max="365">
                                     <div class="form__item">
                                         <div class="field field_icon field_calendar">
-                                        <label><?= Loc::getMessage('FILTER_FROM') ?></label>
+                                            <label><?= Loc::getMessage('FILTER_FROM') ?></label>
                                             <div class="field__input" data-calendar-label="data-calendar-label" data-date-from><?php if ($dateFrom): ?><?= $dateFrom ?><?php else: ?><span></span><?php endif; ?>
                                             </div>
                                         </div>
@@ -673,9 +673,9 @@ if (empty($chpy)) {
                                                         </li>
                                                         <? $k++; ?>
                                                     <? endforeach ?>
-                                                        
+
                                                     <? foreach ($arDates[1] as $key => $monthName) : ?>
-                                                    
+
                                                         <li class="list__item">
                                                             <button data-calendar-year="<?= $nextYear ?>" data-calendar-month-select="<?= $k ?>" type="button"><?= $monthName ?></button>
                                                             <? if ($key === 0): ?>
@@ -686,7 +686,7 @@ if (empty($chpy)) {
                                                     <? endforeach ?>
                                                 </ul>
                                             </div>
-                                                            
+
                                             <div class="calendar__navigation-item calendar__navigation-item_years">
                                                 <div class="calendar__navigation-label" data-calendar-navigation="data-calendar-navigation"><span><?= $currYear ?></span></div>
                                                 <ul class="list">
@@ -699,11 +699,11 @@ if (empty($chpy)) {
                                                 </ul>
                                             </div>
                                         </div>
-                                                            
+
                                         <div class="calendar__month">
                                             <input type="hidden" data-calendar-value="data-calendar-value">
                                         </div>
-                                                            
+
                                         <div class="calendar__dropdown-close">
                                             Закрыть
                                         </div>
@@ -783,7 +783,7 @@ if (empty($chpy)) {
                                             </div>
                                         </div>
                                     </div>
-                                    <button class="button button_primary" data-filter-set data-filter-catalog-front-btn="true"> 
+                                    <button class="button button_primary" data-filter-set data-filter-catalog-front-btn="true">
                                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                             <path fill-rule="evenodd" clip-rule="evenodd" d="M16.9697 16.9697C17.2626 16.6768 17.7374 16.6768 18.0303 16.9697L22.5303 21.4697C22.8232 21.7626 22.8232 22.2374 22.5303 22.5303C22.2374 22.8232 21.7626 22.8232 21.4697 22.5303L16.9697 18.0303C16.6768 17.7374 16.6768 17.2626 16.9697 16.9697Z" fill="white" />
                                             <path fill-rule="evenodd" clip-rule="evenodd" d="M1.25 11C1.25 5.61522 5.61522 1.25 11 1.25C16.3848 1.25 20.75 5.61522 20.75 11C20.75 16.3848 16.3848 20.75 11 20.75C5.61522 20.75 1.25 16.3848 1.25 11ZM11 2.75C6.44365 2.75 2.75 6.44365 2.75 11C2.75 15.5563 6.44365 19.25 11 19.25C15.5563 19.25 19.25 15.5563 19.25 11C19.25 6.44365 15.5563 2.75 11 2.75Z" fill="white" />
@@ -802,7 +802,7 @@ if (empty($chpy)) {
                         </div>
                     </form>
                 </div>
-            <?php else:?>
+            <?php else: ?>
                 <div class="catalog_filter">
                     <form class="form filters" id="form-catalog-filter-front">
                         <div class="form__group">
@@ -996,24 +996,24 @@ if (empty($chpy)) {
                         </div>
 
                     </form>
-                </div>   
-            <?php endif;?>
+                </div>
+            <?php endif; ?>
             <div class="catalog_sorter">
                 <div class="filter_btn">
                     <a class="button filter" href="#filters-modal" data-modal="data-modal">
                         <span>Фильтры</span>
                     </a>
                     <?php if (CSite::InDir('/map')): ?>
-                        <a href="/catalog/<?= ($_SERVER['QUERY_STRING'] !== '')? '?' . $_SERVER['QUERY_STRING'] : '';?>" class="button button_primary catalog__map-halfscreen link__to_catalog">
+                        <a href="/catalog/<?= ($_SERVER['QUERY_STRING'] !== '') ? '?' . $_SERVER['QUERY_STRING'] : ''; ?>" class="button button_primary catalog__map-halfscreen link__to_catalog">
                             <svg class="icon icon_arrow-text" viewbox="0 0 12 8" style="width: 1.2rem; height: 0.8rem;">
                                 <use xlink:href="#arrow-text" />
                             </svg>
                             <span>Перейти к списку</span>
                         </a>
-                    <?php endif;?>
+                    <?php endif; ?>
                 </div>
 
-                <div class="sort <?= (CSite::InDir('/map'))? 'hidden' : ''?>" >
+                <div class="sort <?= (CSite::InDir('/map')) ? 'hidden' : '' ?>">
                     <span>Сортировать по:</span>
                     <ul class="list">
                         <li class="list__item">
@@ -1130,7 +1130,7 @@ if (empty($chpy)) {
                 <a href="#" class="show-more-seo">Показать ещё</a>
             </div>
         <? } ?>
-    <? endif;?>
+    <? endif; ?>
 </main>
 
 <div class="modal modal_filters" id="filters-modal">
