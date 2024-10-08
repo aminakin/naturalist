@@ -110,6 +110,7 @@
   background-color: var(--color-btn);
   border: none;
   height: 40px;
+  font-weight: 400;
 }
 
 .impressions-slider .impressions-slider__more:hover {

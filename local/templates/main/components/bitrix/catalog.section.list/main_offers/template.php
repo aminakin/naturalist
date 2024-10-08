@@ -171,7 +171,7 @@ $reviewsDeclension = new Declension('отзыв', 'отзыва', 'отзыво�
                             <span><?= Loc::getMessage('PRICE_ONE_NIGHT') ?></span>
                         </div>
                     </div>
-                    <a class="button button_transparent" onclick="VK.Goal('customize_product')" href="<?= $arItem["SECTION_PAGE_URL"] ?>"><?= Loc::getMessage('FILTER_CHOOSE'); ?></a>
+                    <a class="button button_transparent" target="_blank" onclick="VK.Goal('customize_product')" href="<?= $arItem["SECTION_PAGE_URL"] ?>"><?= Loc::getMessage('FILTER_CHOOSE'); ?></a>
                 </div>
             <? endforeach; ?>
         <? else : ?>

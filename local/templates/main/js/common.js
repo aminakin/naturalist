@@ -360,7 +360,7 @@ var order = new Order();
 $(function () {
   $(document).on("click", "[data-add-basket]", function (e) {
     e.preventDefault();
-
+    window.preloader.show();
     var productId = $(this).data("id");
     var price = $(this).data("price");
     var guests = $(this).data("guests");
@@ -475,7 +475,7 @@ $(function () {
       success: function (a) {
         if (!a.ERROR) {
           if (a.RELOAD) {
-            element.removeClass("active");;
+            element.removeClass("active");
             element.removeAttr("data-favourite-remove");
             element.attr("data-favourite-add", "");
 
@@ -580,5 +580,16 @@ $(function () {
     evt.preventDefault();
     $(".cert-index__seo-text").addClass("show-all-seo");
     $(this).hide();
+  });
+
+  $("a").on("click", function () {
+    if (
+      !this.getAttribute("href").includes("#") &&
+      this.getAttribute("target") != "_blank"
+    ) {
+      setTimeout(() => {
+        window.preloader.show();
+      }, 1000);
+    }
   });
 });

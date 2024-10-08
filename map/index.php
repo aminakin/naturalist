@@ -12,13 +12,13 @@ $APPLICATION->IncludeComponent(
 		"SET_STATUS_404" => "Y",
 		"SHOW_404" => "Y",
 		"SEF_FOLDER" => "/map/",
-		"SEF_URL_TEMPLATES" => Array(
+		"SEF_URL_TEMPLATES" => array(
 			"section" => "#SECTION_CODE#/",
 			"detail" => "#SECTION_CODE#/#ELEMENT_CODE#/"
 		),
-		"VARIABLE_ALIASES" => Array(
-			"section" => Array(),
-			"detail" => Array(),
+		"VARIABLE_ALIASES" => array(
+			"section" => array(),
+			"detail" => array(),
 		),
 		"ITEMS_COUNT" => 10,
 		"DETAIL_ITEMS_COUNT" => 8,
@@ -29,18 +29,18 @@ $APPLICATION->IncludeComponent(
 ?>
 <div class="container">
 	<section class="cert-index__seo-text catalog_map">
-	    <?php
-	        $APPLICATION->IncludeComponent(
-	            "bitrix:main.include",
-	            "",
-	            Array(
-	                "AREA_FILE_SHOW" => "file", 
-	                "PATH" => '/include/home-seo-text.php',
-	                "EDIT_TEMPLATE" => ""
-	            )
-	        );
-	    ?>     
-	</section>	
+		<?php
+		$APPLICATION->IncludeComponent(
+			"bitrix:main.include",
+			"",
+			array(
+				"AREA_FILE_SHOW" => "file",
+				"PATH" => '/include/map-seo-text.php',
+				"EDIT_TEMPLATE" => ""
+			)
+		);
+		?>
+	</section>
 	<a href="#" class="show-more-seo">Раскрыть</a>
 </div>
 <?

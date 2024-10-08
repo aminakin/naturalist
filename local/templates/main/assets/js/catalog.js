@@ -17202,15 +17202,14 @@
           key: "handleHide",
           value: function handleHide() {
             var _this = this;
-            
 
-              document
-                .querySelectorAll(".catalog_map [data-calendar-label]")
-                .forEach(function (item) {
-                    if(item.innerText !== ''){
-                      item.previousElementSibling.style.bottom = "30px";
-                    }
-                });
+            document
+              .querySelectorAll(".catalog_map [data-calendar-label]")
+              .forEach(function (item) {
+                if (item.innerText !== "") {
+                  item.previousElementSibling.style.bottom = "30px";
+                }
+              });
 
             document.addEventListener("click", function (event) {
               if (
@@ -17239,7 +17238,7 @@
                 document
                   .querySelectorAll(".catalog_map [data-calendar-label]")
                   .forEach(function (item) {
-                      item.previousElementSibling.style.bottom = "30px";
+                    item.previousElementSibling.style.bottom = "30px";
                   });
               }
 
@@ -17255,12 +17254,14 @@
                 });
               }
             });
-            if(document.querySelector(".calendar__dropdown-close") != null) {
-              document.querySelector(".calendar__dropdown-close").addEventListener("click", function (event) {
-                _this.$elements.dropdown.forEach(function ($item) {
-                  $item.classList.remove("calendar__dropdown_show");
+            if (document.querySelector(".calendar__dropdown-close") != null) {
+              document
+                .querySelector(".calendar__dropdown-close")
+                .addEventListener("click", function (event) {
+                  _this.$elements.dropdown.forEach(function ($item) {
+                    $item.classList.remove("calendar__dropdown_show");
+                  });
                 });
-              });
             }
             window.addEventListener("resize", function () {
               // _this.$elements.dropdown.classList.remove('calendar__dropdown_show');
@@ -18020,7 +18021,7 @@
                   )
                   .concat(
                     data.price,
-                       '</span><span class="dot"></span><span>Цена за одну ночь </span></div></div><a class="button button_transparent" onclick="setLocalStorageCatalog(event);" href="'
+                    '</span><span class="dot"></span><span>Цена за одну ночь </span></div></div><a class="button button_transparent" onclick="setLocalStorageCatalog(event);" href="'
                   )
                   .concat(data.href, '">Выбрать</a>\n\t\t\t</div>\n\t\t');
               window.objectsGallery();
@@ -18053,21 +18054,20 @@
           {
             key: "handleCreateMarkersCenter",
             value: function handleCreateMarkersCenter(points) {
-
               let pointsCount = points.length;
               let lat = 0;
               let lon = 0;
-              points.forEach(function(point){
+              points.forEach(function (point) {
                 lat += parseInt(point[0]);
                 lon += parseInt(point[1]);
               });
 
-              let averageLat = lat/pointsCount;
-              let averageLon = lon/pointsCount;
+              let averageLat = lat / pointsCount;
+              let averageLon = lon / pointsCount;
 
               this.options.center = [averageLat, averageLon];
               return this.options.center;
-            }
+            },
           },
           {
             key: "handleCreateMarkers",
@@ -18078,11 +18078,10 @@
                 '<div class="object-placemark[if properties.active || properties.hover] object-placemark_active[endif]">$[properties.markerData.price]</div>'
               );
               var balloonLayout = ymaps.templateLayoutFactory.createClass(
-                '\n\t\t\t<div class="mini-balloon">\n\t\t\t\t<div class="mini-balloon__image" style="background-image:url($[properties.markerData.preview])"></div>\n\t\t\t\t<div class="mini-balloon__content">\n\t\t\t\t\t<div class="h6">$[properties.markerData.title]</div>\n\t\t\t\t\t<div class="score"><img src="'
-                  .concat(
-                    this.options.imageAssetsPath,
-                    'assets/img/star-score.svg" alt=""><span>$[properties.markerData.score]</span></div>\n\t\t\t\t\t<div class="area-info"><div><span>$[properties.markerData.price]</span><span class="dot"></span><span>Цена за одну ночь</span></div></div>\n\t\t\t\t</div>\n\t\t\t</div>\n\t\t'
-                  )
+                '\n\t\t\t<div class="mini-balloon">\n\t\t\t\t<div class="mini-balloon__image" style="background-image:url($[properties.markerData.preview])"></div>\n\t\t\t\t<div class="mini-balloon__content">\n\t\t\t\t\t<div class="h6">$[properties.markerData.title]</div>\n\t\t\t\t\t<div class="score"><img src="'.concat(
+                  this.options.imageAssetsPath,
+                  'assets/img/star-score.svg" alt=""><span>$[properties.markerData.score]</span></div>\n\t\t\t\t\t<div class="area-info"><div><span>$[properties.markerData.price]</span><span class="dot"></span><span>Цена за одну ночь</span></div></div>\n\t\t\t\t</div>\n\t\t\t</div>\n\t\t'
+                )
               );
               this.items.forEach(function (marker, index) {
                 _this.objects[index] = new ymaps.Placemark(
@@ -18204,7 +18203,6 @@
                     }
                   });
               });
-
             },
           },
           {
@@ -18293,18 +18291,17 @@
           {
             key: "handleInitMap",
             value: function handleInitMap() {
-              
               /*let urlParams = new URLSearchParams(window.location.search);
               urlParams.get('name');*/
 
               var urlParam = window.location.search;
               if (Array.from(urlParam)[0] === "?") {
                 let itemCoords = [];
-                this.items.forEach(function(item){
-                   itemCoords.push(item.coords);
+                this.items.forEach(function (item) {
+                  itemCoords.push(item.coords);
                 });
 
-                this.options.zoom = 6;
+                this.options.zoom = 7;
                 this.handleCreateMarkersCenter(itemCoords);
               }
 
@@ -18313,7 +18310,7 @@
                 {
                   center: this.options.center,
                   zoom: this.options.zoom,
-                  controls: ['fullscreenControl'],
+                  controls: ["fullscreenControl"],
                 },
                 {
                   minZoom: 5,
@@ -18367,7 +18364,7 @@
                   },
                 },
               });
-              
+
               this.map.controls.add(zoomControl);
               this.handleCreateClusters();
               this.handleCreateMarkers();
@@ -18422,10 +18419,10 @@
                 }
 
                 var mapCreate = function mapCreate() {
-                    var mapCreateTimeout = setTimeout(function () {
-                      if (!_this3.map) CatalogMap.handleCreateMap();
-                      clearTimeout(mapCreateTimeout);
-                    }, 0);
+                  var mapCreateTimeout = setTimeout(function () {
+                    if (!_this3.map) CatalogMap.handleCreateMap();
+                    clearTimeout(mapCreateTimeout);
+                  }, 0);
                 };
 
                 if (
@@ -18433,7 +18430,6 @@
                     "catalog__map_fullscreen"
                   )
                 ) {
-                  
                   var mapCreateTimeout = setTimeout(function () {
                     if (!_this3.map) CatalogMap.handleCreateMap();
                     clearTimeout(mapCreateTimeout);
@@ -18581,7 +18577,7 @@
                       .closest("[data-autocomplete]")
                       .classList.add(_this.classes.show);
                     // _this.elements.$root.classList.add(_this.classes.show);
-                      _this.elements.$fieldMobile.focus();
+                    _this.elements.$fieldMobile.focus();
 
                     return false;
                   }
@@ -18628,8 +18624,10 @@
                       );
                     });
 
-                    if($inputElement !== undefined) {
-                      $inputElement.closest("[data-autocomplete]").classList.add(_this.classes.show);
+                    if ($inputElement !== undefined) {
+                      $inputElement
+                        .closest("[data-autocomplete]")
+                        .classList.add(_this.classes.show);
                     }
                     // _this.elements.$root.classList.add(_this.classes.show);
                     _this.elements.$fieldMobile.focus();
@@ -18658,7 +18656,7 @@
               );
             });
 
-            if(_this2.elements.$fieldMobile !== null){
+            if (_this2.elements.$fieldMobile !== null) {
               _this2.elements.$fieldMobile.addEventListener(
                 "keyup",
                 debounce_default()(function (event) {
@@ -18668,7 +18666,7 @@
             }
 
             _this2.elements.$field.forEach(($item) => {
-              if($item.value !== ''){
+              if ($item.value !== "") {
                 $item.previousElementSibling.style.bottom = "30px";
               }
               $item.addEventListener("click", function (event) {
@@ -18676,7 +18674,7 @@
               });
             });
 
-            if(_this2.elements.$fieldMobile !== null){
+            if (_this2.elements.$fieldMobile !== null) {
               _this2.elements.$fieldMobile.addEventListener(
                 "click",
                 function (event) {
@@ -18738,7 +18736,7 @@
                 _this2.handleRequest(event.target.value, $item);
               });
             });
-            if(this.elements.$fieldMobile !== null){
+            if (this.elements.$fieldMobile !== null) {
               this.elements.$fieldMobile.addEventListener(
                 "focusin",
                 function (event) {

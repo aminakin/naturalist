@@ -596,6 +596,10 @@ if (!count($arPageSections)) {
 if (empty($chpy)) {
     $APPLICATION->AddHeadString('<link rel="canonical" href="' . HTTP_HOST . $APPLICATION->GetCurPage() . '">', true);
 }
+
+if ($chpy['UF_CANONICAL']) {
+    $APPLICATION->AddHeadString('<link rel="canonical" href="' . HTTP_HOST . $chpy['UF_CANONICAL'] . '">', true);
+}
 /**/
 ?>
 
@@ -1102,8 +1106,8 @@ if (empty($chpy)) {
     <?php if (CSite::InDir('/map') == false): ?>
         <section class="cert-index__seo-text">
             <div class="container">
-                <? if (!empty($arSeoImpressions) && reset($arSeoImpressions)['PREVIEW_TEXT'] != '') {
-                    echo reset($arSeoImpressions)['PREVIEW_TEXT'];
+                <? if (!empty($arSeoImpressions) && reset($arSeoImpressions)['DETAIL_TEXT'] != '') {
+                    echo reset($arSeoImpressions)['DETAIL_TEXT'];
                     $isSeoText = true;
                 } else if (empty($_GET)) {
                     $APPLICATION->IncludeComponent(

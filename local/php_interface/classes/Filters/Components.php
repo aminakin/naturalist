@@ -34,6 +34,7 @@ class Components
 
         return $chpyDataClass::query()
             ->addSelect('UF_SEO_TEXT')
+            ->addSelect('UF_CANONICAL')
             ->where('UF_NEW_URL', $filter)
             ?->fetch() ?? '';
     }

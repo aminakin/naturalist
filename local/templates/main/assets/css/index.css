@@ -2990,7 +2990,8 @@
     padding-top: 3.2rem;
   }
 
-  .objects__more a {
+  .objects__more a,
+  .objects .objects__more a {
     display: block;
   }
 }
@@ -3005,4 +3006,9 @@
 
 .b24-widget-button-wrapper.hide {
   display: none !important;
+}
+
+.house-type .swiper-slide svg {
+  width: 40px;
+  height: 40px;
 }

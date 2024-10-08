@@ -188,6 +188,7 @@ foreach ($arResult as $key => $value) {
                             </div>
 
                             <a class="button button_primary"
+                                target="_blank"
                                 onclick="VK.Goal('customize_product');"
                                 href="<?= $arSection["URL"] ?>">Выбрать</a>
                         </div>
@@ -372,6 +373,7 @@ foreach ($arResult as $key => $value) {
                                     </div>
 
                                     <a class="button button_primary"
+                                        target="_blank"
                                         onclick="VK.Goal('customize_product');"
                                         href="<?= $arSection["URL"] ?>">Выбрать</a>
                                 </div>
@@ -385,7 +387,7 @@ foreach ($arResult as $key => $value) {
 
     </div>
 
-    <div class="catalog__map <?= (CSite::InDir('/map'))? 'catalog__on_map': ''?>" data-map-overlay>
+    <div class="catalog__map <?= (CSite::InDir('/map')) ? 'catalog__on_map' : '' ?>" data-map-overlay>
         <div class="catalog__map-sticky">
             <div id="map"></div>
 
@@ -393,7 +395,7 @@ foreach ($arResult as $key => $value) {
                 <svg class="icon icon_fullscreen" viewbox="0 0 20 20" style="width: 2rem; height: 2rem;">
                     <use xlink:href="#fullscreen" />
                 </svg>
-            </button*/?>
+            </button*/ ?>
             <?php if (CSite::InDir('/map')): ?>
                 <a href="/catalog/" class="button button_primary catalog__map-halfscreen link__to_catalog">
                     <svg class="icon icon_arrow-text" viewbox="0 0 12 8" style="width: 1.2rem; height: 0.8rem;">
@@ -402,7 +404,7 @@ foreach ($arResult as $key => $value) {
                     <span>Перейти к списку</span>
                 </a>
                 <?/*a class="button button_primary  link_route" target="_blank"
-                    href="https://yandex.ru/maps/?mode=routes&rtext=" data-route="data-route">Маршрут</a*/?>
+                    href="https://yandex.ru/maps/?mode=routes&rtext=" data-route="data-route">Маршрут</a*/ ?>
             <?php endif; /*?>
                 <button class="button button_primary catalog__map-halfscreen" data-map-half type="button">
                     <svg class="icon icon_arrow-text" viewbox="0 0 12 8" style="width: 1.2rem; height: 0.8rem;">
@@ -410,7 +412,7 @@ foreach ($arResult as $key => $value) {
                     </svg>
                     <span>Перейти к списку</span>
                 </button>
-            <?php endif; */?>
+            <?php endif; */ ?>
             <div class="catalog__map-more" data-map-more-wrapper></div>
         </div>
     </div>

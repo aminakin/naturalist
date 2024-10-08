@@ -72,7 +72,7 @@ $(function () {
 
     location.href = url;
   });
-  
+
   // Фильтр - применение
   $(document).on("click", "[data-filter-set]", function (event) {
     event.preventDefault();
@@ -237,7 +237,7 @@ $(function () {
     if (Object.keys(params).length > 0) {
       window.preloader.show();
       var url = setUrlParams(params);
-      window.location = location.pathname + url;
+      window.location = "/catalog/" + url;
     }
   });
 
@@ -267,7 +267,12 @@ $(function () {
     ]);
 
     var url = setUrlParams(params);
-    window.location = url;
+
+    if (location.pathname.includes("catalog")) {
+      window.location = location.origin + "/catalog/";
+    } else {
+      window.location = location.origin + "/map/";
+    }
   });
 });
 

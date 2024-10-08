@@ -416,7 +416,7 @@ h1.page_title {
   }
 }
 
-.cert-index__seo-text{
+.cert-index__seo-text {
   padding-top: 7.6rem;
   font-size: 14px;
   line-height: 20px;
@@ -428,7 +428,7 @@ h1.page_title {
 }
 
 .show-all-seo {
-  -webkit-line-clamp: 9999;
+  -webkit-line-clamp: 9999 !important;
 }
 
 .show-more-seo {
@@ -442,7 +442,7 @@ h1.page_title {
   color: var(--color-black);
 }
 
-.show-more-seo:hover{
+.show-more-seo:hover {
   color: var(--color-orange);
 }
 
@@ -460,9 +460,8 @@ h1.page_title {
   }
 }
 
-
 @media (max-width: 768px) {
-  .cert-index__seo-text{
+  .cert-index__seo-text {
     padding-top: 40px;
   }
 }
