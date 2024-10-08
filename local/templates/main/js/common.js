@@ -390,6 +390,7 @@ $(function () {
               price: price,
               brand: externalService,
               quantity: 1,
+              variant: title,
             },
           ],
         },
@@ -585,7 +586,9 @@ $(function () {
   $("a").on("click", function () {
     if (
       !this.getAttribute("href").includes("#") &&
-      this.getAttribute("target") != "_blank"
+      this.getAttribute("target") != "_blank" &&
+      this.getAttribute("href") != "javascript: void(0)" &&
+      !$(this).parents("#bx-panel").length
     ) {
       setTimeout(() => {
         window.preloader.show();

@@ -72,6 +72,7 @@ if ($orderId) {
                         id: <?= $order['ITEMS'][0]['ITEM']['SECTION']['UF_EXTERNAL_ID'] ?>,
                         name: '<?= $order['ITEMS'][0]['ITEM']['SECTION']['NAME'] ?>',
                         price: <?= $order['FIELDS']['PRICE'] ?>,
+                        variant: $order['ITEMS'][0]['ITEM']['NAME'],
                         //category: window.orderData.sectionName,
                         quantity: 1,
                         position: 1,

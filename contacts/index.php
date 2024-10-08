@@ -172,7 +172,13 @@ global $arSettings;
                             </div>
                         </div>
                     </div>
-                    <img class="map-image" src="/img/map.jpg" width="632" alt="Карта">
+                    <div class="contacts__map">
+                        <div style="position:relative;overflow:hidden;">
+                            <a href="https://yandex.ru/maps/213/moscow/?utm_medium=mapframe&utm_source=maps" style="color:#eee;font-size:12px;position:absolute;top:0px;">Москва</a>
+                            <a href="https://yandex.ru/maps/213/moscow/house/astrakhanskiy_pereulok_5s3/Z04YcARpTUUGQFtvfXt2eX9qYg==/?indoorLevel=1&ll=37.639401%2C55.778396&utm_medium=mapframe&utm_source=maps&z=17.12" style="color:#eee;font-size:12px;position:absolute;top:14px;">Астраханский переулок, 5с3 — Яндекс Карты</a>
+                            <iframe src="https://yandex.ru/map-widget/v1/?indoorLevel=1&ll=37.639401%2C55.778396&mode=search&ol=geo&ouri=ymapsbm1%3A%2F%2Fgeo%3Fdata%3DCgg1NjczNjM1NhJL0KDQvtGB0YHQuNGPLCDQnNC-0YHQutCy0LAsINCQ0YHRgtGA0LDRhdCw0L3RgdC60LjQuSDQv9C10YDQtdGD0LvQvtC6LCA10YEzIgoNwI4WQhUUHV9C&z=17.12" width="100%" height="500" frameborder="1" allowfullscreen="true" style="position:relative;"></iframe>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

@@ -272,14 +272,17 @@ foreach ($arResult as $key => $value) {
                                 <label class="checkbox payment-item">
                                     <input type="radio" class="checkbox" value="<?= $paysystem['ID'] ?>" name="paysystem" <?= $key == 0 ? 'checked' : '' ?>>
                                     <span></span>
-                                    <yandex-pay-badge
-                                        merchant-id="d82873ad-61ce-4050-b05e-1f4599f0bb7b"
-                                        type="bnpl"
-                                        amount="<?= $arResult['finalPrice']['REAL_PRICE'] - Users::getInnerScore() ?>"
-                                        size="l"
-                                        variant="detailed"
-                                        theme="light"
-                                        color="primary" />
+                                    <div class="yabadge-wrap">
+                                        <yandex-pay-badge
+                                            merchant-id="d82873ad-61ce-4050-b05e-1f4599f0bb7b"
+                                            type="bnpl"
+                                            amount="<?= $arResult['finalPrice']['REAL_PRICE'] - Users::getInnerScore() ?>"
+                                            size="l"
+                                            variant="detailed"
+                                            theme="dark"
+                                            align="left"
+                                            color="transparent" />
+                                    </div>
                                 </label>
                             <? } ?>
                     <? }

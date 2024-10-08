@@ -171,6 +171,16 @@ h1.page_title {
   height: 24px;
 }
 
+.yabadge-wrap {
+  background-color: #494751;
+  padding: 5px;
+  border-radius: 5px;
+}
+
+.contacts__map {
+  margin-top: 30px;
+}
+
 @media (max-width: 1650px) {
   .catalog__map_fullscreen .link_route {
     left: calc((50% - var(--container-max-width) / 2) + 220px);

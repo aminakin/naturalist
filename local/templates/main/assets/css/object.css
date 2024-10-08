@@ -204,14 +204,14 @@
   align-items: center;
 }
 
-.object .favorite svg path{
-  stroke: var( --color-black)!important;
-  fill: var( --color-white)!important;
+.object .favorite svg path {
+  stroke: var(--color-black) !important;
+  fill: var(--color-white) !important;
 }
 
-.object .favorite.active svg path{
-  stroke: var( --color-orange)!important;
-  fill: var( --color-orange)!important;
+.object .favorite.active svg path {
+  stroke: var(--color-orange) !important;
+  fill: var(--color-orange) !important;
 }
 
 .object .tag {
@@ -358,14 +358,14 @@
   align-items: center;
 }
 
-.object-row .favorite svg path{
-  stroke: var( --color-black)!important;
-  fill: var( --color-white)!important;
+.object-row .favorite svg path {
+  stroke: var(--color-black) !important;
+  fill: var(--color-white) !important;
 }
 
-.object-row .favorite.active svg path{
-  stroke: var( --color-orange)!important;
-  fill: var( --color-orange)!important;
+.object-row .favorite.active svg path {
+  stroke: var(--color-orange) !important;
+  fill: var(--color-orange) !important;
 }
 
 .object-row .tag {
@@ -2306,6 +2306,9 @@
 
 .room__order .split-wrap {
   margin-top: 12px;
+  background-color: #494751;
+  padding: 5px;
+  border-radius: 5px;
 }
 
 .room__discount {
