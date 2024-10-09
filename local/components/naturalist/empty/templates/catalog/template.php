@@ -42,7 +42,7 @@ foreach ($arResult as $key => $value) {
                 $this->AddEditAction($arSection['ID'], $arSection['EDIT_LINK'], CIBlock::GetArrayByID($arSection["IBLOCK_ID"], "ELEMENT_EDIT"));
                 $this->AddDeleteAction($arSection['ID'], $arSection['DELETE_LINK'], CIBlock::GetArrayByID($arSection["IBLOCK_ID"], "ELEMENT_DELETE"), array("CONFIRM" => Loc::GetMessage('CT_BNL_ELEMENT_DELETE_CONFIRM')));
                 ?>
-                <div class="object-row" data-map-id="<?= $arSection["ID"] ?>" href="<?= $arSection["URL"] ?>"
+                <div class="object-row" target="_blank" data-map-id="<?= $arSection["ID"] ?>" href="<?= $arSection["URL"] ?>"
                     id="<?= $this->GetEditAreaId($arSection['ID']) ?>">
                     <div class="object-row__images">
                         <div class="swiper slider-gallery" data-slider-object="data-slider-object"
@@ -109,7 +109,7 @@ foreach ($arResult as $key => $value) {
 
                     <div class="object-row__content">
                         <div class="object-row__description">
-                            <a class="object-row__title h3"
+                            <a class="object-row__title h3" target="_blank"
                                 href="<?= $arSection["URL"] ?>"><?= $arSection["NAME"] ?></a>
 
                             <div class="area-info">
@@ -132,13 +132,13 @@ foreach ($arResult as $key => $value) {
                                 </div>
                             </div>
                             <div class="object-row__reviews">
-                                <a href="<?= $arSection["URL"] ?>#reviews-anchor"
+                                <a target="_blank" href="<?= $arSection["URL"] ?>#reviews-anchor"
                                     style="display: flex;font-size: 1.3rem;margin-left: 0;" class="score"
                                     data-score="[{&quot;label&quot;:&quot;Удобство расположения&quot;,&quot;value&quot;:<?= $arReviewsAvg[$arSection["ID"]]["criterials"][1][0] ?? '0.0' ?>},{&quot;label&quot;:&quot;Питание&quot;,&quot;value&quot;:<?= $arReviewsAvg[$arSection["ID"]]["criterials"][2][0] ?? '0.0' ?>},{&quot;label&quot;:&quot;Уют&quot;,&quot;value&quot;:<?= $arReviewsAvg[$arSection["ID"]]["criterials"][3][0] ?? '0.0' ?>},{&quot;label&quot;:&quot;Сервис&quot;,&quot;value&quot;:<?= $arReviewsAvg[$arSection["ID"]]["criterials"][4][0] ?? '0.0' ?>},{&quot;label&quot;:&quot;Чистота&quot;,&quot;value&quot;:<?= $arReviewsAvg[$arSection["ID"]]["criterials"][5][0] ?? '0.0' ?>},{&quot;label&quot;:&quot;Эстетика окружения&quot;,&quot;value&quot;:<?= $arReviewsAvg[$arSection["ID"]]["criterials"][6][0] ?? '0.0' ?>},{&quot;label&quot;:&quot;Разнообразие досуга&quot;,&quot;value&quot;:<?= $arReviewsAvg[$arSection["ID"]]["criterials"][7][0] ?? '0.0' ?>},{&quot;label&quot;:&quot;Соотношение цена/качество&quot;,&quot;value&quot;:<?= $arReviewsAvg[$arSection["ID"]]["criterials"][8][0] ?? '0.0' ?>}]">
                                     <img src="<?= SITE_TEMPLATE_PATH ?>/assets/img/score.svg" alt>
                                     <span><?= $arReviewsAvg[$arSection["ID"]]["avg"] ?? 0 ?></span>
                                 </a>
-                                <a href="<?= $arSection["URL"] ?>#reviews-anchor"><?= $arReviewsAvg[$arSection["ID"]]["count"] ?? 0 ?> <?= $reviewsDeclension->get($arReviewsAvg[$arSection["ID"]]["count"]) ?></a>
+                                <a target="_blank" href="<?= $arSection["URL"] ?>#reviews-anchor"><?= $arReviewsAvg[$arSection["ID"]]["count"] ?? 0 ?> <?= $reviewsDeclension->get($arReviewsAvg[$arSection["ID"]]["count"]) ?></a>
                             </div>
 
                             <?php if ($arSection["UF_FEATURES"]): ?>
@@ -302,7 +302,7 @@ foreach ($arResult as $key => $value) {
 
                             <div class="object-row__content">
                                 <div class="object-row__description">
-                                    <a class="object-row__title h3"
+                                    <a class="object-row__title h3" target="_blank"
                                         href="<?= $arSection["URL"] ?>"><?= $arSection["NAME"] ?></a>
 
                                     <div class="area-info">
@@ -318,13 +318,13 @@ foreach ($arResult as $key => $value) {
                                         </div>
                                     </div>
                                     <div class="object-row__reviews">
-                                        <a href="<?= $arSection["URL"] ?>#reviews-anchor"
+                                        <a target="_blank" href="<?= $arSection["URL"] ?>#reviews-anchor"
                                             style="display: flex;font-size: 1.3rem;margin-left: 0;" class="score"
                                             data-score="[{&quot;label&quot;:&quot;Удобство расположения&quot;,&quot;value&quot;:<?= $arReviewsAvg[$arSection["ID"]]["criterials"][1][0] ?? '0.0' ?>},{&quot;label&quot;:&quot;Питание&quot;,&quot;value&quot;:<?= $arReviewsAvg[$arSection["ID"]]["criterials"][2][0] ?? '0.0' ?>},{&quot;label&quot;:&quot;Уют&quot;,&quot;value&quot;:<?= $arReviewsAvg[$arSection["ID"]]["criterials"][3][0] ?? '0.0' ?>},{&quot;label&quot;:&quot;Сервис&quot;,&quot;value&quot;:<?= $arReviewsAvg[$arSection["ID"]]["criterials"][4][0] ?? '0.0' ?>},{&quot;label&quot;:&quot;Чистота&quot;,&quot;value&quot;:<?= $arReviewsAvg[$arSection["ID"]]["criterials"][5][0] ?? '0.0' ?>},{&quot;label&quot;:&quot;Эстетика окружения&quot;,&quot;value&quot;:<?= $arReviewsAvg[$arSection["ID"]]["criterials"][6][0] ?? '0.0' ?>},{&quot;label&quot;:&quot;Разнообразие досуга&quot;,&quot;value&quot;:<?= $arReviewsAvg[$arSection["ID"]]["criterials"][7][0] ?? '0.0' ?>},{&quot;label&quot;:&quot;Соотношение цена/качество&quot;,&quot;value&quot;:<?= $arReviewsAvg[$arSection["ID"]]["criterials"][8][0] ?? '0.0' ?>}]">
                                             <img src="<?= SITE_TEMPLATE_PATH ?>/assets/img/score.svg" alt>
                                             <span><?= $arReviewsAvg[$arSection["ID"]]["avg"] ?? 0 ?></span>
                                         </a>
-                                        <a href="<?= $arSection["URL"] ?>#reviews-anchor"><?= $arReviewsAvg[$arSection["ID"]]["count"] ?? 0 ?> <?= $reviewsDeclension->get($arReviewsAvg[$arSection["ID"]]["count"]) ?></a>
+                                        <a target="_blank" href="<?= $arSection["URL"] ?>#reviews-anchor"><?= $arReviewsAvg[$arSection["ID"]]["count"] ?? 0 ?> <?= $reviewsDeclension->get($arReviewsAvg[$arSection["ID"]]["count"]) ?></a>
                                     </div>
 
                                     <?php if ($arSection["UF_FEATURES"]): ?>

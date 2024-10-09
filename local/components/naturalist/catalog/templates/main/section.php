@@ -489,6 +489,13 @@ $houseTypes = $houseTypesDataClass::query()
     ->setOrder(['UF_SORT' => 'ASC'])
     ?->fetchAll();
 
+// Водоёмы
+$waterDataClass = HighloadBlockTable::compileEntity(WATER_HL_ENTITY)->getDataClass();
+$water = $waterDataClass::query()
+    ->addSelect('*')
+    ->setOrder(['UF_SORT' => 'ASC'])
+    ?->fetchAll();
+
 // Варианты отдыха
 $restVariantsDataClass = HighloadBlockTable::compileEntity(REST_VARS_HL_ENTITY)->getDataClass();
 $restVariants = $restVariantsDataClass::query()
@@ -1169,6 +1176,8 @@ if ($chpy['UF_CANONICAL']) {
                 "arFilterRestVariants" => $arFilterRestVariants,
                 "objectComforts" => $objectComforts,
                 "arFilterObjectComforts" => $arFilterObjectComforts,
+                "water" => $water,
+                "arFilterWater" => $arFilterWater,
             )
         );
         ?>

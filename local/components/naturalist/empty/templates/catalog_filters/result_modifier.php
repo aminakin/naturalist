@@ -25,4 +25,6 @@ $arResult = array(
     "arFilterRestVariants" => $arParams['arFilterRestVariants'],
     "objectComforts" => $arParams['objectComforts'],
     "arFilterObjectComforts" => $arParams['arFilterObjectComforts'],
+    "water" => $arParams['water'],
+    "arFilterWater" => $arParams['arFilterWater'],
 );

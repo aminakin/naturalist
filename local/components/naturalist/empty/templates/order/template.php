@@ -279,7 +279,7 @@ foreach ($arResult as $key => $value) {
                                             amount="<?= $arResult['finalPrice']['REAL_PRICE'] - Users::getInnerScore() ?>"
                                             size="l"
                                             variant="detailed"
-                                            theme="dark"
+                                            theme="light"
                                             align="left"
                                             color="transparent" />
                                     </div>

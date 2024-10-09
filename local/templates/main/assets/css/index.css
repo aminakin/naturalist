@@ -1836,6 +1836,10 @@
   font-weight: 400;
 }
 
+.main-form .form__item .button:disabled {
+  background-color: transparent;
+}
+
 .main-form .form__item .booking-mini__dropdown {
   width: calc(200% + 1rem);
 }

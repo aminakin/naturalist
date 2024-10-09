@@ -225,6 +225,24 @@ foreach ($arResult as $key => $value) {
                         </div>
                     </div>
                 <? endif; ?>
+
+                <? if ($water): ?>
+                    <div class="form__dropdown form__dropdown_show" style="display: none">
+                        <div class="form__dropdown-heading h6">Водоёмы</div>
+                        <div class="form__dropdown-body">
+                            <ul class="list list_checkboxes">
+                                <? foreach ($water as $oneWater) : ?>
+                                    <li class="list__item">
+                                        <label class="checkbox">
+                                            <input type="checkbox" name="water" value="<?= $oneWater["ID"] ?>"
+                                                <? if ($arFilterWater && in_array($oneWater["ID"], $arFilterWater)) : ?>checked<? endif; ?>><span><?= $oneWater["UF_NAME"] ?></span>
+                                        </label>
+                                    </li>
+                                <? endforeach; ?>
+                            </ul>
+                        </div>
+                    </div>
+                <? endif; ?>
             </div>
 
             <div class="filters-attrs__block">

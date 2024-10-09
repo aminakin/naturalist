@@ -98,6 +98,28 @@ $(function () {
       delete params["types"];
     }
 
+    var name = $("input[data-autocomplete-result]", parentFrom).val()
+      ? $("input[data-autocomplete-result]", parentFrom).val()
+      : $('input[name="name"]', parentFrom).val();
+    if (name) {
+      params["name"] = name;
+    } else {
+      delete params["name"];
+    }
+
+    if ($('input[name="water"]:checked', parentFrom).length > 0) {
+      var arWater = [];
+      $('input[name="water"]:checked', parentFrom).each(function (
+        indx,
+        element
+      ) {
+        arWater.push($(element).val());
+      });
+      params["water"] = arWater.join(",");
+    } else {
+      delete params["water"];
+    }
+
     if ($('input[name="services"]:checked', parentFrom).length > 0) {
       var arServices = [];
       $('input[name="services"]:checked', parentFrom).each(function (
@@ -124,6 +146,32 @@ $(function () {
       delete params["food"];
     }
 
+    if ($('input[name="restvariants"]:checked', parentFrom).length > 0) {
+      var arRestvariants = [];
+      $('input[name="restvariants"]:checked', parentFrom).each(function (
+        indx,
+        element
+      ) {
+        arRestvariants.push($(element).val());
+      });
+      params["restvariants"] = arRestvariants.join(",");
+    } else {
+      delete params["restvariants"];
+    }
+
+    if ($('input[name="objectcomforts"]:checked', parentFrom).length > 0) {
+      var arObjectcomforts = [];
+      $('input[name="objectcomforts"]:checked', parentFrom).each(function (
+        indx,
+        element
+      ) {
+        arObjectcomforts.push($(element).val());
+      });
+      params["objectcomforts"] = arObjectcomforts.join(",");
+    } else {
+      delete params["objectcomforts"];
+    }
+
     if ($('input[name="features"]:checked', parentFrom).length > 0) {
       var arFeatures = [];
       $('input[name="features"]:checked', parentFrom).each(function (
@@ -148,41 +196,6 @@ $(function () {
       params["housetypes"] = arHousetypes.join(",");
     } else {
       delete params["housetypes"];
-    }
-
-    if ($('input[name="restvariants"]:checked', parentFrom).length > 0) {
-      var arHousetypes = [];
-      $('input[name="restvariants"]:checked', parentFrom).each(function (
-        indx,
-        element
-      ) {
-        arHousetypes.push($(element).val());
-      });
-      params["restvariants"] = arHousetypes.join(",");
-    } else {
-      delete params["restvariants"];
-    }
-
-    if ($('input[name="objectcomforts"]:checked', parentFrom).length > 0) {
-      var arHousetypes = [];
-      $('input[name="objectcomforts"]:checked', parentFrom).each(function (
-        indx,
-        element
-      ) {
-        arHousetypes.push($(element).val());
-      });
-      params["objectcomforts"] = arHousetypes.join(",");
-    } else {
-      delete params["objectcomforts"];
-    }
-
-    var name = $("input[data-autocomplete-result]", parentFrom).val()
-      ? $("input[data-autocomplete-result]", parentFrom).val()
-      : $('input[name="name"]', parentFrom).val();
-    if (name) {
-      params["name"] = name;
-    } else {
-      delete params["name"];
     }
 
     var dateFrom = $("[data-date-from]", parentFrom).text();
@@ -234,10 +247,16 @@ $(function () {
 
     deleteUrlParams(params, ["page"]);
 
+    console.log(params);
+
     if (Object.keys(params).length > 0) {
       window.preloader.show();
       var url = setUrlParams(params);
-      window.location = "/catalog/" + url;
+      if (location.pathname == "/map/") {
+        window.location = location.pathname + url;
+      } else {
+        window.location = "/catalog/" + url;
+      }
     }
   });
 

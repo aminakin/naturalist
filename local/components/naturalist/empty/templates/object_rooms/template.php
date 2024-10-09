@@ -217,8 +217,8 @@ foreach ($arParams['VARS'] as $key => $value) {
                                                 amount="<?= $elementPrice - Users::getInnerScore() ?>"
                                                 size="l"
                                                 variant="detailed"
-                                                theme="dark"
-                                                align="center"
+                                                theme="light"
+                                                align="left"
                                                 color="transparent" />
                                         </div>
                                     </div>
@@ -373,8 +373,8 @@ foreach ($arParams['VARS'] as $key => $value) {
                                                     amount="<?= $elementPrice - Users::getInnerScore() ?>"
                                                     size="l"
                                                     variant="detailed"
-                                                    theme="dark"
-                                                    align="center"
+                                                    theme="light"
+                                                    align="left"
                                                     color="transparent" />
                                             </div>
                                         </div>
