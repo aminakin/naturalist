@@ -71,10 +71,20 @@ $(function () {
 
   if (window.innerWidth < 450) {
     $(".object[href]").on("click", function (evt) {
-      if ($(evt.target).parent().hasClass("favorite")) {
+      if (
+        $(evt.target).parents(".favorite").length ||
+        $(evt.target).hasClass("favorite")
+      ) {
+        console.log($(evt.target).parent());
         return;
       }
-      location.href = $(this).attr("href");
+      evt.preventDefault();
+      var n = document.createElement("a");
+      (n.href = $(this).attr("href")),
+        (n.target = "_blank"),
+        (n.rel = "noopener"),
+        n.click(),
+        n.remove();
     });
   }
 });
