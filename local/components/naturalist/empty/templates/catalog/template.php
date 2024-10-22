@@ -13,6 +13,16 @@ foreach ($arResult as $key => $value) {
     ${$key} = $value;
 }
 ?>
+
+<div>
+    <? foreach ($filterData as $filterDatum) { ?>
+        <div class="object-row__cert-price">
+            <span><?= $filterDatum['NAME']?></span>
+            <span></span>
+        </div>
+    <? } ?>
+
+</div>
 <div class="catalog">
 
     <div class="catalog__objects" data-catalog-container>

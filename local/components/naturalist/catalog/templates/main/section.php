@@ -1069,6 +1069,53 @@ if ($chpy['UF_CANONICAL']) {
     </section>
     <!-- section-->
 
+
+    <?ob_start();?>
+    <div class="modal modal_filters" id="filters-modal">
+        <div class="modal__container">
+            <?
+            $filterData = $APPLICATION->IncludeComponent(
+                "naturalist:empty",
+                "catalog_filters",
+                array(
+                    "arFilterValues" => $arFilterValues,
+                    "dateFrom" => $dateFrom,
+                    "dateTo" => $dateTo,
+                    "arDates" => $arDates,
+                    "currMonthName" => $currMonthName,
+                    "currYear" => $currYear,
+                    "nextYear" => $nextYear,
+                    "guests" => $guests,
+                    "children" => $children,
+                    "guestsDeclension" => $guestsDeclension,
+                    "arChildrenAge" => $arChildrenAge,
+                    "arHLTypes" => $arHLTypes,
+                    "arFilterTypes" => $arFilterTypes,
+                    "arServices" => $arServices,
+                    "arHLFood" => $arHLFood,
+                    "arFilterFood" => $arFilterFood,
+                    "arHLFeatures" => $arHLFeatures,
+                    "arFilterFeatures" => $arFilterFeatures,
+                    "arFilterServices" => $arFilterServices,
+                    "houseTypes" => $houseTypes,
+                    "arFilterHouseTypes" => $arFilterHousetypes,
+                    "restVariants" => $restVariants,
+                    "arFilterRestVariants" => $arFilterRestVariants,
+                    "objectComforts" => $objectComforts,
+                    "arFilterObjectComforts" => $arFilterObjectComforts,
+                    "water" => $water,
+                    "arFilterWater" => $arFilterWater,
+                )
+            );
+            ?>
+        </div>
+    </div>
+    <?
+    $content = ob_get_contents();
+    ob_end_clean();
+    ?>
+    <?$APPLICATION->AddViewContent("filters-modal", $content); ?>
+
     <section class="section section_catalog">
         <div class="container">
             <?
@@ -1104,6 +1151,7 @@ if ($chpy['UF_CANONICAL']) {
                     "guestsDeclension" => $guestsDeclension,
                     "arChildrenAge" => $arChildrenAge,
                     "itemsCount" => $arParams["ITEMS_COUNT"],
+                    'filterData' => $filterData,
                 )
             );
             ?>
@@ -1144,45 +1192,7 @@ if ($chpy['UF_CANONICAL']) {
     <? endif; ?>
 </main>
 
-<div class="modal modal_filters" id="filters-modal">
-    <div class="modal__container">
-        <?
-        $APPLICATION->IncludeComponent(
-            "naturalist:empty",
-            "catalog_filters",
-            array(
-                "arFilterValues" => $arFilterValues,
-                "dateFrom" => $dateFrom,
-                "dateTo" => $dateTo,
-                "arDates" => $arDates,
-                "currMonthName" => $currMonthName,
-                "currYear" => $currYear,
-                "nextYear" => $nextYear,
-                "guests" => $guests,
-                "children" => $children,
-                "guestsDeclension" => $guestsDeclension,
-                "arChildrenAge" => $arChildrenAge,
-                "arHLTypes" => $arHLTypes,
-                "arFilterTypes" => $arFilterTypes,
-                "arServices" => $arServices,
-                "arHLFood" => $arHLFood,
-                "arFilterFood" => $arFilterFood,
-                "arHLFeatures" => $arHLFeatures,
-                "arFilterFeatures" => $arFilterFeatures,
-                "arFilterServices" => $arFilterServices,
-                "houseTypes" => $houseTypes,
-                "arFilterHouseTypes" => $arFilterHousetypes,
-                "restVariants" => $restVariants,
-                "arFilterRestVariants" => $arFilterRestVariants,
-                "objectComforts" => $objectComforts,
-                "arFilterObjectComforts" => $arFilterObjectComforts,
-                "water" => $water,
-                "arFilterWater" => $arFilterWater,
-            )
-        );
-        ?>
-    </div>
-</div>
+<?$APPLICATION->ShowViewContent('filters-modal');?>
 
 <?
 $APPLICATION->IncludeComponent(

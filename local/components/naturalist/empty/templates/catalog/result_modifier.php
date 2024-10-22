@@ -36,6 +36,7 @@ $arResult = array(
     "guestsDeclension" => $arParams['guestsDeclension'],
     "arChildrenAge" => $arParams['arChildrenAge'],
     "itemsCount" => $arParams["itemsCount"],
+    "filterData" => $arParams["filterData"],
 );
 
 
