@@ -557,13 +557,23 @@ class Bnovo
                 ),
                 false,
                 false,
-                array("IBLOCK_ID", "ID", "NAME", "PROPERTY_CATEGORY", "PROPERTY_TARIFF", "PROPERTY_EXTERNAL_ID")
+                array("IBLOCK_ID", "ID", "NAME", "PROPERTY_CATEGORY", "PROPERTY_TARIFF", "PROPERTY_EXTERNAL_ID", "PROPERTY_MANUAL_TARIF")
             );
             $arElementsFilterred = array();
             while ($arElement = $rsElements->Fetch()) {
-                foreach ($arElement["PROPERTY_CATEGORY_VALUE"] as $categoryId) {
-                    foreach ($arTariffsIDs as $tariffId) {
-                        $arElementsFilterred[$tariffId][$categoryId][] = $arElement["ID"];
+                if ($arElement['PROPERTY_MANUAL_TARIF_VALUE'] == 'Y') {
+                    foreach ($arElement["PROPERTY_CATEGORY_VALUE"] as $categoryId) {
+                        foreach ($arTariffsIDs as $tariffId) {
+                            if (in_array($tariffId, $arElement['PROPERTY_TARIFF_VALUE'])) {
+                                $arElementsFilterred[$tariffId][$categoryId][] = $arElement["ID"];
+                            }
+                        }
+                    }
+                } else {
+                    foreach ($arElement["PROPERTY_CATEGORY_VALUE"] as $categoryId) {
+                        foreach ($arTariffsIDs as $tariffId) {
+                            $arElementsFilterred[$tariffId][$categoryId][] = $arElement["ID"];
+                        }
                     }
                 }
             }
@@ -1657,7 +1667,7 @@ class Bnovo
                     CIBlockElement::SetPropertyValuesEx($elementId, CATALOG_IBLOCK_ID, array(
                         // "PHOTOS" => $arElementImages,
                         "CATEGORY" => $elementIdCat,
-                        "TARIFF" => $tariffsIds,
+                        // "TARIFF" => $tariffsIds,
                         // "FEATURES" => $arAmenities,
                         "PARENT_ID" => $arRoom["parent_id"],
                         "SQUARE" => $arRoom["amenities"]["1"]["value"],
