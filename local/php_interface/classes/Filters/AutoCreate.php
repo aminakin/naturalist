@@ -1003,7 +1003,7 @@ class AutoCreate
         self::createAccomodationAndRegionAndFilterLinks();
         self::createAccomodationAndWaterLinks();
         self::createAccomodationAndWaterAndFilterLinks();
-        self::createWaterAndFilterLinks();
+        // self::createWaterAndFilterLinks();
         self::createSitemapLinks();
         self::createSelectionLinks();
         self::createAccomodationAndSelectionLinks();
