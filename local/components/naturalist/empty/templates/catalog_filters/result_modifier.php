@@ -26,5 +26,7 @@ $arResult = array(
     "objectComforts" => $arParams['objectComforts'],
     "arFilterObjectComforts" => $arParams['arFilterObjectComforts'],
     "water" => $arParams['water'],
-    "arFilterWater" => $arParams['arFilterWater'],
+    "arFilterWater" => $$arParams['arFilterWater'],
+    "maxPrice" => $arParams['maxPrice'],
+    "minPrice" => $arParams['minPrice'],
 );

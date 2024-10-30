@@ -13343,6 +13343,20 @@
     }
     /* OBJECT
    -------------------------------------------------- */
+    const houseType = document.querySelector(
+      ".house-type__wrapper .swiper-container"
+    );
+
+    if (houseType !== null) {
+      new core(houseType, {
+        slidesPerView: "auto",
+        loop: false,
+        navigation: {
+          nextEl: ".house-type .swiper-button-next",
+          prevEl: ".house-type .swiper-button-prev",
+        },
+      });
+    }
 
     window.objectsGallery = function () {
       var $object = document.querySelectorAll(
@@ -18392,13 +18406,9 @@
                   .querySelector(".catalog")
                   .getBoundingClientRect();
                 _this3.$elements.overlay.style.marginRight = "".concat(
-                  ((document.body.clientWidth -
-                    overlaySizes.left -
-                    overlaySizes.width) /
-                    remSize()) *
-                    -1,
-                  "rem"
+                  ((document.body.clientWidth - overlaySizes.left - overlaySizes.width) / remSize()) * -1, "rem"
                 );
+                
                 var urlParam = window.location.search;
 
                 if (Array.from(urlParam)[0] === "?") {

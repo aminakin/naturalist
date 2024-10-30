@@ -3438,8 +3438,7 @@ img.lazy.loaded {
 }
 
 .modal__container {
-  background: #fbeed7;
-  background: var(--color-beige-light);
+  background: #F4E6CB;
   border-radius: 0.2rem;
   -webkit-box-shadow: 0 0.8rem 2.2rem rgba(0, 0, 0, 0.15);
   box-shadow: 0 0.8rem 2.2rem rgba(0, 0, 0, 0.15);
@@ -4440,7 +4439,7 @@ img.lazy.loaded {
 
 .crumbs__list .list__item:after {
   content: "→";
-  margin: 0 0.4rem;
+  margin: 0 8px;
 }
 
 .crumbs__list .list__item:last-child:after {

@@ -185,6 +185,24 @@ foreach ($arResult as $key => $value) {
         <div class="filters_attrs">
             <div class="filters-attrs__block">
                 <div class="form__dropdown form__dropdown_show">
+                    <div class="price-filter">
+                        <div class="form__dropdown-heading h6">Цена</div>
+                        <div class="price-inputs__wrap">
+                            <div class="price-input__wrap">
+                                <label for="min-price">от</label>
+                                <input type="text" class="min-price" data-price-value="<?= $minPrice ?>" name="min-price" value="<?= $minPrice ?>" size="5">
+                                <span>&nbsp;₽</span>
+                            </div>
+                            <div class="price-input__wrap">
+                                <label for="max-price">до</label>
+                                <input type="text" class="max-price" data-price-value="<?= $maxPrice ?>" name="max-price" value="<?= $maxPrice ?>" size="5">
+                                <span>&nbsp;₽</span>
+                            </div>
+                        </div>
+                        <div class="slider-range"></div>
+                    </div>
+                </div>
+                <div class="form__dropdown form__dropdown_show">
                     <div class="form__dropdown-heading h6">Тип размещения</div>
                     <div class="form__dropdown-body">
                         <ul class="list list_checkboxes">

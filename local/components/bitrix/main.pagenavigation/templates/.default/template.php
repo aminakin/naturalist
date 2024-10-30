@@ -26,6 +26,9 @@ else
 ?>
 
 <div class="bx-pagination <?=$colorScheme?>">
+<?if($arResult["RECORD_COUNT"] > 0):?>
+	<div class="bx-pagination-total-block"><?=$arParams["TITLE"]." ".$arResult["FIRST_RECORD"]." &ndash; ".$arResult["LAST_RECORD"]?><?if($arParams["SHOW_COUNT"]) echo " ".GetMessage("round_nav_records_of")." ".$arResult["RECORD_COUNT"];?></div>
+<?endif;?>
 	<div class="bx-pagination-container">
 		<ul>
 <?if($arResult["REVERSED_PAGES"] === true):?>

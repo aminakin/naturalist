@@ -39,6 +39,7 @@ use Naturalist\Users;
         })(window, document, 'script', 'dataLayer', 'GTM-5762ML9');
     </script>
     <!-- End Google Tag Manager -->
+    
 
     <meta charset="<?= LANG_CHARSET ?>">
     <meta http-equiv="X-UA-Compatible" content="IE=Edge">
@@ -100,7 +101,7 @@ use Naturalist\Users;
     <? if (CSite::InDir('/objects')) : ?>
         <link rel="stylesheet" href="<?= SITE_TEMPLATE_PATH ?>/assets/css/add_object.css?v=<?= filemtime($_SERVER['DOCUMENT_ROOT'] . SITE_TEMPLATE_PATH . '/assets/css/add_object.css'); ?>">
     <? endif; ?>
-
+    <link rel="stylesheet" href="<?= SITE_TEMPLATE_PATH ?>/assets/css/jquery-ui.min.css?v=<?= filemtime($_SERVER['DOCUMENT_ROOT'] . SITE_TEMPLATE_PATH . '/assets/css/jquery-ui.min.css'); ?>">
     <link rel="stylesheet" href="<?= SITE_TEMPLATE_PATH ?>/assets/css/custom.css?v=<?= filemtime($_SERVER['DOCUMENT_ROOT'] . SITE_TEMPLATE_PATH . '/assets/css/custom.css'); ?>">
 
     <? if (CSite::InDir('/promo')) : ?>
@@ -206,16 +207,12 @@ use Naturalist\Users;
             <div><img src="https://mc.yandex.ru/watch/91071014" style="position:absolute; left:-9999px;" alt="" /></div>
         </noscript>
         <!-- /Yandex.Metrika counter -->
-
-
-
     <?  }
     ?>
-
     <?/*<script src="https://dmp.one/sync?stock_key=4dce2e8f5fdd1727a46278cb20b97261" async charset="UTF-8"></script>*/ ?>
 </head>
 
-<body class=" <?php if (CSite::InDir('/map')) : ?>body__on_map<?php endif; ?>">
+<body class="<?php if (CSite::InDir('/map')) : ?>body__on_map<?php endif; ?>">
     <!-- Google Tag Manager (noscript) -->
     <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5762ML9" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <!-- End Google Tag Manager (noscript) -->

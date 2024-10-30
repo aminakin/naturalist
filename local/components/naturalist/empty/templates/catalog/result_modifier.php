@@ -5,8 +5,6 @@ use Naturalist\Morpher;
 use Naturalist\Products;
 use Naturalist\Regions;
 use Naturalist\Utils;
-use Bitrix\Main\Data\Cache;
-use Bitrix\Main\Application;
 
 $arResult = array(
     "sortBy" => $arParams['sortBy'],
@@ -37,8 +35,8 @@ $arResult = array(
     "arChildrenAge" => $arParams['arChildrenAge'],
     "itemsCount" => $arParams["itemsCount"],
     "filterData" => $arParams["filterData"],
+    "arHouseTypes" => $houseTypeData,
 );
-
 
 // Выборка по наиболее близким координатам
 if ($arResult['arSearchedRegions']) {

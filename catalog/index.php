@@ -19,7 +19,7 @@ $APPLICATION->IncludeComponent(
 			"section" => Array(),
 			"detail" => Array(),
 		),
-		"ITEMS_COUNT" => 10,
+		"ITEMS_COUNT" => 6,
 		"DETAIL_ITEMS_COUNT" => 8,
 		"DETAIL_REVIEWS_COUNT" => 3
 	)

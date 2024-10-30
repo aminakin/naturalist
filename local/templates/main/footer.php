@@ -133,6 +133,17 @@ global $arSettings, $currPage;
         <? endif; ?>
     </div>
 </footer>
+<? if($APPLICATION->GetCurPage() == '/catalog/'):?>   
+        </div>
+    <div class="catalog__map" data-map-overlay>
+        <div class="catalog__map-sticky">
+            <div id="map"></div>
+            <div class="catalog__map-more" data-map-more-wrapper></div>
+        </div>
+    </div>
+</div>
+<? endif;?>
+
 <div class="main-form__shadow"></div>
 <!-- footer-->
 </div>
@@ -427,6 +438,7 @@ global $arSettings, $currPage;
 </svg>
 
 <!-- JS-->
+
 <script defer src="<?= SITE_TEMPLATE_PATH ?>/js/forIE.min.js?v=1666936088452"></script>
 <script defer src="<?= SITE_TEMPLATE_PATH ?>/assets/js/app.js?v=<?= filemtime($_SERVER["DOCUMENT_ROOT"] . '/' . SITE_TEMPLATE_PATH . '/assets/js/app.js') ?>"></script>
 <? if (CSite::InDir('/index.php') || CSite::InDir('/certificates')) : ?>
@@ -466,7 +478,7 @@ global $arSettings, $currPage;
 <? if (CSite::InDir('/contacts')) : ?>
     <script defer src="<?= SITE_TEMPLATE_PATH ?>/assets/js/contacts.js?v=<?= filemtime($_SERVER["DOCUMENT_ROOT"] . '/' . SITE_TEMPLATE_PATH . '/assets/js/contacts.js') ?>"></script>
 <? endif; ?>
-
+<script src="<?= SITE_TEMPLATE_PATH ?>/assets/js/jquery-ui.js?v=<?= filemtime($_SERVER["DOCUMENT_ROOT"] . '/' . SITE_TEMPLATE_PATH . '/assets/js/jquery-ui.js') ?>"></script>
 <script>
     const formsValidate = [
         ...[{
@@ -707,8 +719,6 @@ global $arSettings, $currPage;
         }
     </style>
 <? endif; ?>
-
-
 
 <script>
     (function(w, d, u) {

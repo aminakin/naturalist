@@ -85,6 +85,9 @@ $(function () {
 
     var params = getUrlParams();
 
+    params['maxPrice'] = $(".max-price").val();
+    params['mimPrice'] = $(".min-price").val();
+
     if ($('input[name="type"]:checked', parentFrom).length > 0) {
       var arTypes = [];
       $('input[name="type"]:checked', parentFrom).each(function (
@@ -551,4 +554,46 @@ $(function () {
     var reviewId = $(this).data("id");
     reviews.deleteLike(reviewId);
   });
+});
+
+$(document).ready(function () {
+  
+  
+  let minPrice = $(".min-price").data("price-value");
+  let maxPrice = $(".max-price").data("price-value");
+  console.log(minPrice);
+  $(".slider-range").slider({
+    range: true,
+    values: [minPrice, maxPrice],
+    min: minPrice,
+    max: maxPrice,
+    slide: function (event, ui) {
+      $('.min-price').val(ui.values[0]);
+      $('.max-price').val(ui.values[1]);
+    }
+  });
+  $(".slider-range").on("slidechange", function (event, ui) {
+    let minPrice = ui.values[0];
+    let maxPrice = ui.values[1];
+  });
+
+  $('.button.price').on("click", function () {
+    $(this).toggleClass('active');
+    if($(this).hasClass('active')){
+      $('.catalog_sorter .price-filter').css('display', 'block');
+    }else{
+      $('.catalog_sorter .price-filter').css('display', 'none');
+    }
+  }); 
+
+  $('.sort__btn').on("click", function () {
+    $(this).toggleClass('active');
+    if($(this).hasClass('active')){
+      $('.sort__list').css('display', 'block');
+    }else{
+      $('.sort__list').css('display', 'none');
+    }
+  });
+
+  $('.sort__btn span').html($('span.list__link span').html());
 });
