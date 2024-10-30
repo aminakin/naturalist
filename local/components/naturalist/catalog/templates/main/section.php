@@ -258,6 +258,13 @@ if (!empty($_GET['selection']) && isset($_GET['selection'])) {
     $arFilter["UF_IMPRESSIONS"] = $arFilterImpressions;
 }
 
+// Price
+if (!empty($_GET['mimPrice']) && isset($_GET['mimPrice']) && !empty($_GET['maxPrice']) && isset($_GET['maxPrice'])) {
+    //array_push($arFilter, array("LOGIC" => "AND", array(">=UF_MIN_PRICE" => $_GET['maxPrice']), array("<=UF_MIN_PRICE" => $_GET['mimPrice'])));
+    //array_push($arFilter, array(">=UF_MIN_PRICE" => $_GET['maxPrice']));
+    //$arFilter[">=UF_MIN_PRICE"] = $_GET['mimPrice'];
+}
+
 // Впечатления
 if (!empty($_GET['impressions']) && isset($_GET['impressions'])) {
     $arRequestImpressions = explode(',', $_GET['impressions']);
@@ -300,6 +307,9 @@ $arSections = array();
 
 $searchedRegionData = Regions::getRegionById($arRegionIds[0] ?? false);
 while ($arSection = $rsSections->GetNext()) {
+
+
+
     $arDataFullGallery = [];
     if ($arSection["UF_PHOTOS"]) {
         foreach ($arSection["UF_PHOTOS"] as $photoId) {
@@ -364,9 +374,12 @@ while ($arSection = $rsSections->GetNext()) {
     $arButtons = CIBlock::GetPanelButtons($arSection["IBLOCK_ID"], $arSection["ID"], 0, array("SECTION_BUTTONS" => false, "SESSID" => false));
     $arSection["EDIT_LINK"] = $arButtons["edit"]["edit_element"]["ACTION_URL"];
     $arSection["DELETE_LINK"] = $arButtons["edit"]["delete_element"]["ACTION_URL"];
-
-    $arSections[$arSection["ID"]] = $arSection;
+    if ($arSection["UF_MIN_PRICE"] <= $_GET['maxPrice'] && $arSection["UF_MIN_PRICE"] >= $_GET['mimPrice']) {
+        $arSections[$arSection["ID"]] = $arSection;
+    }
 }
+
+
 
 /* Отзывы */
 $arCampingIDs = array_map(function ($a) {
@@ -830,12 +843,6 @@ if ($chpy['UF_CANONICAL']) {
                                                 </div>
                                             </div>
                                         </div>
-                                        <button class="button button_primary" data-filter-set data-filter-catalog-front-btn="true">
-                                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                <path fill-rule="evenodd" clip-rule="evenodd" d="M16.9697 16.9697C17.2626 16.6768 17.7374 16.6768 18.0303 16.9697L22.5303 21.4697C22.8232 21.7626 22.8232 22.2374 22.5303 22.5303C22.2374 22.8232 21.7626 22.8232 21.4697 22.5303L16.9697 18.0303C16.6768 17.7374 16.6768 17.2626 16.9697 16.9697Z" fill="white" />
-                                                <path fill-rule="evenodd" clip-rule="evenodd" d="M1.25 11C1.25 5.61522 5.61522 1.25 11 1.25C16.3848 1.25 20.75 5.61522 20.75 11C20.75 16.3848 16.3848 20.75 11 20.75C5.61522 20.75 1.25 16.3848 1.25 11ZM11 2.75C6.44365 2.75 2.75 6.44365 2.75 11C2.75 15.5563 6.44365 19.25 11 19.25C15.5563 19.25 19.25 15.5563 19.25 11C19.25 6.44365 15.5563 2.75 11 2.75Z" fill="white" />
-                                            </svg>
-                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -845,7 +852,7 @@ if ($chpy['UF_CANONICAL']) {
                                         <path fill-rule="evenodd" clip-rule="evenodd" d="M16.9697 16.9697C17.2626 16.6768 17.7374 16.6768 18.0303 16.9697L22.5303 21.4697C22.8232 21.7626 22.8232 22.2374 22.5303 22.5303C22.2374 22.8232 21.7626 22.8232 21.4697 22.5303L16.9697 18.0303C16.6768 17.7374 16.6768 17.2626 16.9697 16.9697Z" fill="white" />
                                         <path fill-rule="evenodd" clip-rule="evenodd" d="M1.25 11C1.25 5.61522 5.61522 1.25 11 1.25C16.3848 1.25 20.75 5.61522 20.75 11C20.75 16.3848 16.3848 20.75 11 20.75C5.61522 20.75 1.25 16.3848 1.25 11ZM11 2.75C6.44365 2.75 2.75 6.44365 2.75 11C2.75 15.5563 6.44365 19.25 11 19.25C15.5563 19.25 19.25 15.5563 19.25 11C19.25 6.44365 15.5563 2.75 11 2.75Z" fill="white" />
                                     </svg>
-                                    <span><?= Loc::getMessage('FILTER_SEARCH')?></span>
+                                    <span><?= Loc::getMessage('FILTER_SEARCH') ?></span>
                                 </button>
                             </div>
                         </form>
@@ -925,7 +932,7 @@ if ($chpy['UF_CANONICAL']) {
                                 <span>Фильтры</span>
                             </a>
                             <div class="price-filter__wrap">
-                                <a class="button price" href="#price-filter">
+                                <a class="button price" href="#">
                                     <span>Цена</span>
                                     <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                                         <path d="M9.6464 12.9799L5.8535 9.18705C5.53852 8.87207 5.7616 8.3335 6.20706 8.3335H13.7928C14.2383 8.3335 14.4614 8.87207 14.1464 9.18705L10.3535 12.9799C10.1582 13.1752 9.84166 13.1752 9.6464 12.9799Z" fill="black" />

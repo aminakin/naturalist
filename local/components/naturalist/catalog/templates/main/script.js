@@ -557,11 +557,9 @@ $(function () {
 });
 
 $(document).ready(function () {
-  
-  
   let minPrice = $(".min-price").data("price-value");
   let maxPrice = $(".max-price").data("price-value");
-  console.log(minPrice);
+
   $(".slider-range").slider({
     range: true,
     values: [minPrice, maxPrice],
@@ -596,4 +594,14 @@ $(document).ready(function () {
   });
 
   $('.sort__btn span').html($('span.list__link span').html());
+
+  $('.fake-filter_catalog').on("click", function () {
+    $('.catalog_filter').css('display', 'flex');
+    $('.catalog-filter_close').css('display', 'block');
+  });
+
+  $('.catalog-filter_close').on("click", function () {
+    $('.catalog_filter').css('display', 'none');
+    $('.catalog-filter_close').css('display', 'none');
+  });
 });

@@ -2627,6 +2627,7 @@ span.flatpickr-weekday {
   display: none;
   padding: 0;
   position: relative;
+  height: 40px;
 }
 
 .header__menu {
