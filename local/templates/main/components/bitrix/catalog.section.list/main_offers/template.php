@@ -141,7 +141,7 @@ $reviewsDeclension = new Declension('отзыв', 'отзыва', 'отзыво�
                     <? endif; ?>
                     <div class="object__info">
                         <div class="object__heading">
-                            <a target="_blank" class="object__title" href="<?= $arItem["SECTION_PAGE_URL"] ?>"><?= $arItem["NAME"] ?></a>
+                            <a target="_blank" rel="noopener" class="object__title" href="<?= $arItem["SECTION_PAGE_URL"] ?>"><?= $arItem["NAME"] ?></a>
                             <a target="_blank" href="<?= $arItem["SECTION_PAGE_URL"] ?>#reviews-anchor" class="score" data-score="[{&quot;label&quot;:&quot;Удобство расположения&quot;,&quot;value&quot;:<?= $arReviewsAvg[$arItem["ID"]]["criterials"][1][0] ?? '0.0' ?>},{&quot;label&quot;:&quot;Питание&quot;,&quot;value&quot;:<?= $arReviewsAvg[$arItem["ID"]]["criterials"][2][0] ?? '0.0' ?>},{&quot;label&quot;:&quot;Уют&quot;,&quot;value&quot;:<?= $arReviewsAvg[$arItem["ID"]]["criterials"][3][0] ?? '0.0' ?>},{&quot;label&quot;:&quot;Сервис&quot;,&quot;value&quot;:<?= $arReviewsAvg[$arItem["ID"]]["criterials"][4][0] ?? '0.0' ?>},{&quot;label&quot;:&quot;Чистота&quot;,&quot;value&quot;:<?= $arReviewsAvg[$arItem["ID"]]["criterials"][5][0] ?? '0.0' ?>},{&quot;label&quot;:&quot;Эстетика окружения&quot;,&quot;value&quot;:<?= $arReviewsAvg[$arItem["ID"]]["criterials"][6][0] ?? '0.0' ?>},{&quot;label&quot;:&quot;Разнообразие досуга&quot;,&quot;value&quot;:<?= $arReviewsAvg[$arItem["ID"]]["criterials"][7][0] ?? '0.0' ?>},{&quot;label&quot;:&quot;Соотношение цена/качество&quot;,&quot;value&quot;:<?= $arReviewsAvg[$arItem["ID"]]["criterials"][8][0] ?? '0.0' ?>}]">
                                 <img src="<?= SITE_TEMPLATE_PATH ?>/assets/img/star-score.svg" alt="Рейтинг">
                                 <? if ($arReviewsAvg[$arItem["ID"]]["count"] > 0) { ?>
@@ -184,3 +184,17 @@ $reviewsDeclension = new Declension('отзыв', 'отзыва', 'отзыво�
         </div>
     <? endif; ?>
 </div>
+<script>
+    // $(document).ready(function() {
+    //     $('.object__title').on('click', function(evt) {
+    //         evt.stopPropagation();
+    //         evt.preventDefault();
+    //         var n = document.createElement('a');
+    //         n.href = $(this).attr('href'),
+    //             n.target = '_blank',
+    //             n.rel = 'noopener',
+    //             n.click(),
+    //             n.remove()
+    //     })
+    // })
+</script>

@@ -106,6 +106,7 @@ class BuyCert {
         _this.calcSumm();
         if (!this.value != 15287) {
           _this.removeRequired(_this.customPriceInput);
+          _this.customPriceInput.value = "";
         }
       });
     });
