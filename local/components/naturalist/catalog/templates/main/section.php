@@ -84,7 +84,12 @@ $isSeoText = false;
 /* Фильтрация */
 $arFilter = array(
     "IBLOCK_ID" => CATALOG_IBLOCK_ID,
-    "ACTIVE" => "Y"
+    "ACTIVE" => "Y",
+    array(
+        array("<=UF_MIN_PRICE" => $_GET['maxPrice']),
+        array(">=UF_MIN_PRICE" => $_GET['mimPrice'])
+    )
+
 );
 // Название и место
 if (!empty($_GET['name']) && isset($_GET['name'])) {
@@ -308,8 +313,6 @@ $arSections = array();
 $searchedRegionData = Regions::getRegionById($arRegionIds[0] ?? false);
 while ($arSection = $rsSections->GetNext()) {
 
-
-
     $arDataFullGallery = [];
     if ($arSection["UF_PHOTOS"]) {
         foreach ($arSection["UF_PHOTOS"] as $photoId) {
@@ -374,12 +377,10 @@ while ($arSection = $rsSections->GetNext()) {
     $arButtons = CIBlock::GetPanelButtons($arSection["IBLOCK_ID"], $arSection["ID"], 0, array("SECTION_BUTTONS" => false, "SESSID" => false));
     $arSection["EDIT_LINK"] = $arButtons["edit"]["edit_element"]["ACTION_URL"];
     $arSection["DELETE_LINK"] = $arButtons["edit"]["delete_element"]["ACTION_URL"];
-    if ($arSection["UF_MIN_PRICE"] <= $_GET['maxPrice'] && $arSection["UF_MIN_PRICE"] >= $_GET['mimPrice']) {
-        $arSections[$arSection["ID"]] = $arSection;
-    }
+
+    $arSections[$arSection["ID"]] = $arSection;
+    
 }
-
-
 
 /* Отзывы */
 $arCampingIDs = array_map(function ($a) {

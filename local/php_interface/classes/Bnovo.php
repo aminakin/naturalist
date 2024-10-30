@@ -305,11 +305,11 @@ class Bnovo
                 "UF_DATE" => $arDates,
                 "!UF_RESERVED" => '1',
                 "!UF_CLOSED" => "1",
-                [
-                    "LOGIC" => "OR",
-                    ["<=UF_MIN_STAY" => $daysCount],
-                    ["=UF_MIN_STAY" => 0]
-                ],
+                // [
+                //     "LOGIC" => "OR",
+                //     ["<=UF_MIN_STAY" => $daysCount],
+                //     ["=UF_MIN_STAY" => 0]
+                // ],
                 [
                     "LOGIC" => "OR",
                     [">=UF_MAX_STAY" => $daysCount],
@@ -318,7 +318,7 @@ class Bnovo
                 "=UF_CLOSED_ARRIVAL" => "0",
                 "=UF_CLOSED_DEPARTURE" => "0"
             ],
-            "order" => ["ID" => "ASC"],
+            "order" => ["UF_DATE" => "ASC"],
         ]);
         $arData = $rsData->FetchAll();
 
@@ -335,8 +335,9 @@ class Bnovo
         // Удаляем из сгруппированного массива цен размещения с ограничением по минимальному заезду
         foreach ($arDataGrouped as $key => $arItems) {
             foreach ($arItems as $arItem) {
-                if (intval($arItem['UF_MIN_STAY_ARRIVAL']) > $daysCount) {
-                    $error = 'На выбранные даты возможно бронирование минимум на ' . $arItem['UF_MIN_STAY_ARRIVAL'] . ' ' . $daysDeclension->get($arItem['UF_MIN_STAY_ARRIVAL']);
+                if (intval($arItem['UF_MIN_STAY_ARRIVAL']) > $daysCount || intval($arItem['UF_MIN_STAY']) > $daysCount) {
+                    $minDays = $arItem['UF_MIN_STAY_ARRIVAL'] ? $arItem['UF_MIN_STAY_ARRIVAL'] : $arItem['UF_MIN_STAY'];
+                    $error = 'На выбранные даты возможно бронирование минимум на ' . $minDays . ' ' . $daysDeclension->get($minDays);
 
                     // Удаляем элементы из первоначального массива дат, т.к. он далее будет использоваться для поиска цен                    
                     foreach ($arDataGrouped[$key] as $toDel) {
@@ -556,13 +557,23 @@ class Bnovo
                 ),
                 false,
                 false,
-                array("IBLOCK_ID", "ID", "NAME", "PROPERTY_CATEGORY", "PROPERTY_TARIFF", "PROPERTY_EXTERNAL_ID")
+                array("IBLOCK_ID", "ID", "NAME", "PROPERTY_CATEGORY", "PROPERTY_TARIFF", "PROPERTY_EXTERNAL_ID", "PROPERTY_MANUAL_TARIF")
             );
             $arElementsFilterred = array();
             while ($arElement = $rsElements->Fetch()) {
-                foreach ($arElement["PROPERTY_CATEGORY_VALUE"] as $categoryId) {
-                    foreach ($arTariffsIDs as $tariffId) {
-                        $arElementsFilterred[$tariffId][$categoryId][] = $arElement["ID"];
+                if ($arElement['PROPERTY_MANUAL_TARIF_VALUE'] == 'Y') {
+                    foreach ($arElement["PROPERTY_CATEGORY_VALUE"] as $categoryId) {
+                        foreach ($arTariffsIDs as $tariffId) {
+                            if (in_array($tariffId, $arElement['PROPERTY_TARIFF_VALUE'])) {
+                                $arElementsFilterred[$tariffId][$categoryId][] = $arElement["ID"];
+                            }
+                        }
+                    }
+                } else {
+                    foreach ($arElement["PROPERTY_CATEGORY_VALUE"] as $categoryId) {
+                        foreach ($arTariffsIDs as $tariffId) {
+                            $arElementsFilterred[$tariffId][$categoryId][] = $arElement["ID"];
+                        }
                     }
                 }
             }
@@ -762,7 +773,7 @@ class Bnovo
             });
         }
 
-        if (empty($arItems)) {
+        if (empty($arItems) && $error == '') {
             $error = 'Не найдено номеров на выбранные даты';
         }
 
@@ -1656,7 +1667,7 @@ class Bnovo
                     CIBlockElement::SetPropertyValuesEx($elementId, CATALOG_IBLOCK_ID, array(
                         // "PHOTOS" => $arElementImages,
                         "CATEGORY" => $elementIdCat,
-                        "TARIFF" => $tariffsIds,
+                        // "TARIFF" => $tariffsIds,
                         // "FEATURES" => $arAmenities,
                         "PARENT_ID" => $arRoom["parent_id"],
                         "SQUARE" => $arRoom["amenities"]["1"]["value"],
@@ -1851,6 +1862,8 @@ class Bnovo
         ));
         $response = curl_exec($ch);
         $arData = json_decode($response, true);
+
+        //xprint($arData);
 
         if (empty($arData) || (isset($arData['code']) && $arData['code'] != 200)) {
             if ($arData['code'] == 403) {
