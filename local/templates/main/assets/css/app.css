@@ -5132,6 +5132,10 @@ img.lazy.loaded {
   display: none;
 }
 
+.catalog-filter_close{
+  display: none;
+}
+
 @media (max-width: 1024px) {
   .list__item_phone a span {
     display: none;

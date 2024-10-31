@@ -559,7 +559,7 @@ $(document).ready(function () {
   let maxPriceFull = $(".max-price").data("price-value");
 
   let paramsUrl = getUrlParams();
-  
+
   if (paramsUrl['maxPrice'] !== undefined && paramsUrl['minPrice'] !== undefined) {
     minPrice = paramsUrl['minPrice'];
     maxPrice = paramsUrl['maxPrice'];
@@ -619,12 +619,7 @@ $(document).ready(function () {
   $('.filter-clea__btn').on("click", function () {
     let type = $(this).data("type");
     let value = String($(this).data("id"));
-
-    console.log(type);
-
     let array = paramsUrl[type].split(',');
-
-    console.log(array);
 
     let filteredArray = array.filter(function (item) {
       return item !== value;
@@ -632,12 +627,12 @@ $(document).ready(function () {
 
     console.log(filteredArray);
     
-    var currentUrl = new URL(window.location.href);
-    var newValue = filteredArray.join(', ');
+    let currentUrl = new URL(window.location.href);
+    let newValue = filteredArray.join(', ');
 
     console.log(newValue);
 
-    var params = currentUrl.searchParams;
+    let params = currentUrl.searchParams;
     params.set(type , newValue);
 
     window.history.replaceState({}, '', currentUrl);
