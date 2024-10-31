@@ -85,12 +85,16 @@ $isSeoText = false;
 $arFilter = array(
     "IBLOCK_ID" => CATALOG_IBLOCK_ID,
     "ACTIVE" => "Y",
-    array(
-        array("<=UF_MIN_PRICE" => $_GET['maxPrice']),
-        array(">=UF_MIN_PRICE" => $_GET['mimPrice'])
-    )
-
 );
+
+// Цена
+if ($_GET['maxPrice'] || $_GET['minPrice']) {
+    $arFilter[] = [
+        ["<=UF_MIN_PRICE" => $_GET['maxPrice']],
+        [">=UF_MIN_PRICE" => $_GET['minPrice']]
+    ];
+}
+
 // Название и место
 if (!empty($_GET['name']) && isset($_GET['name'])) {
     $search = ($_GET['name']) ? $_GET['name'] : null;
@@ -192,82 +196,98 @@ if (!empty($dateFrom) && !empty($dateTo) && !empty($_GET['guests'])) {
     }
 }
 
+$filterCount = 0;
+
 // Тип
 if (!empty($_GET['types']) && isset($_GET['types'])) {
     $arFilterTypes = explode(',', $_GET['types']);
-    //$arFilter["UF_TYPE"] = $arFilterTypes;
     $arFilter[] = array(
         "LOGIC" => "OR",
         array("UF_TYPE" => explode(',', $_GET['types'])),
         array("UF_TYPE_EXTRA" => explode(',', $_GET['types']))
     );
+
+    $filterCount += count($arFilterTypes);
 }
 
 // Услуги
 if (!empty($_GET['services']) && isset($_GET['services'])) {
     $arFilterServices = explode(',', $_GET['services']);
     $arFilter["UF_SERVICES"] = $arFilterServices;
+
+    $filterCount += count($arFilterServices);
 }
 
 // Питание
 if (!empty($_GET['food']) && isset($_GET['food'])) {
     $arFilterFood = explode(',', $_GET['food']);
     $arFilter["UF_FOOD"] = $arFilterFood;
+
+    $filterCount += count($arFilterFood);
 }
 
 // Особенности
 if (!empty($_GET['features']) && isset($_GET['features'])) {
     $arFilterFeatures = explode(',', $_GET['features']);
     $arFilter["UF_FEATURES"] = $arFilterFeatures;
+
+    $filterCount += count($arFilterFeatures);
 }
 
 // Варианты отдыха
 if (!empty($_GET['restvariants']) && isset($_GET['restvariants'])) {
     $arFilterRestVariants = explode(',', $_GET['restvariants']);
     $arFilter["UF_REST_VARIANTS"] = $arFilterRestVariants;
+
+    $filterCount += count($arFilterRestVariants);
 }
 
 // Удобства
 if (!empty($_GET['objectcomforts']) && isset($_GET['objectcomforts'])) {
     $arFilterObjectComforts = explode(',', $_GET['objectcomforts']);
     $arFilter["UF_OBJECT_COMFORTS"] = $arFilterObjectComforts;
+
+    $filterCount += count($arFilterObjectComforts);
 }
 
 // Тип дома
 if (!empty($_GET['housetypes']) && isset($_GET['housetypes'])) {
     $arFilterHousetypes = explode(',', $_GET['housetypes']);
     $arFilter["UF_SUIT_TYPE"] = $arFilterHousetypes;
+
+    $filterCount += count($arFilterHousetypes);
 }
 
 // Водоём
 if (!empty($_GET['water']) && isset($_GET['water'])) {
     $arFilterWater = explode(',', $_GET['water']);
     $arFilter["UF_WATER"] = $arFilterWater;
+
+    $filterCount += count($arFilterWater);
 }
 
 // Общий водоём
 if (!empty($_GET['commonwater']) && isset($_GET['commonwater'])) {
     $arFilterCommonWater = explode(',', $_GET['commonwater']);
     $arFilter["UF_COMMON_WATER"] = $arFilterCommonWater;
+
+    $filterCount += count($arFilterCommonWater);
 }
 
 // Sitemap
 if (!empty($_GET['sitemap']) && isset($_GET['sitemap'])) {
     $arFilterSitemap = explode(',', $_GET['sitemap']);
     $arFilter["UF_SITEMAP"] = $arFilterSitemap;
+
+    $filterCount += count($arFilterSitemap);
 }
 
 // Sitemap
 if (!empty($_GET['selection']) && isset($_GET['selection'])) {
     $arFilterImpressions = explode(',', $_GET['selection']);
     $arFilter["UF_IMPRESSIONS"] = $arFilterImpressions;
-}
 
-// Price
-if (!empty($_GET['mimPrice']) && isset($_GET['mimPrice']) && !empty($_GET['maxPrice']) && isset($_GET['maxPrice'])) {
-    //array_push($arFilter, array("LOGIC" => "AND", array(">=UF_MIN_PRICE" => $_GET['maxPrice']), array("<=UF_MIN_PRICE" => $_GET['mimPrice'])));
-    //array_push($arFilter, array(">=UF_MIN_PRICE" => $_GET['maxPrice']));
-    //$arFilter[">=UF_MIN_PRICE"] = $_GET['mimPrice'];
+    $filterCount += count($arFilterImpressions);
 }
 
 // Впечатления
@@ -288,6 +308,8 @@ if (!empty($_GET['impressions']) && isset($_GET['impressions'])) {
     if (empty($arFilterImpressions)) {
         LocalRedirect("/404/");
     }
+
+    $filterCount += count($arRequestImpressions);
 }
 
 /* Сортировка */
@@ -348,7 +370,6 @@ while ($arSection = $rsSections->GetNext()) {
     }
 
     /* -- */
-
     if ($arExternalInfo) {
         $sectionPrice = $arExternalInfo[$arSection["UF_EXTERNAL_ID"]];
         // Если это Traveline, то делим цену на кол-во дней
@@ -379,7 +400,6 @@ while ($arSection = $rsSections->GetNext()) {
     $arSection["DELETE_LINK"] = $arButtons["edit"]["delete_element"]["ACTION_URL"];
 
     $arSections[$arSection["ID"]] = $arSection;
-    
 }
 
 /* Отзывы */
@@ -414,17 +434,25 @@ if ($sortBy == 'rating') {
     });
 }
 
-/*min/max price */
+$arFilterPrice = [
+    "IBLOCK_ID" => CATALOG_IBLOCK_ID,
+    "ACTIVE" => "Y",
+];
+
+$arSectionsPrice = [];
 $arPrices = [];
-foreach ($arSections as $arSection) {
-    if ($arSection['UF_MIN_PRICE'] !== NULL) {
-        $arPrices[] = $arSection['UF_MIN_PRICE'];
+
+$rsSectionsPrice = CIBlockSection::GetList($arSort, $arFilterPrice, false, ["UF_MIN_PRICE"], false);
+while ($arSectionPrice = $rsSectionsPrice->GetNext()) {
+    if ($arSectionPrice['UF_MIN_PRICE'] !== NULL) {
+        $arSectionsPrice[] = $arSectionPrice['UF_MIN_PRICE'];
     }
 }
 
-if (!empty($arPrices)) {
-    $minPrice = round(min($arPrices));
-    $maxPrice = round(max($arPrices));
+/*min/max price */
+if (!empty($arSectionsPrice)) {
+    $minPrice = round(min($arSectionsPrice));
+    $maxPrice = round(max($arSectionsPrice));
 }
 
 /* Кастомная сортировка по цене */
@@ -562,7 +590,7 @@ while ($arEntity = $rsData->Fetch()) {
 }
 
 // Услуги
-$rsServices = CIBlockElement::GetList(array("SORT" => "ASC"), array("IBLOCK_ID" => SERVICES_IBLOCK_ID, "ACTIVE" => "Y", "PROPERTY_SHOW_FILTER_VALUE" => "Y"), false, false, array("IBLOCK_ID", "ID", "CODE", "NAME"));
+$rsServices = CIBlockElement::GetList(array("SORT" => "ASC"), array("IBLOCK_ID" => SERVICES_IBLOCK_ID, "ACTIVE" => "Y", "PROPERTY_SHOW_FILTER_VALUE" => "Y"), false, false, array("ID", "IBLOCK_ID", "NAME", "CODE"));
 $arServices = array();
 while ($arService = $rsServices->Fetch()) {
     $arServices[$arService["ID"]] = $arService;
@@ -930,7 +958,7 @@ if ($chpy['UF_CANONICAL']) {
                                 </a>
                             <?php endif; ?>
                             <a class="button filter" href="#filters-modal" data-modal="data-modal">
-                                <span>Фильтры</span>
+                                <span>Фильтры</span> <?= ($filterCount !== 0) ? '<span class="filter-count">' . $filterCount . '</span>' : '' ?>
                             </a>
                             <div class="price-filter__wrap">
                                 <a class="button price" href="#">

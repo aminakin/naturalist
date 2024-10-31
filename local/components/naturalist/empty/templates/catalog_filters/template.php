@@ -13,11 +13,9 @@ foreach ($arResult as $key => $value) {
     </button>
 </div>
 <form class="form filters <?php if (CSite::InDir('/map')): ?>filter__on_map<?php endif; ?>" id="form-catalog-filter">
-
     <div class="filters__form" id="popup_filter_body">
         <div class="form__group mainsearch">
             <div class="form_group_wrapper">
-
                 <div class="form__item name">
                     <div class="field field_autocomplete" data-autocomplete="/ajax/autocomplete.php">
                         <input type="hidden" data-autocomplete-result
@@ -30,7 +28,6 @@ foreach ($arResult as $key => $value) {
                 </div>
 
                 <div class="form_group_wrapper-filter_items">
-
                     <div class="form__row calendar" data-calendar="data-calendar" data-calendar-min="today"
                         data-calendar-max="365">
                         <div class="form__item">
@@ -353,7 +350,7 @@ foreach ($arResult as $key => $value) {
                                     ?>
                                     <li class="list__item">
                                         <label class="checkbox">
-                                            <input type="checkbox" name="features" value="<?= $arFeature["ID"] ?>"
+                                            <input type="checkbox" name="feature" value="<?= $arFeature["ID"] ?>"
                                                 <? if ($arFilterFeatures && in_array(
                                                     $arFeature["ID"],
                                                     $arFilterFeatures

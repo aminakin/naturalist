@@ -19,6 +19,7 @@ $arResult = array(
     "arFavourites" => $arParams['arFavourites'],
     "arHLTypes" => $arParams['arHLTypes'],
     "arHLFeatures" => $arParams['arHLFeatures'],
+    "arServices" => $arParams['arServices'],
     "arSearchedRegions" => $arParams['arSearchedRegions'] ?? false,
     "searchedRegionData" => $arParams['searchedRegionData'] ?? false,
     "searchName" => $arParams['searchName'] ?? '',

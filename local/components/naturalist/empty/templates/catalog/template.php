@@ -15,14 +15,7 @@ foreach ($arResult as $key => $value) {
 }
 ?>
 
-<div>
-    <? foreach ($filterData as $filterDatum) { ?>
-        <div class="object-row__cert-price">
-            <span><?= $filterDatum['NAME'] ?></span>
-            <span></span>
-        </div>
-    <? } ?>
-</div>
+
 <div class="catalog">
     <div class="catalog__objects" data-catalog-container>
         <?php if ($allCount > 0) {
@@ -40,6 +33,18 @@ foreach ($arResult as $key => $value) {
                     </svg>
                     <div class="catalog__count-text"><?= Loc::GetMessage('NOT_FOUND_REGION') ?></div>
                 </div>
+
+                <div class="filter-clear_wrap">
+                    <? foreach ($filterData as $filterDatum) { ?>
+                        <div class="filter-clea__btn" data-type="<?= $filterDatum['TYPE'] ?>" data-id="<?= $filterDatum['ID'] ?>">
+                            <span><?= $filterDatum['NAME'] ?></span>
+                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd" clip-rule="evenodd" d="M16.0669 3.93306C16.311 4.17714 16.311 4.57286 16.0669 4.81694L4.81694 16.0669C4.57286 16.311 4.17714 16.311 3.93306 16.0669C3.68898 15.8229 3.68898 15.4271 3.93306 15.1831L15.1831 3.93306C15.4271 3.68898 15.8229 3.68898 16.0669 3.93306Z" fill="black" />
+                                <path fill-rule="evenodd" clip-rule="evenodd" d="M3.93306 3.93306C4.17714 3.68898 4.57286 3.68898 4.81694 3.93306L16.0669 15.1831C16.311 15.4271 16.311 15.8229 16.0669 16.0669C15.8229 16.311 15.4271 16.311 15.1831 16.0669L3.93306 4.81694C3.68898 4.57286 3.68898 4.17714 3.93306 3.93306Z" fill="black" />
+                            </svg>
+                        </div>
+                    <? } ?>
+                </div>
             <?php } else { ?>
                 <div class="catalog__count--not-found">
                     <svg width="65" height="64" viewBox="0 0 65 64" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -49,6 +54,18 @@ foreach ($arResult as $key => $value) {
                         <path fill-rule="evenodd" clip-rule="evenodd" d="M25.2197 19.7197C25.5126 19.4268 25.9874 19.4268 26.2803 19.7197L39.7803 33.2197C40.0732 33.5126 40.0732 33.9874 39.7803 34.2803C39.4874 34.5732 39.0126 34.5732 38.7197 34.2803L25.2197 20.7803C24.9268 20.4874 24.9268 20.0126 25.2197 19.7197Z" fill="white" />
                     </svg>
                     <div class="catalog__count-text"><?= Loc::GetMessage('NOT_FOUND') ?></div>
+                </div>
+
+                <div class="filter-clear_wrap">
+                    <? foreach ($filterData as $filterDatum) { ?>
+                        <div class="filter-clea__btn" data-type="<?= $filterDatum['TYPE'] ?>" data-id="<?= $filterDatum['ID'] ?>">
+                            <span><?= $filterDatum['NAME'] ?></span>
+                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd" clip-rule="evenodd" d="M16.0669 3.93306C16.311 4.17714 16.311 4.57286 16.0669 4.81694L4.81694 16.0669C4.57286 16.311 4.17714 16.311 3.93306 16.0669C3.68898 15.8229 3.68898 15.4271 3.93306 15.1831L15.1831 3.93306C15.4271 3.68898 15.8229 3.68898 16.0669 3.93306Z" fill="black" />
+                                <path fill-rule="evenodd" clip-rule="evenodd" d="M3.93306 3.93306C4.17714 3.68898 4.57286 3.68898 4.81694 3.93306L16.0669 15.1831C16.311 15.4271 16.311 15.8229 16.0669 16.0669C15.8229 16.311 15.4271 16.311 15.1831 16.0669L3.93306 4.81694C3.68898 4.57286 3.68898 4.17714 3.93306 3.93306Z" fill="black" />
+                            </svg>
+                        </div>
+                    <? } ?>
                 </div>
         <?php
             }
@@ -151,17 +168,17 @@ foreach ($arResult as $key => $value) {
                             <div class="area-info">
                                 <img src="/local/templates/main/assets/img/location.svg" alt="Маркер">
 
-                                    <? /*php if (!empty($arSection["UF_DISTANCE"])) : ?><span><?= $arSection["UF_DISTANCE"] ?></span><?php endif; */ ?>
-                                    <? /*php if (!empty($arSection["UF_ADDRESS"])) : ?><span><?= $arSection["UF_ADDRESS"] ?></span><?php endif; */ ?>
-                                    <?php if (!empty($arSection["DISCTANCE"])) { ?>
-                                        <span><?= $arSection["DISCTANCE"] ?> км
-                                            от <?= $arSection['DISCTANCE_TO_REGION'] ?>
-                                        </span>
-                                        <?php  } else {
-                                        if (is_array($arSection["REGION"]) && count($arSection["REGION"]) > 0) { ?>
-                                            <span> <?= $arSection["REGION"]['UF_NAME'] ?></span>
-                                    <?php }
-                                    } ?>
+                                <? /*php if (!empty($arSection["UF_DISTANCE"])) : ?><span><?= $arSection["UF_DISTANCE"] ?></span><?php endif; */ ?>
+                                <? /*php if (!empty($arSection["UF_ADDRESS"])) : ?><span><?= $arSection["UF_ADDRESS"] ?></span><?php endif; */ ?>
+                                <?php if (!empty($arSection["DISCTANCE"])) { ?>
+                                    <span><?= $arSection["DISCTANCE"] ?> км
+                                        от <?= $arSection['DISCTANCE_TO_REGION'] ?>
+                                    </span>
+                                    <?php  } else {
+                                    if (is_array($arSection["REGION"]) && count($arSection["REGION"]) > 0) { ?>
+                                        <span> <?= $arSection["REGION"]['UF_NAME'] ?></span>
+                                <?php }
+                                } ?>
                             </div>
                             <?/*php if ($arSection["UF_FEATURES"]): ?>
                                 <div class="object-row__features">
@@ -239,7 +256,6 @@ foreach ($arResult as $key => $value) {
         </div>
 
         <div id="same_items" style="<?= ($page < $pageCount) ? 'display:none;' : 'margin-top: 24px;' ?>">
-
             <?php if ($arResult['arSearchedRegions'] && is_array($arResult["SECTIONS"]) && count($arResult["SECTIONS"]) > 0) { ?>
 
                 <?php if ($allCount > 0) { ?>
@@ -347,11 +363,11 @@ foreach ($arResult as $key => $value) {
 
                                     <div class="area-info">
                                         <img src="/local/templates/main/assets/img/location.svg" alt="Маркер">
-                                            <? /*php if (!empty($arSection["UF_DISTANCE"])) : ?><span><?= $arSection["UF_DISTANCE"] ?></span><?php endif; */ ?>
-                                            <? /*php if (!empty($arSection["UF_ADDRESS"])) : ?><span><?= $arSection["UF_ADDRESS"] ?></span><?php endif; */ ?>
-                                            <?php if (!empty($arSection["DISCTANCE"])) : ?><span>
-                                                    <?= $arSection["DISCTANCE"] ?> км
-                                                    от <?= $arSection['DISCTANCE_TO_REGION'] ?></span><?php endif; ?>
+                                        <? /*php if (!empty($arSection["UF_DISTANCE"])) : ?><span><?= $arSection["UF_DISTANCE"] ?></span><?php endif; */ ?>
+                                        <? /*php if (!empty($arSection["UF_ADDRESS"])) : ?><span><?= $arSection["UF_ADDRESS"] ?></span><?php endif; */ ?>
+                                        <?php if (!empty($arSection["DISCTANCE"])) : ?><span>
+                                                <?= $arSection["DISCTANCE"] ?> км
+                                                от <?= $arSection['DISCTANCE_TO_REGION'] ?></span><?php endif; ?>
                                     </div>
 
                                     <?/*php if ($arSection["UF_FEATURES"]): ?>
@@ -370,7 +386,7 @@ foreach ($arResult as $key => $value) {
                                                 <span><?= $arHLFeatures[$featureId]["UF_NAME"] ?></span>
                                             <?php endforeach; ?>
                                         </div>
-                                    <?php endif; */?>
+                                    <?php endif; */ ?>
                                 </div>
 
                                 <div class="object-row__order">

@@ -3255,7 +3255,8 @@
 }
 
 .catalog_sorter .filter_btn a,
-.sort__btn {
+.sort__btn,
+.filter-clea__btn {
   font-size: 14px;
   font-weight: 400;
   line-height: 40px;
@@ -3269,7 +3270,6 @@
 }
 
 .catalog_sorter .filter_btn a.filter {
-  max-width: 116px;
   padding: 0 16px 0 48px;
   background-size: 20px;
   background-image: url(../img/filter-btn.png);
@@ -3287,7 +3287,8 @@
 }
 
 .catalog_sorter .filter_btn a:hover,
-.sort__btn:hover {
+.sort__btn:hover,
+.filter-clea__btn:hover {
   background-color: var(--color-btn-h);
   border-color: var(--color-btn-h);
 }
@@ -3930,6 +3931,33 @@
 
 .catalog_map .filters__controls .button svg {
   margin-right: 0;
+}
+
+.filter-count{
+  display: block;
+  margin-left: 6px;
+  border-radius: 16px;
+  width: 16px;
+  height: 16px;
+  font-size: 12px;
+  line-height: 14px;
+  background-color: var(--color-orange);
+  color: var(--color-white);
+}
+
+.filter-clear_wrap{
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: -16px;
+}
+
+.filter-clear_wrap .filter-clea__btn{
+  margin: 0 12px 12px 0;
+  cursor: pointer;
+}
+
+.filter-clear_wrap .filter-clea__btn svg{
+  margin-left: 6px;
 }
 
 @media (min-width: 1280px) {

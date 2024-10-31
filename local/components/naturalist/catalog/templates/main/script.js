@@ -86,7 +86,7 @@ $(function () {
     var params = getUrlParams();
 
     params['maxPrice'] = $(".max-price").val();
-    params['mimPrice'] = $(".min-price").val();
+    params['minPrice'] = $(".min-price").val();
 
     if ($('input[name="type"]:checked', parentFrom).length > 0) {
       var arTypes = [];
@@ -175,17 +175,17 @@ $(function () {
       delete params["objectcomforts"];
     }
 
-    if ($('input[name="features"]:checked', parentFrom).length > 0) {
+    if ($('input[name="feature"]:checked', parentFrom).length > 0) {
       var arFeatures = [];
-      $('input[name="features"]:checked', parentFrom).each(function (
+      $('input[name="feature"]:checked', parentFrom).each(function (
         indx,
         element
       ) {
         arFeatures.push($(element).val());
       });
-      params["features"] = arFeatures.join(",");
+      params["feature"] = arFeatures.join(",");
     } else {
-      delete params["features"];
+      delete params["feature"];
     }
 
     if ($('input[name="housetypes"]:checked', parentFrom).length > 0) {
@@ -250,8 +250,6 @@ $(function () {
 
     deleteUrlParams(params, ["page"]);
 
-    console.log(params);
-
     if (Object.keys(params).length > 0) {
       window.preloader.show();
       var url = setUrlParams(params);
@@ -277,7 +275,7 @@ $(function () {
       "types",
       "services",
       "food",
-      "features",
+      "feature",
       "name",
       "dateFrom",
       "dateTo",
@@ -557,14 +555,27 @@ $(function () {
 });
 
 $(document).ready(function () {
-  let minPrice = $(".min-price").data("price-value");
-  let maxPrice = $(".max-price").data("price-value");
+  let minPriceFull = $(".min-price").data("price-value");
+  let maxPriceFull = $(".max-price").data("price-value");
+
+  let paramsUrl = getUrlParams();
+  
+  if (paramsUrl['maxPrice'] !== undefined && paramsUrl['minPrice'] !== undefined) {
+    minPrice = paramsUrl['minPrice'];
+    maxPrice = paramsUrl['maxPrice'];
+    $('.min-price').val(paramsUrl['minPrice']);
+    $('.max-price').val(paramsUrl['maxPrice']);
+    
+  }else{
+    minPrice = minPriceFull;
+    maxPrice = maxPriceFull;
+  }
 
   $(".slider-range").slider({
     range: true,
     values: [minPrice, maxPrice],
-    min: minPrice,
-    max: maxPrice,
+    min: minPriceFull,
+    max: maxPriceFull,
     slide: function (event, ui) {
       $('.min-price').val(ui.values[0]);
       $('.max-price').val(ui.values[1]);
@@ -577,18 +588,18 @@ $(document).ready(function () {
 
   $('.button.price').on("click", function () {
     $(this).toggleClass('active');
-    if($(this).hasClass('active')){
+    if ($(this).hasClass('active')) {
       $('.catalog_sorter .price-filter').css('display', 'block');
-    }else{
+    } else {
       $('.catalog_sorter .price-filter').css('display', 'none');
     }
-  }); 
+  });
 
   $('.sort__btn').on("click", function () {
     $(this).toggleClass('active');
-    if($(this).hasClass('active')){
+    if ($(this).hasClass('active')) {
       $('.sort__list').css('display', 'block');
-    }else{
+    } else {
       $('.sort__list').css('display', 'none');
     }
   });
@@ -603,5 +614,35 @@ $(document).ready(function () {
   $('.catalog-filter_close').on("click", function () {
     $('.catalog_filter').css('display', 'none');
     $('.catalog-filter_close').css('display', 'none');
+  });
+
+  $('.filter-clea__btn').on("click", function () {
+    let type = $(this).data("type");
+    let value = String($(this).data("id"));
+
+    console.log(type);
+
+    let array = paramsUrl[type].split(',');
+
+    console.log(array);
+
+    let filteredArray = array.filter(function (item) {
+      return item !== value;
+    });
+
+    console.log(filteredArray);
+    
+    var currentUrl = new URL(window.location.href);
+    var newValue = filteredArray.join(', ');
+
+    console.log(newValue);
+
+    var params = currentUrl.searchParams;
+    params.set(type , newValue);
+
+    window.history.replaceState({}, '', currentUrl);
+    window.location.reload();
+    window.preloader.show();
+
   });
 });
