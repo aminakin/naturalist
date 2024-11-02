@@ -88,12 +88,14 @@ $arFilter = array(
 );
 
 // Цена
-if ($_GET['maxPrice'] || $_GET['minPrice']) {
-    $arFilter[] = [
-        ["<=UF_MIN_PRICE" => $_GET['maxPrice']],
-        [">=UF_MIN_PRICE" => $_GET['minPrice']]
-    ];
-}
+//if ($_GET['maxPrice'] || $_GET['minPrice']) {
+//    $arFilter[] = [
+//        ["<=UF_MIN_PRICE" => $_GET['maxPrice']],
+//        [">=UF_MIN_PRICE" => $_GET['minPrice']]
+//    ];
+//}
+
+
 
 // Название и место
 if (!empty($_GET['name']) && isset($_GET['name'])) {
@@ -398,8 +400,14 @@ while ($arSection = $rsSections->GetNext()) {
     $arButtons = CIBlock::GetPanelButtons($arSection["IBLOCK_ID"], $arSection["ID"], 0, array("SECTION_BUTTONS" => false, "SESSID" => false));
     $arSection["EDIT_LINK"] = $arButtons["edit"]["edit_element"]["ACTION_URL"];
     $arSection["DELETE_LINK"] = $arButtons["edit"]["delete_element"]["ACTION_URL"];
-
-    $arSections[$arSection["ID"]] = $arSection;
+    
+    if ($_GET['maxPrice'] || $_GET['minPrice']){
+        if(($arSection["UF_MIN_PRICE"] <= $_GET['maxPrice'] && $arSection["UF_MIN_PRICE"] >= $_GET['minPrice']) && $arSection["UF_MIN_PRICE"] !== NULL){
+            $arSections[$arSection["ID"]] = $arSection;
+        }
+    }else{
+        $arSections[$arSection["ID"]] = $arSection;
+    }
 }
 
 /* Отзывы */
