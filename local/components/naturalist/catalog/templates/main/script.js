@@ -85,8 +85,17 @@ $(function () {
 
     var params = getUrlParams();
 
-    params['maxPrice'] = $(".max-price").val();
-    params['minPrice'] = $(".min-price").val();
+    if(
+      (Number($(".min-price").data("price-value")) == Number($(".min-price").val())) 
+      && 
+      (Number($(".max-price").data("price-value")) == Number($(".max-price").val())))
+    {
+      delete params["maxPrice"];
+      delete params["minPrice"];
+    }else{
+      params['maxPrice'] = $(".max-price").val();
+      params['minPrice'] = $(".min-price").val();
+    }
 
     if ($('input[name="type"]:checked', parentFrom).length > 0) {
       var arTypes = [];
@@ -201,8 +210,8 @@ $(function () {
       delete params["housetypes"];
     }
 
-    var dateFrom = $("[data-date-from]", parentFrom).text();
-    var dateTo = $("[data-date-to]", parentFrom).text();
+    var dateFrom = $("[data-date-from]", parentFrom).text().trim();
+    var dateTo = $("[data-date-to]", parentFrom).text().trim();
     var guests = $('input[name="guests-adults-count"]', parentFrom).val();
     var children = [];
     $(".guests__children input[data-guests-children]", parentFrom).each(
@@ -212,7 +221,8 @@ $(function () {
       }
     );
 
-    if (dateFrom.trim() != "Заезд" && dateTo.trim() != "Выезд" && guests > 0) {
+    if (dateFrom.trim() != "Заезд" && dateTo.trim() != "Выезд" && guests > 0) {  
+      
       let arDateFrom = dateFrom.split(".");
       let arDateTo = dateTo.split(".");
 
@@ -241,6 +251,14 @@ $(function () {
         return false;
       }
     }
+
+    if(dateFrom == "" && dateTo == "" && guests > 0){
+      delete params["dateFrom"];
+      delete params["dateTo"];
+      delete params["guests"];
+    }
+    console.log(params);
+    
     // else {
     //   var error = "Вы забыли указать даты заезда и выезда";
     //   window.infoModal("Ой…", error);
