@@ -151,9 +151,10 @@ foreach ($arResult as $key => $value) {
                             <a class="object-row__title h3" target="_blank"
                                 href="<?= $arSection["URL"] ?>"><?= $arSection["NAME"] ?></a>
                             <?php
-
-                            if (isset($arHLTypes[$arSection["UF_TYPE"]])) : ?>
-                                <span><?= $arHLTypes[$arSection["UF_TYPE"]]["UF_NAME"] ?></span><?php endif; ?>
+                            if ($filteredHouseType) { ?>
+                                <span><?= $filteredHouseType ?></span>
+                            <? } elseif (isset($arHLTypes[$arSection["UF_TYPE"]])) { ?>
+                                <span><?= $arHLTypes[$arSection["UF_TYPE"]]["UF_NAME"] ?></span><?php } ?>
 
                             <div class="object-row__reviews">
                                 <a target="_blank" href="<?= $arSection["URL"] ?>#reviews-anchor"

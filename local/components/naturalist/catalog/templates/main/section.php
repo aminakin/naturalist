@@ -1154,6 +1154,8 @@ if ($chpy['UF_CANONICAL']) {
                             "arChildrenAge" => $arChildrenAge,
                             "itemsCount" => $arParams["ITEMS_COUNT"],
                             'filterData' => $filterData,
+                            "arHLTypes" => $arHLTypes,
+                            "arFilterTypes" => $arFilterTypes,
                         )
                     );
                     ?>
