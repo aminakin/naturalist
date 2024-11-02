@@ -26,8 +26,8 @@ $(function () {
           var updContentHtml = $(html).find(ajaxContainer).html();
           $(ajaxContainer).append(updContentHtml);
 
-          var updPagerHtml = $(html).find(ajaxPagerContainer).html() ?? "";
-          $(ajaxPagerContainer).html(updPagerHtml);
+          ///var updPagerHtml = $(html).find(ajaxPagerContainer).html() ?? "";
+          ///$(ajaxPagerContainer).html(updPagerHtml);
 
           window.objectsGallery();
           window.map.handleItemHover();

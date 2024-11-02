@@ -15,6 +15,9 @@ $component = $this->getComponent();
 
 $this->setFrameMode(true);
 ?>
+<?if($arResult["RECORD_COUNT"] > 0):?>
+	<div class="bx-pagination-total-block"><?=$arParams["TITLE"]." ".$arResult["FIRST_RECORD"]." &ndash; ".$arResult["LAST_RECORD"]?><?if($arParams["SHOW_COUNT"]) echo " ".GetMessage("round_nav_records_of")." ".$arResult["RECORD_COUNT"];?></div>
+<?endif;?>
 <div class="modern-page-navigation">	
 <?
 if($arResult["REVERSED_PAGES"] === true):
@@ -49,7 +52,7 @@ if($arResult["REVERSED_PAGES"] === true):
 		$pageNumber = $arResult["PAGE_COUNT"] - $page + 1;
 		
 		if ($page == $arResult["CURRENT_PAGE"]):
-?>
+?>			
 			<span class="<?=($first ? "modern-page-first " : "")?>modern-page-current"><?=$pageNumber?></span>
 <?
 		elseif($page == $arResult["PAGE_COUNT"]):
@@ -115,7 +118,7 @@ else:
 	do
 	{
 		if ($page == $arResult["CURRENT_PAGE"]):
-?>
+?>			<span class="modern-page-previous"><?=GetMessage("nav_prev")?></span>
 			<span class="<?=($first ? "modern-page-first " : "")?>modern-page-current"><?=$page?></span>
 <?
 		elseif($page == 1):

@@ -245,7 +245,7 @@ foreach ($arResult as $key => $value) {
 
             $APPLICATION->IncludeComponent(
                 "bitrix:main.pagenavigation",
-                "",
+                "modern",
                 array(
                     "NAV_OBJECT" => $nav,
                     "SEF_MODE" => "N",
