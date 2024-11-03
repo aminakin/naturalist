@@ -479,6 +479,7 @@ global $arSettings, $currPage;
     <script defer src="<?= SITE_TEMPLATE_PATH ?>/assets/js/contacts.js?v=<?= filemtime($_SERVER["DOCUMENT_ROOT"] . '/' . SITE_TEMPLATE_PATH . '/assets/js/contacts.js') ?>"></script>
 <? endif; ?>
 <script src="<?= SITE_TEMPLATE_PATH ?>/assets/js/jquery-ui.js?v=<?= filemtime($_SERVER["DOCUMENT_ROOT"] . '/' . SITE_TEMPLATE_PATH . '/assets/js/jquery-ui.js') ?>"></script>
+<script src="<?= SITE_TEMPLATE_PATH ?>/assets/js/jquery.ui.touch-punch.min.js?v=<?= filemtime($_SERVER["DOCUMENT_ROOT"] . '/' . SITE_TEMPLATE_PATH . '/assets/js/jquery.ui.touch-punch.min.js') ?>"></script>
 <script>
     const formsValidate = [
         ...[{

@@ -3786,6 +3786,7 @@
 
 .price-filter .price-filter__controls .button {
   max-width: 112px;
+  width: 100%;
 }
 
 .price-filter .button.button-accept {
@@ -3856,6 +3857,7 @@
   border: 0.5px solid var(--color-btn);
   border-radius: 12px;
   background: #F9EED8;
+  cursor: pointer;
 }
 
 .price-filter .slider-range.ui-slider .ui-slider-handle:focus,
