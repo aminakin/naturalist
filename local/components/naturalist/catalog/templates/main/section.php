@@ -400,12 +400,12 @@ while ($arSection = $rsSections->GetNext()) {
     $arButtons = CIBlock::GetPanelButtons($arSection["IBLOCK_ID"], $arSection["ID"], 0, array("SECTION_BUTTONS" => false, "SESSID" => false));
     $arSection["EDIT_LINK"] = $arButtons["edit"]["edit_element"]["ACTION_URL"];
     $arSection["DELETE_LINK"] = $arButtons["edit"]["delete_element"]["ACTION_URL"];
-    
-    if ($_GET['maxPrice'] || $_GET['minPrice']){
-        if(($arSection["UF_MIN_PRICE"] <= $_GET['maxPrice'] && $arSection["UF_MIN_PRICE"] >= $_GET['minPrice']) && $arSection["UF_MIN_PRICE"] !== NULL){
+
+    if ($_GET['maxPrice'] || $_GET['minPrice']) {
+        if (($arSection["PRICE"] <= $_GET['maxPrice'] && $arSection["PRICE"] >= $_GET['minPrice']) && $arSection["PRICE"] !== NULL) {
             $arSections[$arSection["ID"]] = $arSection;
         }
-    }else{
+    } else {
         $arSections[$arSection["ID"]] = $arSection;
     }
 }

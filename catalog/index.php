@@ -11,15 +11,15 @@ $APPLICATION->IncludeComponent(
 		"SET_STATUS_404" => "Y",
 		"SHOW_404" => "Y",
 		"SEF_FOLDER" => "/catalog/",
-		"SEF_URL_TEMPLATES" => Array(
+		"SEF_URL_TEMPLATES" => array(
 			"section" => "#SECTION_CODE#/",
 			"detail" => "#SECTION_CODE#/#ELEMENT_CODE#/"
 		),
-		"VARIABLE_ALIASES" => Array(
-			"section" => Array(),
-			"detail" => Array(),
+		"VARIABLE_ALIASES" => array(
+			"section" => array(),
+			"detail" => array(),
 		),
-		"ITEMS_COUNT" => 6,
+		"ITEMS_COUNT" => 12,
 		"DETAIL_ITEMS_COUNT" => 8,
 		"DETAIL_REVIEWS_COUNT" => 3
 	)
