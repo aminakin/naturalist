@@ -152,7 +152,7 @@ Loc::loadMessages(__FILE__);
                         <? $dataFullGallery = implode(",", $arDataFullGallery); ?>
                     <? endif; ?>
                     <div class="swiper-slide" id="<?= $this->GetEditAreaId($arItem['ID']) ?>">
-                        <div class="object">
+                        <div class="object" href="<?= $arItem["SECTION_PAGE_URL"] ?>">
                             <div class="object__images">
                                 <div class="swiper slider-gallery" data-slider-object="data-slider-object" data-fullgallery="[<?= $dataFullGallery; ?>]">
                                     <div class="swiper-wrapper">

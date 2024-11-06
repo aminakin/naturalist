@@ -5,8 +5,6 @@ use Naturalist\Morpher;
 use Naturalist\Products;
 use Naturalist\Regions;
 use Naturalist\Utils;
-use Bitrix\Main\Data\Cache;
-use Bitrix\Main\Application;
 
 $arResult = array(
     "sortBy" => $arParams['sortBy'],
@@ -21,6 +19,7 @@ $arResult = array(
     "arFavourites" => $arParams['arFavourites'],
     "arHLTypes" => $arParams['arHLTypes'],
     "arHLFeatures" => $arParams['arHLFeatures'],
+    "arServices" => $arParams['arServices'],
     "arSearchedRegions" => $arParams['arSearchedRegions'] ?? false,
     "searchedRegionData" => $arParams['searchedRegionData'] ?? false,
     "searchName" => $arParams['searchName'] ?? '',
@@ -36,8 +35,15 @@ $arResult = array(
     "guestsDeclension" => $arParams['guestsDeclension'],
     "arChildrenAge" => $arParams['arChildrenAge'],
     "itemsCount" => $arParams["itemsCount"],
+    "filterData" => $arParams["filterData"],
+    "arHouseTypes" => $houseTypeData,
+    "arHLTypes" => $arParams["arHLTypes"],
+    "arFilterTypes" => $arParams["arFilterTypes"],
 );
 
+if (is_array($arParams["arFilterTypes"]) && count($arParams["arFilterTypes"]) == 1) {
+    $arResult['filteredHouseType'] = $arParams["arHLTypes"][$arParams["arFilterTypes"][0]]['UF_NAME'];
+}
 
 // Выборка по наиболее близким координатам
 if ($arResult['arSearchedRegions']) {

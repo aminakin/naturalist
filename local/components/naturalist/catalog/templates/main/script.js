@@ -79,15 +79,27 @@ $(function () {
 
     $("[data-filter-set]").attr("disabled", "disabled");
 
-    var frontFilter = $(this).data("filter-catalog-front-btn") ?? false;
-
-    var parentFrom = $(this).parents("form");
+    var frontFilter = $("#form-catalog-filter-front") ?? false;
+    var catalogFilter = $("#form-catalog-filter") ?? false;
 
     var params = getUrlParams();
 
-    if ($('input[name="type"]:checked', parentFrom).length > 0) {
+    if (
+      Number($(".min-price").data("price-value")) ==
+        Number($(".min-price").val()) &&
+      Number($(".max-price").data("price-value")) ==
+        Number($(".max-price").val())
+    ) {
+      delete params["maxPrice"];
+      delete params["minPrice"];
+    } else {
+      params["maxPrice"] = $(".max-price").val();
+      params["minPrice"] = $(".min-price").val();
+    }
+
+    if ($('input[name="type"]:checked', catalogFilter).length > 0) {
       var arTypes = [];
-      $('input[name="type"]:checked', parentFrom).each(function (
+      $('input[name="type"]:checked', catalogFilter).each(function (
         indx,
         element
       ) {
@@ -98,18 +110,18 @@ $(function () {
       delete params["types"];
     }
 
-    var name = $("input[data-autocomplete-result]", parentFrom).val()
-      ? $("input[data-autocomplete-result]", parentFrom).val()
-      : $('input[name="name"]', parentFrom).val();
+    var name = $("input[data-autocomplete-result]", frontFilter).val()
+      ? $("input[data-autocomplete-result]", frontFilter).val()
+      : $('input[name="name"]', frontFilter).val();
     if (name) {
       params["name"] = name;
     } else {
       delete params["name"];
     }
 
-    if ($('input[name="water"]:checked', parentFrom).length > 0) {
+    if ($('input[name="water"]:checked', catalogFilter).length > 0) {
       var arWater = [];
-      $('input[name="water"]:checked', parentFrom).each(function (
+      $('input[name="water"]:checked', catalogFilter).each(function (
         indx,
         element
       ) {
@@ -120,9 +132,9 @@ $(function () {
       delete params["water"];
     }
 
-    if ($('input[name="services"]:checked', parentFrom).length > 0) {
+    if ($('input[name="services"]:checked', catalogFilter).length > 0) {
       var arServices = [];
-      $('input[name="services"]:checked', parentFrom).each(function (
+      $('input[name="services"]:checked', catalogFilter).each(function (
         indx,
         element
       ) {
@@ -133,9 +145,9 @@ $(function () {
       delete params["services"];
     }
 
-    if ($('input[name="food"]:checked', parentFrom).length > 0) {
+    if ($('input[name="food"]:checked', catalogFilter).length > 0) {
       var arFood = [];
-      $('input[name="food"]:checked', parentFrom).each(function (
+      $('input[name="food"]:checked', catalogFilter).each(function (
         indx,
         element
       ) {
@@ -146,9 +158,9 @@ $(function () {
       delete params["food"];
     }
 
-    if ($('input[name="restvariants"]:checked', parentFrom).length > 0) {
+    if ($('input[name="restvariants"]:checked', catalogFilter).length > 0) {
       var arRestvariants = [];
-      $('input[name="restvariants"]:checked', parentFrom).each(function (
+      $('input[name="restvariants"]:checked', catalogFilter).each(function (
         indx,
         element
       ) {
@@ -159,9 +171,9 @@ $(function () {
       delete params["restvariants"];
     }
 
-    if ($('input[name="objectcomforts"]:checked', parentFrom).length > 0) {
+    if ($('input[name="objectcomforts"]:checked', catalogFilter).length > 0) {
       var arObjectcomforts = [];
-      $('input[name="objectcomforts"]:checked', parentFrom).each(function (
+      $('input[name="objectcomforts"]:checked', catalogFilter).each(function (
         indx,
         element
       ) {
@@ -172,22 +184,22 @@ $(function () {
       delete params["objectcomforts"];
     }
 
-    if ($('input[name="features"]:checked', parentFrom).length > 0) {
+    if ($('input[name="feature"]:checked', catalogFilter).length > 0) {
       var arFeatures = [];
-      $('input[name="features"]:checked', parentFrom).each(function (
+      $('input[name="feature"]:checked', catalogFilter).each(function (
         indx,
         element
       ) {
         arFeatures.push($(element).val());
       });
-      params["features"] = arFeatures.join(",");
+      params["feature"] = arFeatures.join(",");
     } else {
-      delete params["features"];
+      delete params["feature"];
     }
 
-    if ($('input[name="housetypes"]:checked', parentFrom).length > 0) {
+    if ($('input[name="housetypes"]:checked', catalogFilter).length > 0) {
       var arHousetypes = [];
-      $('input[name="housetypes"]:checked', parentFrom).each(function (
+      $('input[name="housetypes"]:checked', catalogFilter).each(function (
         indx,
         element
       ) {
@@ -198,11 +210,11 @@ $(function () {
       delete params["housetypes"];
     }
 
-    var dateFrom = $("[data-date-from]", parentFrom).text();
-    var dateTo = $("[data-date-to]", parentFrom).text();
-    var guests = $('input[name="guests-adults-count"]', parentFrom).val();
+    var dateFrom = $("[data-date-from]", frontFilter).text().trim();
+    var dateTo = $("[data-date-to]", frontFilter).text().trim();
+    var guests = $('input[name="guests-adults-count"]', frontFilter).val();
     var children = [];
-    $(".guests__children input[data-guests-children]", parentFrom).each(
+    $(".guests__children input[data-guests-children]", frontFilter).each(
       function (indx, element) {
         var age = $(element).val();
         children.push(age);
@@ -238,6 +250,14 @@ $(function () {
         return false;
       }
     }
+
+    if (dateFrom == "" && dateTo == "" && guests > 0) {
+      delete params["dateFrom"];
+      delete params["dateTo"];
+      delete params["guests"];
+    }
+    console.log(params);
+
     // else {
     //   var error = "Вы забыли указать даты заезда и выезда";
     //   window.infoModal("Ой…", error);
@@ -246,8 +266,6 @@ $(function () {
     // }
 
     deleteUrlParams(params, ["page"]);
-
-    console.log(params);
 
     if (Object.keys(params).length > 0) {
       window.preloader.show();
@@ -274,7 +292,7 @@ $(function () {
       "types",
       "services",
       "food",
-      "features",
+      "feature",
       "name",
       "dateFrom",
       "dateTo",
@@ -550,5 +568,94 @@ $(function () {
     e.preventDefault();
     var reviewId = $(this).data("id");
     reviews.deleteLike(reviewId);
+  });
+});
+
+$(document).ready(function () {
+  let minPriceFull = $(".min-price").data("price-value");
+  let maxPriceFull = $(".max-price").data("price-value");
+
+  let paramsUrl = getUrlParams();
+
+  if (
+    paramsUrl["maxPrice"] !== undefined &&
+    paramsUrl["minPrice"] !== undefined
+  ) {
+    minPrice = paramsUrl["minPrice"];
+    maxPrice = paramsUrl["maxPrice"];
+    $(".min-price").val(paramsUrl["minPrice"]);
+    $(".max-price").val(paramsUrl["maxPrice"]);
+  } else {
+    minPrice = minPriceFull;
+    maxPrice = maxPriceFull;
+  }
+
+  $(".slider-range").slider({
+    range: true,
+    values: [minPrice, maxPrice],
+    min: minPriceFull,
+    max: maxPriceFull,
+    slide: function (event, ui) {
+      $(".min-price").val(ui.values[0]);
+      $(".max-price").val(ui.values[1]);
+    },
+  });
+  $(".slider-range").on("slidechange", function (event, ui) {
+    let minPrice = ui.values[0];
+    let maxPrice = ui.values[1];
+  });
+
+  $(".button.price").on("click", function () {
+    $(this).toggleClass("active");
+    if ($(this).hasClass("active")) {
+      $(".catalog_sorter .price-filter").css("display", "block");
+    } else {
+      $(".catalog_sorter .price-filter").css("display", "none");
+    }
+  });
+
+  $(".sort__btn").on("click", function () {
+    $(this).toggleClass("active");
+    if ($(this).hasClass("active")) {
+      $(".sort__list").css("display", "block");
+    } else {
+      $(".sort__list").css("display", "none");
+    }
+  });
+
+  $(".sort__btn span").html($("span.list__link span").html());
+
+  $(".fake-filter_catalog").on("click", function () {
+    $(".catalog_filter").css("display", "flex");
+    $(".catalog-filter_close").css("display", "block");
+  });
+
+  $(".catalog-filter_close").on("click", function () {
+    $(".catalog_filter").css("display", "none");
+    $(".catalog-filter_close").css("display", "none");
+  });
+
+  $(".filter-clea__btn").on("click", function () {
+    let type = $(this).data("type");
+    let value = String($(this).data("id"));
+    let array = paramsUrl[type].split(",");
+
+    let filteredArray = array.filter(function (item) {
+      return item !== value;
+    });
+
+    console.log(filteredArray);
+
+    let currentUrl = new URL(window.location.href);
+    let newValue = filteredArray.join(", ");
+
+    console.log(newValue);
+
+    let params = currentUrl.searchParams;
+    params.set(type, newValue);
+
+    window.history.replaceState({}, "", currentUrl);
+    window.location.reload();
+    window.preloader.show();
   });
 });

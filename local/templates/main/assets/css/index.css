@@ -1547,6 +1547,7 @@
 
 .section_form .house-type.container {
   z-index: 1;
+  overflow: hidden;
 }
 
 .section_form .container > * {
