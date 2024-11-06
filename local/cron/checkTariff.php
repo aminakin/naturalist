@@ -6,12 +6,16 @@ if (!$_SERVER['DOCUMENT_ROOT']) {
 }
 include_once $_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_before.php";
 
-\Bitrix\Main\Loader::includeModule('iblock');
-
 // Поиск всех внешних ID тарифов
 $tariffData = \Bitrix\Iblock\Iblock::wakeUp(TARIFFS_IBLOCK_ID)->getEntityDataClass()::query()
     ->setSelect(['ID', "EXTERNALID" => 'EXTERNAL_ID.VALUE'])
     ->fetchAll();
+
+foreach ($tariffData as $key => $value) {
+    if ($value['EXTERNALID']) {
+        $tariffs[] = $value['EXTERNALID'];
+    }
+}
 
 $hlEntity = new \Naturalist\HighLoadBlockHelper('RoomOffers');
 
@@ -19,7 +23,7 @@ $hlEntity = new \Naturalist\HighLoadBlockHelper('RoomOffers');
 $hlEntity->prepareParamsQuery(
     ["ID", "UF_TARIFF_ID"],
     ["ID" => "ASC"],
-    ["!UF_TARIFF_ID" => array_column($tariffData, 'EXTERNALID')],
+    ["!UF_TARIFF_ID" => $tariffs],
 );
 
 $rows = $hlEntity->getDataAll();

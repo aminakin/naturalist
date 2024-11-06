@@ -15,7 +15,7 @@ $arOutput = array();
 
 $inputJSON = file_get_contents('php://input');
 $params    = json_decode($inputJSON, true);
-$filePath = $api->setCurrentData($params);
+$filePath = $api->setCurrentData($params, $resource);
 $arSend['FILE'] = $filePath;
 
 if ($method == 'POST' && $resource == 'auth') {
