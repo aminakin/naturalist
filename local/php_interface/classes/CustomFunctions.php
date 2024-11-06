@@ -21,6 +21,9 @@ class CustomFunctions
     private static $certvarHlCode = 'Certvar';
     private static $certpocketHlCode = 'Certpocket';
     private static $certelvarHlCode = 'Certelvar';
+    private static $regionsHlCode = 'Regions';
+    private static $waterHlCode = 'Water';
+    private static $suitHlCode = 'SuitTypes';
 
     /**
      * Удаляет неиспользуемые файлы из папки /upload/uf/
@@ -28,7 +31,6 @@ class CustomFunctions
      */
     public static function deleteOldUfFiles()
     {
-        return;
         // Получаем все фото из доп. полей разделов каталога
         $entity = Section::compileEntityByIblock(CATALOG_IBLOCK_ID);
         $rsSectionObjects = $entity::getList(
@@ -50,11 +52,14 @@ class CustomFunctions
         }
 
         // Получаем все фото из HL блоков особенностей объектов и сертификатов
-        array_merge($photoPaths, self::addPhotosToArray(self::$amenitiesHlCode, 'UF_ICON'));
-        array_merge($photoPaths, self::addPhotosToArray(self::$certvarHlCode, 'UF_FILE'));
-        array_merge($photoPaths, self::addPhotosToArray(self::$certvarHlCode, 'UF_IMG_TO_CERT'));
-        array_merge($photoPaths, self::addPhotosToArray(self::$certpocketHlCode, 'UF_FILE'));
-        array_merge($photoPaths, self::addPhotosToArray(self::$certelvarHlCode, 'UF_FILE'));
+        $photoPaths = array_merge($photoPaths, self::addPhotosToArray(self::$amenitiesHlCode, 'UF_ICON'));
+        $photoPaths = array_merge($photoPaths, self::addPhotosToArray(self::$certvarHlCode, 'UF_FILE'));
+        $photoPaths = array_merge($photoPaths, self::addPhotosToArray(self::$certvarHlCode, 'UF_IMG_TO_CERT'));
+        $photoPaths = array_merge($photoPaths, self::addPhotosToArray(self::$certpocketHlCode, 'UF_FILE'));
+        $photoPaths = array_merge($photoPaths, self::addPhotosToArray(self::$certelvarHlCode, 'UF_FILE'));
+        $photoPaths = array_merge($photoPaths, self::addPhotosToArray(self::$regionsHlCode, 'UF_ICON'));
+        $photoPaths = array_merge($photoPaths, self::addPhotosToArray(self::$waterHlCode, 'UF_IMG'));
+        $photoPaths = array_merge($photoPaths, self::addPhotosToArray(self::$suitHlCode, 'UF_IMG'));
 
         $photoPaths = array_unique($photoPaths);
         $uf = scandir($_SERVER['DOCUMENT_ROOT'] . self::$ufFolder);

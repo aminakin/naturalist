@@ -622,12 +622,12 @@ class Rest
         }
     }
 
-    public function setCurrentData($val)
+    public function setCurrentData($val, $resource = '')
     {
         if (is_array($val)) {
             $importFilePath = $_SERVER["DOCUMENT_ROOT"] . '/import/bnovo/import_hotelid_' . $val["hotel_id"] . '_date_' . date("j-m-Y-H-i-s") . '.json';
 
-            if ($val["hotel_id"] == 508) {
+            if ($val["hotel_id"] == 508 && $resource == 'prices') {
                 $filesDataClass = HighloadBlockTable::compileEntity(BNOVO_FILES_HL_ENTITY)->getDataClass();
                 $filesDataClass::add([
                     'UF_FILE_NAME' => $importFilePath,

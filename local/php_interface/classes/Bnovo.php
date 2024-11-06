@@ -2409,7 +2409,7 @@ class Bnovo
         $now = new DateTime();
         $startDate = FormatDate("Y-m-d", $now->getTimeStamp());
 
-        $future = new DateTime(date('Y-m-d', strtotime($startDate . '+60 day')));
+        $future = new DateTime(date('Y-m-d', strtotime($startDate . '+90 day')));
         $endDate = FormatDate("Y-m-d", $future->getTimeStamp());
 
         $lastDownLoad = Option::get("main", "bnovo_last_download");
