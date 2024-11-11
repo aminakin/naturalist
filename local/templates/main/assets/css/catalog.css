@@ -3789,6 +3789,10 @@
   width: 100%;
 }
 
+.price-filter .price-filter__controls .button:first-child{
+  margin-right: 12px;
+}
+
 .price-filter .button.button-accept {
   color: var(--color-white);
 }
@@ -4032,6 +4036,7 @@
     grid-template-columns: 1fr 1fr;
     height: 5rem;
     position: relative;
+    z-index: 1;
   }
 
   .catalog_map .calendar__month {
@@ -4079,7 +4084,6 @@
 
   .catalog_map .calendar__navigation .list__item button {
     width: auto;
-    margin: 0 auto;
   }
 
   .catalog_map .calendar__month .flatpickr-calendar.inline {
