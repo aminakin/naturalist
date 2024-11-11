@@ -960,6 +960,7 @@ class AutoCreate
         $query =  $entity::query()
             ->addSelect('ID')
             ->addSelect('UF_NEW_URL')
+            ->addSelect('UF_REAL_URL')
             ?->fetchAll();
 
         foreach ($query as $link) {
@@ -967,7 +968,9 @@ class AutoCreate
         }
 
         foreach ($urls as $url) {
-            if (isset($result[$url['UF_NEW_URL']]) && $result[$url['UF_NEW_URL']]['UF_NEW_URL'] == $url['UF_NEW_URL']) {
+            if ((isset($result[$url['UF_NEW_URL']]) && $result[$url['UF_NEW_URL']]['UF_NEW_URL'] == $url['UF_NEW_URL']) ||
+                isset($result[$url['UF_REAL_URL']]) && $result[$url['UF_NEW_URL']]['UF_REAL_URL'] == $url['UF_REAL_URL']
+            ) {
                 $entity::update($result[$url['UF_NEW_URL']]['ID'], $url);
             } else {
                 $entity::add($url);
@@ -981,6 +984,7 @@ class AutoCreate
 
         $query =  $entity::query()
             ->addSelect('ID')
+            ->where('UF_SEO_TEXT', '')
             ?->fetchAll();
 
         foreach ($query as $item) {

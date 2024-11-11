@@ -26,27 +26,35 @@ class Sitemap
     {
         $sitemap = new SitemapIndex('/sitemap.xml', ['SITE_ID' => 's1', 'PROTOCOL' => self::PROTOCOL, 'DOMAIN' => self::DOMAIN]);
 
-        $fileUrlEnc = self::PROTOCOL . '://' . self::DOMAIN . '/' . self::FILE_NAME;
+        $files = self::getChpyFilesList();
 
-        $contents = $sitemap->getContents();
-
-        $reg = "/" . sprintf(preg_quote($sitemap::ENTRY_TPL, "/"), preg_quote($fileUrlEnc, "/"), "[^<]*") . "/";
-
-        $newEntry = sprintf(
-            $sitemap::ENTRY_TPL,
-            $fileUrlEnc,
-            date('c')
-        );
-
-        $count = 0;
-        $contents = preg_replace($reg, $newEntry, $contents, 1, $count);
-
-        if ($count <= 0) {
-            $contents = mb_substr($contents, 0, -mb_strlen($sitemap::FILE_FOOTER))
-                . $newEntry . $sitemap::FILE_FOOTER;
+        if (!count($files)) {
+            return;
         }
 
-        $sitemap->putContents($contents);
+        foreach ($files as $file) {
+            $fileUrlEnc = self::PROTOCOL . '://' . self::DOMAIN . '/' . $file;
+
+            $contents = $sitemap->getContents();
+
+            $reg = "/" . sprintf(preg_quote($sitemap::ENTRY_TPL, "/"), preg_quote($fileUrlEnc, "/"), "[^<]*") . "/";
+
+            $newEntry = sprintf(
+                $sitemap::ENTRY_TPL,
+                $fileUrlEnc,
+                date('c')
+            );
+
+            $count = 0;
+            $contents = preg_replace($reg, $newEntry, $contents, 1, $count);
+
+            if ($count <= 0) {
+                $contents = mb_substr($contents, 0, -mb_strlen($sitemap::FILE_FOOTER))
+                    . $newEntry . $sitemap::FILE_FOOTER;
+            }
+
+            $sitemap->putContents($contents);
+        }
     }
 
     /**
@@ -62,10 +70,48 @@ class Sitemap
     }
 
     /**
+     * Возвращает список файлов с ЧПУ ссылками
+     *
+     * @return array
+     */
+    private static function getChpyFilesList(): array
+    {
+        $result = [];
+        $files = scandir($_SERVER['DOCUMENT_ROOT']);
+        foreach ($files as $file) {
+            if (str_contains($file, 'chpy.')) {
+                $result[] = $file;
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * Удаляет все файлы с ЧПУ ссылками
+     *
+     * @return void
+     */
+    public static function deleteChpyFiles(): void
+    {
+        $files = self::getChpyFilesList();
+
+        if (!count($files)) {
+            return;
+        }
+
+        foreach ($files as $file) {
+            unlink($_SERVER['DOCUMENT_ROOT'] . '/' . $file);
+        }
+    }
+
+    /**
      * Добавляет ЧПУ в файл
      */
     public static function addChpyToFile()
     {
+        self::deleteChpyFiles();
+
         file_put_contents('/' . self::FILE_NAME, '');
 
         $file = new SitemapFile('/' . self::FILE_NAME, ['SITE_ID' => 's1', 'PROTOCOL' => self::PROTOCOL, 'DOMAIN' => self::DOMAIN]);

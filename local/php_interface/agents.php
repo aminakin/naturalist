@@ -22,6 +22,7 @@ function createCHPU()
 function updateSitemap()
 {
     Sitemap::addChpyToFile();
+    Sitemap::addChpyFileToSitemap();
 
     return 'updateSitemap();';
 }
