@@ -18031,7 +18031,7 @@
                   .concat(data.title, "</a>\n\t\t\t\t\t")
                   .concat(
                     data.scoreData && data.scoreData.length > 0
-                      ? '<a href="'
+                      ? '<a target="_blank" href="'
                           .concat(
                             data.href,
                             '#reviews-anchor" class="score" data-score=\''
@@ -18050,7 +18050,7 @@
                   )
                   .concat(
                     data.price,
-                    '</span><span class="dot"></span><span>Цена за одну ночь </span></div></div><a class="button button_transparent" onclick="setLocalStorageCatalog(event);" href="'
+                    '</span><span class="dot"></span><span>Цена за одну ночь </span></div></div><a target="_blank" class="button button_transparent" onclick="setLocalStorageCatalog(event);" href="'
                   )
                   .concat(data.href, '">Выбрать</a>\n\t\t\t</div>\n\t\t');
               window.objectsGallery();
@@ -18351,7 +18351,9 @@
                 });
 
                 this.options.zoom = 7;
-                this.handleCreateMarkersCenter(itemCoords);
+                if(itemCoords.length > 0) {
+                  this.handleCreateMarkersCenter(itemCoords);
+                }
               }
 
               this.map = new ymaps.Map(

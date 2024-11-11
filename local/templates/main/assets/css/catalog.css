@@ -2248,12 +2248,13 @@
 }
 
 .body__on_map .catalog__map-sticky {
-  position: static;
+  position: relative;
   width: 100%;
   max-height: 800px;
   border-radius: 12px;
   overflow: hidden;
   padding: 0;
+  top: 0;
 }
 
 .body__on_map .catalog__on_map {
@@ -4546,6 +4547,11 @@
 
   .catalog_sorter.map {
     max-width: 230px;
+    margin-left: 8px;
+  }
+
+  .catalog_sorter .price-filter{
+    left: -130px;
   }
 
   .house-type.container,
@@ -5017,6 +5023,15 @@
 
   .bx-pagination-container ul {
     justify-content: space-around;
+  }
+
+  .catalog__map-more{
+    margin-top: 0;
+    left: 8px;
+    -webkit-transform: translate(0%, -50%);
+    -ms-transform: translate(0%, -50%);
+    transform: translate(0%, -50%);
+    width: 25.2rem;
   }
 }
 
