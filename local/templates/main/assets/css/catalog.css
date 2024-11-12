@@ -3656,9 +3656,9 @@
   border: none;
 }
 
-.house-type__wrapper .swiper-slide:hover a svg path {
+/*.house-type__wrapper .swiper-slide:hover a svg path {
   fill: var(--color-orange);
-}
+}*/
 
 .house-type__wrapper .swiper-slide:hover a .house-type__text {
   color: var(--color-orange);
