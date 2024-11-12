@@ -4551,6 +4551,10 @@
   }
 
   .catalog_sorter .price-filter{
+    left: -52px;
+  }
+
+  .body__on_map .catalog_sorter .price-filter{
     left: -130px;
   }
 
