@@ -52,7 +52,7 @@ if ($arParams['arServices']){
         if ($arParams['arFilterServices'] && in_array($arService["ID"], $arParams['arFilterServices'])){
             $catalogFilterData[] = [
                 'ID' =>  $arService["ID"],
-                'NAME' =>  $arService["UF_NAME"],
+                'NAME' =>  $arService["NAME"],
                 'TYPE' => 'services'
             ];
         }
