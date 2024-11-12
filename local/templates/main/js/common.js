@@ -60,7 +60,8 @@ window.setLocalStorageCatalog = function (event) {
       // console.log(data);
     },
   });
-  location.href = event.target.getAttribute("href");
+  window.open(event.target.getAttribute("href"));
+  //location.href = event.target.getAttribute("href");
 };
 
 window.getChildrenOrderTitle = function (order) {
