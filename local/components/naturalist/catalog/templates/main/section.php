@@ -570,12 +570,12 @@ $water = $waterDataClass::query()
     ?->fetchAll();
 
 // Общие водоёмы
-$commonWaterDataClass = HighloadBlockTable::compileEntity(COMMON_WATER_HL_ENTITY)->getDataClass();
+/*$commonWaterDataClass = HighloadBlockTable::compileEntity(COMMON_WATER_HL_ENTITY)->getDataClass();
 $commonWater = $commonWaterDataClass::query()
     ->addSelect('*')
     ->setOrder(['UF_SORT' => 'ASC'])
     ?->fetchAll();
-
+*/
 // Варианты отдыха
 $restVariantsDataClass = HighloadBlockTable::compileEntity(REST_VARS_HL_ENTITY)->getDataClass();
 $restVariants = $restVariantsDataClass::query()
