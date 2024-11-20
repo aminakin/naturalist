@@ -1652,7 +1652,7 @@ class Bnovo
             // }
 
             // Поля элемента
-            $arExistElement = CIBlockElement::GetList(false, array("IBLOCK_ID" => CATALOG_IBLOCK_ID, "PROPERTY_EXTERNAL_ID" => $arRoom['id']))->Fetch();
+            $arExistElement = CIBlockElement::GetList(false, array("IBLOCK_ID" => CATALOG_IBLOCK_ID, "PROPERTY_EXTERNAL_ID" => $arRoom['id'], "PROPERTY_EXTERNAL_SERVICE" => 6))->Fetch();
             if ($arExistElement) {
                 if (!$onlyRooms) {
                     $elementId = $arExistElement["ID"];
