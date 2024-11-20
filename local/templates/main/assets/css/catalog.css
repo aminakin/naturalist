@@ -3756,7 +3756,7 @@
 
 .slider-gallery .swiper-button-prev,
 .slider-gallery .swiper-button-next {
-  display: none;
+  /*display: none;*/
 }
 
 .catalog-full__wrapper .cert-index__seo-text {
