@@ -569,6 +569,13 @@ $water = $waterDataClass::query()
     ->setOrder(['UF_SORT' => 'ASC'])
     ?->fetchAll();
 
+// Общие водоёмы
+$commonWaterDataClass = HighloadBlockTable::compileEntity(COMMON_WATER_HL_ENTITY)->getDataClass();
+$commonWater = $commonWaterDataClass::query()
+    ->addSelect('*')
+    ->setOrder(['UF_SORT' => 'ASC'])
+    ?->fetchAll();
+
 // Варианты отдыха
 $restVariantsDataClass = HighloadBlockTable::compileEntity(REST_VARS_HL_ENTITY)->getDataClass();
 $restVariants = $restVariantsDataClass::query()
@@ -1113,6 +1120,8 @@ if ($chpy['UF_CANONICAL']) {
                             "arFilterObjectComforts" => $arFilterObjectComforts,
                             "water" => $water,
                             "arFilterWater" => $arFilterWater,
+                            "commonWater" => $commonWater,
+                            "arFilterCommonWater" => $arFilterCommonWater,
                             "maxPrice" => $maxPrice,
                             "minPrice" => $minPrice,
                         )
@@ -1171,20 +1180,36 @@ if ($chpy['UF_CANONICAL']) {
             </section>
             <!-- section-->
             <?php if (CSite::InDir('/map') == false): ?>
-                <div class="container">
-                    <section class="cert-index__seo-text">
-                        <? $APPLICATION->IncludeComponent(
-                            "bitrix:main.include",
-                            "",
-                            array(
-                                "AREA_FILE_SHOW" => "file",
-                                "PATH" => '/include/' . $seoFile . '-seo-text.php',
-                                "EDIT_TEMPLATE" => ""
-                            )
-                        ); ?>
-                    </section>
-                    <a href="#" class="show-more-seo">Раскрыть</a>
-                </div>
+                <section class="cert-index__seo-text">
+                    <div class="container">
+                        <? if (!empty($arSeoImpressions) && reset($arSeoImpressions)['PREVIEW_TEXT'] != '') {
+                            echo reset($arSeoImpressions)['PREVIEW_TEXT'];
+                            $isSeoText = true;
+                        } else if (empty($_GET)) {
+                            $APPLICATION->IncludeComponent(
+                                "bitrix:main.include",
+                                "",
+                                array(
+                                    "AREA_FILE_SHOW" => "file",
+                                    "PATH" => '/include/' . $seoFile . '-seo-text.php',
+                                    "EDIT_TEMPLATE" => ""
+                                )
+                            );
+                            $isSeoText = false;
+                        } else if ($chySeoText) {
+                            echo $chySeoText;
+                            $isSeoText = true;
+                        } else if (isset($pageSeoData) && isset($pageSeoData['UF_SEO_TEXT'])) {
+                            echo $pageSeoData['UF_SEO_TEXT'];
+                            $isSeoText = true;
+                        } ?>
+                    </div>
+                </section>
+                <? if ($isSeoText) { ?>
+                    <div class="container">
+                        <a href="#" class="show-more-seo">Показать ещё</a>
+                    </div>
+                <? } ?>
             <? endif; ?>
         </main>
         <div class="mobile-link__btn">

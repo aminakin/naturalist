@@ -132,6 +132,19 @@ $(function () {
       delete params["water"];
     }
 
+    if ($('input[name="commonwater"]:checked', catalogFilter).length > 0) {
+      var arCommonWater = [];
+      $('input[name="commonwater"]:checked', catalogFilter).each(function (
+        indx,
+        element
+      ) {
+        arCommonWater.push($(element).val());
+      });
+      params["commonwater"] = arCommonWater.join(",");
+    } else {
+      delete params["commonwater"];
+    }
+
     if ($('input[name="services"]:checked', catalogFilter).length > 0) {
       var arServices = [];
       $('input[name="services"]:checked', catalogFilter).each(function (
@@ -184,17 +197,17 @@ $(function () {
       delete params["objectcomforts"];
     }
 
-    if ($('input[name="feature"]:checked', catalogFilter).length > 0) {
+    if ($('input[name="features"]:checked', catalogFilter).length > 0) {
       var arFeatures = [];
-      $('input[name="feature"]:checked', catalogFilter).each(function (
+      $('input[name="features"]:checked', catalogFilter).each(function (
         indx,
         element
       ) {
         arFeatures.push($(element).val());
       });
-      params["feature"] = arFeatures.join(",");
+      params["features"] = arFeatures.join(",");
     } else {
-      delete params["feature"];
+      delete params["features"];
     }
 
     if ($('input[name="housetypes"]:checked', catalogFilter).length > 0) {

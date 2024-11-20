@@ -258,6 +258,24 @@ foreach ($arResult as $key => $value) {
                         </div>
                     </div>
                 <? endif; ?>
+
+                <? if ($commonWater): ?>
+                    <div class="form__dropdown form__dropdown_show" style="display: none">
+                        <div class="form__dropdown-heading h6">Общие водоёмы</div>
+                        <div class="form__dropdown-body">
+                            <ul class="list list_checkboxes">
+                                <? foreach ($commonWater as $oneCommonWater) : ?>
+                                    <li class="list__item">
+                                        <label class="checkbox">
+                                            <input type="checkbox" name="commonwater" value="<?= $oneCommonWater["ID"] ?>"
+                                                <? if ($arFilterCommonWater && in_array($oneCommonWater["ID"], $arFilterCommonWater)) : ?>checked<? endif; ?>><span><?= $oneCommonWater["UF_NAME"] ?></span>
+                                        </label>
+                                    </li>
+                                <? endforeach; ?>
+                            </ul>
+                        </div>
+                    </div>
+                <? endif; ?>
             </div>
 
             <div class="filters-attrs__block">
@@ -350,7 +368,7 @@ foreach ($arResult as $key => $value) {
                                     ?>
                                     <li class="list__item">
                                         <label class="checkbox">
-                                            <input type="checkbox" name="feature" value="<?= $arFeature["ID"] ?>"
+                                            <input type="checkbox" name="features" value="<?= $arFeature["ID"] ?>"
                                                 <? if ($arFilterFeatures && in_array(
                                                     $arFeature["ID"],
                                                     $arFilterFeatures

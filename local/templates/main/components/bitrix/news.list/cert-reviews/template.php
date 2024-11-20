@@ -42,7 +42,7 @@ $this->setFrameMode(true);
 					<div class="cert-review">
 						<div class="cert-review__img">
 							<?if (is_array($arItem['PROPERTIES']['PHOTOS']['VALUE']) && count($arItem['PROPERTIES']['PHOTOS']['VALUE'])) {
-								$arPhoto = CFile::ResizeImageGet($arItem['PROPERTIES']['PHOTOS']['VALUE'][0], array('width' => 356, 'height' => 193), BX_RESIZE_IMAGE_EXACT, true);
+								$arPhoto = CFile::ResizeImageGet($arItem['PROPERTIES']['PHOTOS']['VALUE'][0], array('width' => 386, 'height' => 493), BX_RESIZE_IMAGE_EXACT, true);
 							?>
 								<img src="<?=$arPhoto['src']?>" alt="">
 							<?} else {?>
