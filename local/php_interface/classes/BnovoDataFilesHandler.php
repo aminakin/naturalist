@@ -42,7 +42,7 @@ class BnovoDataFilesHandler
             return;
         }
 
-        $result = $this->rest->updatePrices($data, $this->filePath, true);
+        $result = $this->rest->updatePrices($data, $this->filePath);
 
         if ($result['code'] == 200) {
             $this->entity::update($this->rowId, ['UF_LOADED' => 1]);
