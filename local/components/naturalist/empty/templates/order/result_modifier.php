@@ -1,4 +1,5 @@
 <?
+
 use Bitrix\Main\Application;
 use Bitrix\Main\Grid\Declension;
 use Bitrix\Highloadblock\HighloadBlockTable;
@@ -50,12 +51,12 @@ $daysDeclension = new Declension('ночь', 'ночи', 'ночей');
 /* Текущий раздел */
 $arSection = CIBlockSection::GetList(false, array("IBLOCK_ID" => CATALOG_IBLOCK_ID, "ID" => $sectionId), false, array("IBLOCK_ID", "ID", "NAME", "CODE", "DESCRIPTION", "SECTION_PAGE_URL", "UF_*"), false)->GetNext();
 
-if($arSection["UF_PHOTOS"]) {
-    foreach($arSection["UF_PHOTOS"] as $photoId) {
+if ($arSection["UF_PHOTOS"]) {
+    foreach ($arSection["UF_PHOTOS"] as $photoId) {
         $arSection["PICTURES"][$photoId] = CFile::ResizeImageGet($photoId, array('width' => 590, 'height' => 390), BX_RESIZE_IMAGE_EXACT, true);
     }
 } else {
-    $arSection["PICTURES"][0]["src"] = SITE_TEMPLATE_PATH."/img/big_no_photo.png";
+    $arSection["PICTURES"][0]["src"] = SITE_TEMPLATE_PATH . "/img/big_no_photo.png";
 }
 
 /* Текущий элемент */
@@ -88,7 +89,7 @@ while ($arReview = $rsReviews->GetNext()) {
     $avgRating += $arReview["PROPERTY_RATING_VALUE"];
     $reviewsCount++;
 }
-if($reviewsCount > 0) {
+if ($reviewsCount > 0) {
     $avgRating = round($avgRating / $reviewsCount, 1);
 }
 
@@ -125,9 +126,14 @@ $arGuestsNamesData = [1 => 'Основной', 'Второй', 'Третий', '
 /* Получаем активные купоны */
 $orders = new Orders();
 $coupons = $orders->getActivatedCoupons();
+if (intval(Users::getInnerScore()) !== 0 && is_array($coupons) && count($coupons)) {
+    foreach ($coupons as $coupon) {
+        $orders->removeCoupon($coupon['COUPON']);
+    }
+}
 
 /* Считаем скидки */
-$basket = Basket::loadItemsForFUser(Fuser::getId(),Context::getCurrent()->getSite());
+$basket = Basket::loadItemsForFUser(Fuser::getId(), Context::getCurrent()->getSite());
 $registry = Registry::getInstance(Registry::REGISTRY_TYPE_ORDER);
 $orderClass = $registry->getOrderClassName();
 $order = $orderClass::create(Context::getCurrent()->getSite(), $USER->getId());
@@ -206,6 +212,6 @@ $arResult = array(
     "finalPrice" => $finalBaskePrices,
     "paySystems" => $paySystemResult,
 );
-if(!empty($prices)) {
+if (!empty($prices)) {
     $arResult["priceOneNight"] = array_shift(unserialize($prices));
 }

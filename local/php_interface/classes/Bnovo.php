@@ -1832,10 +1832,6 @@ class Bnovo
     /* Обновление цен и броней */
     public function updateReservationData($hotelId, $arTariffs, $arCategories, $arDates, $newLogic = false)
     {
-        if ($hotelId == 11712 && $newLogic == false) {
-            return;
-        }
-
         $url = $this->bnovoApiURL . '/plans_data';
         $headers = array(
             "Content-Type: application/json"
@@ -1976,10 +1972,6 @@ class Bnovo
     /* Обновление наличия */
     public function updateAvailabilityData($hotelId, $arCategories, $arDates, $fromOrder = false, $newLogic = false)
     {
-        if ($hotelId == 11712 && $newLogic == false) {
-            return;
-        }
-
         $url = $this->bnovoApiURL . '/availability';
         $headers = array(
             "Content-Type: application/json"
@@ -2446,12 +2438,43 @@ class Bnovo
 
         if (!empty($sections)) {
             foreach ($sections as $section) {
-                if ($section['UF_EXTERNAL_ID'] == 11712) {
-                    continue;
-                }
                 $this->updateReservationData($section['UF_EXTERNAL_ID'], [], [], [$startDate, $endDate]);
                 $this->updateAvailabilityData($section['UF_EXTERNAL_ID'], [], [$startDate, $endDate]);
             }
+        }
+    }
+
+    /**
+     * Проверяет все объекты Бново на подключение к каналу продаж
+     *
+     * @return void
+     * 
+     */
+    public function checkDisabledBnovoObjects(): void
+    {
+        $sections = $this->getSections();
+        $message = '';
+
+        $now = new DateTime();
+        $startDate = FormatDate("Y-m-d", $now->getTimeStamp());
+
+        $future = new DateTime(date('Y-m-d', strtotime($startDate . '+1 day')));
+        $endDate = FormatDate("Y-m-d", $future->getTimeStamp());
+
+        if (!empty($sections)) {
+            foreach ($sections as $section) {
+                $result = $this->updateAvailabilityData($section['UF_EXTERNAL_ID'], [], [$startDate, $endDate], true);
+                if (!is_array($result)) {
+                    $message .= "Ошибка при проверке данных по объекту " . $section['NAME'] . "\r\n";
+                    $message .= "Текст ошибки: " . $result . "\r\n\r\n";
+                }
+            }
+        }
+
+        if ($message != '') {
+            \CEvent::Send('BNOVO_DATA_ERROR', 's1', [
+                'MESSAGE' => $message,
+            ]);
         }
     }
 
