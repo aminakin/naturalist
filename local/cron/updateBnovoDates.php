@@ -1,12 +1,15 @@
 <?
+
 use Bitrix\Main\Application;
-use Naturalist\Bnovo;
+use Naturalist\BnovoDataFilesHandler;
 
 set_time_limit(6000);
 if (!$_SERVER['DOCUMENT_ROOT']) {
-    $_SERVER["DOCUMENT_ROOT"] = realpath(dirname(__FILE__)."/../../");
+    $_SERVER["DOCUMENT_ROOT"] = realpath(dirname(__FILE__) . "/../../");
 }
 include_once $_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_before.php";
 
-$bnovo = new Bnovo();
-$bnovo->getNearPrices();
+if (!$GLOBALS['BNOVO_FILES_WORKING']) {
+    $BnovoDataFilesHandler = new BnovoDataFilesHandler();
+    $BnovoDataFilesHandler->handleFile();
+}

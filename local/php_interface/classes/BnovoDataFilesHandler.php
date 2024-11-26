@@ -49,6 +49,8 @@ class BnovoDataFilesHandler
         }
 
         $GLOBALS['BNOVO_FILES_WORKING'] = false;
+
+        echo "Агент отработал \r\n";
     }
 
     /**
