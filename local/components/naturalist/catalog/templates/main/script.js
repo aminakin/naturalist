@@ -120,6 +120,7 @@ $(function () {
     }
 
     if ($('input[name="water"]:checked', catalogFilter).length > 0) {
+      delete params["water"];
       var arWater = [];
       $('input[name="water"]:checked', catalogFilter).each(function (
         indx,
@@ -133,6 +134,7 @@ $(function () {
     }
 
     if ($('input[name="commonwater"]:checked', catalogFilter).length > 0) {
+      delete params["commonwater"];
       var arCommonWater = [];
       $('input[name="commonwater"]:checked', catalogFilter).each(function (
         indx,
@@ -146,6 +148,7 @@ $(function () {
     }
 
     if ($('input[name="services"]:checked', catalogFilter).length > 0) {
+      delete params["services"];
       var arServices = [];
       $('input[name="services"]:checked', catalogFilter).each(function (
         indx,
@@ -159,6 +162,7 @@ $(function () {
     }
 
     if ($('input[name="food"]:checked', catalogFilter).length > 0) {
+      delete params["food"];
       var arFood = [];
       $('input[name="food"]:checked', catalogFilter).each(function (
         indx,
@@ -172,6 +176,7 @@ $(function () {
     }
 
     if ($('input[name="restvariants"]:checked', catalogFilter).length > 0) {
+      delete params["restvariants"];
       var arRestvariants = [];
       $('input[name="restvariants"]:checked', catalogFilter).each(function (
         indx,
@@ -185,6 +190,7 @@ $(function () {
     }
 
     if ($('input[name="objectcomforts"]:checked', catalogFilter).length > 0) {
+      delete params["objectcomforts"];
       var arObjectcomforts = [];
       $('input[name="objectcomforts"]:checked', catalogFilter).each(function (
         indx,
@@ -198,6 +204,7 @@ $(function () {
     }
 
     if ($('input[name="features"]:checked', catalogFilter).length > 0) {
+      delete params["features"];
       var arFeatures = [];
       $('input[name="features"]:checked', catalogFilter).each(function (
         indx,
@@ -211,6 +218,7 @@ $(function () {
     }
 
     if ($('input[name="housetypes"]:checked', catalogFilter).length > 0) {
+      delete params["housetypes"];
       var arHousetypes = [];
       $('input[name="housetypes"]:checked', catalogFilter).each(function (
         indx,

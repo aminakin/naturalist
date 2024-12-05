@@ -1830,7 +1830,7 @@ class Bnovo
     }
 
     /* Обновление цен и броней */
-    public function updateReservationData($hotelId, $arTariffs, $arCategories, $arDates, $newLogic = false)
+    public function updateReservationData($hotelId, $arTariffs, $arCategories, $arDates)
     {
         $url = $this->bnovoApiURL . '/plans_data';
         $headers = array(
@@ -1970,7 +1970,7 @@ class Bnovo
     }
 
     /* Обновление наличия */
-    public function updateAvailabilityData($hotelId, $arCategories, $arDates, $fromOrder = false, $newLogic = false)
+    public function updateAvailabilityData($hotelId, $arCategories, $arDates, $fromOrder = false)
     {
         $url = $this->bnovoApiURL . '/availability';
         $headers = array(
@@ -2397,7 +2397,7 @@ class Bnovo
      */
     public function getNearPrices(): void
     {
-        //return;
+        return;
         $now = new DateTime();
         $startDate = FormatDate("Y-m-d", $now->getTimeStamp());
 
