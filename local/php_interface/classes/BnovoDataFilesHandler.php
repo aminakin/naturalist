@@ -14,8 +14,7 @@ Loader::includeModule('highloadblock');
  */
 class BnovoDataFilesHandler
 {
-    private $rowId;
-    private $filePath;
+    private $arFiles = [];
     private $entity;
     private $rest;
 
@@ -33,19 +32,21 @@ class BnovoDataFilesHandler
     public function handleFile(): void
     {
         $GLOBALS['BNOVO_FILES_WORKING'] = true;
-        $this->getLastFile();
+        $this->getLastFiles();
 
-        $data = Json::decode(file_get_contents($this->filePath));
-
-        if (empty($data)) {
+        if (empty($this->arFiles)) {
             $GLOBALS['BNOVO_FILES_WORKING'] = false;
             return;
         }
 
-        $result = $this->rest->updatePrices($data, $this->filePath);
+        foreach ($this->arFiles as $file) {
+            $data = Json::decode(file_get_contents($file['UF_FILE_NAME']));
 
-        if ($result['code'] == 200) {
-            $this->entity::update($this->rowId, ['UF_LOADED' => 1]);
+            $result = $this->rest->updatePrices($data, $file['UF_FILE_NAME']);
+
+            if ($result['code'] == 200) {
+                $this->entity::update($file['ID'], ['UF_LOADED' => 1]);
+            }
         }
 
         $GLOBALS['BNOVO_FILES_WORKING'] = false;
@@ -58,18 +59,18 @@ class BnovoDataFilesHandler
      *
      * @return void
      */
-    private function getLastFile(): void
+    private function getLastFiles(): void
     {
         $info = $this->entity::query()
             ->addSelect('*')
             ->where('UF_LOADED', 0)
-            ?->fetch();
+            ->setLimit(3)
+            ?->fetchAll();
 
         if (empty($info)) {
             return;
         }
 
-        $this->rowId = $info['ID'];
-        $this->filePath = $info['UF_FILE_NAME'];
+        $this->arFiles = $info;
     }
 }
