@@ -455,6 +455,7 @@ h1.page_title {
 
 .cert-index__reviews {
   margin-top: 88px;
+  overflow: hidden;
 }
 
 @media (max-width: 1024px) {
