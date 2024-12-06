@@ -40,6 +40,7 @@ use Naturalist\Users;
     </script>
     <!-- End Google Tag Manager -->
 
+
     <meta charset="<?= LANG_CHARSET ?>">
     <meta http-equiv="X-UA-Compatible" content="IE=Edge">
     <title><? $APPLICATION->ShowTitle() ?></title>
@@ -100,7 +101,7 @@ use Naturalist\Users;
     <? if (CSite::InDir('/objects')) : ?>
         <link rel="stylesheet" href="<?= SITE_TEMPLATE_PATH ?>/assets/css/add_object.css?v=<?= filemtime($_SERVER['DOCUMENT_ROOT'] . SITE_TEMPLATE_PATH . '/assets/css/add_object.css'); ?>">
     <? endif; ?>
-
+    <link rel="stylesheet" href="<?= SITE_TEMPLATE_PATH ?>/assets/css/jquery-ui.min.css?v=<?= filemtime($_SERVER['DOCUMENT_ROOT'] . SITE_TEMPLATE_PATH . '/assets/css/jquery-ui.min.css'); ?>">
     <link rel="stylesheet" href="<?= SITE_TEMPLATE_PATH ?>/assets/css/custom.css?v=<?= filemtime($_SERVER['DOCUMENT_ROOT'] . SITE_TEMPLATE_PATH . '/assets/css/custom.css'); ?>">
 
     <? if (CSite::InDir('/promo')) : ?>
@@ -206,16 +207,12 @@ use Naturalist\Users;
             <div><img src="https://mc.yandex.ru/watch/91071014" style="position:absolute; left:-9999px;" alt="" /></div>
         </noscript>
         <!-- /Yandex.Metrika counter -->
-
-
-
     <?  }
     ?>
-
     <?/*<script src="https://dmp.one/sync?stock_key=4dce2e8f5fdd1727a46278cb20b97261" async charset="UTF-8"></script>*/ ?>
 </head>
 
-<body class=" <?php if (CSite::InDir('/map')) : ?>body__on_map<?php endif; ?>">
+<body class="<?php if (CSite::InDir('/map')) : ?>body__on_map<?php endif; ?>">
     <!-- Google Tag Manager (noscript) -->
     <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5762ML9" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <!-- End Google Tag Manager (noscript) -->
@@ -230,7 +227,12 @@ use Naturalist\Users;
                 <div class="header__logo">
                     <a class="logotype" href="/"><img src="<?= $arSettings['header_logo'] ?>" alt="<?= $arSettings['header_logo_name'] ?>"></a>
                 </div>
-
+                <div class="catalog-filter_close">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M16.0669 3.93306C16.311 4.17714 16.311 4.57286 16.0669 4.81694L4.81694 16.0669C4.57286 16.311 4.17714 16.311 3.93306 16.0669C3.68898 15.8229 3.68898 15.4271 3.93306 15.1831L15.1831 3.93306C15.4271 3.68898 15.8229 3.68898 16.0669 3.93306Z" fill="black" />
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M3.93306 3.93306C4.17714 3.68898 4.57286 3.68898 4.81694 3.93306L16.0669 15.1831C16.311 15.4271 16.311 15.8229 16.0669 16.0669C15.8229 16.311 15.4271 16.311 15.1831 16.0669L3.93306 4.81694C3.68898 4.57286 3.68898 4.17714 3.93306 3.93306Z" fill="black" />
+                    </svg>
+                </div>
                 <button class="header__toggler" data-menu-open type="button">
                     <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <rect width="40" height="40" rx="8" fill="#E0C695" />

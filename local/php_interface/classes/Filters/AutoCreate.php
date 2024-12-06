@@ -196,6 +196,41 @@ class AutoCreate
     }
 
     /**
+     * Тип размещения + общие водоёмы
+     */
+    public static function createAccomodationAndCommonWaterLinks()
+    {
+        $first = self::getFilterArray(TYPES_HL_ENTITY);
+        $chpyDataClass = HighloadBlockTable::compileEntity(COMMON_WATER_HL_ENTITY)->getDataClass();
+
+        $second =  $chpyDataClass::query()
+            ->addSelect('ID')
+            ->addSelect('UF_NAME')
+            ->addSelect('UF_SKLON')
+            ?->fetchAll();
+
+        foreach ($first as $firstElement) {
+            foreach ($second as $secondElement) {
+                if ($firstElement['UF_SKLON'] && $secondElement['UF_SKLON']) {
+                    $h1 = $firstElement['UF_SKLON'] . ' России ' . mb_strtolower($secondElement['UF_SKLON']);
+                    $links[] = [
+                        'UF_NEW_URL' => '/catalog/' . self::getNewUrl($firstElement['UF_SKLON']) . self::getNewUrl($secondElement['UF_SKLON']),
+                        'UF_REAL_URL' => '/catalog/?types=' . $firstElement['ID'] . '&commonwater=' . $secondElement['ID'],
+                        'UF_ACTIVE' => 1,
+                        'UF_H1' => $h1,
+                        'UF_TITLE' => $h1 . TITLE_PATTERN,
+                        'UF_DESCRIPTION' => DESCRIPTION_START_PATTERN . $h1 . DESCRIPTION_END_PATTERN,
+                    ];
+                }
+            }
+        }
+
+        if (isset($links) && is_array($links)) {
+            self::addUrls($links);
+        }
+    }
+
+    /**
      * Тип размещения + параметр фильтрации
      */
     public static function createAccomodationAndFilterLinks()
@@ -960,15 +995,16 @@ class AutoCreate
         $query =  $entity::query()
             ->addSelect('ID')
             ->addSelect('UF_NEW_URL')
+            ->addSelect('UF_REAL_URL')
             ?->fetchAll();
 
         foreach ($query as $link) {
-            $result[$link['UF_NEW_URL']] = $link;
+            $result[$link['UF_REAL_URL']] = $link;
         }
 
         foreach ($urls as $url) {
-            if (isset($result[$url['UF_NEW_URL']]) && $result[$url['UF_NEW_URL']]['UF_NEW_URL'] == $url['UF_NEW_URL']) {
-                $entity::update($result[$url['UF_NEW_URL']]['ID'], $url);
+            if (isset($result[$url['UF_REAL_URL']])) {
+                $entity::update($result[$url['UF_REAL_URL']]['ID'], $url);
             } else {
                 $entity::add($url);
             }
@@ -981,6 +1017,7 @@ class AutoCreate
 
         $query =  $entity::query()
             ->addSelect('ID')
+            ->where('UF_SEO_TEXT', '')
             ?->fetchAll();
 
         foreach ($query as $item) {
@@ -1003,7 +1040,7 @@ class AutoCreate
         self::createAccomodationAndRegionAndFilterLinks();
         self::createAccomodationAndWaterLinks();
         self::createAccomodationAndWaterAndFilterLinks();
-        self::createWaterAndFilterLinks();
+        // self::createWaterAndFilterLinks();
         self::createSitemapLinks();
         self::createSelectionLinks();
         self::createAccomodationAndSelectionLinks();
@@ -1012,5 +1049,6 @@ class AutoCreate
         self::createAccomodationAndRegionAndSelectionAndFiltersLinks();
         self::createAccomodationAndFiltersAndFiltersLinks();
         self::createAccomodationRegionAndAndFiltersAndFiltersLinks();
+        self::createAccomodationAndCommonWaterLinks();
     }
 }

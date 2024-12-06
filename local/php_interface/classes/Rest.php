@@ -562,7 +562,7 @@ class Rest
     }
 
     /* Изменение цен, наличия, ограничений */
-    public function updatePrices($params, $fileName = '', $newLogic = false)
+    public function updatePrices($params, $fileName = '')
     {
         $hotelId = $params["hotel_id"];
         $externalId = $params["account_id"];
@@ -585,7 +585,7 @@ class Rest
         if ($arPrices) {
             foreach ($arPrices as $tariffId => $arCategories) {
                 foreach ($arCategories as $categoryId => $arCategoryDates) {
-                    $res = $bnovo->updateReservationData($externalId, $tariffId, $categoryId, $arCategoryDates, $newLogic);
+                    $res = $bnovo->updateReservationData($externalId, $tariffId, $categoryId, $arCategoryDates);
                 }
                 if (!empty($res)) {
                     $arSend['MESSAGE'] = $res;
@@ -598,7 +598,7 @@ class Rest
         $arRooms = $params["data"]["rooms"];
         if ($arRooms) {
             foreach ($arRooms as $categoryId => $arCategoryDates) {
-                $res = $bnovo->updateAvailabilityData($externalId, $categoryId, $arCategoryDates, false, $newLogic);
+                $res = $bnovo->updateAvailabilityData($externalId, $categoryId, $arCategoryDates, false);
                 if (!empty($res)) {
                     $arSend['MESSAGE'] = $res;
                     $this->sendError($arSend);
@@ -622,12 +622,12 @@ class Rest
         }
     }
 
-    public function setCurrentData($val)
+    public function setCurrentData($val, $resource = '')
     {
         if (is_array($val)) {
             $importFilePath = $_SERVER["DOCUMENT_ROOT"] . '/import/bnovo/import_hotelid_' . $val["hotel_id"] . '_date_' . date("j-m-Y-H-i-s") . '.json';
 
-            if ($val["hotel_id"] == 508) {
+            if ($resource == 'prices') {
                 $filesDataClass = HighloadBlockTable::compileEntity(BNOVO_FILES_HL_ENTITY)->getDataClass();
                 $filesDataClass::add([
                     'UF_FILE_NAME' => $importFilePath,

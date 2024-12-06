@@ -1,7 +1,7 @@
 <?
 
 use Bitrix\Main\Application;
-use Naturalist\BnovoDataFilesHandler;
+use Naturalist\Bnovo;
 
 set_time_limit(6000);
 if (!$_SERVER['DOCUMENT_ROOT']) {
@@ -9,7 +9,5 @@ if (!$_SERVER['DOCUMENT_ROOT']) {
 }
 include_once $_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_before.php";
 
-if (!$GLOBALS['BNOVO_FILES_WORKING']) {
-    $BnovoDataFilesHandler = new BnovoDataFilesHandler();
-    $BnovoDataFilesHandler->handleFile();
-}
+$bnovo = new Bnovo();
+$bnovo->checkDisabledBnovoObjects();

@@ -13,11 +13,9 @@ foreach ($arResult as $key => $value) {
     </button>
 </div>
 <form class="form filters <?php if (CSite::InDir('/map')): ?>filter__on_map<?php endif; ?>" id="form-catalog-filter">
-
     <div class="filters__form" id="popup_filter_body">
         <div class="form__group mainsearch">
             <div class="form_group_wrapper">
-
                 <div class="form__item name">
                     <div class="field field_autocomplete" data-autocomplete="/ajax/autocomplete.php">
                         <input type="hidden" data-autocomplete-result
@@ -30,7 +28,6 @@ foreach ($arResult as $key => $value) {
                 </div>
 
                 <div class="form_group_wrapper-filter_items">
-
                     <div class="form__row calendar" data-calendar="data-calendar" data-calendar-min="today"
                         data-calendar-max="365">
                         <div class="form__item">
@@ -185,6 +182,24 @@ foreach ($arResult as $key => $value) {
         <div class="filters_attrs">
             <div class="filters-attrs__block">
                 <div class="form__dropdown form__dropdown_show">
+                    <div class="price-filter">
+                        <div class="form__dropdown-heading h6">Цена</div>
+                        <div class="price-inputs__wrap">
+                            <div class="price-input__wrap">
+                                <label for="min-price">от</label>
+                                <input type="text" class="min-price" data-price-value="<?= $minPrice ?>" name="min-price" value="<?= $minPrice ?>" size="5">
+                                <span>&nbsp;₽</span>
+                            </div>
+                            <div class="price-input__wrap">
+                                <label for="max-price">до</label>
+                                <input type="text" class="max-price" data-price-value="<?= $maxPrice ?>" name="max-price" value="<?= $maxPrice ?>" size="5">
+                                <span>&nbsp;₽</span>
+                            </div>
+                        </div>
+                        <div class="slider-range"></div>
+                    </div>
+                </div>
+                <div class="form__dropdown form__dropdown_show">
                     <div class="form__dropdown-heading h6">Тип размещения</div>
                     <div class="form__dropdown-body">
                         <ul class="list list_checkboxes">
@@ -236,6 +251,24 @@ foreach ($arResult as $key => $value) {
                                         <label class="checkbox">
                                             <input type="checkbox" name="water" value="<?= $oneWater["ID"] ?>"
                                                 <? if ($arFilterWater && in_array($oneWater["ID"], $arFilterWater)) : ?>checked<? endif; ?>><span><?= $oneWater["UF_NAME"] ?></span>
+                                        </label>
+                                    </li>
+                                <? endforeach; ?>
+                            </ul>
+                        </div>
+                    </div>
+                <? endif; ?>
+
+                <? if ($commonWater): ?>
+                    <div class="form__dropdown form__dropdown_show" style="display: none">
+                        <div class="form__dropdown-heading h6">Общие водоёмы</div>
+                        <div class="form__dropdown-body">
+                            <ul class="list list_checkboxes">
+                                <? foreach ($commonWater as $oneCommonWater) : ?>
+                                    <li class="list__item">
+                                        <label class="checkbox">
+                                            <input type="checkbox" name="commonwater" value="<?= $oneCommonWater["ID"] ?>"
+                                                <? if ($arFilterCommonWater && in_array($oneCommonWater["ID"], $arFilterCommonWater)) : ?>checked<? endif; ?>><span><?= $oneCommonWater["UF_NAME"] ?></span>
                                         </label>
                                     </li>
                                 <? endforeach; ?>

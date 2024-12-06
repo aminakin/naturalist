@@ -670,16 +670,16 @@ $APPLICATION->AddHeadString('<meta name="description" content="' . $descriptionS
         </div>
     </section>
     <!-- section-->
-    <?if (isset($arSection['UF_DOP_SEO_TEXT']) && $arSection['UF_DOP_SEO_TEXT'] != '') {?>
+    <? if (isset($arSection['UF_DOP_SEO_TEXT']) && $arSection['UF_DOP_SEO_TEXT'] != '') { ?>
         <section class="cert-index__seo-text">
             <div class="container">
-                <?=$arSection['UF_DOP_SEO_TEXT']?>
-            </div>            
+                <?= $arSection['UF_DOP_SEO_TEXT'] ?>
+            </div>
         </section>
         <div class="container">
             <a href="#" class="show-more-seo">Раскрыть</a>
         </div>
-    <?}?>
+    <? } ?>
 </main>
 
 <?

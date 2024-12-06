@@ -13343,6 +13343,20 @@
     }
     /* OBJECT
    -------------------------------------------------- */
+    const houseType = document.querySelector(
+      ".house-type__wrapper .swiper-container"
+    );
+
+    if (houseType !== null) {
+      new core(houseType, {
+        slidesPerView: "auto",
+        loop: false,
+        navigation: {
+          nextEl: ".house-type .swiper-button-next",
+          prevEl: ".house-type .swiper-button-prev",
+        },
+      });
+    }
 
     window.objectsGallery = function () {
       var $object = document.querySelectorAll(
@@ -13445,65 +13459,84 @@
     /* FULL GALLERY
    -------------------------------------------------- */
 
-    document.addEventListener("click", function (event) {
-      var $el = event.target;
+    // document.addEventListener("click", function (event) {
+    //   var $el = event.target;
 
+    //   if (
+    //     $el.matches("[data-fullgallery-item]") ||
+    //     ($el.closest("[data-fullgallery-item]") && window.innerWidth > 450)
+    //   ) {
+    //     event.preventDefault();
+    //     var $dataEl = $el.matches("[data-fullgallery-item]")
+    //       ? $el
+    //       : $el.closest("[data-fullgallery-item]");
+    //     var id = $dataEl.dataset.fullgalleryItem;
+    //     var images = JSON.parse(
+    //       $el.closest("[data-fullgallery]").dataset.fullgallery
+    //     );
+
+    //     if (images.length > 0) {
+    //       document.body.insertAdjacentHTML(
+    //         "beforeend",
+    //         '<div class="modal modal_fullgallery" id="fullgallery">\n\t\t\t\t\t<div class="modal__container">\n\t\t\t\t\t\t<button class="modal__close" data-modal-close>\n\t\t\t\t\t\t\t<svg class="icon icon_cross-large" viewBox="0 0 32 32" style="width: 3.2rem; height: 3.2rem;">\n\t\t\t\t\t\t\t\t<use xlink:href="#cross-large"></use>\n\t\t\t\t\t\t\t</svg>\n\t\t\t\t\t\t\t<svg class="icon icon_cross" viewBox="0 0 18 18" style="width: 1.8rem; height: 1.8rem;">\n\t\t\t\t\t\t\t\t<use xlink:href="#cross"></use>\n\t\t\t\t\t\t\t</svg>\n\t\t\t\t\t\t</button>\n\t\t\t\t\t\t<div class="swiper slider-gallery slider-gallery_large">\n\t\t\t\t\t\t\t<div class="swiper-wrapper">\n\t\t\t\t\t\t\t\t'.concat(
+    //           images
+    //             .map(function (item) {
+    //               return '<div class="swiper-slide"><img class="swiper-lazy" src="'.concat(
+    //                 item,
+    //                 '" alt=""></div>'
+    //               );
+    //             })
+    //             .join(""),
+    //           '\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t<div class="swiper-button-prev">\n\t\t\t\t\t\t\t\t<svg class="icon icon_arrow-large" viewBox="0 0 32 32" style="width: 3.2rem; height: 3.2rem;">\n\t\t\t\t\t\t\t\t\t<use xlink:href="#arrow-large"></use>\n\t\t\t\t\t\t\t\t</svg>\n\t\t\t\t\t\t\t\t<svg class="icon icon_arrow-small" viewBox="0 0 16 16" style="width: 1.6rem; height: 1.6rem;">\n\t\t\t\t\t\t\t\t\t<use xlink:href="#arrow-small"></use>\n\t\t\t\t\t\t\t\t</svg>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t<div class="swiper-button-next">\n\t\t\t\t\t\t\t\t<svg class="icon icon_arrow-large" viewBox="0 0 32 32" style="width: 3.2rem; height: 3.2rem;">\n\t\t\t\t\t\t\t\t\t<use xlink:href="#arrow-large"></use>\n\t\t\t\t\t\t\t\t</svg>\n\t\t\t\t\t\t\t\t<svg class="icon icon_arrow-small" viewBox="0 0 16 16" style="width: 1.6rem; height: 1.6rem;">\n\t\t\t\t\t\t\t\t\t<use xlink:href="#arrow-small"></use>\n\t\t\t\t\t\t\t\t</svg>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t<div class="swiper-pagination"></div>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\t\t\t\t</div>'
+    //         )
+    //       );
+    //       var slider = new core("#fullgallery .swiper", {
+    //         slidesPerView: 1,
+    //         spaceBetween: 0,
+    //         speed: 250,
+    //         effect: "fade",
+    //         loop: false,
+    //         watchSlidesProgress: true,
+    //         fadeEffect: {
+    //           crossFade: true,
+    //         },
+    //         preloadImages: false,
+    //         lazy: {
+    //           loadPrevNext: true,
+    //           loadOnTransitionStart: true,
+    //         },
+    //         navigation: {
+    //           nextEl: ".swiper-button-next",
+    //           prevEl: ".swiper-button-prev",
+    //         },
+    //         pagination: {
+    //           el: ".swiper-pagination",
+    //           type: "bullets",
+    //         },
+    //       });
+    //       slider.slideTo(parseInt(id), 0);
+    //       window.modal.open("fullgallery");
+    //     }
+    //   }
+    // });
+    $(".object-row[href]").on("click", function (evt) {
       if (
-        $el.matches("[data-fullgallery-item]") ||
-        ($el.closest("[data-fullgallery-item]") && window.innerWidth > 450)
+        $(evt.target).parents(".favorite").length ||
+        $(evt.target).hasClass("favorite") ||
+        $(evt.target).parents(".swiper-button-prev").length ||
+        $(evt.target).hasClass("swiper-button-prev") ||
+        $(evt.target).parents(".swiper-button-next").length ||
+        $(evt.target).hasClass("swiper-button-next")
       ) {
-        event.preventDefault();
-        var $dataEl = $el.matches("[data-fullgallery-item]")
-          ? $el
-          : $el.closest("[data-fullgallery-item]");
-        var id = $dataEl.dataset.fullgalleryItem;
-        var images = JSON.parse(
-          $el.closest("[data-fullgallery]").dataset.fullgallery
-        );
-
-        if (images.length > 0) {
-          document.body.insertAdjacentHTML(
-            "beforeend",
-            '<div class="modal modal_fullgallery" id="fullgallery">\n\t\t\t\t\t<div class="modal__container">\n\t\t\t\t\t\t<button class="modal__close" data-modal-close>\n\t\t\t\t\t\t\t<svg class="icon icon_cross-large" viewBox="0 0 32 32" style="width: 3.2rem; height: 3.2rem;">\n\t\t\t\t\t\t\t\t<use xlink:href="#cross-large"></use>\n\t\t\t\t\t\t\t</svg>\n\t\t\t\t\t\t\t<svg class="icon icon_cross" viewBox="0 0 18 18" style="width: 1.8rem; height: 1.8rem;">\n\t\t\t\t\t\t\t\t<use xlink:href="#cross"></use>\n\t\t\t\t\t\t\t</svg>\n\t\t\t\t\t\t</button>\n\t\t\t\t\t\t<div class="swiper slider-gallery slider-gallery_large">\n\t\t\t\t\t\t\t<div class="swiper-wrapper">\n\t\t\t\t\t\t\t\t'.concat(
-              images
-                .map(function (item) {
-                  return '<div class="swiper-slide"><img class="swiper-lazy" src="'.concat(
-                    item,
-                    '" alt=""></div>'
-                  );
-                })
-                .join(""),
-              '\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t<div class="swiper-button-prev">\n\t\t\t\t\t\t\t\t<svg class="icon icon_arrow-large" viewBox="0 0 32 32" style="width: 3.2rem; height: 3.2rem;">\n\t\t\t\t\t\t\t\t\t<use xlink:href="#arrow-large"></use>\n\t\t\t\t\t\t\t\t</svg>\n\t\t\t\t\t\t\t\t<svg class="icon icon_arrow-small" viewBox="0 0 16 16" style="width: 1.6rem; height: 1.6rem;">\n\t\t\t\t\t\t\t\t\t<use xlink:href="#arrow-small"></use>\n\t\t\t\t\t\t\t\t</svg>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t<div class="swiper-button-next">\n\t\t\t\t\t\t\t\t<svg class="icon icon_arrow-large" viewBox="0 0 32 32" style="width: 3.2rem; height: 3.2rem;">\n\t\t\t\t\t\t\t\t\t<use xlink:href="#arrow-large"></use>\n\t\t\t\t\t\t\t\t</svg>\n\t\t\t\t\t\t\t\t<svg class="icon icon_arrow-small" viewBox="0 0 16 16" style="width: 1.6rem; height: 1.6rem;">\n\t\t\t\t\t\t\t\t\t<use xlink:href="#arrow-small"></use>\n\t\t\t\t\t\t\t\t</svg>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t<div class="swiper-pagination"></div>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\t\t\t\t</div>'
-            )
-          );
-          var slider = new core("#fullgallery .swiper", {
-            slidesPerView: 1,
-            spaceBetween: 0,
-            speed: 250,
-            effect: "fade",
-            loop: false,
-            watchSlidesProgress: true,
-            fadeEffect: {
-              crossFade: true,
-            },
-            preloadImages: false,
-            lazy: {
-              loadPrevNext: true,
-              loadOnTransitionStart: true,
-            },
-            navigation: {
-              nextEl: ".swiper-button-next",
-              prevEl: ".swiper-button-prev",
-            },
-            pagination: {
-              el: ".swiper-pagination",
-              type: "bullets",
-            },
-          });
-          slider.slideTo(parseInt(id), 0);
-          window.modal.open("fullgallery");
-        }
+        return;
       }
+      evt.preventDefault();
+      var n = document.createElement("a");
+      (n.href = $(this).attr("href")),
+        (n.target = "_blank"),
+        (n.rel = "noopener"),
+        n.click(),
+        n.remove();
     });
     window.addEventListener("modalAfterClose", function (event) {
       if (event.detail.id === "fullgallery") {
@@ -18002,7 +18035,7 @@
                   .concat(data.title, "</a>\n\t\t\t\t\t")
                   .concat(
                     data.scoreData && data.scoreData.length > 0
-                      ? '<a href="'
+                      ? '<a target="_blank" href="'
                           .concat(
                             data.href,
                             '#reviews-anchor" class="score" data-score=\''
@@ -18021,7 +18054,7 @@
                   )
                   .concat(
                     data.price,
-                    '</span><span class="dot"></span><span>Цена за одну ночь </span></div></div><a class="button button_transparent" onclick="setLocalStorageCatalog(event);" href="'
+                    '</span><span class="dot"></span><span>Цена за одну ночь </span></div></div><a target="_blank" class="button button_transparent" onclick="setLocalStorageCatalog(event);" href="'
                   )
                   .concat(data.href, '">Выбрать</a>\n\t\t\t</div>\n\t\t');
               window.objectsGallery();
@@ -18111,6 +18144,15 @@
                   .add("mouseenter", function (event) {
                     if (device.isTouch()) return false;
                     var $el = event.get("target"); // eslint-disable-next-line no-underscore-dangle
+                    var objectId = $el.properties._data.markerData.id;
+                    if (objectId) {
+                      var leftCard = _this.$elements.catalog.querySelector(
+                        '[data-map-id="' + objectId + '"]'
+                      );
+                      if (leftCard) {
+                        leftCard.classList.add("hover");
+                      }
+                    }
 
                     var isActive = $el.properties._data.active;
                     $el.properties.singleSet("hover", true);
@@ -18180,6 +18222,17 @@
                     var $el = event.get("target");
                     $el.properties.singleSet("hover", false);
                     $el.balloon.close();
+
+                    var objectId = $el.properties._data.markerData.id;
+                    if (objectId) {
+                      var leftCard = _this.$elements.catalog.querySelector(
+                        '[data-map-id="' + objectId + '"]'
+                      );
+                      if (leftCard) {
+                        leftCard.classList.remove("hover");
+                      }
+                    }
+
                     return true;
                   })
                   .add("click", function (event) {
@@ -18302,7 +18355,9 @@
                 });
 
                 this.options.zoom = 7;
-                this.handleCreateMarkersCenter(itemCoords);
+                if(itemCoords.length > 0) {
+                  this.handleCreateMarkersCenter(itemCoords);
+                }
               }
 
               this.map = new ymaps.Map(
@@ -18399,6 +18454,7 @@
                     -1,
                   "rem"
                 );
+
                 var urlParam = window.location.search;
 
                 if (Array.from(urlParam)[0] === "?") {

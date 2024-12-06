@@ -21,6 +21,7 @@ class BuyCert {
   cityRadio = document.querySelectorAll('input[name="city"]');
   addressInput = document.querySelector('input[name="address"]');
   deliveryInput = document.querySelectorAll('input[name="delivery"]');
+  congratsInput = document.querySelector('textarea[name="congrats"]');
   deliveryBlock = document.querySelector(".user-data__block.delivery");
   prodCostElement = document.querySelector(".summ__item.prod .summ__price");
   deliveryCostElement = document.querySelector(
@@ -62,7 +63,19 @@ class BuyCert {
     this.pocketSelectHandler();
     this.elVariantSelectHandler();
     this.deliverySelectHandler();
+    this.congratsHandler();
     //this.submitHandler();
+  }
+
+  congratsHandler() {
+    this.congratsInput.addEventListener("input", function () {
+      const regex =
+        /[^a-zёЁA-Zа-яА-Я0-9\!\"\№\;\%\:\?\*\(\)\_\-\[\][{\}\.\,\'\+\\\/\@\#\s]+/gi;
+      const str = this.value;
+      const subst = ``;
+      const result = str.replace(regex, subst);
+      this.value = result;
+    });
   }
 
   submitHandler() {
@@ -106,6 +119,7 @@ class BuyCert {
         _this.calcSumm();
         if (!this.value != 15287) {
           _this.removeRequired(_this.customPriceInput);
+          _this.customPriceInput.value = "";
         }
       });
     });

@@ -98,7 +98,7 @@ global $arSettings;
             "",
             array(
                 "AREA_FILE_SHOW" => "file",
-                "PATH" => '/include/home-seo-text.php',
+                "PATH" => '/include/regions-seo-text.php',
                 "EDIT_TEMPLATE" => ""
             )
         );

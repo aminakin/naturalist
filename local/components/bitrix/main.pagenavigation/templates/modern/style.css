@@ -1,39 +1,77 @@
-div.modern-page-navigation {
-  padding: 0.5em 0;
-}
-div.modern-page-navigation a,
-span.modern-page-current,
-span.modern-page-dots {
-  border-left-width: 1px;
-  border-left-style: solid;
-  padding-left: 0.75em;
-  padding-right: 0.5em;
-  text-decoration: none;
-}
-div.modern-page-navigation a.modern-page-previous {
-  border-right-width: 1px;
-  border-right-style: solid;
-  border-left: none;
-}
-div.modern-page-navigation a.modern-page-first,
-div.modern-page-navigation span.modern-page-first {
-  border-left: none;
-  padding-left: 0.5em;
-}
-span.modern-page-current {
-  font-weight: bold;
-  font-size: 1.5rem;
-}
-div.modern-page-navigation a,
-span.modern-page-current,
-div.modern-page-navigation a.modern-page-previous,
-span.modern-page-dots {
-  border-color: #cdcdcd;
+.catalog__more{
+	margin-top: 24px;
 }
 
-@media (max-width: 500px) {
-  .modern-page-previous,
-  .modern-page-next {
-    display: none;
-  }
+.modern-page-dots{
+  display: none!important;
+}
+
+.catalog__more .modern-page-navigation,
+.catalog__more .bx-pagination-total-block{
+	padding: 8px 0;
+}
+
+.modern-page-navigation{
+	padding: 0;
+	list-style: none;
+	display: flex;
+	justify-content: center;
+	margin-bottom: 0;
+}
+.modern-page-navigation a,
+.modern-page-navigation span{
+	border-radius: 6px;
+	line-height: 24px;
+	padding: 0 8px;
+	display: block;
+	background-color: #F4E6CB;
+	color: #2D3139;
+	margin: 0 4px;
+	text-decoration: none;
+	font-size: 14px;
+  border: none;
+}
+
+.modern-page-navigation a:hover,
+.modern-page-navigation span.modern-page-current{
+	background-color: var(--color-orange);
+	color: var(--color-white);
+}
+
+.modern-page-navigation .modern-page-previous{
+	margin-right: 16px;
+}
+
+.modern-page-navigation .modern-page-next{
+	margin-left: 16px;
+}
+
+.modern-page-navigation span.modern-page-previous,
+.modern-page-navigation span.modern-page-next{
+	border-bottom: 1px solid transparent;
+  border-radius: 0;
+  background-color: transparent;
+  padding: 0;
+}
+
+.modern-page-navigation a.modern-page-previous,
+.modern-page-navigation a.modern-page-next{
+	border-bottom: 1px solid var(--color-orange);
+  border-radius: 0;
+  background-color: transparent;
+  padding: 0;
+}
+
+.modern-page-navigation a.modern-page-previous:hover,
+.modern-page-navigation a.modern-page-next:hover{
+	border-bottom: 1px solid transparent;
+	color: var(--color-orange);
+}
+
+.bx-pagination-total-block{
+	font-size: 13px;
+	font-weight: 500;
+	line-height: 24px;
+	color: #596173;
+	margin-bottom: -40px;
 }

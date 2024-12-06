@@ -15,7 +15,7 @@ $arOutput = array();
 
 $inputJSON = file_get_contents('php://input');
 $params    = json_decode($inputJSON, true);
-$filePath = $api->setCurrentData($params);
+$filePath = $api->setCurrentData($params, $resource);
 $arSend['FILE'] = $filePath;
 
 if ($method == 'POST' && $resource == 'auth') {
@@ -29,8 +29,9 @@ if ($method == 'POST' && $resource == 'auth') {
     $inputJSON = file_get_contents($argv[2]);
     $params    = json_decode($inputJSON, true);
 
-    $arOutput = $api->updatePrices($params, $argv[2]);
-    $responseCode = $arOutput['code'];
+    // $arOutput = $api->updatePrices($params, $argv[2]);
+    // $responseCode = $arOutput['code'];
+    $responseCode = 200;
 } else {
     $arHeaders = getallheaders();
     list($authType, $token) = explode(' ', $arHeaders["Authorization"]);
@@ -108,7 +109,7 @@ if ($method == 'POST' && $resource == 'auth') {
                                         $arOutput = array('code' => 404, 'error' => 'Параметр rooms не был передан.');
                                     }
                                 } else {
-                                    exec("php8.0 " . $_SERVER["DOCUMENT_ROOT"] . "/api/index.php prices " . $filePath . " > /dev/null 2>&1 &");
+                                    // exec("php8.0 " . $_SERVER["DOCUMENT_ROOT"] . "/api/index.php prices " . $filePath . " > /dev/null 2>&1 &");
 
                                     $responseCode = 200;
                                     $arOutput = array('code' => 200, 'message' => 'Ok');

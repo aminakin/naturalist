@@ -8,3 +8,5 @@ $MESS['FILTER_CHILD_AGE'] = 'Возраст';
 $MESS['FILTER_PLACE'] = 'Куда вы хотите отправиться?';
 $MESS['FILTER_FROM'] = 'Заезд';
 $MESS['FILTER_TO'] = 'Выезд';
+$MESS['FILTER_SEARCH'] = 'Поиск';
+$MESS['FILTER_RESET'] = 'Сбросить';
