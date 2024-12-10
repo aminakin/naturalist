@@ -276,6 +276,24 @@ foreach ($arResult as $key => $value) {
                         </div>
                     </div>
                 <? endif; ?>
+
+                <? if ($difFilter): ?>
+                    <div class="form__dropdown form__dropdown_show" style="display: none">
+                        <div class="form__dropdown-heading h6">Разные фильтры</div>
+                        <div class="form__dropdown-body">
+                            <ul class="list list_checkboxes">
+                                <? foreach ($difFilter as $oneDifFilter) : ?>
+                                    <li class="list__item">
+                                        <label class="checkbox">
+                                            <input type="checkbox" name="diffilter" value="<?= $oneDifFilter["ID"] ?>"
+                                                <? if ($arDifFilters && in_array($oneDifFilter["ID"], $arDifFilters)) : ?>checked<? endif; ?>><span><?= $oneDifFilter["UF_NAME"] ?></span>
+                                        </label>
+                                    </li>
+                                <? endforeach; ?>
+                            </ul>
+                        </div>
+                    </div>
+                <? endif; ?>
             </div>
 
             <div class="filters-attrs__block">

@@ -105,11 +105,14 @@ if (!empty($_GET['name']) && isset($_GET['name'])) {
     if ($decodeSearch['type']) {
         switch ($decodeSearch['type']) {
             case 'area':
-                //                $arFilter["%UF_REGION_NAME"] = $decodeSearch['item'];
                 $searchName = $decodeSearch['item'];
-                $arRegionIds = Regions::RegionFilterSearcher($searchName);
-
-                $arFilter["UF_REGION"] = $arRegionIds;
+                $arRegionIds = Regions::getCityByName($searchName);
+                if (!empty($arRegionIds)) {
+                    $arFilter["UF_AREA_NAME"] = $arRegionIds[0]['ID'];
+                } else {
+                    $arRegionIds = Regions::RegionFilterSearcher($searchName);
+                    $arFilter["UF_REGION"] = $arRegionIds;
+                }
 
                 break;
             case 'id':
@@ -284,12 +287,20 @@ if (!empty($_GET['sitemap']) && isset($_GET['sitemap'])) {
     $filterCount += count($arFilterSitemap);
 }
 
-// Sitemap
+// Подборки
 if (!empty($_GET['selection']) && isset($_GET['selection'])) {
     $arFilterImpressions = explode(',', $_GET['selection']);
     $arFilter["UF_IMPRESSIONS"] = $arFilterImpressions;
 
     $filterCount += count($arFilterImpressions);
+}
+
+// Разные фильтры
+if (!empty($_GET['diffilter']) && isset($_GET['diffilter'])) {
+    $arDifFilters = explode(',', $_GET['diffilter']);
+    $arFilter["UF_DIFF_FILTERS"] = $arDifFilters;
+
+    $filterCount += count($arDifFilters);
 }
 
 // Впечатления
@@ -337,15 +348,15 @@ $arSections = array();
 /** получение сезона из ИБ */
 if (Cmodule::IncludeModule('asd.iblock')) {
     $arFields = CASDiblockTools::GetIBUF(CATALOG_IBLOCK_ID);
-} 
+}
 
 $searchedRegionData = Regions::getRegionById($arRegionIds[0] ?? false);
 while ($arSection = $rsSections->GetNext()) {
 
     $arDataFullGallery = [];
 
-    foreach($arFields['UF_SEASON'] as $season){
-        if($season == 'Лето'){
+    foreach ($arFields['UF_SEASON'] as $season) {
+        if ($season == 'Лето') {
             if ($arSection["UF_PHOTOS"]) {
                 foreach ($arSection["UF_PHOTOS"] as $photoId) {
                     $imageOriginal = CFile::GetFileArray($photoId);
@@ -355,7 +366,7 @@ while ($arSection = $rsSections->GetNext()) {
             } else {
                 $arSection["PICTURES"][0]["src"] = SITE_TEMPLATE_PATH . "/img/big_no_photo.png";
             }
-        }elseif($season == 'Зима'){
+        } elseif ($season == 'Зима') {
             if ($arSection["UF_WINTER_PHOTOS"]) {
                 foreach ($arSection["UF_WINTER_PHOTOS"] as $photoId) {
                     $imageOriginal = CFile::GetFileArray($photoId);
@@ -373,7 +384,7 @@ while ($arSection = $rsSections->GetNext()) {
                     $arSection["PICTURES"][0]["src"] = SITE_TEMPLATE_PATH . "/img/big_no_photo.png";
                 }
             }
-        }elseif($season == 'Осень+Весна'){
+        } elseif ($season == 'Осень+Весна') {
             if ($arSection["UF_MIDSEASON_PHOTOS"]) {
                 foreach ($arSection["UF_MIDSEASON_PHOTOS"] as $photoId) {
                     $imageOriginal = CFile::GetFileArray($photoId);
@@ -620,6 +631,12 @@ $commonWaterDataClass = HighloadBlockTable::compileEntity(COMMON_WATER_HL_ENTITY
 $commonWater = $commonWaterDataClass::query()
     ->addSelect('*')
     ->setOrder(['UF_SORT' => 'ASC'])
+    ?->fetchAll();
+
+// Разные фильтры
+$difFilterDataClass = HighloadBlockTable::compileEntity(DIFFERENT_FILTERS_HL_ENTITY)->getDataClass();
+$difFilter = $difFilterDataClass::query()
+    ->addSelect('*')
     ?->fetchAll();
 
 // Варианты отдыха
@@ -1167,7 +1184,9 @@ if ($chpy['UF_CANONICAL']) {
                             "water" => $water,
                             "arFilterWater" => $arFilterWater,
                             "commonWater" => $commonWater,
+                            "difFilter" => $difFilter,
                             "arFilterCommonWater" => $arFilterCommonWater,
+                            "arDifFilters" => $arDifFilters,
                             "maxPrice" => $maxPrice,
                             "minPrice" => $minPrice,
                         )
