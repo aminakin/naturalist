@@ -12,6 +12,4 @@ include_once $_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_be
 if (!$GLOBALS['BNOVO_FILES_WORKING']) {
     $BnovoDataFilesHandler = new BnovoDataFilesHandler();
     $BnovoDataFilesHandler->handleFile();
-} else {
-    echo "Процесс занят \r\n";
 }

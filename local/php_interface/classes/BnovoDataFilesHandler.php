@@ -31,6 +31,13 @@ class BnovoDataFilesHandler
      */
     public function handleFile(): void
     {
+        var_dump($GLOBALS['BNOVO_FILES_WORKING']);
+
+        if ($GLOBALS['BNOVO_FILES_WORKING']) {
+            echo 'Процесс занят';
+            return;
+        }
+
         $GLOBALS['BNOVO_FILES_WORKING'] = true;
         $this->getLastFiles();
 

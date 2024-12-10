@@ -80,7 +80,7 @@ class AutoCreate
             ->addSelect('ID')
             ->addSelect('UF_NAME')
             ->addSelect('UF_SKLON')
-            ->whereNotNull('UF_SKLON')
+            ->where('UF_SKLON', '!=', '')
             ?->fetchAll();
 
         foreach ($query as $value) {
@@ -270,7 +270,7 @@ class AutoCreate
             ->addSelect('ID')
             ->addSelect('UF_NAME')
             ->addSelect('UF_SKLON')
-            ->whereNotNull('UF_SKLON')
+            ->where('UF_SKLON', '!=', '')
             ?->fetchAll();
 
         foreach ($first as $firstElement) {
@@ -303,7 +303,7 @@ class AutoCreate
             ->addSelect('ID')
             ->addSelect('UF_NAME')
             ->addSelect('UF_SKLON')
-            ->whereNotNull('UF_SKLON')
+            ->where('UF_SKLON', '!=', '')
             ?->fetchAll();
 
         $third = self::getAllFiltersArray();
@@ -529,7 +529,7 @@ class AutoCreate
             ->addSelect('ID')
             ->addSelect('UF_NAME')
             ->addSelect('UF_SKLON')
-            ->whereNotNull('UF_SKLON')
+            ->where('UF_SKLON', '!=', '')
             ?->fetchAll();
 
         $third = self::getMiniSelectionsArray();
@@ -593,7 +593,7 @@ class AutoCreate
             ->addSelect('ID')
             ->addSelect('UF_NAME')
             ->addSelect('UF_SKLON')
-            ->whereNotNull('UF_SKLON')
+            ->where('UF_SKLON', '!=', '')
             ?->fetchAll();
         $second = self::getMiniSelectionAndMiniFiltersArray();
 
@@ -663,7 +663,7 @@ class AutoCreate
             ->addSelect('ID')
             ->addSelect('UF_NAME')
             ->addSelect('UF_SKLON')
-            ->whereNotNull('UF_SKLON')
+            ->where('UF_SKLON', '!=', '')
             ?->fetchAll();
         $second = self::getFiltersAndFiltersArray();
 
@@ -720,6 +720,7 @@ class AutoCreate
                 ->addSelect('ID')
                 ->addSelect('UF_NAME')
                 ->addSelect('UF_SKLON')
+                ->where('UF_SKLON', '!=', '')
                 ->where('UF_SHOW_FILTER', 1)
                 ?->fetchAll();
             $result[$entity['FILTER']] = $query;
