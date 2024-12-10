@@ -110,10 +110,25 @@ $(function () {
       delete params["types"];
     }
 
+    if ($('input[name="diffilter"]:checked', catalogFilter).length > 0) {
+      delete params["diffilter"];
+      var arDifFilter = [];
+      $('input[name="diffilter"]:checked', catalogFilter).each(function (
+        indx,
+        element
+      ) {
+        arDifFilter.push($(element).val());
+      });
+      params["diffilter"] = arDifFilter.join(",");
+    } else {
+      delete params["diffilter"];
+    }
+
     var name = $("input[data-autocomplete-result]", frontFilter).val()
       ? $("input[data-autocomplete-result]", frontFilter).val()
       : $('input[name="name"]', frontFilter).val();
     if (name) {
+      delete params["name"];
       params["name"] = name;
     } else {
       delete params["name"];

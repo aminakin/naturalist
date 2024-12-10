@@ -31,4 +31,6 @@ $arResult = array(
     "arFilterCommonWater" => $arParams['arFilterCommonWater'],
     "maxPrice" => $arParams['maxPrice'],
     "minPrice" => $arParams['minPrice'],
+    "difFilter" => $arParams['difFilter'],
+    "arDifFilters" => $arParams['arDifFilters'],
 );
