@@ -1,4 +1,5 @@
 <?
+
 use Bitrix\Highloadblock\HighloadBlockTable;
 use Bitrix\Iblock\Elements\ElementGlampingsTable;
 
@@ -24,8 +25,11 @@ $allCount = count($arResult["SECTIONS"]);
 $page = $_REQUEST['page'] ?? 1;
 $pageCount = ceil($allCount / $arParams["ITEMS_COUNT"]);
 if ($pageCount > 1) {
-    $arResult["SECTIONS"] = array_slice($arResult["SECTIONS"], ($page - 1) * $arParams["ITEMS_COUNT"],
-        $arParams["ITEMS_COUNT"]);
+    $arResult["SECTIONS"] = array_slice(
+        $arResult["SECTIONS"],
+        ($page - 1) * $arParams["ITEMS_COUNT"],
+        $arParams["ITEMS_COUNT"]
+    );
 }
 
 // Добавляем свойство Скидка, если есть хотя бы 1 элемент со вкидкой
@@ -50,18 +54,79 @@ $elements = ElementGlampingsTable::getList([
     'filter' => ['IBLOCK_SECTION_ID' => $arSectionIds],
 ])->fetchAll();
 
-foreach ($elements as $element) {        
-    $arElementsBySection[$element['IBLOCK_SECTION_ID']][] = $element;    
+foreach ($elements as $element) {
+    $arElementsBySection[$element['IBLOCK_SECTION_ID']][] = $element;
 }
 unset($element);
 
 foreach ($arResult["SECTIONS"] as &$section) {
     foreach ($arElementsBySection[$section['ID']] as $element) {
-        $arPrice = CCatalogProduct::GetOptimalPrice($element['ID'], 1, $USER->GetUserGroupArray(), 'N');        
+        $arPrice = CCatalogProduct::GetOptimalPrice($element['ID'], 1, $USER->GetUserGroupArray(), 'N');
         if (is_array($arPrice['DISCOUNT']) && count($arPrice['DISCOUNT'])) {
-            $section['IS_DISCOUNT'] = 'Y';            
+            $section['IS_DISCOUNT'] = 'Y';
             break;
         }
-    }    
+    }
 }
 unset($section);
+
+
+/** получение сезона из ИБ */
+if (Cmodule::IncludeModule('asd.iblock')) {
+    $arFields = CASDiblockTools::GetIBUF(CATALOG_IBLOCK_ID);
+}
+
+foreach ($arResult["SECTIONS"] as &$arItem) {
+    
+    foreach ($arFields['UF_SEASON'] as $season) {
+        if ($season == 'Лето') {
+            if ($arItem["UF_PHOTOS"]) {
+                foreach ($arItem["UF_PHOTOS"] as $photoId) {
+                    $imageOriginal = CFile::GetFileArray($photoId);
+                    $arDataFullGallery[] = "\"" . $imageOriginal["SRC"] . "\"";
+                    $arItem["PICTURES"][$photoId] = CFile::ResizeImageGet($photoId, array('width' => 590, 'height' => 390), BX_RESIZE_IMAGE_EXACT, true);
+                }
+            } else {
+                $arItem["PICTURES"][0]["src"] = SITE_TEMPLATE_PATH . "/img/big_no_photo.png";
+            }
+        } elseif ($season == 'Зима') {
+            if ($arItem["UF_WINTER_PHOTOS"]) {
+                foreach ($arItem["UF_WINTER_PHOTOS"] as $photoId) {
+                    $imageOriginal = CFile::GetFileArray($photoId);
+                    $arDataFullGallery[] = "\"" . $imageOriginal["SRC"] . "\"";
+                    $arItem["PICTURES"][$photoId] = CFile::ResizeImageGet($photoId, array('width' => 590, 'height' => 390), BX_RESIZE_IMAGE_EXACT, true);
+                }
+            } else {
+                if ($arItem["UF_PHOTOS"]) {
+                    foreach ($arItem["UF_PHOTOS"] as $photoId) {
+                        $imageOriginal = CFile::GetFileArray($photoId);
+                        $arDataFullGallery[] = "\"" . $imageOriginal["SRC"] . "\"";
+                        $arItem["PICTURES"][$photoId] = CFile::ResizeImageGet($photoId, array('width' => 590, 'height' => 390), BX_RESIZE_IMAGE_EXACT, true);
+                    }
+                } else {
+                    $arItem["PICTURES"][0]["src"] = SITE_TEMPLATE_PATH . "/img/big_no_photo.png";
+                }
+            }
+        } elseif ($season == 'Осень+Весна') {
+            if ($arItem["UF_MIDSEASON_PHOTOS"]) {
+                foreach ($arItem["UF_MIDSEASON_PHOTOS"] as $photoId) {
+                    $imageOriginal = CFile::GetFileArray($photoId);
+                    $arDataFullGallery[] = "\"" . $imageOriginal["SRC"] . "\"";
+                    $arItem["PICTURES"][$photoId] = CFile::ResizeImageGet($photoId, array('width' => 590, 'height' => 390), BX_RESIZE_IMAGE_EXACT, true);
+                }
+            } else {
+                if ($arItem["UF_PHOTOS"]) {
+                    foreach ($arItem["UF_PHOTOS"] as $photoId) {
+                        $imageOriginal = CFile::GetFileArray($photoId);
+                        $arDataFullGallery[] = "\"" . $imageOriginal["SRC"] . "\"";
+                        $arItem["PICTURES"][$photoId] = CFile::ResizeImageGet($photoId, array('width' => 590, 'height' => 390), BX_RESIZE_IMAGE_EXACT, true);
+                    }
+                } else {
+                    $arItem["PICTURES"][0]["src"] = SITE_TEMPLATE_PATH . "/img/big_no_photo.png";
+                }
+            }
+        }
+    }
+    $arItem["FULL_GALLERY"] = implode(",", $arDataFullGallery);
+    unset($arItem["UF_PHOTOS"]);
+}

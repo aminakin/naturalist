@@ -53,7 +53,7 @@ $reviewsDeclension = new Declension('отзыв', 'отзыва', 'отзыво�
                     array("CONFIRM" => Loc::GetMessage('CT_BNL_ELEMENT_DELETE_CONFIRM'))
                 );
                 ?>
-                <? if ($arItem["UF_PHOTOS"]) : ?>
+                <? /*if ($arItem["UF_PHOTOS"]) : ?>
                     <? $arDataFullGallery = []; ?>
                     <? foreach ($arItem["UF_PHOTOS"] as $keyElement => $photoId) : ?>
                         <?
@@ -62,24 +62,26 @@ $reviewsDeclension = new Declension('отзыв', 'отзыва', 'отзыво�
                         ?>
                     <? endforeach; ?>
                     <? $dataFullGallery = implode(",", $arDataFullGallery); ?>
-                <? endif; ?>
+                <? endif; */?>
 
                 <div class="object" href="<?= $arItem["SECTION_PAGE_URL"] ?>" data-id="<?= $arItem["ID"] ?>" id="<?= $this->GetEditAreaId($arItem['ID']) ?>">
                     <div class="object__images">
-                        <div class="swiper slider-gallery" data-slider-object="data-slider-object" data-fullgallery="[<?= $dataFullGallery; ?>]">
+                        <div class="swiper slider-gallery" data-slider-object="data-slider-object" data-fullgallery="[<?= $arItem["FULL_GALLERY"]; ?>]">
                             <div class="swiper-wrapper">
-                                <? if ($arItem["UF_PHOTOS"]) : ?>
+                                <? 
+
+                                if ($arItem["PICTURES"]) : ?>
                                     <? $keyPhoto = 1; ?>
-                                    <? foreach ($arItem["UF_PHOTOS"] as $keyElement => $photoId) : ?>
-                                        <?
-                                        $arPhoto = CFile::ResizeImageGet(
+                                    <? foreach ($arItem["PICTURES"] as $keyElement => $photoId) : ?>
+                                        <? //var_export($photoId);
+                                        /*$arPhoto = CFile::ResizeImageGet(
                                             $photoId,
                                             array('width' => 600, 'height' => 400),
                                             BX_RESIZE_IMAGE_EXACT,
                                             true
-                                        );
+                                        );*/
                                         ?>
-                                        <? if (count($arItem["UF_PHOTOS"]) > 1) : ?>
+                                        <? /*if (count($arItem["UF_PHOTOS"]) > 1) : ?>
                                             <?
                                             $alt = $arResult["HL_TYPES"][$arItem["UF_TYPE"]]["UF_NAME"] . " " . $arItem["NAME"] . " рис." . $keyPhoto;;
                                             $title = "Фото - " . $arItem["NAME"] . " рис." . $keyPhoto;
@@ -89,9 +91,9 @@ $reviewsDeclension = new Declension('отзыв', 'отзыва', 'отзыво�
                                             $alt = $arResult["HL_TYPES"][$arItem["UF_TYPE"]]["UF_NAME"] . " " . $arItem["NAME"];
                                             $title = "Фото - " . $arItem["NAME"];
                                             ?>
-                                        <? endif; ?>
+                                        <? endif; */?>
                                         <div class="swiper-slide" data-fullgallery-item="<?= $keyElement; ?>">
-                                            <img class="lazy" alt="<?= $alt ?>" title="<?= $title ?>" data-src="<?= $arPhoto["src"] ?>" alt="<?= $arItem["NAME"] ?>">
+                                            <img class="lazy" alt="<?= $alt ?>" title="<?= $title ?>" data-src="<?= $photoId["src"] ?>" alt="<?= $arItem["NAME"] ?>">
                                         </div>
                                         <? $keyPhoto++; ?>
                                     <? endforeach ?>
@@ -106,7 +108,7 @@ $reviewsDeclension = new Declension('отзыв', 'отзыва', 'отзыво�
                                 <? endif; ?>
                             </div>
 
-                            <? if (isset($arItem["UF_PHOTOS"]) && !empty($arItem["UF_PHOTOS"]) && count($arItem["UF_PHOTOS"]) > 1) : ?>
+                            <? if (isset($arItem["PICTURES"]) && !empty($arItem["PICTURES"]) && count($arItem["PICTURES"]) > 1) : ?>
                                 <div class="swiper-button-prev">
                                     <svg class="icon icon_arrow-small" viewbox="0 0 16 16" style="width: 1.6rem; height: 1.6rem;">
                                         <use xlink:href="#arrow-small" />
