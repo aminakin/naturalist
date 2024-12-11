@@ -2119,6 +2119,7 @@
 #filters-modal {
   font-family: "Lato";
   top: 56px;
+  height: calc(100% - 56px);
 }
 
 #popup_filter_body {
@@ -3789,7 +3790,7 @@
   width: 100%;
 }
 
-.price-filter .price-filter__controls .button:first-child{
+.price-filter .price-filter__controls .button:first-child {
   margin-right: 12px;
 }
 
@@ -4550,11 +4551,11 @@
     margin-left: 8px;
   }
 
-  .catalog_sorter .price-filter{
+  .catalog_sorter .price-filter {
     left: -52px;
   }
 
-  .body__on_map .catalog_sorter .price-filter{
+  .body__on_map .catalog_sorter .price-filter {
     left: -130px;
   }
 
@@ -4911,6 +4912,7 @@
   #filters-modal {
     padding-top: 64px;
     top: 0;
+    height: 100%;
   }
 
   #filters-modal .filters__heading .h3 {
@@ -5029,7 +5031,7 @@
     justify-content: space-around;
   }
 
-  .catalog__map-more{
+  .catalog__map-more {
     margin-top: 0;
     left: 8px;
     -webkit-transform: translate(0%, -50%);

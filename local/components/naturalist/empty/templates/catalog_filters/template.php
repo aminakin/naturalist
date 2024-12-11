@@ -302,11 +302,11 @@ foreach ($arResult as $key => $value) {
                         <div class="form__dropdown-heading h6">Типы домов</div>
                         <div class="form__dropdown-body">
                             <ul class="list list_checkboxes">
-                                <? foreach ($houseTypes as $houseType) : ?>
+                                <? foreach ($houseTypes as $houseType1) : ?>
                                     <li class="list__item">
                                         <label class="checkbox">
-                                            <input type="checkbox" name="housetypes" value="<?= $houseType["ID"] ?>"
-                                                <? if ($arFilterHouseTypes && in_array($houseType["ID"], $arFilterHouseTypes)) : ?>checked<? endif; ?>><span><?= $houseType["UF_NAME"] ?></span>
+                                            <input type="checkbox" name="housetypes" value="<?= $houseType1["ID"] ?>"
+                                                <? if ($arFilterHouseTypes && in_array($houseType1["ID"], $arFilterHouseTypes)) : ?>checked<? endif; ?>><span><?= $houseType1["UF_NAME"] ?></span>
                                         </label>
                                     </li>
                                 <? endforeach; ?>

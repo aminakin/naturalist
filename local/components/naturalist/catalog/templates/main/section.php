@@ -614,9 +614,7 @@ if (!empty($houseTypeData)) {
     foreach ($houseTypeData as $key => &$houseType) {
         $houseType['URL'] = Components::getChpyLink(SUIT_TYPES_HL_ENTITY . '_' . $houseType['ID'])['UF_NEW_URL'];
     }
-    usort($houseTypeData, function ($a, $b) {
-        return ($a['UF_SORT'] - $b['UF_SORT']);
-    });
+    unset($houseType);
 }
 
 // Водоёмы
@@ -983,7 +981,9 @@ if ($chpy['UF_CANONICAL']) {
                                                         <p class="house-type__text"><?= $houseType['UF_NAME'] ?></p>
                                                     </a>
                                                 </li>
-                                            <? } ?>
+                                            <? }
+                                            unset($houseType);
+                                            ?>
                                         </ul>
                                     </div>
                                     <div class="house-type__shadow right"></div>
