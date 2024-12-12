@@ -271,6 +271,17 @@ if ($arResult['ERROR']) {
                     <span class="summ__text"><?=Loc::GetMessage('SUMM_ALL')?></span>
                     <span class="summ__price">0 ₽</span>
                 </div>
+                <div class="promo__item-wrap">
+                    <label class="checkbox promo__item">
+                        <input type="checkbox" class="checkbox visually-hidden" name="promo">
+                        <span><?=Loc::GetMessage('HAVE_PROMO')?></span>
+                    </label> 
+                    <div class="promo__item-input">
+                        <input type="text" name="promo_code" placeholder="<?=Loc::GetMessage('ENTER_PROMO')?>">
+                        <button class="promo__button"><?=Loc::GetMessage('BUT_PROMO')?></button>
+                    </div>
+                    <div class="promo__error"><?=Loc::GetMessage('ERROR_PROMO')?></div>
+                </div>
             </div>
         </section>
         <section class="form__block payment">
