@@ -1,12 +1,15 @@
 .cert-buy__form {
   display: grid;
-  gap: 88px;
+  gap: 90px;
+}
+
+.container {
+  max-width: calc(1380px + var(--container-gap)* 2);
 }
 
 .form__title-block {
-  font-family: "Lato";
+  font-family: var(--header-text-font-family);
   font-size: 28px;
-  letter-spacing: -1pt;
   line-height: 34px;
   font-weight: 600;
   position: relative;
@@ -34,7 +37,7 @@ label {
 }
 
 .form__cert label {
-  padding: 62px 10px;
+  padding: 60px 10px;
   border-radius: 15px;
   border: 1px solid black;
   display: flex;
@@ -54,10 +57,11 @@ label.selected {
 }
 
 .form__certs {
-  margin-top: 88px;
+  margin-top: 90px;
+  margin-bottom: -31px;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 20px;
+  gap: 26px;
 }
 
 .nominal__custom-cost {
@@ -71,7 +75,7 @@ label.selected {
 }
 
 .nominal__price {
-  font-family: "Lato";
+  font-family: var(--header-text-font-family);
   font-size: 36px;
   line-height: 34px;
   letter-spacing: -1pt;
@@ -84,15 +88,16 @@ label.selected {
 }
 
 .nominal__descr {
+  font-family: var(--base-font-family);
   font-weight: 500;
   text-align: center;
-  margin: 16px 0 0 0;
+  margin: 21px 0 0 0;
   font-size: 18px;
   line-height: 24px;
 }
 
 .form__format {
-  margin-top: 88px;
+  margin-top: 77px;
   display: flex;
   gap: 70px;
   justify-content: space-between;
@@ -107,12 +112,12 @@ label.selected {
   border-radius: 15px;
   border: 1px solid black;
   gap: 34px;
-  min-height: 301px;
+  min-height: 297px;
   position: relative;
 }
 
 .format__electro {
-  width: 38%;
+  width: 39%;
 }
 
 .format__fiz {
@@ -121,7 +126,7 @@ label.selected {
 
 .format__title {
   text-transform: uppercase;
-  font-family: "Lato";
+  font-family: var(--header-text-font-family);
   font-weight: 600;
   font-size: 28px;
   line-height: 34px;
@@ -157,7 +162,7 @@ label.selected {
   color: #e6c48e;
 }
 
-.format__electro label.selected svg g > path:first-child {
+.format__electro label.selected svg g>path:first-child {
   fill: #fbeed7;
 }
 
@@ -167,15 +172,15 @@ label.selected {
   background-color: #e6c48e;
 }
 
-.format__fiz label.selected svg g > path:first-child {
+.format__fiz label.selected svg g>path:first-child {
   fill: #fbeed7;
 }
 
 .form__el-variant {
-  margin-top: 88px;
+  margin-top: 72px;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 20px;
+  gap: 26px;
 }
 
 .design label {
@@ -183,19 +188,26 @@ label.selected {
   position: relative;
 }
 
-.design label img {
-  transition: all 0.25s;
-  border: 4px solid transparent;
+.design label .variant__img-wrap {
+  max-width: 325px;
+  height: 459px;
+  display: flex;
+  border: 1.06px solid #000000;
   border-radius: 15px;
   margin-top: 16px;
+  overflow: hidden;
+}
+
+.design label img {
+  transition: all 0.25s;
   width: 100%;
+  border-radius: 15px;
 }
 
 .design label .el-variant__title {
   transition: all 0.25s;
-  padding: 0 10px;
-  font-size: 18px;
-  line-height: 24px;
+  font-size: 11px;
+  line-height: 15px;
   font-weight: 500;
   border-radius: 50px;
 }
@@ -323,7 +335,7 @@ label.selected {
 }
 
 .form__submit {
-  font-family: "Lato";
+  font-family: var(--header-text-font-family);
   font-size: 28px;
   line-height: 34px;
   letter-spacing: 5pt;
@@ -397,14 +409,14 @@ label.selected {
 }
 
 .summ__text {
-  font-family: "Lato";
+  font-family: var(--header-text-font-family);
   font-size: 23px;
   line-height: 25px;
   font-weight: 600;
 }
 
 .summ__price {
-  font-family: "Lato";
+  font-family: var(--header-text-font-family);
   font-size: 28px;
   line-height: 29px;
   font-weight: 600;
@@ -421,7 +433,7 @@ input.visually-hidden {
   left: 0;
 }
 
-@media (max-width: 1000px) {
+@media (max-width: 1023px) {
   .section_crumbs {
     padding-bottom: 1rem;
   }
@@ -485,23 +497,30 @@ input.visually-hidden {
   }
 }
 
-@media (max-width: 500px) {
+@media (max-width: 550px) {
   .section_crumbs {
     padding-bottom: 1rem;
   }
 
   .form__title-block {
-    font-size: 21px;
-    line-height: 21px;
+    font-size: 14px;
+    line-height: 18px;
   }
 
   .form__dot {
-    top: 40px;
+    top: 27px;
+    width: 18px;
+    height: 18px;
   }
 
   .form__certs {
+    gap: 42px;
+  }
+
+  .form__certs {
+    margin: 42px 0 0px;
     grid-template-columns: 1fr;
-    gap: 16px;
+    gap: 18px;
   }
 
   .form__cert label {
@@ -509,13 +528,16 @@ input.visually-hidden {
   }
 
   .nominal__descr {
-    margin-top: 19px;
-    font-size: 13px;
-    line-height: 19px;
+    margin-top: 15px;
+    font-size: 11px;
+    line-height: 15px;
   }
 
-  .nominal__descr br {
+  /*.nominal__descr br {
     display: none;
+  }*/
+  .form__format {
+    gap: 36px;
   }
 
   .form__format label {
@@ -525,8 +547,10 @@ input.visually-hidden {
   }
 
   .format__title {
-    font-size: 21px;
-    line-height: 21px;
+    font-size: 15.57px;
+    font-weight: 600;
+    line-height: 18.9px;
+    letter-spacing: -0.01em;
   }
 
   .format__title span {
@@ -534,16 +558,24 @@ input.visually-hidden {
   }
 
   .format__descr {
-    font-size: 13px;
-    line-height: 19px;
+    font-size: 11px;
+    line-height: 15px;
+  }
+
+  .format__descr br {
+    display: none;
   }
 
   .format__descr span {
-    line-height: 19px;
+    font-size: 7.05px;
+    font-weight: 500;
+    line-height: 10.31px;
   }
 
   .form__title {
     padding-right: 30px;
+    margin-top: 4px;
+    padding-top: 4px;
   }
 
   .design label .el-variant__title {
@@ -552,14 +584,48 @@ input.visually-hidden {
   }
 
   .form__el-variant {
-    margin-top: 38px;
+    margin-top: 42px;
     display: grid;
     grid-template-columns: 1fr;
     gap: 24px;
   }
 
-  .design label img {
+  /*.design label img {
     margin-top: 8px;
+  }*/
+
+  .checkbox span:before{
+    width: 16px!important;
+    height: 16px!important;
+    top: calc(50% - 9px);
+  }
+  .payment-item.checkbox span{
+    width: 16px!important;
+    height: 16px!important;
+  }
+
+  .checkbox span{
+    padding-left: 26px;
+  }
+
+  .payment-item img{
+    max-width: 30px!important;
+  }
+
+  .checkbox input:checked + span:after{
+    width: 8px;
+    height: 8px;
+    top: calc(50% - 8px);
+    left: 4px;
+  }
+
+  .design label .variant__img-wrap{
+    margin-top: 10px;
+  }
+
+  .design label .variant__img-wrap{
+    max-width: 343px;
+    height: 484px;
   }
 
   .congrats__content,
@@ -619,15 +685,14 @@ input.visually-hidden {
 
   .payment-item p,
   .cert-buy .field .checkbox span {
-    font-size: 15px;
-    line-height: 21px;
+    font-size: 13px;
+    line-height: 14px;
   }
 
   .form__submit {
     margin-top: 24px;
     font-size: 21px;
     line-height: 21px;
-    letter-spacing: normal;
     padding: 13.5px;
   }
 
@@ -649,9 +714,9 @@ input.visually-hidden {
   }
 
   .summ__text {
-    font-size: 15px;
-    line-height: 19px;
-    max-width: 150px;
+    font-size: 13px;
+    line-height: 14px;
+    /*max-width: 150px;*/
   }
 
   .summ__content {
@@ -663,7 +728,11 @@ input.visually-hidden {
   }
 
   .summ__price {
-    font-size: 21px;
-    line-height: 21px;
+    font-size: 13px;
+    line-height: 14px;
+  }
+  
+  .split-badge{
+    max-width: 270px;
   }
 }

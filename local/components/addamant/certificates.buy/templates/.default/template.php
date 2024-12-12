@@ -33,7 +33,7 @@ if ($arResult['ERROR']) {
         <input type="hidden" name="pocket_cost" value="<?=$arParams['POCKET_COST']?>">
         <section class="form__block nominal">
             <div class="form__title-block">
-                <span class="form__number">1</span>
+                <span class="form__number">1.</span>
                 <p class="form__title"><?=Loc::GetMessage('NOMINAL_TITLE')?></p>
                 <span class="form__dot"></span>
             </div>
@@ -74,7 +74,7 @@ if ($arResult['ERROR']) {
         </section>
         <section class="form__block format">
             <div class="form__title-block">
-                <span class="form__number">2</span>
+                <span class="form__number">2.</span>
                 <p class="form__title"><?=Loc::GetMessage('FORMAT_TITLE')?></p>
                 <span class="form__dot"></span>
             </div>
@@ -123,7 +123,7 @@ if ($arResult['ERROR']) {
         </section>
         <section class="form__block el-variant design" style="display: none">
             <div class="form__title-block">
-                <span class="form__number">3</span>
+                <span class="form__number">3.</span>
                 <p class="form__title"><?=Loc::GetMessage('VARIANT_EL_TITLE')?></p>
                 <span class="form__dot"></span>
             </div>
@@ -141,7 +141,7 @@ if ($arResult['ERROR']) {
         </section>
         <section class="form__block variant design">
             <div class="form__title-block">
-                <span class="form__number">3</span>
+                <span class="form__number">3.</span>
                 <p class="form__title"><?=Loc::GetMessage('VARIANT_TITLE', ['#COST#' => $arParams['VARIANT_COST']])?></p>
                 <span class="form__dot"></span>
             </div>
@@ -159,7 +159,7 @@ if ($arResult['ERROR']) {
         </section>
         <section class="form__block pocket design" style="display: none">
             <div class="form__title-block">
-                <span class="form__number">4</span>
+                <span class="form__number">4.</span>
                 <p class="form__title"><?=Loc::GetMessage('POCKET_TITLE', ['#COST#' => $arParams['POCKET_COST']])?></p>
                 <span class="form__dot"></span>
             </div>
@@ -177,7 +177,7 @@ if ($arResult['ERROR']) {
         </section>
         <section class="form__block congrats">
             <div class="form__title-block">
-                <span class="form__number">5</span>
+                <span class="form__number">5.</span>
                 <p class="form__title"><?=Loc::GetMessage('VARIANT_TEXT_TITLE')?></p>
                 <span class="form__dot"></span>
             </div>
@@ -191,7 +191,7 @@ if ($arResult['ERROR']) {
         </section>
         <section class="form__block user-data">
             <div class="form__title-block">
-                <span class="form__number">6</span>
+                <span class="form__number">6.</span>
                 <p class="form__title"><?=Loc::GetMessage('PERSONAL_TITLE')?></p>
                 <span class="form__dot"></span>
             </div>
@@ -244,7 +244,7 @@ if ($arResult['ERROR']) {
         </section>
         <section class="form__block comment">
             <div class="form__title-block">
-                <span class="form__number">7</span>
+                <span class="form__number">7.</span>
                 <p class="form__title"><?=Loc::GetMessage('COMMENT_TITLE')?></p>
                 <span class="form__dot"></span>
             </div>

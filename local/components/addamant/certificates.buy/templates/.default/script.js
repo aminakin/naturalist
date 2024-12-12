@@ -305,7 +305,7 @@ class BuyCert {
     let index = 1;
     this.sectionNumbers.forEach((element) => {
       if (element.offsetParent !== null) {
-        element.textContent = index;
+        element.textContent = index + '.';
         index += 1;
       }
     });
