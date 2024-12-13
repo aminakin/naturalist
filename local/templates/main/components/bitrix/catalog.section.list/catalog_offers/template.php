@@ -141,7 +141,7 @@ Loc::loadMessages(__FILE__);
                     $this->AddEditAction($arItem['ID'], $arItem['EDIT_LINK'], CIBlock::GetArrayByID($arItem["IBLOCK_ID"], "ELEMENT_EDIT"));
                     $this->AddDeleteAction($arItem['ID'], $arItem['DELETE_LINK'], CIBlock::GetArrayByID($arItem["IBLOCK_ID"], "ELEMENT_DELETE"), array("CONFIRM" => Loc::GetMessage('CT_BNL_ELEMENT_DELETE_CONFIRM')));
                     ?>
-                    <? if ($arItem["UF_PHOTOS"]): ?>
+                    <? /*if ($arItem["UF_PHOTOS"]): ?>
                         <? $arDataFullGallery = []; ?>
                         <? foreach ($arItem["UF_PHOTOS"] as $keyElement => $photoId): ?>
                             <?
@@ -150,16 +150,16 @@ Loc::loadMessages(__FILE__);
                             ?>
                         <? endforeach; ?>
                         <? $dataFullGallery = implode(",", $arDataFullGallery); ?>
-                    <? endif; ?>
+                    <? endif; */?>
                     <div class="swiper-slide" id="<?= $this->GetEditAreaId($arItem['ID']) ?>">
                         <div class="object" href="<?= $arItem["SECTION_PAGE_URL"] ?>">
                             <div class="object__images">
-                                <div class="swiper slider-gallery" data-slider-object="data-slider-object" data-fullgallery="[<?= $dataFullGallery; ?>]">
+                                <div class="swiper slider-gallery" data-slider-object="data-slider-object" data-fullgallery="[<?= $arItem["FULL_GALLERY"]; ?>]">
                                     <div class="swiper-wrapper">
-                                        <? if ($arItem["UF_PHOTOS"]): ?>
+                                        <? if ($arItem["PICTURES"]): ?>
                                             <? $keyPhoto = 1; ?>
-                                            <? foreach ($arItem["UF_PHOTOS"] as $keyElement => $photoId): ?>
-                                                <?
+                                            <? foreach ($arItem["PICTURES"] as $keyElement => $photoId): ?>
+                                                <?/*
                                                 $arPhoto = CFile::ResizeImageGet($photoId, array('width' => 600, 'height' => 400), BX_RESIZE_IMAGE_EXACT, true);
                                                 ?>
                                                 <? if (count((array)$arItem["UF_PHOTOS"]) > 1): ?>
@@ -172,9 +172,9 @@ Loc::loadMessages(__FILE__);
                                                     $alt = $arResult["HL_TYPES"][$arItem["UF_TYPE"]]["UF_NAME"] . " " . $arItem["NAME"];
                                                     $title = "Фото - " . $arItem["NAME"];
                                                     ?>
-                                                <? endif; ?>
+                                                <? endif;*/ ?>
                                                 <div class="swiper-slide" data-fullgallery-item="<?= $keyElement; ?>">
-                                                    <img class="lazy" alt="<?= $alt ?>" title="<?= $title ?>" data-src="<?= $arPhoto["src"] ?>"
+                                                    <img class="lazy" alt="<?= $alt ?>" title="<?= $title ?>" data-src="<?= $photoId["src"] ?>"
                                                         alt="<?= $arItem["NAME"] ?>">
                                                 </div>
                                                 <? $keyPhoto++; ?>
