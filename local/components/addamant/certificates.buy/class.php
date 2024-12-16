@@ -1,6 +1,6 @@
 <?php
 
-if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED!==true) {
+if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) {
     die();
 }
 
@@ -17,18 +17,18 @@ use Bitrix\Sale\Delivery\Services;
 
 Loc::loadMessages(__FILE__);
 
-class CertBuy extends \CBitrixComponent 
+class CertBuy extends \CBitrixComponent
 {
     private $certificates;
     private $postList = [];
 
     public function onPrepareComponentParams($arParams)
-	{        
+    {
         return $arParams;
     }
-    
+
     protected function prepareResultArray()
-	{
+    {
         Loader::includeModule("sale");
 
         $this->certificates = new CatalogHelper();
@@ -49,20 +49,35 @@ class CertBuy extends \CBitrixComponent
             ])->fetchAll(),
             'DELIVERIES' => Services\Table::getList([
                 'filter' => [
-                    'ACTIVE'=>'Y',
+                    'ACTIVE' => 'Y',
                     'PARENT_ID' => CERT_DELIVERY_PARENT_ID,
                 ]
             ])->fetchAll(),
         ];
+
+        $orders = new Orders();
+        $coupons = $orders->getActivatedCoupons();        
+        if (count($coupons)) {
+            $this->arResult['COUPONS'] = $coupons;
+            if ($coupons[0]['ACTIVE'] === 'Y') {
+                $rule = CSaleDiscount::GetByID($coupons[0]['DISCOUNT_ID']);
+                if ($rule['ACTIVE'] === 'Y') {
+                    $action = unserialize($rule['ACTIONS'])['CHILDREN'][0]['DATA'];
+                    $this->arResult['DISCOUNT_TYPE'] = $action['Unit'];
+                    $this->arResult['DISCOUNT_VALUE'] = $action['Value'];
+                }
+            }
+            
+        }
     }
 
     public function executeComponent()
-	{
-		global $APPLICATION;		
-        $this->prepareResultArray();        
+    {
+        global $APPLICATION;
+        $this->prepareResultArray();
         $this->handleRequest();
-		$this->includeComponentTemplate();
-	}
+        $this->includeComponentTemplate();
+    }
 
     /**
      * Возвращает список сертификатов из каталога
@@ -70,15 +85,15 @@ class CertBuy extends \CBitrixComponent
      * @return array
      * 
      */
-    private function getCertificates() : array
-    {        
+    private function getCertificates(): array
+    {
         return $this->certificates->getProducts();
     }
 
     /**
      * Обрабатывает входящий POST запрос     
      */
-    protected function handleRequest() : void
+    protected function handleRequest(): void
     {
         $request = Context::getCurrent()->getRequest();
         $this->postList = $request->getPostList()->toArray();
@@ -86,7 +101,7 @@ class CertBuy extends \CBitrixComponent
             $order = new OrderHelper($this->postList);
             $orderId = $order->add();
             if ($orderId) {
-                $this->getPaymentUrl($orderId);                
+                $this->getPaymentUrl($orderId);
             } else {
                 $this->arResult['ERROR'] = 'Произошла ошибка. Пожалуйста, попробуйте позже.';
             }
@@ -101,10 +116,10 @@ class CertBuy extends \CBitrixComponent
      * @return void
      * 
      */
-    private function getPaymentUrl(int $orderId) : void
+    private function getPaymentUrl(int $orderId): void
     {
         if ($this->postList['paysystem'] == CERT_CASH_PAYSYSTEM_ID) {
-            $this->arResult['PAYMENT_URL'] = '/certificates/success/?orderId='.$orderId;
+            $this->arResult['PAYMENT_URL'] = '/certificates/success/?orderId=' . $orderId;
             return;
         }
 
@@ -113,9 +128,9 @@ class CertBuy extends \CBitrixComponent
         if ($this->postList['paysystem'] != CERT_YANDEX_PAYSYSTEM_ID && $this->postList['paysystem'] != CERT_YANDEX_SPLIT_PAYSYSTEM_ID) {
             $this->arResult['PAYMENT_URL'] = $order->getPaymentUrl($orderId, false);
             return;
-        }        
+        }
 
-        $url = $this->arResult['LOCAL_HOST']."/bitrix/services/yandexpay.pay/trading/orders";
+        $url = $this->arResult['LOCAL_HOST'] . "/bitrix/services/yandexpay.pay/trading/orders";
         $data = $order->getPaymentUrl($orderId, false, true);
         $options = array(
             'http' => array(

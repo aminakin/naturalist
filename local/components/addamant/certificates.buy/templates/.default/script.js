@@ -1,7 +1,9 @@
 "use strict";
 
 class BuyCert {
-  constructor() {
+  constructor(discountValue, discountType) {
+    this.discountValue = discountValue;
+    this.discountType = discountType;
     this.bindEvents();
     this.setSectionNumbers();
   }
@@ -27,6 +29,9 @@ class BuyCert {
   deliveryCostElement = document.querySelector(
     ".summ__item.del-var .summ__price"
   );
+  discountAmountBlock = document.querySelector(".summ__item.discount");
+  discountAmount = document.querySelector(".summ__item.discount .summ__price");
+  oldPrice = document.querySelector(".summ__price--old");
   summCostElement = document.querySelector(".summ__item.all .summ__price");
   certVariantsLabels = document.querySelectorAll(
     ".variant .form__el-variant label"
@@ -41,12 +46,21 @@ class BuyCert {
   );
   certPockets = document.querySelectorAll('input[name="cert_pocket"]');
   submitForm = document.querySelector(".cert-buy__form");
+  promoButton = document.querySelector(".promo__button");
+  promoDeleteButton = document.querySelector(".coupon__delete");
+  promoSwitcher = document.querySelector('input[name="promo"]');
+  promoInput = document.querySelector(".promo__item-input");
+  promoWrap = document.querySelector(".promo__item-wrap");
+  promoInfo = document.querySelector(".promo__info");
 
   totalSumm = 0;
   prodSumm = 0;
   deliverySumm = 0;
   variantSumm = 0;
   pocketSumm = 0;
+  prodSummDiscount = 0;
+  prodDiscount = 0;
+  totalSummDiscount = 0;
 
   ecommerceSend = false;
 
@@ -64,7 +78,86 @@ class BuyCert {
     this.elVariantSelectHandler();
     this.deliverySelectHandler();
     this.congratsHandler();
+    this.promoButtonHandler();
+    this.promoSwitcherHandler();
+    this.promoDeleteHandler();
     //this.submitHandler();
+  }
+
+  promoDeleteHandler() {
+    this.promoDeleteButton.addEventListener("click", () => {
+      this.removeCoupon(this.promoInput.querySelector("input").value);
+    });
+  }
+
+  promoSwitcherHandler() {
+    this.promoSwitcher.addEventListener("change", (evt) => {
+      const checkbox = evt.target;
+      if (checkbox.checked) {
+        this.promoInput.style.display = "flex";
+      } else {
+        this.promoInput.style.display = "none";
+      }
+    });
+  }
+
+  sendCoupon() {
+    const _this = this;
+    let data = {
+      coupon: _this.promoInput.querySelector("input").value,
+      action: "couponAdd",
+    };
+    jQuery.ajax({
+      type: "POST",
+      url: "/ajax/handlers/addOrder.php",
+      data: data,
+      dataType: "json",
+      success: function (data) {
+        if (data.STATUS == "SUCCESS") {
+          _this.promoWrap.classList.add("entered");
+          _this.promoWrap.classList.remove("error");
+          _this.promoInfo.style.display = "none";
+          _this.discountValue = data.INFO.DISCOUNT_VALUE;
+          _this.discountType = data.INFO.DISCOUNT_TYPE;
+          _this.calcSumm();
+        } else {
+          _this.promoInfo.textContent = data.MESSAGE;
+          _this.promoInfo.style.display = "block";
+          _this.promoWrap.classList.add("error");
+        }
+      },
+      error: function (data) {
+        alert(
+          "Что-то пошло не так. Пожалуйста, попробуйте позже или обратитесь в службу поддержки."
+        );
+      },
+    });
+  }
+
+  removeCoupon(coupon) {
+    const _this = this;
+    let data = {
+      coupon: coupon,
+      action: "couponDelete",
+    };
+    jQuery.ajax({
+      type: "POST",
+      url: "/ajax/handlers/addOrder.php",
+      data: data,
+      dataType: "json",
+      success: function (data) {
+        _this.promoWrap.classList.remove("entered");
+        _this.promoInput.querySelector("input").value = "";
+        _this.discountValue = 0;
+        _this.discountType = "";
+        _this.calcSumm();
+      },
+      error: function (data) {
+        alert(
+          "Что-то пошло не так. Пожалуйста, попробуйте позже или обратитесь в службу поддержки."
+        );
+      },
+    });
   }
 
   congratsHandler() {
@@ -75,6 +168,13 @@ class BuyCert {
       const subst = ``;
       const result = str.replace(regex, subst);
       this.value = result;
+    });
+  }
+
+  promoButtonHandler() {
+    this.promoButton.addEventListener("click", (evt) => {
+      evt.preventDefault();
+      this.sendCoupon();
     });
   }
 
@@ -305,7 +405,7 @@ class BuyCert {
     let index = 1;
     this.sectionNumbers.forEach((element) => {
       if (element.offsetParent !== null) {
-        element.textContent = index + '.';
+        element.textContent = index + ".";
         index += 1;
       }
     });
@@ -395,11 +495,45 @@ class BuyCert {
   calcDelivery() {}
 
   calcSumm() {
-    this.totalSumm =
-      +this.prodSumm +
-      +this.deliverySumm +
-      +this.variantSumm +
-      +this.pocketSumm;
+    if (this.discountValue != 0) {
+      if (this.discountType == "Perc") {
+        this.prodSummDiscount =
+          (+this.prodSumm * (100 - this.discountValue)) / 100;
+      } else {
+        this.prodSummDiscount = +this.prodSumm - this.discountValue;
+      }
+      this.prodDiscount = +this.prodSumm - this.prodSummDiscount;
+
+      this.totalSumm =
+        +this.prodSumm +
+        +this.deliverySumm +
+        +this.variantSumm +
+        +this.pocketSumm;
+
+      this.totalSummDiscount =
+        +this.prodSummDiscount +
+        +this.deliverySumm +
+        +this.variantSumm +
+        +this.pocketSumm;
+
+      this.renderPrice(this.oldPrice, this.totalSumm);
+      this.renderPrice(this.discountAmount, -this.prodDiscount);
+      this.renderPrice(this.summCostElement, this.totalSummDiscount);
+
+      this.oldPrice.style.display = "block";
+      this.discountAmountBlock.style.display = "flex";
+    } else {
+      this.totalSumm =
+        +this.prodSumm +
+        +this.deliverySumm +
+        +this.variantSumm +
+        +this.pocketSumm;
+
+      this.renderPrice(this.summCostElement, this.totalSumm);
+      this.oldPrice.style.display = "none";
+      this.discountAmountBlock.style.display = "none";
+    }
+
     this.renderPrice(
       this.deliveryCostElement,
       +this.deliverySumm + +this.variantSumm + +this.pocketSumm
@@ -413,7 +547,6 @@ class BuyCert {
         ".summ__text"
       ).textContent = "Доставка и упаковка:";
     }
-    this.renderPrice(this.summCostElement, this.totalSumm);
   }
 
   renderPrice(element, value) {
