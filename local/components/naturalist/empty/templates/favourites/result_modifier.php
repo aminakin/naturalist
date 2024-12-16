@@ -65,16 +65,72 @@ if ($arFavourites) {
         }
     }
 
+    /** получение сезона из ИБ */
+    if (Cmodule::IncludeModule('asd.iblock')) {
+        $arFields = CASDiblockTools::GetIBUF(CATALOG_IBLOCK_ID);
+    }
+
     $rsFavourites = CIBlockSection::GetList(array(), $arFilter, false, array("IBLOCK_ID", "ID", "NAME", "CODE", "SECTION_PAGE_URL", "UF_*"), false);
     while ($arFavourite = $rsFavourites->GetNext()) {
-        if($arFavourite["UF_PHOTOS"]) {
+        /*if($arFavourite["UF_PHOTOS"]) {
             foreach ($arFavourite["UF_PHOTOS"] as $photoId) {
                 $arFavourite["PICTURES"][$photoId] = CFile::ResizeImageGet($photoId, array('width' => 600, 'height' => 400), BX_RESIZE_IMAGE_EXACT, true);
             }
 
         } else {
             $arFavourite["PICTURES"][0]["src"] = SITE_TEMPLATE_PATH."/img/no_photo.png";
+        }*/
+        foreach($arFields['UF_SEASON'] as $season){
+            if($season == 'Лето'){
+                if ($arFavourite["UF_PHOTOS"]) {
+                    foreach ($arFavourite["UF_PHOTOS"] as $photoId) {
+                        $imageOriginal = CFile::GetFileArray($photoId);
+                        $arDataFullGallery[] = "\"" . $imageOriginal["SRC"] . "\"";
+                        $arFavourite["PICTURES"][$photoId] = CFile::ResizeImageGet($photoId, array('width' => 590, 'height' => 390), BX_RESIZE_IMAGE_EXACT, true);
+                    }
+                } else {
+                    $arFavourite["PICTURES"][0]["src"] = SITE_TEMPLATE_PATH . "/img/big_no_photo.png";
+                }
+            }elseif($season == 'Зима'){
+                if ($arFavourite["UF_WINTER_PHOTOS"]) {
+                    foreach ($arFavourite["UF_WINTER_PHOTOS"] as $photoId) {
+                        $imageOriginal = CFile::GetFileArray($photoId);
+                        $arDataFullGallery[] = "\"" . $imageOriginal["SRC"] . "\"";
+                        $arFavourite["PICTURES"][$photoId] = CFile::ResizeImageGet($photoId, array('width' => 590, 'height' => 390), BX_RESIZE_IMAGE_EXACT, true);
+                    }
+                } else {
+                    if ($arFavourite["UF_PHOTOS"]) {
+                        foreach ($arFavourite["UF_PHOTOS"] as $photoId) {
+                            $imageOriginal = CFile::GetFileArray($photoId);
+                            $arDataFullGallery[] = "\"" . $imageOriginal["SRC"] . "\"";
+                            $arFavourite["PICTURES"][$photoId] = CFile::ResizeImageGet($photoId, array('width' => 590, 'height' => 390), BX_RESIZE_IMAGE_EXACT, true);
+                        }
+                    } else {
+                        $arSearFavouritection["PICTURES"][0]["src"] = SITE_TEMPLATE_PATH . "/img/big_no_photo.png";
+                    }
+                }
+            }elseif($season == 'Осень+Весна'){
+                if ($arFavourite["UF_MIDSEASON_PHOTOS"]) {
+                    foreach ($arFavourite["UF_MIDSEASON_PHOTOS"] as $photoId) {
+                        $imageOriginal = CFile::GetFileArray($photoId);
+                        $arDataFullGallery[] = "\"" . $imageOriginal["SRC"] . "\"";
+                        $arFavourite["PICTURES"][$photoId] = CFile::ResizeImageGet($photoId, array('width' => 590, 'height' => 390), BX_RESIZE_IMAGE_EXACT, true);
+                    }
+                } else {
+                    if ($arFavourite["UF_PHOTOS"]) {
+                        foreach ($arFavourite["UF_PHOTOS"] as $photoId) {
+                            $imageOriginal = CFile::GetFileArray($photoId);
+                            $arDataFullGallery[] = "\"" . $imageOriginal["SRC"] . "\"";
+                            $arFavourite["PICTURES"][$photoId] = CFile::ResizeImageGet($photoId, array('width' => 590, 'height' => 390), BX_RESIZE_IMAGE_EXACT, true);
+                        }
+                    } else {
+                        $arFavourite["PICTURES"][0]["src"] = SITE_TEMPLATE_PATH . "/img/big_no_photo.png";
+                    }
+                }
+            }
         }
+        unset($arFavourite["UF_PHOTOS"]);
+        $arFavourite["FULL_GALLERY"] = implode(",", $arDataFullGallery);
 
         $arFavourite["RATING"] = (isset($arReviewsAvg[$arFavourite["ID"]])) ? $arReviewsAvg[$arFavourite["ID"]]["avg"] : 0;
         $arFavourite["REVIEWS_COUNT"] = (isset($arReviews[$arFavourite["ID"]])) ? $arReviewsAvg[$arFavourite["ID"]]["count"] : 0;
