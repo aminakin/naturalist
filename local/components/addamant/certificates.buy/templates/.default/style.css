@@ -44,6 +44,7 @@ label {
   align-items: center;
   justify-content: center;
   position: relative;
+  min-height: 156px;
 }
 
 /* label:has(input:checked) {
@@ -71,7 +72,13 @@ label.selected {
   border: none;
   margin: 0;
   padding: 0;
-  height: 34px;
+  height: 156px;
+  position: absolute;
+  top: 0px;
+}
+
+html {
+  scroll-padding-top: 150px;
 }
 
 .nominal__price {
@@ -196,18 +203,20 @@ label.selected {
   border-radius: 15px;
   margin-top: 16px;
   overflow: hidden;
+  display: flex;
+  margin: 0 auto;
 }
 
 .design label img {
   transition: all 0.25s;
   width: 100%;
-  border-radius: 15px;
+  object-fit: cover;
 }
 
 .design label .el-variant__title {
   transition: all 0.25s;
-  font-size: 11px;
-  line-height: 15px;
+  font-size: 18px;
+  line-height: 26px;
   font-weight: 500;
   border-radius: 50px;
 }
@@ -219,11 +228,17 @@ label.selected {
 
 .design label.selected .el-variant__title {
   background-color: #f18d3f;
+  padding: 0px 16px;
 }
 
 .design label.selected img {
   border-color: #f18d3f;
+  border-radius: 10px;
 }
+
+.design label.selected .variant__img-wrap{
+  border: 4px solid #F18D3F
+} 
 
 .congrats__content,
 .user-data__content {
@@ -453,6 +468,10 @@ input.visually-hidden {
   margin-top: 52px;
 }
 
+.promo__item-wrap.entered input[name="promo_code"]{
+  color: #696969;
+}
+
 .promo__item span {
   font-size: 20px;
   line-height: 30px;
@@ -641,6 +660,11 @@ input.visually-hidden {
 
   .form__cert label {
     padding: 49px 10px;
+    min-height: 134px;
+  }
+
+  .nominal__custom-cost{
+    height: 134px;
   }
 
   .nominal__descr {
@@ -863,13 +887,12 @@ input.visually-hidden {
   }
 
   .promo__item-input {
-    display: flex;
     margin-top: 18px;
   }
 
   .promo__item-input input {
     margin-right: 4px;
-    max-width: 160px;
+    max-width: 162px;
     background-color: transparent;
     border: 1.55px solid #000000;
     padding: 6.5px 7.5px;
@@ -891,6 +914,7 @@ input.visually-hidden {
     padding: 7.5px 0;
     font-size: 10px;
     line-height: 21px;
+    max-width: 177px;
   }
 
   .promo__info {

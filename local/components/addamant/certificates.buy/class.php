@@ -14,6 +14,7 @@ use Naturalist\Certificates\OrderHelper;
 use Naturalist\Orders;
 use Bitrix\Sale\PaySystem;
 use Bitrix\Sale\Delivery\Services;
+use Bitrix\Sale;
 
 Loc::loadMessages(__FILE__);
 
@@ -56,7 +57,7 @@ class CertBuy extends \CBitrixComponent
         ];
 
         $orders = new Orders();
-        $coupons = $orders->getActivatedCoupons();        
+        $coupons = $orders->getActivatedCoupons();
         if (count($coupons)) {
             $this->arResult['COUPONS'] = $coupons;
             if ($coupons[0]['ACTIVE'] === 'Y') {
@@ -67,7 +68,6 @@ class CertBuy extends \CBitrixComponent
                     $this->arResult['DISCOUNT_VALUE'] = $action['Value'];
                 }
             }
-            
         }
     }
 
@@ -75,6 +75,10 @@ class CertBuy extends \CBitrixComponent
     {
         global $APPLICATION;
         $this->prepareResultArray();
+
+        // Создадим пустую корзину для новых пользователей
+        $basket = Sale\Basket::loadItemsForFUser(Sale\Fuser::getId(), Context::getCurrent()->getSite());
+
         $this->handleRequest();
         $this->includeComponentTemplate();
     }
