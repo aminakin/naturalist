@@ -59,6 +59,15 @@
   font-display: swap;
   font-family: Montserrat;
   font-style: normal;
+  font-weight: 500;
+  src: url(../fonts/Montserrat-Medium.woff2) format("woff2"),
+    url(../fonts/Montserrat-Medium.woff) format("woff");
+}
+
+@font-face {
+  font-display: swap;
+  font-family: Montserrat;
+  font-style: normal;
   font-weight: 700;
   src: url(../fonts/Montserrat-Bold.woff2) format("woff2"),
     url(../fonts/Montserrat-Bold.woff) format("woff");
@@ -134,6 +143,15 @@
   font-weight: 700;
   src: url(../fonts/TTTravelsNext-Bd.woff2) format("woff2"),
     url(../fonts/TTTravelsNext-Bd.woff) format("woff");
+}
+
+@font-face {
+  font-display: swap;
+  font-family: TT Travels Next;
+  font-style: normal;
+  font-weight: 800;
+  src: url(../fonts/TTTravelsNext-Eb.woff2) format("woff2"),
+    url(../fonts/TTTravelsNext-Eb.woff) format("woff");
 }
 
 ::-moz-selection {

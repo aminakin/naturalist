@@ -33,7 +33,7 @@ if ($arResult['ERROR']) {
         <input type="hidden" name="pocket_cost" value="<?=$arParams['POCKET_COST']?>">
         <section class="form__block nominal">
             <div class="form__title-block">
-                <span class="form__number">1</span>
+                <span class="form__number">1.</span>
                 <p class="form__title"><?=Loc::GetMessage('NOMINAL_TITLE')?></p>
                 <span class="form__dot"></span>
             </div>
@@ -74,7 +74,7 @@ if ($arResult['ERROR']) {
         </section>
         <section class="form__block format">
             <div class="form__title-block">
-                <span class="form__number">2</span>
+                <span class="form__number">2.</span>
                 <p class="form__title"><?=Loc::GetMessage('FORMAT_TITLE')?></p>
                 <span class="form__dot"></span>
             </div>
@@ -123,7 +123,7 @@ if ($arResult['ERROR']) {
         </section>
         <section class="form__block el-variant design" style="display: none">
             <div class="form__title-block">
-                <span class="form__number">3</span>
+                <span class="form__number">3.</span>
                 <p class="form__title"><?=Loc::GetMessage('VARIANT_EL_TITLE')?></p>
                 <span class="form__dot"></span>
             </div>
@@ -141,7 +141,7 @@ if ($arResult['ERROR']) {
         </section>
         <section class="form__block variant design">
             <div class="form__title-block">
-                <span class="form__number">3</span>
+                <span class="form__number">3.</span>
                 <p class="form__title"><?=Loc::GetMessage('VARIANT_TITLE', ['#COST#' => $arParams['VARIANT_COST']])?></p>
                 <span class="form__dot"></span>
             </div>
@@ -159,7 +159,7 @@ if ($arResult['ERROR']) {
         </section>
         <section class="form__block pocket design" style="display: none">
             <div class="form__title-block">
-                <span class="form__number">4</span>
+                <span class="form__number">4.</span>
                 <p class="form__title"><?=Loc::GetMessage('POCKET_TITLE', ['#COST#' => $arParams['POCKET_COST']])?></p>
                 <span class="form__dot"></span>
             </div>
@@ -177,7 +177,7 @@ if ($arResult['ERROR']) {
         </section>
         <section class="form__block congrats">
             <div class="form__title-block">
-                <span class="form__number">5</span>
+                <span class="form__number">5.</span>
                 <p class="form__title"><?=Loc::GetMessage('VARIANT_TEXT_TITLE')?></p>
                 <span class="form__dot"></span>
             </div>
@@ -191,7 +191,7 @@ if ($arResult['ERROR']) {
         </section>
         <section class="form__block user-data">
             <div class="form__title-block">
-                <span class="form__number">6</span>
+                <span class="form__number">6.</span>
                 <p class="form__title"><?=Loc::GetMessage('PERSONAL_TITLE')?></p>
                 <span class="form__dot"></span>
             </div>
@@ -244,7 +244,7 @@ if ($arResult['ERROR']) {
         </section>
         <section class="form__block comment">
             <div class="form__title-block">
-                <span class="form__number">7</span>
+                <span class="form__number">7.</span>
                 <p class="form__title"><?=Loc::GetMessage('COMMENT_TITLE')?></p>
                 <span class="form__dot"></span>
             </div>
@@ -267,9 +267,35 @@ if ($arResult['ERROR']) {
                     <span class="summ__text"><?=Loc::GetMessage('SUMM_DELIVERY')?></span>
                     <span class="summ__price">0 ₽</span>
                 </div>
+                <div class="summ__item discount" style="display: none">
+                    <span class="summ__text"><?=Loc::GetMessage('DISCOUNT')?></span>
+                    <span class="summ__price">0 ₽</span>
+                </div>
                 <div class="summ__item all">
                     <span class="summ__text"><?=Loc::GetMessage('SUMM_ALL')?></span>
-                    <span class="summ__price">0 ₽</span>
+                    <div class="summ__prices">
+                        <span class="summ__price--old">0 ₽</span>
+                        <span class="summ__price">0 ₽</span>
+                    </div>
+                </div>
+                <div class="promo__item-wrap <?=$arResult['COUPONS'] ? 'entered' : ''?>">
+                    <label class="checkbox promo__item">
+                        <input type="checkbox" class="checkbox visually-hidden" name="promo" <?=$arResult['COUPONS'] ? 'checked' : ''?>>
+                        <span><?=Loc::GetMessage('HAVE_PROMO')?></span>
+                    </label>
+                    <div class="promo__item-input" <?=$arResult['COUPONS'] ? 'style="display: flex"' : ''?>>
+                        <input type="text" name="promo_code" placeholder="<?=Loc::GetMessage('ENTER_PROMO')?>" <?=$arResult['COUPONS'] ? 'value="'.$arResult['COUPONS'][0]['COUPON'].'"' : ''?>>
+                        <svg class="coupon__success-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="17" viewBox="0 0 18 17" fill="none">
+                            <path fill-rule="evenodd" clip-rule="evenodd" d="M17.6574 2.53062L5.39302 16.8907L0.24707 7.42242L2.84543 5.8302L5.93478 11.5145L15.4351 0.390717L17.6574 2.53062Z" fill="#34A453"></path>
+                        </svg>
+                        <button type="button" class="coupon__delete">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                <path fill-rule="evenodd" clip-rule="evenodd" d="M6.2449 7.98458L1.46104 13.3204L3.49136 15.1407L8.27522 9.80487L13.8369 14.7912L15.6572 12.7609L10.0955 7.77455L15.3077 1.961L13.2773 0.140717L8.06519 5.95426L2.47751 0.944625L0.657227 2.97494L6.2449 7.98458Z" fill="#E63623"></path>
+                            </svg>
+                        </button>
+                        <button class="promo__button"><?=Loc::GetMessage('BUT_PROMO')?></button>
+                    </div>
+                    <div class="promo__info"></div>
                 </div>
             </div>
         </section>
@@ -429,7 +455,7 @@ if ($arResult['ERROR']) {
 </style>
 
 <script>
-    let buyCert = new BuyCert();
+    let buyCert = new BuyCert(<?=$arResult['DISCOUNT_VALUE'] ? $arResult['DISCOUNT_VALUE'] : 0?>, '<?=$arResult['DISCOUNT_TYPE'] ? $arResult['DISCOUNT_TYPE'] : ''?>');
     buyCert.showFiz();
 </script>
 

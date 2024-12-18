@@ -1,12 +1,15 @@
 .cert-buy__form {
   display: grid;
-  gap: 88px;
+  gap: 90px;
+}
+
+.container {
+  max-width: calc(1380px + var(--container-gap) * 2);
 }
 
 .form__title-block {
-  font-family: "Lato";
+  font-family: var(--header-text-font-family);
   font-size: 28px;
-  letter-spacing: -1pt;
   line-height: 34px;
   font-weight: 600;
   position: relative;
@@ -34,13 +37,14 @@ label {
 }
 
 .form__cert label {
-  padding: 62px 10px;
+  padding: 60px 10px;
   border-radius: 15px;
   border: 1px solid black;
   display: flex;
   align-items: center;
   justify-content: center;
   position: relative;
+  min-height: 156px;
 }
 
 /* label:has(input:checked) {
@@ -54,10 +58,11 @@ label.selected {
 }
 
 .form__certs {
-  margin-top: 88px;
+  margin-top: 90px;
+  margin-bottom: -31px;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 20px;
+  gap: 26px;
 }
 
 .nominal__custom-cost {
@@ -67,11 +72,17 @@ label.selected {
   border: none;
   margin: 0;
   padding: 0;
-  height: 34px;
+  height: 156px;
+  position: absolute;
+  top: 0px;
+}
+
+html {
+  scroll-padding-top: 150px;
 }
 
 .nominal__price {
-  font-family: "Lato";
+  font-family: var(--header-text-font-family);
   font-size: 36px;
   line-height: 34px;
   letter-spacing: -1pt;
@@ -84,15 +95,16 @@ label.selected {
 }
 
 .nominal__descr {
+  font-family: var(--base-font-family);
   font-weight: 500;
   text-align: center;
-  margin: 16px 0 0 0;
+  margin: 21px 0 0 0;
   font-size: 18px;
   line-height: 24px;
 }
 
 .form__format {
-  margin-top: 88px;
+  margin-top: 77px;
   display: flex;
   gap: 70px;
   justify-content: space-between;
@@ -107,12 +119,12 @@ label.selected {
   border-radius: 15px;
   border: 1px solid black;
   gap: 34px;
-  min-height: 301px;
+  min-height: 297px;
   position: relative;
 }
 
 .format__electro {
-  width: 38%;
+  width: 39%;
 }
 
 .format__fiz {
@@ -121,7 +133,7 @@ label.selected {
 
 .format__title {
   text-transform: uppercase;
-  font-family: "Lato";
+  font-family: var(--header-text-font-family);
   font-weight: 600;
   font-size: 28px;
   line-height: 34px;
@@ -172,10 +184,10 @@ label.selected {
 }
 
 .form__el-variant {
-  margin-top: 88px;
+  margin-top: 72px;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 20px;
+  gap: 26px;
 }
 
 .design label {
@@ -183,19 +195,28 @@ label.selected {
   position: relative;
 }
 
-.design label img {
-  transition: all 0.25s;
-  border: 4px solid transparent;
+.design label .variant__img-wrap {
+  max-width: 325px;
+  height: 459px;
+  display: flex;
+  border: 1.06px solid #000000;
   border-radius: 15px;
   margin-top: 16px;
+  overflow: hidden;
+  display: flex;
+  margin: 0 auto;
+}
+
+.design label img {
+  transition: all 0.25s;
   width: 100%;
+  object-fit: cover;
 }
 
 .design label .el-variant__title {
   transition: all 0.25s;
-  padding: 0 10px;
   font-size: 18px;
-  line-height: 24px;
+  line-height: 26px;
   font-weight: 500;
   border-radius: 50px;
 }
@@ -207,11 +228,17 @@ label.selected {
 
 .design label.selected .el-variant__title {
   background-color: #f18d3f;
+  padding: 0px 16px;
 }
 
 .design label.selected img {
   border-color: #f18d3f;
+  border-radius: 10px;
 }
+
+.design label.selected .variant__img-wrap{
+  border: 4px solid #F18D3F
+} 
 
 .congrats__content,
 .user-data__content {
@@ -323,7 +350,7 @@ label.selected {
 }
 
 .form__submit {
-  font-family: "Lato";
+  font-family: var(--header-text-font-family);
   font-size: 28px;
   line-height: 34px;
   letter-spacing: 5pt;
@@ -397,18 +424,34 @@ label.selected {
 }
 
 .summ__text {
-  font-family: "Lato";
-  font-size: 23px;
-  line-height: 25px;
+  font-family: var(--header-text-font-family);
+  font-size: 20px;
+  line-height: 21px;
   font-weight: 600;
 }
 
-.summ__price {
-  font-family: "Lato";
+.summ__price,
+.summ__price--old {
+  font-family: var(--header-text-font-family);
   font-size: 28px;
   line-height: 29px;
   font-weight: 600;
   letter-spacing: -0.28px;
+}
+
+.summ__price--old {
+  position: relative;
+  display: none;
+}
+
+.summ__price--old::before {
+  content: "";
+  width: 120%;
+  height: 3px;
+  background-color: var(--color-orange);
+  position: absolute;
+  left: -10%;
+  top: 42%;
 }
 
 .summ__item.all {
@@ -421,7 +464,111 @@ input.visually-hidden {
   left: 0;
 }
 
-@media (max-width: 1000px) {
+.promo__item-wrap {
+  margin-top: 52px;
+}
+
+.promo__item-wrap.entered input[name="promo_code"]{
+  color: #696969;
+}
+
+.promo__item span {
+  font-size: 20px;
+  line-height: 30px;
+}
+
+.promo__item-input {
+  display: none;
+  margin-top: 37px;
+  position: relative;
+}
+
+.promo__item-input input {
+  margin-right: 8px;
+  max-width: 320px;
+  background-color: transparent;
+  border: 1.55px solid #000000;
+  padding: 14px 45px 14px 15px;
+  font-size: 20px;
+  line-height: 30px;
+  border-radius: 2px;
+  width: 100%;
+}
+
+.promo__item-input input::placeholder {
+  color: #acacac;
+  opacity: 1;
+}
+
+.promo__item-input input::-ms-input-placeholder {
+  color: #acacac;
+}
+
+.promo__item-input .promo__button {
+  max-width: 350px;
+  width: 100%;
+  background-color: #f18d3f;
+  text-align: center;
+  padding: 16px 0;
+  font-size: 21px;
+  line-height: 28px;
+  font-weight: 600;
+  height: auto;
+  border-radius: 2px;
+  border: none;
+  font-family: var(--header-text-font-family);
+}
+
+.promo__info {
+  font-family: var(--base-font-family);
+  font-size: 18.5px;
+  font-weight: 500;
+  line-height: 23.26px;
+  max-width: 528px;
+  margin-top: 17px;
+  display: none;
+}
+
+.error .promo__info,
+.error .promo__item-input input {
+  color: #d71515;
+}
+
+.promo__item-wrap.entered .promo__button {
+  display: none;
+}
+
+.coupon__success-icon {
+  position: absolute;
+  left: 277px;
+  top: calc(50% - 9px);
+  display: none;
+}
+
+.promo__item-wrap.entered .coupon__success-icon {
+  display: block;
+}
+
+.coupon__delete {
+  background-color: transparent;
+  border: none;
+  padding: 5px;
+  display: none;
+  align-items: center;
+}
+
+.promo__item-wrap.entered .coupon__delete {
+  display: flex;
+}
+
+.summ__prices {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  align-items: flex-end;
+}
+
+@media (max-width: 1023px) {
   .section_crumbs {
     padding-bottom: 1rem;
   }
@@ -485,37 +632,52 @@ input.visually-hidden {
   }
 }
 
-@media (max-width: 500px) {
+@media (max-width: 550px) {
   .section_crumbs {
     padding-bottom: 1rem;
   }
 
   .form__title-block {
-    font-size: 21px;
-    line-height: 21px;
+    font-size: 14px;
+    line-height: 18px;
   }
 
   .form__dot {
-    top: 40px;
+    top: 27px;
+    width: 18px;
+    height: 18px;
   }
 
   .form__certs {
+    gap: 42px;
+  }
+
+  .form__certs {
+    margin: 42px 0 0px;
     grid-template-columns: 1fr;
-    gap: 16px;
+    gap: 18px;
   }
 
   .form__cert label {
     padding: 49px 10px;
+    min-height: 134px;
+  }
+
+  .nominal__custom-cost{
+    height: 134px;
   }
 
   .nominal__descr {
-    margin-top: 19px;
-    font-size: 13px;
-    line-height: 19px;
+    margin-top: 15px;
+    font-size: 11px;
+    line-height: 15px;
   }
 
-  .nominal__descr br {
+  /*.nominal__descr br {
     display: none;
+  }*/
+  .form__format {
+    gap: 36px;
   }
 
   .form__format label {
@@ -525,8 +687,10 @@ input.visually-hidden {
   }
 
   .format__title {
-    font-size: 21px;
-    line-height: 21px;
+    font-size: 15.57px;
+    font-weight: 600;
+    line-height: 18.9px;
+    letter-spacing: -0.01em;
   }
 
   .format__title span {
@@ -534,16 +698,24 @@ input.visually-hidden {
   }
 
   .format__descr {
-    font-size: 13px;
-    line-height: 19px;
+    font-size: 11px;
+    line-height: 15px;
+  }
+
+  .format__descr br {
+    display: none;
   }
 
   .format__descr span {
-    line-height: 19px;
+    font-size: 7.05px;
+    font-weight: 500;
+    line-height: 10.31px;
   }
 
   .form__title {
     padding-right: 30px;
+    margin-top: 4px;
+    padding-top: 4px;
   }
 
   .design label .el-variant__title {
@@ -552,14 +724,49 @@ input.visually-hidden {
   }
 
   .form__el-variant {
-    margin-top: 38px;
+    margin-top: 42px;
     display: grid;
     grid-template-columns: 1fr;
     gap: 24px;
   }
 
-  .design label img {
+  /*.design label img {
     margin-top: 8px;
+  }*/
+
+  .checkbox span:before {
+    width: 16px !important;
+    height: 16px !important;
+    top: calc(50% - 9px);
+  }
+
+  .payment-item.checkbox span {
+    width: 16px !important;
+    height: 16px !important;
+  }
+
+  .checkbox span {
+    padding-left: 26px;
+  }
+
+  .payment-item img {
+    max-width: 30px !important;
+  }
+
+  .checkbox input:checked + span:after {
+    width: 8px;
+    height: 8px;
+    top: calc(50% - 5px);
+    left: 4px;
+  }
+
+  .design label .variant__img-wrap {
+    margin-top: 10px;
+  }
+
+  .design label .variant__img-wrap {
+    max-width: 343px;
+    height: 484px;
   }
 
   .congrats__content,
@@ -619,15 +826,14 @@ input.visually-hidden {
 
   .payment-item p,
   .cert-buy .field .checkbox span {
-    font-size: 15px;
-    line-height: 21px;
+    font-size: 13px;
+    line-height: 14px;
   }
 
   .form__submit {
     margin-top: 24px;
     font-size: 21px;
     line-height: 21px;
-    letter-spacing: normal;
     padding: 13.5px;
   }
 
@@ -649,9 +855,9 @@ input.visually-hidden {
   }
 
   .summ__text {
-    font-size: 15px;
-    line-height: 19px;
-    max-width: 150px;
+    font-size: 13px;
+    line-height: 14px;
+    /*max-width: 150px;*/
   }
 
   .summ__content {
@@ -663,7 +869,65 @@ input.visually-hidden {
   }
 
   .summ__price {
-    font-size: 21px;
+    font-size: 13px;
+    line-height: 14px;
+  }
+
+  .split-badge {
+    max-width: 270px;
+  }
+
+  .promo__item-wrap {
+    margin-top: 32px;
+  }
+
+  .promo__item span {
+    font-size: 13px;
+    line-height: 19px;
+  }
+
+  .promo__item-input {
+    margin-top: 18px;
+  }
+
+  .promo__item-input input {
+    margin-right: 4px;
+    max-width: 162px;
+    background-color: transparent;
+    border: 1.55px solid #000000;
+    padding: 6.5px 7.5px;
+    font-size: 10px;
+    line-height: 15px;
+  }
+
+  .promo__item-input input::placeholder {
+    color: #acacac;
+    opacity: 1;
+  }
+
+  .promo__item-input input::-ms-input-placeholder {
+    color: #acacac;
+  }
+
+  .promo__item-input .promo__button {
+    background-color: #f18d3f;
+    padding: 7.5px 0;
+    font-size: 10px;
     line-height: 21px;
+    max-width: 177px;
+  }
+
+  .promo__info {
+    font-size: 9px;
+    line-height: 11.5px;
+    max-width: 260px;
+    margin-top: 12px;
+  }
+
+  .coupon__success-icon {
+    width: 9px;
+    height: 9px;
+    top: calc(50% - 4px);
+    left: 140px;
   }
 }

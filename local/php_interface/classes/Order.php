@@ -664,8 +664,17 @@ class Orders
             $getCoupon = DiscountCouponsManager::getData($coupon);
             if ($getCoupon['ACTIVE'] === 'Y') {
                 DiscountCouponsManager::add($coupon);
+                $rule = \CSaleDiscount::GetByID($getCoupon['DISCOUNT_ID']);
+                if ($rule['ACTIVE'] === 'Y') {
+                    $action = unserialize($rule['ACTIONS'])['CHILDREN'][0]['DATA'];
+                    $info = ["DISCOUNT_TYPE" => $action['Unit'], "DISCOUNT_VALUE" => $action['Value']];
+                } else {
+                    $info = ["DISCOUNT_TYPE" => '', "DISCOUNT_VALUE" => 0];
+                }
+                
                 return json_encode([
                     "MESSAGE" => "Купон применён",
+                    "INFO" => $info,
                     "STATUS" => "SUCCESS"
                 ]);
             } else {
