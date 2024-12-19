@@ -101,10 +101,14 @@ class BuyCert {
     });
   }
 
-  sendCoupon() {
+  sendCoupon(target) {
     const _this = this;
+    const enteredCoupon = _this.promoInput.querySelector("input").value;
+    if (enteredCoupon == "" || target.style.display == "none") {
+      return;
+    }
     let data = {
-      coupon: _this.promoInput.querySelector("input").value,
+      coupon: enteredCoupon,
       action: "couponAdd",
     };
     jQuery.ajax({
@@ -174,7 +178,19 @@ class BuyCert {
   promoButtonHandler() {
     this.promoButton.addEventListener("click", (evt) => {
       evt.preventDefault();
-      this.sendCoupon();
+      const enteredCoupon = this.promoInput
+        .querySelector("input")
+        .value.toLocaleLowerCase()
+        .trim();
+
+      if (enteredCoupon == "volya" && this.prodSumm < 5000) {
+        this.promoInfo.textContent =
+          "Данный промокод действует на заказ от 5000 руб";
+        this.promoInfo.style.display = "block";
+        this.promoWrap.classList.add("error");
+      } else {
+        this.sendCoupon(evt.target);
+      }
     });
   }
 
@@ -355,10 +371,10 @@ class BuyCert {
       _this.setRequired(this);
       this.setAttribute("placeholder", "    ₽");
     });
-    this.customPriceInput.addEventListener(
-      "mouseleave",
-      this.checkCustomPrice.bind(this)
-    );
+    // this.customPriceInput.addEventListener(
+    //   "mouseleave",
+    //   this.checkCustomPrice.bind(this)
+    // );
     this.customPriceInput.addEventListener(
       "input",
       this.checkCustomPrice.bind(this)
@@ -495,6 +511,15 @@ class BuyCert {
   calcDelivery() {}
 
   calcSumm() {
+    if (this.prodSumm < 5000 && this.promoWrap.classList.contains("entered")) {
+      const enteredCoupon = this.promoInput
+        .querySelector("input")
+        .value.toLocaleLowerCase()
+        .trim();
+      if (enteredCoupon == "volya") {
+        this.removeCoupon(enteredCoupon);
+      }
+    }
     if (this.discountValue != 0) {
       if (this.discountType == "Perc") {
         this.prodSummDiscount =

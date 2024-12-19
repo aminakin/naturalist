@@ -6,6 +6,7 @@ use Bitrix\Highloadblock\HighloadBlockTable;
 use Bitrix\Main\Web\Json;
 use Naturalist\Rest;
 use Bitrix\Main\Loader;
+use Bitrix\Main\Config\Option;
 
 Loader::includeModule('highloadblock');
 
@@ -31,20 +32,19 @@ class BnovoDataFilesHandler
      */
     public function handleFile(): void
     {
-        var_dump($GLOBALS['BNOVO_FILES_WORKING']);
-
-        if ($GLOBALS['BNOVO_FILES_WORKING']) {
-            echo 'Процесс занят';
+        $isBusy = Option::get("main", "bnovo_files_working");
+        if ($isBusy == 'Y') {
+            echo "Процесс занят \r\n";
             return;
         }
 
-        $GLOBALS['BNOVO_FILES_WORKING'] = true;
         $this->getLastFiles();
 
         if (empty($this->arFiles)) {
-            $GLOBALS['BNOVO_FILES_WORKING'] = false;
             return;
         }
+
+        Option::set("main", "bnovo_files_working", 'Y');
 
         foreach ($this->arFiles as $file) {
             $data = Json::decode(file_get_contents($file['UF_FILE_NAME']));
@@ -56,7 +56,7 @@ class BnovoDataFilesHandler
             }
         }
 
-        $GLOBALS['BNOVO_FILES_WORKING'] = false;
+        Option::set("main", "bnovo_files_working", 'N');
 
         echo "Агент отработал \r\n";
     }

@@ -3,10 +3,6 @@
   gap: 90px;
 }
 
-.container {
-  max-width: calc(1380px + var(--container-gap) * 2);
-}
-
 .form__title-block {
   font-family: var(--header-text-font-family);
   font-size: 28px;
@@ -195,22 +191,12 @@ html {
   position: relative;
 }
 
-.design label .variant__img-wrap {
-  max-width: 325px;
-  height: 459px;
-  display: flex;
-  border: 1.06px solid #000000;
-  border-radius: 15px;
-  margin-top: 16px;
-  overflow: hidden;
-  display: flex;
-  margin: 0 auto;
-}
-
 .design label img {
   transition: all 0.25s;
+  border: 4px solid transparent;
+  border-radius: 15px;
+  margin-top: 16px;
   width: 100%;
-  object-fit: cover;
 }
 
 .design label .el-variant__title {
@@ -231,14 +217,11 @@ html {
   padding: 0px 16px;
 }
 
-.design label.selected img {
+.design label.selected img,
+.design label:hover img {
   border-color: #f18d3f;
   border-radius: 10px;
 }
-
-.design label.selected .variant__img-wrap{
-  border: 4px solid #F18D3F
-} 
 
 .congrats__content,
 .user-data__content {
@@ -468,7 +451,7 @@ input.visually-hidden {
   margin-top: 52px;
 }
 
-.promo__item-wrap.entered input[name="promo_code"]{
+.promo__item-wrap.entered input[name="promo_code"] {
   color: #696969;
 }
 
@@ -663,7 +646,7 @@ input.visually-hidden {
     min-height: 134px;
   }
 
-  .nominal__custom-cost{
+  .nominal__custom-cost {
     height: 134px;
   }
 
@@ -730,9 +713,9 @@ input.visually-hidden {
     gap: 24px;
   }
 
-  /*.design label img {
+  .design label img {
     margin-top: 8px;
-  }*/
+  }
 
   .checkbox span:before {
     width: 16px !important;
@@ -758,15 +741,6 @@ input.visually-hidden {
     height: 8px;
     top: calc(50% - 5px);
     left: 4px;
-  }
-
-  .design label .variant__img-wrap {
-    margin-top: 10px;
-  }
-
-  .design label .variant__img-wrap {
-    max-width: 343px;
-    height: 484px;
   }
 
   .congrats__content,
