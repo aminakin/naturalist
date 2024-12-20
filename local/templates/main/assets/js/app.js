@@ -6362,9 +6362,9 @@
 
     // eslint-disable-next-line func-names
 
-    Element.prototype.remove = function () {
-      this.parentElement.removeChild(this);
-    }; // eslint-disable-next-line func-names,no-multi-assign
+    // Element.prototype.remove = function () {
+    //   this.parentElement.removeChild(this);
+    // }; // eslint-disable-next-line func-names,no-multi-assign
 
     NodeList.prototype.remove = HTMLCollection.prototype.remove = function () {
       for (var i = this.length - 1; i >= 0; i -= 1) {

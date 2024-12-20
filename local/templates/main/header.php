@@ -21,24 +21,26 @@ use Naturalist\Users;
 <html lang="<?= LANGUAGE_ID ?>">
 
 <head>
-    <!-- Google Tag Manager -->
-    <script>
-        (function(w, d, s, l, i) {
-            w[l] = w[l] || [];
-            w[l].push({
-                'gtm.start': new Date().getTime(),
-                event: 'gtm.js'
-            });
-            var f = d.getElementsByTagName(s)[0],
-                j = d.createElement(s),
-                dl = l != 'dataLayer' ? '&l=' + l : '';
-            j.async = true;
-            j.src =
-                'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
-            f.parentNode.insertBefore(j, f);
-        })(window, document, 'script', 'dataLayer', 'GTM-5762ML9');
-    </script>
-    <!-- End Google Tag Manager -->
+    <? if (!CSite::InDir('/promo-cert/')) { ?>
+        <!-- Google Tag Manager -->
+        <script>
+            (function(w, d, s, l, i) {
+                w[l] = w[l] || [];
+                w[l].push({
+                    'gtm.start': new Date().getTime(),
+                    event: 'gtm.js'
+                });
+                var f = d.getElementsByTagName(s)[0],
+                    j = d.createElement(s),
+                    dl = l != 'dataLayer' ? '&l=' + l : '';
+                j.async = true;
+                j.src =
+                    'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
+                f.parentNode.insertBefore(j, f);
+            })(window, document, 'script', 'dataLayer', 'GTM-5762ML9');
+        </script>
+        <!-- End Google Tag Manager -->
+    <? } ?>
 
 
     <meta charset="<?= LANG_CHARSET ?>">
@@ -104,7 +106,7 @@ use Naturalist\Users;
     <link rel="stylesheet" href="<?= SITE_TEMPLATE_PATH ?>/assets/css/jquery-ui.min.css?v=<?= filemtime($_SERVER['DOCUMENT_ROOT'] . SITE_TEMPLATE_PATH . '/assets/css/jquery-ui.min.css'); ?>">
     <link rel="stylesheet" href="<?= SITE_TEMPLATE_PATH ?>/assets/css/custom.css?v=<?= filemtime($_SERVER['DOCUMENT_ROOT'] . SITE_TEMPLATE_PATH . '/assets/css/custom.css'); ?>">
 
-    <? if (CSite::InDir('/promo')) : ?>
+    <? if (CSite::InDir('/promo/')) : ?>
         <!-- Marquiz script start --> 
         <script>
             (function(w, d, s, o) {

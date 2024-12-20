@@ -589,7 +589,8 @@ $(function () {
       !this.getAttribute("href").includes("#") &&
       this.getAttribute("target") != "_blank" &&
       this.getAttribute("href") != "javascript: void(0)" &&
-      !$(this).parents("#bx-panel").length
+      !$(this).parents("#bx-panel").length &&
+      !this.classList.contains("fancy")
     ) {
       setTimeout(() => {
         window.preloader.show();
