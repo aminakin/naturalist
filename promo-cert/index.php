@@ -245,7 +245,7 @@ $variants = $certificates->hlElVariantsValues;
                         </defs>
                     </svg>
                 </div>
-                <p class="sliders__text">Электронное письмо поментально придет на вашу почту. А также вы можете указать почту получателя и он сразу получит. Сертификат действителен в течение года после покупки.</p>
+                <p class="sliders__text">Электронное письмо мгновенно придёт на вашу почту. Вы также можете указать почту получателя, и он сразу получит сертификат. Сертификат действителен в течение года с момента покупки.</p>
             </div>
         </div>
         <a href="/certificates/buy/" class="certs__elec-link">Купить сертификат</a>
@@ -265,10 +265,10 @@ $variants = $certificates->hlElVariantsValues;
                         </a>
                     </div>
                     <div class="swiper-slide">
-                        <a href="img/video/2.mp4" class="video__slider-inner fancy" data-fancybox='video-galery' data-caption="Анна Хинкевич&lt;br /&gt;Российская актриса кино &lt;br /&gt;и телевидения, ведущая">
+                        <a href="img/video/2.mp4" class="video__slider-inner fancy" data-fancybox='video-galery' data-caption="Анна Хилькевич&lt;br /&gt;Российская актриса кино &lt;br /&gt;и телевидения, ведущая">
                             <img width="338" src="img/preview/2.jpg" alt="">
                             <span class="video__slide-text">
-                                <span class="video__slide-name">Анна Хинкевич</span>
+                                <span class="video__slide-name">Анна Хилькевич</span>
                                 <span class="video__slide-prof">Российская актриса кино <br>и телевидения, ведущая</span>
                             </span>
                         </a>

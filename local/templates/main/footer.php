@@ -133,16 +133,16 @@ global $arSettings, $currPage;
         <? endif; ?>
     </div>
 </footer>
-<? if($APPLICATION->GetCurPage() == '/catalog/'):?>   
-        </div>
+<? if ($APPLICATION->GetCurPage() == '/catalog/'): ?>
+    </div>
     <div class="catalog__map" data-map-overlay>
         <div class="catalog__map-sticky">
             <div id="map"></div>
             <div class="catalog__map-more" data-map-more-wrapper></div>
         </div>
     </div>
-</div>
-<? endif;?>
+    </div>
+<? endif; ?>
 
 <div class="main-form__shadow"></div>
 <!-- footer-->
@@ -441,7 +441,7 @@ global $arSettings, $currPage;
 
 <script defer src="<?= SITE_TEMPLATE_PATH ?>/js/forIE.min.js?v=1666936088452"></script>
 <script defer src="<?= SITE_TEMPLATE_PATH ?>/assets/js/app.js?v=<?= filemtime($_SERVER["DOCUMENT_ROOT"] . '/' . SITE_TEMPLATE_PATH . '/assets/js/app.js') ?>"></script>
-<? if (CSite::InDir('/index.php') || CSite::InDir('/certificates')) : ?>
+<? if (CSite::InDir('/index.php') || CSite::InDir('/certificates') || CSite::InDir('/promo-cert')) : ?>
     <script defer src="<?= SITE_TEMPLATE_PATH ?>/assets/js/index.js?v=<?= filemtime($_SERVER["DOCUMENT_ROOT"] . '/' . SITE_TEMPLATE_PATH . '/assets/js/index.js') ?>"></script>
 <? endif; ?>
 <? if (CSite::InDir('/catalog')) : ?>

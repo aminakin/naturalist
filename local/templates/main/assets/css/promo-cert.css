@@ -22,7 +22,7 @@
   background-size: cover;
   border-radius: 30px;
   min-height: 560px;
-  margin-top: 50px;
+  margin-top: 90px;
   display: flex;
   align-items: center;
 }
@@ -326,6 +326,9 @@
 }
 
 @media (max-width: 768px) {
+  .certs__top-banner {
+    margin-top: 80px;
+  }
   .video-mob-wrap .swiper-slide:not(:first-child) {
     display: none;
   }
