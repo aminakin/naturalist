@@ -109,6 +109,9 @@ if (!empty($_GET['name']) && isset($_GET['name'])) {
                 $arRegionIds = Regions::getCityByName($searchName);
                 if (!empty($arRegionIds)) {
                     $arFilter["UF_AREA_NAME"] = $arRegionIds[0]['ID'];
+                    $arRegionIds = array_map(function($arRegion) {
+                        return $arRegion['REGION_ID'];
+                    }, $arRegionIds);
                 } else {
                     $arRegionIds = Regions::RegionFilterSearcher($searchName);
                     $arFilter["UF_REGION"] = $arRegionIds;

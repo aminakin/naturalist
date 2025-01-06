@@ -1,0 +1,46 @@
+<?php
+
+namespace Naturalist\bronevik;
+
+use CIBlockElement;
+class HotelRoomBronevik
+{
+    const EXTERNAL_SERVICE = 24;
+
+    public function list($filter = [], $order = ['ID' => 'ASC'], $select = ['*', 'PROPERTY_*']): array
+    {
+        $result = [];
+
+        $res = CIBlockElement::GetList(
+            $order,
+            array_merge(['IBLOCK_ID' => CATALOG_IBLOCK_ID, 'PROPERTY_EXTERNAL_SERVICE' => self::EXTERNAL_SERVICE], $filter),
+            false,
+            false,
+            $select,
+        );
+
+        while ($element = $res->GetNextElement()) {
+            $resultItem = $element->GetFields();
+            $resultItem['PROPERTIES'] = $element->GetProperties();
+            $result[] = $resultItem;
+        }
+
+        return $result;
+    }
+
+    public function showByExternalId(int $id): array|false
+    {
+        if ($result = CIBlockElement::GetList(
+            [],
+            [
+                'IBLOCK_ID' => CATALOG_IBLOCK_ID,
+                'PROPERTY_EXTERNAL_ID' => $id,
+                'PROPERTY_EXTERNAL_SERVICE' => self::EXTERNAL_SERVICE,
+            ]
+        )->Fetch()) {
+            return $result;
+        }
+
+        return false;
+    }
+}
