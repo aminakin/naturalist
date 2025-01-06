@@ -200,7 +200,19 @@ foreach ($arResult as $key => $value) {
                     </div>
                 </div>
                 <div class="form__dropdown form__dropdown_show">
-                    <div class="form__dropdown-heading h6">Тип размещения</div>
+                    <div class="form__dropdown-heading h6">
+                        <?
+                        $APPLICATION->IncludeComponent(
+                            "bitrix:main.include",
+                            "",
+                            array(
+                                "AREA_FILE_SHOW" => "file",
+                                "PATH" => '/include/filter/title-1.php',
+                                "EDIT_TEMPLATE" => ""
+                            )
+                        );
+                        ?>
+                    </div>
                     <div class="form__dropdown-body">
                         <ul class="list list_checkboxes">
                             <? foreach ($arHLTypes as $arType) : ?>
@@ -225,7 +237,19 @@ foreach ($arResult as $key => $value) {
 
                 <? if ($restVariants): ?>
                     <div class="form__dropdown form__dropdown_show">
-                        <div class="form__dropdown-heading h6">Варианты отдыха</div>
+                        <div class="form__dropdown-heading h6">
+                            <?
+                            $APPLICATION->IncludeComponent(
+                                "bitrix:main.include",
+                                "",
+                                array(
+                                    "AREA_FILE_SHOW" => "file",
+                                    "PATH" => '/include/filter/title-2.php',
+                                    "EDIT_TEMPLATE" => ""
+                                )
+                            );
+                            ?>
+                        </div>
                         <div class="form__dropdown-body">
                             <ul class="list list_checkboxes">
                                 <? foreach ($restVariants as $restVariant) : ?>
@@ -299,7 +323,19 @@ foreach ($arResult as $key => $value) {
             <div class="filters-attrs__block">
                 <? if ($houseTypes) { ?>
                     <div class="form__dropdown form__dropdown_show">
-                        <div class="form__dropdown-heading h6">Типы домов</div>
+                        <div class="form__dropdown-heading h6">
+                            <?
+                            $APPLICATION->IncludeComponent(
+                                "bitrix:main.include",
+                                "",
+                                array(
+                                    "AREA_FILE_SHOW" => "file",
+                                    "PATH" => '/include/filter/title-3.php',
+                                    "EDIT_TEMPLATE" => ""
+                                )
+                            );
+                            ?>
+                        </div>
                         <div class="form__dropdown-body">
                             <ul class="list list_checkboxes">
                                 <? foreach ($houseTypes as $houseType1) : ?>
@@ -317,7 +353,19 @@ foreach ($arResult as $key => $value) {
 
                 <? if ($arServices): ?>
                     <div class="form__dropdown form__dropdown_show">
-                        <div class="form__dropdown-heading h6">Окружение</div>
+                        <div class="form__dropdown-heading h6">
+                            <?
+                            $APPLICATION->IncludeComponent(
+                                "bitrix:main.include",
+                                "",
+                                array(
+                                    "AREA_FILE_SHOW" => "file",
+                                    "PATH" => '/include/filter/title-4.php',
+                                    "EDIT_TEMPLATE" => ""
+                                )
+                            );
+                            ?>
+                        </div>
                         <div class="form__dropdown-body">
                             <ul class="list list_checkboxes">
                                 <? foreach ($arServices as $arService) : ?>
@@ -337,7 +385,19 @@ foreach ($arResult as $key => $value) {
             <div class="filters-attrs__block">
                 <? if ($arHLFood): ?>
                     <div class="form__dropdown form__dropdown_show">
-                        <div class="form__dropdown-heading h6">Питание</div>
+                        <div class="form__dropdown-heading h6">
+                            <?
+                            $APPLICATION->IncludeComponent(
+                                "bitrix:main.include",
+                                "",
+                                array(
+                                    "AREA_FILE_SHOW" => "file",
+                                    "PATH" => '/include/filter/title-5.php',
+                                    "EDIT_TEMPLATE" => ""
+                                )
+                            );
+                            ?>
+                        </div>
                         <div class="form__dropdown-body">
                             <ul class="list list_checkboxes">
                                 <? foreach ($arHLFood as $arFoodItem) : ?>
@@ -355,7 +415,19 @@ foreach ($arResult as $key => $value) {
 
                 <? if ($objectComforts) { ?>
                     <div class="form__dropdown form__dropdown_show">
-                        <div class="form__dropdown-heading h6">Удобства</div>
+                        <div class="form__dropdown-heading h6">
+                            <?
+                            $APPLICATION->IncludeComponent(
+                                "bitrix:main.include",
+                                "",
+                                array(
+                                    "AREA_FILE_SHOW" => "file",
+                                    "PATH" => '/include/filter/title-6.php',
+                                    "EDIT_TEMPLATE" => ""
+                                )
+                            );
+                            ?>
+                        </div>
                         <div class="form__dropdown-body">
                             <ul class="list list_checkboxes">
                                 <? foreach ($objectComforts as $objectComfort) : ?>
@@ -375,7 +447,19 @@ foreach ($arResult as $key => $value) {
             <div class="filters-attrs__block">
                 <? if ($arHLFeatures): ?>
                     <div class="form__dropdown form__dropdown_show">
-                        <div class="form__dropdown-heading h6">Впечатления</div>
+                        <div class="form__dropdown-heading h6">
+                            <?
+                            $APPLICATION->IncludeComponent(
+                                "bitrix:main.include",
+                                "",
+                                array(
+                                    "AREA_FILE_SHOW" => "file",
+                                    "PATH" => '/include/filter/title-7.php',
+                                    "EDIT_TEMPLATE" => ""
+                                )
+                            );
+                            ?>
+                        </div>
                         <div class="form__dropdown-body">
                             <ul class="list list_checkboxes">
                                 <? foreach ($arHLFeatures as $arFeature) : ?>

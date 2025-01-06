@@ -10,6 +10,7 @@ use Bitrix\Sale\Delivery;
 use Bitrix\Main\Context;
 use Bitrix\Currency\CurrencyManager;
 use Naturalist\Users;
+use Naturalist\CatalogProvider;
 
 /**
  * Работа с заказом сертификата.
@@ -40,6 +41,7 @@ class OrderHelper
         'congrats' => ORDER_PROP_CONGRATS,
         'cert_format' => ORDER_PROP_CERT_FORMAT,
         'address' => ORDER_PROP_CERT_ADDRESS,
+        'promo_code' => ORDER_PROP_ENTERED_COUPON,
     ];
 
     public function __construct(array $params)
@@ -52,7 +54,7 @@ class OrderHelper
 
 
     /**
-     * Создаёт заказ и возаращает ссылку на оплату или ошибку          
+     * Создаёт заказ и возвращает ссылку на оплату или ошибку          
      * 
      * @return string
      * 
@@ -70,9 +72,9 @@ class OrderHelper
         $this->order->save();
         $orderId = $this->order->getId();
         if ($orderId) {
-            return $orderId;        
+            return $orderId;
         }
-        return false;        
+        return false;
     }
 
     /**
@@ -81,7 +83,7 @@ class OrderHelper
      * @return void
      * 
      */
-    private function checkUser() : void
+    private function checkUser(): void
     {
         global $userId;
 
@@ -99,43 +101,45 @@ class OrderHelper
      * @return void
      * 
      */
-    private function createBasket() : void
+    private function createBasket(): void
     {
         $this->basket = Basket::create($this->siteId);
         $this->item = $this->basket->createItem('catalog', $this->params['cert_id']);
+
+        // Проверка на польвательскую цену сертификата
+        if ($this->params['cert_price'] != '') {
+            $_SESSION['CUSTOM_CERT_PRICE'] = $this->params['cert_price'];
+            $provider = CatalogProvider::class;
+        } else {
+            $_SESSION['CUSTOM_CERT_PRICE'] = 0;
+            $provider = 'CCatalogProductProvider';
+        }
+
         $arFields = [
             'QUANTITY' => 1,
             'CURRENCY' => CurrencyManager::getBaseCurrency(),
             'LID' => $this->siteId,
-            'PRODUCT_PROVIDER_CLASS' => 'CCatalogProductProvider',
+            'PRODUCT_PROVIDER_CLASS' => $provider,
         ];
 
-        $this->item->setFields($arFields);        
-        $this->order->setBasket($this->basket);        
+        $this->item->setFields($arFields);
+        $this->order->setBasket($this->basket);
     }
 
     /**
-     * [Description for modifyBasket]
+     * Модификация корзины
      *
      * @return void
      * 
      */
-    private function modifyBasket() : void
+    private function modifyBasket(): void
     {
         $arFields = [];
         $basketItems = $this->basket->getBasketItems();
         $item = $basketItems[0];
 
-        // Проверка на польвательскую цену сертификата
-        if ($this->params['cert_price'] != '') {
-            $arFields['PRICE'] = $this->params['cert_price'];
-            $arFields['CUSTOM_PRICE'] = 'Y';
-        }
-
-        $item->setFields($arFields);
-
         // Цена сертификата для добавления в свойство заказа, т.к. дальше она может измениться
-        $this->itemPrice = $item->getPrice();
+        $this->itemPrice = $item->getBasePrice();
 
         // Цена сетрификата для дальнейших рассчётов
         $itemPrice = $item->getPrice();
@@ -154,7 +158,7 @@ class OrderHelper
             $arFields['CUSTOM_PRICE'] = 'Y';
         }
 
-        $item->setFields($arFields);        
+        $item->setFields($arFields);
         $this->basket->save();
     }
 
@@ -164,10 +168,10 @@ class OrderHelper
      * @return void
      * 
      */
-    private function createOrder() : void
+    private function createOrder(): void
     {
-        $this->order = Order::create($this->siteId, $this->userId);        
-        $this->order->setPersonTypeId(1);        
+        $this->order = Order::create($this->siteId, $this->userId);
+        $this->order->setPersonTypeId(1);
     }
 
     /**
@@ -178,7 +182,7 @@ class OrderHelper
      * @return void
      * 
      */
-    private function addDelivery(bool $inner = false) : void
+    private function addDelivery(bool $inner = false): void
     {
         $shipmentCollection = $this->order->getShipmentCollection();
         $shipment = $shipmentCollection->createItem();
@@ -198,7 +202,7 @@ class OrderHelper
      * @return void
      * 
      */
-    private function addPayment() : void
+    private function addPayment(): void
     {
         $paymentCollection = $this->order->getPaymentCollection();
         $paySystemService = PaySystem\Manager::getObjectById($this->params['paysystem']);
@@ -206,7 +210,7 @@ class OrderHelper
         $payment->setFields([
             'SUM' => $this->order->getPrice(),
             'CURRENCY' => $this->order->getCurrency(),
-        ]);        
+        ]);
     }
 
     /**
@@ -215,7 +219,7 @@ class OrderHelper
      * @return void
      * 
      */
-    private function setOrderProps() : void
+    private function setOrderProps(): void
     {
         // Комментарий
         $this->order->setField('USER_DESCRIPTION', $this->params["comment"]);
@@ -226,7 +230,7 @@ class OrderHelper
         // Остальыне свойства
         foreach ($this->arProps as $propName => $prop) {
             $this->setOneOrderProp($prop, $this->params[$propName]);
-        }        
+        }
     }
 
     /**
@@ -235,7 +239,7 @@ class OrderHelper
      * @return void
      * 
      */
-    private function setOneOrderProp(int $propId, $propValue) : void
+    private function setOneOrderProp(int $propId, $propValue): void
     {
         $propertyCollection = $this->order->getPropertyCollection();
         $propertyValue = $propertyCollection->getItemByOrderPropertyId($propId);

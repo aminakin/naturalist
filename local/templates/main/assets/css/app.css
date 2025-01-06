@@ -48,7 +48,7 @@
 
 @font-face {
   font-display: swap;
-  font-family: Montserrat;
+  font-family: "Montserrat";
   font-style: normal;
   font-weight: 400;
   src: url(../fonts/Montserrat-Regular.woff2) format("woff2"),
@@ -57,7 +57,16 @@
 
 @font-face {
   font-display: swap;
-  font-family: Montserrat;
+  font-family: "Montserrat";
+  font-style: normal;
+  font-weight: 500;
+  src: url(../fonts/Montserrat-Medium.woff2) format("woff2"),
+    url(../fonts/Montserrat-Medium.woff) format("woff");
+}
+
+@font-face {
+  font-display: swap;
+  font-family: "Montserrat";
   font-style: normal;
   font-weight: 700;
   src: url(../fonts/Montserrat-Bold.woff2) format("woff2"),
@@ -75,7 +84,7 @@
 
 @font-face {
   font-display: swap;
-  font-family: Lato;
+  font-family: "Lato";
   font-style: normal;
   font-weight: 500;
   src: url(../fonts/Lato-Medium.woff2) format("woff2"),
@@ -84,16 +93,16 @@
 
 @font-face {
   font-display: swap;
-  font-family: Lato;
+  font-family: "Lato";
   font-style: normal;
-  font-weight: bold;
+  font-weight: 600;
   src: url(../fonts/Lato-Semibold.woff2) format("woff2"),
     url(../fonts/Lato-Semibold.woff) format("woff");
 }
 
 @font-face {
   font-display: swap;
-  font-family: Lato;
+  font-family: "Lato";
   font-style: normal;
   font-weight: 700;
   src: url(../fonts/Lato-Bold.woff2) format("woff2"),
@@ -102,7 +111,7 @@
 
 @font-face {
   font-display: swap;
-  font-family: TT Travels Next;
+  font-family: "TT Travels Next";
   font-style: normal;
   font-weight: 400;
   src: url(../fonts/TTTravelsNext-Regular.woff2) format("woff2"),
@@ -111,7 +120,7 @@
 
 @font-face {
   font-display: swap;
-  font-family: TT Travels Next;
+  font-family: "TT Travels Next";
   font-style: normal;
   font-weight: 500;
   src: url(../fonts/TTTravelsNext-Md.woff2) format("woff2"),
@@ -120,7 +129,7 @@
 
 @font-face {
   font-display: swap;
-  font-family: TT Travels Next;
+  font-family: "TT Travels Next";
   font-style: normal;
   font-weight: 600;
   src: url(../fonts/TTTravelsNext-DmBd.woff2) format("woff2"),
@@ -129,11 +138,20 @@
 
 @font-face {
   font-display: swap;
-  font-family: TT Travels Next;
+  font-family: "TT Travels Next";
   font-style: normal;
   font-weight: 700;
   src: url(../fonts/TTTravelsNext-Bd.woff2) format("woff2"),
     url(../fonts/TTTravelsNext-Bd.woff) format("woff");
+}
+
+@font-face {
+  font-display: swap;
+  font-family: "TT Travels Next";
+  font-style: normal;
+  font-weight: 800;
+  src: url(../fonts/TTTravelsNext-Eb.woff2) format("woff2"),
+    url(../fonts/TTTravelsNext-Eb.woff) format("woff");
 }
 
 ::-moz-selection {
@@ -3439,7 +3457,7 @@ img.lazy.loaded {
 }
 
 .modal__container {
-  background: #F4E6CB;
+  background: #f4e6cb;
   border-radius: 0.2rem;
   -webkit-box-shadow: 0 0.8rem 2.2rem rgba(0, 0, 0, 0.15);
   box-shadow: 0 0.8rem 2.2rem rgba(0, 0, 0, 0.15);
@@ -5132,7 +5150,7 @@ img.lazy.loaded {
   display: none;
 }
 
-.catalog-filter_close{
+.catalog-filter_close {
   display: none;
 }
 

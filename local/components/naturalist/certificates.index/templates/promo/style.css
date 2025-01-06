@@ -1,0 +1,92 @@
+.certificates_index__question-text {
+  display: none;
+}
+
+.certificates_index__question-title {
+  font-size: 22px;
+  font-weight: 500;
+  line-height: 26px;
+  font-family: "Montserrat" !important;
+  margin: 0;
+}
+
+.certificates_index__question {
+  padding: 32px 0;
+  position: relative;
+}
+
+.certificates_index__question:first-child {
+  border-top: 1px solid black;
+}
+
+.certificates_index__question {
+  display: flex;
+  flex-direction: column;
+  border-bottom: 1px solid black;
+  cursor: pointer;
+}
+
+.certificates_index__question-text {
+  margin-top: 20px;
+  font-family: "Montserrat" !important;
+  font-size: 19px;
+  font-weight: 300;
+  line-height: 23px;
+  padding-right: 30px;
+}
+
+.certificates_index__questions-title {
+  font-weight: 700;
+  font-size: 56px;
+  line-height: 67px;
+  font-family: "Lato";
+  margin-bottom: 50px;
+  text-align: center;
+}
+
+.certificates_index__question::after {
+  content: url("data:image/svg+xml,%3Csvg width='14' height='7' viewBox='0 0 14 7' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0.436386C0 0.325684 0.0469938 0.212394 0.138217 0.127437C0.320663 -0.0424789 0.619212 -0.0424789 0.801659 0.127437L7.0463 5.94318L13.1997 0.212394C13.3822 0.0424787 13.6807 0.0424787 13.8632 0.212394C14.0456 0.38231 14.0456 0.660353 13.8632 0.830268L7.37802 6.87256C7.19558 7.04248 6.89703 7.04248 6.71458 6.87256L0.138217 0.747885C0.0442294 0.660353 0 0.549651 0 0.436386Z' fill='black'/%3E%3C/svg%3E%0A");
+  display: flex;
+  width: fit-content;
+  justify-content: center;
+  align-items: center;
+  height: fit-content;
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+  transition: 0.5s all ease-in-out;
+}
+
+.certificates_index__question.active::after {
+  transform: rotate(180deg);
+}
+
+@media (max-width: 1024px) {
+  .certificates_index__questions-title {
+    margin-bottom: 24px;
+    font-size: 22px;
+    line-height: 27px;
+  }
+
+  .certificates_index__question {
+    padding: 24px 12px 24px 0;
+  }
+
+  .certificates_index__question-text {
+    padding-right: 0;
+    font-size: 14px;
+    line-height: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .certificates_index__question-title {
+    font-size: 14px;
+  }
+
+  .certificates_index__question {
+    padding: 16px 12px 16px 0;
+  }
+}
