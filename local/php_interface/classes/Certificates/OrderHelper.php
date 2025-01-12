@@ -227,6 +227,11 @@ class OrderHelper
         // Цена сертификата
         $this->setOneOrderProp(ORDER_PROP_CERT_PRICE, $this->itemPrice);
 
+        // Если самовывоз, удаляем адрес доставки
+        if ($this->params['delivery'] == CERT_SELF_DELIVERY_ID) {
+            $this->params['address'] = '';
+        }
+
         // Остальыне свойства
         foreach ($this->arProps as $propName => $prop) {
             $this->setOneOrderProp($prop, $this->params[$propName]);
