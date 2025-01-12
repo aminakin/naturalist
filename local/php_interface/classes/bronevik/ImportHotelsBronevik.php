@@ -2,8 +2,9 @@
 
 namespace Naturalist\bronevik;
 
-use CIBlockSection;
 use CFile;
+use CIBlockSection;
+use Naturalist\bronevik\repository\Bronevik;
 
 class ImportHotelsBronevik
 {
@@ -13,10 +14,13 @@ class ImportHotelsBronevik
 
     private ImportHotelRoomsBronevik $importnerHotelRoomsBronevik;
 
+    private HotelBronevik $hotelBronevik;
+
     public function __construct()
     {
         $this->bronevik = new Bronevik();
         $this->importnerHotelRoomsBronevik = new ImportHotelRoomsBronevik();
+        $this->hotelBronevik = new HotelBronevik();
     }
 
     /**
@@ -30,15 +34,12 @@ class ImportHotelsBronevik
 
         $hotels = $this->bronevik->getHotelInfo($ids);
         foreach ($hotels->hotel as $hotel) {
-            //var_export($hotel?->rooms?->room); die();
             $data = $this->getHotelData($hotel);
             if ($id = $this->upsert($data))
             {
                 ($this->importnerHotelRoomsBronevik)($id, $hotel?->rooms?->room);
             }
         }
-
-        //var_export($data); die();
     }
 
     private function getHotelData($data): array
@@ -59,10 +60,6 @@ class ImportHotelsBronevik
         $arFields["DESCRIPTION"] = $data->descriptionDetails->description;
         $arFields["UF_COORDS"] = $data->descriptionDetails->latitude . ',' . $data->descriptionDetails->longitude;
 
-        /*$data->descriptionDetails->type == 'hotel';
-        $data->descriptionDetails->category == 3;
-        $data->descriptionDetails->rooms->room;*/
-
         return $arFields;
     }
 
@@ -78,36 +75,28 @@ class ImportHotelsBronevik
 
     private function upsert(array $data): int|null|bool
     {
-        // TODO move to HotelBronevik
-        $arSection = CIBlockSection::GetList(
-            false,
-            array(
-                "IBLOCK_ID" => CATALOG_IBLOCK_ID,
-                "UF_EXTERNAL_ID" => $data["UF_EXTERNAL_ID"]
-            ),
-            false,
-            array("IBLOCK_ID", "ID", "NAME", "CODE", "SORT", "UF_*"),
-            false
-        )->Fetch();
+        $arSection = $this->hotelBronevik->listFetch(["UF_EXTERNAL_ID" => $data["UF_EXTERNAL_ID"]], false, ["IBLOCK_ID", "ID", "NAME", "CODE", "SORT", "UF_*"]);
+        if (count($arSection)) {
+            $arSection = current($arSection);
+            $isLoadImage = true;
 
-        $isLoadImage = true;
-
-        if ($arSection) {
-            $isLoadImage = $arSection["UF_CHECKBOX_1"] != 1;
-        }
-
-        $photos = $this->downloadSectionImages($data, $isLoadImage);
-        if (is_array($photos)) {
-            $data['UF_PHOTOS'] = $photos;
-        }
-        // TODO move to HotelBronevik
-        $iS = new CIBlockSection();
-        if ($arSection) {
-            if ($iS->Update($arSection['ID'], $data)) {
-                return $arSection['ID'];
+            if ($arSection) {
+                $isLoadImage = $arSection["UF_CHECKBOX_1"] != 1;
             }
-        } else {
-            return $iS->Add($data);
+
+            $photos = $this->downloadSectionImages($data, $isLoadImage);
+            if (is_array($photos)) {
+                $data['UF_PHOTOS'] = $photos;
+            }
+
+            $iS = new CIBlockSection();
+            if ($arSection) {
+                if ($iS->Update($arSection['ID'], $data)) {
+                    return $arSection['ID'];
+                }
+            } else {
+                return $iS->Add($data);
+            }
         }
 
         return null;
@@ -134,7 +123,7 @@ class ImportHotelsBronevik
             if (count($arImages)) {
                 return $arImages;
                 $arFields["UF_PHOTOS"] = $arImages;
-                // TODO move to HotelBronevik
+
                 $iS = new CIBlockSection();
                 $res = $iS->Update($arSection['ID'], $arFields);
 

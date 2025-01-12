@@ -7,7 +7,7 @@ class HotelRoomBronevik
 {
     const EXTERNAL_SERVICE = 24;
 
-    public function list($filter = [], $order = ['ID' => 'ASC'], $select = ['*', 'PROPERTY_*']): array
+    public function list($filter = [], $order = ['ID' => 'ASC'], $select = ['*', 'PROPERTY_*'], string $type = ''): array
     {
         $result = [];
 
@@ -42,5 +42,19 @@ class HotelRoomBronevik
         }
 
         return false;
+    }
+
+    public function update(int $id, array $fields)
+    {
+        $iE = new CIBlockElement();
+
+        $iE->Update($id, $fields);
+    }
+
+    public function store(array $data)
+    {
+        $iE = new CIBlockElement();
+
+        return $iE->Add($data);
     }
 }

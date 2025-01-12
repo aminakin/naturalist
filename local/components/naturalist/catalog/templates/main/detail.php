@@ -363,7 +363,7 @@ if (!empty($arSection) && !empty($dateFrom) && !empty($dateTo) && !empty($_GET['
     });
     $arElementsJson = $arElements;
 
-    if ($arSection["UF_EXTERNAL_SERVICE"] == "bnovo") {
+    if ($arSection["UF_EXTERNAL_SERVICE"] == "bnovo" || $arSection["UF_EXTERNAL_SERVICE"] ==  'bronevik') {
         $arParams["DETAIL_ITEMS_COUNT"] = 999;
     }
     // Пагинация номеров

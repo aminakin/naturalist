@@ -320,7 +320,8 @@ var Order = function () {
     checksum,
     people,
     title,
-    photo
+    photo,
+    bronevikOfferExternalId
   ) {
     var data = {
       productId: productId,
@@ -338,6 +339,7 @@ var Order = function () {
       people: people,
       title: title,
       photo: photo,
+      bronevikOfferExternalId: bronevikOfferExternalId,
     };
 
     jQuery.ajax({
@@ -348,7 +350,7 @@ var Order = function () {
       success: function (a) {
         if (!a.ERROR) {
           //window.infoModal(SUCCESS_TITLE, a.MESSAGE);
-          VK.Goal("purchase");
+          //VK.Goal("purchase");
           location.href = "/order/";
         } else {
           window.infoModal(ERROR_TITLE, a.ERROR);
@@ -361,6 +363,9 @@ var order = new Order();
 $(function () {
   $(document).on("click", "[data-add-basket]", function (e) {
     e.preventDefault();
+    if (window.preloader == undefined) {
+      window.preloader = new Preloader();
+    }
     window.preloader.show();
     var productId = $(this).data("id");
     var price = $(this).data("price");
@@ -379,6 +384,7 @@ $(function () {
     var photo = $(this).data("room-photo");
     var objectTItle = $(this).data("object-title");
     var sectionExternalId = $(this).data("section-external-id");
+    var bronevikOfferExternalId = $(this).data("bronevik-offer-external-id");
 
     dataLayer.push({
       ecommerce: {
@@ -413,7 +419,8 @@ $(function () {
       checksum,
       people,
       title,
-      photo
+      photo,
+      bronevikOfferExternalId
     );
   });
 });

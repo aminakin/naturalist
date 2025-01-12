@@ -1,14 +1,21 @@
 <?php
 
-namespace Naturalist\bronevik;
+namespace Naturalist\bronevik\repository;
 
+use Bronevik\HotelsConnector\Element\Child;
+use Bronevik\HotelsConnector\Element\CreateOrderRequest;
 use Bronevik\HotelsConnector\Element\GeoLocation;
-use Bronevik\HotelsConnector\Element\Meal;
-use Bronevik\HotelsConnector\Element\Meals;
-use Bronevik\HotelsConnector\Element\SearchOfferCriterion;
-use Naturalist\bronevik\connector\HotelsConnector;
+use Bronevik\HotelsConnector\Element\Guest;
+use Bronevik\HotelsConnector\Element\Guests;
 use Bronevik\HotelsConnector\Element\Hotels;
 use Bronevik\HotelsConnector\Element\HotelsWithInfo;
+use Bronevik\HotelsConnector\Element\Meal;
+use Bronevik\HotelsConnector\Element\Order;
+use Bronevik\HotelsConnector\Element\OrderServices;
+use Bronevik\HotelsConnector\Element\SearchOfferCriterion;
+use Bronevik\HotelsConnector\Element\ServiceAccommodation;
+use Bronevik\HotelsConnector\Enum\CurrencyCodes;
+use Naturalist\bronevik\connector\HotelsConnector;
 
 class Bronevik
 {
@@ -141,5 +148,69 @@ class Bronevik
         $meals = $this->getMeals();
 
         return $meals[$id];
+    }
+
+    /**
+     * @throws \SoapFault
+     */
+    public function OrderCreate(string $offerCode, array $arGuests, array $arChildren): Order
+    {
+        $connector = HotelsConnector::getInstance();
+
+        $request = new CreateOrderRequest();
+        $request->setCurrency(CurrencyCodes::RUB);
+        $service = new ServiceAccommodation();
+        $service->setOfferCode($offerCode);
+        $guests = new Guests();
+        foreach($arGuests as $guestItem) {
+            $guest = new Guest();
+            $guest->setFirstName($guestItem['firstName']);
+            $guest->setLastName($guestItem['lastName']);
+
+            $guests->add($guest);
+        }
+
+        foreach ($arChildren as $childItem) {
+            $child = new Child();
+            $child->setCount($childItem['count']);
+            $child->setAge($childItem['age']);
+
+            $guests->addChild($child);
+        }
+
+        $service->setGuests($guests);
+
+        $request->addServices($service);
+
+        return $connector->createOrder($request);
+    }
+
+    public function CancelOrder(int $orderId): bool
+    {
+        $connector = HotelsConnector::getInstance();
+
+        return $connector->cancelOrder($orderId);
+    }
+
+    /**
+     * @throws \SoapFault
+     */
+    public function getOrder(int $orderId): Order
+    {
+        $connector = HotelsConnector::getInstance();
+
+        return $connector->getOrder($orderId);
+    }
+
+    /**
+     * @throws \SoapFault
+     */
+    public function getHotelOfferPricing(ServiceAccommodation $serviceAccommodation): OrderServices
+    {
+        $connector = HotelsConnector::getInstance();
+        $services = [];
+        $services[] = $serviceAccommodation;
+
+        return $connector->getHotelOfferPricing($services, CurrencyCodes::RUB);
     }
 }

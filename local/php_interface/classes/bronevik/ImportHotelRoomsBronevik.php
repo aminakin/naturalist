@@ -6,11 +6,19 @@ use Bronevik\HotelsConnector\Element\HotelRoom;
 use CFile;
 use CUtil;
 use CIBlockElement;
+use Naturalist\Products;
 
 class ImportHotelRoomsBronevik
 {
     const EXTERNAL_SERVICE = 24;
 
+    private HotelRoomBronevik $hotelRoomBronevik;
+
+
+    public function __construct()
+    {
+        $this->hotelRoomBronevik = new HotelRoomBronevik();
+    }
     public function __invoke(int $hotelId, array $rooms): void
     {
         foreach ($rooms as $room) {
@@ -23,26 +31,27 @@ class ImportHotelRoomsBronevik
     {
         $id = $data['PROPERTY_VALUES']['EXTERNAL_ID'];
 
-        $arExistElement = CIBlockElement::GetList(
-            false,
-            array("IBLOCK_ID" => CATALOG_IBLOCK_ID, "PROPERTY_EXTERNAL_ID" => $id, "PROPERTY_EXTERNAL_SERVICE" => self::EXTERNAL_SERVICE),
-        )->Fetch();
-        // TODO move to HotelRoomBronevik
-        $iE = new CIBlockElement();
-        if ($arExistElement) {
-            $iE->Update($arExistElement['ID'], [
-                'CODE' => $data['CODE'],
-            ]);
+        $arExistElement = $this->hotelRoomBronevik->list(array("IBLOCK_ID" => CATALOG_IBLOCK_ID, "PROPERTY_EXTERNAL_ID" => $id, "PROPERTY_EXTERNAL_SERVICE" => self::EXTERNAL_SERVICE), false);
+        if (count($arExistElement)) {
+            $itemExistElement = current($arExistElement);
+            $itemId = $itemExistElement['ID'];
+            $this->hotelRoomBronevik->update($itemId, ['CODE' => $data['CODE']]);
 
             CIBlockElement::SetPropertyValuesEx($arExistElement['ID'], CATALOG_IBLOCK_ID, [
                 'SQUARE' => $data['PROPERTY_VALUES']['SQUARE'],
                 'PHOTO_ARRAY' => $data['PROPERTY_VALUES']['PHOTO_ARRAY'],
                 'PHOTOS' => $data['PROPERTY_VALUES']['PHOTOS'],
             ]);
+            Products::setQuantity($arExistElement['ID']);
+            Products::setPrice($arExistElement['ID']);
 
-            return $arExistElement['ID'];
+            return $itemId;
         } else {
-            return $iE->Add($data);
+            $itemId = $this->hotelRoomBronevik->store($data);
+            Products::setQuantity($itemId);
+            Products::setPrice($itemId);
+
+            return $itemId;
         }
     }
 
@@ -63,12 +72,7 @@ class ImportHotelRoomsBronevik
                 "PHOTO_ARRAY" => json_encode($arrayPhotos),
                 "PHOTOS" => self::getImages($arrayPhotos),
                 "EXTERNAL_ID" => $room->id,
-                // "EXTERNAL_CATEGORY_ID" => $arRoomType["id"], Внешний ID категории (Traveline)
-                // "CATEGORY" => $elementIdCat, Категории номеров (Bnovo)
-                // "TARIFF" => $tariffsIds, Тариф (Bnovo)
                 "EXTERNAL_SERVICE" => self::EXTERNAL_SERVICE,
-                // "FEATURES" => $arAmenities,
-                // "PARENT_ID" => $arRoom["parent_id"], PARENT_ID_BNOVO
                 "SQUARE" => $room->size,
             ),
         ];

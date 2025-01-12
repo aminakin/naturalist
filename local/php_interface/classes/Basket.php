@@ -100,7 +100,7 @@ class Baskets
         self::manageHL($fBasketUserId, $productId, $price);
 
         $arFields = array(
-            'PRODUCT_ID' => $productId,
+            'PRODUCT_ID' => (int)$productId,
             'PRODUCT_PRICE_ID' => 1,
             'PRICE' => $price,            
             'CURRENCY' => 'RUB',
@@ -115,7 +115,7 @@ class Baskets
         if(!empty($fUserId)){
             $arFields["FUSER_ID"] = $fUserId;
         }
-
+//var_export($arFields); die();
         $basketProductId = CSaleBasket::Add($arFields);
 
         if ($basketProductId) {

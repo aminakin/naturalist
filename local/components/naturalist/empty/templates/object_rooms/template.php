@@ -16,69 +16,125 @@ foreach ($arParams['VARS'] as $key => $value) {
         <? if ($arSection["UF_EXTERNAL_SERVICE"] == "bronevik"): ?>
             <? foreach ($arExternalInfo as $idNumber => $room): ?>
                 <? $arElement = $room[0];
-                //var_export($arElement); die();?>
-                <div class="room">
-                    <? if (is_array($arElement["PROPERTIES"]['PHOTOS']['VALUE']) && count($arElement["PROPERTIES"]['PHOTOS']['VALUE'])): ?>
-                        <div class="room__images">
-                            <div class="swiper slider-gallery" data-slider-object="data-slider-object" data-fullgallery="[<?= $arElement["FULL_GALLERY_ROOM"]; ?>]">
-                                <div class="swiper-wrapper">
-                                    <? $keyPhoto = 1; ?>
-                                    <? $keyPhotoRoom = 0; ?>
-                                    <? foreach ($arElement["PROPERTIES"]['PHOTOS']['VALUE'] as $photoId):
-                                        $arPhoto = CFile::GetByID($photoId)->Fetch();
-//                                    var_export($arPhoto); die(); ?>
-                                        <? if (count($arElement["PROPERTIES"]['PHOTOS']['VALUE']) > 1): ?>
-                                            <?
-                                            $alt = $arResult["arSection"]["NAME"] . " " . $arElement["NAME"] . " рис." . $keyPhoto;;
-                                            $title = "Фото - " . $arElement["NAME"] . " рис." . $keyPhoto;
-                                            ?>
-                                        <? else: ?>
-                                            <?
-                                            $alt = $arResult["arSection"]["NAME"] . " " . $arElement["NAME"];
-                                            $title = "Фото - " . $arElement["NAME"];
-                                            ?>
-                                        <? endif; ?>
-                                        <div class="swiper-slide" data-fullgallery-item="<?= $keyPhotoRoom; ?>">
-                                            <img class="" loading="lazy" alt="<?= $alt; ?>" title="<?= $title; ?>" src="<?= $arPhoto["SRC"] ?>">
-                                        </div>
-                                        <? $keyPhoto++; ?>
-                                        <? $keyPhotoRoom++; ?>
-                                    <? endforeach; ?>
-                                </div>
+                if (is_array($arElement['OFFERS']) && count($arElement['OFFERS'])): ?>
+                    <div class="room">
+                        <? if (is_array($arElement["PROPERTIES"]['PHOTOS']['VALUE']) && count($arElement["PROPERTIES"]['PHOTOS']['VALUE'])): ?>
+                            <div class="room__images">
+                                <div class="swiper slider-gallery" data-slider-object="data-slider-object" data-fullgallery="[<?= $arElement["FULL_GALLERY_ROOM"]; ?>]">
+                                    <div class="swiper-wrapper">
+                                        <? $keyPhoto = 1; ?>
+                                        <? $keyPhotoRoom = 0; ?>
+                                        <? foreach ($arElement["PROPERTIES"]['PHOTOS']['VALUE'] as $photoId):
+                                            $arPhoto = CFile::GetByID($photoId)->Fetch();
+    //                                    var_export($arPhoto); die(); ?>
+                                            <? if (count($arElement["PROPERTIES"]['PHOTOS']['VALUE']) > 1): ?>
+                                                <?
+                                                $alt = $arResult["arSection"]["NAME"] . " " . $arElement["NAME"] . " рис." . $keyPhoto;;
+                                                $title = "Фото - " . $arElement["NAME"] . " рис." . $keyPhoto;
+                                                ?>
+                                            <? else: ?>
+                                                <?
+                                                $alt = $arResult["arSection"]["NAME"] . " " . $arElement["NAME"];
+                                                $title = "Фото - " . $arElement["NAME"];
+                                                ?>
+                                            <? endif; ?>
+                                            <div class="swiper-slide" data-fullgallery-item="<?= $keyPhotoRoom; ?>">
+                                                <img class="" loading="lazy" alt="<?= $alt; ?>" title="<?= $title; ?>" src="<?= $arPhoto["SRC"] ?>">
+                                            </div>
+                                            <? $keyPhoto++; ?>
+                                            <? $keyPhotoRoom++; ?>
+                                        <? endforeach; ?>
+                                    </div>
 
-                                <? if (count($arElement["PROPERTIES"]['PHOTOS']['VALUE']) > 1): ?>
-                                    <div class="swiper-button-prev">
-                                        <svg class="icon icon_arrow-small" viewbox="0 0 16 16" style="width: 1.6rem; height: 1.6rem;">
-                                            <use xlink:href="#arrow-small" />
-                                        </svg>
-                                    </div>
-                                    <div class="swiper-button-next">
-                                        <svg class="icon icon_arrow-small" viewbox="0 0 16 16" style="width: 1.6rem; height: 1.6rem;">
-                                            <use xlink:href="#arrow-small" />
-                                        </svg>
-                                    </div>
-                                    <div class="swiper-pagination"></div>
+                                    <? if (count($arElement["PROPERTIES"]['PHOTOS']['VALUE']) > 1): ?>
+                                        <div class="swiper-button-prev">
+                                            <svg class="icon icon_arrow-small" viewbox="0 0 16 16" style="width: 1.6rem; height: 1.6rem;">
+                                                <use xlink:href="#arrow-small" />
+                                            </svg>
+                                        </div>
+                                        <div class="swiper-button-next">
+                                            <svg class="icon icon_arrow-small" viewbox="0 0 16 16" style="width: 1.6rem; height: 1.6rem;">
+                                                <use xlink:href="#arrow-small" />
+                                            </svg>
+                                        </div>
+                                        <div class="swiper-pagination"></div>
+                                    <? endif; ?>
+                                </div>
+                            </div>
+                        <? endif; ?>
+                        <div class="room__content">
+                            <div class="room__description">
+                                <div class="h3"><?= $arElement["NAME"]?> <?//= $arElement["ID"]?></div>
+                                <? if (!empty($arElement['PROPERTIES']['SQUARE']['VALUE'])): ?>
+                                    <div class="room__features">Площадь: <?= $arElement['PROPERTIES']['SQUARE']['VALUE'] ?></div>
                                 <? endif; ?>
+
+                                <? if (!empty($arElement["DETAIL_TEXT"])): ?>
+                                    <div class="room__features"><?= preg_replace('/\n/', '<br />', $arElement["DETAIL_TEXT"]) ?></div>
+                                <? endif; ?>
+
+                                <? if (is_array($arElement["PROPERTY_FEATURES_VALUE"]) && count($arElement["PROPERTY_FEATURES_VALUE"])): ?>
+                                    <div class="room__features" data-room-features>
+                                        <ul class="list">
+                                            <? $arSlicedFeatures = array_slice($arElement["PROPERTY_FEATURES_VALUE"], 0, 6);
+                                            foreach ($arSlicedFeatures as $key => $featureId): ?>
+                                                <li class="list__item"><?= $arHLRoomFeatures[$featureId]["UF_NAME"] ?></li>
+                                            <? endforeach; ?>
+                                        </ul>
+                                    </div>
+                                <? endif; ?>
+
+                                <div class="room__features">
+                                    <a class="room__features-more" href="#" data-room-more="<?= $idNumber ?>">Подробнее о номере</a>
+                                </div>
                             </div>
                         </div>
-                    <? endif; ?>
-                    <div class="room__content">
-                        <div class="room__description">
-                            <div class="h3"><?= $arElement["NAME"]?></div>
-                            <? if (!empty($arElement['PROPERTIES']['SQUARE']['VALUE'])): ?>
-                                <div class="room__features">Площадь: <?= $arElement['PROPERTIES']['SQUARE']['VALUE'] ?></div>
-                            <? endif; ?>
+                        <div class="room__offers">
+                            <p class="room__variants-title">Варианты размещения</p>
+                            <? foreach ($arElement['OFFERS'] as $offer): ?>
+                                <h4 class="root__offer_type"><?= \Naturalist\bronevik\enums\RoomTypeEnum::from($offer['PROPERTIES']['ROOM_TYPE']['VALUE'])->translateValue() ?></h4>
+                                <div class="root__offer_rate_type"><?= \Naturalist\bronevik\enums\RateTypeNamesEnum::from($offer['PROPERTIES']['RATE_TYPE']['VALUE'])->translateValue() ?></div>
+                                <div class="root__offer_cancellation_policies"><?= $offer['PROPERTIES']['CANCELLATION_POLICIES']['NAME'] ?>:<br/><?= $offer['PROPERTIES']['CANCELLATION_POLICIES']['~VALUE'] ?></div>
+                                <div class="root__offer_payment_recipient"><?= $offer['PROPERTIES']['PAYMENT_RECIPIENT']['NAME'] ?>:<br/><?= \Naturalist\bronevik\enums\PaymentRecipientEnum::from($offer['PROPERTIES']['PAYMENT_RECIPIENT']['VALUE'])->translateValue() ?></div>
+                                <div class="root__offer_meals">Питание:<br/><?= $offer['PROPERTIES']['MEALS']['~VALUE'] ?></div>
+                                <div class="root__offer_price"><?= $offer['PROPERTIES']['PRICE']['VALUE'] ?> RUB</div>
+                                <? // TODO Надо ?>
+                                <a class="button button_primary"
+                                   onclick="VK.Goal('customize_product')"
+                                   data-section-external-id="<?= $arSection['UF_EXTERNAL_ID'] ?>"
+                                   data-add-basket
+                                   data-object-title="<?= $arSection['NAME'] ?>"
+                                   data-id="<?= $offer['PROPERTIES']['ROOM_ID']["VALUE"] ?>"
+                                   data-price="<?= $offer['PROPERTIES']['PRICE']['VALUE'] ?>"
+                                   data-guests="<?= $guests ?>"
+                                   data-children-age="<?= $_GET['childrenAge'] ?>"
+                                   data-date-from="<?= $dateFrom ?>"
+                                   data-date-to="<?= $dateTo ?>"
+                                   data-external-id="<?= $arElement["PROPERTY_EXTERNAL_ID_VALUE"] ?>"
+                                   data-external-service="<?= $arSection["UF_EXTERNAL_SERVICE"] ?>"
+                                   data-category-id="<?= $arElement["PROPERTY_EXTERNAL_CATEGORY_ID_VALUE"] ?>"
+                                   data-bronevik-offer-external-id="<?= $offer['PROPERTIES']['CODE']['VALUE'] ?>"
+                                   data-cancel-amount="<?= $arExternalItem['cancelAmount'] ?>"
+                                   data-people="<?= $arExternalItem['fullPlacementsName'] ?>"
+                                   data-room-title="<?= $arElement["NAME"] ?>"
+                                   data-room-photo="<?
+                                   if ($arElement["PROPERTIES"]['PHOTOS']['VALUE'] !== false) {
+                                       $photoId = current($arElement["PROPERTIES"]['PHOTOS']['VALUE']);
+                                       $arPhoto = CFile::GetByID($photoId)->Fetch();
+                                       echo $arPhoto['src'];
+                                   } else {
+                                       echo '';
+                                   }
+                                   ?>"
+                                   href="#">Забронировать</a>
 
-                            <? if (!empty($arElement["DETAIL_TEXT"])): ?>
-                                <div class="room__features"><?= preg_replace('/\n/', '<br />', $arElement["DETAIL_TEXT"]) ?></div>
-                            <? endif; ?>
+<!--                                --><?// var_export($arExternalInfo); ?>
+<!--                                --><?// var_export($offer); die(); ?>
+<!--                                --><?php //= $offer['ID'] . "<br />"?>
+                            <? endforeach;?>
                         </div>
                     </div>
-                </div>
-
-<!--                --><?// foreach ($room[0]['OFFERS'] as $offer): ?>
-<!--                    --><?php //= $offer['ID'] . "<br />"?>
-<!--                --><?// endforeach;?>
+                <?php endif; ?>
             <? endforeach;?>
         <? elseif ($arSection["UF_EXTERNAL_SERVICE"] == "bnovo"): ?>
             <? foreach ($arElements as $arElement):
@@ -483,7 +539,40 @@ foreach ($arParams['VARS'] as $key => $value) {
         </div>
     <? endif; ?>
 
-    <? if ($arSection["UF_EXTERNAL_SERVICE"] == "bnovo"): ?>
+    <? if ($arSection["UF_EXTERNAL_SERVICE"] == "bronevik"):?>
+        <script>
+            window.moreRooms = [
+                <? foreach ($arElementsJson as $arElement): ?>
+                <? if ($arExternalInfo[$arElement["ID"]]): ?>
+                <? foreach ($arExternalInfo[$arElement["ID"]] as $checksum => $arExternalItem): ?> {
+                    "id": "<?= $arElement['ID'] ?>",
+                    "title": "<?= addslashes($arElement["NAME"]) ?>",
+                    "footnote": "<?= !empty($arElement["PROPERTY_SQUARE_VALUE"]) ? "Площадь: " . $arElement["PROPERTY_SQUARE_VALUE"] . " м² <br>" . $arExternalItem['fullPlacementsName'] : $arExternalItem['fullPlacementsName'] ?>",
+                    "text": `<?= $arElement["DETAIL_TEXT"] ?>`,
+                    "furnishings": [
+                        <? foreach ($arElement["PROPERTY_FEATURES_VALUE"] as $featureId): ?> `<?= $arHLRoomFeatures[$featureId]["UF_NAME"] ?>`,
+                        <? endforeach; ?>
+                    ],
+                    "services": [
+                        <? foreach ($arExternalItem['includedServices'] as $arServiceItem): ?>
+                        <?= $arServicesTraveline[$arServiceItem["id"]]["NAME"] ? "`" . $arServicesTraveline[$arServiceItem["id"]]["NAME"] . "`," : "" ?>
+                        <? endforeach; ?>
+                    ],
+                    "reservCancel": [
+                        // TODO Сделать
+                        <? if ($arExternalItem['cancelPossible'] && $arExternalItem['cancelAmount'] > 0): ?> "Бесплатная отмена до <?= $arExternalItem['cancelDate'] ?> (Московское время)",
+                        "Далее штраф за отмену бронирования — <?= $arExternalItem['cancelAmount'] ?> ₽"
+                        <? elseif ($arExternalItem['cancelAmount'] > 0): ?> "Штраф за отмену бронирования — <?= $arExternalItem['cancelAmount'] ?> ₽"
+                        <? else: ?> "Бесплатная отмена бронирования"
+                        <? endif; ?>
+                    ]
+                },
+                <? endforeach; ?>
+                <? endif; ?>
+                <? endforeach; ?>
+            ];
+        </script>
+    <? elseif ($arSection["UF_EXTERNAL_SERVICE"] == "bnovo"): ?>
         <script>
             window.moreRooms = [
                 <? foreach ($arElementsJson as $arElement):
