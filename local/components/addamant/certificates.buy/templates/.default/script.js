@@ -320,17 +320,19 @@ class BuyCert {
   }
 
   deliverySelectHandler() {
-    let _this = this;
     this.deliveryInput.forEach((element) => {
-      element.addEventListener("change", function () {
-        if (this.checked) {
-          _this.deliverySumm = +this.getAttribute("cost");
-          _this.calcSumm();
+      element.addEventListener("change", (evt) => {
+        const input = evt.target;
+        if (input.checked) {
+          this.deliverySumm = +input.getAttribute("cost");
+          this.calcSumm();
         }
-        if (this.value == 3) {
-          _this.removeRequired(_this.addressInput);
+        if (input.value == 3) {
+          this.removeRequired(this.addressInput);
+          this.addressInput.closest(".address").style.display = "none";
         } else {
-          _this.setRequired(_this.addressInput);
+          this.setRequired(this.addressInput);
+          this.addressInput.closest(".address").style.display = "block";
         }
       });
     });
