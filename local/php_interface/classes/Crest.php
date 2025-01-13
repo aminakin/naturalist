@@ -20,8 +20,8 @@ namespace Naturalist;
 class CRest
 {
 	const VERSION = '1.36';
-	const BATCH_COUNT    = 50;//count batch 1 query
-	const TYPE_TRANSPORT = 'json';// json or xml
+	const BATCH_COUNT    = 50; //count batch 1 query
+	const TYPE_TRANSPORT = 'json'; // json or xml
 
 	/**
 	 * call where install application even url
@@ -34,12 +34,9 @@ class CRest
 			'rest_only' => true,
 			'install' => false
 		];
-		if($_REQUEST[ 'event' ] == 'ONAPPINSTALL' && !empty($_REQUEST[ 'auth' ]))
-		{
-			$result['install'] = static::setAppSettings($_REQUEST[ 'auth' ], true);
-		}
-		elseif($_REQUEST['PLACEMENT'] == 'DEFAULT')
-		{
+		if ($_REQUEST['event'] == 'ONAPPINSTALL' && !empty($_REQUEST['auth'])) {
+			$result['install'] = static::setAppSettings($_REQUEST['auth'], true);
+		} elseif ($_REQUEST['PLACEMENT'] == 'DEFAULT') {
 			$result['rest_only'] = false;
 			$result['install'] = static::setAppSettings(
 				[
@@ -75,76 +72,62 @@ class CRest
 	 */
 	protected static function callCurl($arParams)
 	{
-		if(!function_exists('curl_init'))
-		{
+		if (!function_exists('curl_init')) {
 			return [
 				'error'             => 'error_php_lib_curl',
 				'error_information' => 'need install curl lib'
 			];
 		}
 		$arSettings = static::getAppSettings();
-		if($arSettings !== false)
-		{
-			if(isset($arParams[ 'this_auth' ]) && $arParams[ 'this_auth' ] == 'Y')
-			{
+		if ($arSettings !== false) {
+			if (isset($arParams['this_auth']) && $arParams['this_auth'] == 'Y') {
 				$url = 'https://oauth.bitrix.info/oauth/token/';
-			}
-			else
-			{
-				$url = $arSettings[ "client_endpoint" ] . $arParams[ 'method' ] . '.' . static::TYPE_TRANSPORT;
-				if(empty($arSettings[ 'is_web_hook' ]) || $arSettings[ 'is_web_hook' ] != 'Y')
-				{
-					$arParams[ 'params' ][ 'auth' ] = $arSettings[ 'access_token' ];
+			} else {
+				$url = $arSettings["client_endpoint"] . $arParams['method'] . '.' . static::TYPE_TRANSPORT;
+				if (empty($arSettings['is_web_hook']) || $arSettings['is_web_hook'] != 'Y') {
+					$arParams['params']['auth'] = $arSettings['access_token'];
 				}
 			}
 
-			$sPostFields = http_build_query($arParams[ 'params' ]);
+			$sPostFields = http_build_query($arParams['params']);
 
-			try
-			{
+			try {
 				$obCurl = curl_init();
 				curl_setopt($obCurl, CURLOPT_URL, $url);
 				curl_setopt($obCurl, CURLOPT_RETURNTRANSFER, true);
 				curl_setopt($obCurl, CURLOPT_POSTREDIR, 10);
 				curl_setopt($obCurl, CURLOPT_USERAGENT, 'Bitrix24 CRest PHP ' . static::VERSION);
-				if($sPostFields)
-				{
+				if ($sPostFields) {
 					curl_setopt($obCurl, CURLOPT_POST, true);
 					curl_setopt($obCurl, CURLOPT_POSTFIELDS, $sPostFields);
 				}
 				curl_setopt(
-					$obCurl, CURLOPT_FOLLOWLOCATION, (isset($arParams[ 'followlocation' ]))
-					? $arParams[ 'followlocation' ] : 1
+					$obCurl,
+					CURLOPT_FOLLOWLOCATION,
+					(isset($arParams['followlocation']))
+						? $arParams['followlocation'] : 1
 				);
-				if(defined("C_REST_IGNORE_SSL") && C_REST_IGNORE_SSL === true)
-				{
+				if (defined("C_REST_IGNORE_SSL") && C_REST_IGNORE_SSL === true) {
 					curl_setopt($obCurl, CURLOPT_SSL_VERIFYPEER, false);
 					curl_setopt($obCurl, CURLOPT_SSL_VERIFYHOST, false);
 				}
 				$out = curl_exec($obCurl);
 				$info = curl_getinfo($obCurl);
-				if(curl_errno($obCurl))
-				{
-					$info[ 'curl_error' ] = curl_error($obCurl);
+				if (curl_errno($obCurl)) {
+					$info['curl_error'] = curl_error($obCurl);
 				}
-				if(static::TYPE_TRANSPORT == 'xml' && (!isset($arParams[ 'this_auth' ]) || $arParams[ 'this_auth' ] != 'Y'))//auth only json support
+				if (static::TYPE_TRANSPORT == 'xml' && (!isset($arParams['this_auth']) || $arParams['this_auth'] != 'Y')) //auth only json support
 				{
 					$result = $out;
-				}
-				else
-				{
+				} else {
 					$result = static::expandData($out);
 				}
 				curl_close($obCurl);
 
-				if(!empty($result[ 'error' ]))
-				{
-					if($result[ 'error' ] == 'expired_token' && empty($arParams[ 'this_auth' ]))
-					{
+				if (!empty($result['error'])) {
+					if ($result['error'] == 'expired_token' && empty($arParams['this_auth'])) {
 						$result = static::GetNewAuth($arParams);
-					}
-					else
-					{
+					} else {
 						$arErrorInform = [
 							'expired_token'          => 'expired token, cant get new auth? Check access oauth server.',
 							'invalid_token'          => 'invalid token, need reinstall application',
@@ -155,16 +138,14 @@ class CRest
 							'NO_AUTH_FOUND'          => 'Some setup error b24, check in table "b_module_to_module" event "OnRestCheckAuth"',
 							'INTERNAL_SERVER_ERROR'  => 'Server down, try later'
 						];
-						if(!empty($arErrorInform[ $result[ 'error' ] ]))
-						{
-							$result[ 'error_information' ] = $arErrorInform[ $result[ 'error' ] ];
+						if (!empty($arErrorInform[$result['error']])) {
+							$result['error_information'] = $arErrorInform[$result['error']];
 						}
 					}
 				}
-				if(!empty($info[ 'curl_error' ]))
-				{
-					$result[ 'error' ] = 'curl_error';
-					$result[ 'error_information' ] = $info[ 'curl_error' ];
+				if (!empty($info['curl_error'])) {
+					$result['error'] = 'curl_error';
+					$result['error_information'] = $info['curl_error'];
 				}
 
 				// static::setLog(
@@ -178,9 +159,7 @@ class CRest
 				// );
 
 				return $result;
-			}
-			catch(Exception $e)
-			{
+			} catch (Exception $e) {
 				static::setLog(
 					[
 						'message' => $e->getMessage(),
@@ -197,9 +176,7 @@ class CRest
 					'error_information' => $e->getMessage(),
 				];
 			}
-		}
-		else
-		{
+		} else {
 			static::setLog(
 				[
 					'params' => $arParams
@@ -228,9 +205,8 @@ class CRest
 			'method' => $method,
 			'params' => $params
 		];
-		if(defined('C_REST_CURRENT_ENCODING'))
-		{
-			$arPost[ 'params' ] = static::changeEncoding($arPost[ 'params' ]);
+		if (defined('C_REST_CURRENT_ENCODING')) {
+			$arPost['params'] = static::changeEncoding($arPost['params']);
 		}
 
 		$result = static::callCurl($arPost);
@@ -263,32 +239,25 @@ class CRest
 	public static function callBatch($arData, $halt = 0)
 	{
 		$arResult = [];
-		if(is_array($arData))
-		{
-			if(defined('C_REST_CURRENT_ENCODING'))
-			{
+		if (is_array($arData)) {
+			if (defined('C_REST_CURRENT_ENCODING')) {
 				$arData = static::changeEncoding($arData);
 			}
 			$arDataRest = [];
 			$i = 0;
-			foreach($arData as $key => $data)
-			{
-				if(!empty($data[ 'method' ]))
-				{
+			foreach ($arData as $key => $data) {
+				if (!empty($data['method'])) {
 					$i++;
-					if(static::BATCH_COUNT >= $i)
-					{
-						$arDataRest[ 'cmd' ][ $key ] = $data[ 'method' ];
-						if(!empty($data[ 'params' ]))
-						{
-							$arDataRest[ 'cmd' ][ $key ] .= '?' . http_build_query($data[ 'params' ]);
+					if (static::BATCH_COUNT >= $i) {
+						$arDataRest['cmd'][$key] = $data['method'];
+						if (!empty($data['params'])) {
+							$arDataRest['cmd'][$key] .= '?' . http_build_query($data['params']);
 						}
 					}
 				}
 			}
-			if(!empty($arDataRest))
-			{
-				$arDataRest[ 'halt' ] = $halt;
+			if (!empty($arDataRest)) {
+				$arDataRest['halt'] = $halt;
 				$arPost = [
 					'method' => 'batch',
 					'params' => $arDataRest
@@ -311,34 +280,29 @@ class CRest
 	{
 		$result = [];
 		$arSettings = static::getAppSettings();
-		if($arSettings !== false)
-		{
+		if ($arSettings !== false) {
 			$arParamsAuth = [
 				'this_auth' => 'Y',
 				'params'    =>
-					[
-						'client_id'     => $arSettings[ 'C_REST_CLIENT_ID' ],
-						'grant_type'    => 'refresh_token',
-						'client_secret' => $arSettings[ 'C_REST_CLIENT_SECRET' ],
-						'refresh_token' => $arSettings[ "refresh_token" ],
-					]
+				[
+					'client_id'     => $arSettings['C_REST_CLIENT_ID'],
+					'grant_type'    => 'refresh_token',
+					'client_secret' => $arSettings['C_REST_CLIENT_SECRET'],
+					'refresh_token' => $arSettings["refresh_token"],
+				]
 			];
 			$newData = static::callCurl($arParamsAuth);
-			if(isset($newData[ 'C_REST_CLIENT_ID' ]))
-			{
-				unset($newData[ 'C_REST_CLIENT_ID' ]);
+			if (isset($newData['C_REST_CLIENT_ID'])) {
+				unset($newData['C_REST_CLIENT_ID']);
 			}
-			if(isset($newData[ 'C_REST_CLIENT_SECRET' ]))
-			{
-				unset($newData[ 'C_REST_CLIENT_SECRET' ]);
+			if (isset($newData['C_REST_CLIENT_SECRET'])) {
+				unset($newData['C_REST_CLIENT_SECRET']);
 			}
-			if(isset($newData[ 'error' ]))
-			{
-				unset($newData[ 'error' ]);
+			if (isset($newData['error'])) {
+				unset($newData['error']);
 			}
-			if(static::setAppSettings($newData))
-			{
-				$arParams[ 'this_auth' ] = 'N';
+			if (static::setAppSettings($newData)) {
+				$arParams['this_auth'] = 'N';
 				$result = static::callCurl($arParams);
 			}
 		}
@@ -354,11 +318,9 @@ class CRest
 	private static function setAppSettings($arSettings, $isInstall = false)
 	{
 		$return = false;
-		if(is_array($arSettings))
-		{
+		if (is_array($arSettings)) {
 			$oldData = static::getAppSettings();
-			if($isInstall != true && !empty($oldData) && is_array($oldData))
-			{
+			if ($isInstall != true && !empty($oldData) && is_array($oldData)) {
 				$arSettings = array_merge($oldData, $arSettings);
 			}
 			$return = static::setSettingData($arSettings);
@@ -372,26 +334,22 @@ class CRest
 
 	private static function getAppSettings()
 	{
-		if(defined("C_REST_WEB_HOOK_URL") && !empty(C_REST_WEB_HOOK_URL))
-		{
+		if (defined("C_REST_WEB_HOOK_URL") && !empty(C_REST_WEB_HOOK_URL)) {
 			$arData = [
 				'client_endpoint' => C_REST_WEB_HOOK_URL,
 				'is_web_hook'     => 'Y'
 			];
 			$isCurrData = true;
-		}
-		else
-		{
+		} else {
 			$arData = static::getSettingData();
 			$isCurrData = false;
-			if(
-				!empty($arData[ 'access_token' ]) &&
-				!empty($arData[ 'domain' ]) &&
-				!empty($arData[ 'refresh_token' ]) &&
-				!empty($arData[ 'application_token' ]) &&
-				!empty($arData[ 'client_endpoint' ])
-			)
-			{
+			if (
+				!empty($arData['access_token']) &&
+				!empty($arData['domain']) &&
+				!empty($arData['refresh_token']) &&
+				!empty($arData['application_token']) &&
+				!empty($arData['client_endpoint'])
+			) {
 				$isCurrData = true;
 			}
 		}
@@ -408,15 +366,12 @@ class CRest
 	protected static function getSettingData()
 	{
 		$return = [];
-		if(file_exists(__DIR__ . '/settings.json'))
-		{
+		if (file_exists(__DIR__ . '/settings.json')) {
 			$return = static::expandData(file_get_contents(__DIR__ . '/settings.json'));
-			if(defined("C_REST_CLIENT_ID") && !empty(C_REST_CLIENT_ID))
-			{
+			if (defined("C_REST_CLIENT_ID") && !empty(C_REST_CLIENT_ID)) {
 				$return['C_REST_CLIENT_ID'] = C_REST_CLIENT_ID;
 			}
-			if(defined("C_REST_CLIENT_SECRET") && !empty(C_REST_CLIENT_SECRET))
-			{
+			if (defined("C_REST_CLIENT_SECRET") && !empty(C_REST_CLIENT_SECRET)) {
 				$return['C_REST_CLIENT_SECRET'] = C_REST_CLIENT_SECRET;
 			}
 		}
@@ -431,24 +386,17 @@ class CRest
 	 */
 	protected static function changeEncoding($data, $encoding = true)
 	{
-		if(is_array($data))
-		{
+		if (is_array($data)) {
 			$result = [];
-			foreach ($data as $k => $item)
-			{
+			foreach ($data as $k => $item) {
 				$k = static::changeEncoding($k, $encoding);
 				$result[$k] = static::changeEncoding($item, $encoding);
 			}
-		}
-		else
-		{
-			if($encoding)
-			{
+		} else {
+			if ($encoding) {
 				$result = iconv(C_REST_CURRENT_ENCODING, "UTF-8//TRANSLIT", $data);
-			}
-			else
-			{
-				$result = iconv( "UTF-8",C_REST_CURRENT_ENCODING, $data);
+			} else {
+				$result = iconv("UTF-8", C_REST_CURRENT_ENCODING, $data);
 			}
 		}
 
@@ -463,19 +411,15 @@ class CRest
 	 */
 	protected static function wrapData($data, $debag = false)
 	{
-		if(defined('C_REST_CURRENT_ENCODING'))
-		{
+		if (defined('C_REST_CURRENT_ENCODING')) {
 			$data = static::changeEncoding($data, true);
 		}
-		$return = json_encode($data, JSON_HEX_TAG|JSON_HEX_AMP|JSON_HEX_APOS|JSON_HEX_QUOT);
+		$return = json_encode($data, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT);
 
-		if($debag)
-		{
+		if ($debag) {
 			$e = json_last_error();
-			if ($e != JSON_ERROR_NONE)
-			{
-				if ($e == JSON_ERROR_UTF8)
-				{
+			if ($e != JSON_ERROR_NONE) {
+				if ($e == JSON_ERROR_UTF8) {
 					return 'Failed encoding! Recommended \'UTF - 8\' or set define C_REST_CURRENT_ENCODING = current site encoding for function iconv()';
 				}
 			}
@@ -493,8 +437,7 @@ class CRest
 	protected static function expandData($data)
 	{
 		$return = json_decode($data, true);
-		if(defined('C_REST_CURRENT_ENCODING'))
-		{
+		if (defined('C_REST_CURRENT_ENCODING')) {
 			$return = static::changeEncoding($return, false);
 		}
 		return $return;
@@ -509,7 +452,7 @@ class CRest
 
 	protected static function setSettingData($arSettings)
 	{
-		return  (boolean)file_put_contents(__DIR__ . '/settings.json', static::wrapData($arSettings));
+		return  (bool)file_put_contents(__DIR__ . '/settings.json', static::wrapData($arSettings));
 	}
 
 	/**
@@ -523,38 +466,27 @@ class CRest
 	public static function setLog($arData, $type = '')
 	{
 		$return = false;
-		if(!defined("C_REST_BLOCK_LOG") || C_REST_BLOCK_LOG !== true)
-		{
-			if(defined("C_REST_LOGS_DIR"))
-			{
+		if (!defined("C_REST_BLOCK_LOG") || C_REST_BLOCK_LOG !== true) {
+			if (defined("C_REST_LOGS_DIR")) {
 				$path = C_REST_LOGS_DIR;
-			}
-			else
-			{
+			} else {
 				$path = __DIR__ . '/logs/';
 			}
 			$path .= date("Y-m-d/H") . '/';
 
-			if (!file_exists($path))
-			{
+			if (!file_exists($path)) {
 				@mkdir($path, 0775, true);
 			}
 
 			$path .= time() . '_' . $type . '_' . rand(1, 9999999) . 'log';
-			if(!defined("C_REST_LOG_TYPE_DUMP") || C_REST_LOG_TYPE_DUMP !== true)
-			{
+			if (!defined("C_REST_LOG_TYPE_DUMP") || C_REST_LOG_TYPE_DUMP !== true) {
 				$jsonLog = static::wrapData($arData);
-				if ($jsonLog === false)
-				{
+				if ($jsonLog === false) {
 					$return = file_put_contents($path . '_backup.txt', var_export($arData, true));
-				}
-				else
-				{
+				} else {
 					$return = file_put_contents($path . '.json', $jsonLog);
 				}
-			}
-			else
-			{
+			} else {
 				$return = file_put_contents($path . '.txt', var_export($arData, true));
 			}
 		}
@@ -571,44 +503,35 @@ class CRest
 		$return = [];
 
 		//check curl lib install
-		if(!function_exists('curl_init'))
-		{
+		if (!function_exists('curl_init')) {
 			$return['curl_error'] = 'Need install curl lib.';
 		}
 
 		//creat setting file
-		file_put_contents(__DIR__ . '/settings_check.json', static::wrapData(['test'=>'data']));
-		if(!file_exists(__DIR__ . '/settings_check.json'))
-		{
+		file_put_contents(__DIR__ . '/settings_check.json', static::wrapData(['test' => 'data']));
+		if (!file_exists(__DIR__ . '/settings_check.json')) {
 			$return['setting_creat_error'] = 'Check permission! Recommended: folders: 775, files: 664';
 		}
 		unlink(__DIR__ . '/settings_check.json');
 		//creat logs folder and files
-		$path = __DIR__ . '/logs/'.date("Y-m-d/H") . '/';
-		if(!mkdir($path, 0775, true) && !file_exists($path))
-		{
+		$path = __DIR__ . '/logs/' . date("Y-m-d/H") . '/';
+		if (!mkdir($path, 0775, true) && !file_exists($path)) {
 			$return['logs_folder_creat_error'] = 'Check permission! Recommended: folders: 775, files: 664';
-		}
-		else
-		{
-			file_put_contents($path . 'test.txt', var_export(['test'=>'data'], true));
-			if(!file_exists($path . 'test.txt'))
-			{
+		} else {
+			file_put_contents($path . 'test.txt', var_export(['test' => 'data'], true));
+			if (!file_exists($path . 'test.txt')) {
 				$return['logs_file_creat_error'] = 'check permission! recommended: folders: 775, files: 664';
 			}
 			unlink($path . 'test.txt');
 		}
 
-		if($print === true)
-		{
-			if(empty($return))
-			{
+		if ($print === true) {
+			if (empty($return)) {
 				$return['success'] = 'Success!';
 			}
 			echo '<pre>';
 			print_r($return);
 			echo '</pre>';
-
 		}
 
 		return $return;
