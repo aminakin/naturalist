@@ -18,4 +18,7 @@ $arResult = array(
     "reviewsCount" => $arParams['reviewsCount'],
     "avgRating" => $arParams['avgRating'],
     "arAvgCriterias" => $arParams['arAvgCriterias'],
+    "arHLFeatures" => $arParams['arHLFeatures'],
+    "coords" => $arParams['coords'],
+    "arServices" => $arParams['arServices'],
 );

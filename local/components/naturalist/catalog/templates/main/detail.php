@@ -43,52 +43,52 @@ $arDataFullGallery = [];
 /** получение сезона из ИБ */
 if (Cmodule::IncludeModule('asd.iblock')) {
     $arFields = CASDiblockTools::GetIBUF(CATALOG_IBLOCK_ID);
-} 
+}
 
 
 
-foreach($arFields['UF_SEASON'] as $season){
-    if($season == 'Лето'){
+foreach ($arFields['UF_SEASON'] as $season) {
+    if ($season == 'Лето') {
         if ($arSection["UF_PHOTOS"]) {
             foreach ($arSection["UF_PHOTOS"] as $photoId) {
                 $imageOriginal = CFile::GetFileArray($photoId);
                 $arDataFullGallery[] = "\"" . $imageOriginal["SRC"] . "\"";
-                $arSection["PICTURES"][$photoId] = CFile::ResizeImageGet($photoId, array('width' => 590, 'height' => 390), BX_RESIZE_IMAGE_EXACT, true);
+                $arSection["PICTURES"][] = CFile::ResizeImageGet($photoId, array('width' => 590, 'height' => 390), BX_RESIZE_IMAGE_EXACT, true);
             }
         } else {
             $arSection["PICTURES"][0]["src"] = SITE_TEMPLATE_PATH . "/img/big_no_photo.png";
         }
-    }elseif($season == 'Зима'){
+    } elseif ($season == 'Зима') {
         if ($arSection["UF_WINTER_PHOTOS"]) {
             foreach ($arSection["UF_WINTER_PHOTOS"] as $photoId) {
                 $imageOriginal = CFile::GetFileArray($photoId);
                 $arDataFullGallery[] = "\"" . $imageOriginal["SRC"] . "\"";
-                $arSection["PICTURES"][$photoId] = CFile::ResizeImageGet($photoId, array('width' => 590, 'height' => 390), BX_RESIZE_IMAGE_EXACT, true);
+                $arSection["PICTURES"][] = CFile::ResizeImageGet($photoId, array('width' => 590, 'height' => 390), BX_RESIZE_IMAGE_EXACT, true);
             }
         } else {
             if ($arSection["UF_PHOTOS"]) {
                 foreach ($arSection["UF_PHOTOS"] as $photoId) {
                     $imageOriginal = CFile::GetFileArray($photoId);
                     $arDataFullGallery[] = "\"" . $imageOriginal["SRC"] . "\"";
-                    $arSection["PICTURES"][$photoId] = CFile::ResizeImageGet($photoId, array('width' => 590, 'height' => 390), BX_RESIZE_IMAGE_EXACT, true);
+                    $arSection["PICTURES"][] = CFile::ResizeImageGet($photoId, array('width' => 590, 'height' => 390), BX_RESIZE_IMAGE_EXACT, true);
                 }
             } else {
                 $arSection["PICTURES"][0]["src"] = SITE_TEMPLATE_PATH . "/img/big_no_photo.png";
             }
         }
-    }elseif($season == 'Осень+Весна'){
+    } elseif ($season == 'Осень+Весна') {
         if ($arSection["UF_MIDSEASON_PHOTOS"]) {
             foreach ($arSection["UF_MIDSEASON_PHOTOS"] as $photoId) {
                 $imageOriginal = CFile::GetFileArray($photoId);
                 $arDataFullGallery[] = "\"" . $imageOriginal["SRC"] . "\"";
-                $arSection["PICTURES"][$photoId] = CFile::ResizeImageGet($photoId, array('width' => 590, 'height' => 390), BX_RESIZE_IMAGE_EXACT, true);
+                $arSection["PICTURES"][] = CFile::ResizeImageGet($photoId, array('width' => 590, 'height' => 390), BX_RESIZE_IMAGE_EXACT, true);
             }
         } else {
             if ($arSection["UF_PHOTOS"]) {
                 foreach ($arSection["UF_PHOTOS"] as $photoId) {
                     $imageOriginal = CFile::GetFileArray($photoId);
                     $arDataFullGallery[] = "\"" . $imageOriginal["SRC"] . "\"";
-                    $arSection["PICTURES"][$photoId] = CFile::ResizeImageGet($photoId, array('width' => 590, 'height' => 390), BX_RESIZE_IMAGE_EXACT, true);
+                    $arSection["PICTURES"][] = CFile::ResizeImageGet($photoId, array('width' => 590, 'height' => 390), BX_RESIZE_IMAGE_EXACT, true);
                 }
             } else {
                 $arSection["PICTURES"][0]["src"] = SITE_TEMPLATE_PATH . "/img/big_no_photo.png";
@@ -102,8 +102,6 @@ $arSection["FULL_GALLERY"] = implode(",", $arDataFullGallery);
 if ($arSection["UF_COORDS"]) {
     /* Метеоданные */
     $coords = $arSection["UF_COORDS"];
-    $arMeteo = Users::getMeteo($coords);
-
     $arSection["COORDS"] = explode(',', $arSection["UF_COORDS"]);
 }
 /** Услуги */
@@ -478,7 +476,7 @@ $APPLICATION->AddHeadString('<meta name="description" content="' . $descriptionS
 /**/
 ?>
 
-<main class="main">
+<main class="main object__detail">
     <section class="section section_crumbs">
         <div class="container">
             <?
@@ -494,74 +492,40 @@ $APPLICATION->AddHeadString('<meta name="description" content="' . $descriptionS
     </section>
     <!-- section-->
 
-    <section class="section section_object">
-        <div class="container">
-            <?
-            $APPLICATION->IncludeComponent(
-                "naturalist:empty",
-                "object_hero",
-                array(
-                    "arSection" => $arSection,
-                    "arFavourites" => $arFavourites,
-                    "currentURL" => $currentURL,
-                    "arHLTypes" => $arHLTypes,
-                    "dateFrom" => $dateFrom,
-                    "dateTo" => $dateTo,
-                    "arDates" => $arDates,
-                    "currMonthName" => $currMonthName,
-                    "currYear" => $currYear,
-                    "nextYear" => $nextYear,
-                    "guests" => $guests,
-                    "children" => $children,
-                    "guestsDeclension" => $guestsDeclension,
-                    "childrenDeclension" => $childrenDeclension,
-                    "arChildrenAge" => $arChildrenAge,
-                    "reviewsDeclension" => $reviewsDeclension,
-                    "reviewsCount" => $reviewsCount,
-                    "avgRating" => $avgRating,
-                    "arAvgCriterias" => $arAvgCriterias,
-                    "h1SEO" => $h1SEO,
-                )
-            );
-            ?>
-        </div>
-    </section>
-    <!-- section-->
 
-    <? if ($arSection["UF_COORDS"] && $arMeteo) : ?>
-        <section class="section section_info">
-            <div class="container">
-                <?
-                $APPLICATION->IncludeComponent(
-                    "naturalist:empty",
-                    "object_info",
-                    array(
-                        "arMeteo" => $arMeteo,
-                    )
-                );
-                ?>
-            </div>
-        </section>
-        <!-- section-->
-    <? endif; ?>
+    <?
+    $APPLICATION->IncludeComponent(
+        "naturalist:empty",
+        "object_hero",
+        array(
+            "arSection" => $arSection,
+            "arFavourites" => $arFavourites,
+            "currentURL" => $currentURL,
+            "arHLTypes" => $arHLTypes,
+            "dateFrom" => $dateFrom,
+            "dateTo" => $dateTo,
+            "arDates" => $arDates,
+            "currMonthName" => $currMonthName,
+            "currYear" => $currYear,
+            "nextYear" => $nextYear,
+            "guests" => $guests,
+            "children" => $children,
+            "guestsDeclension" => $guestsDeclension,
+            "childrenDeclension" => $childrenDeclension,
+            "arChildrenAge" => $arChildrenAge,
+            "reviewsDeclension" => $reviewsDeclension,
+            "reviewsCount" => $reviewsCount,
+            "avgRating" => $avgRating,
+            "arAvgCriterias" => $arAvgCriterias,
+            "h1SEO" => $h1SEO,
+            "arHLFeatures" => $arHLFeatures,
+            "coords" => $coords,
+            "arServices" => $arServices,
+            "arAvgCriterias" => $arAvgCriterias,
+        )
+    );
+    ?>
 
-    <section class="section section_about" id="map">
-        <div class="container">
-            <?
-            $APPLICATION->IncludeComponent(
-                "naturalist:empty",
-                "object_about",
-                array(
-                    "arSection" => $arSection,
-                    "arHLFeatures" => $arHLFeatures,
-                    "coords" => $coords,
-                    "arServices" => $arServices,
-                )
-            );
-            ?>
-        </div>
-    </section>
-    <!-- section-->
 
     <? if ($allCount > 0) : ?>
         <section class="section section_room" id="rooms-anchor">
@@ -658,7 +622,6 @@ $APPLICATION->AddHeadString('<meta name="description" content="' . $descriptionS
                     "CACHE_TIME" => "36000000",
                     "CACHE_NOTES" => "",
                     "CACHE_GROUPS" => "N",
-
                     "SECTION_RATING" => $avgRating,
                     "SECTION_COORDS" => explode(",", $arSection["UF_COORDS"]),
                     "RATING_RANGE" => 0.5,

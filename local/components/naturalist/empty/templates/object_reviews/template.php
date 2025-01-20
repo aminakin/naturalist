@@ -20,66 +20,7 @@ global $arUser, $userId, $isAuthorized;
         <span><?= $reviewsCount ?> <?= $reviewsDeclension->get($reviewsCount) ?></span>
     </div>
 
-    <div class="reviews__scors">
-        <ul class="list list_score">
-            <li class="list__item">
-                <div class="list__item-label">Удобство расположения</div>
-                <div class="list__item-progress">
-                    <div style="width: <?= $arAvgCriterias[1][1] ?? 0 ?>%"></div>
-                </div>
-                <div class="list__item-number"><?= $arAvgCriterias[1][0] ?? "0.0" ?></div>
-            </li>
-            <li class="list__item">
-                <div class="list__item-label">Питание</div>
-                <div class="list__item-progress">
-                    <div style="width: <?= $arAvgCriterias[2][1] ?? 0 ?>%"></div>
-                </div>
-                <div class="list__item-number"><?= $arAvgCriterias[2][0] ?? "0.0" ?></div>
-            </li>
-            <li class="list__item">
-                <div class="list__item-label">Уют</div>
-                <div class="list__item-progress">
-                    <div style="width: <?= $arAvgCriterias[3][1] ?? 0 ?>%"></div>
-                </div>
-                <div class="list__item-number"><?= $arAvgCriterias[3][0] ?? "0.0" ?></div>
-            </li>
-            <li class="list__item">
-                <div class="list__item-label">Сервис</div>
-                <div class="list__item-progress">
-                    <div style="width: <?= $arAvgCriterias[4][1] ?? 0 ?>%"></div>
-                </div>
-                <div class="list__item-number"><?= $arAvgCriterias[4][0] ?? "0.0" ?></div>
-            </li>
-            <li class="list__item">
-                <div class="list__item-label">Чистота</div>
-                <div class="list__item-progress">
-                    <div style="width: <?= $arAvgCriterias[5][1] ?? 0 ?>%"></div>
-                </div>
-                <div class="list__item-number"><?= $arAvgCriterias[5][0] ?? "0.0" ?></div>
-            </li>
-            <li class="list__item">
-                <div class="list__item-label">Эстетика окружения</div>
-                <div class="list__item-progress">
-                    <div style="width: <?= $arAvgCriterias[6][1] ?? 0 ?>%"></div>
-                </div>
-                <div class="list__item-number"><?= $arAvgCriterias[6][0] ?? "0.0" ?></div>
-            </li>
-            <li class="list__item">
-                <div class="list__item-label">Разнообразие досуга</div>
-                <div class="list__item-progress">
-                    <div style="width: <?= $arAvgCriterias[7][1] ?? 0 ?>%"></div>
-                </div>
-                <div class="list__item-number"><?= $arAvgCriterias[7][0] ?? "0.0" ?></div>
-            </li>
-            <li class="list__item">
-                <div class="list__item-label">Соотношение цена/качество</div>
-                <div class="list__item-progress">
-                    <div style="width: <?= $arAvgCriterias[8][1] ?? 0 ?>%"></div>
-                </div>
-                <div class="list__item-number"><?= $arAvgCriterias[8][0] ?? "0.0" ?></div>
-            </li>
-        </ul>
-    </div>
+
 
     <div class="reviews__reviews" data-object-reviews-container>
         <a class="anchor"></a>
