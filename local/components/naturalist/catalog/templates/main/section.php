@@ -12,13 +12,10 @@
 /** @var CBitrixComponent $component */
 $this->setFrameMode(true);
 
-use Bitrix\Main\Application;
 use Bitrix\Main\Grid\Declension;
 use Bitrix\Highloadblock\HighloadBlockTable;
 use Bitrix\Main\Web\Uri;
-use Naturalist\Morpher;
 use Naturalist\Regions;
-use Naturalist\Users;
 use Naturalist\Products;
 use Naturalist\Reviews;
 use Bitrix\Iblock\Elements\ElementGlampingsTable;
@@ -27,11 +24,6 @@ use Naturalist\Filters\Components;
 use Naturalist\Filters\UrlHandler;
 use Bitrix\Main\Localization\Loc;
 
-global $arUser, $userId, $isAuthorized;
-
-$request = Application::getInstance()->getContext()->getRequest();
-$isAjax = $request->isAjaxRequest();
-
 $arUriParams = array(
     'dateFrom' => $_GET['dateFrom'],
     'dateTo' => $_GET['dateTo'],
@@ -39,16 +31,6 @@ $arUriParams = array(
     'children' => $_GET['children'],
     'childrenAge' => $_GET['childrenAge'],
 );
-
-if (CSite::InDir('/map')) {
-    $seoFile = 'map';
-} else {
-    $seoFile = 'catalog';
-}
-
-$requestUrl = $_SERVER['REDIRECT_URL'] ? $_SERVER['REDIRECT_URL'] : $_SERVER['SCRIPT_NAME'];
-$chpy = Components::getChpyLinkByUrl($requestUrl);
-$chySeoText = $chpy['UF_SEO_TEXT'];
 
 if ($_GET['page'] && count($_GET) > 1) {
     $urlWithPage = '/catalog/?';
@@ -61,129 +43,15 @@ if ($_GET['page'] && count($_GET) > 1) {
     $pageSeoData = UrlHandler::getByRealUrl($urlWithPage, SITE_ID);
 }
 
-/* Избранное (список ID) */
-$arFavourites = Users::getFavourites();
-
 /* Склонения */
 $countDeclension = new Declension('вариант', 'варианта', 'вариантов');
 $reviewsDeclension = new Declension('отзыв', 'отзыва', 'отзывов');
 $guestsDeclension = new Declension('гость', 'гостя', 'гостей');
 
-/* Отзывы */
-/*$rsReviews = CIBlockElement::GetList(array("SORT" => "ASC"), array("IBLOCK_ID" => REVIEWS_IBLOCK_ID, "ACTIVE" => "Y"), false, false, array("ID", "PROPERTY_CAMPING_ID", "PROPERTY_RATING"));
-$arReviews = array();
-while ($arReview = $rsReviews->Fetch()) {
-    $arReviews[$arReview["PROPERTY_CAMPING_ID_VALUE"]][$arReview["ID"]] = $arReview["PROPERTY_RATING_VALUE"];
-}
-$arReviewsAvg = array_map(function ($a) {
-    return round(array_sum($a) / count($a), 1);
-}, $arReviews);*/
-
 $isSeoText = false;
 
 /* Фильтрация */
-$arFilter = array(
-    "IBLOCK_ID" => CATALOG_IBLOCK_ID,
-    "ACTIVE" => "Y",
-);
-
-// Цена
-//if ($_GET['maxPrice'] || $_GET['minPrice']) {
-//    $arFilter[] = [
-//        ["<=UF_MIN_PRICE" => $_GET['maxPrice']],
-//        [">=UF_MIN_PRICE" => $_GET['minPrice']]
-//    ];
-//}
-
-
-
-// Название и место
-if (!empty($_GET['name']) && isset($_GET['name'])) {
-    $search = ($_GET['name']) ? $_GET['name'] : null;
-
-    $decodeSearch = json_decode($search, true);
-    if ($decodeSearch['type']) {
-        switch ($decodeSearch['type']) {
-            case 'area':
-                $searchName = $decodeSearch['item'];
-                $arRegionIds = Regions::getCityByName($searchName);
-                if (!empty($arRegionIds)) {
-                    $arFilter["UF_AREA_NAME"] = $arRegionIds[0]['ID'];
-                    $arRegionIds = array_map(function($arRegion) {
-                        return $arRegion['REGION_ID'];
-                    }, $arRegionIds);
-                } else {
-                    $arRegionIds = Regions::RegionFilterSearcher($searchName);
-                    $arFilter["UF_REGION"] = $arRegionIds;
-                }
-
-                break;
-            case 'id':
-                $arFilter["ID"] = $decodeSearch['item'];
-                break;
-            case 'street':
-                $arFilter["%UF_ADDRESS"] = $decodeSearch['item'];
-                break;
-
-            case 'object':
-                $arNameResult = CIBlockSection::GetList([], array_merge($arFilter, ["%NAME" => trim($decodeSearch['item'])]), false, array("ID"), false)->Fetch();
-                if ($arNameResult) {
-                    $arSectionIDs[] = $arNameResult["ID"];
-                }
-                $arFilter["ID"] = $arSectionIDs;
-                break;
-        }
-
-        $arFilterValues["SEARCH"] = json_encode($decodeSearch, JSON_UNESCAPED_UNICODE);
-        $arFilterValues["SEARCH_TEXT"] = strip_tags($decodeSearch['title']);
-    } else {
-
-        //        CModule::IncludeModule('search');
-        //        $obSearch = new CSearch;
-        //        $obSearch->SetOptions(array(
-        //            'ERROR_ON_EMPTY_STEM' => false,
-        //        ));
-        //        $obSearch->Search(array(
-        //            'QUERY' => trim($search),
-        //            'MODULE_ID' => 'iblock',
-        //            'PARAM1' => 'catalog',
-        //            'PARAM2' => CATALOG_IBLOCK_ID
-        //        ));
-        //        if (!$obSearch->selectedRowsCount()) {//и делаем резапрос, если не найдено с морфологией...
-        //            $obSearch->Search(array(
-        //                'QUERY' => trim($search),
-        //                'MODULE_ID' => 'iblock',
-        //                'PARAM1' => 'catalog',
-        //                'PARAM2' => CATALOG_IBLOCK_ID
-        //            ), array(), array('STEMMING' => false));//... уже с отключенной морфологией
-        //        }
-        //        while ($row = $obSearch->fetch()) {
-        //            if($row['ITEM_ID'][0] == 'S'){
-        //                $arSectionIDs[] = substr($row['ITEM_ID'],1);
-        //            }
-        //        }
-
-        $arRegionIds = Regions::RegionFilterSearcher($search);
-        $arFilter["UF_REGION"] = $arRegionIds;
-
-
-        if (empty($arRegionIds)) {
-
-            $arNameResult = CIBlockSection::GetList([], ['NAME' => '%' . $search . '%'], false, ['ID'], false)->Fetch();
-            if ($arNameResult) {
-                $arSectionIDs[] = $arNameResult["ID"];
-            }
-
-
-
-            $arFilter["ID"] = $arSectionIDs;
-            unset($arFilter["UF_REGION"]);
-        }
-
-        //        $arFilter["ID"] = $arSectionIDs;
-        $arFilterValues["SEARCH_TEXT"] = strip_tags($search);
-    }
-}
+$arFilter = $arResult['SECTION_FILTER'];
 
 // Заезд, выезд, кол-во гостей
 $dateFrom = $_GET['dateFrom'];
@@ -214,7 +82,6 @@ if (!empty($_GET['types']) && isset($_GET['types'])) {
         array("UF_TYPE" => explode(',', $_GET['types'])),
         array("UF_TYPE_EXTRA" => explode(',', $_GET['types']))
     );
-
     $filterCount += count($arFilterTypes);
 }
 
@@ -222,7 +89,6 @@ if (!empty($_GET['types']) && isset($_GET['types'])) {
 if (!empty($_GET['services']) && isset($_GET['services'])) {
     $arFilterServices = explode(',', $_GET['services']);
     $arFilter["UF_SERVICES"] = $arFilterServices;
-
     $filterCount += count($arFilterServices);
 }
 
@@ -230,7 +96,6 @@ if (!empty($_GET['services']) && isset($_GET['services'])) {
 if (!empty($_GET['food']) && isset($_GET['food'])) {
     $arFilterFood = explode(',', $_GET['food']);
     $arFilter["UF_FOOD"] = $arFilterFood;
-
     $filterCount += count($arFilterFood);
 }
 
@@ -238,7 +103,6 @@ if (!empty($_GET['food']) && isset($_GET['food'])) {
 if (!empty($_GET['features']) && isset($_GET['features'])) {
     $arFilterFeatures = explode(',', $_GET['features']);
     $arFilter["UF_FEATURES"] = $arFilterFeatures;
-
     $filterCount += count($arFilterFeatures);
 }
 
@@ -246,7 +110,6 @@ if (!empty($_GET['features']) && isset($_GET['features'])) {
 if (!empty($_GET['restvariants']) && isset($_GET['restvariants'])) {
     $arFilterRestVariants = explode(',', $_GET['restvariants']);
     $arFilter["UF_REST_VARIANTS"] = $arFilterRestVariants;
-
     $filterCount += count($arFilterRestVariants);
 }
 
@@ -254,7 +117,6 @@ if (!empty($_GET['restvariants']) && isset($_GET['restvariants'])) {
 if (!empty($_GET['objectcomforts']) && isset($_GET['objectcomforts'])) {
     $arFilterObjectComforts = explode(',', $_GET['objectcomforts']);
     $arFilter["UF_OBJECT_COMFORTS"] = $arFilterObjectComforts;
-
     $filterCount += count($arFilterObjectComforts);
 }
 
@@ -262,7 +124,6 @@ if (!empty($_GET['objectcomforts']) && isset($_GET['objectcomforts'])) {
 if (!empty($_GET['housetypes']) && isset($_GET['housetypes'])) {
     $arFilterHousetypes = explode(',', $_GET['housetypes']);
     $arFilter["UF_SUIT_TYPE"] = $arFilterHousetypes;
-
     $filterCount += count($arFilterHousetypes);
 }
 
@@ -270,7 +131,6 @@ if (!empty($_GET['housetypes']) && isset($_GET['housetypes'])) {
 if (!empty($_GET['water']) && isset($_GET['water'])) {
     $arFilterWater = explode(',', $_GET['water']);
     $arFilter["UF_WATER"] = $arFilterWater;
-
     $filterCount += count($arFilterWater);
 }
 
@@ -278,7 +138,6 @@ if (!empty($_GET['water']) && isset($_GET['water'])) {
 if (!empty($_GET['commonwater']) && isset($_GET['commonwater'])) {
     $arFilterCommonWater = explode(',', $_GET['commonwater']);
     $arFilter["UF_COMMON_WATER"] = $arFilterCommonWater;
-
     $filterCount += count($arFilterCommonWater);
 }
 
@@ -286,7 +145,6 @@ if (!empty($_GET['commonwater']) && isset($_GET['commonwater'])) {
 if (!empty($_GET['sitemap']) && isset($_GET['sitemap'])) {
     $arFilterSitemap = explode(',', $_GET['sitemap']);
     $arFilter["UF_SITEMAP"] = $arFilterSitemap;
-
     $filterCount += count($arFilterSitemap);
 }
 
@@ -294,7 +152,6 @@ if (!empty($_GET['sitemap']) && isset($_GET['sitemap'])) {
 if (!empty($_GET['selection']) && isset($_GET['selection'])) {
     $arFilterImpressions = explode(',', $_GET['selection']);
     $arFilter["UF_IMPRESSIONS"] = $arFilterImpressions;
-
     $filterCount += count($arFilterImpressions);
 }
 
@@ -302,7 +159,6 @@ if (!empty($_GET['selection']) && isset($_GET['selection'])) {
 if (!empty($_GET['diffilter']) && isset($_GET['diffilter'])) {
     $arDifFilters = explode(',', $_GET['diffilter']);
     $arFilter["UF_DIFF_FILTERS"] = $arDifFilters;
-
     $filterCount += count($arDifFilters);
 }
 
@@ -424,7 +280,6 @@ while ($arSection = $rsSections->GetNext()) {
 
         $arSection['DISCTANCE'] = Utils::calculateTheDistance($searchedRegionData['COORDS'][0], $searchedRegionData['COORDS'][1], $arSection['COORDS'][0], $arSection['COORDS'][1]);
         $arSection['DISCTANCE_TO_REGION'] = $searchedRegionData['UF_CENTER_NAME_RU'] ?? $searchedRegionData['CENTER_UF_NAME'];
-        //        $arSection['DISCTANCE_TO_REGION'] = Utils::morpher($searchedRegionData['CENTER_UF_NAME'], Morpher::CASE_GENITIVE);
 
         $arSection['DISCTANCE_TO_REGION'] = ucfirst($arSection['DISCTANCE_TO_REGION']);
     } else {
@@ -744,12 +599,12 @@ if (!count($arPageSections)) {
     $APPLICATION->AddHeadString('<meta name="robots" content="noindex">', true);
 }
 
-if (empty($chpy)) {
+if (empty($arResult['CHPY'])) {
     $APPLICATION->AddHeadString('<link rel="canonical" href="' . HTTP_HOST . $APPLICATION->GetCurPage() . '">', true);
 }
 
-if ($chpy['UF_CANONICAL']) {
-    $APPLICATION->AddHeadString('<link rel="canonical" href="' . HTTP_HOST . $chpy['UF_CANONICAL'] . '">', true);
+if ($arResult['CHPY']['UF_CANONICAL']) {
+    $APPLICATION->AddHeadString('<link rel="canonical" href="' . HTTP_HOST . $arResult['CHPY']['UF_CANONICAL'] . '">', true);
 } ?>
 
 
@@ -775,7 +630,7 @@ if ($chpy['UF_CANONICAL']) {
                     <div class="fake-filter_catalog">
                         <div class="fake-filter_inputs">
                             <div class="fake-filter_location">
-                                <?= ($arFilterValues["SEARCH_TEXT"]) ? $arFilterValues["SEARCH_TEXT"] :  Loc::getMessage('FILTER_PLACE') ?>
+                                <?= ($arResult['SECTION_FILTER_VALUES']["SEARCH_TEXT"]) ? $arResult['SECTION_FILTER_VALUES']["SEARCH_TEXT"] :  Loc::getMessage('FILTER_PLACE') ?>
                             </div>
                             <div class="fake-filter_date">
                                 <span class="from"><?= ($dateFrom) ? $dateFrom : 'Заезд' ?></span>
@@ -796,9 +651,9 @@ if ($chpy['UF_CANONICAL']) {
                             <div class="form_group_wrapper">
                                 <div class="form__item item_name">
                                     <div class="field field_autocomplete" data-autocomplete="/ajax/autocomplete.php">
-                                        <input type="hidden" data-autocomplete-result value='<?= ($arFilterValues["SEARCH"]) ? $arFilterValues["SEARCH"] : null ?>'>
+                                        <input type="hidden" data-autocomplete-result value='<?= ($arResult['SECTION_FILTER_VALUES']["SEARCH"]) ? $arResult['SECTION_FILTER_VALUES']["SEARCH"] : null ?>'>
                                         <label for="field-place"><?= Loc::getMessage('FILTER_PLACE') ?></label>
-                                        <input class="field__input" type="text" name="name" placeholder="" data-autocomplete-field value='<?= ($arFilterValues["SEARCH_TEXT"]) ? $arFilterValues["SEARCH_TEXT"] : null ?>'>
+                                        <input class="field__input" type="text" name="name" placeholder="" data-autocomplete-field value='<?= ($arResult['SECTION_FILTER_VALUES']["SEARCH_TEXT"]) ? $arResult['SECTION_FILTER_VALUES']["SEARCH_TEXT"] : null ?>'>
                                         <div class="autocomplete-dropdown-wrap">
                                             <div class="autocomplete-dropdown-search">
                                                 <input class="field__input" id="field-place" type="text" name="name" placeholder="Регионы или локации" data-autocomplete-field-mobile>
@@ -1159,7 +1014,7 @@ if ($chpy['UF_CANONICAL']) {
                         "naturalist:empty",
                         "catalog_filters",
                         array(
-                            "arFilterValues" => $arFilterValues,
+                            "arFilterValues" => $arResult['SECTION_FILTER_VALUES'],
                             "dateFrom" => $dateFrom,
                             "dateTo" => $dateTo,
                             "arDates" => $arDates,
@@ -1219,14 +1074,14 @@ if ($chpy['UF_CANONICAL']) {
                             "reviewsDeclension" => $reviewsDeclension,
                             "arPageSections" => $arPageSections,
                             "arReviewsAvg" => $arReviewsAvg,
-                            "arFavourites" => $arFavourites,
+                            "arFavourites" => $arResult['FAVORITES'],
                             "arHLTypes" => $arHLTypes,
                             "arHLFeatures" => $arHLFeatures,
                             "arServices" => $arServices,
                             "arSearchedRegions" => is_array($arRegionIds) ? array_unique($arRegionIds) : '',
                             "searchedRegionData" => $searchedRegionData,
                             "searchName" => $searchName ?? $search,
-                            "arFilterValues" => $arFilterValues,
+                            "arFilterValues" => $arResult['SECTION_FILTER_VALUES'],
                             "dateFrom" => $dateFrom,
                             "dateTo" => $dateTo,
                             "arDates" => $arDates,
@@ -1259,13 +1114,13 @@ if ($chpy['UF_CANONICAL']) {
                                 "",
                                 array(
                                     "AREA_FILE_SHOW" => "file",
-                                    "PATH" => '/include/' . $seoFile . '-seo-text.php',
+                                    "PATH" => '/include/' . $arResult['SEO_FILE'] . '-seo-text.php',
                                     "EDIT_TEMPLATE" => ""
                                 )
                             );
-                            $isSeoText = false;
-                        } else if ($chySeoText) {
-                            echo $chySeoText;
+                            $isSeoText = true;
+                        } else if ($arResult['CHPY_SEO_TEXT']) {
+                            echo $arResult['CHPY_SEO_TEXT'];
                             $isSeoText = true;
                         } else if (isset($pageSeoData) && isset($pageSeoData['UF_SEO_TEXT'])) {
                             echo $pageSeoData['UF_SEO_TEXT'];
@@ -1316,7 +1171,7 @@ if ($chpy['UF_CANONICAL']) {
             "catalog_scripts",
             array(
                 "arSections" => $arSections,
-                "arFavourites" => $arFavourites,
+                "arFavourites" => $arResult['FAVORITES'],
                 "arReviewsAvg" => $arReviewsAvg,
                 "map" => $arParams["MAP"]
             )
