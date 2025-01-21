@@ -5,10 +5,14 @@ if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) {
 }
 
 use Bitrix\Main\Localization\Loc;
+use Bitrix\Main\Grid\Declension;
+use Bitrix\Main\Web\Uri;
+use Bitrix\Highloadblock\HighloadBlockTable;
 use Naturalist\Products;
 use Naturalist\Filters\Components;
 use Naturalist\Users;
 use Naturalist\Regions;
+use Naturalist\Utils;
 
 Loc::loadMessages(__FILE__);
 
@@ -34,11 +38,31 @@ class NaturalistCatalog extends \CBitrixComponent
         "ELEMENT_CODE",
     ];
 
+    private $daysCount = 0;
+    private $filterCount = 0;
+    private $sortBy = '';
+    private $sortOrder = '';
+    private $orderReverse = '';
     private $arUriParams = [];
     private $filterParams = [];
     private $arFilter = [];
     private $arFilterValues = [];
-    private $filterCount = 0;
+    private $arRegionIds = [];
+    private $arSeoImpressions = [];
+    private $arSort = [];
+    private $season = [];
+    private $arExternalInfo = [];
+    private $arSections = [];
+    private $arHLTypes = [];
+    private $houseTypeData = [];
+    private $water = [];
+    private $commonWater = [];
+    private $difFilter = [];
+    private $restVariants = [];
+    private $objectComforts = [];
+    private $arHLFeatures = [];
+    private $arServices = [];
+    private $arHLFood = [];
     private $chpy;
 
     private function fillSectionVariables()
@@ -46,10 +70,11 @@ class NaturalistCatalog extends \CBitrixComponent
         $this->arUriParams = [
             'dateFrom' => $this->request->get('dateFrom'),
             'dateTo' => $this->request->get('dateTo'),
-            'guests' => $this->request->get('guests'),
-            'children' => $this->request->get('children'),
-            'childrenAge' => $this->request->get('childrenAge'),
+            'guests' => $this->request->get('guests') ? $this->request->get('guests') : 2,
+            'children' => $this->request->get('children') ? $this->request->get('children') : 0,
+            'childrenAge' => $this->request->get('childrenAge') ? explode(',', $this->request->get('childrenAge')) : [],
         ];
+
         $this->filterParams = [
             'types' => $this->request->get('types'),
             'services' => $this->request->get('services'),
@@ -63,9 +88,262 @@ class NaturalistCatalog extends \CBitrixComponent
             'sitemap' => $this->request->get('sitemap'),
             'selection' => $this->request->get('selection'),
             'diffilter' => $this->request->get('diffilter'),
+            'impressions' => $this->request->get('impressions'),
         ];
         $this->chpy = Components::getChpyLinkByUrl($_SERVER['REDIRECT_URL'] ? $_SERVER['REDIRECT_URL'] : $_SERVER['SCRIPT_NAME']);
         $this->setSectionFilters();
+        $this->getHlBlocks();
+        $this->setSort();
+        $this->getSeason();
+        $this->getExternalData();
+        $this->fillSections();
+    }
+
+    private function getHlBlocks()
+    {
+        // Тип объекта
+        $objectTypesClass = HighloadBlockTable::compileEntity(TYPES_HL_ENTITY)->getDataClass();
+        $objectTypesData = $objectTypesClass::getList([
+            "select" => ["*"],
+            "order" => ["UF_SORT" => "ASC"],
+            "filter" => ["UF_SHOW_FILTER" => "1"],
+        ]);
+        while ($arEntity = $objectTypesData->Fetch()) {
+            $this->arHLTypes[$arEntity["ID"]] = $arEntity;
+        }
+
+        // Питание
+        $foodClass = HighloadBlockTable::compileEntity(FOOD_HL_ENTITY)->getDataClass();
+        $foodData = $foodClass::getList([
+            "select" => ["*"],
+            "order" => ["UF_SORT" => "ASC"],
+            "filter" => ["UF_SHOW_FILTER" => "1"],
+        ]);
+        while ($arEntity = $foodData->Fetch()) {
+            $this->arHLFood[$arEntity["ID"]] = $arEntity;
+        }
+
+        // Типы домов
+        $houseTypesDataClass = HighloadBlockTable::compileEntity(SUIT_TYPES_HL_ENTITY)->getDataClass();
+        $this->houseTypeData = $houseTypesDataClass::query()
+            ->addSelect('*')
+            ->setOrder(['UF_SORT' => 'ASC'])
+            ?->fetchAll();
+
+        if (!empty($this->houseTypeData)) {
+            foreach ($this->houseTypeData as $key => &$houseType) {
+                $houseType['URL'] = Components::getChpyLink(SUIT_TYPES_HL_ENTITY . '_' . $houseType['ID'])['UF_NEW_URL'];
+            }
+            unset($houseType);
+        }
+
+        // Водоёмы
+        $waterDataClass = HighloadBlockTable::compileEntity(WATER_HL_ENTITY)->getDataClass();
+        $this->water = $waterDataClass::query()
+            ->addSelect('*')
+            ->setOrder(['UF_SORT' => 'ASC'])
+            ?->fetchAll();
+
+        // Общие водоёмы
+        $commonWaterDataClass = HighloadBlockTable::compileEntity(COMMON_WATER_HL_ENTITY)->getDataClass();
+        $this->commonWater = $commonWaterDataClass::query()
+            ->addSelect('*')
+            ->setOrder(['UF_SORT' => 'ASC'])
+            ?->fetchAll();
+
+        // Разные фильтры
+        $difFilterDataClass = HighloadBlockTable::compileEntity(DIFFERENT_FILTERS_HL_ENTITY)->getDataClass();
+        $this->difFilter = $difFilterDataClass::query()
+            ->addSelect('*')
+            ?->fetchAll();
+
+        // Варианты отдыха
+        $restVariantsDataClass = HighloadBlockTable::compileEntity(REST_VARS_HL_ENTITY)->getDataClass();
+        $this->restVariants = $restVariantsDataClass::query()
+            ->addSelect('*')
+            ->setOrder(['UF_SORT' => 'ASC'])
+            ?->fetchAll();
+
+        // Удобства
+        $objectComfortsDataClass = HighloadBlockTable::compileEntity(OBJECT_COMFORT_HL_ENTITY)->getDataClass();
+        $this->objectComforts = $objectComfortsDataClass::query()
+            ->addSelect('*')
+            ->setOrder(['UF_SORT' => 'ASC'])
+            ?->fetchAll();
+
+        // Особенности объекта        
+        $entityClass = HighloadBlockTable::compileEntity(FEATURES_HL_ENTITY)->getDataClass();
+        $rsData = $entityClass::getList([
+            "select" => ["*"],
+            "order" => ["UF_SORT" => "ASC"],
+        ]);
+        while ($arEntity = $rsData->Fetch()) {
+            $this->arHLFeatures[$arEntity["ID"]] = $arEntity;
+        }
+
+        // Услуги
+        $rsServices = CIBlockElement::GetList(array("SORT" => "ASC"), array("IBLOCK_ID" => SERVICES_IBLOCK_ID, "ACTIVE" => "Y", "PROPERTY_SHOW_FILTER_VALUE" => "Y"), false, false, array("ID", "IBLOCK_ID", "NAME", "CODE"));
+        while ($arService = $rsServices->Fetch()) {
+            $this->arServices[$arService["ID"]] = $arService;
+        }
+    }
+
+    private function getExternalData()
+    {
+        if (!empty($this->arUriParams['dateFrom']) && !empty($this->arUriParams['dateTo']) && !empty($this->arUriParams['guests'])) {
+            $this->daysCount = abs(strtotime($this->arUriParams['dateTo']) - strtotime($this->arUriParams['dateFrom'])) / 86400;
+
+            // Запрос в апи на получение списка кемпингов со свободными местами в выбранный промежуток
+            $this->arExternalInfo = Products::search($this->arUriParams['guests'], $this->arUriParams['childrenAge'], $this->arUriParams['dateFrom'], $this->arUriParams['dateTo'], false);
+            $arExternalIDs = array_keys($this->arExternalInfo);
+            if ($arExternalIDs) {
+                $this->arFilter["UF_EXTERNAL_ID"] = $arExternalIDs;
+            } else {
+                $this->arFilter["UF_EXTERNAL_ID"] = false;
+            }
+        }
+    }
+
+    private function fillSections()
+    {
+        $rsSections = CIBlockSection::GetList($this->arSort, $this->arFilter, false, ["IBLOCK_ID", "ID", "NAME", "CODE", "SECTION_PAGE_URL", "UF_*"], false);
+        $searchedRegionData = Regions::getRegionById($this->arRegionIds[0] ?? false);
+        while ($arSection = $rsSections->GetNext()) {
+
+            $arDataFullGallery = [];
+
+            foreach ($this->season['UF_SEASON'] as $season) {
+                if ($season == 'Лето') {
+                    if ($arSection["UF_PHOTOS"]) {
+                        foreach ($arSection["UF_PHOTOS"] as $photoId) {
+                            $imageOriginal = CFile::GetFileArray($photoId);
+                            $arDataFullGallery[] = "\"" . $imageOriginal["SRC"] . "\"";
+                            $arSection["PICTURES"][$photoId] = CFile::ResizeImageGet($photoId, array('width' => 590, 'height' => 390), BX_RESIZE_IMAGE_EXACT, true);
+                        }
+                    } else {
+                        $arSection["PICTURES"][0]["src"] = SITE_TEMPLATE_PATH . "/img/big_no_photo.png";
+                    }
+                } elseif ($season == 'Зима') {
+                    if ($arSection["UF_WINTER_PHOTOS"]) {
+                        foreach ($arSection["UF_WINTER_PHOTOS"] as $photoId) {
+                            $imageOriginal = CFile::GetFileArray($photoId);
+                            $arDataFullGallery[] = "\"" . $imageOriginal["SRC"] . "\"";
+                            $arSection["PICTURES"][$photoId] = CFile::ResizeImageGet($photoId, array('width' => 590, 'height' => 390), BX_RESIZE_IMAGE_EXACT, true);
+                        }
+                    } else {
+                        if ($arSection["UF_PHOTOS"]) {
+                            foreach ($arSection["UF_PHOTOS"] as $photoId) {
+                                $imageOriginal = CFile::GetFileArray($photoId);
+                                $arDataFullGallery[] = "\"" . $imageOriginal["SRC"] . "\"";
+                                $arSection["PICTURES"][$photoId] = CFile::ResizeImageGet($photoId, array('width' => 590, 'height' => 390), BX_RESIZE_IMAGE_EXACT, true);
+                            }
+                        } else {
+                            $arSection["PICTURES"][0]["src"] = SITE_TEMPLATE_PATH . "/img/big_no_photo.png";
+                        }
+                    }
+                } elseif ($season == 'Осень+Весна') {
+                    if ($arSection["UF_MIDSEASON_PHOTOS"]) {
+                        foreach ($arSection["UF_MIDSEASON_PHOTOS"] as $photoId) {
+                            $imageOriginal = CFile::GetFileArray($photoId);
+                            $arDataFullGallery[] = "\"" . $imageOriginal["SRC"] . "\"";
+                            $arSection["PICTURES"][$photoId] = CFile::ResizeImageGet($photoId, array('width' => 590, 'height' => 390), BX_RESIZE_IMAGE_EXACT, true);
+                        }
+                    } else {
+                        if ($arSection["UF_PHOTOS"]) {
+                            foreach ($arSection["UF_PHOTOS"] as $photoId) {
+                                $imageOriginal = CFile::GetFileArray($photoId);
+                                $arDataFullGallery[] = "\"" . $imageOriginal["SRC"] . "\"";
+                                $arSection["PICTURES"][$photoId] = CFile::ResizeImageGet($photoId, array('width' => 590, 'height' => 390), BX_RESIZE_IMAGE_EXACT, true);
+                            }
+                        } else {
+                            $arSection["PICTURES"][0]["src"] = SITE_TEMPLATE_PATH . "/img/big_no_photo.png";
+                        }
+                    }
+                }
+            }
+            unset($arSection["UF_PHOTOS"]);
+            $arSection["FULL_GALLERY"] = implode(",", $arDataFullGallery);
+
+            if ($arSection["UF_COORDS"]) {
+                $arSection["COORDS"] = explode(',', $arSection["UF_COORDS"]);
+            }
+
+            /* Растояние до поискового запроса */
+            if ($searchedRegionData) {
+
+                $searchedRegionData['COORDS'] = explode(',', $searchedRegionData['UF_COORDS']);
+
+                $arSection['DISCTANCE'] = Utils::calculateTheDistance($searchedRegionData['COORDS'][0], $searchedRegionData['COORDS'][1], $arSection['COORDS'][0], $arSection['COORDS'][1]);
+                $arSection['DISCTANCE_TO_REGION'] = $searchedRegionData['UF_CENTER_NAME_RU'] ?? $searchedRegionData['CENTER_UF_NAME'];
+
+                $arSection['DISCTANCE_TO_REGION'] = ucfirst($arSection['DISCTANCE_TO_REGION']);
+            } else {
+                $arSection['REGION'] = Regions::getRegionById($arSection['UF_REGION'] ?? false);
+            }
+
+            /* -- */
+            if ($this->arExternalInfo) {
+                $sectionPrice = $this->arExternalInfo[$arSection["UF_EXTERNAL_ID"]];
+                // Если это Traveline, то делим цену на кол-во дней
+                if ($arSection["UF_EXTERNAL_SERVICE"] == 1) {
+                    $sectionPrice = round($sectionPrice / $this->daysCount);
+                }
+            } else {
+                $sectionPrice = $arSection["UF_MIN_PRICE"];
+            }
+            $arSection["PRICE"] = $sectionPrice;
+
+            $arUriParamsSort = array(
+                'sort' => $this->sortBy,
+                'order' => $this->sortOrder,
+            );
+
+            if ($this->arUriParams['dateFrom'] != '') {
+                $this->arUriParams = array_merge($this->arUriParams, $arUriParamsSort);
+            }
+
+            $uri = new Uri($arSection["SECTION_PAGE_URL"]);
+            $uri->addParams($this->arUriParams);
+            $sectionUrl = $uri->getUri();
+            $arSection["URL"] = $sectionUrl;
+
+            $arButtons = CIBlock::GetPanelButtons($arSection["IBLOCK_ID"], $arSection["ID"], 0, array("SECTION_BUTTONS" => false, "SESSID" => false));
+            $arSection["EDIT_LINK"] = $arButtons["edit"]["edit_element"]["ACTION_URL"];
+            $arSection["DELETE_LINK"] = $arButtons["edit"]["delete_element"]["ACTION_URL"];
+
+            if ($this->request->get('maxPrice') || $this->request->get('minPrice')) {
+                if (($arSection["PRICE"] <= $this->request->get('maxPrice') && $arSection["PRICE"] >= $this->request->get('minPrice')) && $arSection["PRICE"] !== NULL) {
+                    $this->arSections[$arSection["ID"]] = $arSection;
+                }
+            } else {
+                $this->arSections[$arSection["ID"]] = $arSection;
+            }
+        }
+    }
+
+    private function getSeason()
+    {
+        if (Cmodule::IncludeModule('asd.iblock')) {
+            $this->season = CASDiblockTools::GetIBUF(CATALOG_IBLOCK_ID);
+        }
+    }
+
+    private function setSort()
+    {
+        $this->sortBy = (!empty($this->request->get('sort'))) ? strtolower($this->request->get('sort')) : "sort";
+        $this->sortOrder = (!empty($this->request->get('order'))) ? strtolower($this->request->get('order')) : "asc";
+        $this->orderReverse = (!empty($this->request->get('order')) && $this->request->get('order') == 'asc') ? "desc" : "asc";
+        switch ($this->sortBy) {
+            case 'popular':
+                $sort = 'UF_RESERVE_COUNT';
+                break;
+
+            default:
+                $sort = 'SORT';
+                break;
+        }
+
+        $this->arSort = array($sort => $this->sortOrder);
     }
 
     private function setSectionFilters()
@@ -135,6 +413,10 @@ class NaturalistCatalog extends \CBitrixComponent
                 }
                 $this->arFilterValues["SEARCH_TEXT"] = strip_tags($search);
             }
+
+            if ($arRegionIds) {
+                $this->arRegionIds = $arRegionIds;
+            }
         }
     }
 
@@ -153,79 +435,101 @@ class NaturalistCatalog extends \CBitrixComponent
 
         // Услуги
         if (!empty($this->filterParams['services'])) {
-            $arFilterServices = explode(',', $_GET['services']);
-            $this->arFilter["UF_SERVICES"] = $arFilterServices;
-            $this->filterCount += count($arFilterServices);
+            $this->arResult['arFilterServices'] = explode(',', $this->filterParams['services']);
+            $this->arFilter["UF_SERVICES"] = $this->arResult['arFilterServices'];
+            $this->filterCount += count($this->arResult['arFilterServices']);
         }
 
         // Питание
         if (!empty($this->filterParams['food'])) {
-            $arFilterFood = explode(',', $_GET['food']);
-            $this->arFilter["UF_FOOD"] = $arFilterFood;
-            $this->filterCount += count($arFilterFood);
+            $this->arResult['arFilterFood'] = explode(',', $this->filterParams['food']);
+            $this->arFilter["UF_FOOD"] = $this->arResult['arFilterFood'];
+            $this->filterCount += count($this->arResult['arFilterFood']);
         }
 
         // Особенности
         if (!empty($this->filterParams['features'])) {
-            $arFilterFeatures = explode(',', $_GET['features']);
-            $this->arFilter["UF_FEATURES"] = $arFilterFeatures;
-            $this->filterCount += count($arFilterFeatures);
+            $this->arResult['arFilterFeatures'] = explode(',', $this->filterParams['features']);
+            $this->arFilter["UF_FEATURES"] = $this->arResult['arFilterFeatures'];
+            $this->filterCount += count($this->arResult['arFilterFeatures']);
         }
 
         // Варианты отдыха
         if (!empty($this->filterParams['restvariants'])) {
-            $arFilterRestVariants = explode(',', $_GET['restvariants']);
-            $this->arFilter["UF_REST_VARIANTS"] = $arFilterRestVariants;
-            $this->filterCount += count($arFilterRestVariants);
+            $this->arResult['arFilterRestVariants'] = explode(',', $this->filterParams['restvariants']);
+            $this->arFilter["UF_REST_VARIANTS"] = $this->arResult['arFilterRestVariants'];
+            $this->filterCount += count($this->arResult['arFilterRestVariants']);
         }
 
         // Удобства
         if (!empty($this->filterParams['objectcomforts'])) {
-            $arFilterObjectComforts = explode(',', $_GET['objectcomforts']);
-            $this->arFilter["UF_OBJECT_COMFORTS"] = $arFilterObjectComforts;
-            $this->filterCount += count($arFilterObjectComforts);
+            $this->arResult['arFilterObjectComforts'] = explode(',', $this->filterParams['objectcomforts']);
+            $this->arFilter["UF_OBJECT_COMFORTS"] = $this->arResult['arFilterObjectComforts'];
+            $this->filterCount += count($this->arResult['arFilterObjectComforts']);
         }
 
         // Тип дома
         if (!empty($this->filterParams['housetypes'])) {
-            $arFilterHousetypes = explode(',', $_GET['housetypes']);
-            $this->arFilter["UF_SUIT_TYPE"] = $arFilterHousetypes;
-            $this->filterCount += count($arFilterHousetypes);
+            $this->arResult['arFilterHousetypes'] = explode(',', $this->filterParams['housetypes']);
+            $this->arFilter["UF_SUIT_TYPE"] = $this->arResult['arFilterHousetypes'];
+            $this->filterCount += count($this->arResult['arFilterHousetypes']);
         }
 
         // Водоём
         if (!empty($this->filterParams['water'])) {
-            $arFilterWater = explode(',', $_GET['water']);
-            $this->arFilter["UF_WATER"] = $arFilterWater;
-            $this->filterCount += count($arFilterWater);
+            $this->arResult['arFilterWater'] = explode(',', $this->filterParams['water']);
+            $this->arFilter["UF_WATER"] = $this->arResult['arFilterWater'];
+            $this->filterCount += count($this->arResult['arFilterWater']);
         }
 
         // Общий водоём
         if (!empty($this->filterParams['commonwater'])) {
-            $arFilterCommonWater = explode(',', $_GET['commonwater']);
-            $this->arFilter["UF_COMMON_WATER"] = $arFilterCommonWater;
-            $this->filterCount += count($arFilterCommonWater);
+            $this->arResult['arFilterCommonWater'] = explode(',', $this->filterParams['commonwater']);
+            $this->arFilter["UF_COMMON_WATER"] = $this->arResult['arFilterCommonWater'];
+            $this->filterCount += count($this->arResult['arFilterCommonWater']);
         }
 
         // Sitemap
         if (!empty($this->filterParams['sitemap'])) {
-            $arFilterSitemap = explode(',', $_GET['sitemap']);
-            $this->arFilter["UF_SITEMAP"] = $arFilterSitemap;
-            $this->filterCount += count($arFilterSitemap);
+            $this->arResult['arFilterSitemap'] = explode(',', $this->filterParams['sitemap']);
+            $this->arFilter["UF_SITEMAP"] = $this->arResult['arFilterSitemap'];
+            $this->filterCount += count($this->arResult['arFilterSitemap']);
         }
 
         // Подборки
         if (!empty($this->filterParams['selection'])) {
-            $arFilterImpressions = explode(',', $_GET['selection']);
-            $this->arFilter["UF_IMPRESSIONS"] = $arFilterImpressions;
-            $this->filterCount += count($arFilterImpressions);
+            $this->arResult['arFilterSelection'] = explode(',', $this->filterParams['selection']);
+            $this->arFilter["UF_IMPRESSIONS"] = $this->arResult['arFilterSelection'];
+            $this->filterCount += count($this->arResult['arFilterSelection']);
         }
 
         // Разные фильтры
         if (!empty($this->filterParams['diffilter'])) {
-            $arDifFilters = explode(',', $_GET['diffilter']);
-            $this->arFilter["UF_DIFF_FILTERS"] = $arDifFilters;
-            $this->filterCount += count($arDifFilters);
+            $this->arResult['arDifFilters'] = explode(',', $this->filterParams['diffilter']);
+            $this->arFilter["UF_DIFF_FILTERS"] = $this->arResult['arDifFilters'];
+            $this->filterCount += count($this->arResult['arDifFilters']);
+        }
+
+        // Впечатления
+        if (!empty($this->filterParams['impressions'])) {
+            $arRequestImpressions = explode(',', $this->filterParams['impressions']);
+
+            $rsImpressions = CIBlockElement::GetList(false, array("IBLOCK_ID" => IMPRESSIONS_IBLOCK_ID, "ACTIVE" => "Y", "CODE" => $arRequestImpressions));
+            $arFilterImpressions = array();
+            while ($arImpression = $rsImpressions->Fetch()) {
+                $arFilterImpressions[] = $arImpression["ID"];
+                $meta = new \Bitrix\Iblock\InheritedProperty\ElementValues(IMPRESSIONS_IBLOCK_ID, $arImpression['ID']);
+                $arImpression['META'] = $meta->getValues();
+                $this->arSeoImpressions[] = $arImpression;
+            }
+
+            $this->arFilter["UF_IMPRESSIONS"] = $arFilterImpressions;
+
+            if (empty($arFilterImpressions)) {
+                LocalRedirect("/404/");
+            }
+
+            $this->filterCount += count($arRequestImpressions);
         }
     }
 
@@ -311,7 +615,7 @@ class NaturalistCatalog extends \CBitrixComponent
     protected function prepareSection()
     {
         $this->fillSectionVariables();
-        $this->arResult['URI_PARAMS'] = $this->arUriParams;
+        $this->arResult['arUriParams'] = $this->arUriParams;
         $this->arResult['CHPY'] = $this->chpy;
         $this->arResult['CHPY_SEO_TEXT'] = $this->chpy['UF_SEO_TEXT'];
         $this->arResult['SEO_FILE'] = CSite::InDir('/map') ? 'map' : 'catalog';
@@ -319,6 +623,26 @@ class NaturalistCatalog extends \CBitrixComponent
         $this->arResult['SECTION_FILTER'] = $this->arFilter;
         $this->arResult['SECTION_FILTER_VALUES'] = $this->arFilterValues;
         $this->arResult['FILTER_COUNT'] = $this->filterCount;
+        $this->arResult['arRegionIds'] = $this->arRegionIds;
+        $this->arResult['countDeclension'] = new Declension('вариант', 'варианта', 'вариантов');
+        $this->arResult['reviewsDeclension'] = new Declension('отзыв', 'отзыва', 'отзывов');
+        $this->arResult['guestsDeclension'] = new Declension('гость', 'гостя', 'гостей');
+        $this->arResult['arSeoImpressions'] = $this->arSeoImpressions;
+        $this->arResult['arSort'] = $this->arSort;
+        $this->arResult['sortBy'] = $this->sortBy;
+        $this->arResult['sortOrder'] = $this->sortOrder;
+        $this->arResult['orderReverse'] = $this->orderReverse;
+        $this->arResult['SECTIONS'] = $this->arSections;
+        $this->arResult['arHLTypes'] = $this->arHLTypes;
+        $this->arResult['arHLFood'] = $this->arHLFood;
+        $this->arResult['houseTypeData'] = $this->houseTypeData;
+        $this->arResult['water'] = $this->water;
+        $this->arResult['commonWater'] = $this->commonWater;
+        $this->arResult['difFilter'] = $this->difFilter;
+        $this->arResult['restVariants'] = $this->restVariants;
+        $this->arResult['objectComforts'] = $this->objectComforts;
+        $this->arResult['arHLFeatures'] = $this->arHLFeatures;
+        $this->arResult['arServices'] = $this->arServices;
     }
 
     protected function prepareDetail() {}
