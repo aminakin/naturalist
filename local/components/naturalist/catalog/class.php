@@ -35,8 +35,10 @@ class NaturalistCatalog extends \CBitrixComponent
     ];
 
     private $arUriParams = [];
+    private $filterParams = [];
     private $arFilter = [];
     private $arFilterValues = [];
+    private $filterCount = 0;
     private $chpy;
 
     private function fillSectionVariables()
@@ -47,6 +49,20 @@ class NaturalistCatalog extends \CBitrixComponent
             'guests' => $this->request->get('guests'),
             'children' => $this->request->get('children'),
             'childrenAge' => $this->request->get('childrenAge'),
+        ];
+        $this->filterParams = [
+            'types' => $this->request->get('types'),
+            'services' => $this->request->get('services'),
+            'food' => $this->request->get('food'),
+            'features' => $this->request->get('features'),
+            'restvariants' => $this->request->get('restvariants'),
+            'objectcomforts' => $this->request->get('objectcomforts'),
+            'housetypes' => $this->request->get('housetypes'),
+            'water' => $this->request->get('water'),
+            'commonwater' => $this->request->get('commonwater'),
+            'sitemap' => $this->request->get('sitemap'),
+            'selection' => $this->request->get('selection'),
+            'diffilter' => $this->request->get('diffilter'),
         ];
         $this->chpy = Components::getChpyLinkByUrl($_SERVER['REDIRECT_URL'] ? $_SERVER['REDIRECT_URL'] : $_SERVER['SCRIPT_NAME']);
         $this->setSectionFilters();
@@ -59,6 +75,7 @@ class NaturalistCatalog extends \CBitrixComponent
             "ACTIVE" => "Y",
         ];
         $this->setSectionNameFilter();
+        $this->setOtherFilters();
     }
 
     private function setSectionNameFilter()
@@ -118,6 +135,97 @@ class NaturalistCatalog extends \CBitrixComponent
                 }
                 $this->arFilterValues["SEARCH_TEXT"] = strip_tags($search);
             }
+        }
+    }
+
+    private function setOtherFilters()
+    {
+        // Тип
+        if (!empty($this->filterParams['types'])) {
+            $this->arResult['arFilterTypes'] = explode(',', $this->filterParams['types']);
+            $this->arFilter[] = [
+                "LOGIC" => "OR",
+                ["UF_TYPE" => explode(',', $this->filterParams['types'])],
+                ["UF_TYPE_EXTRA" => explode(',', $this->filterParams['types'])]
+            ];
+            $this->filterCount += count($this->arResult['arFilterTypes']);
+        }
+
+        // Услуги
+        if (!empty($this->filterParams['services'])) {
+            $arFilterServices = explode(',', $_GET['services']);
+            $this->arFilter["UF_SERVICES"] = $arFilterServices;
+            $this->filterCount += count($arFilterServices);
+        }
+
+        // Питание
+        if (!empty($this->filterParams['food'])) {
+            $arFilterFood = explode(',', $_GET['food']);
+            $this->arFilter["UF_FOOD"] = $arFilterFood;
+            $this->filterCount += count($arFilterFood);
+        }
+
+        // Особенности
+        if (!empty($this->filterParams['features'])) {
+            $arFilterFeatures = explode(',', $_GET['features']);
+            $this->arFilter["UF_FEATURES"] = $arFilterFeatures;
+            $this->filterCount += count($arFilterFeatures);
+        }
+
+        // Варианты отдыха
+        if (!empty($this->filterParams['restvariants'])) {
+            $arFilterRestVariants = explode(',', $_GET['restvariants']);
+            $this->arFilter["UF_REST_VARIANTS"] = $arFilterRestVariants;
+            $this->filterCount += count($arFilterRestVariants);
+        }
+
+        // Удобства
+        if (!empty($this->filterParams['objectcomforts'])) {
+            $arFilterObjectComforts = explode(',', $_GET['objectcomforts']);
+            $this->arFilter["UF_OBJECT_COMFORTS"] = $arFilterObjectComforts;
+            $this->filterCount += count($arFilterObjectComforts);
+        }
+
+        // Тип дома
+        if (!empty($this->filterParams['housetypes'])) {
+            $arFilterHousetypes = explode(',', $_GET['housetypes']);
+            $this->arFilter["UF_SUIT_TYPE"] = $arFilterHousetypes;
+            $this->filterCount += count($arFilterHousetypes);
+        }
+
+        // Водоём
+        if (!empty($this->filterParams['water'])) {
+            $arFilterWater = explode(',', $_GET['water']);
+            $this->arFilter["UF_WATER"] = $arFilterWater;
+            $this->filterCount += count($arFilterWater);
+        }
+
+        // Общий водоём
+        if (!empty($this->filterParams['commonwater'])) {
+            $arFilterCommonWater = explode(',', $_GET['commonwater']);
+            $this->arFilter["UF_COMMON_WATER"] = $arFilterCommonWater;
+            $this->filterCount += count($arFilterCommonWater);
+        }
+
+        // Sitemap
+        if (!empty($this->filterParams['sitemap'])) {
+            $arFilterSitemap = explode(',', $_GET['sitemap']);
+            $this->arFilter["UF_SITEMAP"] = $arFilterSitemap;
+            $this->filterCount += count($arFilterSitemap);
+        }
+
+        // Подборки
+        if (!empty($this->filterParams['selection'])) {
+            $arFilterImpressions = explode(',', $_GET['selection']);
+            $this->arFilter["UF_IMPRESSIONS"] = $arFilterImpressions;
+            $this->filterCount += count($arFilterImpressions);
+        }
+
+        // Разные фильтры
+        if (!empty($this->filterParams['diffilter'])) {
+            $arDifFilters = explode(',', $_GET['diffilter']);
+            $this->arFilter["UF_DIFF_FILTERS"] = $arDifFilters;
+            $this->filterCount += count($arDifFilters);
         }
     }
 
@@ -210,6 +318,7 @@ class NaturalistCatalog extends \CBitrixComponent
         $this->arResult['FAVORITES'] = Users::getFavourites();
         $this->arResult['SECTION_FILTER'] = $this->arFilter;
         $this->arResult['SECTION_FILTER_VALUES'] = $this->arFilterValues;
+        $this->arResult['FILTER_COUNT'] = $this->filterCount;
     }
 
     protected function prepareDetail() {}

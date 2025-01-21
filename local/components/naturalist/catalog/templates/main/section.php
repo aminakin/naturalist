@@ -72,95 +72,7 @@ if (!empty($dateFrom) && !empty($dateTo) && !empty($_GET['guests'])) {
     }
 }
 
-$filterCount = 0;
-
-// Тип
-if (!empty($_GET['types']) && isset($_GET['types'])) {
-    $arFilterTypes = explode(',', $_GET['types']);
-    $arFilter[] = array(
-        "LOGIC" => "OR",
-        array("UF_TYPE" => explode(',', $_GET['types'])),
-        array("UF_TYPE_EXTRA" => explode(',', $_GET['types']))
-    );
-    $filterCount += count($arFilterTypes);
-}
-
-// Услуги
-if (!empty($_GET['services']) && isset($_GET['services'])) {
-    $arFilterServices = explode(',', $_GET['services']);
-    $arFilter["UF_SERVICES"] = $arFilterServices;
-    $filterCount += count($arFilterServices);
-}
-
-// Питание
-if (!empty($_GET['food']) && isset($_GET['food'])) {
-    $arFilterFood = explode(',', $_GET['food']);
-    $arFilter["UF_FOOD"] = $arFilterFood;
-    $filterCount += count($arFilterFood);
-}
-
-// Особенности
-if (!empty($_GET['features']) && isset($_GET['features'])) {
-    $arFilterFeatures = explode(',', $_GET['features']);
-    $arFilter["UF_FEATURES"] = $arFilterFeatures;
-    $filterCount += count($arFilterFeatures);
-}
-
-// Варианты отдыха
-if (!empty($_GET['restvariants']) && isset($_GET['restvariants'])) {
-    $arFilterRestVariants = explode(',', $_GET['restvariants']);
-    $arFilter["UF_REST_VARIANTS"] = $arFilterRestVariants;
-    $filterCount += count($arFilterRestVariants);
-}
-
-// Удобства
-if (!empty($_GET['objectcomforts']) && isset($_GET['objectcomforts'])) {
-    $arFilterObjectComforts = explode(',', $_GET['objectcomforts']);
-    $arFilter["UF_OBJECT_COMFORTS"] = $arFilterObjectComforts;
-    $filterCount += count($arFilterObjectComforts);
-}
-
-// Тип дома
-if (!empty($_GET['housetypes']) && isset($_GET['housetypes'])) {
-    $arFilterHousetypes = explode(',', $_GET['housetypes']);
-    $arFilter["UF_SUIT_TYPE"] = $arFilterHousetypes;
-    $filterCount += count($arFilterHousetypes);
-}
-
-// Водоём
-if (!empty($_GET['water']) && isset($_GET['water'])) {
-    $arFilterWater = explode(',', $_GET['water']);
-    $arFilter["UF_WATER"] = $arFilterWater;
-    $filterCount += count($arFilterWater);
-}
-
-// Общий водоём
-if (!empty($_GET['commonwater']) && isset($_GET['commonwater'])) {
-    $arFilterCommonWater = explode(',', $_GET['commonwater']);
-    $arFilter["UF_COMMON_WATER"] = $arFilterCommonWater;
-    $filterCount += count($arFilterCommonWater);
-}
-
-// Sitemap
-if (!empty($_GET['sitemap']) && isset($_GET['sitemap'])) {
-    $arFilterSitemap = explode(',', $_GET['sitemap']);
-    $arFilter["UF_SITEMAP"] = $arFilterSitemap;
-    $filterCount += count($arFilterSitemap);
-}
-
-// Подборки
-if (!empty($_GET['selection']) && isset($_GET['selection'])) {
-    $arFilterImpressions = explode(',', $_GET['selection']);
-    $arFilter["UF_IMPRESSIONS"] = $arFilterImpressions;
-    $filterCount += count($arFilterImpressions);
-}
-
-// Разные фильтры
-if (!empty($_GET['diffilter']) && isset($_GET['diffilter'])) {
-    $arDifFilters = explode(',', $_GET['diffilter']);
-    $arFilter["UF_DIFF_FILTERS"] = $arDifFilters;
-    $filterCount += count($arDifFilters);
-}
+$filterCount = 0 + $arResult['FILTER_COUNT'];
 
 // Впечатления
 if (!empty($_GET['impressions']) && isset($_GET['impressions'])) {
@@ -1026,7 +938,7 @@ if ($arResult['CHPY']['UF_CANONICAL']) {
                             "guestsDeclension" => $guestsDeclension,
                             "arChildrenAge" => $arChildrenAge,
                             "arHLTypes" => $arHLTypes,
-                            "arFilterTypes" => $arFilterTypes,
+                            "arFilterTypes" => $arResult['arFilterTypes'],
                             "arServices" => $arServices,
                             "arHLFood" => $arHLFood,
                             "arFilterFood" => $arFilterFood,
@@ -1095,7 +1007,7 @@ if ($arResult['CHPY']['UF_CANONICAL']) {
                             "itemsCount" => $arParams["ITEMS_COUNT"],
                             'filterData' => $filterData,
                             "arHLTypes" => $arHLTypes,
-                            "arFilterTypes" => $arFilterTypes,
+                            "arFilterTypes" => $arResult['arFilterTypes'],
                         )
                     );
                     ?>
