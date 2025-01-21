@@ -15,20 +15,11 @@ $this->setFrameMode(true);
 
 use Bitrix\Iblock\Elements\ElementGlampingsTable;
 use Naturalist\Utils;
-
 use Bitrix\Main\Localization\Loc;
-
-
 
 $isSeoText = false;
 
 $arSections = $arResult['SECTIONS'];
-
-
-
-$allCount = count($arSections);
-
-
 
 /* Пагинация */
 $page = $_REQUEST['page'] ?? 1;
@@ -68,18 +59,7 @@ foreach ($arPageSections as &$section) {
 }
 unset($section);
 
-/* Генерация массива месяцев для фильтра */
-$arDates = array();
-$currMonth = date('m');
-$currMonthName = FormatDate("f");
-$currYear = date('Y');
-$nextYear = $currYear + 1;
-for ($i = $currMonth; $i <= 12; $i++) {
-    $arDates[0][] = FormatDate("f", strtotime('1970-' . $i . '-01'));
-}
-for ($j = 1; $j <= 12; $j++) {
-    $arDates[1][] = FormatDate("f", strtotime('1970-' . $j . '-01'));
-}
+
 
 if ($arResult['pageSeoData']) {
     if ($arResult['pageSeoData']['UF_H1']) {
@@ -188,24 +168,24 @@ if ($arResult['CHPY']['UF_CANONICAL']) {
                                         <div class="calendar__dropdown" data-calendar-dropdown="data-calendar-dropdown">
                                             <div class="calendar__navigation">
                                                 <div class="calendar__navigation-item calendar__navigation-item_months">
-                                                    <div class="calendar__navigation-label" data-calendar-navigation="data-calendar-navigation"><span><?= $currMonthName ?></span></div>
+                                                    <div class="calendar__navigation-label" data-calendar-navigation="data-calendar-navigation"><span><?= $arResult['currMonthName'] ?></span></div>
                                                     <ul class="list">
                                                         <?
                                                         $k = 0;
                                                         ?>
-                                                        <? foreach ($arDates[0] as $monthName) : ?>
+                                                        <? foreach ($arResult['arDates'][0] as $monthName) : ?>
                                                             <li class="list__item<? if ($k == 0) : ?> list__item_active<? endif; ?>">
-                                                                <button data-calendar-year="<?= $currYear ?>" data-calendar-month-select="<?= $k ?>" type="button"><?= $monthName ?></button>
+                                                                <button data-calendar-year="<?= $arResult['currYear'] ?>" data-calendar-month-select="<?= $k ?>" type="button"><?= $monthName ?></button>
                                                             </li>
                                                             <? $k++; ?>
                                                         <? endforeach ?>
 
-                                                        <? foreach ($arDates[1] as $key => $monthName) : ?>
+                                                        <? foreach ($arResult['arDates'][1] as $key => $monthName) : ?>
 
                                                             <li class="list__item">
-                                                                <button data-calendar-year="<?= $nextYear ?>" data-calendar-month-select="<?= $k ?>" type="button"><?= $monthName ?></button>
+                                                                <button data-calendar-year="<?= $arResult['nextYear'] ?>" data-calendar-month-select="<?= $k ?>" type="button"><?= $monthName ?></button>
                                                                 <? if ($key === 0): ?>
-                                                                    <div class="list__item-year"><?= $nextYear ?></div>
+                                                                    <div class="list__item-year"><?= $arResult['nextYear'] ?></div>
                                                                 <? endif; ?>
                                                             </li>
                                                             <? $k++; ?>
@@ -214,13 +194,13 @@ if ($arResult['CHPY']['UF_CANONICAL']) {
                                                 </div>
 
                                                 <div class="calendar__navigation-item calendar__navigation-item_years">
-                                                    <div class="calendar__navigation-label" data-calendar-navigation="data-calendar-navigation"><span><?= $currYear ?></span></div>
+                                                    <div class="calendar__navigation-label" data-calendar-navigation="data-calendar-navigation"><span><?= $arResult['currYear'] ?></span></div>
                                                     <ul class="list">
                                                         <li class="list__item list__item_active">
-                                                            <button data-calendar-year-select="<?= $currYear ?>" type="button"><?= $currYear ?></button>
+                                                            <button data-calendar-year-select="<?= $arResult['currYear'] ?>" type="button"><?= $arResult['currYear'] ?></button>
                                                         </li>
                                                         <li class="list__item">
-                                                            <button data-calendar-year-select="<?= $nextYear ?>" type="button"><?= $nextYear ?></button>
+                                                            <button data-calendar-year-select="<?= $arResult['nextYear'] ?>" type="button"><?= $arResult['nextYear'] ?></button>
                                                         </li>
                                                     </ul>
                                                 </div>
@@ -441,7 +421,7 @@ if ($arResult['CHPY']['UF_CANONICAL']) {
                                 </div>
                                 <ul class="sort__list">
                                     <li class="list__item">
-                                        <?php if ($arResult['arSort'] == "popular"): ?>
+                                        <?php if ($arResult['sortBy'] == "popular"): ?>
                                             <span class="list__link" data-sort="popular" data-type="<?= $arResult['orderReverse'] ?>">
                                                 <span>Популярные</span>
                                                 <input type="radio" id="radio-1" checked>
@@ -456,7 +436,7 @@ if ($arResult['CHPY']['UF_CANONICAL']) {
                                         <?php endif; ?>
                                     </li>
                                     <li class="list__item">
-                                        <?php if ($arResult['arSort'] == "price" && $_GET['order'] == 'asc'): ?>
+                                        <?php if ($arResult['sortBy'] == "price" && $_GET['order'] == 'asc'): ?>
                                             <span class="list__link" data-sort="price" data-type="<?= $arResult['orderReverse'] ?>">
                                                 <span>Сначала дешевле</span>
                                                 <input type="radio" id="radio-2" checked>
@@ -471,7 +451,7 @@ if ($arResult['CHPY']['UF_CANONICAL']) {
                                         <?php endif; ?>
                                     </li>
                                     <li class="list__item">
-                                        <?php if ($arResult['arSort'] == "price" && $_GET['order'] == 'desc'): ?>
+                                        <?php if ($arResult['sortBy'] == "price" && $_GET['order'] == 'desc'): ?>
                                             <span class="list__link" data-sort="price" data-type="<?= $arResult['orderReverse'] ?>">
                                                 <span>Сначала дороже</span>
                                                 <input type="radio" id="radio-3" checked>
@@ -486,7 +466,7 @@ if ($arResult['CHPY']['UF_CANONICAL']) {
                                         <?php endif; ?>
                                     </li>
                                     <li class="list__item">
-                                        <?php if ($arResult['arSort'] == "rating"): ?>
+                                        <?php if ($arResult['sortBy'] == "rating"): ?>
                                             <span class="list__link" data-sort="rating" data-type="<?= $arResult['orderReverse'] ?>">
                                                 <span>Рейтинг</span>
                                                 <input type="radio" id="radio-4" checked>
@@ -519,10 +499,10 @@ if ($arResult['CHPY']['UF_CANONICAL']) {
                             "arFilterValues" => $arResult['SECTION_FILTER_VALUES'],
                             "dateFrom" => $arResult['arUriParams']['dateFrom'],
                             "dateTo" => $arResult['arUriParams']['dateTo'],
-                            "arDates" => $arDates,
-                            "currMonthName" => $currMonthName,
-                            "currYear" => $currYear,
-                            "nextYear" => $nextYear,
+                            "arDates" => $arResult['arDates'],
+                            "currMonthName" => $arResult['currMonthName'],
+                            "currYear" => $arResult['currYear'],
+                            "nextYear" => $arResult['nextYear'],
                             "guests" => $arResult['arUriParams']['guests'],
                             "children" => $arResult['arUriParams']['children'],
                             "guestsDeclension" => $arResult['guestsDeclension'],
@@ -567,9 +547,9 @@ if ($arResult['CHPY']['UF_CANONICAL']) {
                         "naturalist:empty",
                         "catalog",
                         array(
-                            "sortBy" => $arResult['arSort'],
+                            "sortBy" => $arResult['sortBy'],
                             "orderReverse" => $arResult['orderReverse'],
-                            "page" => $arParams["REAL_PAGE"] ? $arParams["REAL_PAGE"] : $page,
+                            "page" => $arParams["REAL_PAGE"] ? $arParams["REAL_PAGE"] : $arResult['page'],
                             "pageCount" => $pageCount,
                             "allCount" => count($arResult['SECTIONS']),
                             "countDeclension" => $arResult['countDeclension'],
@@ -581,15 +561,15 @@ if ($arResult['CHPY']['UF_CANONICAL']) {
                             "arHLFeatures" => $arResult['arHLFeatures'],
                             "arServices" => $arResult['arServices'],
                             "arSearchedRegions" => is_array($arResult['arRegionIds']) ? array_unique($arResult['arRegionIds']) : '',
-                            "searchedRegionData" => $searchedRegionData,
-                            "searchName" => $searchName ?? $search,
+                            "searchedRegionData" => $arResult['searchedRegionData'],
+                            "searchName" => $arResult['searchName'] ?? $arResult['search'],
                             "arFilterValues" => $arResult['SECTION_FILTER_VALUES'],
                             "dateFrom" => $arResult['arUriParams']['dateFrom'],
                             "dateTo" => $arResult['arUriParams']['dateTo'],
-                            "arDates" => $arDates,
-                            "currMonthName" => $currMonthName,
-                            "currYear" => $currYear,
-                            "nextYear" => $nextYear,
+                            "arDates" => $arResult['arDates'],
+                            "currMonthName" => $arResult['currMonthName'],
+                            "currYear" => $arResult['currYear'],
+                            "nextYear" => $arResult['nextYear'],
                             "guests" => $arResult['arUriParams']['guests'],
                             "children" => $arResult['arUriParams']['children'],
                             "guestsDeclension" => $arResult['guestsDeclension'],

@@ -51,6 +51,8 @@ class NaturalistCatalog extends \CBitrixComponent
     private $titleSEO = '';
     private $descriptionSEO = '';
     private $h1SEO = '';
+    private $search = '';
+    private $searchName = '';
     private $arUriParams = [];
     private $filterParams = [];
     private $arFilter = [];
@@ -75,6 +77,10 @@ class NaturalistCatalog extends \CBitrixComponent
     private $arReviewsAvg = [];
     private $chpy;
     private $searchedRegionData;
+    private $arDates;
+    private $currMonthName;
+    private $currYear;
+    private $nextYear;
 
     private function fillSectionVariables()
     {
@@ -112,6 +118,23 @@ class NaturalistCatalog extends \CBitrixComponent
         $this->fillRating();
         $this->applySort();
         $this->setPageSeoData();
+        $this->makeCalendar();
+    }
+
+    private function makeCalendar()
+    {
+        /* Генерация массива месяцев для фильтра */
+        $this->arDates = array();
+        $currMonth = date('m');
+        $this->currMonthName = FormatDate("f");
+        $this->currYear = date('Y');
+        $this->nextYear = $this->currYear + 1;
+        for ($i = $currMonth; $i <= 12; $i++) {
+            $this->arDates[0][] = FormatDate("f", strtotime('1970-' . $i . '-01'));
+        }
+        for ($j = 1; $j <= 12; $j++) {
+            $this->arDates[1][] = FormatDate("f", strtotime('1970-' . $j . '-01'));
+        }
     }
 
     private function setPageSeoData()
@@ -490,21 +513,21 @@ class NaturalistCatalog extends \CBitrixComponent
     private function setSectionNameFilter()
     {
         if ($this->request->get('name') !== null) {
-            $search = ($this->request->get('name')) ? $this->request->get('name') : null;
+            $this->search = ($this->request->get('name')) ? $this->request->get('name') : null;
 
-            $decodeSearch = json_decode($search, true);
+            $decodeSearch = json_decode($this->search, true);
             if ($decodeSearch['type']) {
                 switch ($decodeSearch['type']) {
                     case 'area':
-                        $searchName = $decodeSearch['item'];
-                        $arRegionIds = Regions::getCityByName($searchName);
+                        $this->searchName = $decodeSearch['item'];
+                        $arRegionIds = Regions::getCityByName($this->searchName);
                         if (!empty($arRegionIds)) {
                             $this->arFilter["UF_AREA_NAME"] = $arRegionIds[0]['ID'];
                             $arRegionIds = array_map(function ($arRegion) {
                                 return $arRegion['REGION_ID'];
                             }, $arRegionIds);
                         } else {
-                            $arRegionIds = Regions::RegionFilterSearcher($searchName);
+                            $arRegionIds = Regions::RegionFilterSearcher($this->searchName);
                             $this->arFilter["UF_REGION"] = $arRegionIds;
                         }
 
@@ -528,13 +551,13 @@ class NaturalistCatalog extends \CBitrixComponent
                 $this->arFilterValues["SEARCH"] = json_encode($decodeSearch, JSON_UNESCAPED_UNICODE);
                 $this->arFilterValues["SEARCH_TEXT"] = strip_tags($decodeSearch['title']);
             } else {
-                $arRegionIds = Regions::RegionFilterSearcher($search);
+                $arRegionIds = Regions::RegionFilterSearcher($this->search);
                 $this->arFilter["UF_REGION"] = $arRegionIds;
 
 
                 if (empty($arRegionIds)) {
 
-                    $arNameResult = CIBlockSection::GetList([], ['NAME' => '%' . $search . '%'], false, ['ID'], false)->Fetch();
+                    $arNameResult = CIBlockSection::GetList([], ['NAME' => '%' . $this->search . '%'], false, ['ID'], false)->Fetch();
                     if ($arNameResult) {
                         $arSectionIDs[] = $arNameResult["ID"];
                     }
@@ -542,7 +565,7 @@ class NaturalistCatalog extends \CBitrixComponent
                     $this->arFilter["ID"] = $arSectionIDs;
                     unset($this->arFilter["UF_REGION"]);
                 }
-                $this->arFilterValues["SEARCH_TEXT"] = strip_tags($search);
+                $this->arFilterValues["SEARCH_TEXT"] = strip_tags($this->search);
             }
 
             if ($arRegionIds) {
@@ -781,6 +804,14 @@ class NaturalistCatalog extends \CBitrixComponent
         $this->arResult['minPrice'] = $this->minPrice;
         $this->arResult['maxPrice'] = $this->maxPrice;
         $this->arResult['arReviewsAvg'] = $this->arReviewsAvg;
+        $this->arResult['page'] = $this->page;
+        $this->arResult['arDates'] = $this->arDates;
+        $this->arResult['currMonthName'] = $this->currMonthName;
+        $this->arResult['currYear'] = $this->currYear;
+        $this->arResult['nextYear'] = $this->nextYear;
+        $this->arResult['searchedRegionData'] = $this->searchedRegionData;
+        $this->arResult['searchName'] = $this->searchName;
+        $this->arResult['search'] = $this->search;
     }
 
     protected function prepareDetail() {}
