@@ -14,6 +14,7 @@ use Naturalist\Users;
 use Naturalist\Regions;
 use Naturalist\Utils;
 use Naturalist\Filters\UrlHandler;
+use Naturalist\Reviews;
 
 Loc::loadMessages(__FILE__);
 
@@ -42,9 +43,14 @@ class NaturalistCatalog extends \CBitrixComponent
     private $daysCount = 0;
     private $filterCount = 0;
     private $page = 0;
+    private $minPrice = 0;
+    private $maxPrice = 0;
     private $sortBy = '';
     private $sortOrder = '';
     private $orderReverse = '';
+    private $titleSEO = '';
+    private $descriptionSEO = '';
+    private $h1SEO = '';
     private $arUriParams = [];
     private $filterParams = [];
     private $arFilter = [];
@@ -66,7 +72,9 @@ class NaturalistCatalog extends \CBitrixComponent
     private $arServices = [];
     private $arHLFood = [];
     private $pageSeoData = [];
+    private $arReviewsAvg = [];
     private $chpy;
+    private $searchedRegionData;
 
     private function fillSectionVariables()
     {
@@ -101,6 +109,8 @@ class NaturalistCatalog extends \CBitrixComponent
         $this->getSeason();
         $this->getExternalData();
         $this->fillSections();
+        $this->fillRating();
+        $this->applySort();
         $this->setPageSeoData();
     }
 
@@ -122,36 +132,36 @@ class NaturalistCatalog extends \CBitrixComponent
         $metaTags = getMetaTags();
         $currentURLDir = $APPLICATION->GetCurDir();
 
-        if ($this->page > 1 && isset($_GET["impressions"]) && !empty($_GET['impressions']) && !empty($metaTags["/catalog/?page=2&impressions"])) { //переход с раздела "Впечатления" с пагинацией
-            if (!empty($arSeoImpressions)) {
-                $impressionReplace = $arSeoImpressions[0]["META"]['ELEMENT_PAGE_TITLE'] ? $arSeoImpressions[0]["META"]['ELEMENT_PAGE_TITLE'] : $arSeoImpressions[0]["NAME"];
+        if ($this->page > 1 && !empty($this->request->get("impressions")) && !empty($metaTags["/catalog/?page=2&impressions"])) { //переход с раздела "Впечатления" с пагинацией
+            if (!empty($this->arSeoImpressions)) {
+                $impressionReplace = $this->arSeoImpressions[0]["META"]['ELEMENT_PAGE_TITLE'] ? $this->arSeoImpressions[0]["META"]['ELEMENT_PAGE_TITLE'] : $this->arSeoImpressions[0]["NAME"];
             } else {
                 $impressionReplace = "";
             }
-            $titleSEO = $arSeoImpressions[0]["META"]['ELEMENT_META_TITLE'] . ' Страница - ' . $this->page;
-            $descriptionSEO = $arSeoImpressions[0]["META"]['ELEMENT_META_DESCRIPTION'] . ' Страница - ' . $this->page;;
-            $h1SEO = $impressionReplace;
-        } elseif (isset($_GET["impressions"]) && !empty($_GET['impressions']) && !empty($metaTags["/catalog/?page=2&impressions"])) { //переход с раздела "Впечатления"
-            if (!empty($arSeoImpressions)) {
-                $impressionReplace = $arSeoImpressions[0]["META"]['ELEMENT_PAGE_TITLE'] ? $arSeoImpressions[0]["META"]['ELEMENT_PAGE_TITLE'] : $arSeoImpressions[0]["NAME"];
+            $this->titleSEO = $this->arSeoImpressions[0]["META"]['ELEMENT_META_TITLE'] . ' Страница - ' . $this->page;
+            $this->descriptionSEO = $this->arSeoImpressions[0]["META"]['ELEMENT_META_DESCRIPTION'] . ' Страница - ' . $this->page;;
+            $this->h1SEO = $impressionReplace;
+        } elseif (!empty($this->request->get("impressions")) && !empty($metaTags["/catalog/?page=2&impressions"])) { //переход с раздела "Впечатления"
+            if (!empty($this->arSeoImpressions)) {
+                $impressionReplace = $this->arSeoImpressions[0]["META"]['ELEMENT_PAGE_TITLE'] ? $this->arSeoImpressions[0]["META"]['ELEMENT_PAGE_TITLE'] : $this->arSeoImpressions[0]["NAME"];
             } else {
                 $impressionReplace = "";
             }
-            $titleSEO = $arSeoImpressions[0]["META"]['ELEMENT_META_TITLE'];
-            $descriptionSEO = $arSeoImpressions[0]["META"]['ELEMENT_META_DESCRIPTION'];
-            $h1SEO = $impressionReplace;
+            $this->titleSEO = $this->arSeoImpressions[0]["META"]['ELEMENT_META_TITLE'];
+            $this->descriptionSEO = $this->arSeoImpressions[0]["META"]['ELEMENT_META_DESCRIPTION'];
+            $this->h1SEO = $impressionReplace;
         } elseif ($this->page > 1 && !empty($metaTags["/catalog/?page=2"])) { //страницы пагинации
-            $titleSEO = str_replace("#PAGE#", $this->page, $metaTags["/catalog/?page=2"]["~PROPERTY_TITLE_VALUE"]["TEXT"]);
-            $descriptionSEO = str_replace("#PAGE#", $this->page, $metaTags["/catalog/?page=2"]["~PROPERTY_DESCRIPTION_VALUE"]["TEXT"]);
-            $h1SEO = str_replace("#PAGE#", $this->page, $metaTags["/catalog/?page=2"]["~PROPERTY_H1_VALUE"]["TEXT"]);
+            $this->titleSEO = str_replace("#PAGE#", $this->page, $metaTags["/catalog/?page=2"]["~PROPERTY_TITLE_VALUE"]["TEXT"]);
+            $this->descriptionSEO = str_replace("#PAGE#", $this->page, $metaTags["/catalog/?page=2"]["~PROPERTY_DESCRIPTION_VALUE"]["TEXT"]);
+            $this->h1SEO = str_replace("#PAGE#", $this->page, $metaTags["/catalog/?page=2"]["~PROPERTY_H1_VALUE"]["TEXT"]);
         } elseif (!empty($metaTags[$currentURLDir])) {
-            $titleSEO = $metaTags[$currentURLDir]["~PROPERTY_TITLE_VALUE"]["TEXT"];
-            $descriptionSEO = $metaTags[$currentURLDir]["~PROPERTY_DESCRIPTION_VALUE"]["TEXT"];
-            $h1SEO = $metaTags[$currentURLDir]["~PROPERTY_H1_VALUE"]["TEXT"];
+            $this->titleSEO = $metaTags[$currentURLDir]["~PROPERTY_TITLE_VALUE"]["TEXT"];
+            $this->descriptionSEO = $metaTags[$currentURLDir]["~PROPERTY_DESCRIPTION_VALUE"]["TEXT"];
+            $this->h1SEO = $metaTags[$currentURLDir]["~PROPERTY_H1_VALUE"]["TEXT"];
         } else {
-            $titleSEO = "Каталог - онлайн-сервис бронирования глэмпингов и кемпингов Натуралист";
-            $descriptionSEO = "Каталог | Натуралист - удобный онлайн-сервис поиска и бронирования глэмпинга для отдыха на природе с оплатой на сайте. Вы можете подобрать место для комфортного природного туризма в России по выгодным ценам с моментальной системой бронирования.";
-            $h1SEO = "Карта глэмпингов в России";
+            $this->titleSEO = "Каталог - онлайн-сервис бронирования глэмпингов и кемпингов Натуралист";
+            $this->descriptionSEO = "Каталог | Натуралист - удобный онлайн-сервис поиска и бронирования глэмпинга для отдыха на природе с оплатой на сайте. Вы можете подобрать место для комфортного природного туризма в России по выгодным ценам с моментальной системой бронирования.";
+            $this->h1SEO = "Карта глэмпингов в России";
         }
     }
 
@@ -263,7 +273,7 @@ class NaturalistCatalog extends \CBitrixComponent
     private function fillSections()
     {
         $rsSections = CIBlockSection::GetList($this->arSort, $this->arFilter, false, ["IBLOCK_ID", "ID", "NAME", "CODE", "SECTION_PAGE_URL", "UF_*"], false);
-        $searchedRegionData = Regions::getRegionById($this->arRegionIds[0] ?? false);
+        $this->searchedRegionData = Regions::getRegionById($this->arRegionIds[0] ?? false);
         while ($arSection = $rsSections->GetNext()) {
 
             $arDataFullGallery = [];
@@ -324,13 +334,18 @@ class NaturalistCatalog extends \CBitrixComponent
                 $arSection["COORDS"] = explode(',', $arSection["UF_COORDS"]);
             }
 
+            // Минимальная и максимальная цена в выборке
+            if ($arSection['UF_MIN_PRICE'] !== NULL) {
+                $arSectionsPrice[] = $arSection['UF_MIN_PRICE'];
+            }
+
             /* Растояние до поискового запроса */
-            if ($searchedRegionData) {
+            if ($this->searchedRegionData) {
 
-                $searchedRegionData['COORDS'] = explode(',', $searchedRegionData['UF_COORDS']);
+                $this->searchedRegionData['COORDS'] = explode(',', $this->searchedRegionData['UF_COORDS']);
 
-                $arSection['DISCTANCE'] = Utils::calculateTheDistance($searchedRegionData['COORDS'][0], $searchedRegionData['COORDS'][1], $arSection['COORDS'][0], $arSection['COORDS'][1]);
-                $arSection['DISCTANCE_TO_REGION'] = $searchedRegionData['UF_CENTER_NAME_RU'] ?? $searchedRegionData['CENTER_UF_NAME'];
+                $arSection['DISCTANCE'] = Utils::calculateTheDistance($this->searchedRegionData['COORDS'][0], $this->searchedRegionData['COORDS'][1], $arSection['COORDS'][0], $arSection['COORDS'][1]);
+                $arSection['DISCTANCE_TO_REGION'] = $this->searchedRegionData['UF_CENTER_NAME_RU'] ?? $this->searchedRegionData['CENTER_UF_NAME'];
 
                 $arSection['DISCTANCE_TO_REGION'] = ucfirst($arSection['DISCTANCE_TO_REGION']);
             } else {
@@ -375,6 +390,26 @@ class NaturalistCatalog extends \CBitrixComponent
                 $this->arSections[$arSection["ID"]] = $arSection;
             }
         }
+
+        if (!empty($arSectionsPrice)) {
+            $this->minPrice = round(min($arSectionsPrice));
+            $this->maxPrice = round(max($arSectionsPrice));
+        }
+    }
+
+    private function fillRating()
+    {
+        /* Отзывы */
+        $arCampingIDs = array_map(function ($a) {
+            return $a["ID"];
+        }, $this->arSections);
+
+        if (isset($arCampingIDs) && !empty($arCampingIDs)) {
+            $this->arReviewsAvg = Reviews::getCampingRating($arCampingIDs);
+            foreach ($this->arReviewsAvg as $id => $review) {
+                $this->arSections[$id]["RATING"] = $review["avg"];
+            }
+        }
     }
 
     private function getSeason()
@@ -400,6 +435,46 @@ class NaturalistCatalog extends \CBitrixComponent
         }
 
         $this->arSort = array($sort => $this->sortOrder);
+    }
+
+    private function applySort()
+    {
+        $sortOrder = $this->sortOrder;
+
+        // Сортировка по расстоянию
+        if ($this->searchedRegionData) {
+            usort($this->arSections, function ($a, $b) {
+                return ($a['DISCTANCE'] - $b['DISCTANCE']);
+            });
+        }
+
+        /* Кастомная сортировка по рейтингу */
+        if ($this->sortBy == 'rating') {
+            uasort($this->arSections, function ($a, $b) use ($sortOrder) {
+                if ($a['RATING'] == $b['RATING'])
+                    return false;
+
+                if ($sortOrder == 'asc') {
+                    return ($a['RATING'] > $b['RATING']) ? 1 : -1;
+                } elseif ($sortOrder == 'desc') {
+                    return ($a['RATING'] < $b['RATING']) ? 1 : -1;
+                }
+            });
+        }
+
+        /* Кастомная сортировка по цене */
+        if ($this->sortBy == 'price') {
+            uasort($this->arSections, function ($a, $b) use ($sortOrder) {
+                if ($a['PRICE'] == $b['PRICE'])
+                    return false;
+
+                if ($sortOrder == 'asc') {
+                    return ($a['PRICE'] > $b['PRICE']) ? 1 : -1;
+                } elseif ($sortOrder == 'desc') {
+                    return ($a['PRICE'] < $b['PRICE']) ? 1 : -1;
+                }
+            });
+        }
     }
 
     private function setSectionFilters()
@@ -700,6 +775,12 @@ class NaturalistCatalog extends \CBitrixComponent
         $this->arResult['arHLFeatures'] = $this->arHLFeatures;
         $this->arResult['arServices'] = $this->arServices;
         $this->arResult['pageSeoData'] = $this->pageSeoData;
+        $this->arResult['titleSEO'] = $this->titleSEO;
+        $this->arResult['descriptionSEO'] = $this->descriptionSEO;
+        $this->arResult['h1SEO'] = $this->h1SEO;
+        $this->arResult['minPrice'] = $this->minPrice;
+        $this->arResult['maxPrice'] = $this->maxPrice;
+        $this->arResult['arReviewsAvg'] = $this->arReviewsAvg;
     }
 
     protected function prepareDetail() {}

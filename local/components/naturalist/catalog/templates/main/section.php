@@ -12,7 +12,7 @@
 /** @var CBitrixComponent $component */
 $this->setFrameMode(true);
 
-use Naturalist\Reviews;
+
 use Bitrix\Iblock\Elements\ElementGlampingsTable;
 use Naturalist\Utils;
 
@@ -24,71 +24,11 @@ $isSeoText = false;
 
 $arSections = $arResult['SECTIONS'];
 
-/* Отзывы */
-$arCampingIDs = array_map(function ($a) {
-    return $a["ID"];
-}, $arSections);
-if (isset($arCampingIDs) && !empty($arCampingIDs)) {
-    $arReviewsAvg = Reviews::getCampingRating($arCampingIDs);
-    foreach ($arReviewsAvg as $id => $review) {
-        $arSections[$id]["RATING"] = $review["avg"];
-    }
-}
 
-if ($searchedRegionData) {
-    usort($arSections, function ($a, $b) {
-        return ($a['DISCTANCE'] - $b['DISCTANCE']);
-    });
-}
+
 $allCount = count($arSections);
 
-/* Кастомная сортировка по рейтингу */
-if ($sortBy == 'rating') {
-    uasort($arSections, function ($a, $b) use ($sortOrder) {
-        if ($a['RATING'] == $b['RATING'])
-            return false;
 
-        if ($sortOrder == 'asc') {
-            return ($a['RATING'] > $b['RATING']) ? 1 : -1;
-        } elseif ($sortOrder == 'desc') {
-            return ($a['RATING'] < $b['RATING']) ? 1 : -1;
-        }
-    });
-}
-
-$arFilterPrice = [
-    "IBLOCK_ID" => CATALOG_IBLOCK_ID,
-    "ACTIVE" => "Y",
-];
-
-$arSectionsPrice = [];
-
-$rsSectionsPrice = CIBlockSection::GetList($arResult['arSort'], $arFilterPrice, false, ["UF_MIN_PRICE"], false);
-while ($arSectionPrice = $rsSectionsPrice->GetNext()) {
-    if ($arSectionPrice['UF_MIN_PRICE'] !== NULL) {
-        $arSectionsPrice[] = $arSectionPrice['UF_MIN_PRICE'];
-    }
-}
-
-/*min/max price */
-if (!empty($arSectionsPrice)) {
-    $minPrice = round(min($arSectionsPrice));
-    $maxPrice = round(max($arSectionsPrice));
-}
-
-/* Кастомная сортировка по цене */
-if ($sortBy == 'price') {
-    uasort($arSections, function ($a, $b) use ($sortOrder) {
-        if ($a['PRICE'] == $b['PRICE'])
-            return false;
-
-        if ($sortOrder == 'asc') {
-            return ($a['PRICE'] > $b['PRICE']) ? 1 : -1;
-        } elseif ($sortOrder == 'desc') {
-            return ($a['PRICE'] < $b['PRICE']) ? 1 : -1;
-        }
-    });
-}
 
 /* Пагинация */
 $page = $_REQUEST['page'] ?? 1;
@@ -128,8 +68,6 @@ foreach ($arPageSections as &$section) {
 }
 unset($section);
 
-
-
 /* Генерация массива месяцев для фильтра */
 $arDates = array();
 $currMonth = date('m');
@@ -143,8 +81,6 @@ for ($j = 1; $j <= 12; $j++) {
     $arDates[1][] = FormatDate("f", strtotime('1970-' . $j . '-01'));
 }
 
-
-
 if ($arResult['pageSeoData']) {
     if ($arResult['pageSeoData']['UF_H1']) {
         $APPLICATION->SetPageProperty("custom_title", $arResult['pageSeoData']['UF_H1']);
@@ -156,9 +92,9 @@ if ($arResult['pageSeoData']) {
         $APPLICATION->SetPageProperty("description", $arResult['pageSeoData']['UF_DESCRIPTION']);
     }
 } else {
-    $APPLICATION->SetTitle($titleSEO);
-    $APPLICATION->SetPageProperty("custom_title", $h1SEO);
-    $APPLICATION->SetPageProperty("description", $descriptionSEO);
+    $APPLICATION->SetTitle($arResult['titleSEO']);
+    $APPLICATION->SetPageProperty("custom_title", $arResult['h1SEO']);
+    $APPLICATION->SetPageProperty("description", $arResult['descriptionSEO']);
 }
 
 if (!count($arPageSections)) {
@@ -474,12 +410,12 @@ if ($arResult['CHPY']['UF_CANONICAL']) {
                                     <div class="price-inputs__wrap">
                                         <div class="price-input__wrap">
                                             <label for="min-price">от</label>
-                                            <input type="text" class="min-price" data-price-value="<?= $minPrice ?>" name="min-price" value="<?= $minPrice ?>" size="5">
+                                            <input type="text" class="min-price" data-price-value="<?= $arResult['minPrice'] ?>" name="min-price" value="<?= $arResult['minPrice'] ?>" size="5">
                                             <span>&nbsp;₽</span>
                                         </div>
                                         <div class="price-input__wrap">
                                             <label for="max-price">до</label>
-                                            <input type="text" class="max-price" data-price-value="<?= $maxPrice ?>" name="max-price" value="<?= $maxPrice ?>" size="5">
+                                            <input type="text" class="max-price" data-price-value="<?= $arResult['maxPrice'] ?>" name="max-price" value="<?= $arResult['maxPrice'] ?>" size="5">
                                             <span>&nbsp;₽</span>
                                         </div>
                                     </div>
@@ -506,7 +442,7 @@ if ($arResult['CHPY']['UF_CANONICAL']) {
                                 <ul class="sort__list">
                                     <li class="list__item">
                                         <?php if ($arResult['arSort'] == "popular"): ?>
-                                            <span class="list__link" data-sort="popular" data-type="<?= $orderReverse ?>">
+                                            <span class="list__link" data-sort="popular" data-type="<?= $arResult['orderReverse'] ?>">
                                                 <span>Популярные</span>
                                                 <input type="radio" id="radio-1" checked>
                                                 <label for="radio-1"></label>
@@ -521,7 +457,7 @@ if ($arResult['CHPY']['UF_CANONICAL']) {
                                     </li>
                                     <li class="list__item">
                                         <?php if ($arResult['arSort'] == "price" && $_GET['order'] == 'asc'): ?>
-                                            <span class="list__link" data-sort="price" data-type="<?= $orderReverse ?>">
+                                            <span class="list__link" data-sort="price" data-type="<?= $arResult['orderReverse'] ?>">
                                                 <span>Сначала дешевле</span>
                                                 <input type="radio" id="radio-2" checked>
                                                 <label for="radio-2"></label>
@@ -536,7 +472,7 @@ if ($arResult['CHPY']['UF_CANONICAL']) {
                                     </li>
                                     <li class="list__item">
                                         <?php if ($arResult['arSort'] == "price" && $_GET['order'] == 'desc'): ?>
-                                            <span class="list__link" data-sort="price" data-type="<?= $orderReverse ?>">
+                                            <span class="list__link" data-sort="price" data-type="<?= $arResult['orderReverse'] ?>">
                                                 <span>Сначала дороже</span>
                                                 <input type="radio" id="radio-3" checked>
                                                 <label for="radio-3"></label>
@@ -551,7 +487,7 @@ if ($arResult['CHPY']['UF_CANONICAL']) {
                                     </li>
                                     <li class="list__item">
                                         <?php if ($arResult['arSort'] == "rating"): ?>
-                                            <span class="list__link" data-sort="rating" data-type="<?= $orderReverse ?>">
+                                            <span class="list__link" data-sort="rating" data-type="<?= $arResult['orderReverse'] ?>">
                                                 <span>Рейтинг</span>
                                                 <input type="radio" id="radio-4" checked>
                                                 <label for="radio-4"></label>
@@ -611,8 +547,8 @@ if ($arResult['CHPY']['UF_CANONICAL']) {
                             "difFilter" => $arResult['difFilter'],
                             "arFilterCommonWater" => $arResult['arFilterCommonWater'],
                             "arDifFilters" => $arResult['arDifFilters'],
-                            "maxPrice" => $maxPrice,
-                            "minPrice" => $minPrice,
+                            "maxPrice" => $arResult['maxPrice'],
+                            "minPrice" => $arResult['minPrice'],
                         )
                     );
                     ?>
@@ -632,14 +568,14 @@ if ($arResult['CHPY']['UF_CANONICAL']) {
                         "catalog",
                         array(
                             "sortBy" => $arResult['arSort'],
-                            "orderReverse" => $orderReverse,
+                            "orderReverse" => $arResult['orderReverse'],
                             "page" => $arParams["REAL_PAGE"] ? $arParams["REAL_PAGE"] : $page,
                             "pageCount" => $pageCount,
                             "allCount" => count($arResult['SECTIONS']),
                             "countDeclension" => $arResult['countDeclension'],
                             "reviewsDeclension" => $arResult['reviewsDeclension'],
                             "arPageSections" => $arPageSections,
-                            "arReviewsAvg" => $arReviewsAvg,
+                            "arReviewsAvg" => $arResult['arReviewsAvg'],
                             "arFavourites" => $arResult['FAVORITES'],
                             "arHLTypes" => $arResult['arHLTypes'],
                             "arHLFeatures" => $arResult['arHLFeatures'],
@@ -737,7 +673,7 @@ if ($arResult['CHPY']['UF_CANONICAL']) {
             array(
                 "arSections" => $arResult['SECTIONS'],
                 "arFavourites" => $arResult['FAVORITES'],
-                "arReviewsAvg" => $arReviewsAvg,
+                "arReviewsAvg" => $arResult['arReviewsAvg'],
                 "map" => $arParams["MAP"]
             )
         );
