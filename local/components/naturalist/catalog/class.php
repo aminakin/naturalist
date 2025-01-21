@@ -13,6 +13,7 @@ use Naturalist\Filters\Components;
 use Naturalist\Users;
 use Naturalist\Regions;
 use Naturalist\Utils;
+use Naturalist\Filters\UrlHandler;
 
 Loc::loadMessages(__FILE__);
 
@@ -40,6 +41,7 @@ class NaturalistCatalog extends \CBitrixComponent
 
     private $daysCount = 0;
     private $filterCount = 0;
+    private $page = 0;
     private $sortBy = '';
     private $sortOrder = '';
     private $orderReverse = '';
@@ -63,6 +65,7 @@ class NaturalistCatalog extends \CBitrixComponent
     private $arHLFeatures = [];
     private $arServices = [];
     private $arHLFood = [];
+    private $pageSeoData = [];
     private $chpy;
 
     private function fillSectionVariables()
@@ -90,6 +93,7 @@ class NaturalistCatalog extends \CBitrixComponent
             'diffilter' => $this->request->get('diffilter'),
             'impressions' => $this->request->get('impressions'),
         ];
+        $this->page = $this->request->get('page') ?? 1;
         $this->chpy = Components::getChpyLinkByUrl($_SERVER['REDIRECT_URL'] ? $_SERVER['REDIRECT_URL'] : $_SERVER['SCRIPT_NAME']);
         $this->setSectionFilters();
         $this->getHlBlocks();
@@ -97,6 +101,58 @@ class NaturalistCatalog extends \CBitrixComponent
         $this->getSeason();
         $this->getExternalData();
         $this->fillSections();
+        $this->setPageSeoData();
+    }
+
+    private function setPageSeoData()
+    {
+        if ($this->request->get('page') && count($_GET) > 1) {
+            $urlWithPage = '/catalog/?';
+            foreach ($_GET as $getName => $getValue) {
+                if ($getName !== 'page') {
+                    $urlWithPage .= $getName . '=' . $getValue . '&';
+                }
+            }
+            $urlWithPage = substr($urlWithPage, 0, -1);
+            $this->pageSeoData = UrlHandler::getByRealUrl($urlWithPage, SITE_ID);
+        }
+
+        /* Генерация SEO */
+        global $APPLICATION;
+        $metaTags = getMetaTags();
+        $currentURLDir = $APPLICATION->GetCurDir();
+
+        if ($this->page > 1 && isset($_GET["impressions"]) && !empty($_GET['impressions']) && !empty($metaTags["/catalog/?page=2&impressions"])) { //переход с раздела "Впечатления" с пагинацией
+            if (!empty($arSeoImpressions)) {
+                $impressionReplace = $arSeoImpressions[0]["META"]['ELEMENT_PAGE_TITLE'] ? $arSeoImpressions[0]["META"]['ELEMENT_PAGE_TITLE'] : $arSeoImpressions[0]["NAME"];
+            } else {
+                $impressionReplace = "";
+            }
+            $titleSEO = $arSeoImpressions[0]["META"]['ELEMENT_META_TITLE'] . ' Страница - ' . $this->page;
+            $descriptionSEO = $arSeoImpressions[0]["META"]['ELEMENT_META_DESCRIPTION'] . ' Страница - ' . $this->page;;
+            $h1SEO = $impressionReplace;
+        } elseif (isset($_GET["impressions"]) && !empty($_GET['impressions']) && !empty($metaTags["/catalog/?page=2&impressions"])) { //переход с раздела "Впечатления"
+            if (!empty($arSeoImpressions)) {
+                $impressionReplace = $arSeoImpressions[0]["META"]['ELEMENT_PAGE_TITLE'] ? $arSeoImpressions[0]["META"]['ELEMENT_PAGE_TITLE'] : $arSeoImpressions[0]["NAME"];
+            } else {
+                $impressionReplace = "";
+            }
+            $titleSEO = $arSeoImpressions[0]["META"]['ELEMENT_META_TITLE'];
+            $descriptionSEO = $arSeoImpressions[0]["META"]['ELEMENT_META_DESCRIPTION'];
+            $h1SEO = $impressionReplace;
+        } elseif ($this->page > 1 && !empty($metaTags["/catalog/?page=2"])) { //страницы пагинации
+            $titleSEO = str_replace("#PAGE#", $this->page, $metaTags["/catalog/?page=2"]["~PROPERTY_TITLE_VALUE"]["TEXT"]);
+            $descriptionSEO = str_replace("#PAGE#", $this->page, $metaTags["/catalog/?page=2"]["~PROPERTY_DESCRIPTION_VALUE"]["TEXT"]);
+            $h1SEO = str_replace("#PAGE#", $this->page, $metaTags["/catalog/?page=2"]["~PROPERTY_H1_VALUE"]["TEXT"]);
+        } elseif (!empty($metaTags[$currentURLDir])) {
+            $titleSEO = $metaTags[$currentURLDir]["~PROPERTY_TITLE_VALUE"]["TEXT"];
+            $descriptionSEO = $metaTags[$currentURLDir]["~PROPERTY_DESCRIPTION_VALUE"]["TEXT"];
+            $h1SEO = $metaTags[$currentURLDir]["~PROPERTY_H1_VALUE"]["TEXT"];
+        } else {
+            $titleSEO = "Каталог - онлайн-сервис бронирования глэмпингов и кемпингов Натуралист";
+            $descriptionSEO = "Каталог | Натуралист - удобный онлайн-сервис поиска и бронирования глэмпинга для отдыха на природе с оплатой на сайте. Вы можете подобрать место для комфортного природного туризма в России по выгодным ценам с моментальной системой бронирования.";
+            $h1SEO = "Карта глэмпингов в России";
+        }
     }
 
     private function getHlBlocks()
@@ -643,6 +699,7 @@ class NaturalistCatalog extends \CBitrixComponent
         $this->arResult['objectComforts'] = $this->objectComforts;
         $this->arResult['arHLFeatures'] = $this->arHLFeatures;
         $this->arResult['arServices'] = $this->arServices;
+        $this->arResult['pageSeoData'] = $this->pageSeoData;
     }
 
     protected function prepareDetail() {}

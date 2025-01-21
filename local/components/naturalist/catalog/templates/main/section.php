@@ -15,19 +15,10 @@ $this->setFrameMode(true);
 use Naturalist\Reviews;
 use Bitrix\Iblock\Elements\ElementGlampingsTable;
 use Naturalist\Utils;
-use Naturalist\Filters\UrlHandler;
+
 use Bitrix\Main\Localization\Loc;
 
-if ($_GET['page'] && count($_GET) > 1) {
-    $urlWithPage = '/catalog/?';
-    foreach ($_GET as $getName => $getValue) {
-        if ($getName !== 'page') {
-            $urlWithPage .= $getName . '=' . $getValue . '&';
-        }
-    }
-    $urlWithPage = substr($urlWithPage, 0, -1);
-    $pageSeoData = UrlHandler::getByRealUrl($urlWithPage, SITE_ID);
-}
+
 
 $isSeoText = false;
 
@@ -152,51 +143,17 @@ for ($j = 1; $j <= 12; $j++) {
     $arDates[1][] = FormatDate("f", strtotime('1970-' . $j . '-01'));
 }
 
-/* Генерация SEO */
-$metaTags = getMetaTags();
-$currentURLDir = $APPLICATION->GetCurDir();
 
-if ($page > 1 && isset($_GET["impressions"]) && !empty($_GET['impressions']) && !empty($metaTags["/catalog/?page=2&impressions"])) { //переход с раздела "Впечатления" с пагинацией
-    if (!empty($arSeoImpressions)) {
-        $impressionReplace = $arSeoImpressions[0]["META"]['ELEMENT_PAGE_TITLE'] ? $arSeoImpressions[0]["META"]['ELEMENT_PAGE_TITLE'] : $arSeoImpressions[0]["NAME"];
-    } else {
-        $impressionReplace = "";
-    }
-    $titleSEO = $arSeoImpressions[0]["META"]['ELEMENT_META_TITLE'] . ' Страница - ' . $page;
-    $descriptionSEO = $arSeoImpressions[0]["META"]['ELEMENT_META_DESCRIPTION'] . ' Страница - ' . $page;;
-    $h1SEO = $impressionReplace;
-} elseif (isset($_GET["impressions"]) && !empty($_GET['impressions']) && !empty($metaTags["/catalog/?page=2&impressions"])) { //переход с раздела "Впечатления"
-    if (!empty($arSeoImpressions)) {
-        $impressionReplace = $arSeoImpressions[0]["META"]['ELEMENT_PAGE_TITLE'] ? $arSeoImpressions[0]["META"]['ELEMENT_PAGE_TITLE'] : $arSeoImpressions[0]["NAME"];
-    } else {
-        $impressionReplace = "";
-    }
-    $titleSEO = $arSeoImpressions[0]["META"]['ELEMENT_META_TITLE'];
-    $descriptionSEO = $arSeoImpressions[0]["META"]['ELEMENT_META_DESCRIPTION'];
-    $h1SEO = $impressionReplace;
-} elseif ($page > 1 && !empty($metaTags["/catalog/?page=2"])) { //страницы пагинации
-    $titleSEO = str_replace("#PAGE#", $page, $metaTags["/catalog/?page=2"]["~PROPERTY_TITLE_VALUE"]["TEXT"]);
-    $descriptionSEO = str_replace("#PAGE#", $page, $metaTags["/catalog/?page=2"]["~PROPERTY_DESCRIPTION_VALUE"]["TEXT"]);
-    $h1SEO = str_replace("#PAGE#", $page, $metaTags["/catalog/?page=2"]["~PROPERTY_H1_VALUE"]["TEXT"]);
-} elseif (!empty($metaTags[$currentURLDir])) {
-    $titleSEO = $metaTags[$currentURLDir]["~PROPERTY_TITLE_VALUE"]["TEXT"];
-    $descriptionSEO = $metaTags[$currentURLDir]["~PROPERTY_DESCRIPTION_VALUE"]["TEXT"];
-    $h1SEO = $metaTags[$currentURLDir]["~PROPERTY_H1_VALUE"]["TEXT"];
-} else {
-    $titleSEO = "Каталог - онлайн-сервис бронирования глэмпингов и кемпингов Натуралист";
-    $descriptionSEO = "Каталог | Натуралист - удобный онлайн-сервис поиска и бронирования глэмпинга для отдыха на природе с оплатой на сайте. Вы можете подобрать место для комфортного природного туризма в России по выгодным ценам с моментальной системой бронирования.";
-    $h1SEO = "Карта глэмпингов в России";
-}
 
-if ($pageSeoData) {
-    if ($pageSeoData['UF_H1']) {
-        $APPLICATION->SetPageProperty("custom_title", $pageSeoData['UF_H1']);
+if ($arResult['pageSeoData']) {
+    if ($arResult['pageSeoData']['UF_H1']) {
+        $APPLICATION->SetPageProperty("custom_title", $arResult['pageSeoData']['UF_H1']);
     }
-    if ($pageSeoData['UF_TITLE']) {
-        $APPLICATION->SetTitle($pageSeoData['UF_TITLE']);
+    if ($arResult['pageSeoData']['UF_TITLE']) {
+        $APPLICATION->SetTitle($arResult['pageSeoData']['UF_TITLE']);
     }
-    if ($pageSeoData['UF_DESCRIPTION']) {
-        $APPLICATION->SetPageProperty("description", $pageSeoData['UF_DESCRIPTION']);
+    if ($arResult['pageSeoData']['UF_DESCRIPTION']) {
+        $APPLICATION->SetPageProperty("description", $arResult['pageSeoData']['UF_DESCRIPTION']);
     }
 } else {
     $APPLICATION->SetTitle($titleSEO);
@@ -548,7 +505,7 @@ if ($arResult['CHPY']['UF_CANONICAL']) {
                                 </div>
                                 <ul class="sort__list">
                                     <li class="list__item">
-                                        <?php if ($sortBy == "popular"): ?>
+                                        <?php if ($arResult['arSort'] == "popular"): ?>
                                             <span class="list__link" data-sort="popular" data-type="<?= $orderReverse ?>">
                                                 <span>Популярные</span>
                                                 <input type="radio" id="radio-1" checked>
@@ -563,7 +520,7 @@ if ($arResult['CHPY']['UF_CANONICAL']) {
                                         <?php endif; ?>
                                     </li>
                                     <li class="list__item">
-                                        <?php if ($sortBy == "price" && $_GET['order'] == 'asc'): ?>
+                                        <?php if ($arResult['arSort'] == "price" && $_GET['order'] == 'asc'): ?>
                                             <span class="list__link" data-sort="price" data-type="<?= $orderReverse ?>">
                                                 <span>Сначала дешевле</span>
                                                 <input type="radio" id="radio-2" checked>
@@ -578,7 +535,7 @@ if ($arResult['CHPY']['UF_CANONICAL']) {
                                         <?php endif; ?>
                                     </li>
                                     <li class="list__item">
-                                        <?php if ($sortBy == "price" && $_GET['order'] == 'desc'): ?>
+                                        <?php if ($arResult['arSort'] == "price" && $_GET['order'] == 'desc'): ?>
                                             <span class="list__link" data-sort="price" data-type="<?= $orderReverse ?>">
                                                 <span>Сначала дороже</span>
                                                 <input type="radio" id="radio-3" checked>
@@ -593,7 +550,7 @@ if ($arResult['CHPY']['UF_CANONICAL']) {
                                         <?php endif; ?>
                                     </li>
                                     <li class="list__item">
-                                        <?php if ($sortBy == "rating"): ?>
+                                        <?php if ($arResult['arSort'] == "rating"): ?>
                                             <span class="list__link" data-sort="rating" data-type="<?= $orderReverse ?>">
                                                 <span>Рейтинг</span>
                                                 <input type="radio" id="radio-4" checked>
@@ -674,7 +631,7 @@ if ($arResult['CHPY']['UF_CANONICAL']) {
                         "naturalist:empty",
                         "catalog",
                         array(
-                            "sortBy" => $sortBy,
+                            "sortBy" => $arResult['arSort'],
                             "orderReverse" => $orderReverse,
                             "page" => $arParams["REAL_PAGE"] ? $arParams["REAL_PAGE"] : $page,
                             "pageCount" => $pageCount,
@@ -730,8 +687,8 @@ if ($arResult['CHPY']['UF_CANONICAL']) {
                         } else if ($arResult['CHPY_SEO_TEXT']) {
                             echo $arResult['CHPY_SEO_TEXT'];
                             $isSeoText = true;
-                        } else if (isset($pageSeoData) && isset($pageSeoData['UF_SEO_TEXT'])) {
-                            echo $pageSeoData['UF_SEO_TEXT'];
+                        } else if (isset($arResult['pageSeoData']) && isset($arResult['pageSeoData']['UF_SEO_TEXT'])) {
+                            echo $arResult['pageSeoData']['UF_SEO_TEXT'];
                             $isSeoText = true;
                         } ?>
                     </div>
