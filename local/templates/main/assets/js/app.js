@@ -12878,15 +12878,15 @@
     var Preloader = function () {
       this.element = `<div class="preloader"><img src="/local/templates/main/assets/img/preloader.svg"></div>`;
       this.show = function () {
-        scrollLockEnable();
-        document.body.insertAdjacentHTML("beforeend", preloader.element);
+        // scrollLockEnable();
+        // document.body.insertAdjacentHTML("beforeend", preloader.element);
       };
       this.hide = function () {
-        let element = document.querySelector(".preloader");
-        if (element) {
-          element.remove();
-        }
-        scrollLockDisable();
+        // let element = document.querySelector(".preloader");
+        // if (element) {
+        //   element.remove();
+        // }
+        // scrollLockDisable();
       };
     };
 

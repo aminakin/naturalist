@@ -46,6 +46,8 @@
   --color-btn-h: #d7ba84;
   --color-new-1: #f4e6cb;
   --color-text-1: #434956;
+  --color-text-2: #80899c;
+  --color-text-4: #596173;
 }
 
 @font-face {
@@ -3493,6 +3495,18 @@ img.lazy.loaded {
   text-align: center;
 }
 
+#review-form {
+  margin-top: 20px;
+}
+
+.modal_review .modal__footnote {
+  margin: 4px 0 0 0;
+  text-align: left;
+  font-size: 16px;
+  line-height: 22px;
+  color: var(--color-text-1);
+}
+
 .modal__content > .list .list__item {
   padding-left: 2rem;
   position: relative;
@@ -3860,43 +3874,68 @@ img.lazy.loaded {
 }
 
 .modal_review .modal__container {
-  max-width: 70rem;
-  padding: 3.2rem 4rem;
+  max-width: 760px;
+  padding: 20px;
+  border-radius: 16px;
+  font-family: "Lato";
+  background-color: var(--color-beige-light);
+}
+
+.modal_review__title {
+  font-size: 18px;
+  line-height: 24px;
+  font-weight: 600;
 }
 
 .modal_review .form {
-  grid-row-gap: 3.2rem;
+  grid-row-gap: 20px;
 }
 
 .modal_review .field__input {
-  height: 4.8rem;
-  padding: 1.3rem 1.6rem;
+  padding: 11px 12px;
+  border-radius: 12px;
+  background-color: var(--color-new-1);
+  border: none !important;
+  font-size: 16px;
+  line-height: 22px;
+  height: auto;
+  margin-top: 6px;
+}
+
+.modal_review .field__input::placeholder,
+.modal_review .field textarea.field__input::placeholder {
+  color: var(--color-text-2);
 }
 
 .modal_review .field textarea.field__input {
-  height: 18.5rem;
-  margin-top: -1.4rem;
+  height: 94px;
+  font-size: 16px;
+  line-height: 22px;
+  margin-top: 6px;
 }
 
 .modal_review .list_upload {
-  margin-left: -4rem;
-  margin-top: 0;
 }
 
 .modal_review .list_upload .list__item {
-  margin-left: 0;
-  max-width: none;
-  padding-left: 4rem;
-  width: 50%;
+  position: relative;
 }
 
 .modal_review .list_upload.list_full {
-  margin-top: 1.6rem;
+  margin-top: 8px;
 }
 
 .modal_review .button {
-  height: 4.8rem;
+  padding: 10px;
+  background-color: var(--color-orange);
+  color: white;
+  font-size: 14px;
+  line-height: 20px;
   width: 100%;
+  border-radius: 8px;
+  font-family: "Lato";
+  height: auto;
+  font-weight: 400;
 }
 
 .modal_photo .modal__container {
@@ -4978,12 +5017,9 @@ img.lazy.loaded {
   }
 
   .modal_review .list_upload .list__item {
-    padding-left: 0;
-    width: 100%;
   }
 
   .modal_review .list_upload .list__item + .list__item {
-    margin-top: 1.6rem;
   }
 
   .modal_room-more .modal__container {

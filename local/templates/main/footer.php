@@ -463,7 +463,7 @@ global $arSettings, $currPage;
 <? if (CSite::InDir('/personal/active')) : ?>
     <script defer src="<?= SITE_TEMPLATE_PATH ?>/assets/js/lk_active.js?v=<?= filemtime($_SERVER["DOCUMENT_ROOT"] . '/' . SITE_TEMPLATE_PATH . '/assets/js/lk_active.js') ?>"></script>
 <? endif; ?>
-<? if (CSite::InDir('/personal/history') || CSite::InDir('/personal/certificates')) : ?>
+<? if (CSite::InDir('/personal/history') || CSite::InDir('/personal/certificates') || CSite::InDir('/catalog')) : ?>
     <script defer src="<?= SITE_TEMPLATE_PATH ?>/assets/js/lk_history.js?v=<?= filemtime($_SERVER["DOCUMENT_ROOT"] . '/' . SITE_TEMPLATE_PATH . '/assets/js/lk_history.js') ?>"></script>
 <? endif; ?>
 <? if (CSite::InDir('/personal/favourites')) : ?>

@@ -25,12 +25,16 @@ foreach ($arParams['VARS'] as $key => $value) {
         const balloonLayout = ymaps.templateLayoutFactory.createClass(`
                 <div class="mini-balloon">
                     <div class="mini-balloon__image">
-                        <img src="<?= current($arSection["PICTURES"])["src"] ?>" alt="<?= $arSection["NAME"] ?>">
+                        <img src="<?= current($arSection["PICTURES"])["src"] ?>" width="64" height="64" alt="<?= $arSection["NAME"] ?>">
                     </div>
                     <div class="mini-balloon__content">
                         <div class="h6"><?= $arSection["NAME"] ?></div>
                         <div class="score"><img src="<?= SITE_TEMPLATE_PATH ?>/assets/img/star-score.svg" alt=""><span><?= $avgRating ?></span></div>
-                        <div class="area-info"><img src="<?= SITE_TEMPLATE_PATH ?>/assets/img/marker.svg" alt=""><div><span><?= $arSection["UF_ADDRESS"] ?></span></div></div>
+                        <div class="area-info">                            
+                            <span class="map-price"><?= number_format($minPrice, 0, '.', ' ') ?> ₽</span>
+                            <span class="map-ellips"></span>
+                            <span class="map-text">Цена за одну ночь</span>
+                        </div>
                     </div>
                 </div>
             `)

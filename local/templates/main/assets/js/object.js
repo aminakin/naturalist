@@ -152,7 +152,7 @@
     },
 
     /***/ 1373: /***/ function () {
-      var reviewControlText = ["Обзор полностью", "Скрыть обзор"];
+      var reviewControlText = ["Развернуть", "Скрыть"];
 
       window.reviewsText = function () {
         document
@@ -17227,19 +17227,6 @@
                   )
                 : "",
               "\n\t\t\t\t\t\t"
-            )
-            .concat(
-              content.reservCancel.length
-                ? '\n\t\t\t\t\t\t\t\t\t<div class="h6">\u0423\u0441\u043B\u043E\u0432\u0438\u044F \u043E\u0442\u043C\u0435\u043D\u044B \u0431\u0440\u043E\u043D\u0438\u0440\u043E\u0432\u0430\u043D\u0438\u044F</div>\n\t\t\t\t\t\t\t\t\t<ul class="list list_circle-small">\n\t\t\t\t\t\t\t\t\t\t'.concat(
-                    content.reservCancel
-                      .map(function (item) {
-                        return '<li class="list__item">'.concat(item, "</li>");
-                      })
-                      .join(""),
-                    "\n\t\t\t\t\t\t\t\t\t</ul>\n\t\t\t\t\t\t\t\t"
-                  )
-                : "",
-              "\n\t\t\t\t\t</div>\n\t\t\t\t"
             )
         );
         window.modal.open("more");

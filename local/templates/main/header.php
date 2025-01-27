@@ -21,7 +21,7 @@ use Naturalist\Users;
 <html lang="<?= LANGUAGE_ID ?>">
 
 <head>
-    <? if (!CSite::InDir('/promo-cert/')) { ?>
+    <?/* if (!CSite::InDir('/promo-cert/')) { ?>
         <!-- Google Tag Manager -->
         <script>
             (function(w, d, s, l, i) {
@@ -40,7 +40,7 @@ use Naturalist\Users;
             })(window, document, 'script', 'dataLayer', 'GTM-5762ML9');
         </script>
         <!-- End Google Tag Manager -->
-    <? } ?>
+    <? } */ ?>
 
 
     <meta charset="<?= LANG_CHARSET ?>">
