@@ -46,10 +46,20 @@ foreach ($arParams['VARS'] as $key => $value) {
                         <div class="room__top">
                             <? if ($arElement["PICTURES"]): ?>
                                 <div class="room__images">
+                                    <? if ($arElement['PROPERTY_ROOMTOUR_VALUE']) { ?>
+                                        <a class="room__tour" href="<?= CFile::GetPath($arElement['PROPERTY_ROOMTOUR_VALUE']) ?>" data-fancybox="gallery_<?= $arElement['ID'] ?>" data-caption="<?= $arElement["NAME"] ?>">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" fill="none">
+                                                <path d="M11.0471 1.5H6.95215V4.77H11.0471V1.5Z" fill="black" />
+                                                <path d="M12.1729 1.5V4.77H16.4029C16.0204 2.7075 14.4979 1.5075 12.1729 1.5Z" fill="black" />
+                                                <path d="M1.5 5.89502V12.1425C1.5 14.8725 3.1275 16.5 5.8575 16.5H12.1425C14.8725 16.5 16.5 14.8725 16.5 12.1425V5.89502H1.5ZM10.83 12.135L9.27 13.035C8.94 13.2225 8.6175 13.32 8.3175 13.32C8.0925 13.32 7.89 13.2675 7.7025 13.1625C7.2675 12.915 7.0275 12.405 7.0275 11.745V9.94502C7.0275 9.28502 7.2675 8.77502 7.7025 8.52752C8.1375 8.27252 8.6925 8.31752 9.27 8.65502L10.83 9.55502C11.4075 9.88502 11.7225 10.35 11.7225 10.8525C11.7225 11.355 11.4 11.7975 10.83 12.135Z" fill="black" />
+                                                <path d="M5.82766 1.5C3.50266 1.5075 1.98016 2.7075 1.59766 4.77H5.82766V1.5Z" fill="black" />
+                                            </svg>
+                                            Румтур
+                                        </a>
+                                    <? } ?>
                                     <div class="swiper slider-gallery" data-slider-object="data-slider-object">
                                         <div class="swiper-wrapper">
                                             <? $keyPhoto = 1; ?>
-                                            <? $keyPhotoRoom = 0; ?>
                                             <? foreach ($arElement["PICTURES"] as $arPhoto): ?>
                                                 <? if (count($arElement["PICTURES"]) > 1): ?>
                                                     <?
@@ -62,13 +72,12 @@ foreach ($arParams['VARS'] as $key => $value) {
                                                     $title = "Фото - " . $arElement["NAME"];
                                                     ?>
                                                 <? endif; ?>
-                                                <div class="swiper-slide" data-fullgallery-item="<?= $keyPhotoRoom; ?>">
+                                                <div class="swiper-slide">
                                                     <a href="<?= $arPhoto["big"] ?>" data-fancybox="gallery_<?= $arElement['ID'] ?>" data-caption="<?= $arElement["NAME"] ?>">
                                                         <img class="" loading="lazy" alt="<?= $alt; ?>" title="<?= $title; ?>" src="<?= $arPhoto["src"] ?>">
                                                     </a>
                                                 </div>
                                                 <? $keyPhoto++; ?>
-                                                <? $keyPhotoRoom++; ?>
                                             <? endforeach; ?>
                                         </div>
 
@@ -88,24 +97,20 @@ foreach ($arParams['VARS'] as $key => $value) {
                                     </div>
                                 </div>
                                 <script>
-                                    document.addEventListener("DOMContentLoaded", function() {
-                                        if (Fancybox !== "undefined") {
-                                            Fancybox.bind(' [data-fancybox="gallery_<?= $arElement['ID'] ?>" ]', {
-                                                Toolbar: {
-                                                    display: {
-                                                        left: ["infobar"],
-                                                        middle: [],
-                                                        right: ["close"],
-                                                    },
-                                                },
+                                    Fancybox.bind(' [data-fancybox="gallery_<?= $arElement['ID'] ?>" ]', {
+                                        Toolbar: {
+                                            display: {
+                                                left: ["infobar"],
+                                                middle: [],
+                                                right: ["close"],
+                                            },
+                                        },
 
-                                                commonCaption: true,
+                                        commonCaption: true,
 
-                                                Thumbs: {
-                                                    type: "classic",
-                                                },
-                                            });
-                                        }
+                                        Thumbs: {
+                                            type: "classic",
+                                        },
                                     });
                                 </script>
                             <? endif; ?>
@@ -369,10 +374,20 @@ foreach ($arParams['VARS'] as $key => $value) {
                             <div class="room__top">
                                 <? if ($arElement["PICTURES"]): ?>
                                     <div class="room__images">
+                                        <? if ($arElement['PROPERTY_ROOMTOUR_VALUE']) { ?>
+                                            <a class="room__tour" href="<?= CFile::GetPath($arElement['PROPERTY_ROOMTOUR_VALUE']) ?>" data-fancybox="gallery_<?= $arElement['ID'] ?>" data-caption="<?= $arElement["NAME"] ?>">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" fill="none">
+                                                    <path d="M11.0471 1.5H6.95215V4.77H11.0471V1.5Z" fill="black" />
+                                                    <path d="M12.1729 1.5V4.77H16.4029C16.0204 2.7075 14.4979 1.5075 12.1729 1.5Z" fill="black" />
+                                                    <path d="M1.5 5.89502V12.1425C1.5 14.8725 3.1275 16.5 5.8575 16.5H12.1425C14.8725 16.5 16.5 14.8725 16.5 12.1425V5.89502H1.5ZM10.83 12.135L9.27 13.035C8.94 13.2225 8.6175 13.32 8.3175 13.32C8.0925 13.32 7.89 13.2675 7.7025 13.1625C7.2675 12.915 7.0275 12.405 7.0275 11.745V9.94502C7.0275 9.28502 7.2675 8.77502 7.7025 8.52752C8.1375 8.27252 8.6925 8.31752 9.27 8.65502L10.83 9.55502C11.4075 9.88502 11.7225 10.35 11.7225 10.8525C11.7225 11.355 11.4 11.7975 10.83 12.135Z" fill="black" />
+                                                    <path d="M5.82766 1.5C3.50266 1.5075 1.98016 2.7075 1.59766 4.77H5.82766V1.5Z" fill="black" />
+                                                </svg>
+                                                Румтур
+                                            </a>
+                                        <? } ?>
                                         <div class="swiper slider-gallery" data-slider-object="data-slider-object">
                                             <div class="swiper-wrapper">
                                                 <? $keyPhoto = 1; ?>
-                                                <? $keyPhotoRoom = 0; ?>
                                                 <? foreach ($arElement["PICTURES"] as $arPhoto): ?>
                                                     <? if (count($arElement["PICTURES"]) > 1): ?>
                                                         <?
@@ -385,13 +400,12 @@ foreach ($arParams['VARS'] as $key => $value) {
                                                         $title = "Фото - " . $arElement["NAME"];
                                                         ?>
                                                     <? endif; ?>
-                                                    <div class="swiper-slide" data-fullgallery-item="<?= $keyPhotoRoom; ?>">
+                                                    <div class="swiper-slide">
                                                         <a href="<?= $arPhoto["big"] ?>" data-fancybox="gallery_<?= $arElement['ID'] ?>" data-caption="<?= $arElement["NAME"] ?>">
                                                             <img class="" loading="lazy" alt="<?= $alt; ?>" title="<?= $title; ?>" src="<?= $arPhoto["src"] ?>">
                                                         </a>
                                                     </div>
                                                     <? $keyPhoto++; ?>
-                                                    <? $keyPhotoRoom++; ?>
                                                 <? endforeach; ?>
                                             </div>
 
@@ -411,24 +425,20 @@ foreach ($arParams['VARS'] as $key => $value) {
                                         </div>
                                     </div>
                                     <script>
-                                        document.addEventListener("DOMContentLoaded", function() {
-                                            if (Fancybox !== "undefined") {
-                                                Fancybox.bind(' [data-fancybox="gallery_<?= $arElement['ID'] ?>" ]', {
-                                                    Toolbar: {
-                                                        display: {
-                                                            left: ["infobar"],
-                                                            middle: [],
-                                                            right: ["close"],
-                                                        },
-                                                    },
+                                        Fancybox.bind(' [data-fancybox="gallery_<?= $arElement['ID'] ?>" ]', {
+                                            Toolbar: {
+                                                display: {
+                                                    left: ["infobar"],
+                                                    middle: [],
+                                                    right: ["close"],
+                                                },
+                                            },
 
-                                                    commonCaption: true,
+                                            commonCaption: true,
 
-                                                    Thumbs: {
-                                                        type: "classic",
-                                                    },
-                                                });
-                                            }
+                                            Thumbs: {
+                                                type: "classic",
+                                            },
                                         });
                                     </script>
                                 <? endif; ?>
@@ -486,7 +496,7 @@ foreach ($arParams['VARS'] as $key => $value) {
                                                 Можно с животными
                                             </div>
                                         <? } ?>
-                                        <a class="room__features-more" href="#" data-room-more="<?= $checksum ?>">Подробнее о номере</a>
+                                        <a class="room__features-more" href="#" elementId="<?= $arElement['ID'] ?>" data-room-more="<?= $checksum ?>">Подробнее о номере</a>
                                     </div>
                                 </div>
                             </div>
@@ -613,82 +623,5 @@ foreach ($arParams['VARS'] as $key => $value) {
         <div class="rooms__more">
             <a href="#" data-object-showmore data-page="<?= $page + 1 ?>">Показать ещё</a>
         </div>
-    <? endif; ?>
-
-    <? if ($arSection["UF_EXTERNAL_SERVICE"] == "bnovo"): ?>
-        <script>
-            window.moreRooms = [
-                <? foreach ($arElementsJson as $arElement):
-                    $arElementsTariffs[$arElement['ID']] = $arElement;
-                endforeach; ?>
-                <? foreach ($arExternalInfo as $idNumber => $arTariffs): ?>
-                    <? foreach ($arTariffs as $keyTariff => $arTariff):
-                        $arElement = $arElementsTariffs[$idNumber];
-                        if ((int)$arElement["PROPERTY_PARENT_ID_VALUE"] > 0 && !empty($arElementsParent[$arElement['PROPERTY_PARENT_ID_VALUE']])) {
-                            $arElement = $arElementsParent[$arElement['PROPERTY_PARENT_ID_VALUE']];
-                            $arElement["ID"] = $arElementsTariffs[$idNumber]["ID"];
-                            $arElement["PROPERTY_EXTERNAL_ID_VALUE"] = $arElementsTariffs[$idNumber]["PROPERTY_EXTERNAL_ID_VALUE"];
-                        }
-                    ?> {
-                            "id": "<?= $arElement['ID'] . '-' . $arTariff["tariffId"] ?>",
-                            "title": "<?= addslashes($arElement["NAME"]) . ' ' .  ($arTariff['value']['PROPERTY_NAME_DETAIL_VALUE'] ?? $arTariff['value']['NAME']) ?>",
-                            "footnote": "<?= !empty($arElement["PROPERTY_SQUARE_VALUE"]) ? "Площадь: " . $arElement["PROPERTY_SQUARE_VALUE"] . " м² <br>" . $arExternalItem['fullPlacementsName'] : $arExternalItem['fullPlacementsName'] ?>",
-                            "text": `<?= $arElement["DETAIL_TEXT"] ?>`,
-                            "furnishings": [
-                                <? foreach ($arElement["PROPERTY_FEATURES_VALUE"] as $featureId): ?> `<?= $arHLRoomFeatures[$featureId]["UF_NAME"] ?>`,
-                                <? endforeach; ?>
-                            ],
-                            "services": [
-                                <? foreach ($arExternalItem['includedServices'] as $arServiceItem): ?>
-                                    <?= $arServicesTraveline[$arServiceItem["id"]]["NAME"] ? "`" . $arServicesTraveline[$arServiceItem["id"]]["NAME"] . "`," : "" ?>
-                                <? endforeach; ?>
-                            ],
-                            "reservCancel": [
-                                <? if (!empty($arTariff['value']['PROPERTY_CANCELLATION_FINE_TYPE_VALUE']) && $arTariff['value']['PROPERTY_CANCELLATION_FINE_TYPE_VALUE'] == '2'): ?>
-                                    <?= !empty($arTariff['value']['PROPERTY_CANCELLATION_RULES_VALUE']) ? '`' . $arTariff['value']['PROPERTY_CANCELLATION_RULES_VALUE'] . '`,' : '' ?> "Штраф за отмену бронирования — <?= $arTariff['price'] * ($arTariff['value']['PROPERTY_CANCELLATION_FINE_AMOUNT_VALUE'] / 100) ?> ₽"
-
-                                <? elseif (!empty($arTariff['value']['PROPERTY_CANCELLATION_FINE_TYPE_VALUE']) && $arTariff['value']['PROPERTY_CANCELLATION_FINE_TYPE_VALUE'] == '5'): ?>
-                                    <?= !empty($arTariff['value']['PROPERTY_CANCELLATION_RULES_VALUE']) ? '`' . $arTariff['value']['PROPERTY_CANCELLATION_RULES_VALUE'] . '`,' : '' ?> "Штраф за отмену бронирования — <?= $arTariff['price'] ?> ₽"
-
-                                <? elseif (!empty($arTariff['value']['PROPERTY_CANCELLATION_FINE_TYPE_VALUE']) && $arTariff['value']['PROPERTY_CANCELLATION_FINE_TYPE_VALUE'] == '4'): ?>
-                                    <?= !empty($arTariff['value']['PROPERTY_CANCELLATION_RULES_VALUE']) ? '`' . $arTariff['value']['PROPERTY_CANCELLATION_RULES_VALUE'] . '`,' : '' ?> "Штраф за отмену бронирования — <?= array_shift($arTariff['prices']) ?> ₽"
-
-                                <? elseif (!empty($arTariff['value']['PROPERTY_CANCELLATION_FINE_TYPE_VALUE'])): ?>
-                                    <?= !empty($arTariff['value']['PROPERTY_CANCELLATION_RULES_VALUE']) ? '`' . $arTariff['value']['PROPERTY_CANCELLATION_RULES_VALUE'] . '`,' : '' ?> "Штраф за отмену бронирования — <?= $arTariff['value']['PROPERTY_CANCELLATION_FINE_AMOUNT_VALUE'] ?> ₽"
-
-                                <? else: ?>
-                                    <?= !empty($arTariff['value']['PROPERTY_CANCELLATION_RULES_VALUE']) ? '`' . $arTariff['value']['PROPERTY_CANCELLATION_RULES_VALUE'] . '`,' : '' ?> "Бесплатная отмена бронирования"
-                                <? endif; ?>
-                            ]
-                        },
-                    <? endforeach; ?>
-                <? endforeach; ?>
-            ];
-        </script>
-    <? else: ?>
-        <script>
-            window.moreRooms = [
-                <? foreach ($arElementsJson as $arElement): ?>
-                    <? if ($arExternalInfo[$arElement["ID"]]): ?>
-                        <? foreach ($arExternalInfo[$arElement["ID"]] as $checksum => $arExternalItem): ?> {
-                                "id": "<?= $checksum ?>",
-                                "title": "<?= addslashes($arElement["NAME"]) ?>",
-                                "footnote": "<?= !empty($arElement["PROPERTY_SQUARE_VALUE"]) ? "Площадь: " . $arElement["PROPERTY_SQUARE_VALUE"] . " м² <br>" . $arExternalItem['fullPlacementsName'] : $arExternalItem['fullPlacementsName'] ?>",
-                                "text": `<?= $arElement["DETAIL_TEXT"] ?>`,
-                                "furnishings": [
-                                    <? foreach ($arElement["PROPERTY_FEATURES_VALUE"] as $featureId): ?> `<?= $arHLRoomFeatures[$featureId]["UF_NAME"] ?>`,
-                                    <? endforeach; ?>
-                                ],
-                                "services": [
-                                    <? foreach ($arExternalItem['includedServices'] as $arServiceItem): ?>
-                                        <?= $arServicesTraveline[$arServiceItem["id"]]["NAME"] ? "`" . $arServicesTraveline[$arServiceItem["id"]]["NAME"] . "`," : "" ?>
-                                    <? endforeach; ?>
-                                ],
-                            },
-                        <? endforeach; ?>
-                    <? endif; ?>
-                <? endforeach; ?>
-            ];
-        </script>
     <? endif; ?>
 </div>

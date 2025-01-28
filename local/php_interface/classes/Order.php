@@ -671,7 +671,7 @@ class Orders
                 } else {
                     $info = ["DISCOUNT_TYPE" => '', "DISCOUNT_VALUE" => 0];
                 }
-                
+
                 return json_encode([
                     "MESSAGE" => "Купон применён",
                     "INFO" => $info,

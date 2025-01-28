@@ -12343,7 +12343,7 @@
           ? e.target
           : e.target.closest("[data-scroll-to]");
         scroll_to_element_default()($el.getAttribute("href"), {
-          offset: 0,
+          offset: -100,
           duration: 500,
         });
       }
@@ -12878,15 +12878,15 @@
     var Preloader = function () {
       this.element = `<div class="preloader"><img src="/local/templates/main/assets/img/preloader.svg"></div>`;
       this.show = function () {
-        // scrollLockEnable();
-        // document.body.insertAdjacentHTML("beforeend", preloader.element);
+        scrollLockEnable();
+        document.body.insertAdjacentHTML("beforeend", preloader.element);
       };
       this.hide = function () {
-        // let element = document.querySelector(".preloader");
-        // if (element) {
-        //   element.remove();
-        // }
-        // scrollLockDisable();
+        let element = document.querySelector(".preloader");
+        if (element) {
+          element.remove();
+        }
+        scrollLockDisable();
       };
     };
 

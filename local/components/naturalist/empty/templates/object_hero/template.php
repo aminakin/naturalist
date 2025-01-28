@@ -34,6 +34,13 @@ global $isMobile;
                 </button>
             </div>
             <div class="object-hero__gallery">
+                <button class="favorite top <?= ($arFavourites && in_array($arSection["ID"], $arFavourites)) ? ' active' : '' ?> mobile"
+                    <? if ($arFavourites && in_array($arSection["ID"], $arFavourites)) : ?>data-favourite-remove<? else: ?>data-favourite-add<? endif; ?>
+                    data-id="<?= $arSection["ID"] ?>">
+                    <svg width="19" height="18" viewBox="0 0 19 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M3.77566 2.51612C6.01139 1.14472 8.01707 1.69128 9.22872 2.60121C9.42805 2.75091 9.56485 2.85335 9.6667 2.92254C9.76854 2.85335 9.90535 2.75091 10.1047 2.60121C11.3163 1.69128 13.322 1.14472 15.5577 2.51612C17.1037 3.4644 17.9735 5.44521 17.6683 7.72109C17.3616 10.008 15.8814 12.5944 12.7467 14.9146C12.7205 14.934 12.6945 14.9533 12.6687 14.9724C11.5801 15.7786 10.8592 16.3125 9.6667 16.3125C8.47415 16.3125 7.75326 15.7786 6.66473 14.9724C6.63893 14.9533 6.61292 14.934 6.5867 14.9146C3.452 12.5944 1.97181 10.008 1.6651 7.72109C1.35986 5.44521 2.22973 3.4644 3.77566 2.51612ZM9.54914 2.99503C9.54673 2.99611 9.54716 2.99576 9.55019 2.99454L9.54914 2.99503ZM9.78321 2.99454C9.78624 2.99576 9.78667 2.99611 9.78426 2.99503L9.78321 2.99454Z" fill="#E39250"></path>
+                    </svg>
+                </button>
                 <? if ($isMobile) { ?>
                     <div class="swiper slider-gallery" data-slider-object="data-slider-object" data-fullgallery="[<?= $arSection["FULL_GALLERY"]; ?>]">
                         <div class="swiper-wrapper">
@@ -120,23 +127,6 @@ global $isMobile;
                         </div>
                     <? } ?>
                     <div class="about">
-                        <?/* if ($arSection["UF_FEATURES"]): ?>
-                            <div class="about__text about__text_hidden">
-                                <? if ($arSection["UF_FEATURES"]): ?>
-                                    <ul class="list list_icons">
-                                        <? foreach ($arSection["UF_FEATURES"] as $key => $featureId): ?>
-                                            <?
-                                            $arIcon = CFile::GetFileArray($arHLFeatures[$featureId]["UF_ICON"]);
-                                            ?>
-                                            <li class="list__item">
-                                                <img src="<?= $arIcon["SRC"] ?>" alt="<?= $arHLFeatures[$featureId]["UF_NAME"] ?>">
-                                                <span><?= $arHLFeatures[$featureId]["UF_NAME"] ?></span>
-                                            </li>
-                                        <? endforeach; ?>
-                                    </ul>
-                                <? endif; ?>
-                            </div>
-                        <? endif; */ ?>
                         <div class="about__item">
                             <div class="about__item-title">Типы домов</div>
                             <div class="about__item-content">
@@ -151,7 +141,7 @@ global $isMobile;
                                         </div>
                                     <? } ?>
                                     <? if (count($arSection['UF_SUIT_TYPE']) > 4) { ?>
-                                        <a href="#" class="object__house-more">Ещё <?= intval(count($arSection['UF_SUIT_TYPE']) - 4) ?></a>
+                                        <a href="#houses" data-modal class="object__house-more">Ещё <?= intval(count($arSection['UF_SUIT_TYPE']) - 4) ?></a>
                                     <? } ?>
                                 </div>
                             </div>
@@ -189,28 +179,55 @@ global $isMobile;
                             </div>
                         </div>
                     </div>
-                    <div class="object__links">
-                        <a href="#" class="object__page-link">Правила проживания</a>
-                        <a href="#" class="object__page-link">Удобства</a>
-                        <a href="#" class="object__page-link">Развлечения</a>
+
+                    <? if ($reviewsCount > 0) { ?>
+                        <div class="object-hero__reviews-right mobile">
+                            <div class="object-hero__reviews-title">Отзывы</div>
+                            <div class="object-hero__reviews-info">
+                                <a href="#reviews-anchor" data-scroll-to class="score">
+                                    <img src="<?= SITE_TEMPLATE_PATH ?>/assets/img/star-score.svg" alt="">
+                                    <?= $avgRating ?>
+                                </a>
+                                <span class="map-ellips"></span>
+                                <a href="#reviews-anchor"
+                                    data-scroll-to=""><?= $reviewsCount ?> <?= $reviewsDeclension->get($reviewsCount) ?>
+                                </a>
+                            </div>
+                        </div>
+                    <? } ?>
+
+                    <div class="object__links-wrap">
+                        <div class="object__links">
+                            <? if ($arSection['~UF_LIVING_RULES']) { ?>
+                                <a href="#rules-anchor" class="object__page-link" data-scroll-to>Правила проживания</a>
+                            <? } ?>
+                            <? if ($arObjectComforts) { ?>
+                                <a href="#comfort-anchor" class="object__page-link" data-scroll-to>Удобства</a>
+                            <? } ?>
+                            <? if ($arHLFeatures) { ?>
+                                <a href="#fun-anchor" class="object__page-link" data-scroll-to>Развлечения</a>
+                            <? } ?>
+                        </div>
                     </div>
-                    <div class="object-hero__form">
-                        <form class="form" id="form-object-filter">
+                    <div class="object-hero__form catalog_map">
+                        <form class="form filters" id="form-object-filter">
                             <div class="form__row calendar" data-calendar="data-calendar" data-calendar-min="today"
                                 data-calendar-max="365">
                                 <div class="form__item">
-                                    <div class="field field_icon field_calendar">
+                                    <div class="field field_icon field_calendar start">
+                                        <label>Заезд</label>
                                         <div class="field__input" data-calendar-label="data-calendar-label"
                                             data-date-from><? if ($dateFrom): ?><?= $dateFrom ?><? else: ?>
-                                            <span>Заезд</span><? endif; ?>
+                                            <span></span><? endif; ?>
                                         </div>
                                     </div>
                                 </div>
 
                                 <div class="form__item">
                                     <div class="field field_icon field_calendar">
+                                        <label>Выезд</label>
                                         <div class="field__input" data-calendar-label="data-calendar-label"
-                                            data-date-to><? if ($dateTo): ?><?= $dateTo ?><? else: ?><span>Выезд</span><? endif; ?></div>
+                                            data-date-to><? if ($dateTo): ?><?= $dateTo ?><? else: ?><span></span><? endif; ?></div>
                                     </div>
                                 </div>
 
@@ -390,6 +407,145 @@ global $isMobile;
                     <? else : ?>
                         <p class="search-error" style="display: none"><?= $searchError != '' ? $searchError : 'Не найдено номеров на выбранные даты' ?></p>
                     <? endif; ?>
+                    <div class="object-hero__description">
+                        <? if ($arSection['~UF_LIVING_RULES']) { ?>
+                            <div class="object__living-rules" id="rules-anchor">
+                                <div class="object__living-rules-title">Правила проживания</div>
+                                <?= htmlspecialchars_decode($arSection['~UF_LIVING_RULES']) ?>
+                            </div>
+                        <? } ?>
+                        <? if ($arObjectComforts) { ?>
+                            <div class="object__living-rules object__comforts" id="comfort-anchor">
+                                <div class="object__living-rules-title">Удобства</div>
+                                <ul class="object__comforts-list">
+                                    <? foreach ($arObjectComforts as $comfort) { ?>
+                                        <li>
+                                            <? if ($comfort['ELEMENT']) { ?>
+                                                <a class="getDetail" href="#" detailId="<?= $comfort['ELEMENT'] ?>"><?= $comfort['UF_NAME'] ?></a>
+                                            <? } else {
+                                                echo $comfort['UF_NAME'];
+                                            } ?>
+                                        </li>
+                                    <? } ?>
+                                </ul>
+                                <? if (count($arObjectComforts) > 6) {
+                                ?>
+                                    <a href="#comfort-more" class="object__comforst-more" data-modal>Показать ещё</a>
+                                <? }
+                                ?>
+                            </div>
+                        <? } ?>
+                        <? if ($arHLFeatures) { ?>
+                            <div class="object__living-rules object__comforts" id="fun-anchor">
+                                <div class="object__living-rules-title">Развлечения</div>
+                                <ul class="object__comforts-list">
+                                    <? foreach ($arHLFeatures as $feat) { ?>
+                                        <li>
+                                            <? if ($feat['ELEMENT']) { ?>
+                                                <a href="#" class="getDetail" detailId="<?= $feat['ELEMENT'] ?>"><?= $feat['UF_NAME'] ?></a>
+                                            <? } else {
+                                                echo $feat['UF_NAME'];
+                                            } ?>
+                                        </li>
+                                    <? } ?>
+                                </ul>
+                                <? if (count($arHLFeatures) > 6) {
+                                ?>
+                                    <a href="#feature-more" class="object__comforst-more" data-modal>Показать ещё</a>
+                                <? }
+                                ?>
+                            </div>
+                        <? } ?>
+                    </div>
+                    <? if ($coords): ?>
+                        <div class="about__map mobile">
+                            <div class="about__map-heading">
+                                <a href="https://yandex.ru/maps/?mode=routes&rtext=~<?= $coords ?>" target="_blank" class="about__map-route">Проложить маршрут</a>
+                                <a class="about__map-big" href="#modal-map" data-modal>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" fill="none">
+                                        <path fill-rule="evenodd" clip-rule="evenodd" d="M15.7727 2.22725C15.9924 2.44692 15.9924 2.80308 15.7727 3.02275L10.5227 8.27275C10.3031 8.49242 9.94692 8.49242 9.72725 8.27275C9.50758 8.05308 9.50758 7.69692 9.72725 7.47725L14.9773 2.22725C15.1969 2.00758 15.5531 2.00758 15.7727 2.22725Z" fill="white" />
+                                        <path fill-rule="evenodd" clip-rule="evenodd" d="M8.27275 9.72725C8.49242 9.94692 8.49242 10.3031 8.27275 10.5227L3.02275 15.7727C2.80308 15.9924 2.44692 15.9924 2.22725 15.7727C2.00758 15.5531 2.00758 15.1969 2.22725 14.9773L7.47725 9.72725C7.69692 9.50758 8.05308 9.50758 8.27275 9.72725Z" fill="white" />
+                                        <path fill-rule="evenodd" clip-rule="evenodd" d="M15.4752 1.78324C15.6233 1.82809 15.8019 1.90575 15.9481 2.0519C16.0942 2.19804 16.1719 2.37665 16.2167 2.52476C16.2631 2.67772 16.2873 2.84168 16.2999 2.99943C16.3251 3.31432 16.3091 3.6739 16.2811 4.01291C16.255 4.3288 16.2164 4.64881 16.1833 4.9236C16.1806 4.94649 16.1778 4.96907 16.1752 4.99131C16.1385 5.29658 16.1145 5.51143 16.1128 5.63298C16.1084 5.94361 15.853 6.19184 15.5424 6.18743C15.2317 6.18302 14.9835 5.92762 14.9879 5.61699C14.9907 5.42189 15.0245 5.13709 15.0582 4.85709C15.0608 4.83559 15.0634 4.81395 15.066 4.79217C15.0995 4.51399 15.1356 4.21413 15.1599 3.92026C15.1863 3.60019 15.1964 3.31246 15.1785 3.08924C15.17 2.98312 15.1563 2.90745 15.1421 2.85788C15.0925 2.84367 15.0169 2.82998 14.9107 2.82148C14.6875 2.8036 14.3998 2.81365 14.0797 2.8401C13.7859 2.86438 13.486 2.90049 13.2078 2.93398C13.186 2.93661 13.1644 2.93921 13.1429 2.94179C12.8629 2.97544 12.5781 3.00931 12.383 3.01209C12.0724 3.0165 11.817 2.76826 11.8126 2.45764C11.8081 2.14701 12.0564 1.89161 12.367 1.8872C12.4886 1.88547 12.7034 1.86151 13.0087 1.82483C13.0309 1.82216 13.0535 1.81944 13.0764 1.81668C13.3512 1.78358 13.6712 1.74502 13.9871 1.71892C14.3261 1.69091 14.6857 1.67485 15.0006 1.70007C15.1583 1.7127 15.3223 1.73692 15.4752 1.78324Z" fill="white" />
+                                        <path fill-rule="evenodd" clip-rule="evenodd" d="M2.45764 11.8126C2.76826 11.817 3.0165 12.0724 3.01209 12.383C3.00931 12.5781 2.97544 12.8629 2.94179 13.1429C2.93921 13.1644 2.93661 13.186 2.93398 13.2078C2.90049 13.486 2.86438 13.7859 2.8401 14.0797C2.81365 14.3998 2.8036 14.6875 2.82148 14.9107C2.82998 15.0169 2.84367 15.0925 2.85788 15.1421C2.90745 15.1563 2.98312 15.17 3.08924 15.1785C3.31246 15.1964 3.60019 15.1863 3.92026 15.1599C4.21413 15.1356 4.51399 15.0995 4.79218 15.066C4.81395 15.0634 4.83559 15.0608 4.85709 15.0582C5.13709 15.0245 5.42189 14.9907 5.617 14.9879C5.92762 14.9835 6.18302 15.2317 6.18743 15.5424C6.19184 15.853 5.94361 16.1084 5.63298 16.1128C5.51143 16.1145 5.29658 16.1385 4.99131 16.1752C4.96907 16.1778 4.94649 16.1806 4.9236 16.1833C4.64881 16.2164 4.3288 16.255 4.01291 16.2811C3.6739 16.3091 3.31432 16.3251 2.99943 16.2999C2.84168 16.2873 2.67772 16.2631 2.52476 16.2167C2.37665 16.1719 2.19804 16.0942 2.0519 15.9481C1.90575 15.8019 1.82809 15.6233 1.78324 15.4752C1.73692 15.3223 1.7127 15.1583 1.70007 15.0006C1.67485 14.6857 1.69091 14.3261 1.71892 13.9871C1.74502 13.6712 1.78357 13.3512 1.81668 13.0764C1.81944 13.0535 1.82216 13.0309 1.82483 13.0087C1.86151 12.7034 1.88547 12.4886 1.8872 12.367C1.89161 12.0564 2.14701 11.8081 2.45764 11.8126ZM2.87302 15.1845C2.87302 15.1845 2.87292 15.1843 2.87273 15.1839L2.87302 15.1845Z" fill="white" />
+                                    </svg>
+                                </a>
+                            </div>
+                            <div class="about__map-map">
+                                <div id="map-preview"></div>
+                            </div>
+                        </div>
+                    <? endif; ?>
+                    <? if ($reviewsCount > 0): ?>
+                        <div class="reviews__scors mobile">
+                            <div class="reviews__title">Что нравится гостям</div>
+                            <ul class="list list_score">
+                                <li class="list__item">
+                                    <div class="list__item-label">Удобство расположения</div>
+                                    <div class="list__item-progress">
+                                        <div style="width: <?= $arAvgCriterias[1][1] ?? 0 ?>%"></div>
+                                    </div>
+                                    <img src="<?= SITE_TEMPLATE_PATH ?>/assets/img/star-score.svg" alt="">
+                                    <div class="list__item-number"><?= $arAvgCriterias[1][0] ?? "0.0" ?></div>
+                                </li>
+                                <li class="list__item">
+                                    <div class="list__item-label">Питание</div>
+                                    <div class="list__item-progress">
+                                        <div style="width: <?= $arAvgCriterias[2][1] ?? 0 ?>%"></div>
+                                    </div>
+                                    <img src="<?= SITE_TEMPLATE_PATH ?>/assets/img/star-score.svg" alt="">
+                                    <div class="list__item-number"><?= $arAvgCriterias[2][0] ?? "0.0" ?></div>
+                                </li>
+                                <li class="list__item">
+                                    <div class="list__item-label">Уют</div>
+                                    <div class="list__item-progress">
+                                        <div style="width: <?= $arAvgCriterias[3][1] ?? 0 ?>%"></div>
+                                    </div>
+                                    <img src="<?= SITE_TEMPLATE_PATH ?>/assets/img/star-score.svg" alt="">
+                                    <div class="list__item-number"><?= $arAvgCriterias[3][0] ?? "0.0" ?></div>
+                                </li>
+                                <li class="list__item">
+                                    <div class="list__item-label">Сервис</div>
+                                    <div class="list__item-progress">
+                                        <div style="width: <?= $arAvgCriterias[4][1] ?? 0 ?>%"></div>
+                                    </div>
+                                    <img src="<?= SITE_TEMPLATE_PATH ?>/assets/img/star-score.svg" alt="">
+                                    <div class="list__item-number"><?= $arAvgCriterias[4][0] ?? "0.0" ?></div>
+                                </li>
+                                <li class="list__item">
+                                    <div class="list__item-label">Чистота</div>
+                                    <div class="list__item-progress">
+                                        <div style="width: <?= $arAvgCriterias[5][1] ?? 0 ?>%"></div>
+                                    </div>
+                                    <img src="<?= SITE_TEMPLATE_PATH ?>/assets/img/star-score.svg" alt="">
+                                    <div class="list__item-number"><?= $arAvgCriterias[5][0] ?? "0.0" ?></div>
+                                </li>
+                                <li class="list__item">
+                                    <div class="list__item-label">Эстетика окружения</div>
+                                    <div class="list__item-progress">
+                                        <div style="width: <?= $arAvgCriterias[6][1] ?? 0 ?>%"></div>
+                                    </div>
+                                    <img src="<?= SITE_TEMPLATE_PATH ?>/assets/img/star-score.svg" alt="">
+                                    <div class="list__item-number"><?= $arAvgCriterias[6][0] ?? "0.0" ?></div>
+                                </li>
+                                <li class="list__item">
+                                    <div class="list__item-label">Разнообразие досуга</div>
+                                    <div class="list__item-progress">
+                                        <div style="width: <?= $arAvgCriterias[7][1] ?? 0 ?>%"></div>
+                                    </div>
+                                    <img src="<?= SITE_TEMPLATE_PATH ?>/assets/img/star-score.svg" alt="">
+                                    <div class="list__item-number"><?= $arAvgCriterias[7][0] ?? "0.0" ?></div>
+                                </li>
+                                <li class="list__item">
+                                    <div class="list__item-label">Цена/качество</div>
+                                    <div class="list__item-progress">
+                                        <div style="width: <?= $arAvgCriterias[8][1] ?? 0 ?>%"></div>
+                                    </div>
+                                    <img src="<?= SITE_TEMPLATE_PATH ?>/assets/img/star-score.svg" alt="">
+                                    <div class="list__item-number"><?= $arAvgCriterias[8][0] ?? "0.0" ?></div>
+                                </li>
+                            </ul>
+                        </div>
+                    <? endif; ?>
                     <? if ($arReviews) : ?>
                         <section class="section section_reviews" id="reviews-anchor">
                             <?
@@ -529,8 +685,8 @@ global $isMobile;
                 </div>
             </div>
 
-            <div class="object-hero__description">
-                <?/*<div class="object-hero__heading">
+
+            <?/*<div class="object-hero__heading">
                     <div class="object-hero__controls">
                         <div class="share">
                             <button class="share__control" type="button" data-share="data-share">
@@ -573,7 +729,7 @@ global $isMobile;
                         </div>
                     </div>
                 </div>*/ ?>
-            </div>
+
         </div>
     </div>
 </section>

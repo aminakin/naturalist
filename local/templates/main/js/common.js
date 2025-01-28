@@ -588,6 +588,7 @@ $(function () {
     if (
       !this.getAttribute("href").includes("#") &&
       this.getAttribute("target") != "_blank" &&
+      !this.getAttribute("data-fancybox") &&
       this.getAttribute("href") != "javascript: void(0)" &&
       !$(this).parents("#bx-panel").length &&
       !this.classList.contains("fancy")

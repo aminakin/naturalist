@@ -22,9 +22,7 @@ use Naturalist\Reviews;
 
 global $arUser, $userId, $isAuthorized;
 
-$APPLICATION->SetAdditionalCSS(SITE_TEMPLATE_PATH . '/assets/css/lk_history.css?v=' . filemtime($_SERVER['DOCUMENT_ROOT'] . SITE_TEMPLATE_PATH . '/assets/css/lk_history.css'));
 $APPLICATION->SetAdditionalCSS('https://unpkg.com/zuck.js/dist/zuck.css');
-$APPLICATION->SetAdditionalCSS('https://unpkg.com/zuck.js/dist/skins/snapgram.css');
 $APPLICATION->AddHeadScript('https://unpkg.com/zuck.js/dist/zuck.js');
 
 $request = Application::getInstance()->getContext()->getRequest();
@@ -405,11 +403,13 @@ $entity = HighloadBlockTable::compileEntity($hlblock);
 $entityClass = $entity->getDataClass();
 $rsData = $entityClass::getList([
     "select" => ["*"],
+    "filter" => ['ID' => $arSection['UF_FEATURES']],
     "order" => ["UF_SORT" => "ASC"],
 ]);
 $arHLFeatures = array();
 while ($arEntity = $rsData->Fetch()) {
-    $arHLFeatures[$arEntity["ID"]] = $arEntity;
+    $arHLFeatures[$arEntity["UF_XML_ID"]] = $arEntity;
+    $arHLFeaturesIds[] = $arEntity["UF_XML_ID"];
 }
 // Особенности номера
 $hlId = 8;
@@ -420,6 +420,7 @@ $rsData = $entityClass::getList([
     "select" => ["*"],
     "order" => ["UF_SORT" => "ASC"],
 ]);
+
 $arHLRoomFeatures = array();
 while ($arEntity = $rsData->Fetch()) {
     $arHLRoomFeatures[$arEntity["UF_XML_ID"]] = $arEntity;
@@ -433,6 +434,42 @@ $houseTypeData = $houseTypesDataClass::query()
 foreach ($houseTypeData as $houseType) {
     $arHouseTypes[$houseType['ID']] = $houseType;
 }
+
+// Удобства объекта
+$objectComfortsDataClass = HighloadBlockTable::compileEntity(OBJECT_COMFORT_HL_ENTITY)->getDataClass();
+$objectComfortsData = $objectComfortsDataClass::query()
+    ->addSelect('*')
+    ->where('ID', 'in', $arSection['UF_OBJECT_COMFORTS'])
+    ->setOrder(['UF_SORT' => 'ASC'])
+    ?->fetchAll();
+foreach ($objectComfortsData as $objectComfort) {
+    $arObjectComforts[$objectComfort['UF_XML_ID']] = $objectComfort;
+    $arObjectComfortsIds[] = $objectComfort['UF_XML_ID'];
+}
+
+// Поиск детального описания удобства или развлечения
+$featuresDetailList = \Bitrix\Iblock\Elements\ElementFeaturesdetailTable::getList([
+    'select' => ['ID', 'NAME', 'FUN_VALUE' => 'FUN.VALUE', 'COMFORT_VALUE' => 'COMFORT.VALUE'],
+    'filter' => [
+        'OBJECT.VALUE' => $arSection['ID'],
+        [
+            "LOGIC" => "OR",
+            ["COMFORT.VALUE" => $arObjectComfortsIds],
+            ["FUN.VALUE" => $arHLFeaturesIds]
+        ],
+    ]
+])->fetchAll();
+
+foreach ($featuresDetailList as $featuresDetail) {
+    if (isset($arObjectComforts[$featuresDetail['COMFORT_VALUE']])) {
+        $arObjectComforts[$featuresDetail['COMFORT_VALUE']]['ELEMENT'] = $featuresDetail['ID'];
+    }
+    if (isset($arHLFeatures[$featuresDetail['FUN_VALUE']])) {
+        $arHLFeatures[$featuresDetail['FUN_VALUE']]['ELEMENT'] = $featuresDetail['ID'];
+    }
+}
+
+//
 
 // Услуги (для Traveline)
 $rsServices = CIBlockElement::GetList(array(), array("IBLOCK_ID" => SERVICES_IBLOCK_ID, "PROPERTY_TRAVELINE" => getEnumIdByXml(SERVICES_IBLOCK_ID, 'TRAVELINE', 'Y')), false, false, array("ID", "NAME", "CODE"));
@@ -551,6 +588,7 @@ $APPLICATION->AddHeadString('<meta name="description" content="' . $descriptionS
             "isUserReview" => $isUserReview,
             'roomsDeclension' => $roomsDeclension,
             'bedsDeclension' => $bedsDeclension,
+            'arObjectComforts' => $arObjectComforts,
         )
     );
     ?>
@@ -611,6 +649,8 @@ $APPLICATION->AddHeadString('<meta name="description" content="' . $descriptionS
                     "RATING_RANGE" => 0.5,
                     "COORDS_RANGE" => 2,
                     "ITEMS_COUNT" => 8,
+                    "AR_SECTION" => $arSection,
+                    "arHLTypes" => $arHLTypes,
                 )
             );
             ?>
@@ -636,6 +676,10 @@ $APPLICATION->IncludeComponent(
     array(
         'SECTION_IMGS' => $arSection["PICTURES"],
         'TITLE' => $h1SEO,
+        'OBJECT_COMFORTS' => $arObjectComforts,
+        'OBJECT_FUN' => $arHLFeatures,
+        'HOUSE_TYPES' => $arHouseTypes,
+        'SECTION' => $arSection
     )
 );
 ?>

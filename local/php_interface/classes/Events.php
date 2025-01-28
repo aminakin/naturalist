@@ -190,7 +190,8 @@ class Events
 
         $orderId = $order->getId();
         $orders = new Orders();
-        $reservationRes = $orders->makeReservation($orderId);
+        $reservationRes = true;
+        //$reservationRes = $orders->makeReservation($orderId);
 
         // Если успешно забронировано
         if (!isset($reservationRes["ERROR"])) {
@@ -290,7 +291,7 @@ class Events
     public static function cancelOrder($event)
     {
         $order = $event->getParameter("ENTITY");
-        if ($order->isCanceled()) {
+        if ($order->getField('STATUS_ID') == 'C') {
             $orderId = $order->getId();
             $orders = new Orders();
             $orders->cancel($orderId, 'Отмена заказа из админки');

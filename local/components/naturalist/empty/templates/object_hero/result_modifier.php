@@ -44,4 +44,5 @@ $arResult = array(
     "isUserReview" => $arParams['isUserReview'],
     'roomsDeclension' => $arParams['roomsDeclension'],
     'bedsDeclension' => $arParams['bedsDeclension'],
+    'arObjectComforts' => $arParams['arObjectComforts'],
 );

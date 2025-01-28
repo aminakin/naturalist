@@ -3959,8 +3959,10 @@ img.lazy.loaded {
 }
 
 .modal_room-more .modal__container {
-  max-width: 73.4rem;
-  padding: 5.6rem 11.2rem;
+  max-width: 1000px;
+  padding: 32px;
+  border-radius: 16px;
+  background-color: var(--color-beige-light);
 }
 
 .list_social {
@@ -5022,11 +5024,6 @@ img.lazy.loaded {
   .modal_review .list_upload .list__item + .list__item {
   }
 
-  .modal_room-more .modal__container {
-    padding-left: 6rem;
-    padding-right: 6rem;
-  }
-
   .slider-gallery .swiper-button-prev {
     left: 1.5rem;
   }
@@ -5089,11 +5086,6 @@ img.lazy.loaded {
 }
 
 @media (max-width: 768px) {
-  .modal_room-more .modal__container {
-    padding-left: 2.4rem;
-    padding-right: 2.4rem;
-  }
-
   .footer {
     padding: 40px 0 48px;
   }
@@ -5212,4 +5204,117 @@ img.lazy.loaded {
   .list__item_phone a svg {
     display: inline-block;
   }
+}
+
+.modal_auth .modal__container {
+  max-width: 390px;
+  border-radius: 16px;
+  background-color: var(--color-beige-light);
+}
+
+.modal_auth .modal__container .h3 {
+  font-family: Lato;
+  text-align: left;
+  margin-bottom: 20px;
+  font-size: 18px;
+  line-height: 24px;
+  font-weight: 600;
+}
+
+.modal_auth .modal__container .form .field__input {
+  padding: 11px 12px;
+  border-color: transparent;
+  border-radius: 12px;
+  background-color: var(--color-new-1);
+  font-family: Lato;
+  font-size: 16px;
+  line-height: 22px;
+  height: auto;
+}
+
+.modal_auth .modal__container .form .field__input::placeholder {
+  color: var(--color-text-2);
+}
+
+.modal_auth .form {
+  gap: 20px;
+}
+
+.modal_auth .modal__container .form__controls .button {
+  border-radius: 8px;
+  background-color: var(--color-orange);
+  color: white;
+  font-family: Lato;
+  padding: 10px;
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 400;
+  height: auto;
+  border: none;
+}
+
+.modal_auth .modal__container .form__item-headnote {
+  margin: 0 0 20px 0;
+  position: relative;
+  font-size: 14px;
+  line-height: 20px;
+  color: var(--color-text-4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal_auth .modal__container .form__item-headnote::before,
+.modal_auth .modal__container .form__item-headnote::after {
+  content: "";
+  position: absolute;
+  height: 1px;
+  width: 35%;
+  background-color: var(--color-btn);
+  left: 8px;
+}
+
+.modal_auth .modal__container .form__item-headnote::after {
+  left: auto;
+  right: 8px;
+}
+
+.modal_auth .list_social .list__link {
+  padding: 10px 40px;
+  width: 100%;
+  border-radius: 8px;
+  border: 1px solid black;
+  color: black;
+  font-size: 14px;
+  line-height: 20px;
+  position: relative;
+  font-family: Lato;
+}
+
+.modal_auth .list_social .list__link svg {
+  position: absolute;
+  left: 14px;
+}
+
+.modal_auth .list > .list__item {
+  width: 100%;
+}
+
+.modal_form .modal__container .form__policy {
+  font-family: Lato;
+  font-size: 13px;
+  line-height: 18px;
+  color: var(--color-text-4);
+}
+
+.form__policy a {
+  border-bottom: 1px solid black;
+}
+
+.modal__label {
+  color: #2d3139;
+  font-size: 14px;
+  line-height: 20px;
+  font-family: Lato;
+  margin-bottom: 6px;
 }

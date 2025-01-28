@@ -65,7 +65,7 @@ class BlogersSliderStories {
 }
 
 document.addEventListener("DOMContentLoaded", function () {
-  if (objectStories) {
+  if (typeof objectStories !== undefined) {
     new BlogersSliderStories();
   }
 

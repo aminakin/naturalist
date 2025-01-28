@@ -12715,6 +12715,33 @@
     window.addEventListener("load", function () {
       window.objectsGallery();
     });
+
+    window.featureGallery = function () {
+      var $object = document.querySelector(
+        ".detail-feature__slider:not(.swiper-initialized)"
+      );
+
+      // eslint-disable-next-line no-unused-vars
+      var objectSlider = new core($object, {
+        slidesPerView: 1,
+        spaceBetween: 0,
+        speed: 250,
+        effect: "slide",
+        loop: true,
+        watchOverflow: true,
+        watchSlidesProgress: true,
+        preloadImages: false,
+        lazy: {
+          loadPrevNext: true,
+          loadOnTransitionStart: true,
+        },
+        navigation: {
+          nextEl: $object.querySelector(".swiper-button-next"),
+          prevEl: $object.querySelector(".swiper-button-prev"),
+        },
+      });
+    };
+
     /* RELATED
    -------------------------------------------------- */
 
@@ -16749,8 +16776,26 @@
           value: function handleHide() {
             var _this = this;
 
+            document
+              .querySelectorAll(".catalog_map [data-calendar-label]")
+              .forEach(function (item) {
+                if (item.innerText !== "") {
+                  item.previousElementSibling.style.bottom = "30px";
+                }
+              });
+
             document.addEventListener("click", function (event) {
               var $el = event.target;
+
+              if (
+                $el.getAttribute("data-calendar-label") == "data-calendar-label"
+              ) {
+                document
+                  .querySelectorAll(".catalog_map [data-calendar-label]")
+                  .forEach(function (item) {
+                    item.previousElementSibling.style.bottom = "30px";
+                  });
+              }
 
               if (
                 !$el.matches("[data-calendar-dropdown]") &&
@@ -17168,70 +17213,71 @@
     rangeCalendar.init();
     /* MORE
    -------------------------------------------------- */
-
+    // Загрузка доп инфо о номере
     document.addEventListener("click", function (event) {
       var $el = event.target;
+      let roomId = $el.getAttribute("elementId");
 
-      if ($el.dataset.roomMore !== undefined) {
-        event.preventDefault(); // eslint-disable-next-line no-undef
-
-        var content = moreRooms.find(function (item) {
-          return item.id === $el.dataset.roomMore;
-        });
+      if (roomId) {
+        event.preventDefault();
         var $contentModal = document.querySelector("[data-room-more-content]");
+
         $contentModal.innerHTML = "";
-        $contentModal.insertAdjacentHTML(
-          "beforeend",
-          '\n\t\t\t\t\t<div class="modal-more">\n\t\t\t\t\t\t<div class="h3 modal-more__title">'
-            .concat(content.title, "</div>\n\t\t\t\t\t\t")
-            .concat(
-              content.title
-                ? '<div class="modal-more__footnote">'.concat(
-                    content.footnote,
-                    "</div>"
-                  )
-                : "",
-              "\n\t\t\t\t\t\t"
-            )
-            .concat(
-              content.text
-                ? '<div class="modal-more__text">'.concat(
-                    content.text,
-                    "</div>"
-                  )
-                : "",
-              "\n\t\t\t\t\t\t"
-            )
-            .concat(
-              content.furnishings.length
-                ? '\n\t\t\t\t\t\t\t\t\t<div class="h6">\u041E\u0441\u043D\u0430\u0449\u0435\u043D\u0438\u0435 \u043D\u043E\u043C\u0435\u0440\u0430</div>\n\t\t\t\t\t\t\t\t\t<ul class="list list_circle">\n\t\t\t\t\t\t\t\t\t\t'.concat(
-                    content.furnishings
-                      .map(function (item) {
-                        return '<li class="list__item">'.concat(item, "</li>");
-                      })
-                      .join(""),
-                    "\n\t\t\t\t\t\t\t\t\t</ul>\n\t\t\t\t\t\t\t\t"
-                  )
-                : "",
-              "\n\t\t\t\t\t\t"
-            )
-            .concat(
-              content.services.length
-                ? '\n\t\t\t\t\t\t\t\t\t<div class="h6">\u0423\u0441\u043B\u0443\u0433\u0438</div>\n\t\t\t\t\t\t\t\t\t<ul class="list list_circle">\n\t\t\t\t\t\t\t\t\t\t'.concat(
-                    content.services
-                      .map(function (item) {
-                        return '<li class="list__item">'.concat(item, "</li>");
-                      })
-                      .join(""),
-                    "\n\t\t\t\t\t\t\t\t\t</ul>\n\t\t\t\t\t\t\t\t"
-                  )
-                : "",
-              "\n\t\t\t\t\t\t"
-            )
-        );
+        $.ajax({
+          url: "/ajax/object/getRoomFeatures.php",
+          data: {
+            roomId: roomId,
+          },
+          method: "POST",
+          dataType: "html",
+          processData: true,
+          preparePost: true,
+          async: false,
+          success: function (data) {
+            $contentModal.insertAdjacentHTML("beforeend", data);
+          },
+          error: function (data) {
+            console.error(data);
+          },
+        });
         window.modal.open("more");
       }
     });
+
+    // Загрузка доп инфо об удобстве/развлечении
+    document.addEventListener("click", function (event) {
+      var $el = event.target;
+      let detailId = $el.getAttribute("detailId");
+
+      if (detailId) {
+        event.preventDefault();
+        var $contentModal = document.querySelector(
+          "[data-detail-more-content]"
+        );
+
+        $contentModal.innerHTML = "";
+        $.ajax({
+          url: "/ajax/object/getDetailInfo.php",
+          data: {
+            detailId: detailId,
+          },
+          method: "POST",
+          dataType: "html",
+          processData: true,
+          preparePost: true,
+          async: false,
+          success: function (data) {
+            $contentModal.insertAdjacentHTML("beforeend", data);
+            window.featureGallery();
+          },
+          error: function (data) {
+            console.error(data);
+          },
+        });
+        window.modal.open("detail-more");
+      }
+    });
+
     window.markupSelectHandler = function (input) {
       let price = input.value;
       let priceText = new Intl.NumberFormat("ru-RU", {
