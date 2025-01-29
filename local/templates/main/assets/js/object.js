@@ -12751,21 +12751,28 @@
         if ($item.querySelector(".swiper:not(.swiper-initialized)")) {
           // eslint-disable-next-line no-unused-vars
           var headingRelatedSlider = new core($item.querySelector(".swiper"), {
-            slidesPerView: 3,
+            slidesPerView: "auto",
             spaceBetween: 20,
             speed: 250,
             effect: "slide",
             loop: false,
             watchSlidesProgress: true,
-            navigation: {
-              nextEl: $item.querySelector(
-                ".slider__heading-controls .swiper-button-next"
-              ),
-              prevEl: $item.querySelector(
-                ".slider__heading-controls .swiper-button-prev"
-              ),
-            },
+            navigation: false,
             breakpoints: {
+              500: {
+                slidesPerView: 2,
+                navigation: {
+                  nextEl: $item.querySelector(
+                    ".slider__heading-controls .swiper-button-next"
+                  ),
+                  prevEl: $item.querySelector(
+                    ".slider__heading-controls .swiper-button-prev"
+                  ),
+                },
+              },
+              900: {
+                slidesPerView: 3,
+              },
               1280: {
                 slidesPerView: 4,
               },
@@ -12909,8 +12916,18 @@
           $guests.classList.remove("guests_show");
         }
       });
+
+      document
+        .querySelector(".guests__dropdown-close")
+        .addEventListener("click", function (event) {
+          $guests.classList.remove("guests_show");
+          $(".b24-widget-button-wrapper").show();
+
+          document.querySelector(".main-form__shadow").style.display = "none";
+        });
       $guestsControl.addEventListener("click", function () {
         $guests.classList.toggle("guests_show");
+        $(".b24-widget-button-wrapper").toggle();
       });
 
       var countGuests = function countGuests() {
@@ -16808,6 +16825,16 @@
                 );
               }
             });
+            if (document.querySelector(".calendar__dropdown-close") != null) {
+              document
+                .querySelector(".calendar__dropdown-close")
+                .addEventListener("click", function (event) {
+                  _this.$elements.dropdown.classList.remove(
+                    "calendar__dropdown_show"
+                  );
+                  $(".b24-widget-button-wrapper").show();
+                });
+            }
             window.addEventListener("resize", function () {
               _this.$elements.dropdown.classList.remove(
                 "calendar__dropdown_show"
@@ -16831,6 +16858,7 @@
                 _this2.$elements.dropdown.classList.remove(
                   "calendar__dropdown_show"
                 );
+                $(".b24-widget-button-wrapper").show();
               }
             });
           },
@@ -16845,6 +16873,7 @@
                 _this3.$elements.dropdown.classList.toggle(
                   "calendar__dropdown_show"
                 );
+                $(".b24-widget-button-wrapper").toggle();
               });
             });
           },

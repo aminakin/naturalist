@@ -45,7 +45,6 @@ global $isMobile;
                     <div class="swiper slider-gallery" data-slider-object="data-slider-object" data-fullgallery="[<?= $arSection["FULL_GALLERY"]; ?>]">
                         <div class="swiper-wrapper">
                             <? $keyPhoto = 1; ?>
-                            <? $keyPhotoFullGallery = 0; ?>
                             <? foreach ($arSection["PICTURES"] as $arPhoto) : ?>
                                 <? if (count($arSection["PICTURES"]) > 1): ?>
                                     <?
@@ -59,12 +58,13 @@ global $isMobile;
                                     ?>
 
                                 <? endif; ?>
-                                <div class="swiper-slide" data-fullgallery-item="<?= $keyPhotoFullGallery; ?>">
-                                    <img class="swiper-lazy" alt="<?= $alt ?>" title="<?= $title ?>"
-                                        data-src="<?= $arPhoto["src"] ?>">
+                                <div class="swiper-slide">
+                                    <a href="#gallery" data-modal>
+                                        <img class="swiper-lazy" alt="<?= $alt ?>" title="<?= $title ?>"
+                                            data-src="<?= $arPhoto["src"] ?>">
+                                    </a>
                                 </div>
                                 <? $keyPhoto++; ?>
-                                <? $keyPhotoFullGallery++; ?>
                             <? endforeach; ?>
                         </div>
 
@@ -209,7 +209,23 @@ global $isMobile;
                             <? } ?>
                         </div>
                     </div>
-                    <div class="object-hero__form catalog_map">
+                    <div class="fake-filter_catalog">
+                        <div class="fake-filter_inputs">
+                            <div class="fake-filter_date">
+                                <span class="from"><?= ($dateFrom) ? $dateFrom : 'Заезд' ?></span>
+                                &nbsp;-&nbsp;
+                                <span class="to"><?= ($dateTo) ? $dateTo : 'Выезд' ?></span>
+                                <span class="fake-filter_guest"><?= $_GET['guests'] ? '<span class="dot"></span>' . $guests + $children . ' ' . $guestsDeclension->get($guests + $children) : '' ?></span>
+                            </div>
+                        </div>
+                        <div class="fake-filter_btn">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd" clip-rule="evenodd" d="M16.9697 16.9697C17.2626 16.6768 17.7374 16.6768 18.0303 16.9697L22.5303 21.4697C22.8232 21.7626 22.8232 22.2374 22.5303 22.5303C22.2374 22.8232 21.7626 22.8232 21.4697 22.5303L16.9697 18.0303C16.6768 17.7374 16.6768 17.2626 16.9697 16.9697Z" fill="white" />
+                                <path fill-rule="evenodd" clip-rule="evenodd" d="M1.25 11C1.25 5.61522 5.61522 1.25 11 1.25C16.3848 1.25 20.75 5.61522 20.75 11C20.75 16.3848 16.3848 20.75 11 20.75C5.61522 20.75 1.25 16.3848 1.25 11ZM11 2.75C6.44365 2.75 2.75 6.44365 2.75 11C2.75 15.5563 6.44365 19.25 11 19.25C15.5563 19.25 19.25 15.5563 19.25 11C19.25 6.44365 15.5563 2.75 11 2.75Z" fill="white" />
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="object-hero__form catalog_filter catalog_map">
                         <form class="form filters" id="form-object-filter">
                             <div class="form__row calendar" data-calendar="data-calendar" data-calendar-min="today"
                                 data-calendar-max="365">
@@ -284,6 +300,9 @@ global $isMobile;
                                     <div class="calendar__month">
                                         <input type="hidden" data-calendar-value="data-calendar-value">
                                     </div>
+                                    <div class="calendar__dropdown-close">
+                                        Закрыть
+                                    </div>
                                 </div>
                             </div>
 
@@ -352,6 +371,9 @@ global $isMobile;
                                                         </div>
                                                     <? endforeach; ?>
                                                 <? endif; ?>
+                                            </div>
+                                            <div class="guests__dropdown-close">
+                                                Закрыть
                                             </div>
                                         </div>
                                     </div>
@@ -457,7 +479,7 @@ global $isMobile;
                             </div>
                         <? } ?>
                     </div>
-                    <? if ($coords): ?>
+                    <? if ($coords && $isMobile): ?>
                         <div class="about__map mobile">
                             <div class="about__map-heading">
                                 <a href="https://yandex.ru/maps/?mode=routes&rtext=~<?= $coords ?>" target="_blank" class="about__map-route">Проложить маршрут</a>
