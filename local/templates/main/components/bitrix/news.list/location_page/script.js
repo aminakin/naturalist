@@ -65,7 +65,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
       locations.forEach((location) => {
         let text = location.textContent.toLowerCase();
-        text = text.replace("республика", "");
+        text = text.replace("республика ", "");
         text = text.replace("озеро ", "");
         text = text.replace("река ", "");
 

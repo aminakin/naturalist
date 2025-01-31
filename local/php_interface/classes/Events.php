@@ -9,6 +9,7 @@ use Bitrix\Main\Application;
 use Bitrix\Main\Context;
 use Bitrix\Main\Loader;
 use Bitrix\Sale\Order;
+use Bitrix\Main\Engine\CurrentUser;
 use CIBlockSection;
 use CIBlockElement;
 use CFile;
@@ -48,6 +49,7 @@ class Events
         $event->addEventHandler('sale', 'OnSaleOrderSaved', [self::class, "makeOrderCert"]);
         $event->addEventHandler('sale', 'OnSaleOrderSaved', [self::class, "cancelOrder"]);
         $event->addEventHandler('iblock', 'OnBeforeIBlockSectionDelete', [self::class, "OnBeforeIBlockSectionDeleteHandler"]);
+        $event->addEventHandler('iblock', 'OnBeforeIBlockElementDelete', [self::class, "OnBeforeIBlockElementDeleteHandler"]);
     }
 
     public static function deleteKernelJs(&$content)
@@ -375,6 +377,13 @@ class Events
     // Удаление данных по размещениям Биново при удалении объекта
     public static function OnBeforeIBlockSectionDeleteHandler($Id)
     {
+        $userGroups = CurrentUser::get()->getUserGroups();
+        if (in_array(MODERATOR_USER_GROUP, $userGroups)) {
+            global $APPLICATION;
+            $APPLICATION->throwException("Нет прав на удаление раздела");
+            return false;
+        }
+
         Loader::IncludeModule("iblock");
         $arSection = CIBlockSection::GetList(false, array(
             "IBLOCK_ID" => CATALOG_IBLOCK_ID,
@@ -401,6 +410,17 @@ class Events
                     echo 'Ошибка: ' . implode(', ', $res->getErrors()) . "";
                 }
             }
+        }
+    }
+
+    // Запрет на удаление элемента для группы пользователей
+    public static function OnBeforeIBlockElementDeleteHandler($id)
+    {
+        $userGroups = CurrentUser::get()->getUserGroups();
+        if (in_array(MODERATOR_USER_GROUP, $userGroups)) {
+            global $APPLICATION;
+            $APPLICATION->throwException("Нет прав на удаление элемента");
+            return false;
         }
     }
 

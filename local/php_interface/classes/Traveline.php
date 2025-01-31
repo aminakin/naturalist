@@ -1052,6 +1052,11 @@ class Traveline
         curl_close($ch);
 
         date_default_timezone_set('UTC');
+
+        if (!$checksum) {
+            $checksum = self::getChecksum(Application::getInstance()->getSession()->getId());
+        }
+
         foreach ($arResponse["roomStays"] as $arItem) {
             if ($externalElementId == $arItem['ratePlan']['id'] && $externalCategoryId == $arItem['roomType']['id'] && $checksum == $arItem['checksum']) {
                 return [

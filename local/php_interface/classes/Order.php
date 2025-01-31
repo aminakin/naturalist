@@ -313,8 +313,8 @@ class Orders
             }
         }
 
-        $res = CSaleOrder::CancelOrder($orderId, "Y", $reason);
-        if ($res) {
+        //$res = CSaleOrder::CancelOrder($orderId, "Y", $reason);
+        if ($cancelReservation) {
             // Выставляем заказу статус "С" (Отменен)
             $updStatusRes = $this->updateStatus($orderId, "C");
 
