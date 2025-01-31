@@ -12757,18 +12757,17 @@
             effect: "slide",
             loop: false,
             watchSlidesProgress: true,
-            navigation: false,
+            navigation: {
+              nextEl: $item.querySelector(
+                ".slider__heading-controls .swiper-button-next"
+              ),
+              prevEl: $item.querySelector(
+                ".slider__heading-controls .swiper-button-prev"
+              ),
+            },
             breakpoints: {
               500: {
                 slidesPerView: 2,
-                navigation: {
-                  nextEl: $item.querySelector(
-                    ".slider__heading-controls .swiper-button-next"
-                  ),
-                  prevEl: $item.querySelector(
-                    ".slider__heading-controls .swiper-button-prev"
-                  ),
-                },
               },
               900: {
                 slidesPerView: 3,

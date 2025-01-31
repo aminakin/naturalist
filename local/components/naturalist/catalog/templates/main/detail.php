@@ -268,16 +268,19 @@ if (isset($_GET['childrenAge'])) {
 } else {
     $arChildrenAge = [];
 }
+
+// Фильтр номеров
+$arFilter = array(
+    "IBLOCK_ID" => CATALOG_IBLOCK_ID,
+    "ACTIVE" => "Y",
+    "SECTION_ID" => $arSection["ID"]
+);
+
+$arExternalInfo = [];
+
 if (!empty($arSection) && !empty($dateFrom) && !empty($dateTo) && !empty($_GET['guests'])) {
     $daysRange = $dateFrom . " - " . $dateTo;
     $daysCount = abs(strtotime($dateTo) - strtotime($dateFrom)) / 86400;
-
-    // Фильтр номеров
-    $arFilter = array(
-        "IBLOCK_ID" => CATALOG_IBLOCK_ID,
-        "ACTIVE" => "Y",
-        "SECTION_ID" => $arSection["ID"]
-    );
 
     // Запрос в апи на получение списка кемпингов со свободными местами в выбранный промежуток
     $arExternalResult = Products::searchRooms($arSection['ID'], $arSection['UF_EXTERNAL_ID'], $arSection['UF_EXTERNAL_SERVICE'], $guests, $arChildrenAge, $dateFrom, $dateTo, $arSection['UF_MIN_CHIELD_AGE']);
@@ -288,93 +291,108 @@ if (!empty($arSection) && !empty($dateFrom) && !empty($dateTo) && !empty($_GET['
     } else {
         $arFilter["ID"] = false;
     }
+}
 
-    // Список номеров
-    $rsElements = CIBlockElement::GetList(array("SORT" => "ASC"), $arFilter, false, false, array("IBLOCK_ID", "ID", "IBLOCK_SECTION_ID", "NAME", "DETAIL_TEXT", "PROPERTY_PHOTOS", "PROPERTY_FEATURES", "PROPERTY_EXTERNAL_ID", "PROPERTY_EXTERNAL_CATEGORY_ID", "PROPERTY_SQUARE", "PROPERTY_PARENT_ID", 'PROPERTY_ROOMS', 'PROPERTY_BEDS', 'PROPERTY_ROOMTOUR'));
-    $arElements = array();
-    while ($arElement = $rsElements->Fetch()) {
-        if ($arElement["PROPERTY_PHOTOS_VALUE"]) {
-            foreach ($arElement["PROPERTY_PHOTOS_VALUE"] as $photoId) {
-                $roomImageOriginal = CFile::GetFileArray($photoId);
-                $arElement["PICTURES"][$photoId] = [
-                    'src' => CFile::ResizeImageGet($photoId, array('width' => 464, 'height' => 328), BX_RESIZE_IMAGE_EXACT, true)['src'],
-                    'big' => CFile::GetFileArray($photoId)["SRC"],
-                ];
-            }
-        } else {
-            $arElement["PICTURES"][0]["src"] = SITE_TEMPLATE_PATH . "/img/no_photo.png";
+if (!isset($arFilter["ID"]) || empty($arFilter["ID"])) {
+    $arFilter['PROPERTY_IS_FAVORITE_VALUE'] = 'Да';
+    unset($arFilter['ID']);
+}
+
+// Список номеров
+$rsElements = CIBlockElement::GetList(array("SORT" => "ASC"), $arFilter, false, false, array("IBLOCK_ID", "ID", "IBLOCK_SECTION_ID", "NAME", "DETAIL_TEXT", "PROPERTY_PHOTOS", "PROPERTY_FEATURES", "PROPERTY_EXTERNAL_ID", "PROPERTY_EXTERNAL_CATEGORY_ID", "PROPERTY_SQUARE", "PROPERTY_PARENT_ID", 'PROPERTY_ROOMS', 'PROPERTY_BEDS', 'PROPERTY_ROOMTOUR'));
+$arElements = array();
+while ($arElement = $rsElements->Fetch()) {
+    if ($arElement["PROPERTY_PHOTOS_VALUE"]) {
+        foreach ($arElement["PROPERTY_PHOTOS_VALUE"] as $photoId) {
+            $roomImageOriginal = CFile::GetFileArray($photoId);
+            $arElement["PICTURES"][$photoId] = [
+                'src' => CFile::ResizeImageGet($photoId, array('width' => 464, 'height' => 328), BX_RESIZE_IMAGE_EXACT, true)['src'],
+                'big' => CFile::GetFileArray($photoId)["SRC"],
+            ];
         }
+    } else {
+        $arElement["PICTURES"][0]["src"] = SITE_TEMPLATE_PATH . "/img/no_photo.png";
+    }
 
+    if (!empty($arExternalInfo)) {
         $roomElement = current($arExternalInfo[$arElement["ID"]]);
         $arElement["PRICE"] = $roomElement["price"];
-
-        $discountData = CCatalogProduct::GetOptimalPrice($arElement['ID'], 1, $USER->GetUserGroupArray(), 'N');
-
-        if (is_array($discountData['DISCOUNT']) && count($discountData['DISCOUNT'])) {
-            $arElement['DISCOUNT_DATA']['VALUE'] = $discountData['DISCOUNT']['VALUE'];
-            $arElement['DISCOUNT_DATA']['VALUE_TYPE'] = $discountData['DISCOUNT']['VALUE_TYPE'];
-        }
-
-        $arElements[$arElement['ID']] = $arElement;
+    } else {
+        $arElement["PRICE"] = 0;
     }
 
-    if ($arSection["UF_EXTERNAL_SERVICE"] == "bnovo") {
-        foreach ($arElements as $arElement) {
-            if ((int)$arElement["PROPERTY_PARENT_ID_VALUE"] > 0) {
-                if (!isset($parentExternalIds) || !in_array(
-                    $arElement["PROPERTY_PARENT_ID_VALUE"],
-                    $parentExternalIds
-                )) {
-                    $parentExternalIds[] = $arElement["PROPERTY_PARENT_ID_VALUE"];
-                }
-            }
-        }
 
-        if (isset($parentExternalIds) && !empty($parentExternalIds)) {
-            unset($arFilter["ID"]);
-            $arFilter["?PROPERTY_EXTERNAL_ID"] = implode('|', $parentExternalIds);
-            $rsElements = CIBlockElement::GetList(false, $arFilter, false, false, array("IBLOCK_ID", "ID", "IBLOCK_SECTION_ID", "NAME", "DETAIL_TEXT", "PROPERTY_PHOTOS", "PROPERTY_FEATURES", "PROPERTY_EXTERNAL_ID", "PROPERTY_EXTERNAL_CATEGORY_ID", "PROPERTY_SQUARE", "PROPERTY_PARENT_ID"));
-            while ($arElement = $rsElements->Fetch()) {
-                if ($arElement["PROPERTY_PHOTOS_VALUE"]) {
-                    foreach ($arElement["PROPERTY_PHOTOS_VALUE"] as $photoId) {
-                        $arElement["PICTURES"][$photoId] = [
-                            'src' => CFile::ResizeImageGet($photoId, array('width' => 464, 'height' => 328), BX_RESIZE_IMAGE_EXACT, true)['src'],
-                            'big' => CFile::GetFileArray($photoId)["SRC"],
-                        ];
-                    }
-                } else {
-                    $arElement["PICTURES"][0]["src"] = SITE_TEMPLATE_PATH . "/img/no_photo.png";
-                }
 
-                $arElementsParent[$arElement['PROPERTY_EXTERNAL_ID_VALUE']] = $arElement;
+    $discountData = CCatalogProduct::GetOptimalPrice($arElement['ID'], 1, $USER->GetUserGroupArray(), 'N');
+
+    if (is_array($discountData['DISCOUNT']) && count($discountData['DISCOUNT'])) {
+        $arElement['DISCOUNT_DATA']['VALUE'] = $discountData['DISCOUNT']['VALUE'];
+        $arElement['DISCOUNT_DATA']['VALUE_TYPE'] = $discountData['DISCOUNT']['VALUE_TYPE'];
+    }
+
+    $arElements[$arElement['ID']] = $arElement;
+}
+
+if ($arSection["UF_EXTERNAL_SERVICE"] == "bnovo") {
+    foreach ($arElements as $arElement) {
+        if ((int)$arElement["PROPERTY_PARENT_ID_VALUE"] > 0) {
+            if (!isset($parentExternalIds) || !in_array(
+                $arElement["PROPERTY_PARENT_ID_VALUE"],
+                $parentExternalIds
+            )) {
+                $parentExternalIds[] = $arElement["PROPERTY_PARENT_ID_VALUE"];
             }
         }
     }
 
-    // Сортировка номеров по убыванию цены
-    usort($arElements, function ($a, $b) {
-        return ($a['PRICE'] - $b['PRICE']);
-    });
-    $arElementsJson = $arElements;
+    if (isset($parentExternalIds) && !empty($parentExternalIds)) {
+        unset($arFilter["ID"]);
+        $arFilter["?PROPERTY_EXTERNAL_ID"] = implode('|', $parentExternalIds);
+        $rsElements = CIBlockElement::GetList(false, $arFilter, false, false, array("IBLOCK_ID", "ID", "IBLOCK_SECTION_ID", "NAME", "DETAIL_TEXT", "PROPERTY_PHOTOS", "PROPERTY_FEATURES", "PROPERTY_EXTERNAL_ID", "PROPERTY_EXTERNAL_CATEGORY_ID", "PROPERTY_SQUARE", "PROPERTY_PARENT_ID"));
+        while ($arElement = $rsElements->Fetch()) {
+            if ($arElement["PROPERTY_PHOTOS_VALUE"]) {
+                foreach ($arElement["PROPERTY_PHOTOS_VALUE"] as $photoId) {
+                    $arElement["PICTURES"][$photoId] = [
+                        'src' => CFile::ResizeImageGet($photoId, array('width' => 464, 'height' => 328), BX_RESIZE_IMAGE_EXACT, true)['src'],
+                        'big' => CFile::GetFileArray($photoId)["SRC"],
+                    ];
+                }
+            } else {
+                $arElement["PICTURES"][0]["src"] = SITE_TEMPLATE_PATH . "/img/no_photo.png";
+            }
 
-    if ($arSection["UF_EXTERNAL_SERVICE"] == "bnovo") {
-        $arParams["DETAIL_ITEMS_COUNT"] = 999;
+            $arElementsParent[$arElement['PROPERTY_EXTERNAL_ID_VALUE']] = $arElement;
+        }
     }
+}
 
+// Сортировка номеров по убыванию цены
+usort($arElements, function ($a, $b) {
+    return ($a['PRICE'] - $b['PRICE']);
+});
+$arElementsJson = $arElements;
+
+if ($arSection["UF_EXTERNAL_SERVICE"] == "bnovo") {
+    $arParams["DETAIL_ITEMS_COUNT"] = 999;
+}
+
+if (!empty($arExternalInfo)) {
     $minPrice = $arElements[0]['PRICE'];
+} else {
+    $minPrice = $arSection['UF_MIN_PRICE'];
+}
 
-    // Пагинация номеров
-    $allCount = count($arElements);
-    if ($allCount > 0) {
-        $page = $_REQUEST['page'] ?? 1;
-        $pageCount = ceil($allCount / $arParams["DETAIL_ITEMS_COUNT"]);
-        if ($pageCount > 1) {
-            $arElements = array_slice(
-                $arElements,
-                ($page - 1) * $arParams["DETAIL_ITEMS_COUNT"],
-                $arParams["DETAIL_ITEMS_COUNT"]
-            );
-        }
+// Пагинация номеров
+$allCount = count($arElements);
+if ($allCount > 0) {
+    $page = $_REQUEST['page'] ?? 1;
+    $pageCount = ceil($allCount / $arParams["DETAIL_ITEMS_COUNT"]);
+    if ($pageCount > 1) {
+        $arElements = array_slice(
+            $arElements,
+            ($page - 1) * $arParams["DETAIL_ITEMS_COUNT"],
+            $arParams["DETAIL_ITEMS_COUNT"]
+        );
     }
 }
 
@@ -589,6 +607,7 @@ $APPLICATION->AddHeadString('<meta name="description" content="' . $descriptionS
             'roomsDeclension' => $roomsDeclension,
             'bedsDeclension' => $bedsDeclension,
             'arObjectComforts' => $arObjectComforts,
+            'searchError' => $searchError,
         )
     );
     ?>

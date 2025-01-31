@@ -337,7 +337,7 @@ class Bnovo
             foreach ($arItems as $arItem) {
                 if (intval($arItem['UF_MIN_STAY_ARRIVAL']) > $daysCount || intval($arItem['UF_MIN_STAY']) > $daysCount) {
                     $minDays = $arItem['UF_MIN_STAY_ARRIVAL'] ? $arItem['UF_MIN_STAY_ARRIVAL'] : $arItem['UF_MIN_STAY'];
-                    $error = 'На выбранные даты возможно бронирование минимум на ' . $minDays . ' ' . $daysDeclension->get($minDays);
+                    $error = 'Бронирование возможно от ' . $minDays . ' ' . $daysDeclension->get($minDays);
 
                     // Удаляем элементы из первоначального массива дат, т.к. он далее будет использоваться для поиска цен                    
                     foreach ($arDataGrouped[$key] as $toDel) {
@@ -778,6 +778,8 @@ class Bnovo
         }
 
         //xprint($arItems);
+
+
 
         return [
             'arItems' => $arItems,
@@ -1632,24 +1634,24 @@ class Bnovo
             $elementCode = \CUtil::translit($elementName, "ru");
 
             // Amenities
-            // $arAmenities = array();
-            // $roomsFeaturesEntityClass   = self::getEntityClass(self::$roomsFeaturesHLId);
-            // foreach ($arRoom["amenities"] as $key => $arItem) {
-            //     if ($key == "1") {
-            //         continue;
-            //     }
-            //     $rsData = $roomsFeaturesEntityClass::getList([
-            //         "select" => ["*"],
-            //         "filter" => [
-            //             "UF_XML_ID" => "bn_" . $key
-            //         ],
-            //         "order" => ["UF_SORT" => "ASC"],
-            //     ]);
-            //     $arEntity = $rsData->Fetch();
-            //     if ($arEntity) {
-            //         $arAmenities[] = $arEntity["UF_XML_ID"];
-            //     }
-            // }
+            $arAmenities = array();
+            $roomsFeaturesEntityClass   = self::getEntityClass(self::$roomsFeaturesHLId);
+            foreach ($arRoom["amenities"] as $key => $arItem) {
+                if ($key == "1") {
+                    continue;
+                }
+                $rsData = $roomsFeaturesEntityClass::getList([
+                    "select" => ["*"],
+                    "filter" => [
+                        "UF_XML_ID" => "bn_" . $key
+                    ],
+                    "order" => ["UF_SORT" => "ASC"],
+                ]);
+                $arEntity = $rsData->Fetch();
+                if ($arEntity) {
+                    $arAmenities[] = $arEntity["UF_XML_ID"];
+                }
+            }
 
             // Поля элемента
             $arExistElement = CIBlockElement::GetList(false, array("IBLOCK_ID" => CATALOG_IBLOCK_ID, "PROPERTY_EXTERNAL_ID" => $arRoom['id'], "PROPERTY_EXTERNAL_SERVICE" => 6))->Fetch();
@@ -1695,7 +1697,7 @@ class Bnovo
                         "CATEGORY" => $elementIdCat,
                         "TARIFF" => $tariffsIds,
                         "EXTERNAL_SERVICE" => 6,
-                        // "FEATURES" => $arAmenities,
+                        "FEATURES" => $arAmenities,
                         "PARENT_ID" => $arRoom["parent_id"],
                         "SQUARE" => $arRoom["amenities"]["1"]["value"],
                     )

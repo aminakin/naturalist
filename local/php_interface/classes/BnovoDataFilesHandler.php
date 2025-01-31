@@ -34,7 +34,7 @@ class BnovoDataFilesHandler
     {
         $isBusy = Option::get("main", "bnovo_files_working");
         if ($isBusy == 'Y') {
-            echo "Процесс занят \r\n";
+            //echo "Процесс занят \r\n";
             return;
         }
 
@@ -58,7 +58,7 @@ class BnovoDataFilesHandler
 
         Option::set("main", "bnovo_files_working", 'N');
 
-        echo "Агент отработал \r\n";
+        //echo "Агент отработал \r\n";
     }
 
     /**

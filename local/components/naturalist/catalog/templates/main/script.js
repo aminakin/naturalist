@@ -452,7 +452,7 @@ $(function () {
       }
     );
 
-    if (dateFrom.trim() != "Заезд" && dateTo.trim() != "Выезд" && guests > 0) {
+    if (dateFrom.trim() != "" && dateTo.trim() != "" && guests > 0) {
       let arDateFrom = dateFrom.split(".");
       let arDateTo = dateTo.split(".");
 

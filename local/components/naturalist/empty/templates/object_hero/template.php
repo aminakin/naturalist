@@ -209,7 +209,7 @@ global $isMobile;
                             <? } ?>
                         </div>
                     </div>
-                    <div class="fake-filter_catalog">
+                    <div class="fake-filter_catalog" id="fake-filter_catalog">
                         <div class="fake-filter_inputs">
                             <div class="fake-filter_date">
                                 <span class="from"><?= ($dateFrom) ? $dateFrom : 'Заезд' ?></span>
@@ -420,6 +420,7 @@ global $isMobile;
                                         "arElementsParent" => $arElementsParent ?? [],
                                         'roomsDeclension' => $roomsDeclension,
                                         'bedsDeclension' => $bedsDeclension,
+                                        'searchError' => $searchError,
                                     )
                                 )
                             );

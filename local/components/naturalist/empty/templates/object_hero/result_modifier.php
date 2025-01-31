@@ -45,4 +45,5 @@ $arResult = array(
     'roomsDeclension' => $arParams['roomsDeclension'],
     'bedsDeclension' => $arParams['bedsDeclension'],
     'arObjectComforts' => $arParams['arObjectComforts'],
+    'searchError' => $arParams['searchError'],
 );
