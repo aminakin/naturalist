@@ -313,8 +313,8 @@ class Orders
             }
         }
 
-        $res = CSaleOrder::CancelOrder($orderId, "Y", $reason);
-        if ($res) {
+        //$res = CSaleOrder::CancelOrder($orderId, "Y", $reason);
+        if ($cancelReservation) {
             // Выставляем заказу статус "С" (Отменен)
             $updStatusRes = $this->updateStatus($orderId, "C");
 
@@ -671,7 +671,7 @@ class Orders
                 } else {
                     $info = ["DISCOUNT_TYPE" => '', "DISCOUNT_VALUE" => 0];
                 }
-                
+
                 return json_encode([
                     "MESSAGE" => "Купон применён",
                     "INFO" => $info,

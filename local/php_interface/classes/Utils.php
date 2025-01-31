@@ -18,7 +18,6 @@ class Utils
      */
     public static function calculateTheDistance($latitudeFirstPoint, $longitudeFirstPoint, $latitudeSecondPoint, $longitudeSecondPoint)
     {
-
         // перевести координаты в радианы
         $latitudeFirstPointToRad = $latitudeFirstPoint * M_PI / 180;
         $latitudeSecondPointToRad = $latitudeSecondPoint * M_PI / 180;
