@@ -209,7 +209,7 @@ class Orders
         $service = $arOrder['ITEMS'][0]['ITEM']['SECTION']['UF_EXTERNAL_SERVICE'];
         if ($service == $this->bronevikSectionPropEnumId) {
             $id = current($arOrder['ITEMS'])['ID'];
-//            $penaltyAmount = (new HotelRoomOfferPenaltyBronevik())(current($arOrder['ITEMS'])['ID']);
+            //            $penaltyAmount = (new HotelRoomOfferPenaltyBronevik())(current($arOrder['ITEMS'])['ID']);
         } elseif ($service == $this->travelineSectionPropEnumId) {
             $penaltyAmount = Traveline::beforeCancelReservation($arOrder);
         } else {
@@ -335,9 +335,8 @@ class Orders
             }
         }
 
-        $res = CSaleOrder::CancelOrder($orderId, "Y", $reason);
-        $this->applyPenaltyCanceledOrder($orderId);
-        if ($res) {
+        //$res = CSaleOrder::CancelOrder($orderId, "Y", $reason);
+        if ($cancelReservation) {
             // Выставляем заказу статус "С" (Отменен)
             $updStatusRes = $this->updateStatus($orderId, "C");
 
@@ -719,7 +718,7 @@ class Orders
                 } else {
                     $info = ["DISCOUNT_TYPE" => '', "DISCOUNT_VALUE" => 0];
                 }
-                
+
                 return json_encode([
                     "MESSAGE" => "Купон применён",
                     "INFO" => $info,

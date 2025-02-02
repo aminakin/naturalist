@@ -10,4 +10,6 @@ $arResult = array(
     "arReviewsUsers" => $arParams['arReviewsUsers'],
     "reviewsPage" => $arParams['reviewsPage'],
     "reviewsPageCount" => $arParams['reviewsPageCount'],
+    "sectionId" => $arParams['sectionId'],
+    "isUserReview" => $arParams['isUserReview'],
 );

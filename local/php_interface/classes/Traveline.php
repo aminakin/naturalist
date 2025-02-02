@@ -4,18 +4,15 @@ namespace Naturalist;
 
 use Bitrix\Highloadblock\HighloadBlockTable;
 use Bitrix\Main\Application;
-use Bitrix\Main\Context;
 use Bitrix\Main\Diag\Debug;
 use Bitrix\Main\Loader;
 use Bitrix\Sale\Order;
 use Bitrix\Main\Config\Option;
-use Bitrix\Main\Session\Handlers\Table\UserSessionTable;
 use CIBlockElement;
 use CIBlockSection;
 use CFile;
 use CUtil;
 use Naturalist\Products;
-use Naturalist\CustomFunctions;
 
 Loader::includeModule("iblock");
 
@@ -27,9 +24,6 @@ defined("B_PROLOG_INCLUDED") && B_PROLOG_INCLUDED === true || die();
 
 class Traveline
 {
-    private static $testDomain = 'naturalistbx.idemcloud.ru';
-    private static $testHotels = [8866, 8867, 8617];
-
     private static $travelineApiURL = 'https://partner.tlintegration.com/api';
     private static $travelineApiKey = '5498c10a-4bfd-4728-8da2-e283ac52fda1';
 
@@ -43,8 +37,6 @@ class Traveline
         'Reservation already cancelled' => 'Бронирование во внешнем сервисе уже отменено.',
     ];
 
-    // HL ID Особенности объекта
-    private static $campingFeaturesHLId = 5;
     // HL ID Особенности номера
     private static $roomsFeaturesHLId = 8;
     // HL ID Питание
@@ -323,7 +315,7 @@ class Traveline
     public static function update()
     {
         // Сначала обновляем список возможных удобств
-        // self::updateAmenities();
+        self::updateAmenities();
 
         // Все отели Travelline
         $arSectionItems = self::getSections();
@@ -332,7 +324,7 @@ class Traveline
         $arCatalogItems = self::getRooms();
 
         // Все удобства в номерах
-        // $arUpdatedAmenities = self::getAmenities();
+        $arUpdatedAmenities = self::getAmenities();
 
         // Ответ от эндпоинта
         $arTravelineItems = self::getResponse(self::$travellineHotelsRequestLink, ["include" => "all"]);
@@ -399,13 +391,13 @@ class Traveline
                     $elementCode = CUtil::translit($elementName, "ru");
 
                     // Amenities
-                    // $arAmenities = array();
-                    // foreach ($arRoomType["amenities"] as $arItem) {
-                    //     $arEntity = $arUpdatedAmenities[$arItem["code"]];
-                    //     if ($arEntity) {
-                    //         $arAmenities[] = $arEntity["UF_XML_ID"];
-                    //     }
-                    // }
+                    $arAmenities = array();
+                    foreach ($arRoomType["amenities"] as $arItem) {
+                        $arEntity = $arUpdatedAmenities[$arItem["code"]];
+                        if ($arEntity) {
+                            $arAmenities[] = $arEntity["UF_XML_ID"];
+                        }
+                    }
 
                     // Поля элемента                    
                     $arExistElement = $arCatalogItems[$arRatePlan['id'] . '_' . $arRoomType["id"]];
@@ -438,7 +430,7 @@ class Traveline
                                 "EXTERNAL_ID" => $arRatePlan["id"],
                                 "EXTERNAL_CATEGORY_ID" => $arRoomType["id"],
                                 "EXTERNAL_SERVICE" => self::$travelineElementPropEnumId,
-                                // "FEATURES" => $arAmenities,
+                                "FEATURES" => $arAmenities,
                                 "SQUARE" => $arRoomType['size']['value'],
                             )
                         );
@@ -1060,6 +1052,11 @@ class Traveline
         curl_close($ch);
 
         date_default_timezone_set('UTC');
+
+        if (!$checksum) {
+            $checksum = self::getChecksum(Application::getInstance()->getSession()->getId());
+        }
+
         foreach ($arResponse["roomStays"] as $arItem) {
             if ($externalElementId == $arItem['ratePlan']['id'] && $externalCategoryId == $arItem['roomType']['id'] && $checksum == $arItem['checksum']) {
                 return [
