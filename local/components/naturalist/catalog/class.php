@@ -8,6 +8,9 @@ use Bitrix\Main\Localization\Loc;
 use Bitrix\Main\Grid\Declension;
 use Bitrix\Main\Web\Uri;
 use Bitrix\Highloadblock\HighloadBlockTable;
+use Bitrix\Iblock\Elements\ElementObjectfaqTable;
+use Bitrix\Iblock\InheritedProperty\SectionValues;
+use Bitrix\Main\Engine\CurrentUser;
 use Naturalist\Products;
 use Naturalist\Filters\Components;
 use Naturalist\Users;
@@ -45,6 +48,12 @@ class NaturalistCatalog extends \CBitrixComponent
     private $page = 0;
     private $minPrice = 0;
     private $maxPrice = 0;
+    private $reviewsCount = 0;
+    private $avgRating = 0;
+    private $reviewsPage = 0;
+    private $reviewsPageCount = 0;
+    private $isUserReview = 'N';
+    private $searchError = '';
     private $sortBy = '';
     private $sortOrder = '';
     private $orderReverse = '';
@@ -53,6 +62,7 @@ class NaturalistCatalog extends \CBitrixComponent
     private $h1SEO = '';
     private $search = '';
     private $searchName = '';
+    private $reviewsSortType = '';
     private $arUriParams = [];
     private $filterParams = [];
     private $arFilter = [];
@@ -74,23 +84,23 @@ class NaturalistCatalog extends \CBitrixComponent
     private $arServices = [];
     private $arHLFood = [];
     private $pageSeoData = [];
+    private $arReviews = [];
     private $arReviewsAvg = [];
+    private $arAvgCriterias = [];
+    private $arReviewsUsers = [];
+    private $arReviewsLikesData = [];
     private $chpy;
     private $searchedRegionData;
     private $arDates;
     private $currMonthName;
     private $currYear;
     private $nextYear;
+    private $daysRange;
+
 
     private function fillSectionVariables()
     {
-        $this->arUriParams = [
-            'dateFrom' => $this->request->get('dateFrom'),
-            'dateTo' => $this->request->get('dateTo'),
-            'guests' => $this->request->get('guests') ? $this->request->get('guests') : 2,
-            'children' => $this->request->get('children') ? $this->request->get('children') : 0,
-            'childrenAge' => $this->request->get('childrenAge') ? explode(',', $this->request->get('childrenAge')) : [],
-        ];
+        $this->fillUriParams();
 
         $this->filterParams = [
             'types' => $this->request->get('types'),
@@ -121,20 +131,24 @@ class NaturalistCatalog extends \CBitrixComponent
         $this->makeCalendar();
     }
 
+    private function fillUriParams()
+    {
+        $this->arUriParams = [
+            'dateFrom' => $this->request->get('dateFrom'),
+            'dateTo' => $this->request->get('dateTo'),
+            'guests' => $this->request->get('guests') ? $this->request->get('guests') : 2,
+            'children' => $this->request->get('children') ? $this->request->get('children') : 0,
+            'childrenAge' => $this->request->get('childrenAge') ? explode(',', $this->request->get('childrenAge')) : [],
+        ];
+    }
+
     private function makeCalendar()
     {
         /* Генерация массива месяцев для фильтра */
-        $this->arDates = array();
-        $currMonth = date('m');
+        $this->arDates = Products::getDates();
         $this->currMonthName = FormatDate("f");
         $this->currYear = date('Y');
         $this->nextYear = $this->currYear + 1;
-        for ($i = $currMonth; $i <= 12; $i++) {
-            $this->arDates[0][] = FormatDate("f", strtotime('1970-' . $i . '-01'));
-        }
-        for ($j = 1; $j <= 12; $j++) {
-            $this->arDates[1][] = FormatDate("f", strtotime('1970-' . $j . '-01'));
-        }
     }
 
     private function setPageSeoData()
@@ -196,6 +210,7 @@ class NaturalistCatalog extends \CBitrixComponent
             "select" => ["*"],
             "order" => ["UF_SORT" => "ASC"],
             "filter" => ["UF_SHOW_FILTER" => "1"],
+            'cache' => ['ttl' => 36000000],
         ]);
         while ($arEntity = $objectTypesData->Fetch()) {
             $this->arHLTypes[$arEntity["ID"]] = $arEntity;
@@ -207,6 +222,7 @@ class NaturalistCatalog extends \CBitrixComponent
             "select" => ["*"],
             "order" => ["UF_SORT" => "ASC"],
             "filter" => ["UF_SHOW_FILTER" => "1"],
+            'cache' => ['ttl' => 36000000],
         ]);
         while ($arEntity = $foodData->Fetch()) {
             $this->arHLFood[$arEntity["ID"]] = $arEntity;
@@ -217,6 +233,7 @@ class NaturalistCatalog extends \CBitrixComponent
         $this->houseTypeData = $houseTypesDataClass::query()
             ->addSelect('*')
             ->setOrder(['UF_SORT' => 'ASC'])
+            ->setCacheTtl(36000000)
             ?->fetchAll();
 
         if (!empty($this->houseTypeData)) {
@@ -231,6 +248,7 @@ class NaturalistCatalog extends \CBitrixComponent
         $this->water = $waterDataClass::query()
             ->addSelect('*')
             ->setOrder(['UF_SORT' => 'ASC'])
+            ->setCacheTtl(36000000)
             ?->fetchAll();
 
         // Общие водоёмы
@@ -238,12 +256,14 @@ class NaturalistCatalog extends \CBitrixComponent
         $this->commonWater = $commonWaterDataClass::query()
             ->addSelect('*')
             ->setOrder(['UF_SORT' => 'ASC'])
+            ->setCacheTtl(36000000)
             ?->fetchAll();
 
         // Разные фильтры
         $difFilterDataClass = HighloadBlockTable::compileEntity(DIFFERENT_FILTERS_HL_ENTITY)->getDataClass();
         $this->difFilter = $difFilterDataClass::query()
             ->addSelect('*')
+            ->setCacheTtl(36000000)
             ?->fetchAll();
 
         // Варианты отдыха
@@ -251,6 +271,7 @@ class NaturalistCatalog extends \CBitrixComponent
         $this->restVariants = $restVariantsDataClass::query()
             ->addSelect('*')
             ->setOrder(['UF_SORT' => 'ASC'])
+            ->setCacheTtl(36000000)
             ?->fetchAll();
 
         // Удобства
@@ -258,6 +279,7 @@ class NaturalistCatalog extends \CBitrixComponent
         $this->objectComforts = $objectComfortsDataClass::query()
             ->addSelect('*')
             ->setOrder(['UF_SORT' => 'ASC'])
+            ->setCacheTtl(36000000)
             ?->fetchAll();
 
         // Особенности объекта        
@@ -265,6 +287,8 @@ class NaturalistCatalog extends \CBitrixComponent
         $rsData = $entityClass::getList([
             "select" => ["*"],
             "order" => ["UF_SORT" => "ASC"],
+            'cache' => ['ttl' => 36000000],
+
         ]);
         while ($arEntity = $rsData->Fetch()) {
             $this->arHLFeatures[$arEntity["ID"]] = $arEntity;
@@ -293,6 +317,100 @@ class NaturalistCatalog extends \CBitrixComponent
         }
     }
 
+    private function setSectionPictures(&$arSection, &$arDataFullGallery = [])
+    {
+        foreach ($this->season['UF_SEASON'] as $season) {
+            if ($season == 'Лето') {
+                if ($arSection["UF_PHOTOS"]) {
+                    foreach ($arSection["UF_PHOTOS"] as $photoId) {
+                        $imageOriginal = CFile::GetFileArray($photoId);
+                        $arDataFullGallery[] = "\"" . $imageOriginal["SRC"] . "\"";
+                        $preResult = CFile::ResizeImageGet($photoId, array('width' => 590, 'height' => 390), BX_RESIZE_IMAGE_EXACT, true);
+                        $preResult['big'] = $imageOriginal['SRC'];
+                        $arSection["PICTURES"][] = $preResult;
+                    }
+                } else {
+                    $arSection["PICTURES"][0]["src"] = SITE_TEMPLATE_PATH . "/img/big_no_photo.png";
+                }
+                if ($arSection['UF_STORIES_SUMMER'] && $arSection['UF_STORIES_PREVIEW_SUMMER']) {
+                    foreach ($arSection['UF_STORIES_SUMMER'] as $key => $story) {
+                        $arSection['STORIES'][] =
+                            [
+                                'name' => $arSection['NAME'],
+                                'video' => CFile::GetPath($story),
+                                'preview' => CFile::GetPath($arSection['UF_STORIES_PREVIEW_SUMMER'][$key]),
+                            ];
+                    }
+                }
+            } elseif ($season == 'Зима') {
+                if ($arSection["UF_WINTER_PHOTOS"]) {
+                    foreach ($arSection["UF_WINTER_PHOTOS"] as $photoId) {
+                        $imageOriginal = CFile::GetFileArray($photoId);
+                        $arDataFullGallery[] = "\"" . $imageOriginal["SRC"] . "\"";
+                        $preResult = CFile::ResizeImageGet($photoId, array('width' => 590, 'height' => 390), BX_RESIZE_IMAGE_EXACT, true);
+                        $preResult['big'] = $imageOriginal['SRC'];
+                        $arSection["PICTURES"][] = $preResult;
+                    }
+                } else {
+                    if ($arSection["UF_PHOTOS"]) {
+                        foreach ($arSection["UF_PHOTOS"] as $photoId) {
+                            $imageOriginal = CFile::GetFileArray($photoId);
+                            $arDataFullGallery[] = "\"" . $imageOriginal["SRC"] . "\"";
+                            $preResult = CFile::ResizeImageGet($photoId, array('width' => 590, 'height' => 390), BX_RESIZE_IMAGE_EXACT, true);
+                            $preResult['big'] = $imageOriginal['SRC'];
+                            $arSection["PICTURES"][] = $preResult;
+                        }
+                    } else {
+                        $arSection["PICTURES"][0]["src"] = SITE_TEMPLATE_PATH . "/img/big_no_photo.png";
+                    }
+                }
+                if ($arSection['UF_STORIES_WINTER'] && $arSection['UF_STORIES_PREVIEW_WINTER']) {
+                    foreach ($arSection['UF_STORIES_WINTER'] as $key => $story) {
+                        $arSection['STORIES'][] =
+                            [
+                                'name' => $arSection['NAME'],
+                                'video' => CFile::GetPath($story),
+                                'preview' => CFile::GetPath($arSection['UF_STORIES_PREVIEW_WINTER'][$key]),
+                            ];
+                    }
+                }
+            } elseif ($season == 'Осень+Весна') {
+                if ($arSection["UF_MIDSEASON_PHOTOS"]) {
+                    foreach ($arSection["UF_MIDSEASON_PHOTOS"] as $photoId) {
+                        $imageOriginal = CFile::GetFileArray($photoId);
+                        $arDataFullGallery[] = "\"" . $imageOriginal["SRC"] . "\"";
+                        $preResult = CFile::ResizeImageGet($photoId, array('width' => 590, 'height' => 390), BX_RESIZE_IMAGE_EXACT, true);
+                        $preResult['big'] = $imageOriginal['SRC'];
+                        $arSection["PICTURES"][] = $preResult;
+                    }
+                } else {
+                    if ($arSection["UF_PHOTOS"]) {
+                        foreach ($arSection["UF_PHOTOS"] as $photoId) {
+                            $imageOriginal = CFile::GetFileArray($photoId);
+                            $arDataFullGallery[] = "\"" . $imageOriginal["SRC"] . "\"";
+                            $preResult = CFile::ResizeImageGet($photoId, array('width' => 590, 'height' => 390), BX_RESIZE_IMAGE_EXACT, true);
+                            $preResult['big'] = $imageOriginal['SRC'];
+                            $arSection["PICTURES"][] = $preResult;
+                        }
+                    } else {
+                        $arSection["PICTURES"][0]["src"] = SITE_TEMPLATE_PATH . "/img/big_no_photo.png";
+                    }
+                }
+                if ($arSection['UF_STORIES_MIDSEASON'] && $arSection['UF_STORIES_PREVIEW_MIDSEASON']) {
+                    foreach ($arSection['UF_STORIES_MIDSEASON'] as $key => $story) {
+                        $arSection['STORIES'][] =
+                            [
+                                'name' => $arSection['NAME'],
+                                'video' => CFile::GetPath($story),
+                                'preview' => CFile::GetPath($arSection['UF_STORIES_PREVIEW_MIDSEASON'][$key]),
+                            ];
+                    }
+                }
+            }
+        }
+        unset($arSection["UF_PHOTOS"]);
+    }
+
     private function fillSections()
     {
         $rsSections = CIBlockSection::GetList($this->arSort, $this->arFilter, false, ["IBLOCK_ID", "ID", "NAME", "CODE", "SECTION_PAGE_URL", "UF_*"], false);
@@ -301,56 +419,8 @@ class NaturalistCatalog extends \CBitrixComponent
 
             $arDataFullGallery = [];
 
-            foreach ($this->season['UF_SEASON'] as $season) {
-                if ($season == 'Лето') {
-                    if ($arSection["UF_PHOTOS"]) {
-                        foreach ($arSection["UF_PHOTOS"] as $photoId) {
-                            $imageOriginal = CFile::GetFileArray($photoId);
-                            $arDataFullGallery[] = "\"" . $imageOriginal["SRC"] . "\"";
-                            $arSection["PICTURES"][$photoId] = CFile::ResizeImageGet($photoId, array('width' => 590, 'height' => 390), BX_RESIZE_IMAGE_EXACT, true);
-                        }
-                    } else {
-                        $arSection["PICTURES"][0]["src"] = SITE_TEMPLATE_PATH . "/img/big_no_photo.png";
-                    }
-                } elseif ($season == 'Зима') {
-                    if ($arSection["UF_WINTER_PHOTOS"]) {
-                        foreach ($arSection["UF_WINTER_PHOTOS"] as $photoId) {
-                            $imageOriginal = CFile::GetFileArray($photoId);
-                            $arDataFullGallery[] = "\"" . $imageOriginal["SRC"] . "\"";
-                            $arSection["PICTURES"][$photoId] = CFile::ResizeImageGet($photoId, array('width' => 590, 'height' => 390), BX_RESIZE_IMAGE_EXACT, true);
-                        }
-                    } else {
-                        if ($arSection["UF_PHOTOS"]) {
-                            foreach ($arSection["UF_PHOTOS"] as $photoId) {
-                                $imageOriginal = CFile::GetFileArray($photoId);
-                                $arDataFullGallery[] = "\"" . $imageOriginal["SRC"] . "\"";
-                                $arSection["PICTURES"][$photoId] = CFile::ResizeImageGet($photoId, array('width' => 590, 'height' => 390), BX_RESIZE_IMAGE_EXACT, true);
-                            }
-                        } else {
-                            $arSection["PICTURES"][0]["src"] = SITE_TEMPLATE_PATH . "/img/big_no_photo.png";
-                        }
-                    }
-                } elseif ($season == 'Осень+Весна') {
-                    if ($arSection["UF_MIDSEASON_PHOTOS"]) {
-                        foreach ($arSection["UF_MIDSEASON_PHOTOS"] as $photoId) {
-                            $imageOriginal = CFile::GetFileArray($photoId);
-                            $arDataFullGallery[] = "\"" . $imageOriginal["SRC"] . "\"";
-                            $arSection["PICTURES"][$photoId] = CFile::ResizeImageGet($photoId, array('width' => 590, 'height' => 390), BX_RESIZE_IMAGE_EXACT, true);
-                        }
-                    } else {
-                        if ($arSection["UF_PHOTOS"]) {
-                            foreach ($arSection["UF_PHOTOS"] as $photoId) {
-                                $imageOriginal = CFile::GetFileArray($photoId);
-                                $arDataFullGallery[] = "\"" . $imageOriginal["SRC"] . "\"";
-                                $arSection["PICTURES"][$photoId] = CFile::ResizeImageGet($photoId, array('width' => 590, 'height' => 390), BX_RESIZE_IMAGE_EXACT, true);
-                            }
-                        } else {
-                            $arSection["PICTURES"][0]["src"] = SITE_TEMPLATE_PATH . "/img/big_no_photo.png";
-                        }
-                    }
-                }
-            }
-            unset($arSection["UF_PHOTOS"]);
+            $this->setSectionPictures($arSection, $arDataFullGallery);
+
             $arSection["FULL_GALLERY"] = implode(",", $arDataFullGallery);
 
             if ($arSection["UF_COORDS"]) {
@@ -814,7 +884,221 @@ class NaturalistCatalog extends \CBitrixComponent
         $this->arResult['search'] = $this->search;
     }
 
-    protected function prepareDetail() {}
+    protected function prepareDetail()
+    {
+        $this->fillDetailVariables();
+        $this->arResult['arUriParams'] = $this->arUriParams;
+        $this->arResult['FAVORITES'] = Users::getFavourites();
+        $this->arResult['SECTION'] = $this->arSections;
+        $this->arResult['guestsDeclension'] = new Declension('гость', 'гостя', 'гостей');
+        $this->arResult['childrenDeclension'] = new Declension('ребенок', 'детей', 'детей');
+        $this->arResult['reviewsDeclension'] = new Declension('отзыв', 'отзыва', 'отзывов');
+        $this->arResult['daysDeclension'] = new Declension('ночь', 'ночи', 'ночей');
+        $this->arResult['roomsDeclension'] = new Declension('комната', 'комнаты', 'комнат');
+        $this->arResult['bedsDeclension'] = new Declension('спальное место', 'спальных места', 'спальных мест');
+        $this->arResult['titleSEO'] = $this->titleSEO;
+        $this->arResult['descriptionSEO'] = $this->descriptionSEO;
+        $this->arResult['h1SEO'] = $this->h1SEO;
+        $this->arResult['currMonthName'] = $this->currMonthName;
+        $this->arResult['currYear'] = $this->currYear;
+        $this->arResult['nextYear'] = $this->nextYear;
+        $this->arResult['arDates'] = $this->arDates;
+        $this->arResult['daysCount'] = $this->daysCount;
+        $this->arResult['daysRange'] = $this->daysRange;
+        $this->arResult['searchError'] = $this->searchError;
+        $this->arResult['arExternalInfo'] = $this->arExternalInfo;
+        $this->arResult['arFilter'] = $this->arFilter;
+        $this->arResult['isUserReview'] = $this->isUserReview;
+        $this->arResult['arReviews'] = $this->arReviews;
+        $this->arResult['reviewsSortType'] = $this->reviewsSortType;
+        $this->arResult['arReviewsUsers'] = $this->arReviewsUsers;
+        $this->arResult['reviewsPage'] = $this->reviewsPage;
+        $this->arResult['reviewsPageCount'] = $this->reviewsPageCount;
+        $this->arResult['arReviewsLikesData'] = $this->arReviewsLikesData;
+        $this->arResult['reviewsCount'] = $this->reviewsCount;
+        $this->arResult['avgRating'] = $this->avgRating;
+        $this->arResult['arAvgCriterias'] = $this->arAvgCriterias;        
+    }
+
+    protected function fillDetailVariables()
+    {
+        $this->fillDetailSection();
+        $this->getSeason();
+        $this->setSectionPictures($this->arSections);
+        $this->fillUriParams();
+        $this->getHlBlocks();
+        $this->fillDetailSeoParams();
+        $this->makeCalendar();
+        $this->getFaq();
+        $this->setDetailFilter();
+        $this->getDetailExternalInfo();
+        $this->getDetailReviews();
+    }
+
+    private function getDetailReviews()
+    {
+        /* Отзывы */
+        $this->reviewsSortType = (!empty($_GET['sort']) && isset($_GET['sort'])) ? strtolower($_GET['sort']) : "date";
+        switch ($this->reviewsSortType) {
+            case 'date':
+                $arReviewsSort = array("ACTIVE_FROM" => "DESC");
+                break;
+
+            case 'negative':
+                $arReviewsSort = array("PROPERTY_RATING" => "ASC");
+                break;
+
+            case 'positive':
+                $arReviewsSort = array("PROPERTY_RATING" => "DESC");
+                break;
+        }
+        $rsReviews = CIBlockElement::GetList($arReviewsSort, array("IBLOCK_ID" => REVIEWS_IBLOCK_ID, "ACTIVE" => "Y", "PROPERTY_CAMPING_ID" => $this->arSections["ID"]), false, false, array("ID", "NAME", "ACTIVE_FROM", "DATE_CREATE", "DETAIL_TEXT", "PROPERTY_CAMPING_ID", "PROPERTY_PHOTOS", "PROPERTY_USER_ID", "PROPERTY_CRITERION_1", "PROPERTY_CRITERION_2", "PROPERTY_CRITERION_3", "PROPERTY_CRITERION_4", "PROPERTY_CRITERION_5", "PROPERTY_CRITERION_6", "PROPERTY_CRITERION_7", "PROPERTY_CRITERION_8", "PROPERTY_RATING"));
+        $arReviewsUserIDs = array();
+        $reviewsCountNotNullRating = 0;
+        while ($arReview = $rsReviews->GetNext()) {
+            foreach ($arReview["PROPERTY_PHOTOS_VALUE"] as $photoId) {
+                $arReview["PICTURES"][] =  CFile::ResizeImageGet($photoId, array('width' => 1920, 'height' => 1080), BX_RESIZE_IMAGE_PROPORTIONAL_ALT, true, false, false, 80)["src"];
+                $arReview["PICTURES_THUMB"][] = CFile::ResizeImageGet($photoId, array('width' => 125, 'height' => 87), BX_RESIZE_IMAGE_PROPORTIONAL_ALT, true, false, false, 80);
+            }
+
+            if ($arReview['PROPERTY_USER_ID_VALUE'] == CurrentUser::get()->getId()) {
+                $this->isUserReview = 'Y';
+            }
+
+            $arButtons = CIBlock::GetPanelButtons($arReview["IBLOCK_ID"], $arReview["ID"], 0, array("SECTION_BUTTONS" => false, "SESSID" => false));
+            $arReview["EDIT_LINK"] = $arButtons["edit"]["edit_element"]["ACTION_URL"];
+            $arReview["DELETE_LINK"] = $arButtons["edit"]["delete_element"]["ACTION_URL"];
+
+            $this->arReviews[$arReview["ID"]] = $arReview;
+
+            for ($i = 1; $i <= 8; $i++) {
+                if ($arReview["PROPERTY_CRITERION_" . $i . "_VALUE"] > 0) {
+                    $this->arAvgCriterias[$i][0]['value'] += $arReview["PROPERTY_CRITERION_" . $i . "_VALUE"];
+                    $this->arAvgCriterias[$i][0]['count'] += 1;
+                }
+            }
+
+            $this->avgRating += $arReview["PROPERTY_RATING_VALUE"];
+            $this->reviewsCount++;
+            if ($arReview["PROPERTY_RATING_VALUE"] != 0) {
+                $reviewsCountNotNullRating++;
+            }
+
+            if (!in_array($arReview["PROPERTY_USER_ID_VALUE"], $arReviewsUserIDs)) {
+                $arReviewsUserIDs[] = $arReview["PROPERTY_USER_ID_VALUE"];
+            }
+        }
+        if ($this->reviewsCount > 0) {
+            // Средние значения
+            for ($i = 1; $i <= 8; $i++) {
+                if (!empty($this->arAvgCriterias[$i][0]['count'])) {
+                    $this->arAvgCriterias[$i][0] = number_format(round($this->arAvgCriterias[$i][0]['value'] / $this->arAvgCriterias[$i][0]['count'], 1), 1, '.', '');
+                    $this->arAvgCriterias[$i][1] = round($this->arAvgCriterias[$i][0] * 100 / 5);
+                }
+            }
+            $this->avgRating = round($this->avgRating / ($reviewsCountNotNullRating ? $reviewsCountNotNullRating : 1), 1);
+
+            // Список юзеров в отзывах
+            $rsReviewsUsers = CUser::GetList(($by = "ID"), ($order = "ASC"), array("ID" => implode(' | ', $arReviewsUserIDs)), array("FIELDS" => array("ID", "NAME", "PERSONAL_PHOTO")));
+            while ($arReviewUser = $rsReviewsUsers->Fetch()) {
+                if ($arReviewUser["PERSONAL_PHOTO"]) {
+                    $arReviewUser["PERSONAL_PHOTO"] = CFile::GetFileArray($arReviewUser["PERSONAL_PHOTO"])["SRC"];
+                }
+
+                $this->arReviewsUsers[$arReviewUser["ID"]] = $arReviewUser;
+            }
+
+            // Пагинация отзывов
+            $this->reviewsPage = $_REQUEST['reviewsPage'] ?? 1;
+            $this->reviewsPageCount = ceil($this->reviewsCount / $this->arParams["DETAIL_REVIEWS_COUNT"]);
+            if ($this->reviewsPageCount > 1) {
+                $this->arReviews = array_slice($this->arReviews, ($this->reviewsPage - 1) * $this->arParams["DETAIL_REVIEWS_COUNT"], $this->arParams["DETAIL_REVIEWS_COUNT"], true);
+            }
+
+            // Лайки отзывов
+            $arReviewsIDs = array_keys($this->arReviews);
+            $this->arReviewsLikesData = Reviews::getLikes($arReviewsIDs);
+            foreach ($this->arReviewsLikesData["STATS"] as $reviewId => $arLikes) {
+                $this->arReviews[$reviewId]["LIKES"] = $arLikes;
+            }
+        }
+    }
+
+    private function getDetailExternalInfo()
+    {
+        if (!empty($this->arSections) && !empty($this->arUriParams['dateFrom']) && !empty($this->arUriParams['dateTo']) && !empty($this->arUriParams['guests'])) {
+            $this->daysRange = $this->arUriParams['dateFrom'] . " - " . $this->arUriParams['dateTo'];
+            $this->daysCount = abs(strtotime($this->arUriParams['dateTo']) - strtotime($this->arUriParams['dateFrom'])) / 86400;
+
+            // Запрос в апи на получение списка кемпингов со свободными местами в выбранный промежуток
+            $arExternalResult = Products::searchRooms($this->arSections['ID'], $this->arSections['UF_EXTERNAL_ID'], $this->arSections['UF_EXTERNAL_SERVICE'], $this->arUriParams['guests'], $this->arUriParams['childrenAge'], $this->arUriParams['dateFrom'], $this->arUriParams['dateTo'], $this->arSections['UF_MIN_CHIELD_AGE']);
+            $this->arExternalInfo = $arExternalResult['arRooms'];
+            $this->searchError = $arExternalResult['error'];
+            if ($this->arExternalInfo) {
+                $this->arFilter["ID"] = array_keys($this->arExternalInfo);
+            } else {
+                $this->arFilter["ID"] = false;
+            }
+        }
+
+        if (!isset($this->arFilter["ID"]) || empty($this->arFilter["ID"])) {
+            $this->arFilter['PROPERTY_IS_FAVORITE_VALUE'] = 'Да';
+            unset($this->arFilter['ID']);
+        }
+    }
+
+    private function setDetailFilter()
+    {
+        $this->arFilter = array(
+            "IBLOCK_ID" => CATALOG_IBLOCK_ID,
+            "ACTIVE" => "Y",
+            "SECTION_ID" => $this->arSections["ID"]
+        );
+    }
+
+    private function fillDetailSeoParams()
+    {
+        $fieldsSection = new SectionValues(CATALOG_IBLOCK_ID, $this->arSections['ID']);
+        $fieldsSectionValues  = $fieldsSection->getValues();
+
+        if (!empty($fieldsSectionValues)) {
+            if (!empty($this->arHLTypes[$this->arSections["UF_TYPE"]]["UF_NAME"])) {
+                $typeObject = mb_strtolower($this->arSections[$this->arSections["UF_TYPE"]]["UF_NAME"], "UTF-8");
+            } else {
+                $typeObject = "";
+            }
+
+            $this->titleSEO = str_replace("#TYPE#", $this->arHLTypes[$this->arSections["UF_TYPE"]]["UF_NAME"], $fieldsSectionValues["SECTION_META_TITLE"]);
+            $this->descriptionSEO = str_replace("#TYPE#", $typeObject, $fieldsSectionValues["SECTION_META_DESCRIPTION"]);
+            $this->h1SEO = str_replace("#TYPE#", $this->arHLTypes[$this->arSections["UF_TYPE"]]["UF_NAME"], $fieldsSectionValues["SECTION_PAGE_TITLE"]);
+        } else {
+            $this->titleSEO = $this->arSections["NAME"] . " - онлайн-сервис бронирования глэмпингов и кемпингов Натуралист";
+            $this->descriptionSEO = $this->arSections["NAME"] . " | Натуралист - удобный онлайн-сервис поиска и бронирования глэмпинга для отдыха на природе с оплатой на сайте. Вы можете подобрать место для комфортного природного туризма в России по выгодным ценам с моментальной системой бронирования.";
+            $this->h1SEO = $this->arSections["~NAME"];
+        }
+    }
+
+    protected function fillDetailSection()
+    {
+        $this->arSections = CIBlockSection::GetList(false, array("ACTIVE" => "Y", "IBLOCK_ID" => CATALOG_IBLOCK_ID, "=CODE" => $this->arResult["VARIABLES"]["SECTION_CODE"]), false, array("IBLOCK_ID", "ID", "NAME", "CODE", "DESCRIPTION", "SECTION_PAGE_URL", "UF_*"), false)->GetNext();
+        if ($this->arSections) {
+            $arEnum = CUserFieldEnum::GetList(array(), array("CODE" => "UF_EXTERNAL_SERVICE", "ID" => $this->arSections["UF_EXTERNAL_SERVICE"]))->GetNext();
+            $this->arSections["UF_EXTERNAL_SERVICE"] = $arEnum['XML_ID'];
+
+            if ($this->arSections["UF_COORDS"]) {
+                $this->arSections["COORDS"] = explode(',', $this->arSections["UF_COORDS"]);
+            }
+        }
+    }
+
+    protected function getFaq()
+    {
+        $this->arResult['FAQ'] = ElementObjectfaqTable::getList([
+            'select' => ['NAME', 'PREVIEW_TEXT'],
+            'order' => ['SORT' => 'ASC'],
+            'cache' => ['ttl' => 36000000],
+        ])->fetchAll();
+    }
 
     public function executeComponent()
     {

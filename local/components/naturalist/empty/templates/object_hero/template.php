@@ -400,7 +400,6 @@ global $isMobile;
                                     "VARS" => array(
                                         "arSection" => $arSection,
                                         "arElements" => $arElements,
-                                        "arElementsJson" => $arElementsJson,
                                         "daysRange" => $daysRange,
                                         "guests" => $guests,
                                         "children" => $children,
@@ -416,7 +415,6 @@ global $isMobile;
                                         "pageCount" => $pageCount,
                                         "daysDeclension" => $daysDeclension,
                                         "daysCount" => $daysCount,
-                                        "arServicesTraveline" => $arServicesTraveline,
                                         "arElementsParent" => $arElementsParent ?? [],
                                         'roomsDeclension' => $roomsDeclension,
                                         'bedsDeclension' => $bedsDeclension,
