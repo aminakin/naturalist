@@ -13,11 +13,7 @@
 $this->setFrameMode(true);
 
 use Bitrix\Main\Application;
-use Bitrix\Main\Grid\Declension;
-use Bitrix\Highloadblock\HighloadBlockTable;
 use Bitrix\Main\Loader;
-use Naturalist\Products;
-use Naturalist\Reviews;
 
 global $arUser, $userId, $isAuthorized;
 
@@ -32,212 +28,7 @@ if (!$arResult['SECTION']) {
     exit;
 }
 
-$arSection = $arResult['SECTION'];
-
-/** Услуги */
-if ($arSection["UF_SERVICES"]) {
-    $rsServices = CIBlockElement::GetList(false, array("IBLOCK_ID" => SERVICES_IBLOCK_ID, "!IBLOCK_SECTION_ID" => false, "ID" => $arSection["UF_SERVICES"]), false, false, array("IBLOCK_ID", "IBLOCK_SECTION_ID", "ID", "NAME"));
-    $arServices = array();
-    while ($arService = $rsServices->Fetch()) {
-        $arServices[] = $arService;
-    }
-}
-
-$APPLICATION->SetTitle($arSection["NAME"]);
-
-/* Номера */
-
-// Фильтр номеров
-$arFilter = $arResult['arFilter'];
-
-$arExternalInfo = $arResult['arExternalInfo'];
-
-// Список номеров
-$rsElements = CIBlockElement::GetList(array("SORT" => "ASC"), $arFilter, false, false, array("IBLOCK_ID", "ID", "IBLOCK_SECTION_ID", "NAME", "DETAIL_TEXT", "PROPERTY_PHOTOS", "PROPERTY_FEATURES", "PROPERTY_EXTERNAL_ID", "PROPERTY_EXTERNAL_CATEGORY_ID", "PROPERTY_SQUARE", "PROPERTY_PARENT_ID", 'PROPERTY_ROOMS', 'PROPERTY_BEDS', 'PROPERTY_ROOMTOUR'));
-$arElements = array();
-while ($arElement = $rsElements->Fetch()) {
-    if ($arElement["PROPERTY_PHOTOS_VALUE"]) {
-        foreach ($arElement["PROPERTY_PHOTOS_VALUE"] as $photoId) {
-            $roomImageOriginal = CFile::GetFileArray($photoId);
-            $arElement["PICTURES"][$photoId] = [
-                'src' => CFile::ResizeImageGet($photoId, array('width' => 464, 'height' => 328), BX_RESIZE_IMAGE_EXACT, true)['src'],
-                'big' => CFile::GetFileArray($photoId)["SRC"],
-            ];
-        }
-    } else {
-        $arElement["PICTURES"][0]["src"] = SITE_TEMPLATE_PATH . "/img/no_photo.png";
-    }
-
-    if (!empty($arExternalInfo)) {
-        $roomElement = current($arExternalInfo[$arElement["ID"]]);
-        $arElement["PRICE"] = $roomElement["price"];
-    } else {
-        $arElement["PRICE"] = 0;
-    }
-
-    $discountData = CCatalogProduct::GetOptimalPrice($arElement['ID'], 1, $USER->GetUserGroupArray(), 'N');
-
-    if (is_array($discountData['DISCOUNT']) && count($discountData['DISCOUNT'])) {
-        $arElement['DISCOUNT_DATA']['VALUE'] = $discountData['DISCOUNT']['VALUE'];
-        $arElement['DISCOUNT_DATA']['VALUE_TYPE'] = $discountData['DISCOUNT']['VALUE_TYPE'];
-    }
-
-    $arElements[$arElement['ID']] = $arElement;
-}
-
-if ($arSection["UF_EXTERNAL_SERVICE"] == "bnovo") {
-    foreach ($arElements as $arElement) {
-        if ((int)$arElement["PROPERTY_PARENT_ID_VALUE"] > 0) {
-            if (!isset($parentExternalIds) || !in_array(
-                $arElement["PROPERTY_PARENT_ID_VALUE"],
-                $parentExternalIds
-            )) {
-                $parentExternalIds[] = $arElement["PROPERTY_PARENT_ID_VALUE"];
-            }
-        }
-    }
-
-    if (isset($parentExternalIds) && !empty($parentExternalIds)) {
-        unset($arFilter["ID"]);
-        $arFilter["?PROPERTY_EXTERNAL_ID"] = implode('|', $parentExternalIds);
-        $rsElements = CIBlockElement::GetList(false, $arFilter, false, false, array("IBLOCK_ID", "ID", "IBLOCK_SECTION_ID", "NAME", "DETAIL_TEXT", "PROPERTY_PHOTOS", "PROPERTY_FEATURES", "PROPERTY_EXTERNAL_ID", "PROPERTY_EXTERNAL_CATEGORY_ID", "PROPERTY_SQUARE", "PROPERTY_PARENT_ID"));
-        while ($arElement = $rsElements->Fetch()) {
-            if ($arElement["PROPERTY_PHOTOS_VALUE"]) {
-                foreach ($arElement["PROPERTY_PHOTOS_VALUE"] as $photoId) {
-                    $arElement["PICTURES"][$photoId] = [
-                        'src' => CFile::ResizeImageGet($photoId, array('width' => 464, 'height' => 328), BX_RESIZE_IMAGE_EXACT, true)['src'],
-                        'big' => CFile::GetFileArray($photoId)["SRC"],
-                    ];
-                }
-            } else {
-                $arElement["PICTURES"][0]["src"] = SITE_TEMPLATE_PATH . "/img/no_photo.png";
-            }
-
-            $arElementsParent[$arElement['PROPERTY_EXTERNAL_ID_VALUE']] = $arElement;
-        }
-    }
-}
-
-// Сортировка номеров по убыванию цены
-usort($arElements, function ($a, $b) {
-    return ($a['PRICE'] - $b['PRICE']);
-});
-
-if ($arSection["UF_EXTERNAL_SERVICE"] == "bnovo") {
-    $arParams["DETAIL_ITEMS_COUNT"] = 999;
-}
-
-if (!empty($arExternalInfo)) {
-    $minPrice = $arElements[0]['PRICE'];
-} else {
-    $minPrice = $arSection['UF_MIN_PRICE'];
-}
-
-// Пагинация номеров
-$allCount = count($arElements);
-if ($allCount > 0) {
-    $page = $_REQUEST['page'] ?? 1;
-    $pageCount = ceil($allCount / $arParams["DETAIL_ITEMS_COUNT"]);
-    if ($pageCount > 1) {
-        $arElements = array_slice(
-            $arElements,
-            ($page - 1) * $arParams["DETAIL_ITEMS_COUNT"],
-            $arParams["DETAIL_ITEMS_COUNT"]
-        );
-    }
-}
-
-if (!isset($minPrice)) {
-    $minPrice = $arSection['UF_MIN_PRICE'];
-}
-
-/* HL Blocks */
-// Тип объекта
-$hlId = 2;
-$hlblock = HighloadBlockTable::getById($hlId)->fetch();
-$entity = HighloadBlockTable::compileEntity($hlblock);
-$entityClass = $entity->getDataClass();
-$rsData = $entityClass::getList([
-    "select" => ["*"],
-    "order" => ["UF_SORT" => "ASC"],
-]);
-$arHLTypes = array();
-while ($arEntity = $rsData->Fetch()) {
-    $arHLTypes[$arEntity["ID"]] = $arEntity;
-}
-// Особенности объекта
-$hlId = 5;
-$hlblock = HighloadBlockTable::getById($hlId)->fetch();
-$entity = HighloadBlockTable::compileEntity($hlblock);
-$entityClass = $entity->getDataClass();
-$rsData = $entityClass::getList([
-    "select" => ["*"],
-    "filter" => ['ID' => $arSection['UF_FEATURES']],
-    "order" => ["UF_SORT" => "ASC"],
-]);
-$arHLFeatures = array();
-while ($arEntity = $rsData->Fetch()) {
-    $arHLFeatures[$arEntity["UF_XML_ID"]] = $arEntity;
-    $arHLFeaturesIds[] = $arEntity["UF_XML_ID"];
-}
-// Особенности номера
-$hlId = 8;
-$hlblock = HighloadBlockTable::getById($hlId)->fetch();
-$entity = HighloadBlockTable::compileEntity($hlblock);
-$entityClass = $entity->getDataClass();
-$rsData = $entityClass::getList([
-    "select" => ["*"],
-    "order" => ["UF_SORT" => "ASC"],
-]);
-
-$arHLRoomFeatures = array();
-while ($arEntity = $rsData->Fetch()) {
-    $arHLRoomFeatures[$arEntity["UF_XML_ID"]] = $arEntity;
-}
-
-$houseTypesDataClass = HighloadBlockTable::compileEntity(SUIT_TYPES_HL_ENTITY)->getDataClass();
-$houseTypeData = $houseTypesDataClass::query()
-    ->addSelect('*')
-    ->setOrder(['UF_SORT' => 'ASC'])
-    ?->fetchAll();
-foreach ($houseTypeData as $houseType) {
-    $arHouseTypes[$houseType['ID']] = $houseType;
-}
-
-// Удобства объекта
-$objectComfortsDataClass = HighloadBlockTable::compileEntity(OBJECT_COMFORT_HL_ENTITY)->getDataClass();
-$objectComfortsData = $objectComfortsDataClass::query()
-    ->addSelect('*')
-    ->where('ID', 'in', $arSection['UF_OBJECT_COMFORTS'])
-    ->setOrder(['UF_SORT' => 'ASC'])
-    ?->fetchAll();
-foreach ($objectComfortsData as $objectComfort) {
-    $arObjectComforts[$objectComfort['UF_XML_ID']] = $objectComfort;
-    $arObjectComfortsIds[] = $objectComfort['UF_XML_ID'];
-}
-
-// Поиск детального описания удобства или развлечения
-$featuresDetailList = \Bitrix\Iblock\Elements\ElementFeaturesdetailTable::getList([
-    'select' => ['ID', 'NAME', 'FUN_VALUE' => 'FUN.VALUE', 'COMFORT_VALUE' => 'COMFORT.VALUE'],
-    'filter' => [
-        'OBJECT.VALUE' => $arSection['ID'],
-        [
-            "LOGIC" => "OR",
-            ["COMFORT.VALUE" => $arObjectComfortsIds],
-            ["FUN.VALUE" => $arHLFeaturesIds]
-        ],
-    ]
-])->fetchAll();
-
-foreach ($featuresDetailList as $featuresDetail) {
-    if (isset($arObjectComforts[$featuresDetail['COMFORT_VALUE']])) {
-        $arObjectComforts[$featuresDetail['COMFORT_VALUE']]['ELEMENT'] = $featuresDetail['ID'];
-    }
-    if (isset($arHLFeatures[$featuresDetail['FUN_VALUE']])) {
-        $arHLFeatures[$featuresDetail['FUN_VALUE']]['ELEMENT'] = $featuresDetail['ID'];
-    }
-}
-
+$APPLICATION->SetTitle($arResult['SECTION']["NAME"]);
 $APPLICATION->SetTitle($arResult['titleSEO']);
 $APPLICATION->AddHeadString('<meta name="description" content="' . $arResult['descriptionSEO'] . '" />');
 /**/
@@ -265,9 +56,9 @@ $APPLICATION->AddHeadString('<meta name="description" content="' . $arResult['de
         "naturalist:empty",
         "object_hero",
         array(
-            "arSection" => $arSection,
+            "arSection" => $arResult['SECTION'],
             "arFavourites" => $arResult['FAVORITES'],
-            "arHLTypes" => $arHLTypes,
+            "arHLTypes" => $arResult['arHLTypes'],
             "dateFrom" => $arResult['arUriParams']['dateFrom'],
             "dateTo" => $arResult['arUriParams']['dateTo'],
             "arDates" => $arResult['arDates'],
@@ -284,20 +75,20 @@ $APPLICATION->AddHeadString('<meta name="description" content="' . $arResult['de
             "avgRating" => $arResult['avgRating'],
             "arAvgCriterias" => $arResult['arAvgCriterias'],
             "h1SEO" => $arResult['h1SEO'],
-            "arHLFeatures" => $arHLFeatures,
+            "arHLFeatures" => $arResult['arHLFeatures'],
             "coords" => $arResult['SECTION']['UF_COORDS'],
-            "arServices" => $arServices,
-            'houseTypeData' => $arHouseTypes,
-            'allCount' => $allCount,
-            "arHLRoomFeatures" => $arHLRoomFeatures,
+            "arServices" => $arResult['SECTION']['arServices'],
+            'houseTypeData' => $arResult['arHouseTypes'],
+            'allCount' => $arResult['allCount'],
+            "arHLRoomFeatures" => $arResult['arHLRoomFeatures'],
             "arExternalInfo" => $arResult['arExternalInfo'],
-            "arElements" => $arElements,
+            "arElements" => $arResult['arElements'],
             "daysRange" => $arResult['daysRange'],
-            "page" => $page,
-            "pageCount" => $pageCount,
+            "page" => $arResult['page'],
+            "pageCount" => $arResult['pageCount'],
             "daysDeclension" => $arResult['daysDeclension'],
             "daysCount" => $arResult['daysCount'],
-            "arElementsParent" => $arElementsParent ?? [],
+            "arElementsParent" => $arResult['arElementsParent'],
             "arReviews" => $arResult['arReviews'],
             "reviewsSortType" => $arResult['reviewsSortType'],
             "arReviewsLikesData" => $arResult['arReviewsLikesData'],
@@ -307,7 +98,7 @@ $APPLICATION->AddHeadString('<meta name="description" content="' . $arResult['de
             "isUserReview" => $arResult['isUserReview'],
             'roomsDeclension' => $arResult['roomsDeclension'],
             'bedsDeclension' => $arResult['bedsDeclension'],
-            'arObjectComforts' => $arObjectComforts,
+            'arObjectComforts' => $arResult['arObjectComforts'],
             'searchError' => $arResult['searchError'],
         )
     );
@@ -341,7 +132,7 @@ $APPLICATION->AddHeadString('<meta name="description" content="' . $arResult['de
             <?
             global $arRelatedOffersFilter;
             $arRelatedOffersFilter = array(
-                "!ID" => $arSection["ID"]
+                "!ID" => $arResult['SECTION']["ID"]
             );
             $APPLICATION->IncludeComponent(
                 "bitrix:catalog.section.list",
@@ -364,23 +155,23 @@ $APPLICATION->AddHeadString('<meta name="description" content="' . $arResult['de
                     "CACHE_TIME" => "36000000",
                     "CACHE_NOTES" => "",
                     "CACHE_GROUPS" => "N",
-                    "SECTION_RATING" => $avgRating,
-                    "SECTION_COORDS" => explode(",", $arSection["UF_COORDS"]),
+                    "SECTION_RATING" => $arResult['avgRating'],
+                    "SECTION_COORDS" => explode(",", $arResult['SECTION']["UF_COORDS"]),
                     "RATING_RANGE" => 0.5,
                     "COORDS_RANGE" => 2,
                     "ITEMS_COUNT" => 8,
-                    "AR_SECTION" => $arSection,
-                    "arHLTypes" => $arHLTypes,
+                    "AR_SECTION" => $arResult['SECTION'],
+                    "arHLTypes" => $arResult['arHLTypes'],
                 )
             );
             ?>
         </div>
     </section>
     <!-- section-->
-    <? if (isset($arSection['UF_DOP_SEO_TEXT']) && $arSection['UF_DOP_SEO_TEXT'] != '') { ?>
+    <? if (isset($arResult['SECTION']['UF_DOP_SEO_TEXT']) && $arResult['SECTION']['UF_DOP_SEO_TEXT'] != '') { ?>
         <section class="cert-index__seo-text">
             <div class="container">
-                <?= $arSection['UF_DOP_SEO_TEXT'] ?>
+                <?= $arResult['SECTION']['UF_DOP_SEO_TEXT'] ?>
             </div>
         </section>
         <div class="container">
@@ -394,29 +185,29 @@ $APPLICATION->IncludeComponent(
     "naturalist:empty",
     "object_modals",
     array(
-        'SECTION_IMGS' => $arSection["PICTURES"],
+        'SECTION_IMGS' => $arResult['SECTION']["PICTURES"],
         'TITLE' => $arResult['h1SEO'],
-        'OBJECT_COMFORTS' => $arObjectComforts,
-        'OBJECT_FUN' => $arHLFeatures,
-        'HOUSE_TYPES' => $arHouseTypes,
-        'SECTION' => $arSection
+        'OBJECT_COMFORTS' => $arResult['arObjectComforts'],
+        'OBJECT_FUN' => $arResult['arHLFeatures'],
+        'HOUSE_TYPES' => $arResult['arHouseTypes'],
+        'SECTION' => $arResult['SECTION']
     )
 );
 ?>
 
-<? if ($arSection["COORDS"]) : ?>
+<? if ($arResult['SECTION']["COORDS"]) : ?>
     <?
     $APPLICATION->IncludeComponent(
         "naturalist:empty",
         "object_scripts",
         array(
             "VARS" => array(
-                "arSection" => $arSection,
-                "arElements" => $arElements,
+                "arSection" => $arResult['SECTION'],
+                "arElements" => $arResult['arElements'],
                 "arExternalInfo" => $arResult['arExternalInfo'],
-                "arHLRoomFeatures" => $arHLRoomFeatures,
-                "avgRating" => $avgRating,
-                "minPrice" => $minPrice,
+                "arHLRoomFeatures" => $arResult['arHLRoomFeatures'],
+                "avgRating" => $arResult['avgRating'],
+                "minPrice" => $arResult['minPrice'],
             ),
             "CACHE_TYPE" => "N",
         )

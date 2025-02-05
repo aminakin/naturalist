@@ -11,6 +11,8 @@ use Bitrix\Highloadblock\HighloadBlockTable;
 use Bitrix\Iblock\Elements\ElementObjectfaqTable;
 use Bitrix\Iblock\InheritedProperty\SectionValues;
 use Bitrix\Main\Engine\CurrentUser;
+use Bitrix\Iblock\Elements\ElementFeaturesdetailTable;
+use Bitrix\Main\Data\Cache;
 use Naturalist\Products;
 use Naturalist\Filters\Components;
 use Naturalist\Users;
@@ -52,6 +54,8 @@ class NaturalistCatalog extends \CBitrixComponent
     private $avgRating = 0;
     private $reviewsPage = 0;
     private $reviewsPageCount = 0;
+    private $allCount = 0;
+    private $pageCount = 0;
     private $isUserReview = 'N';
     private $searchError = '';
     private $sortBy = '';
@@ -89,6 +93,13 @@ class NaturalistCatalog extends \CBitrixComponent
     private $arAvgCriterias = [];
     private $arReviewsUsers = [];
     private $arReviewsLikesData = [];
+    private $arElements = [];
+    private $arElementsParent = [];
+    private $arHLRoomFeatures = [];
+    private $arHouseTypes = [];
+    private $arObjectComforts = [];
+    private $arHLFeaturesIds = [];
+    private $arObjectComfortsIds = [];
     private $chpy;
     private $searchedRegionData;
     private $arDates;
@@ -306,8 +317,17 @@ class NaturalistCatalog extends \CBitrixComponent
         if (!empty($this->arUriParams['dateFrom']) && !empty($this->arUriParams['dateTo']) && !empty($this->arUriParams['guests'])) {
             $this->daysCount = abs(strtotime($this->arUriParams['dateTo']) - strtotime($this->arUriParams['dateFrom'])) / 86400;
 
-            // Запрос в апи на получение списка кемпингов со свободными местами в выбранный промежуток
-            $this->arExternalInfo = Products::search($this->arUriParams['guests'], $this->arUriParams['childrenAge'], $this->arUriParams['dateFrom'], $this->arUriParams['dateTo'], false);
+            $cache = Cache::createInstance();
+            $cacheKey = $this->arUriParams['dateFrom'] . $this->arUriParams['dateTo'] . $this->arUriParams['guests'];
+
+            if ($cache->initCache(3600, $cacheKey)) {
+                $this->arExternalInfo = $cache->getVars();
+            } elseif ($cache->startDataCache()) {
+                // Запрос в апи на получение списка кемпингов со свободными местами в выбранный промежуток
+                $this->arExternalInfo = Products::search($this->arUriParams['guests'], $this->arUriParams['childrenAge'], $this->arUriParams['dateFrom'], $this->arUriParams['dateTo'], false);
+                $cache->endDataCache($this->arExternalInfo);
+            }
+
             $arExternalIDs = array_keys($this->arExternalInfo);
             if ($arExternalIDs) {
                 $this->arFilter["UF_EXTERNAL_ID"] = $arExternalIDs;
@@ -411,11 +431,30 @@ class NaturalistCatalog extends \CBitrixComponent
         unset($arSection["UF_PHOTOS"]);
     }
 
-    private function fillSections()
+    private function sectionsQuery()
     {
         $rsSections = CIBlockSection::GetList($this->arSort, $this->arFilter, false, ["IBLOCK_ID", "ID", "NAME", "CODE", "SECTION_PAGE_URL", "UF_*"], false);
-        $this->searchedRegionData = Regions::getRegionById($this->arRegionIds[0] ?? false);
         while ($arSection = $rsSections->GetNext()) {
+            $this->arSections[$arSection['ID']] = $arSection;
+        }
+    }
+
+    private function fillSections()
+    {
+        if (!isset($this->arFilter['UF_EXTERNAL_ID'])) {
+            $cache = Cache::createInstance();
+            if ($cache->initCache(86400, 'all_sections')) {
+                $this->arSections = $cache->getVars();
+            } elseif ($cache->startDataCache()) {
+                $this->sectionsQuery();
+                $cache->endDataCache($this->arSections);
+            }
+        } else {
+            $this->sectionsQuery();
+        }
+
+        $this->searchedRegionData = Regions::getRegionById($this->arRegionIds[0] ?? false);
+        foreach ($this->arSections as &$arSection) {
 
             $arDataFullGallery = [];
 
@@ -917,7 +956,18 @@ class NaturalistCatalog extends \CBitrixComponent
         $this->arResult['arReviewsLikesData'] = $this->arReviewsLikesData;
         $this->arResult['reviewsCount'] = $this->reviewsCount;
         $this->arResult['avgRating'] = $this->avgRating;
-        $this->arResult['arAvgCriterias'] = $this->arAvgCriterias;        
+        $this->arResult['arAvgCriterias'] = $this->arAvgCriterias;
+        $this->arResult['arElements'] = $this->arElements;
+        $this->arResult['arElementsParent'] = $this->arElementsParent;
+        $this->arResult['allCount'] = $this->allCount;
+        $this->arResult['page'] = $this->page;
+        $this->arResult['pageCount'] = $this->pageCount;
+        $this->arResult['minPrice'] = $this->minPrice;
+        $this->arResult['arHLTypes'] = $this->arHLTypes;
+        $this->arResult['arHLFeatures'] = $this->arHLFeatures;
+        $this->arResult['arHLRoomFeatures'] = $this->arHLRoomFeatures;
+        $this->arResult['arHouseTypes'] = $this->arHouseTypes;
+        $this->arResult['arObjectComforts'] = $this->arObjectComforts;
     }
 
     protected function fillDetailVariables()
@@ -926,13 +976,223 @@ class NaturalistCatalog extends \CBitrixComponent
         $this->getSeason();
         $this->setSectionPictures($this->arSections);
         $this->fillUriParams();
-        $this->getHlBlocks();
         $this->fillDetailSeoParams();
         $this->makeCalendar();
         $this->getFaq();
         $this->setDetailFilter();
         $this->getDetailExternalInfo();
         $this->getDetailReviews();
+        $this->getDetailServices();
+        $this->getRooms();
+        $this->setPagination();
+        $this->setMinPrice();
+        $this->fillHLInfo();
+        $this->getComfortsDetail();
+    }
+
+    private function getComfortsDetail()
+    {
+        // Поиск детального описания удобства или развлечения
+        $featuresDetailList = ElementFeaturesdetailTable::getList([
+            'select' => ['ID', 'NAME', 'FUN_VALUE' => 'FUN.VALUE', 'COMFORT_VALUE' => 'COMFORT.VALUE'],
+            'filter' => [
+                'OBJECT.VALUE' => $this->arSections['ID'],
+                [
+                    "LOGIC" => "OR",
+                    ["COMFORT.VALUE" => $this->arObjectComfortsIds],
+                    ["FUN.VALUE" => $this->arHLFeaturesIds]
+                ],
+            ],
+            'cache' => ['ttl' => 36000000],
+        ])->fetchAll();
+
+        foreach ($featuresDetailList as $featuresDetail) {
+            if (isset($this->arObjectComforts[$featuresDetail['COMFORT_VALUE']])) {
+                $this->arObjectComforts[$featuresDetail['COMFORT_VALUE']]['ELEMENT'] = $featuresDetail['ID'];
+            }
+            if (isset($this->arHLFeatures[$featuresDetail['FUN_VALUE']])) {
+                $this->arHLFeatures[$featuresDetail['FUN_VALUE']]['ELEMENT'] = $featuresDetail['ID'];
+            }
+        }
+    }
+
+    private function fillHLInfo()
+    {
+        // Тип объекта        
+        $entityClass = HighloadBlockTable::compileEntity(TYPES_HL_ENTITY)->getDataClass();
+        $rsData = $entityClass::getList([
+            "select" => ["*"],
+            "order" => ["UF_SORT" => "ASC"],
+            'cache' => ['ttl' => 36000000],
+        ]);
+        while ($arEntity = $rsData->Fetch()) {
+            $this->arHLTypes[$arEntity["ID"]] = $arEntity;
+        }
+
+        // Особенности объекта           
+        $entityClass = HighloadBlockTable::compileEntity(FEATURES_HL_ENTITY)->getDataClass();
+        $rsData = $entityClass::getList([
+            "select" => ["*"],
+            "filter" => ['ID' => $this->arSections['UF_FEATURES']],
+            "order" => ["UF_SORT" => "ASC"],
+            'cache' => ['ttl' => 36000000],
+        ]);
+        while ($arEntity = $rsData->Fetch()) {
+            $this->arHLFeatures[$arEntity["UF_XML_ID"]] = $arEntity;
+            $this->arHLFeaturesIds[] = $arEntity["UF_XML_ID"];
+        }
+
+        // Особенности номера        
+        $entityClass = HighloadBlockTable::compileEntity(ROOM_FEATURES_HL_ENTITY)->getDataClass();
+        $rsData = $entityClass::getList([
+            "select" => ["*"],
+            "order" => ["UF_SORT" => "ASC"],
+            'cache' => ['ttl' => 36000000],
+        ]);
+        while ($arEntity = $rsData->Fetch()) {
+            $this->arHLRoomFeatures[$arEntity["UF_XML_ID"]] = $arEntity;
+        }
+
+        // Типы домов
+        $houseTypesDataClass = HighloadBlockTable::compileEntity(SUIT_TYPES_HL_ENTITY)->getDataClass();
+        $houseTypeData = $houseTypesDataClass::query()
+            ->addSelect('*')
+            ->setOrder(['UF_SORT' => 'ASC'])
+            ->setCacheTtl(36000000)
+            ?->fetchAll();
+        foreach ($houseTypeData as $houseType) {
+            $this->arHouseTypes[$houseType['ID']] = $houseType;
+        }
+
+        // Удобства объекта
+        $objectComfortsDataClass = HighloadBlockTable::compileEntity(OBJECT_COMFORT_HL_ENTITY)->getDataClass();
+        $objectComfortsData = $objectComfortsDataClass::query()
+            ->addSelect('*')
+            ->where('ID', 'in', $this->arSections['UF_OBJECT_COMFORTS'])
+            ->setOrder(['UF_SORT' => 'ASC'])
+            ->setCacheTtl(36000000)
+            ?->fetchAll();
+        foreach ($objectComfortsData as $objectComfort) {
+            $this->arObjectComforts[$objectComfort['UF_XML_ID']] = $objectComfort;
+            $this->arObjectComfortsIds[] = $objectComfort['UF_XML_ID'];
+        }
+    }
+
+    private function setMinPrice()
+    {
+        if (!empty($this->arExternalInfo)) {
+            $this->minPrice = $this->arElements[0]['PRICE'];
+        } else {
+            $this->minPrice = $this->arSections['UF_MIN_PRICE'];
+        }
+
+        if ($this->minPrice == 0) {
+            $this->minPrice = $this->arSections['UF_MIN_PRICE'];
+        }
+    }
+
+    private function setPagination()
+    {
+        // Пагинация номеров
+        $this->allCount = count($this->arElements);
+        if ($this->allCount > 0) {
+            $this->page = $_REQUEST['page'] ?? 1;
+            $this->pageCount = ceil($this->allCount / $this->arParams["DETAIL_ITEMS_COUNT"]);
+            if ($this->pageCount > 1) {
+                $this->arElements = array_slice(
+                    $this->arElements,
+                    ($this->page - 1) * $this->arParams["DETAIL_ITEMS_COUNT"],
+                    $this->arParams["DETAIL_ITEMS_COUNT"]
+                );
+            }
+        }
+    }
+
+    private function getRooms()
+    {
+        // Список номеров
+        $rsElements = CIBlockElement::GetList(array("SORT" => "ASC"), $this->arFilter, false, false, array("IBLOCK_ID", "ID", "IBLOCK_SECTION_ID", "NAME", "DETAIL_TEXT", "PROPERTY_PHOTOS", "PROPERTY_FEATURES", "PROPERTY_EXTERNAL_ID", "PROPERTY_EXTERNAL_CATEGORY_ID", "PROPERTY_SQUARE", "PROPERTY_PARENT_ID", 'PROPERTY_ROOMS', 'PROPERTY_BEDS', 'PROPERTY_ROOMTOUR'));
+        $this->arElements = array();
+        while ($arElement = $rsElements->Fetch()) {
+            if ($arElement["PROPERTY_PHOTOS_VALUE"]) {
+                foreach ($arElement["PROPERTY_PHOTOS_VALUE"] as $photoId) {
+                    $arElement["PICTURES"][$photoId] = [
+                        'src' => CFile::ResizeImageGet($photoId, array('width' => 464, 'height' => 328), BX_RESIZE_IMAGE_EXACT, true)['src'],
+                        'big' => CFile::GetFileArray($photoId)["SRC"],
+                    ];
+                }
+            } else {
+                $arElement["PICTURES"][0]["src"] = SITE_TEMPLATE_PATH . "/img/no_photo.png";
+            }
+
+            if (!empty($this->arExternalInfo)) {
+                $roomElement = current($this->arExternalInfo[$arElement["ID"]]);
+                $arElement["PRICE"] = $roomElement["price"];
+            } else {
+                $arElement["PRICE"] = 0;
+            }
+
+            $discountData = CCatalogProduct::GetOptimalPrice($arElement['ID'], 1, CurrentUser::get()->getUserGroups(), 'N');
+
+            if (is_array($discountData['DISCOUNT']) && count($discountData['DISCOUNT'])) {
+                $arElement['DISCOUNT_DATA']['VALUE'] = $discountData['DISCOUNT']['VALUE'];
+                $arElement['DISCOUNT_DATA']['VALUE_TYPE'] = $discountData['DISCOUNT']['VALUE_TYPE'];
+            }
+
+            $this->arElements[$arElement['ID']] = $arElement;
+        }
+
+        if ($this->arSections["UF_EXTERNAL_SERVICE"] == "bnovo") {
+            foreach ($this->arElements as $arElement) {
+                if ((int)$arElement["PROPERTY_PARENT_ID_VALUE"] > 0) {
+                    if (!isset($parentExternalIds) || !in_array(
+                        $arElement["PROPERTY_PARENT_ID_VALUE"],
+                        $parentExternalIds
+                    )) {
+                        $parentExternalIds[] = $arElement["PROPERTY_PARENT_ID_VALUE"];
+                    }
+                }
+            }
+
+            if (isset($parentExternalIds) && !empty($parentExternalIds)) {
+                unset($this->arFilter["ID"]);
+                $this->arFilter["?PROPERTY_EXTERNAL_ID"] = implode('|', $parentExternalIds);
+                $rsElements = CIBlockElement::GetList(false, $this->arFilter, false, false, array("IBLOCK_ID", "ID", "IBLOCK_SECTION_ID", "NAME", "DETAIL_TEXT", "PROPERTY_PHOTOS", "PROPERTY_FEATURES", "PROPERTY_EXTERNAL_ID", "PROPERTY_EXTERNAL_CATEGORY_ID", "PROPERTY_SQUARE", "PROPERTY_PARENT_ID"));
+                while ($arElement = $rsElements->Fetch()) {
+                    if ($arElement["PROPERTY_PHOTOS_VALUE"]) {
+                        foreach ($arElement["PROPERTY_PHOTOS_VALUE"] as $photoId) {
+                            $arElement["PICTURES"][$photoId] = [
+                                'src' => CFile::ResizeImageGet($photoId, array('width' => 464, 'height' => 328), BX_RESIZE_IMAGE_EXACT, true)['src'],
+                                'big' => CFile::GetFileArray($photoId)["SRC"],
+                            ];
+                        }
+                    } else {
+                        $arElement["PICTURES"][0]["src"] = SITE_TEMPLATE_PATH . "/img/no_photo.png";
+                    }
+
+                    $this->arElementsParent[$arElement['PROPERTY_EXTERNAL_ID_VALUE']] = $arElement;
+                }
+            }
+        }
+
+        // Сортировка номеров по убыванию цены
+        usort($this->arElements, function ($a, $b) {
+            return ($a['PRICE'] - $b['PRICE']);
+        });
+
+        if ($this->arSections["UF_EXTERNAL_SERVICE"] == "bnovo") {
+            $this->arParams["DETAIL_ITEMS_COUNT"] = 999;
+        }
+    }
+
+    private function getDetailServices()
+    {
+        if ($this->arSections["UF_SERVICES"]) {
+            $rsServices = CIBlockElement::GetList(false, array("IBLOCK_ID" => SERVICES_IBLOCK_ID, "!IBLOCK_SECTION_ID" => false, "ID" => $this->arSections["UF_SERVICES"]), false, false, array("IBLOCK_ID", "IBLOCK_SECTION_ID", "ID", "NAME"));
+            while ($arService = $rsServices->Fetch()) {
+                $this->arSections['arServices'][] = $arService;
+            }
+        }
     }
 
     private function getDetailReviews()
