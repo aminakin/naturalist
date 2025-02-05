@@ -8,6 +8,7 @@ use Naturalist\bronevik\repository\Bronevik;
 
 class ImportHotelsBronevik
 {
+    use AttemptBronevik;
     const EXTERNAL_SERVICE_ID = 6;
 
     private Bronevik $bronevik;
@@ -26,8 +27,9 @@ class ImportHotelsBronevik
     /**
      * @throws \SoapFault
      */
-    public function __invoke(int | array $ids): void
+    public function __invoke(int | array $ids, bool $isLoadHotels = true, bool $isLoadHotelRooms = true): array
     {
+        $siteHotelIds = [];
         if (gettype($ids) === 'integer') {
             $ids = [$ids];
         }
@@ -35,11 +37,23 @@ class ImportHotelsBronevik
         $hotels = $this->bronevik->getHotelInfo($ids);
         foreach ($hotels->hotel as $hotel) {
             $data = $this->getHotelData($hotel);
-            if ($id = $this->upsert($data))
-            {
+            $id = null;
+            if ($isLoadHotels && $id = $this->upsert($data)) {
+                $siteHotelIds[] = $id;
+            }
+
+            if (! $isLoadHotels) {
+                $id = $this->getId($data);
+                $siteHotelIds[] = $id;
+            }
+
+            if ($isLoadHotelRooms && gettype($id) == 'integer') {
                 ($this->importnerHotelRoomsBronevik)($id, $hotel?->rooms?->room);
             }
+
         }
+
+        return $siteHotelIds;
     }
 
     private function getHotelData($data): array
@@ -73,6 +87,18 @@ class ImportHotelsBronevik
         return $result;
     }
 
+    private function getId(array $data): ?int
+    {
+        $arSection = $this->hotelBronevik->listFetch(["UF_EXTERNAL_ID" => $data["UF_EXTERNAL_ID"]], false, ["IBLOCK_ID", "ID", "NAME", "CODE", "SORT", "UF_*"]);
+        if (count($arSection)) {
+            $arSection = current($arSection);
+
+            return $arSection['ID'];
+        }
+
+        return null;
+    }
+
     private function upsert(array $data): int|null|bool
     {
         $arSection = $this->hotelBronevik->listFetch(["UF_EXTERNAL_ID" => $data["UF_EXTERNAL_ID"]], false, ["IBLOCK_ID", "ID", "NAME", "CODE", "SORT", "UF_*"]);
@@ -91,7 +117,9 @@ class ImportHotelsBronevik
 
             $iS = new CIBlockSection();
             if ($arSection) {
-                if ($iS->Update($arSection['ID'], $data)) {
+                // Не увидел процесс изменения данных отеля у бново. Тут так же
+                // $iS->Update($arSection['ID'], $data)
+                if (true) {
                     return $arSection['ID'];
                 }
             } else {

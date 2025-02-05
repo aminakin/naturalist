@@ -1,0 +1,1 @@
+<?require($_SERVER["DOCUMENT_ROOT"]."/local/modules/add_object_bronevik/admin/add_object_bronevik_rows_list.php");?>

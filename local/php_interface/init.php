@@ -40,6 +40,7 @@ Loader::registerAutoLoadClasses(null, array(
     'Naturalist\Filters\Components' => '/local/php_interface/classes/Filters/Components.php',
     'Naturalist\BnovoDataFilesHandler' => '/local/php_interface/classes/BnovoDataFilesHandler.php',
     'Naturalist\bronevik\repository\Bronevik' => '/local/php_interface/classes/bronevik/repository/Bronevik.php',
+    'Naturalist\bronevik\repository\BronevikAdapter' => '/local/php_interface/classes/bronevik/repository/BronevikAdapter.php',
     'Naturalist\bronevik\connector\HotelsConnector' => '/local/php_interface/classes/bronevik/connector/HotelsConnector.php',
     'Naturalist\bronevik\ImportHotelsBronevik' => '/local/php_interface/classes/bronevik/ImportHotelsBronevik.php',
     'Naturalist\bronevik\ImportHotelRoomsBronevik' => '/local/php_interface/classes/bronevik/ImportHotelRoomsBronevik.php',
@@ -57,6 +58,7 @@ Loader::registerAutoLoadClasses(null, array(
     'Naturalist\bronevik\OrderCanceledPenaltyBronevik' => '/local/php_interface/classes/bronevik/OrderCanceledPenaltyBronevik.php',
     'Naturalist\bronevik\OrderBronevik' => '/local/php_interface/classes/bronevik/OrderBronevik.php',
     'Naturalist\bronevik\HotelOfferPricingCheckPriceBronevik' => '/local/php_interface/classes/bronevik/HotelOfferPricingCheckPriceBronevik.php',
+    'Naturalist\bronevik\AttemptBronevik' => '/local/php_interface/classes/bronevik/AttemptBronevik.php',
 ));
 
 // Константы

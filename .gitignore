@@ -11,7 +11,7 @@
 /local/php_interface/init_constants.php
 /local/cron/*.log
 
-/local/modules
+/local/modules/sprint.migration
 .htaccess
 robots.txt
 
