@@ -10,12 +10,11 @@ Loc::loadMessages(__FILE__);
         <div class="h3">Похожие глэмпинги рядом</div>
         <div class="objects">
             <? foreach ($arResult["SECTIONS"] as $arItem): ?>
-                <? if ($arItem["UF_PHOTOS"]): ?>
+                <? if ($arItem["PICTURES"]): ?>
                     <? $arDataFullGallery = []; ?>
-                    <? foreach ($arItem["UF_PHOTOS"] as $keyElement => $photoId): ?>
+                    <? foreach ($arItem["PICTURES"] as $keyElement => $photoId): ?>
                         <?
-                        $imageOriginal = CFile::GetFileArray($photoId);
-                        $arDataFullGallery[] = "&quot;" . $imageOriginal["SRC"] . "&quot;";
+                        $arDataFullGallery[] = "&quot;" . $photoId["scr"] . "&quot;";
                         ?>
                     <? endforeach; ?>
                     <? $dataFullGallery = implode(",", $arDataFullGallery); ?>
@@ -24,13 +23,10 @@ Loc::loadMessages(__FILE__);
                     <div class="object__images">
                         <div class="swiper slider-gallery" data-slider-object="data-slider-object" data-fullgallery="[<?= $dataFullGallery; ?>]">
                             <div class="swiper-wrapper">
-                                <? if ($arItem["UF_PHOTOS"]): ?>
+                                <? if ($arItem["PICTURES"]): ?>
                                     <? $keyPhoto = 1; ?>
-                                    <? foreach ($arItem["UF_PHOTOS"] as $keyElement => $photoId): ?>
-                                        <?
-                                        $arPhoto = CFile::ResizeImageGet($photoId, array('width' => 600, 'height' => 400), BX_RESIZE_IMAGE_EXACT, true);
-                                        ?>
-                                        <? if (count((array)$arItem["UF_PHOTOS"]) > 1): ?>
+                                    <? foreach ($arItem["PICTURES"] as $keyElement => $photoId): ?>
+                                        <? if (count((array)$arItem["PICTURES"]) > 1): ?>
                                             <?
                                             $alt = $arResult["HL_TYPES"][$arItem["UF_TYPE"]]["UF_NAME"] . " " . $arItem["NAME"] . " рис." . $keyPhoto;;
                                             $title = "Фото - " . $arItem["NAME"] . " рис." . $keyPhoto;
@@ -42,7 +38,7 @@ Loc::loadMessages(__FILE__);
                                             ?>
                                         <? endif; ?>
                                         <div class="swiper-slide" data-fullgallery-item="<?= $keyElement; ?>">
-                                            <img class="lazy" alt="<?= $alt ?>" title="<?= $title ?>" data-src="<?= $arPhoto["src"] ?>"
+                                            <img class="lazy" alt="<?= $alt ?>" title="<?= $title ?>" data-src="<?= $photoId["src"] ?>"
                                                 alt="<?= $arItem["NAME"] ?>">
                                         </div>
                                         <? $keyPhoto++; ?>
@@ -150,7 +146,7 @@ Loc::loadMessages(__FILE__);
                             ?>
                         <? endforeach; ?>
                         <? $dataFullGallery = implode(",", $arDataFullGallery); ?>
-                    <? endif; */?>
+                    <? endif; */ ?>
                     <div class="swiper-slide" id="<?= $this->GetEditAreaId($arItem['ID']) ?>">
                         <div class="object" href="<?= $arItem["SECTION_PAGE_URL"] ?>">
                             <div class="object__images">

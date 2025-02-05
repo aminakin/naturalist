@@ -54,8 +54,8 @@ if (!empty($waterData)) {
 $commonWaterDataClass = HighloadBlockTable::compileEntity(COMMON_WATER_HL_ENTITY)->getDataClass();
 $commonWaterData = $commonWaterDataClass::query()
     ->addSelect('ID')
-    ->addSelect('UF_NAME')    
-    ->addSelect('UF_SORT')    
+    ->addSelect('UF_NAME')
+    ->addSelect('UF_SORT')
     ?->fetchAll();
 
 if (!empty($commonWaterData)) {
@@ -101,29 +101,28 @@ if (!empty($regionsFullData)) {
     });
 }
 
-$arResult['HTML'] = function (array $arResult, string $locationsKey)
-{
-    $alphabit = ['А','Б','В','Г','Д','Е','Ё','Ж','З','И','Й','К','Л','М','Н','О','П','Р','С','Т','У','Ф','Х','Ц','Ч','Ш','Щ','Э','Ю','Я',];
-    foreach($alphabit as $letter) { ?>
-        <div 
-        class="location-alphabet__letter<?= checkLetterHasLocations($letter, $arResult, $locationsKey)? '': ' disabled'?>" 
-        data-letter='<?=$letter?>'>
-            <?=$letter?>
-            <?= checkLetterHasLocations($letter, $arResult, $locationsKey)? '': '<div class="no-location">На эту букву пока ничего нет, но это временно. Ожидайте обновлений!</div>'?>
+$arResult['HTML'] = function (array $arResult, string $locationsKey) {
+    $alphabit = ['А', 'Б', 'В', 'Г', 'Д', 'Е', 'Ё', 'Ж', 'З', 'И', 'Й', 'К', 'Л', 'М', 'Н', 'О', 'П', 'Р', 'С', 'Т', 'У', 'Ф', 'Х', 'Ц', 'Ч', 'Ш', 'Щ', 'Э', 'Ю', 'Я',];
+    foreach ($alphabit as $letter) { ?>
+        <div
+            class="location-alphabet__letter<?= checkLetterHasLocations($letter, $arResult, $locationsKey) ? '' : ' disabled' ?>"
+            data-letter='<?= $letter ?>'>
+            <?= $letter ?>
+            <?= checkLetterHasLocations($letter, $arResult, $locationsKey) ? '' : '<div class="no-location">На эту букву пока ничего нет, но это временно. Ожидайте обновлений!</div>' ?>
         </div>
-    <?php }
-    
+<?php }
 };
 
-function checkLetterHasLocations(string $letter, array $locations, string $locationsKey){
+function checkLetterHasLocations(string $letter, array $locations, string $locationsKey)
+{
     $flag = false;
-    foreach($locations as $location) {
+    foreach ($locations as $location) {
         $locationName = mb_strtolower($location[$locationsKey]);
-        $locationName= str_replace('республика ', "", $locationName);
-        $locationName= str_replace('озеро ', "", $locationName);
-        $locationName= str_replace('река ', "", $locationName);
+        $locationName = str_replace('республика ', "", $locationName);
+        $locationName = str_replace('озеро ', "", $locationName);
+        $locationName = str_replace('река ', "", $locationName);
         $locationFirstChar = mb_substr($locationName, 0, 1);
-        if($locationFirstChar === mb_strtolower($letter)) {
+        if ($locationFirstChar === mb_strtolower($letter)) {
             $flag = true;
             break;
         }

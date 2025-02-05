@@ -335,9 +335,9 @@ class Orders
             }
         }
 
-        $res = CSaleOrder::CancelOrder($orderId, "Y", $reason);
         $this->applyPenaltyCanceledOrder($orderId);
-        if ($res) {
+        //$res = CSaleOrder::CancelOrder($orderId, "Y", $reason);
+        if ($cancelReservation) {
             // Выставляем заказу статус "С" (Отменен)
             $updStatusRes = $this->updateStatus($orderId, "C");
 
@@ -719,7 +719,7 @@ class Orders
                 } else {
                     $info = ["DISCOUNT_TYPE" => '', "DISCOUNT_VALUE" => 0];
                 }
-                
+
                 return json_encode([
                     "MESSAGE" => "Купон применён",
                     "INFO" => $info,
@@ -822,8 +822,6 @@ class Orders
             if (empty($arUser["PERSONAL_PHONE"])) {
                 $arUser["PERSONAL_PHONE"] = $params["phone"];
             }
-            $arUser["NAME"] = !empty($arUser["NAME"]) ? $arUser["NAME"] : $params["name"];
-            $arUser["LAST_NAME"] = !empty($arUser["LAST_NAME"]) ? $arUser["LAST_NAME"] : $params["last_name"];
 
             $arVerifyResponse = Traveline::verifyReservation($externalSectionId, $externalElementId, $externalCategoryId, $guests, $arChildrenAge, $dateFrom, $dateTo, $price, $checksum, $arGuestList, $arUser, $adults);
 
@@ -913,9 +911,11 @@ class Orders
         $propertyValue = $propertyCollection->getItemByOrderPropertyId($this->arPropsIDs['EMAIL']);
         $propertyValue->setValue($params["email"]);
         // Имя
+        $arUser["NAME"] = !empty($arUser["NAME"]) ? $arUser["NAME"] : $params["name"];
         $propertyValue = $propertyCollection->getItemByOrderPropertyId($this->arPropsIDs['NAME']);
         $propertyValue->setValue($arUser["NAME"]);
         // Фамилия
+        $arUser["LAST_NAME"] = !empty($arUser["LAST_NAME"]) ? $arUser["LAST_NAME"] : $params["last_name"];
         $propertyValue = $propertyCollection->getItemByOrderPropertyId($this->arPropsIDs['LAST_NAME']);
         $propertyValue->setValue($arUser["LAST_NAME"]);
         // Дата заезда
