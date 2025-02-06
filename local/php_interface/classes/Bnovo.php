@@ -167,11 +167,11 @@ class Bnovo
             $arDataGrouped[$arItem["UF_TARIFF_ID"] . "-" . $arItem["UF_CATEGORY_ID"]][] = $arItem;
         }
 
-        foreach ($arDataGrouped as $key => $arItems) {
-            if (count($arItems) < count($arDates)) {
-                unset($arDataGrouped[$key]);
-            }
-        }
+//        foreach ($arDataGrouped as $key => $arItems) {
+//            if (count($arItems) < count($arDates)) {
+//                unset($arDataGrouped[$key]);
+//            }
+//        }
 
         foreach ($arDataGrouped as $arData) {
             foreach ($arData as $arEntity) {
