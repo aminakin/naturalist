@@ -1043,7 +1043,7 @@ class NaturalistCatalog extends \CBitrixComponent
         }
 
         // Особенности номера        
-        $entityClass = HighloadBlockTable::compileEntity(ROOM_FEATURES_HL_ENTITY)->getDataClass();
+        $entityClass = HighloadBlockTable::compileEntity(HL_ROOM_FEATURES_ENTITY)->getDataClass();
         $rsData = $entityClass::getList([
             "select" => ["*"],
             "order" => ["UF_SORT" => "ASC"],

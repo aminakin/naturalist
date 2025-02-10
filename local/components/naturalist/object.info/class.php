@@ -102,7 +102,7 @@ class ObjectInfo extends \CBitrixComponent
     private function getHlBlockValues(): void
     {
         if ($this->arResult['ELEMENT']['FEATURES']) {
-            $entityDataClass = HighloadBlockTable::compileEntity(ROOM_FEATURES_HL_ENTITY)->getDataClass();
+            $entityDataClass = HighloadBlockTable::compileEntity(HL_ROOM_FEATURES_ENTITY)->getDataClass();
             $query = $entityDataClass::query()
                 ->addSelect('ID')
                 ->addSelect('UF_NAME')
