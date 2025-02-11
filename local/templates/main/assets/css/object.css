@@ -2389,6 +2389,10 @@
   margin: 8px;
 }
 
+.room__order .room__left{
+  align-self: center;
+}
+
 .room__cancelation-title {
   padding: 2px 6px;
   cursor: pointer;
