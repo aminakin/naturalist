@@ -4,7 +4,6 @@ namespace Naturalist;
 
 
 use Bitrix\Highloadblock\HighloadBlockTable;
-use Bitrix\Main\Diag\Debug;
 use Bitrix\Main\Loader;
 
 Loader::includeModule('highloadblock');
@@ -92,6 +91,18 @@ class Regions
         }
 
         $regionesDataClass = HighloadBlockTable::compileEntity(self::$regionsHL)->getDataClass();
+
+        $result = $regionesDataClass::query()
+            ->addSelect('ID')
+            ->addSelect('UF_NAME')
+            ->addSelect('UF_SORT')
+            ->addSelect('UF_COORDS')
+            ->whereLike('UF_NAME', $regionName )
+            ?->fetchAll() ?? [];
+
+        if (count($result) != 0) {
+            return $result;
+        }
 
         return $regionesDataClass::query()
             ->addSelect('ID')

@@ -2,15 +2,14 @@
 
 namespace Naturalist;
 
-use Bitrix\Highloadblock\HighloadBlockTable;
 use Bitrix\Main\Loader;
 use CIBlockElement;
 use CIBlockSection;
 use CUser;
-use CFile;
 use CCatalogDiscount;
 use CCatalogProduct;
 use CPrice;
+use Naturalist\bronevik\SearchRoomsBronevik;
 
 defined("B_PROLOG_INCLUDED") && B_PROLOG_INCLUDED === true || die();
 /**
@@ -25,6 +24,7 @@ class Products
 {
     private static $travelinePropEnumXmlId = 'traveline';
     private static $bnovoPropEnumXmlId = 'bnovo';
+    private static $bronevikPropEnumXmlId = 'bronevik';
 
     /* Получение товаров */
     public function getList($arSort = false, $arFilter = false, $arSelect = false)
@@ -134,6 +134,10 @@ class Products
         } elseif ($serviceType == self::$bnovoPropEnumXmlId) { // Bnovo
             $bnovo = new Bnovo();
             $arResult = $bnovo->searchRooms($sectionId, $externalId, $guests, $arChildrenAge, $dateFrom, $dateTo);
+            $arRooms = $arResult['arItems'];
+            $error = $arResult['error'];
+        } elseif ($serviceType == self::$bronevikPropEnumXmlId) {
+            $arResult = (new SearchRoomsBronevik())($sectionId, $externalId, $guests, $arChildrenAge, $dateFrom, $dateTo, $minChildAge);
             $arRooms = $arResult['arItems'];
             $error = $arResult['error'];
         }

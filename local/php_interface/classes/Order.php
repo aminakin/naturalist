@@ -3,16 +3,33 @@
 namespace Naturalist;
 
 use Bitrix\Main\Application;
+use Bitrix\Main\ArgumentException;
+use Bitrix\Main\ArgumentNullException;
+use Bitrix\Main\ArgumentOutOfRangeException;
+use Bitrix\Main\ArgumentTypeException;
 use Bitrix\Main\Config\Option;
 use Bitrix\Main\Context;
 use Bitrix\Main\Diag\Debug;
 use Bitrix\Main\Loader;
+use Bitrix\Main\NotImplementedException;
+use Bitrix\Main\NotSupportedException;
+use Bitrix\Main\ObjectException;
+use Bitrix\Main\ObjectNotFoundException;
+use Bitrix\Main\ObjectPropertyException;
+use Bitrix\Main\SystemException;
+use Bitrix\Sale\BasketItem;
+use Bitrix\Sale\BasketPropertyItem;
 use Bitrix\Sale\Order;
 use Bitrix\Sale\Basket;
 use Bitrix\Sale\PaySystem;
 use Bitrix\Sale\Fuser;
 use Bitrix\Main\Mail\Event;
 use Bitrix\Sale\DiscountCouponsManager;
+use Naturalist\bronevik\HotelOfferPricingCheckPriceBronevik;
+use Naturalist\bronevik\HotelRoomOfferPenaltyBronevik;
+use Naturalist\bronevik\OrderCancelBronevik;
+use Naturalist\bronevik\OrderCanceledPenaltyBronevik;
+use Naturalist\bronevik\OrderCreateBronevik;
 use Naturalist\CreateOrderPdf;
 use Bitrix\Main\Grid\Declension;
 
@@ -35,6 +52,7 @@ class Orders
 {
     public $travelineSectionPropEnumId = '1';
     public $bnovoSectionPropEnumId = '2';
+    public $bronevikSectionPropEnumId = '6';
 
     public $arPropsIDs = array(
         'PHONE' => 1,
@@ -72,6 +90,7 @@ class Orders
         'PROP_CONGRATS' => ORDER_PROP_CONGRATS,
         'PROP_CERT_PRICE' => ORDER_PROP_CERT_PRICE,
         'CERT_ADDRESS' => ORDER_PROP_CERT_ADDRESS,
+        'BRONEVIK_OFFER_ID' => 41,
     );
     public $statusNames = array(
         "N" => "Не оплачено",
@@ -188,7 +207,10 @@ class Orders
         }
 
         $service = $arOrder['ITEMS'][0]['ITEM']['SECTION']['UF_EXTERNAL_SERVICE'];
-        if ($service == $this->travelineSectionPropEnumId) {
+        if ($service == $this->bronevikSectionPropEnumId) {
+            $id = current($arOrder['ITEMS'])['ID'];
+            //            $penaltyAmount = (new HotelRoomOfferPenaltyBronevik())(current($arOrder['ITEMS'])['ID']);
+        } elseif ($service == $this->travelineSectionPropEnumId) {
             $penaltyAmount = Traveline::beforeCancelReservation($arOrder);
         } else {
             $penaltyAmount = false;
@@ -333,6 +355,17 @@ class Orders
         }
     }
 
+    public function applyPenaltyCanceledOrder(int $orderId): bool
+    {
+        $arOrder = $this->get($orderId);
+        $penalty = (new OrderCanceledPenaltyBronevik())($arOrder['PROPS']['RESERVATION_ID']);
+        if ($penalty > 0 && \CSaleUserAccount::UpdateAccount($arOrder['FIELDS']["USER_ID"], -$penalty, $arOrder['FIELDS']["CURRENCY"], "ORDER_CANCEL_PENALTY", $orderId) !== false) {
+            return true;
+        }
+
+        return false;
+    }
+
     /* Отмена бронирования объекта из заказа во внешнем сервисе */
 
     public function cancelReservation($arOrder)
@@ -343,8 +376,9 @@ class Orders
         $service = $arOrder['ITEMS'][0]['ITEM']['SECTION']['UF_EXTERNAL_SERVICE'];
         $reservationId = $arOrder['PROPS']['RESERVATION_ID'];
 
-
-        if ($service == $this->bnovoSectionPropEnumId) {
+        if ($service == $this->bronevikSectionPropEnumId) {
+            $res = (new OrderCancelBronevik())($arOrder['PROPS']['RESERVATION_ID']);
+        } elseif ($service == $this->bnovoSectionPropEnumId) {
             $bnovo = new Bnovo();
             $res = $bnovo->cancelReservation($arOrder);
         } elseif ($service == $this->travelineSectionPropEnumId) {
@@ -545,6 +579,15 @@ class Orders
 
     /* Бронирование объекта из заказа во внешнем сервисе */
 
+    /**
+     * @throws \SoapFault
+     * @throws ObjectPropertyException
+     * @throws NotImplementedException
+     * @throws ArgumentNullException
+     * @throws ArgumentOutOfRangeException
+     * @throws ArgumentException
+     * @throws SystemException
+     */
     public function makeReservation($orderId)
     {
         $orderId = intval($orderId);
@@ -564,7 +607,9 @@ class Orders
         $service = $arOrder['ITEMS'][0]['ITEM']['SECTION']['UF_EXTERNAL_SERVICE'];
         $reservationPropId = $this->arPropsIDs['RESERVATION_ID'];
 
-        if ($service == $this->bnovoSectionPropEnumId) {
+        if ($service == $this->bronevikSectionPropEnumId) {
+            $reservationRes = (new OrderCreateBronevik())($orderId, $arOrder, $arUser, $reservationPropId);
+        } elseif ($service == $this->bnovoSectionPropEnumId) {
             $bnovo = new Bnovo();
             $reservationRes = $bnovo->makeReservation($orderId, $arOrder, $arUser, $reservationPropId);
         } elseif ($service == $this->travelineSectionPropEnumId) {
@@ -636,7 +681,9 @@ class Orders
             $arChildrenAge = explode(',', $params['childrenAge']);
         }
 
-        if ($service == $this->travelineSectionPropEnumId) {
+        if ($service == $this->bronevikSectionPropEnumId) {
+            $arData = false;
+        } elseif ($service == $this->travelineSectionPropEnumId) {
             $arData = Traveline::getCancellationAmount($params['externalId'], $params['guests'], $arChildrenAge, $params['dateFrom'], $params['dateTo'], $params['checksum'], $params['externalElementId'], $params['travelineCategoryId']);
         } else {
             $arData = false;
@@ -709,6 +756,19 @@ class Orders
 
     /* Добавление нового заказа */
 
+    /**
+     * @throws ArgumentOutOfRangeException
+     * @throws ArgumentException
+     * @throws NotImplementedException
+     * @throws ArgumentNullException
+     * @throws \SoapFault
+     * @throws ObjectPropertyException
+     * @throws ObjectNotFoundException
+     * @throws ArgumentTypeException
+     * @throws SystemException
+     * @throws ObjectException
+     * @throws NotSupportedException
+     */
     public function add($params)
     {
         global $arUser, $userId;
@@ -761,6 +821,8 @@ class Orders
             if (empty($arUser["PERSONAL_PHONE"])) {
                 $arUser["PERSONAL_PHONE"] = $params["phone"];
             }
+            $arUser["NAME"] = !empty($arUser["NAME"]) ? $arUser["NAME"] : $params["name"];
+            $arUser["LAST_NAME"] = !empty($arUser["LAST_NAME"]) ? $arUser["LAST_NAME"] : $params["last_name"];
 
             $arVerifyResponse = Traveline::verifyReservation($externalSectionId, $externalElementId, $externalCategoryId, $guests, $arChildrenAge, $dateFrom, $dateTo, $price, $checksum, $arGuestList, $arUser, $adults);
 
@@ -796,6 +858,13 @@ class Orders
         // Создание корзины
         $siteId = Context::getCurrent()->getSite();
         $basket = Basket::loadItemsForFUser(Fuser::getId(), $siteId);
+
+        if (! (new HotelOfferPricingCheckPriceBronevik())($basket, ['LAST_NAME' => $arUser['LAST_NAME'], 'FIRST_NAME' => $arUser['NAME']])) {
+            return json_encode([
+                "ACTION" => "reload",
+                "ERROR" => "Произошло изменение цены. Пожалуйста, ознакомьтесь!",
+            ]);
+        }
 
         // Создание нового заказа
         $order = Order::create($siteId, $userId);
@@ -843,11 +912,9 @@ class Orders
         $propertyValue = $propertyCollection->getItemByOrderPropertyId($this->arPropsIDs['EMAIL']);
         $propertyValue->setValue($params["email"]);
         // Имя
-        $arUser["NAME"] = !empty($arUser["NAME"]) ? $arUser["NAME"] : $params["name"];
         $propertyValue = $propertyCollection->getItemByOrderPropertyId($this->arPropsIDs['NAME']);
         $propertyValue->setValue($arUser["NAME"]);
         // Фамилия
-        $arUser["LAST_NAME"] = !empty($arUser["LAST_NAME"]) ? $arUser["LAST_NAME"] : $params["last_name"];
         $propertyValue = $propertyCollection->getItemByOrderPropertyId($this->arPropsIDs['LAST_NAME']);
         $propertyValue->setValue($arUser["LAST_NAME"]);
         // Дата заезда
@@ -898,6 +965,12 @@ class Orders
         if ($doublePayment) {
             $propertyValue = $propertyCollection->getItemByOrderPropertyId($this->arPropsIDs['CERT_VALUE']);
             $propertyValue->setValue(intval($params['userbalance']));
+        }
+
+        if ($externalService == $this->bronevikSectionPropEnumId) {
+            $offerId = $arBasketItems['ITEMS'][0]['PROPS']['BRONEVIK_OFFER_ID'];
+            $propertyValue = $propertyCollection->getItemByOrderPropertyId($this->arPropsIDs['BRONEVIK_OFFER_ID']);
+            $propertyValue->setValue($offerId);
         }
 
         if ($externalService == $this->bnovoSectionPropEnumId) {

@@ -152,7 +152,7 @@
     },
 
     /***/ 1373: /***/ function () {
-      var reviewControlText = ["Обзор полностью", "Скрыть обзор"];
+      var reviewControlText = ["Развернуть", "Скрыть"];
 
       window.reviewsText = function () {
         document
@@ -12715,6 +12715,33 @@
     window.addEventListener("load", function () {
       window.objectsGallery();
     });
+
+    window.featureGallery = function () {
+      var $object = document.querySelector(
+        ".detail-feature__slider:not(.swiper-initialized)"
+      );
+
+      // eslint-disable-next-line no-unused-vars
+      var objectSlider = new core($object, {
+        slidesPerView: 1,
+        spaceBetween: 0,
+        speed: 250,
+        effect: "slide",
+        loop: true,
+        watchOverflow: true,
+        watchSlidesProgress: true,
+        preloadImages: false,
+        lazy: {
+          loadPrevNext: true,
+          loadOnTransitionStart: true,
+        },
+        navigation: {
+          nextEl: $object.querySelector(".swiper-button-next"),
+          prevEl: $object.querySelector(".swiper-button-prev"),
+        },
+      });
+    };
+
     /* RELATED
    -------------------------------------------------- */
 
@@ -12724,7 +12751,7 @@
         if ($item.querySelector(".swiper:not(.swiper-initialized)")) {
           // eslint-disable-next-line no-unused-vars
           var headingRelatedSlider = new core($item.querySelector(".swiper"), {
-            slidesPerView: 3,
+            slidesPerView: "auto",
             spaceBetween: 20,
             speed: 250,
             effect: "slide",
@@ -12739,6 +12766,12 @@
               ),
             },
             breakpoints: {
+              500: {
+                slidesPerView: 2,
+              },
+              900: {
+                slidesPerView: 3,
+              },
               1280: {
                 slidesPerView: 4,
               },
@@ -12779,73 +12812,72 @@
     /* FULL GALLERY
    -------------------------------------------------- */
 
-    document.addEventListener("click", function (event) {
-      var $el = event.target;
+    // document.addEventListener("click", function (event) {
+    //   var $el = event.target;
 
-      if (
-        $el.matches("[data-fullgallery-item]") ||
-        ($el.closest("[data-fullgallery-item]") &&
-          window.innerWidth > 450 &&
-          $el.closest(".object-hero__gallery"))
-      ) {
-        event.preventDefault();
-        var $dataEl = $el.matches("[data-fullgallery-item]")
-          ? $el
-          : $el.closest("[data-fullgallery-item]");
-        var id = $dataEl.dataset.fullgalleryItem;
-        var images = JSON.parse(
-          $el.closest("[data-fullgallery]").dataset.fullgallery
-        );
+    //   if (
+    //     $el.matches("[data-fullgallery-item]") ||
+    //     $el.closest("[data-fullgallery-item]")
+    //   ) {
+    //     event.preventDefault();
+    //     var $dataEl = $el.matches("[data-fullgallery-item]")
+    //       ? $el
+    //       : $el.closest("[data-fullgallery-item]");
+    //     var id = $dataEl.dataset.fullgalleryItem;
+    //     var images = JSON.parse(
+    //       $el.closest("[data-fullgallery]").dataset.fullgallery
+    //     );
 
-        if (images.length > 0) {
-          document.body.insertAdjacentHTML(
-            "beforeend",
-            '<div class="modal modal_fullgallery" id="fullgallery">\n\t\t\t\t\t<div class="modal__container">\n\t\t\t\t\t\t<button class="modal__close" data-modal-close>\n\t\t\t\t\t\t\t<svg class="icon icon_cross-large" viewBox="0 0 32 32" style="width: 3.2rem; height: 3.2rem;">\n\t\t\t\t\t\t\t\t<use xlink:href="#cross-large"></use>\n\t\t\t\t\t\t\t</svg>\n\t\t\t\t\t\t\t<svg class="icon icon_cross" viewBox="0 0 18 18" style="width: 1.8rem; height: 1.8rem;">\n\t\t\t\t\t\t\t\t<use xlink:href="#cross"></use>\n\t\t\t\t\t\t\t</svg>\n\t\t\t\t\t\t</button>\n\t\t\t\t\t\t<div class="swiper slider-gallery slider-gallery_large">\n\t\t\t\t\t\t\t<div class="swiper-wrapper">\n\t\t\t\t\t\t\t\t'.concat(
-              images
-                .map(function (item) {
-                  return '<div class="swiper-slide"><img class="swiper-lazy" src="'.concat(
-                    item,
-                    '" alt=""></div>'
-                  );
-                })
-                .join(""),
-              '\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t<div class="swiper-button-prev">\n\t\t\t\t\t\t\t\t<svg class="icon icon_arrow-large" viewBox="0 0 32 32" style="width: 3.2rem; height: 3.2rem;">\n\t\t\t\t\t\t\t\t\t<use xlink:href="#arrow-large"></use>\n\t\t\t\t\t\t\t\t</svg>\n\t\t\t\t\t\t\t\t<svg class="icon icon_arrow-small" viewBox="0 0 16 16" style="width: 1.6rem; height: 1.6rem;">\n\t\t\t\t\t\t\t\t\t<use xlink:href="#arrow-small"></use>\n\t\t\t\t\t\t\t\t</svg>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t<div class="swiper-button-next">\n\t\t\t\t\t\t\t\t<svg class="icon icon_arrow-large" viewBox="0 0 32 32" style="width: 3.2rem; height: 3.2rem;">\n\t\t\t\t\t\t\t\t\t<use xlink:href="#arrow-large"></use>\n\t\t\t\t\t\t\t\t</svg>\n\t\t\t\t\t\t\t\t<svg class="icon icon_arrow-small" viewBox="0 0 16 16" style="width: 1.6rem; height: 1.6rem;">\n\t\t\t\t\t\t\t\t\t<use xlink:href="#arrow-small"></use>\n\t\t\t\t\t\t\t\t</svg>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t<div class="swiper-pagination"></div>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\t\t\t\t</div>'
-            )
-          );
-          var slider = new core("#fullgallery .swiper", {
-            slidesPerView: 1,
-            spaceBetween: 0,
-            speed: 250,
-            effect: "fade",
-            loop: false,
-            watchSlidesProgress: true,
-            fadeEffect: {
-              crossFade: true,
-            },
-            preloadImages: false,
-            lazy: {
-              loadPrevNext: true,
-              loadOnTransitionStart: true,
-            },
-            navigation: {
-              nextEl: ".swiper-button-next",
-              prevEl: ".swiper-button-prev",
-            },
-            pagination: {
-              el: ".swiper-pagination",
-              type: "bullets",
-            },
-          });
-          slider.slideTo(parseInt(id), 0);
-          window.modal.open("fullgallery");
-        }
-      }
-    });
-    window.addEventListener("modalAfterClose", function (event) {
-      if (event.detail.id === "fullgallery") {
-        document.getElementById("fullgallery").remove();
-      }
-    }); // CONCATENATED MODULE: ./src/js/helpers/declension.js
+    //     if (images.length > 0) {
+    //       document.body.insertAdjacentHTML(
+    //         "beforeend",
+    //         '<div class="modal modal_fullgallery" id="fullgallery">\n\t\t\t\t\t<div class="modal__container">\n\t\t\t\t\t\t<button class="modal__close" data-modal-close>\n\t\t\t\t\t\t\t<svg class="icon icon_cross-large" viewBox="0 0 32 32" style="width: 3.2rem; height: 3.2rem;">\n\t\t\t\t\t\t\t\t<use xlink:href="#cross-large"></use>\n\t\t\t\t\t\t\t</svg>\n\t\t\t\t\t\t\t<svg class="icon icon_cross" viewBox="0 0 18 18" style="width: 1.8rem; height: 1.8rem;">\n\t\t\t\t\t\t\t\t<use xlink:href="#cross"></use>\n\t\t\t\t\t\t\t</svg>\n\t\t\t\t\t\t</button>\n\t\t\t\t\t\t<div class="swiper slider-gallery slider-gallery_large">\n\t\t\t\t\t\t\t<div class="swiper-wrapper">\n\t\t\t\t\t\t\t\t'.concat(
+    //           images
+    //             .map(function (item) {
+    //               return '<div class="swiper-slide"><img class="swiper-lazy" src="'.concat(
+    //                 item,
+    //                 '" alt=""></div>'
+    //               );
+    //             })
+    //             .join(""),
+    //           '\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t<div class="swiper-button-prev">\n\t\t\t\t\t\t\t\t<svg class="icon icon_arrow-large" viewBox="0 0 32 32" style="width: 3.2rem; height: 3.2rem;">\n\t\t\t\t\t\t\t\t\t<use xlink:href="#arrow-large"></use>\n\t\t\t\t\t\t\t\t</svg>\n\t\t\t\t\t\t\t\t<svg class="icon icon_arrow-small" viewBox="0 0 16 16" style="width: 1.6rem; height: 1.6rem;">\n\t\t\t\t\t\t\t\t\t<use xlink:href="#arrow-small"></use>\n\t\t\t\t\t\t\t\t</svg>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t<div class="swiper-button-next">\n\t\t\t\t\t\t\t\t<svg class="icon icon_arrow-large" viewBox="0 0 32 32" style="width: 3.2rem; height: 3.2rem;">\n\t\t\t\t\t\t\t\t\t<use xlink:href="#arrow-large"></use>\n\t\t\t\t\t\t\t\t</svg>\n\t\t\t\t\t\t\t\t<svg class="icon icon_arrow-small" viewBox="0 0 16 16" style="width: 1.6rem; height: 1.6rem;">\n\t\t\t\t\t\t\t\t\t<use xlink:href="#arrow-small"></use>\n\t\t\t\t\t\t\t\t</svg>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t\t<div class="swiper-pagination"></div>\n\t\t\t\t\t\t</div>\n\t\t\t\t\t</div>\n\t\t\t\t</div>'
+    //         )
+    //       );
+    //       var slider = new core("#fullgallery .swiper", {
+    //         slidesPerView: 1,
+    //         spaceBetween: 0,
+    //         speed: 250,
+    //         effect: "fade",
+    //         loop: false,
+    //         watchSlidesProgress: true,
+    //         fadeEffect: {
+    //           crossFade: true,
+    //         },
+    //         preloadImages: false,
+    //         lazy: {
+    //           loadPrevNext: true,
+    //           loadOnTransitionStart: true,
+    //         },
+    //         navigation: {
+    //           nextEl: ".swiper-button-next",
+    //           prevEl: ".swiper-button-prev",
+    //         },
+    //         pagination: {
+    //           el: ".swiper-pagination",
+    //           type: "bullets",
+    //         },
+    //       });
+    //       slider.slideTo(parseInt(id), 0);
+    //       window.modal.open("fullgallery");
+    //     }
+    //   }
+    // });
+    // window.addEventListener("modalAfterClose", function (event) {
+    //   if (event.detail.id === "fullgallery") {
+    //     document.getElementById("fullgallery").remove();
+    //   }
+    // });
+    // CONCATENATED MODULE: ./src/js/helpers/declension.js
     function declension(
       number,
       oneNominative,
@@ -12883,8 +12915,18 @@
           $guests.classList.remove("guests_show");
         }
       });
+
+      document
+        .querySelector(".guests__dropdown-close")
+        .addEventListener("click", function (event) {
+          $guests.classList.remove("guests_show");
+          $(".b24-widget-button-wrapper").show();
+
+          document.querySelector(".main-form__shadow").style.display = "none";
+        });
       $guestsControl.addEventListener("click", function () {
         $guests.classList.toggle("guests_show");
+        $(".b24-widget-button-wrapper").toggle();
       });
 
       var countGuests = function countGuests() {
@@ -16750,8 +16792,26 @@
           value: function handleHide() {
             var _this = this;
 
+            document
+              .querySelectorAll(".catalog_map [data-calendar-label]")
+              .forEach(function (item) {
+                if (item.innerText !== "") {
+                  item.previousElementSibling.style.bottom = "30px";
+                }
+              });
+
             document.addEventListener("click", function (event) {
               var $el = event.target;
+
+              if (
+                $el.getAttribute("data-calendar-label") == "data-calendar-label"
+              ) {
+                document
+                  .querySelectorAll(".catalog_map [data-calendar-label]")
+                  .forEach(function (item) {
+                    item.previousElementSibling.style.bottom = "30px";
+                  });
+              }
 
               if (
                 !$el.matches("[data-calendar-dropdown]") &&
@@ -16764,6 +16824,16 @@
                 );
               }
             });
+            if (document.querySelector(".calendar__dropdown-close") != null) {
+              document
+                .querySelector(".calendar__dropdown-close")
+                .addEventListener("click", function (event) {
+                  _this.$elements.dropdown.classList.remove(
+                    "calendar__dropdown_show"
+                  );
+                  $(".b24-widget-button-wrapper").show();
+                });
+            }
             window.addEventListener("resize", function () {
               _this.$elements.dropdown.classList.remove(
                 "calendar__dropdown_show"
@@ -16787,6 +16857,7 @@
                 _this2.$elements.dropdown.classList.remove(
                   "calendar__dropdown_show"
                 );
+                $(".b24-widget-button-wrapper").show();
               }
             });
           },
@@ -16801,6 +16872,7 @@
                 _this3.$elements.dropdown.classList.toggle(
                   "calendar__dropdown_show"
                 );
+                $(".b24-widget-button-wrapper").toggle();
               });
             });
           },
@@ -17169,83 +17241,71 @@
     rangeCalendar.init();
     /* MORE
    -------------------------------------------------- */
-
+    // Загрузка доп инфо о номере
     document.addEventListener("click", function (event) {
       var $el = event.target;
+      let roomId = $el.getAttribute("elementId");
 
-      if ($el.dataset.roomMore !== undefined) {
-        event.preventDefault(); // eslint-disable-next-line no-undef
-
-        var content = moreRooms.find(function (item) {
-          return item.id === $el.dataset.roomMore;
-        });
+      if (roomId) {
+        event.preventDefault();
         var $contentModal = document.querySelector("[data-room-more-content]");
+
         $contentModal.innerHTML = "";
-        $contentModal.insertAdjacentHTML(
-          "beforeend",
-          '\n\t\t\t\t\t<div class="modal-more">\n\t\t\t\t\t\t<div class="h3 modal-more__title">'
-            .concat(content.title, "</div>\n\t\t\t\t\t\t")
-            .concat(
-              content.title
-                ? '<div class="modal-more__footnote">'.concat(
-                    content.footnote,
-                    "</div>"
-                  )
-                : "",
-              "\n\t\t\t\t\t\t"
-            )
-            .concat(
-              content.text
-                ? '<div class="modal-more__text">'.concat(
-                    content.text,
-                    "</div>"
-                  )
-                : "",
-              "\n\t\t\t\t\t\t"
-            )
-            .concat(
-              content.furnishings.length
-                ? '\n\t\t\t\t\t\t\t\t\t<div class="h6">\u041E\u0441\u043D\u0430\u0449\u0435\u043D\u0438\u0435 \u043D\u043E\u043C\u0435\u0440\u0430</div>\n\t\t\t\t\t\t\t\t\t<ul class="list list_circle">\n\t\t\t\t\t\t\t\t\t\t'.concat(
-                    content.furnishings
-                      .map(function (item) {
-                        return '<li class="list__item">'.concat(item, "</li>");
-                      })
-                      .join(""),
-                    "\n\t\t\t\t\t\t\t\t\t</ul>\n\t\t\t\t\t\t\t\t"
-                  )
-                : "",
-              "\n\t\t\t\t\t\t"
-            )
-            .concat(
-              content.services.length
-                ? '\n\t\t\t\t\t\t\t\t\t<div class="h6">\u0423\u0441\u043B\u0443\u0433\u0438</div>\n\t\t\t\t\t\t\t\t\t<ul class="list list_circle">\n\t\t\t\t\t\t\t\t\t\t'.concat(
-                    content.services
-                      .map(function (item) {
-                        return '<li class="list__item">'.concat(item, "</li>");
-                      })
-                      .join(""),
-                    "\n\t\t\t\t\t\t\t\t\t</ul>\n\t\t\t\t\t\t\t\t"
-                  )
-                : "",
-              "\n\t\t\t\t\t\t"
-            )
-            .concat(
-              content.reservCancel.length
-                ? '\n\t\t\t\t\t\t\t\t\t<div class="h6">\u0423\u0441\u043B\u043E\u0432\u0438\u044F \u043E\u0442\u043C\u0435\u043D\u044B \u0431\u0440\u043E\u043D\u0438\u0440\u043E\u0432\u0430\u043D\u0438\u044F</div>\n\t\t\t\t\t\t\t\t\t<ul class="list list_circle-small">\n\t\t\t\t\t\t\t\t\t\t'.concat(
-                    content.reservCancel
-                      .map(function (item) {
-                        return '<li class="list__item">'.concat(item, "</li>");
-                      })
-                      .join(""),
-                    "\n\t\t\t\t\t\t\t\t\t</ul>\n\t\t\t\t\t\t\t\t"
-                  )
-                : "",
-              "\n\t\t\t\t\t</div>\n\t\t\t\t"
-            )
-        );
+        $.ajax({
+          url: "/ajax/object/getRoomFeatures.php",
+          data: {
+            roomId: roomId,
+          },
+          method: "POST",
+          dataType: "html",
+          processData: true,
+          preparePost: true,
+          async: false,
+          success: function (data) {
+            $contentModal.insertAdjacentHTML("beforeend", data);
+          },
+          error: function (data) {
+            console.error(data);
+          },
+        });
         window.modal.open("more");
       }
     });
+
+    // Загрузка доп инфо об удобстве/развлечении
+    document.addEventListener("click", function (event) {
+      var $el = event.target;
+      let detailId = $el.getAttribute("detailId");
+
+      if (detailId) {
+        event.preventDefault();
+        var $contentModal = document.querySelector(
+          "[data-detail-more-content]"
+        );
+
+        $contentModal.innerHTML = "";
+        $.ajax({
+          url: "/ajax/object/getDetailInfo.php",
+          data: {
+            detailId: detailId,
+          },
+          method: "POST",
+          dataType: "html",
+          processData: true,
+          preparePost: true,
+          async: false,
+          success: function (data) {
+            $contentModal.insertAdjacentHTML("beforeend", data);
+            window.featureGallery();
+          },
+          error: function (data) {
+            console.error(data);
+          },
+        });
+        window.modal.open("detail-more");
+      }
+    });
+
     window.markupSelectHandler = function (input) {
       let price = input.value;
       let priceText = new Intl.NumberFormat("ru-RU", {

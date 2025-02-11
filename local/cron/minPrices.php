@@ -12,3 +12,4 @@ include_once $_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_be
 Traveline::setMinPrices();
 $bnovo = new Bnovo();
 $bnovo->setMinPrices();
+(new \Naturalist\bronevik\ImportHotelsMinPriceBronevik())();

@@ -62,13 +62,13 @@ $reviewsDeclension = new Declension('отзыв', 'отзыва', 'отзыво�
                         ?>
                     <? endforeach; ?>
                     <? $dataFullGallery = implode(",", $arDataFullGallery); ?>
-                <? endif; */?>
+                <? endif; */ ?>
 
                 <div class="object" href="<?= $arItem["SECTION_PAGE_URL"] ?>" data-id="<?= $arItem["ID"] ?>" id="<?= $this->GetEditAreaId($arItem['ID']) ?>">
                     <div class="object__images">
                         <div class="swiper slider-gallery" data-slider-object="data-slider-object" data-fullgallery="[<?= $arItem["FULL_GALLERY"]; ?>]">
                             <div class="swiper-wrapper">
-                                <? 
+                                <?
 
                                 if ($arItem["PICTURES"]) : ?>
                                     <? $keyPhoto = 1; ?>
@@ -91,7 +91,7 @@ $reviewsDeclension = new Declension('отзыв', 'отзыва', 'отзыво�
                                             $alt = $arResult["HL_TYPES"][$arItem["UF_TYPE"]]["UF_NAME"] . " " . $arItem["NAME"];
                                             $title = "Фото - " . $arItem["NAME"];
                                             ?>
-                                        <? endif; */?>
+                                        <? endif; */ ?>
                                         <div class="swiper-slide" data-fullgallery-item="<?= $keyElement; ?>">
                                             <img class="lazy" alt="<?= $alt ?>" title="<?= $title ?>" data-src="<?= $photoId["src"] ?>" alt="<?= $arItem["NAME"] ?>">
                                         </div>
@@ -186,17 +186,3 @@ $reviewsDeclension = new Declension('отзыв', 'отзыва', 'отзыво�
         </div>
     <? endif; ?>
 </div>
-<script>
-    // $(document).ready(function() {
-    //     $('.object__title').on('click', function(evt) {
-    //         evt.stopPropagation();
-    //         evt.preventDefault();
-    //         var n = document.createElement('a');
-    //         n.href = $(this).attr('href'),
-    //             n.target = '_blank',
-    //             n.rel = 'noopener',
-    //             n.click(),
-    //             n.remove()
-    //     })
-    // })
-</script>

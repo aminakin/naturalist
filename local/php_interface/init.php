@@ -39,7 +39,24 @@ Loader::registerAutoLoadClasses(null, array(
     'Naturalist\Filters\Sitemap' => '/local/php_interface/classes/Filters/Sitemap.php',
     'Naturalist\Filters\Components' => '/local/php_interface/classes/Filters/Components.php',
     'Naturalist\BnovoDataFilesHandler' => '/local/php_interface/classes/BnovoDataFilesHandler.php',
-
+    'Naturalist\bronevik\repository\Bronevik' => '/local/php_interface/classes/bronevik/repository/Bronevik.php',
+    'Naturalist\bronevik\connector\HotelsConnector' => '/local/php_interface/classes/bronevik/connector/HotelsConnector.php',
+    'Naturalist\bronevik\ImportHotelsBronevik' => '/local/php_interface/classes/bronevik/ImportHotelsBronevik.php',
+    'Naturalist\bronevik\ImportHotelRoomsBronevik' => '/local/php_interface/classes/bronevik/ImportHotelRoomsBronevik.php',
+    'Naturalist\bronevik\ImportHotelsMinPriceBronevik' => '/local/php_interface/classes/bronevik/ImportHotelsMinPriceBronevik.php',
+    'Naturalist\bronevik\SearchRoomsBronevik' => '/local/php_interface/classes/bronevik/SearchRoomsBronevik.php',
+    'Naturalist\bronevik\ImportHotelRoomOffersBronevik' => '/local/php_interface/classes/bronevik/ImportHotelRoomOffersBronevik.php',
+    'Naturalist\bronevik\HotelRoomBronevik' => '/local/php_interface/classes/bronevik/HotelRoomBronevik.php',
+    'Naturalist\bronevik\HotelBronevik' => '/local/php_interface/classes/bronevik/HotelBronevik.php',
+    'Naturalist\bronevik\enums\RateTypeNamesEnum' => '/local/php_interface/classes/bronevik/enums/RateTypeNamesEnum.php',
+    'Naturalist\bronevik\enums\RoomTypeEnum' => '/local/php_interface/classes/bronevik/enums/RoomTypeEnum.php',
+    'Naturalist\bronevik\enums\PaymentRecipientEnum' => '/local/php_interface/classes/bronevik/enums/PaymentRecipientEnum.php',
+    'Naturalist\bronevik\OrderCreateBronevik' => '/local/php_interface/classes/bronevik/OrderCreateBronevik.php',
+    'Naturalist\bronevik\OrderCancelBronevik' => '/local/php_interface/classes/bronevik/OrderCancelBronevik.php',
+    'Naturalist\bronevik\HotelRoomOfferPenaltyBronevik' => '/local/php_interface/classes/bronevik/HotelRoomOfferPenaltyBronevik.php',
+    'Naturalist\bronevik\OrderCanceledPenaltyBronevik' => '/local/php_interface/classes/bronevik/OrderCanceledPenaltyBronevik.php',
+    'Naturalist\bronevik\OrderBronevik' => '/local/php_interface/classes/bronevik/OrderBronevik.php',
+    'Naturalist\bronevik\HotelOfferPricingCheckPriceBronevik' => '/local/php_interface/classes/bronevik/HotelOfferPricingCheckPriceBronevik.php',
 ));
 
 // Константы

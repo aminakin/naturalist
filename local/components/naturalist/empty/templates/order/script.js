@@ -86,8 +86,12 @@ var Order = function () {
               "click",
               "#info-modal [data-modal-close]",
               function (e) {
-                e.preventDefault();
-                history.back(1);
+                if (a.ACTION === 'reload') {
+                  window.location.reload()
+                } else {
+                  e.preventDefault();
+                  history.back(1);
+                }
               }
             );
           }
