@@ -71,7 +71,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     let faqItems = $(".faq__item");
-åß
+
     if (faqItems.length) {
         faqItems.each(function () {
             $(this).on("click", function () {
