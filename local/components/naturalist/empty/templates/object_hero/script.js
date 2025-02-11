@@ -1,8 +1,7 @@
 class BlogersSliderStories {
     constructor() {
 
-        if (typeof objectStories !== undefined) {
-
+        if (typeof objectStories !== 'undefined') {
             this.blogersItemsJson = JSON.parse(objectStories);
             this.blogerReviewsId = document.querySelector("#object__stories");
             this.obZuck = null;
@@ -69,7 +68,7 @@ class BlogersSliderStories {
 }
 
 document.addEventListener("DOMContentLoaded", function () {
-    if (typeof objectStories !== undefined) {
+    if (typeof objectStories !== 'undefined') {
         new BlogersSliderStories();
     }
 
