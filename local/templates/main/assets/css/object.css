@@ -1967,13 +1967,13 @@
   color: var(--color-text-1);
 }
 
-.about__text_hidden .about__text-hide {
-  max-height: 10.2rem;
+.about__text_hidden> .about__text-hide {
+  height: 10.2rem;
   overflow: hidden;
 }
 
 .about__text_hide .about__text-hide > div {
-  -webkit-line-clamp: 6;
+  -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   display: -webkit-box;
   overflow: hidden;
@@ -1984,6 +1984,12 @@
 }
 
 .about__text_more .about__text-show {
+  display: block;
+}
+.about__text_more .about__text-show .additional-text{
+  display: none;
+}
+.about__text_more.about__text_hidden  .about__text-show .additional-text{
   display: block;
 }
 
@@ -4262,7 +4268,7 @@
     line-height: 20px;
   }
 
-  .about__text_hidden .about__text-hide {
+  .about__text_hidden > .about__text-hide {
     max-height: 66px;
   }
 
