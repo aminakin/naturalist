@@ -1,11 +1,14 @@
 class BlogersSliderStories {
     constructor() {
 
-        this.blogersItemsJson = JSON.parse(objectStories);
-        this.blogerReviewsId = document.querySelector("#object__stories");
-        this.obZuck = null;
+        if (typeof objectStories !== undefined) {
 
-        this.initZuck();
+            this.blogersItemsJson = JSON.parse(objectStories);
+            this.blogerReviewsId = document.querySelector("#object__stories");
+            this.obZuck = null;
+
+            this.initZuck();
+        }
     }
 
     getBlogersItemsForZuck() {
