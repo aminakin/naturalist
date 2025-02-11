@@ -118,6 +118,8 @@ class Bnovo
             }
         }
 
+
+
         $entityClass = $this->getEntityClass();
         $rsData = $entityClass::getList([
             "select" => ["*"],
@@ -125,11 +127,11 @@ class Bnovo
                 "UF_DATE" => $arDates,
                 "UF_RESERVED" => 0,
                 "!UF_CLOSED" => "1",
-                [
-                    "LOGIC" => "OR",
-                    ["<=UF_MIN_STAY" => $daysCount],
-                    ["=UF_MIN_STAY" => 0]
-                ],
+//                [
+//                    "LOGIC" => "OR",
+//                    ["<=UF_MIN_STAY" => $daysCount],
+//                    ["=UF_MIN_STAY" => 0]
+//                ],
                 [
                     "LOGIC" => "OR",
                     [">=UF_MAX_STAY" => $daysCount],
@@ -168,7 +170,7 @@ class Bnovo
         }
 
         foreach ($arDataGrouped as $key => $arItems) {
-            if (count($arItems) < count($arDates)) {
+            if (count($arItems) < $daysCount) {
                 unset($arDataGrouped[$key]);
             }
         }
