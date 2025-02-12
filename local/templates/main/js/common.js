@@ -386,23 +386,23 @@ $(function () {
     var sectionExternalId = $(this).data("section-external-id");
     var bronevikOfferExternalId = $(this).data("bronevik-offer-external-id");
 
-    dataLayer.push({
-      ecommerce: {
-        currencyCode: "RUB",
-        add: {
-          products: [
-            {
-              id: sectionExternalId,
-              name: objectTItle,
-              price: price,
-              brand: externalService,
-              quantity: 1,
-              variant: title,
-            },
-          ],
-        },
-      },
-    });
+    // dataLayer.push({
+    //   ecommerce: {
+    //     currencyCode: "RUB",
+    //     add: {
+    //       products: [
+    //         {
+    //           id: sectionExternalId,
+    //           name: objectTItle,
+    //           price: price,
+    //           brand: externalService,
+    //           quantity: 1,
+    //           variant: title,
+    //         },
+    //       ],
+    //     },
+    //   },
+    // });
 
     order.addBasket(
       productId,
