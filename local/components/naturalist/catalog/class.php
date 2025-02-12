@@ -443,7 +443,12 @@ class NaturalistCatalog extends \CBitrixComponent
     {
         if (!isset($this->arFilter['UF_EXTERNAL_ID'])) {
             $cache = Cache::createInstance();
-            if ($cache->initCache(86400, 'all_sections')) {
+
+            $regionCacheFilter = $this->arFilter['UF_REGION'] ? 'region_' . implode('_', $this->arFilter['UF_REGION']) : '';
+            $objectCacheFilter = $this->arFilter['ID'] ? 'region_' . $this->arFilter['ID'] : '';
+            $cacheKey = 'without_date_search_' . $objectCacheFilter . $regionCacheFilter;
+
+            if ($cache->initCache(86400, $cacheKey)) {
                 $this->arSections = $cache->getVars();
             } elseif ($cache->startDataCache()) {
                 $this->sectionsQuery();
