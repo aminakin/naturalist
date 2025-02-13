@@ -487,11 +487,11 @@ foreach ($arParams['VARS'] as $key => $value) {
                                     </div>
 
                                     <div class="room__price">
-                                        <? if ($elementOldPrice) { ?>
-                                            <span class="room__old-price"><span class="number"><?= number_format($elementOldPrice, 0, '.', ' ') ?></span> <span class="rub">₽</span></span>
-                                        <? } ?>
                                         <div class="room__price-per-night">
                                             <span class="room__final-price"><?= number_format($elementPrice, 0, '.', ' ') ?> <span>₽</span></span>
+                                            <? if ($elementOldPrice) { ?>
+                                                <span class="room__old-price"><span class="number"><?= number_format($elementOldPrice, 0, '.', ' ') ?></span> <span class="rub">₽</span></span>
+                                            <? } ?>
                                             <span class="room__nights">за <?= $daysCount ?> <?= $daysDeclension->get($daysCount) ?></span>
                                         </div>
                                         <div class="split-wrap" <?= $elementPrice - Users::getInnerScore() <= 0 ? 'style="display: none"' : '' ?>>
