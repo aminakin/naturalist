@@ -8,11 +8,13 @@ use Bitrix\Main\Entity;
 use Bitrix\Main\Application;
 use Bitrix\Main\Context;
 use Bitrix\Main\Loader;
+use Bitrix\Main\ORM\Data\DataManager;
 use Bitrix\Sale\Order;
 use Bitrix\Main\Engine\CurrentUser;
 use CIBlockSection;
 use CIBlockElement;
 use CFile;
+use Naturalist\Handlers\HigloadHandler;
 use Naturalist\Users;
 use Naturalist\Orders;
 use Naturalist\Settings;
@@ -50,6 +52,13 @@ class Events
         $event->addEventHandler('sale', 'OnSaleOrderSaved', [self::class, "cancelOrder"]);
         $event->addEventHandler('iblock', 'OnBeforeIBlockSectionDelete', [self::class, "OnBeforeIBlockSectionDeleteHandler"]);
         $event->addEventHandler('iblock', 'OnBeforeIBlockElementDelete', [self::class, "OnBeforeIBlockElementDeleteHandler"]);
+
+        /* События HL для модификации данных перед сохранением */
+        $event->addEventHandler('', FEATURES_HL_ENTITY. DataManager::EVENT_ON_BEFORE_ADD, [HigloadHandler::class, 'handle']);
+        $event->addEventHandler('', FEATURES_HL_ENTITY. DataManager::EVENT_ON_BEFORE_UPDATE, [HigloadHandler::class, 'handle']);
+
+        $event->addEventHandler('', OBJECT_COMFORT_HL_ENTITY. DataManager::EVENT_ON_BEFORE_ADD, [HigloadHandler::class, 'handle']);
+        $event->addEventHandler('', OBJECT_COMFORT_HL_ENTITY. DataManager::EVENT_ON_BEFORE_UPDATE, [HigloadHandler::class, 'handle']);
     }
 
     public static function deleteKernelJs(&$content)
