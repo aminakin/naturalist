@@ -192,8 +192,7 @@ class Events
 
         $orderId = $order->getId();
         $orders = new Orders();
-        $reservationRes = true;
-        //$reservationRes = $orders->makeReservation($orderId);
+        $reservationRes = $orders->makeReservation($orderId);
 
         // Если успешно забронировано
         if (!isset($reservationRes["ERROR"])) {
