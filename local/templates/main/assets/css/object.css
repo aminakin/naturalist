@@ -2779,7 +2779,13 @@
   border-top-left-radius: 12px;
   border-bottom-left-radius: 12px;
   overflow: hidden;
-  width: calc(100% + 4px);
+  width: 100%;
+  border-radius: 12px;
+}
+.review__gallery > ul > li:last-child {
+  border-top-right-radius: 12px;
+  border-bottom-right-radius: 12px;
+  overflow: auto;
 }
 
 .review .list_gallery {
