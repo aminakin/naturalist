@@ -41,7 +41,7 @@ class Utils
 
         $y = sqrt(
             pow($cosLatitudeSecondPoint * $sinDelta, 2) +
-                pow($cosLatitudeFirstPoint * $sinLatitudeSecondPoint - $sinLatitudeFirstPoint * $cosLatitudeSecondPoint * $cosDelta, 2)
+            pow($cosLatitudeFirstPoint * $sinLatitudeSecondPoint - $sinLatitudeFirstPoint * $cosLatitudeSecondPoint * $cosDelta, 2)
         );
 
         return round(((atan2($y, $x) * self::EARTH_RADIUS) / 1000));
@@ -59,12 +59,36 @@ class Utils
 
     /**
      * Функция добавления svg файла в html
-     *     
-     * @param string $base     Папка с фалом относительно корня сайта.
+     *
+     * @param string $base Папка с фалом относительно корня сайта.
      * @return string Добавление содержимого файла.
      */
     public static function buildSVG(string $base = 'image')
     {
         return file_get_contents($_SERVER['DOCUMENT_ROOT'] . $base);
+    }
+
+    /**
+     * Преобразование многомерного массива в строку
+     *
+     * @param string $separator
+     * @param array $array
+     * @return string
+     */
+    public static function recursiveImplode(array $array, string $separator = ',', bool $includeKey = true): string
+    {
+        $string = '';
+        foreach ($array as $key => $arrayItem) {
+            if (is_array($arrayItem)) {
+                $string .= ($includeKey) ? $key . $separator . self::recursiveImplode($arrayItem, $separator) : self::recursiveImplode($arrayItem, $separator);
+            } else {
+                $string .= ($includeKey) ? $key . $separator . $arrayItem : $arrayItem;
+                if ($key < count($array) - 1) {
+                    $string .= $separator;
+                }
+            }
+        }
+
+        return $string;
     }
 }
