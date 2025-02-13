@@ -4,14 +4,13 @@ foreach ($arResult as $key => $value) {
 }
 
 global $isMobile;
-
 ?>
 <section class="section section_object">
     <div class="container">
         <div class="object-hero">
             <div class="object__top">
                 <div class="object-hero__heading">
-                    <h1><?= htmlspecialcharsBack($arParams["h1SEO"]); ?></h1>
+                    <h1><?=$arParams["TYPE"]?><?= htmlspecialcharsBack($arParams["h1SEO"]); ?></h1>
                     <? if ($reviewsCount > 0): ?>
                         <div class="object-hero__reviews">
                             <img src="<?= SITE_TEMPLATE_PATH ?>/assets/img/star-score.svg" alt="">
