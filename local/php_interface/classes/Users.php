@@ -59,10 +59,11 @@ class Users
         $name = $params['name'];
         $last_name = $params['last_name'];
 
+        $filter = [];
         if ($type == 'phone') {
-            $filter = array("PERSONAL_PHONE" => $login);
+            $filter = ["PERSONAL_PHONE" => $login];
         } elseif ($type == 'email') {
-            $filter = array("EMAIL" => $login);
+            $filter = ["EMAIL" => $login];
         }
         $arUser = CUser::GetList(($by = "ID"), ($order = "ASC"), $filter)->Fetch();
 
