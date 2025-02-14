@@ -26,7 +26,6 @@ Loc::loadMessages(__FILE__);
 /**
  * Компонент каталога
  */
-
 class NaturalistCatalog extends \CBitrixComponent
 {
     private string $componentPage = '';
@@ -1070,17 +1069,20 @@ class NaturalistCatalog extends \CBitrixComponent
         }
 
         // Удобства объекта
-        $objectComfortsDataClass = HighloadBlockTable::compileEntity(OBJECT_COMFORT_HL_ENTITY)->getDataClass();
-        $objectComfortsData = $objectComfortsDataClass::query()
-            ->addSelect('*')
-            ->where('ID', 'in', $this->arSections['UF_OBJECT_COMFORTS'])
-            ->setOrder(['UF_SORT' => 'ASC'])
-            ->setCacheTtl(36000000)
-            ?->fetchAll();
-        foreach ($objectComfortsData as $objectComfort) {
-            $this->arObjectComforts[$objectComfort['UF_XML_ID']] = $objectComfort;
-            $this->arObjectComfortsIds[] = $objectComfort['UF_XML_ID'];
+        if (is_array($this->arSections['UF_OBJECT_COMFORTS']) && count($this->arSections['UF_OBJECT_COMFORTS'])) {
+            $objectComfortsDataClass = HighloadBlockTable::compileEntity(OBJECT_COMFORT_HL_ENTITY)->getDataClass();
+            $objectComfortsData = $objectComfortsDataClass::query()
+                ->addSelect('*')
+                ->where('ID', 'in', $this->arSections['UF_OBJECT_COMFORTS'])
+                ->setOrder(['UF_SORT' => 'ASC'])
+                ->setCacheTtl(36000000)
+                ?->fetchAll();
+            foreach ($objectComfortsData as $objectComfort) {
+                $this->arObjectComforts[$objectComfort['UF_XML_ID']] = $objectComfort;
+                $this->arObjectComfortsIds[] = $objectComfort['UF_XML_ID'];
+            }
         }
+
     }
 
     private function setMinPrice()
@@ -1151,9 +1153,9 @@ class NaturalistCatalog extends \CBitrixComponent
             foreach ($this->arElements as $arElement) {
                 if ((int)$arElement["PROPERTY_PARENT_ID_VALUE"] > 0) {
                     if (!isset($parentExternalIds) || !in_array(
-                        $arElement["PROPERTY_PARENT_ID_VALUE"],
-                        $parentExternalIds
-                    )) {
+                            $arElement["PROPERTY_PARENT_ID_VALUE"],
+                            $parentExternalIds
+                        )) {
                         $parentExternalIds[] = $arElement["PROPERTY_PARENT_ID_VALUE"];
                     }
                 }
@@ -1222,7 +1224,7 @@ class NaturalistCatalog extends \CBitrixComponent
         $reviewsCountNotNullRating = 0;
         while ($arReview = $rsReviews->GetNext()) {
             foreach ($arReview["PROPERTY_PHOTOS_VALUE"] as $photoId) {
-                $arReview["PICTURES"][] =  CFile::ResizeImageGet($photoId, array('width' => 1920, 'height' => 1080), BX_RESIZE_IMAGE_PROPORTIONAL_ALT, true, false, false, 80)["src"];
+                $arReview["PICTURES"][] = CFile::ResizeImageGet($photoId, array('width' => 1920, 'height' => 1080), BX_RESIZE_IMAGE_PROPORTIONAL_ALT, true, false, false, 80)["src"];
                 $arReview["PICTURES_THUMB"][] = CFile::ResizeImageGet($photoId, array('width' => 125, 'height' => 87), BX_RESIZE_IMAGE_PROPORTIONAL_ALT, true, false, false, 80);
             }
 
@@ -1324,7 +1326,7 @@ class NaturalistCatalog extends \CBitrixComponent
     private function fillDetailSeoParams()
     {
         $fieldsSection = new SectionValues(CATALOG_IBLOCK_ID, $this->arSections['ID']);
-        $fieldsSectionValues  = $fieldsSection->getValues();
+        $fieldsSectionValues = $fieldsSection->getValues();
 
         if (!empty($fieldsSectionValues)) {
             if (!empty($this->arHLTypes[$this->arSections["UF_TYPE"]]["UF_NAME"])) {
