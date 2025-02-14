@@ -59,7 +59,6 @@ use Naturalist\Users;
     <?php if ($APPLICATION->GetCurPage() != '/catalog/') { ?>
         <link rel="canonical" href="<?= HTTP_HOST . $APPLICATION->GetCurPage() ?>">
     <?php } ?>
-    <link rel="icon" href="/favicon.ico" type="image/x-icon">
 
     <link rel="preload" href="<?= SITE_TEMPLATE_PATH ?>/assets/fonts/Montserrat-Bold.woff2" as="font" type="font/woff2" crossorigin>
     <link rel="preload" href="<?= SITE_TEMPLATE_PATH ?>/assets/fonts/Montserrat-Medium.woff2" as="font" type="font/woff2" crossorigin>
