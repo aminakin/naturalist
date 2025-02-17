@@ -262,7 +262,7 @@ class Bnovo
         $childrenIsAdults = false;
 
         $error = '';
-        $daysDeclension = new Declension('ночь', 'ночи', 'ночей');
+        $daysDeclension = new Declension('ночь', 'ночей', 'ночей');
         $arDates = array();
         $period = new DatePeriod(
             new DateTime($dateFrom),
