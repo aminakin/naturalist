@@ -338,7 +338,7 @@ class Bnovo
         foreach ($arDataGrouped as $key => $arItems) {
             foreach ($arItems as $arItem) {
                 if (intval($arItem['UF_MIN_STAY_ARRIVAL']) > $daysCount || intval($arItem['UF_MIN_STAY']) > $daysCount) {
-                    $minDays = $arItem['UF_MIN_STAY_ARRIVAL'] ? $arItem['UF_MIN_STAY_ARRIVAL'] : $arItem['UF_MIN_STAY'];
+                    $minDays = $arItem['UF_MIN_STAY'] ? $arItem['UF_MIN_STAY'] : $arItem['UF_MIN_STAY_ARRIVAL'];
                     $error = 'Бронирование возможно от ' . $minDays . ' ' . $daysDeclension->get($minDays);
 
                     // Удаляем элементы из первоначального массива дат, т.к. он далее будет использоваться для поиска цен                    
