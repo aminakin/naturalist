@@ -1,4 +1,7 @@
 <?
+use Bitrix\Highloadblock as HL; 
+use Bitrix\Main\Entity;
+
 $arResult = array(
     "arSection" => $arParams['arSection'],
     "arFavourites" => $arParams['arFavourites'],
@@ -44,3 +47,4 @@ $arResult = array(
     'arObjectComforts' => $arParams['arObjectComforts'],
     'searchError' => $arParams['searchError'],
 );
+

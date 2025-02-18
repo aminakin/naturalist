@@ -4,14 +4,13 @@ foreach ($arResult as $key => $value) {
 }
 
 global $isMobile;
-
 ?>
 <section class="section section_object">
     <div class="container">
         <div class="object-hero">
             <div class="object__top">
                 <div class="object-hero__heading">
-                    <h1><?= htmlspecialcharsBack($arParams["h1SEO"]); ?></h1>
+                    <h1><?=$arHLTypes[$arSection["UF_TYPE"]]["UF_NAME"]?><?= htmlspecialcharsBack($arParams["h1SEO"]); ?></h1>
                     <? if ($reviewsCount > 0): ?>
                         <div class="object-hero__reviews">
                             <img src="<?= SITE_TEMPLATE_PATH ?>/assets/img/star-score.svg" alt="">
@@ -138,7 +137,7 @@ global $isMobile;
                                 </div>
 
                                 <div class="about__text-show">
-                                    <div class="about__text-hide additional-text" style="text-decoration: underline">Об этом месте:</div>
+                                    <div class="about__text-hide additional-text" style="text-decoration: underline">...</div>
                                     <a href="#" data-text-show-control data-text-show-more="Развернуть"
                                        data-text-show-hide="Скрыть"></a>
                                 </div>
