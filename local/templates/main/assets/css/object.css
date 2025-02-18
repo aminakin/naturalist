@@ -3474,6 +3474,7 @@
     flex-wrap: nowrap;
     max-width: 100%;
     overflow: hidden;
+    border-radius: 12px;
   }
 
   .review .list_gallery .list__item {
