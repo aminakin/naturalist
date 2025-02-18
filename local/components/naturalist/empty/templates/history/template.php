@@ -36,7 +36,7 @@ foreach ($arResult as $key => $value) {
                         <? if ($arUser["PERSONAL_PHOTO"]): ?>
                             <div class="profile-preview__image">
                                 <img class="lazy" data-src="<?= $arUser["PERSONAL_PHOTO"]["src"] ?>"
-                                     alt="<?= $arUser["NAME"] ?>" title="Фото - <?= $arUser["NAME"] ?>">
+                                    alt="<?= $arUser["NAME"] ?>" title="Фото - <?= $arUser["NAME"] ?>">
                             </div>
                         <? endif; ?>
                         <div class="profile-preview__name"><?= $arUser["NAME"] ?></div>
@@ -79,11 +79,11 @@ foreach ($arResult as $key => $value) {
                                 <form class="form form_search" id="form-order-search">
                                     <div class="field">
                                         <input class="field__input" type="text" name="orderNum" value="<?= $orderNum ?>"
-                                               placeholder="Номер заказа">
+                                            placeholder="Номер заказа">
                                         <button data-order-search>
                                             <svg class="icon icon_search" viewbox="0 0 16 17"
-                                                 style="width: 1.6rem; height: 1.7rem;">
-                                                <use xlink:href="#search"/>
+                                                style="width: 1.6rem; height: 1.7rem;">
+                                                <use xlink:href="#search" />
                                             </svg>
                                         </button>
                                     </div>
@@ -124,8 +124,12 @@ foreach ($arResult as $key => $value) {
                                 $arOrderItem = $arOrder["ITEMS"][0]["ITEM"];
                                 $arOrderSection = $arOrderItem["SECTION"];
                                 if (!empty($arOrderSection["UF_PHOTOS"][0])) {
-                                    $photo = CFile::ResizeImageGet($arOrderSection["UF_PHOTOS"][0],
-                                        array('width' => 600, 'height' => 400), BX_RESIZE_IMAGE_EXACT, true)["src"];
+                                    $photo = CFile::ResizeImageGet(
+                                        $arOrderSection["UF_PHOTOS"][0],
+                                        array('width' => 600, 'height' => 400),
+                                        BX_RESIZE_IMAGE_EXACT,
+                                        true
+                                    )["src"];
                                 } else {
                                     $photo = SITE_TEMPLATE_PATH . "/img/no_photo.png";
                                 }
@@ -135,7 +139,7 @@ foreach ($arResult as $key => $value) {
                                 <div class="object-row object-row_profile" data-id="<?= $arOrder["ID"] ?>">
                                     <div class="object-row__images">
                                         <img class="lazy" alt="<?= $alt ?>" title="<?= $title ?>"
-                                             data-src="<?= $photo ?>">
+                                            data-src="<?= $photo ?>">
                                     </div>
 
                                     <div class="object-row__content">
@@ -143,17 +147,17 @@ foreach ($arResult as $key => $value) {
                                             <div class="object-row__headnote">Заказ
                                                 №<?= $arOrder["FIELDS"]["ACCOUNT_NUMBER"] ?>
                                                 <? if ($arOrder["FIELDS"]["STATUS_ID"] != "C") : ?>
-                                                    <button type="button"data-modal-review="<?= $arOrder["ID"] ?>"
-                                                            data-before-review-add data-order-id="<?= $arOrder["ID"] ?>"
-                                                            data-camping-id="<?= $arOrderSection["ID"] ?>">Оставить
+                                                    <button type="button" data-modal-review="<?= $arOrder["ID"] ?>"
+                                                        data-before-review-add data-order-id="<?= $arOrder["ID"] ?>"
+                                                        data-camping-id="<?= $arOrderSection["ID"] ?>">Оставить
                                                         отзыв</button><? endif; ?>
                                             </div>
                                             <div class="object-row__heading">
                                                 <a class="object-row__title h3"
-                                                   href="<?= $arOrderSection["SECTION_PAGE_URL"] ?>"><?= $arOrderSection["NAME"] ?></a>
+                                                    href="<?= $arOrderSection["SECTION_PAGE_URL"] ?>"><?= $arOrderSection["NAME"] ?></a>
                                                 <div class="score">
                                                     <img src="<?= SITE_TEMPLATE_PATH ?>/assets/img/score.svg"
-                                                         alt="Рейтинг">
+                                                        alt="Рейтинг">
                                                     <span><?= (int)$arOrderSection["RATING"]["avg"] ?></span>
                                                 </div>
                                             </div>
@@ -183,7 +187,7 @@ foreach ($arResult as $key => $value) {
                                             </div>
                                             <div class="tag"><?= $arOrder["DATA"]["STATUS"] ?></div>
                                             <a class="button button_transparent"
-                                               href="<?= $arOrderSection["SECTION_PAGE_URL"] ?>">Повторить</a>
+                                                href="<?= $arOrderSection["SECTION_PAGE_URL"] ?>">Повторить</a>
                                         </div>
                                     </div>
                                 </div>
@@ -207,75 +211,11 @@ foreach ($arResult as $key => $value) {
 </main>
 <!-- main-->
 
-<div class="modal modal_review" id="review">
-    <div class="modal__container">
-        <button class="modal__close" data-modal-close="data-modal-close">
-            <svg class="icon icon_cross" viewbox="0 0 18 18" style="width: 1.8rem; height: 1.8rem;">
-                <use xlink:href="#cross"/>
-            </svg>
-        </button>
-        <div class="h3">Оставить отзыв</div>
-        <div class="modal__footnote">Именно благодаря вашим отзывам мы растём и развиваемся</div>
-
-        <form class="form" id="review-form">
-            <input type="hidden" value data-object-review-id="data-object-review-id">
-            <input type="hidden" name="campingId" value="">
-            <input type="hidden" name="orderId" value="">
-
-            <div class="form__item">
-                <div class="field">
-                    <input class="field__input" type="text" name="name" placeholder="Имя">
-                    <span class="field__error" style="display: none;">Ошибка ввода</span>
-                </div>
-            </div>
-
-            <div class="form__item">
-                <div class="field">
-                    <textarea class="field__input" name="text" placeholder="Ваш отзыв"></textarea>
-                </div>
-            </div>
-
-            <div class="form__item">
-                <div class="scores-edit">
-                    <div class="scores-edit__title">Ваша оценка:</div>
-                    <div class="scores-edit__list">
-                        <? for ($i = 1; $i <= 8; $i++): ?>
-                            <div class="scores-edit__item">
-                                <div class="scores-edit__label"><?= $arProps["CRITERION_" . $i] ?></div>
-                                <div class="scores-edit__value" data-rating="data-rating">
-                                    <input type="hidden" data-rating-field="data-rating-field"
-                                           data-rating-field-num="<?= $i ?>" value="0">
-                                    <ul class="list">
-                                        <? for ($j = 5; $j >= 1; $j--): ?>
-                                            <li class="list__item" data-rating-value="<?= $j ?>"><span></span></li>
-                                        <? endfor; ?>
-                                    </ul>
-                                </div>
-                            </div>
-                        <? endfor; ?>
-                    </div>
-                </div>
-            </div>
-
-            <div class="form__item" data-dropzone-item="data-dropzone-item">
-                <input class="dropzone-hide" name="files" type="file" multiple="multiple" value
-                       data-dropzone-value="data-dropzone-value" accept="image/*">
-                <label class="dropzone" data-dropzone="[]">
-                    <input type="file" multiple="multiple" value="" data-dropzone-add="data-dropzone-add"
-                           accept="image/*">
-                    <span class="dropzone__message">
-                        <svg class="icon icon_dropzone" viewbox="0 0 48 48" style="width: 4.8rem; height: 4.8rem;">
-                          <use xlink:href="#dropzone"/>
-                        </svg>
-                        <span>Перетащите фото сюда<br> или <strong>загрузите с компьютера</strong><br> до&nbsp;10&nbsp;файлов, максимальный размер 1&nbsp;файла&nbsp;-&nbsp;5&nbsp;мб</span>
-                    </span>
-                </label>
-                <ul class="list list_upload" data-dropzone-files="data-dropzone-files"></ul>
-            </div>
-
-            <div class="form__control">
-                <button class="button button_primary" data-review-add>Отправить</button>
-            </div>
-        </form>
-    </div>
-</div>
+<?
+$APPLICATION->IncludeComponent(
+    "naturalist:reviews.add",
+    "",
+    [],
+    false
+);
+?>

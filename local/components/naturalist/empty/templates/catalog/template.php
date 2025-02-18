@@ -364,30 +364,10 @@ foreach ($arResult as $key => $value) {
 
                                     <div class="area-info">
                                         <img src="/local/templates/main/assets/img/location.svg" alt="Маркер">
-                                        <? /*php if (!empty($arSection["UF_DISTANCE"])) : ?><span><?= $arSection["UF_DISTANCE"] ?></span><?php endif; */ ?>
-                                        <? /*php if (!empty($arSection["UF_ADDRESS"])) : ?><span><?= $arSection["UF_ADDRESS"] ?></span><?php endif; */ ?>
                                         <?php if (!empty($arSection["DISCTANCE"])) : ?><span>
                                                 <?= $arSection["DISCTANCE"] ?> км
                                                 от <?= $arSection['DISCTANCE_TO_REGION'] ?></span><?php endif; ?>
                                     </div>
-
-                                    <?/*php if ($arSection["UF_FEATURES"]): ?>
-                                        <div class="object-row__features">
-                                            <?php
-                                            $featureCounter = 0;
-                                            foreach ($arSection["UF_FEATURES"] as $featureId) :
-                                                if (empty($arHLFeatures[$featureId]["UF_NAME"])) {
-                                                    continue;
-                                                }
-                                                $featureCounter++;
-                                                if ($featureCounter > 6) {
-                                                    continue;
-                                                }
-                                            ?>
-                                                <span><?= $arHLFeatures[$featureId]["UF_NAME"] ?></span>
-                                            <?php endforeach; ?>
-                                        </div>
-                                    <?php endif; */ ?>
                                 </div>
 
                                 <div class="object-row__order">
@@ -431,7 +411,6 @@ foreach ($arResult as $key => $value) {
         <div class="catalog__map <?= (CSite::InDir('/map')) ? 'catalog__on_map' : '' ?>" data-map-overlay>
             <div class="catalog__map-sticky">
                 <div id="map"></div>
-                <?/*a class="button button_primary  link_route" target="_blank"href="https://yandex.ru/maps/?mode=routes&rtext=" data-route="data-route">Маршрут</a*/ ?>
                 <div class="catalog__map-more" data-map-more-wrapper></div>
             </div>
         </div>

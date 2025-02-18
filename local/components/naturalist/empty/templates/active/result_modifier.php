@@ -1,4 +1,5 @@
 <?
+
 use Bitrix\Main\Application;
 use Bitrix\Main\Grid\Declension;
 use Bitrix\Highloadblock\HighloadBlockTable;
@@ -20,7 +21,7 @@ $arFilter = array(
     "STATUS_ID" => ["P"]
 );
 $orderNum = $_REQUEST['orderNum'] ?? '';
-if(isset($orderNum) && !empty($orderNum)) {
+if (isset($orderNum) && !empty($orderNum)) {
     $arFilter["ACCOUNT_NUMBER"] = $orderNum;
 }
 
@@ -32,7 +33,7 @@ $order = new Orders();
 $arOrders = $order->getList($arFilter, ['ID' => 'DESC']);
 
 /* Кастомная сортировка по свойству DATE_FROM (старт заезда) по возрастанию */
-if($sort == 'date_from') {
+if ($sort == 'date_from') {
     uasort($arOrders, function ($a, $b) {
         if ($a['PROPS']['DATE_FROM'] == $b['PROPS']['DATE_FROM'])
             return false;

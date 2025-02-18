@@ -95,25 +95,6 @@ $(function () {
       });
     });
   }
-  /*
-    $(document).on('change', '#cancel input[name="terms"]', function(e) {
-        if($(this).prop('checked') == true) {
-            $('[data-order-cancel]').attr('disabled', false);
-        } else {
-            $('[data-order-cancel]').attr('disabled', true);
-        }
-    });
-    */
-
-  // Отмена заказа
-  /*
-    $(document).on('click', '[data-before-cancel]', function(e) {
-        e.preventDefault();
-        var orderId = $(this).data('id');
-        $('#cancel [data-order-cancel]').data('order-id', orderId);
-        order.beforeCancel(orderId);
-    });
-    */
   $(document).on("click", "[data-order-cancel]", function (e) {
     e.preventDefault();
     var orderId = $(this).data("id");

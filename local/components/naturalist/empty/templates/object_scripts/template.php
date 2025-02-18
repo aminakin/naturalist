@@ -4,15 +4,15 @@ foreach ($arParams['VARS'] as $key => $value) {
 }
 ?>
 <script>
-    $('document').ready(function(){
+    $('document').ready(function() {
         let error = $(".search-error");
         let params = new URLSearchParams(document.location.search);
         if (error.length && params.get('dateFrom') != null) {
             window.infoModal("Ну вот....", error.text());
-        }    
+        }
     });
-    
-    const mapCenter = [<?=$arSection["COORDS"][0]?>, <?=$arSection["COORDS"][1]?>];
+
+    const mapCenter = [<?= $arSection["COORDS"][0] ?>, <?= $arSection["COORDS"][1] ?>];
     let isMapLoaded = false
 
     function mapInit() {
@@ -25,12 +25,16 @@ foreach ($arParams['VARS'] as $key => $value) {
         const balloonLayout = ymaps.templateLayoutFactory.createClass(`
                 <div class="mini-balloon">
                     <div class="mini-balloon__image">
-                        <img src="<?=current($arSection["PICTURES"])["src"]?>" alt="<?=$arSection["NAME"]?>">
+                        <img src="<?= current($arSection["PICTURES"])["src"] ?>" width="64" height="64" alt="<?= $arSection["NAME"] ?>">
                     </div>
                     <div class="mini-balloon__content">
-                        <div class="h6"><?=$arSection["NAME"]?></div>
-                        <div class="score"><img src="<?= SITE_TEMPLATE_PATH ?>/assets/img/score.svg" alt=""><span><?=$avgRating?></span></div>
-                        <div class="area-info"><img src="<?= SITE_TEMPLATE_PATH ?>/assets/img/marker.svg" alt=""><div><span><?=$arSection["UF_ADDRESS"]?></span></div></div>
+                        <div class="h6"><?= $arSection["NAME"] ?></div>
+                        <div class="score"><img src="<?= SITE_TEMPLATE_PATH ?>/assets/img/star-score.svg" alt=""><span><?= $avgRating ?></span></div>
+                        <div class="area-info">                            
+                            <span class="map-price"><?= number_format($minPrice, 0, '.', ' ') ?> ₽</span>
+                            <span class="map-ellips"></span>
+                            <span class="map-text">Цена за одну ночь</span>
+                        </div>
                     </div>
                 </div>
             `)
@@ -60,14 +64,12 @@ foreach ($arParams['VARS'] as $key => $value) {
         miniMapPlacemark.balloon.open()
 
         const largeMap = new ymaps.Map('map-large', {
-                center: mapCenter,
-                zoom: 16,
-                controls: ['zoomControl', 'trafficControl', 'typeSelector', 'geolocationControl', 'routeButtonControl']
-            },
-            {
-                minZoom: 5
-            }
-        )
+            center: mapCenter,
+            zoom: 16,
+            controls: ['zoomControl', 'trafficControl', 'typeSelector', 'geolocationControl', 'routeButtonControl']
+        }, {
+            minZoom: 5
+        })
 
         const largeMapPlacemark = new ymaps.Placemark(largeMap.getCenter(), {}, placemarkOptions)
 

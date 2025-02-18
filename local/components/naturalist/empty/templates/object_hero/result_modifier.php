@@ -1,8 +1,10 @@
 <?
+use Bitrix\Highloadblock as HL; 
+use Bitrix\Main\Entity;
+
 $arResult = array(
     "arSection" => $arParams['arSection'],
     "arFavourites" => $arParams['arFavourites'],
-    "currentURL" => $arParams['currentURL'],
     "arHLTypes" => $arParams['arHLTypes'],
     "dateFrom" => $arParams['dateFrom'],
     "dateTo" => $arParams['dateTo'],
@@ -13,9 +15,36 @@ $arResult = array(
     "guests" => $arParams['guests'],
     "children" => $arParams['children'],
     "guestsDeclension" => $arParams['guestsDeclension'],
+    "childrenDeclension" => $arParams['childrenDeclension'],
     "arChildrenAge" => $arParams['arChildrenAge'],
     "reviewsDeclension" => $arParams['reviewsDeclension'],
     "reviewsCount" => $arParams['reviewsCount'],
     "avgRating" => $arParams['avgRating'],
     "arAvgCriterias" => $arParams['arAvgCriterias'],
+    "arHLFeatures" => $arParams['arHLFeatures'],
+    "coords" => $arParams['coords'],
+    "arServices" => $arParams['arServices'],
+    "houseTypeData" => $arParams['houseTypeData'],
+    'allCount' => $arParams['allCount'],
+    "arHLRoomFeatures" => $arParams['arHLRoomFeatures'],
+    "arExternalInfo" => $arParams['arExternalInfo'],
+    "arElements" => $arParams['arElements'],
+    "daysRange" => $arParams['daysRange'],
+    "page" => $arParams['page'],
+    "pageCount" => $arParams['pageCount'],
+    "daysDeclension" => $arParams['daysDeclension'],
+    "daysCount" => $arParams['daysCount'],
+    "arElementsParent" => $arParams['arElementsParent'],
+    "arReviews" => $arParams['arReviews'],
+    "reviewsSortType" => $arParams['reviewsSortType'],
+    "arReviewsLikesData" => $arParams['arReviewsLikesData'],
+    "arReviewsUsers" => $arParams['arReviewsUsers'],
+    "reviewsPage" => $arParams['reviewsPage'],
+    "reviewsPageCount" => $arParams['reviewsPageCount'],
+    "isUserReview" => $arParams['isUserReview'],
+    'roomsDeclension' => $arParams['roomsDeclension'],
+    'bedsDeclension' => $arParams['bedsDeclension'],
+    'arObjectComforts' => $arParams['arObjectComforts'],
+    'searchError' => $arParams['searchError'],
 );
+

@@ -59,6 +59,7 @@ Loader::registerAutoLoadClasses(null, array(
     'Naturalist\bronevik\OrderBronevik' => '/local/php_interface/classes/bronevik/OrderBronevik.php',
     'Naturalist\bronevik\HotelOfferPricingCheckPriceBronevik' => '/local/php_interface/classes/bronevik/HotelOfferPricingCheckPriceBronevik.php',
     'Naturalist\bronevik\AttemptBronevik' => '/local/php_interface/classes/bronevik/AttemptBronevik.php',
+    'Naturalist\Handlers\HigloadHandler' => '/local/php_interface/classes/Handlers/HigloadHandler.php',
 ));
 
 // Константы

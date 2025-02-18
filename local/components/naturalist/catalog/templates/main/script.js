@@ -452,7 +452,7 @@ $(function () {
       }
     );
 
-    if (dateFrom.trim() != "Заезд" && dateTo.trim() != "Выезд" && guests > 0) {
+    if (dateFrom.trim() != "" && dateTo.trim() != "" && guests > 0) {
       let arDateFrom = dateFrom.split(".");
       let arDateTo = dateTo.split(".");
 
@@ -501,7 +501,7 @@ $(function () {
             if ($(ajaxContainer).length > 0) {
               $(ajaxContainer).html(updContentHtml.html());
             } else {
-              $("section.section_about").after(updContentHtml);
+              $(".object-hero__form").after(updContentHtml);
             }
 
             window.objectsGallery();
@@ -517,7 +517,7 @@ $(function () {
             if ($(ajaxContainerRelated).length > 0) {
               $(ajaxContainerRelated).html(updContentHtmlRelated.html());
             } else {
-              $("section.section_about").after(updContentHtmlRelated);
+              $("section.object-hero__form").after(updContentHtmlRelated);
             }
             window.objectsGallery();
             window.sliderRelated();

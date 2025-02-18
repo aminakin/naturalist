@@ -1,4 +1,4 @@
-<?
+<?php
 
 use Bitrix\Main\Page\Asset;
 
@@ -21,37 +21,50 @@ use Naturalist\Users;
 <html lang="<?= LANGUAGE_ID ?>">
 
 <head>
-    <? if (!CSite::InDir('/promo-cert/')) { ?>
-        <!-- Google Tag Manager -->
-        <script>
-            (function(w, d, s, l, i) {
-                w[l] = w[l] || [];
-                w[l].push({
-                    'gtm.start': new Date().getTime(),
-                    event: 'gtm.js'
-                });
-                var f = d.getElementsByTagName(s)[0],
-                    j = d.createElement(s),
-                    dl = l != 'dataLayer' ? '&l=' + l : '';
-                j.async = true;
-                j.src =
-                    'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
-                f.parentNode.insertBefore(j, f);
-            })(window, document, 'script', 'dataLayer', 'GTM-5762ML9');
-        </script>
-        <!-- End Google Tag Manager -->
-    <? } ?>
-
+    <?php
+        $gtagShow = true;
+        if (stripos($currPage, 'catalog') !== false &&
+            count(preg_split('@/@', $currPage, -1, PREG_SPLIT_NO_EMPTY)) == 2) {
+            $gtagShow = false;
+        }
+        if ($gtagShow) {
+            ?>
+            <!-- Google Tag Manager -->
+            <script>
+                (function(w, d, s, l, i) {
+                    w[l] = w[l] || [];
+                    w[l].push({
+                        'gtm.start': new Date().getTime(),
+                        event: 'gtm.js'
+                    });
+                    var f = d.getElementsByTagName(s)[0],
+                        j = d.createElement(s),
+                        dl = l != 'dataLayer' ? '&l=' + l : '';
+                    j.async = true;
+                    j.src =
+                        'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
+                    f.parentNode.insertBefore(j, f);
+                })(window, document, 'script', 'dataLayer', 'GTM-5762ML9');
+            </script>
+            <!-- End Google Tag Manager -->
+            <?php
+        }
+    ?>
 
     <meta charset="<?= LANG_CHARSET ?>">
     <meta http-equiv="X-UA-Compatible" content="IE=Edge">
-    <title><? $APPLICATION->ShowTitle() ?></title>
+    <title><?php $APPLICATION->ShowTitle() ?></title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="format-detection" content="telephone=no">
-    <? if ($APPLICATION->GetCurPage() != '/catalog/') { ?>
+    <?php if ($APPLICATION->GetCurPage() != '/catalog/') { ?>
         <link rel="canonical" href="<?= HTTP_HOST . $APPLICATION->GetCurPage() ?>">
-    <? } ?>
-    <link rel="icon" href="/favicon.ico" type="image/x-icon">
+    <?php } ?>
+    <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="shortcut icon" href="/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+
 
     <link rel="preload" href="<?= SITE_TEMPLATE_PATH ?>/assets/fonts/Montserrat-Bold.woff2" as="font" type="font/woff2" crossorigin>
     <link rel="preload" href="<?= SITE_TEMPLATE_PATH ?>/assets/fonts/Montserrat-Medium.woff2" as="font" type="font/woff2" crossorigin>
@@ -62,51 +75,53 @@ use Naturalist\Users;
     <link rel="preload" href="<?= SITE_TEMPLATE_PATH ?>/assets/fonts/Lato-Regular.woff2" as="font" type="font/woff2" crossorigin>
 
     <link rel="stylesheet" href="<?= SITE_TEMPLATE_PATH ?>/assets/css/app.css?v=<?= filemtime($_SERVER['DOCUMENT_ROOT'] . SITE_TEMPLATE_PATH . '/assets/css/app.css'); ?>">
-    <? if (CSite::InDir('/index.php')) : ?>
+    <?php if (CSite::InDir('/index.php')) : ?>
         <link rel="stylesheet" href="<?= SITE_TEMPLATE_PATH ?>/assets/css/index.css?v=<?= filemtime($_SERVER['DOCUMENT_ROOT'] . SITE_TEMPLATE_PATH . '/assets/css/index.css'); ?>">
-    <? endif; ?>
-    <? if (CSite::InDir('/catalog')) : ?>
-        <? if ($currPage === "/catalog/" || strpos($currPage, "/catalog/vpechatleniya/") !== false) : ?>
+    <?php endif; ?>
+    <?php if (CSite::InDir('/catalog')) : ?>
+        <?php if ($currPage === "/catalog/" || strpos($currPage, "/catalog/vpechatleniya/") !== false) : ?>
             <link rel="stylesheet" href="<?= SITE_TEMPLATE_PATH ?>/assets/css/catalog.css?v=<?= filemtime($_SERVER['DOCUMENT_ROOT'] . SITE_TEMPLATE_PATH . '/assets/css/catalog.css'); ?>">
-        <? else : ?>
+        <?php else : ?>
+            <link rel="stylesheet" href="<?= SITE_TEMPLATE_PATH ?>/assets/css/lk_history.css?v=<?= filemtime($_SERVER['DOCUMENT_ROOT'] . SITE_TEMPLATE_PATH . '/assets/css/lk_history.css'); ?>">
+            <link rel="stylesheet" href="<?= SITE_TEMPLATE_PATH ?>/assets/css/catalog.css?v=<?= filemtime($_SERVER['DOCUMENT_ROOT'] . SITE_TEMPLATE_PATH . '/assets/css/catalog.css'); ?>">
             <link rel="stylesheet" href="<?= SITE_TEMPLATE_PATH ?>/assets/css/object.css?v=<?= filemtime($_SERVER['DOCUMENT_ROOT'] . SITE_TEMPLATE_PATH . '/assets/css/object.css'); ?>">
-        <? endif; ?>
-    <? endif; ?>
-    <? if (CSite::InDir('/order')) : ?>
+        <?php endif; ?>
+    <?php endif; ?>
+    <?php if (CSite::InDir('/order')) : ?>
         <link rel="stylesheet" href="<?= SITE_TEMPLATE_PATH ?>/assets/css/reservation.css?v=<?= filemtime($_SERVER['DOCUMENT_ROOT'] . SITE_TEMPLATE_PATH . '/assets/css/reservation.css'); ?>">
-    <? endif; ?>
-    <? if (CSite::InDir('/personal')) : ?>
+    <?php endif; ?>
+    <?php if (CSite::InDir('/personal')) : ?>
         <link rel="stylesheet" href="<?= SITE_TEMPLATE_PATH ?>/assets/css/lk_person.css?v=<?= filemtime($_SERVER['DOCUMENT_ROOT'] . SITE_TEMPLATE_PATH . '/assets/css/lk_person.css'); ?>">
         <link rel="stylesheet" href="<?= SITE_TEMPLATE_PATH ?>/assets/css/lk_person_values.css?v=<?= filemtime($_SERVER['DOCUMENT_ROOT'] . SITE_TEMPLATE_PATH . '/assets/css/lk_person_values.css'); ?>">
-    <? endif; ?>
-    <? if (CSite::InDir('/personal/reviews')) : ?>
+    <?php endif; ?>
+    <?php if (CSite::InDir('/personal/reviews')) : ?>
         <link rel="stylesheet" href="<?= SITE_TEMPLATE_PATH ?>/assets/css/lk_reviews.css?v=<?= filemtime($_SERVER['DOCUMENT_ROOT'] . SITE_TEMPLATE_PATH . '/assets/css/lk_reviews.css'); ?>">
-    <? endif; ?>
-    <? if (CSite::InDir('/personal/active')) : ?>
+    <?php endif; ?>
+    <?php if (CSite::InDir('/personal/active')) : ?>
         <link rel="stylesheet" href="<?= SITE_TEMPLATE_PATH ?>/assets/css/lk_active.css?v=<?= filemtime($_SERVER['DOCUMENT_ROOT'] . SITE_TEMPLATE_PATH . '/assets/css/lk_active.css'); ?>">
-    <? endif; ?>
-    <? if (CSite::InDir('/personal/history')) : ?>
+    <?php endif; ?>
+    <?php if (CSite::InDir('/personal/history')) : ?>
         <link rel="stylesheet" href="<?= SITE_TEMPLATE_PATH ?>/assets/css/lk_history.css?v=<?= filemtime($_SERVER['DOCUMENT_ROOT'] . SITE_TEMPLATE_PATH . '/assets/css/lk_history.css'); ?>">
-    <? endif; ?>
-    <? if (CSite::InDir('/personal/favourites')) : ?>
+    <?php endif; ?>
+    <?php if (CSite::InDir('/personal/favourites')) : ?>
         <link rel="stylesheet" href="<?= SITE_TEMPLATE_PATH ?>/assets/css/lk_favorite.css?v=<?= filemtime($_SERVER['DOCUMENT_ROOT'] . SITE_TEMPLATE_PATH . '/assets/css/lk_favorite.css'); ?>">
-    <? endif; ?>
-    <? if (CSite::InDir('/about')) : ?>
+    <?php endif; ?>
+    <?php if (CSite::InDir('/about')) : ?>
         <link rel="stylesheet" href="<?= SITE_TEMPLATE_PATH ?>/assets/css/about.css?v=<?= filemtime($_SERVER['DOCUMENT_ROOT'] . SITE_TEMPLATE_PATH . '/assets/css/about.css'); ?>">
-    <? endif; ?>
-    <? if (CSite::InDir('/impressions')) : ?>
+    <?php endif; ?>
+    <?php if (CSite::InDir('/impressions')) : ?>
         <link rel="stylesheet" href="<?= SITE_TEMPLATE_PATH ?>/assets/css/impressions.css?v=<?= filemtime($_SERVER['DOCUMENT_ROOT'] . SITE_TEMPLATE_PATH . '/assets/css/impressions.css'); ?>">
-    <? endif; ?>
-    <? if (CSite::InDir('/map')) : ?>
+    <?php endif; ?>
+    <?php if (CSite::InDir('/map')) : ?>
         <link rel="stylesheet" href="<?= SITE_TEMPLATE_PATH ?>/assets/css/catalog.css?v=<?= filemtime($_SERVER['DOCUMENT_ROOT'] . SITE_TEMPLATE_PATH . '/assets/css/catalog.css'); ?>">
-    <? endif; ?>
-    <? if (CSite::InDir('/objects')) : ?>
+    <?php endif; ?>
+    <?php if (CSite::InDir('/objects')) : ?>
         <link rel="stylesheet" href="<?= SITE_TEMPLATE_PATH ?>/assets/css/add_object.css?v=<?= filemtime($_SERVER['DOCUMENT_ROOT'] . SITE_TEMPLATE_PATH . '/assets/css/add_object.css'); ?>">
-    <? endif; ?>
+    <?php endif; ?>
     <link rel="stylesheet" href="<?= SITE_TEMPLATE_PATH ?>/assets/css/jquery-ui.min.css?v=<?= filemtime($_SERVER['DOCUMENT_ROOT'] . SITE_TEMPLATE_PATH . '/assets/css/jquery-ui.min.css'); ?>">
     <link rel="stylesheet" href="<?= SITE_TEMPLATE_PATH ?>/assets/css/custom.css?v=<?= filemtime($_SERVER['DOCUMENT_ROOT'] . SITE_TEMPLATE_PATH . '/assets/css/custom.css'); ?>">
 
-    <? if (CSite::InDir('/promo/')) : ?>
+    <?php if (CSite::InDir('/promo/')) : ?>
         <!-- Marquiz script start --> 
         <script>
             (function(w, d, s, o) {
@@ -131,9 +146,9 @@ use Naturalist\Users;
             });
         </script>
         <!-- Marquiz script end -->
-    <? endif; ?>
+    <?php endif; ?>
 
-    <? $APPLICATION->ShowHead() ?>
+    <?php $APPLICATION->ShowHead() ?>
     <script type="text/javascript">
         ! function() {
             var t = document.createElement("script");
@@ -177,7 +192,7 @@ use Naturalist\Users;
     </noscript>
     <!-- /Top.Mail.Ru counter -->
 
-    <?
+    <?php
     if (!\Bitrix\Main\Engine\CurrentUser::get()->isAdmin()) {
     ?>
 
@@ -209,9 +224,9 @@ use Naturalist\Users;
             <div><img src="https://mc.yandex.ru/watch/91071014" style="position:absolute; left:-9999px;" alt="" /></div>
         </noscript>
         <!-- /Yandex.Metrika counter -->
-    <?  }
+    <?php }
     ?>
-    <?/*<script src="https://dmp.one/sync?stock_key=4dce2e8f5fdd1727a46278cb20b97261" async charset="UTF-8"></script>*/ ?>
+    <?php /*<script src="https://dmp.one/sync?stock_key=4dce2e8f5fdd1727a46278cb20b97261" async charset="UTF-8"></script>*/ ?>
 </head>
 
 <body class="<?php if (CSite::InDir('/map')) : ?>body__on_map<?php endif; ?>">
@@ -220,7 +235,7 @@ use Naturalist\Users;
     <!-- End Google Tag Manager (noscript) -->
 
 
-    <div id="admin_panel"><? $APPLICATION->ShowPanel(); ?></div>
+    <div id="admin_panel"><?php $APPLICATION->ShowPanel(); ?></div>
 
 
     <div class="wrapper">
@@ -251,7 +266,7 @@ use Naturalist\Users;
                             </svg>
                         </button>
                         <ul class="list">
-                            <?
+                            <?php
                             $APPLICATION->IncludeComponent(
                                 "bitrix:menu",
                                 "header",
@@ -301,24 +316,24 @@ use Naturalist\Users;
                                         <?= $arFavourites ? count($arFavourites) : 0 ?>
                                     </span>
                                 </div>
-                                <?/*<span><?= $arSettings['header_favourites_name'] ?></span>*/ ?>
+                                <?php /*<span><?= $arSettings['header_favourites_name'] ?></span>*/ ?>
                             </a>
                         </li>
 
-                        <? if (!$isAuthorized) : ?>
+                        <?php if (!$isAuthorized) : ?>
                             <li class="list__item list__item_login">
                                 <a class="list__link" href="#login-phone" data-modal><?= GetMessage('LOGIN_HEADER') ?>
                                     <?/*svg class="icon icon_person" viewbox="0 0 16 16" style="width: 26px; height: 26px;">
                                         <use xlink:href="#person" />
                                     </svg*/ ?>
-                                    <?/*<span><?= $arSettings['header_personal_name'] ?></span>*/ ?>
+                                    <?php /*<span><?= $arSettings['header_personal_name'] ?></span>*/ ?>
 
                                 </a>
                             </li>
-                        <? else : ?>
+                        <?php else : ?>
                             <li class="list__item list__item_login">
                                 <a class="list__link is-authorized" href="<?= $arSettings['header_personal_link'] ?>">
-                                    <?/* if ($arUser["PERSONAL_PHOTO"]) :
+                                    <?php /* if ($arUser["PERSONAL_PHOTO"]) :
                                         $arUser["PERSONAL_PHOTO"] = CFile::ResizeImageGet($arUser["PERSONAL_PHOTO"]["ID"], array('width' => 96, 'height' => 96), BX_RESIZE_IMAGE_EXACT, true);
                                     ?>
                                         <div class="list__item-icon">
@@ -329,12 +344,12 @@ use Naturalist\Users;
                                         <path fill-rule="evenodd" clip-rule="evenodd" d="M14.1991 13.4384C11.6314 11.9095 8.36886 11.9095 5.80122 13.4384C5.6613 13.5217 5.50798 13.6087 5.34738 13.6998C4.75355 14.0367 4.06019 14.4301 3.57679 14.9032C3.27668 15.197 3.14875 15.4393 3.12829 15.6265C3.11204 15.7752 3.14962 16.0203 3.52514 16.378C4.38835 17.2004 5.2655 17.7084 6.32587 17.7084H13.6744C14.7348 17.7084 15.6119 17.2004 16.4751 16.378C16.8507 16.0203 16.8883 15.7752 16.872 15.6265C16.8515 15.4393 16.7236 15.197 16.4235 14.9032C15.9401 14.4301 15.2467 14.0367 14.6529 13.6998C14.4923 13.6087 14.339 13.5217 14.1991 13.4384ZM14.8386 12.3644L14.5188 12.9014L14.8386 12.3644C14.9355 12.4221 15.0553 12.4897 15.1908 12.5661C15.7848 12.9013 16.6827 13.4078 17.2979 14.0099C17.6826 14.3865 18.0481 14.8828 18.1146 15.4907C18.1853 16.1373 17.9032 16.744 17.3374 17.2831C16.3612 18.2131 15.1897 18.9584 13.6744 18.9584H6.32587C4.81061 18.9584 3.63913 18.2131 2.66292 17.2831C2.09707 16.744 1.81502 16.1373 1.88569 15.4907C1.95215 14.8828 2.31769 14.3865 2.70241 14.0099C3.31755 13.4078 4.21548 12.9013 4.80949 12.5661C4.94504 12.4897 5.06477 12.4221 5.1617 12.3644C8.12341 10.6009 11.8769 10.6009 14.8386 12.3644Z" fill="black" />
                                         <path fill-rule="evenodd" clip-rule="evenodd" d="M10 2.29175C8.27411 2.29175 6.875 3.69086 6.875 5.41675C6.875 7.14264 8.27411 8.54175 10 8.54175C11.7259 8.54175 13.125 7.14264 13.125 5.41675C13.125 3.69086 11.7259 2.29175 10 2.29175ZM5.625 5.41675C5.625 3.0005 7.58375 1.04175 10 1.04175C12.4162 1.04175 14.375 3.0005 14.375 5.41675C14.375 7.83299 12.4162 9.79175 10 9.79175C7.58375 9.79175 5.625 7.83299 5.625 5.41675Z" fill="black" />
                                     </svg>
-                                    <? // endif; 
+                                    <?php // endif;
                                     ?>
-                                    <?/*<span><?= $arUser["NAME"] ?? $arSettings['header_personal_name'] ?></span>*/ ?>
+                                    <?php /*<span><?= $arUser["NAME"] ?? $arSettings['header_personal_name'] ?></span>*/ ?>
                                 </a>
                             </li>
-                        <? endif; ?>
+                        <?php endif; ?>
 
                         <?/* if (intval(Users::getInnerScore()) != 0) { ?>
                             <li class="list__item highlight_orange cert_balance">

@@ -12343,7 +12343,7 @@
           ? e.target
           : e.target.closest("[data-scroll-to]");
         scroll_to_element_default()($el.getAttribute("href"), {
-          offset: 0,
+          offset: -100,
           duration: 500,
         });
       }
@@ -12889,7 +12889,6 @@
         scrollLockDisable();
       };
     };
-debugger
     window.preloader = new Preloader();
   })();
   /******/

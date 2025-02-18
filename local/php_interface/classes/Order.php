@@ -209,7 +209,7 @@ class Orders
         $service = $arOrder['ITEMS'][0]['ITEM']['SECTION']['UF_EXTERNAL_SERVICE'];
         if ($service == $this->bronevikSectionPropEnumId) {
             $id = current($arOrder['ITEMS'])['ID'];
-//            $penaltyAmount = (new HotelRoomOfferPenaltyBronevik())(current($arOrder['ITEMS'])['ID']);
+            //            $penaltyAmount = (new HotelRoomOfferPenaltyBronevik())(current($arOrder['ITEMS'])['ID']);
         } elseif ($service == $this->travelineSectionPropEnumId) {
             $penaltyAmount = Traveline::beforeCancelReservation($arOrder);
         } else {
@@ -822,6 +822,8 @@ class Orders
             if (empty($arUser["PERSONAL_PHONE"])) {
                 $arUser["PERSONAL_PHONE"] = $params["phone"];
             }
+            $arUser["NAME"] = !empty($arUser["NAME"]) ? $arUser["NAME"] : $params["name"];
+            $arUser["LAST_NAME"] = !empty($arUser["LAST_NAME"]) ? $arUser["LAST_NAME"] : $params["last_name"];
 
             $arVerifyResponse = Traveline::verifyReservation($externalSectionId, $externalElementId, $externalCategoryId, $guests, $arChildrenAge, $dateFrom, $dateTo, $price, $checksum, $arGuestList, $arUser, $adults);
 
@@ -858,12 +860,12 @@ class Orders
         $siteId = Context::getCurrent()->getSite();
         $basket = Basket::loadItemsForFUser(Fuser::getId(), $siteId);
 
-        if (! (new HotelOfferPricingCheckPriceBronevik())($basket, ['LAST_NAME' => $arUser['LAST_NAME'], 'FIRST_NAME' => $arUser['NAME']])) {
-            return json_encode([
-                "ACTION" => "reload",
-                "ERROR" => "Произошло изменение цены. Пожалуйста, ознакомьтесь!",
-            ]);
-        }
+//        if (! (new HotelOfferPricingCheckPriceBronevik())($basket, ['LAST_NAME' => $arUser['LAST_NAME'], 'FIRST_NAME' => $arUser['NAME']])) {
+//            return json_encode([
+//                "ACTION" => "reload",
+//                "ERROR" => "Произошло изменение цены. Пожалуйста, ознакомьтесь!",
+//            ]);
+//        }
 
         // Создание нового заказа
         $order = Order::create($siteId, $userId);
@@ -1018,22 +1020,9 @@ class Orders
                 if ($arSaveGuests) {
                     $user = new CUser();
                     $user->Update($userId, array(
-                        "UF_GUESTS_DATA" => json_encode($arSaveGuests)
-                    ));
-                }
-
-                // Обновление Имени и Фамилии пользователя
-                if ($arUser["NAME"] == '' && $params["name"] != '') {
-                    $user = new CUser();
-                    $user->Update($userId, array(
-                        "NAME" => json_encode($arSaveGuests)
-                    ));
-                }
-
-                if ($arUser["LAST_NAME"] == '' && $params["last_name"] != '') {
-                    $user = new CUser();
-                    $user->Update($userId, array(
-                        "LAST_NAME" => json_encode($arSaveGuests)
+                        "UF_GUESTS_DATA" => json_encode($arSaveGuests),
+//                        "NAME" => json_encode($arSaveGuests),
+//                        "LAST_NAME" => json_encode($arSaveGuests)
                     ));
                 }
 

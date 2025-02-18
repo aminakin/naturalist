@@ -12,535 +12,19 @@
 /** @var CBitrixComponent $component */
 $this->setFrameMode(true);
 
-use Bitrix\Main\Application;
-use Bitrix\Main\Grid\Declension;
-use Bitrix\Highloadblock\HighloadBlockTable;
-use Bitrix\Main\Web\Uri;
-use Naturalist\Morpher;
-use Naturalist\Regions;
-use Naturalist\Users;
-use Naturalist\Products;
-use Naturalist\Reviews;
+
 use Bitrix\Iblock\Elements\ElementGlampingsTable;
 use Naturalist\Utils;
-use Naturalist\Filters\Components;
-use Naturalist\Filters\UrlHandler;
 use Bitrix\Main\Localization\Loc;
-
-global $arUser, $userId, $isAuthorized;
-
-$request = Application::getInstance()->getContext()->getRequest();
-$isAjax = $request->isAjaxRequest();
-
-$arUriParams = array(
-    'dateFrom' => $_GET['dateFrom'],
-    'dateTo' => $_GET['dateTo'],
-    'guests' => $_GET['guests'],
-    'children' => $_GET['children'],
-    'childrenAge' => $_GET['childrenAge'],
-);
-
-if (CSite::InDir('/map')) {
-    $seoFile = 'map';
-} else {
-    $seoFile = 'catalog';
-}
-
-$requestUrl = $_SERVER['REDIRECT_URL'] ? $_SERVER['REDIRECT_URL'] : $_SERVER['SCRIPT_NAME'];
-$chpy = Components::getChpyLinkByUrl($requestUrl);
-$chySeoText = $chpy['UF_SEO_TEXT'];
-
-if ($_GET['page'] && count($_GET) > 1) {
-    $urlWithPage = '/catalog/?';
-    foreach ($_GET as $getName => $getValue) {
-        if ($getName !== 'page') {
-            $urlWithPage .= $getName . '=' . $getValue . '&';
-        }
-    }
-    $urlWithPage = substr($urlWithPage, 0, -1);
-    $pageSeoData = UrlHandler::getByRealUrl($urlWithPage, SITE_ID);
-}
-
-/* Избранное (список ID) */
-$arFavourites = Users::getFavourites();
-
-/* Склонения */
-$countDeclension = new Declension('вариант', 'варианта', 'вариантов');
-$reviewsDeclension = new Declension('отзыв', 'отзыва', 'отзывов');
-$guestsDeclension = new Declension('гость', 'гостя', 'гостей');
-
-/* Отзывы */
-/*$rsReviews = CIBlockElement::GetList(array("SORT" => "ASC"), array("IBLOCK_ID" => REVIEWS_IBLOCK_ID, "ACTIVE" => "Y"), false, false, array("ID", "PROPERTY_CAMPING_ID", "PROPERTY_RATING"));
-$arReviews = array();
-while ($arReview = $rsReviews->Fetch()) {
-    $arReviews[$arReview["PROPERTY_CAMPING_ID_VALUE"]][$arReview["ID"]] = $arReview["PROPERTY_RATING_VALUE"];
-}
-$arReviewsAvg = array_map(function ($a) {
-    return round(array_sum($a) / count($a), 1);
-}, $arReviews);*/
 
 $isSeoText = false;
 
-/* Фильтрация */
-$arFilter = array(
-    "IBLOCK_ID" => CATALOG_IBLOCK_ID,
-    "ACTIVE" => "Y",
-);
-
-// Цена
-//if ($_GET['maxPrice'] || $_GET['minPrice']) {
-//    $arFilter[] = [
-//        ["<=UF_MIN_PRICE" => $_GET['maxPrice']],
-//        [">=UF_MIN_PRICE" => $_GET['minPrice']]
-//    ];
-//}
-
-
-
-// Название и место
-if (!empty($_GET['name']) && isset($_GET['name'])) {
-    $search = ($_GET['name']) ? $_GET['name'] : null;
-
-    $decodeSearch = json_decode($search, true);
-    if ($decodeSearch['type']) {
-        switch ($decodeSearch['type']) {
-            case 'area':
-                $searchName = $decodeSearch['item'];
-                $arRegionIds = Regions::getCityByName($searchName);
-                if (!empty($arRegionIds)) {
-                    $arFilter["UF_AREA_NAME"] = $arRegionIds[0]['ID'];
-                    $arRegionIds = array_map(function($arRegion) {
-                        return $arRegion['REGION_ID'];
-                    }, $arRegionIds);
-                } else {
-                    $arRegionIds = Regions::RegionFilterSearcher($searchName);
-                    $arFilter["UF_REGION"] = $arRegionIds;
-                }
-
-                break;
-            case 'id':
-                $arFilter["ID"] = $decodeSearch['item'];
-                break;
-            case 'street':
-                $arFilter["%UF_ADDRESS"] = $decodeSearch['item'];
-                break;
-
-            case 'object':
-                $arNameResult = CIBlockSection::GetList([], array_merge($arFilter, ["%NAME" => trim($decodeSearch['item'])]), false, array("ID"), false)->Fetch();
-                if ($arNameResult) {
-                    $arSectionIDs[] = $arNameResult["ID"];
-                }
-                $arFilter["ID"] = $arSectionIDs;
-                break;
-        }
-
-        $arFilterValues["SEARCH"] = json_encode($decodeSearch, JSON_UNESCAPED_UNICODE);
-        $arFilterValues["SEARCH_TEXT"] = strip_tags($decodeSearch['title']);
-    } else {
-
-        //        CModule::IncludeModule('search');
-        //        $obSearch = new CSearch;
-        //        $obSearch->SetOptions(array(
-        //            'ERROR_ON_EMPTY_STEM' => false,
-        //        ));
-        //        $obSearch->Search(array(
-        //            'QUERY' => trim($search),
-        //            'MODULE_ID' => 'iblock',
-        //            'PARAM1' => 'catalog',
-        //            'PARAM2' => CATALOG_IBLOCK_ID
-        //        ));
-        //        if (!$obSearch->selectedRowsCount()) {//и делаем резапрос, если не найдено с морфологией...
-        //            $obSearch->Search(array(
-        //                'QUERY' => trim($search),
-        //                'MODULE_ID' => 'iblock',
-        //                'PARAM1' => 'catalog',
-        //                'PARAM2' => CATALOG_IBLOCK_ID
-        //            ), array(), array('STEMMING' => false));//... уже с отключенной морфологией
-        //        }
-        //        while ($row = $obSearch->fetch()) {
-        //            if($row['ITEM_ID'][0] == 'S'){
-        //                $arSectionIDs[] = substr($row['ITEM_ID'],1);
-        //            }
-        //        }
-
-        $arRegionIds = Regions::RegionFilterSearcher($search);
-        $arFilter["UF_REGION"] = $arRegionIds;
-
-
-        if (empty($arRegionIds)) {
-
-            $arNameResult = CIBlockSection::GetList([], ['NAME' => '%' . $search . '%'], false, ['ID'], false)->Fetch();
-            if ($arNameResult) {
-                $arSectionIDs[] = $arNameResult["ID"];
-            }
-
-
-
-            $arFilter["ID"] = $arSectionIDs;
-            unset($arFilter["UF_REGION"]);
-        }
-
-        //        $arFilter["ID"] = $arSectionIDs;
-        $arFilterValues["SEARCH_TEXT"] = strip_tags($search);
-    }
-}
-
-// Заезд, выезд, кол-во гостей
-$dateFrom = $_GET['dateFrom'];
-$dateTo = $_GET['dateTo'];
-$guests = $_GET['guests'] ?? 2;
-$children = $_GET['children'] ?? 0;
-$arChildrenAge = (isset($_GET['childrenAge'])) ? explode(',', $_GET['childrenAge']) : [];
-if (!empty($dateFrom) && !empty($dateTo) && !empty($_GET['guests'])) {
-    $daysCount = abs(strtotime($dateTo) - strtotime($dateFrom)) / 86400;
-
-    // Запрос в апи на получение списка кемпингов со свободными местами в выбранный промежуток
-    $arExternalInfo = Products::search($guests, $arChildrenAge, $dateFrom, $dateTo, false);
-    $arExternalIDs = array_keys($arExternalInfo);
-    if ($arExternalIDs) {
-        $arFilter["UF_EXTERNAL_ID"] = $arExternalIDs;
-    } else {
-        $arFilter["UF_EXTERNAL_ID"] = false;
-    }
-}
-
-$filterCount = 0;
-
-// Тип
-if (!empty($_GET['types']) && isset($_GET['types'])) {
-    $arFilterTypes = explode(',', $_GET['types']);
-    $arFilter[] = array(
-        "LOGIC" => "OR",
-        array("UF_TYPE" => explode(',', $_GET['types'])),
-        array("UF_TYPE_EXTRA" => explode(',', $_GET['types']))
-    );
-
-    $filterCount += count($arFilterTypes);
-}
-
-// Услуги
-if (!empty($_GET['services']) && isset($_GET['services'])) {
-    $arFilterServices = explode(',', $_GET['services']);
-    $arFilter["UF_SERVICES"] = $arFilterServices;
-
-    $filterCount += count($arFilterServices);
-}
-
-// Питание
-if (!empty($_GET['food']) && isset($_GET['food'])) {
-    $arFilterFood = explode(',', $_GET['food']);
-    $arFilter["UF_FOOD"] = $arFilterFood;
-
-    $filterCount += count($arFilterFood);
-}
-
-// Особенности
-if (!empty($_GET['features']) && isset($_GET['features'])) {
-    $arFilterFeatures = explode(',', $_GET['features']);
-    $arFilter["UF_FEATURES"] = $arFilterFeatures;
-
-    $filterCount += count($arFilterFeatures);
-}
-
-// Варианты отдыха
-if (!empty($_GET['restvariants']) && isset($_GET['restvariants'])) {
-    $arFilterRestVariants = explode(',', $_GET['restvariants']);
-    $arFilter["UF_REST_VARIANTS"] = $arFilterRestVariants;
-
-    $filterCount += count($arFilterRestVariants);
-}
-
-// Удобства
-if (!empty($_GET['objectcomforts']) && isset($_GET['objectcomforts'])) {
-    $arFilterObjectComforts = explode(',', $_GET['objectcomforts']);
-    $arFilter["UF_OBJECT_COMFORTS"] = $arFilterObjectComforts;
-
-    $filterCount += count($arFilterObjectComforts);
-}
-
-// Тип дома
-if (!empty($_GET['housetypes']) && isset($_GET['housetypes'])) {
-    $arFilterHousetypes = explode(',', $_GET['housetypes']);
-    $arFilter["UF_SUIT_TYPE"] = $arFilterHousetypes;
-
-    $filterCount += count($arFilterHousetypes);
-}
-
-// Водоём
-if (!empty($_GET['water']) && isset($_GET['water'])) {
-    $arFilterWater = explode(',', $_GET['water']);
-    $arFilter["UF_WATER"] = $arFilterWater;
-
-    $filterCount += count($arFilterWater);
-}
-
-// Общий водоём
-if (!empty($_GET['commonwater']) && isset($_GET['commonwater'])) {
-    $arFilterCommonWater = explode(',', $_GET['commonwater']);
-    $arFilter["UF_COMMON_WATER"] = $arFilterCommonWater;
-
-    $filterCount += count($arFilterCommonWater);
-}
-
-// Sitemap
-if (!empty($_GET['sitemap']) && isset($_GET['sitemap'])) {
-    $arFilterSitemap = explode(',', $_GET['sitemap']);
-    $arFilter["UF_SITEMAP"] = $arFilterSitemap;
-
-    $filterCount += count($arFilterSitemap);
-}
-
-// Подборки
-if (!empty($_GET['selection']) && isset($_GET['selection'])) {
-    $arFilterImpressions = explode(',', $_GET['selection']);
-    $arFilter["UF_IMPRESSIONS"] = $arFilterImpressions;
-
-    $filterCount += count($arFilterImpressions);
-}
-
-// Разные фильтры
-if (!empty($_GET['diffilter']) && isset($_GET['diffilter'])) {
-    $arDifFilters = explode(',', $_GET['diffilter']);
-    $arFilter["UF_DIFF_FILTERS"] = $arDifFilters;
-
-    $filterCount += count($arDifFilters);
-}
-
-// Впечатления
-if (!empty($_GET['impressions']) && isset($_GET['impressions'])) {
-    $arRequestImpressions = explode(',', $_GET['impressions']);
-
-    $rsImpressions = CIBlockElement::GetList(false, array("IBLOCK_ID" => IMPRESSIONS_IBLOCK_ID, "ACTIVE" => "Y", "CODE" => $arRequestImpressions));
-    $arFilterImpressions = array();
-    while ($arImpression = $rsImpressions->Fetch()) {
-        $arFilterImpressions[] = $arImpression["ID"];
-        $meta = new \Bitrix\Iblock\InheritedProperty\ElementValues(IMPRESSIONS_IBLOCK_ID, $arImpression['ID']);
-        $arImpression['META'] = $meta->getValues();
-        $arSeoImpressions[] = $arImpression;
-    }
-
-    $arFilter["UF_IMPRESSIONS"] = $arFilterImpressions;
-
-    if (empty($arFilterImpressions)) {
-        LocalRedirect("/404/");
-    }
-
-    $filterCount += count($arRequestImpressions);
-}
-
-/* Сортировка */
-$sortBy = (!empty($_GET['sort']) && isset($_GET['sort'])) ? strtolower($_GET['sort']) : "sort";
-$sortOrder = (!empty($_GET['order']) && isset($_GET['order'])) ? strtolower($_GET['order']) : "asc";
-$orderReverse = (!empty($_GET['order']) && isset($_GET['order']) && $_GET['order'] == 'asc') ? "desc" : "asc";
-switch ($sortBy) {
-    case 'popular':
-        $sort = 'UF_RESERVE_COUNT';
-        break;
-
-    default:
-        $sort = 'SORT';
-        break;
-}
-
-$arSort = array($sort => $sortOrder);
-
-/* Получение разделов */
-$rsSections = CIBlockSection::GetList($arSort, $arFilter, false, array("IBLOCK_ID", "ID", "NAME", "CODE", "SECTION_PAGE_URL", "UF_*"), false);
-$arSections = array();
-
-/** получение сезона из ИБ */
-if (Cmodule::IncludeModule('asd.iblock')) {
-    $arFields = CASDiblockTools::GetIBUF(CATALOG_IBLOCK_ID);
-}
-
-$searchedRegionData = Regions::getRegionById($arRegionIds[0] ?? false);
-while ($arSection = $rsSections->GetNext()) {
-
-    $arDataFullGallery = [];
-
-    foreach ($arFields['UF_SEASON'] as $season) {
-        if ($season == 'Лето') {
-            if ($arSection["UF_PHOTOS"]) {
-                foreach ($arSection["UF_PHOTOS"] as $photoId) {
-                    $imageOriginal = CFile::GetFileArray($photoId);
-                    $arDataFullGallery[] = "\"" . $imageOriginal["SRC"] . "\"";
-                    $arSection["PICTURES"][$photoId] = CFile::ResizeImageGet($photoId, array('width' => 590, 'height' => 390), BX_RESIZE_IMAGE_EXACT, true);
-                }
-            } else {
-                $arSection["PICTURES"][0]["src"] = SITE_TEMPLATE_PATH . "/img/big_no_photo.png";
-            }
-        } elseif ($season == 'Зима') {
-            if ($arSection["UF_WINTER_PHOTOS"]) {
-                foreach ($arSection["UF_WINTER_PHOTOS"] as $photoId) {
-                    $imageOriginal = CFile::GetFileArray($photoId);
-                    $arDataFullGallery[] = "\"" . $imageOriginal["SRC"] . "\"";
-                    $arSection["PICTURES"][$photoId] = CFile::ResizeImageGet($photoId, array('width' => 590, 'height' => 390), BX_RESIZE_IMAGE_EXACT, true);
-                }
-            } else {
-                if ($arSection["UF_PHOTOS"]) {
-                    foreach ($arSection["UF_PHOTOS"] as $photoId) {
-                        $imageOriginal = CFile::GetFileArray($photoId);
-                        $arDataFullGallery[] = "\"" . $imageOriginal["SRC"] . "\"";
-                        $arSection["PICTURES"][$photoId] = CFile::ResizeImageGet($photoId, array('width' => 590, 'height' => 390), BX_RESIZE_IMAGE_EXACT, true);
-                    }
-                } else {
-                    $arSection["PICTURES"][0]["src"] = SITE_TEMPLATE_PATH . "/img/big_no_photo.png";
-                }
-            }
-        } elseif ($season == 'Осень+Весна') {
-            if ($arSection["UF_MIDSEASON_PHOTOS"]) {
-                foreach ($arSection["UF_MIDSEASON_PHOTOS"] as $photoId) {
-                    $imageOriginal = CFile::GetFileArray($photoId);
-                    $arDataFullGallery[] = "\"" . $imageOriginal["SRC"] . "\"";
-                    $arSection["PICTURES"][$photoId] = CFile::ResizeImageGet($photoId, array('width' => 590, 'height' => 390), BX_RESIZE_IMAGE_EXACT, true);
-                }
-            } else {
-                if ($arSection["UF_PHOTOS"]) {
-                    foreach ($arSection["UF_PHOTOS"] as $photoId) {
-                        $imageOriginal = CFile::GetFileArray($photoId);
-                        $arDataFullGallery[] = "\"" . $imageOriginal["SRC"] . "\"";
-                        $arSection["PICTURES"][$photoId] = CFile::ResizeImageGet($photoId, array('width' => 590, 'height' => 390), BX_RESIZE_IMAGE_EXACT, true);
-                    }
-                } else {
-                    $arSection["PICTURES"][0]["src"] = SITE_TEMPLATE_PATH . "/img/big_no_photo.png";
-                }
-            }
-        }
-    }
-    unset($arSection["UF_PHOTOS"]);
-    $arSection["FULL_GALLERY"] = implode(",", $arDataFullGallery);
-
-    $arSection["RATING"] = (isset($arReviewsAvg[$arSection["ID"]])) ? $arReviewsAvg[$arSection["ID"]] : 0;
-    $arSection["REVIEWS_COUNT"] = (isset($arReviews[$arSection["ID"]])) ? count($arReviews[$arSection["ID"]]) : 0;
-
-    if ($arSection["UF_COORDS"]) {
-        $arSection["COORDS"] = explode(',', $arSection["UF_COORDS"]);
-    }
-
-    /* Растояние до поискового запроса */
-    if ($searchedRegionData) {
-
-        $searchedRegionData['COORDS'] = explode(',', $searchedRegionData['UF_COORDS']);
-
-        $arSection['DISCTANCE'] = Utils::calculateTheDistance($searchedRegionData['COORDS'][0], $searchedRegionData['COORDS'][1], $arSection['COORDS'][0], $arSection['COORDS'][1]);
-        $arSection['DISCTANCE_TO_REGION'] = $searchedRegionData['UF_CENTER_NAME_RU'] ?? $searchedRegionData['CENTER_UF_NAME'];
-        //        $arSection['DISCTANCE_TO_REGION'] = Utils::morpher($searchedRegionData['CENTER_UF_NAME'], Morpher::CASE_GENITIVE);
-
-        $arSection['DISCTANCE_TO_REGION'] = ucfirst($arSection['DISCTANCE_TO_REGION']);
-    } else {
-        $arSection['REGION'] = Regions::getRegionById($arSection['UF_REGION'] ?? false);
-    }
-
-    /* -- */
-    if ($arExternalInfo) {
-        $sectionPrice = $arExternalInfo[$arSection["UF_EXTERNAL_ID"]];
-        // Если это Traveline, то делим цену на кол-во дней
-        if ($arSection["UF_EXTERNAL_SERVICE"] == 1) {
-            $sectionPrice = round($sectionPrice / $daysCount);
-        }
-    } else {
-        $sectionPrice = $arSection["UF_MIN_PRICE"];
-    }
-    $arSection["PRICE"] = $sectionPrice;
-
-    $arUriParamsSort = array(
-        'sort' => $sortBy,
-        'order' => $sortOrder,
-    );
-
-    if ($arUriParams['dateFrom'] != '') {
-        $arUriParams = array_merge($arUriParams, $arUriParamsSort);
-    }
-
-    $uri = new Uri($arSection["SECTION_PAGE_URL"]);
-    $uri->addParams($arUriParams);
-    $sectionUrl = $uri->getUri();
-    $arSection["URL"] = $sectionUrl;
-
-    $arButtons = CIBlock::GetPanelButtons($arSection["IBLOCK_ID"], $arSection["ID"], 0, array("SECTION_BUTTONS" => false, "SESSID" => false));
-    $arSection["EDIT_LINK"] = $arButtons["edit"]["edit_element"]["ACTION_URL"];
-    $arSection["DELETE_LINK"] = $arButtons["edit"]["delete_element"]["ACTION_URL"];
-
-    if ($_GET['maxPrice'] || $_GET['minPrice']) {
-        if (($arSection["PRICE"] <= $_GET['maxPrice'] && $arSection["PRICE"] >= $_GET['minPrice']) && $arSection["PRICE"] !== NULL) {
-            $arSections[$arSection["ID"]] = $arSection;
-        }
-    } else {
-        $arSections[$arSection["ID"]] = $arSection;
-    }
-}
-
-/* Отзывы */
-$arCampingIDs = array_map(function ($a) {
-    return $a["ID"];
-}, $arSections);
-if (isset($arCampingIDs) && !empty($arCampingIDs)) {
-    $arReviewsAvg = Reviews::getCampingRating($arCampingIDs);
-    foreach ($arReviewsAvg as $id => $review) {
-        $arSections[$id]["RATING"] = $review["avg"];
-    }
-}
-
-if ($searchedRegionData) {
-    usort($arSections, function ($a, $b) {
-        return ($a['DISCTANCE'] - $b['DISCTANCE']);
-    });
-}
-$allCount = count($arSections);
-
-/* Кастомная сортировка по рейтингу */
-if ($sortBy == 'rating') {
-    uasort($arSections, function ($a, $b) use ($sortOrder) {
-        if ($a['RATING'] == $b['RATING'])
-            return false;
-
-        if ($sortOrder == 'asc') {
-            return ($a['RATING'] > $b['RATING']) ? 1 : -1;
-        } elseif ($sortOrder == 'desc') {
-            return ($a['RATING'] < $b['RATING']) ? 1 : -1;
-        }
-    });
-}
-
-$arFilterPrice = [
-    "IBLOCK_ID" => CATALOG_IBLOCK_ID,
-    "ACTIVE" => "Y",
-];
-
-$arSectionsPrice = [];
-$arPrices = [];
-
-$rsSectionsPrice = CIBlockSection::GetList($arSort, $arFilterPrice, false, ["UF_MIN_PRICE"], false);
-while ($arSectionPrice = $rsSectionsPrice->GetNext()) {
-    if ($arSectionPrice['UF_MIN_PRICE'] !== NULL) {
-        $arSectionsPrice[] = $arSectionPrice['UF_MIN_PRICE'];
-    }
-}
-
-/*min/max price */
-if (!empty($arSectionsPrice)) {
-    $minPrice = round(min($arSectionsPrice));
-    $maxPrice = round(max($arSectionsPrice));
-}
-
-/* Кастомная сортировка по цене */
-if ($sortBy == 'price') {
-    uasort($arSections, function ($a, $b) use ($sortOrder) {
-        if ($a['PRICE'] == $b['PRICE'])
-            return false;
-
-        if ($sortOrder == 'asc') {
-            return ($a['PRICE'] > $b['PRICE']) ? 1 : -1;
-        } elseif ($sortOrder == 'desc') {
-            return ($a['PRICE'] < $b['PRICE']) ? 1 : -1;
-        }
-    });
-}
+$arSections = $arResult['SECTIONS'];
 
 /* Пагинация */
 $page = $_REQUEST['page'] ?? 1;
 
-$pageCount = ceil($allCount / $arParams["ITEMS_COUNT"]);
+$pageCount = ceil(count($arSections) / $arParams["ITEMS_COUNT"]);
 if ($pageCount > 1) {
     $arPageSections = array_slice($arSections, ($page - 1) * $arParams["ITEMS_COUNT"], $arParams["ITEMS_COUNT"]);
 } else {
@@ -575,181 +59,34 @@ foreach ($arPageSections as &$section) {
 }
 unset($section);
 
-/* HL Blocks */
-// Тип объекта
-$hlId = 2;
-$hlblock = HighloadBlockTable::getById($hlId)->fetch();
-$entity = HighloadBlockTable::compileEntity($hlblock);
-$entityClass = $entity->getDataClass();
-$rsData = $entityClass::getList([
-    "select" => ["*"],
-    "order" => ["UF_SORT" => "ASC"],
-    "filter" => ["UF_SHOW_FILTER" => "1"],
-]);
-$arHLTypes = array();
-while ($arEntity = $rsData->Fetch()) {
-    $arHLTypes[$arEntity["ID"]] = $arEntity;
-}
 
-// Питание
-$hlId = 12;
-$hlblock = HighloadBlockTable::getById($hlId)->fetch();
-$entity = HighloadBlockTable::compileEntity($hlblock);
-$entityClass = $entity->getDataClass();
-$rsData = $entityClass::getList([
-    "select" => ["*"],
-    "order" => ["UF_SORT" => "ASC"],
-    "filter" => ["UF_SHOW_FILTER" => "1"],
-]);
-$arHLFood = array();
-while ($arEntity = $rsData->Fetch()) {
-    $arHLFood[$arEntity["ID"]] = $arEntity;
-}
 
-// Типы домов
-$houseTypesDataClass = HighloadBlockTable::compileEntity(SUIT_TYPES_HL_ENTITY)->getDataClass();
-$houseTypeData = $houseTypesDataClass::query()
-    ->addSelect('*')
-    ->setOrder(['UF_SORT' => 'ASC'])
-    ?->fetchAll();
-
-if (!empty($houseTypeData)) {
-    foreach ($houseTypeData as $key => &$houseType) {
-        $houseType['URL'] = Components::getChpyLink(SUIT_TYPES_HL_ENTITY . '_' . $houseType['ID'])['UF_NEW_URL'];
+if ($arResult['pageSeoData']) {
+    if ($arResult['pageSeoData']['UF_H1']) {
+        $APPLICATION->SetPageProperty("custom_title", $arResult['pageSeoData']['UF_H1']);
     }
-    unset($houseType);
-}
-
-// Водоёмы
-$waterDataClass = HighloadBlockTable::compileEntity(WATER_HL_ENTITY)->getDataClass();
-$water = $waterDataClass::query()
-    ->addSelect('*')
-    ->setOrder(['UF_SORT' => 'ASC'])
-    ?->fetchAll();
-
-// Общие водоёмы
-$commonWaterDataClass = HighloadBlockTable::compileEntity(COMMON_WATER_HL_ENTITY)->getDataClass();
-$commonWater = $commonWaterDataClass::query()
-    ->addSelect('*')
-    ->setOrder(['UF_SORT' => 'ASC'])
-    ?->fetchAll();
-
-// Разные фильтры
-$difFilterDataClass = HighloadBlockTable::compileEntity(DIFFERENT_FILTERS_HL_ENTITY)->getDataClass();
-$difFilter = $difFilterDataClass::query()
-    ->addSelect('*')
-    ?->fetchAll();
-
-// Варианты отдыха
-$restVariantsDataClass = HighloadBlockTable::compileEntity(REST_VARS_HL_ENTITY)->getDataClass();
-$restVariants = $restVariantsDataClass::query()
-    ->addSelect('*')
-    ->setOrder(['UF_SORT' => 'ASC'])
-    ?->fetchAll();
-
-// Удобства
-$objectComfortsDataClass = HighloadBlockTable::compileEntity(OBJECT_COMFORT_HL_ENTITY)->getDataClass();
-$objectComforts = $objectComfortsDataClass::query()
-    ->addSelect('*')
-    ->setOrder(['UF_SORT' => 'ASC'])
-    ?->fetchAll();
-
-// Особенности объекта
-$hlId = 5;
-$hlblock = HighloadBlockTable::getById($hlId)->fetch();
-$entity = HighloadBlockTable::compileEntity($hlblock);
-$entityClass = $entity->getDataClass();
-$rsData = $entityClass::getList([
-    "select" => ["*"],
-    "order" => ["UF_SORT" => "ASC"],
-]);
-$arHLFeatures = array();
-while ($arEntity = $rsData->Fetch()) {
-    $arHLFeatures[$arEntity["ID"]] = $arEntity;
-}
-
-// Услуги
-$rsServices = CIBlockElement::GetList(array("SORT" => "ASC"), array("IBLOCK_ID" => SERVICES_IBLOCK_ID, "ACTIVE" => "Y", "PROPERTY_SHOW_FILTER_VALUE" => "Y"), false, false, array("ID", "IBLOCK_ID", "NAME", "CODE"));
-$arServices = array();
-while ($arService = $rsServices->Fetch()) {
-    $arServices[$arService["ID"]] = $arService;
-}
-
-/* Генерация массива месяцев для фильтра */
-$arDates = array();
-$currMonth = date('m');
-$currMonthName = FormatDate("f");
-$currYear = date('Y');
-$nextYear = $currYear + 1;
-for ($i = $currMonth; $i <= 12; $i++) {
-    $arDates[0][] = FormatDate("f", strtotime('1970-' . $i . '-01'));
-}
-for ($j = 1; $j <= 12; $j++) {
-    $arDates[1][] = FormatDate("f", strtotime('1970-' . $j . '-01'));
-}
-
-/* Генерация SEO */
-$metaTags = getMetaTags();
-$currentURLDir = $APPLICATION->GetCurDir();
-
-if ($page > 1 && isset($_GET["impressions"]) && !empty($_GET['impressions']) && !empty($metaTags["/catalog/?page=2&impressions"])) { //переход с раздела "Впечатления" с пагинацией
-    if (!empty($arSeoImpressions)) {
-        $impressionReplace = $arSeoImpressions[0]["META"]['ELEMENT_PAGE_TITLE'] ? $arSeoImpressions[0]["META"]['ELEMENT_PAGE_TITLE'] : $arSeoImpressions[0]["NAME"];
-    } else {
-        $impressionReplace = "";
+    if ($arResult['pageSeoData']['UF_TITLE']) {
+        $APPLICATION->SetTitle($arResult['pageSeoData']['UF_TITLE']);
     }
-    $titleSEO = $arSeoImpressions[0]["META"]['ELEMENT_META_TITLE'] . ' Страница - ' . $page;
-    $descriptionSEO = $arSeoImpressions[0]["META"]['ELEMENT_META_DESCRIPTION'] . ' Страница - ' . $page;;
-    $h1SEO = $impressionReplace;
-} elseif (isset($_GET["impressions"]) && !empty($_GET['impressions']) && !empty($metaTags["/catalog/?page=2&impressions"])) { //переход с раздела "Впечатления"
-    if (!empty($arSeoImpressions)) {
-        $impressionReplace = $arSeoImpressions[0]["META"]['ELEMENT_PAGE_TITLE'] ? $arSeoImpressions[0]["META"]['ELEMENT_PAGE_TITLE'] : $arSeoImpressions[0]["NAME"];
-    } else {
-        $impressionReplace = "";
-    }
-    $titleSEO = $arSeoImpressions[0]["META"]['ELEMENT_META_TITLE'];
-    $descriptionSEO = $arSeoImpressions[0]["META"]['ELEMENT_META_DESCRIPTION'];
-    $h1SEO = $impressionReplace;
-} elseif ($page > 1 && !empty($metaTags["/catalog/?page=2"])) { //страницы пагинации
-    $titleSEO = str_replace("#PAGE#", $page, $metaTags["/catalog/?page=2"]["~PROPERTY_TITLE_VALUE"]["TEXT"]);
-    $descriptionSEO = str_replace("#PAGE#", $page, $metaTags["/catalog/?page=2"]["~PROPERTY_DESCRIPTION_VALUE"]["TEXT"]);
-    $h1SEO = str_replace("#PAGE#", $page, $metaTags["/catalog/?page=2"]["~PROPERTY_H1_VALUE"]["TEXT"]);
-} elseif (!empty($metaTags[$currentURLDir])) {
-    $titleSEO = $metaTags[$currentURLDir]["~PROPERTY_TITLE_VALUE"]["TEXT"];
-    $descriptionSEO = $metaTags[$currentURLDir]["~PROPERTY_DESCRIPTION_VALUE"]["TEXT"];
-    $h1SEO = $metaTags[$currentURLDir]["~PROPERTY_H1_VALUE"]["TEXT"];
-} else {
-    $titleSEO = "Каталог - онлайн-сервис бронирования глэмпингов и кемпингов Натуралист";
-    $descriptionSEO = "Каталог | Натуралист - удобный онлайн-сервис поиска и бронирования глэмпинга для отдыха на природе с оплатой на сайте. Вы можете подобрать место для комфортного природного туризма в России по выгодным ценам с моментальной системой бронирования.";
-    $h1SEO = "Карта глэмпингов в России";
-}
-
-if ($pageSeoData) {
-    if ($pageSeoData['UF_H1']) {
-        $APPLICATION->SetPageProperty("custom_title", $pageSeoData['UF_H1']);
-    }
-    if ($pageSeoData['UF_TITLE']) {
-        $APPLICATION->SetTitle($pageSeoData['UF_TITLE']);
-    }
-    if ($pageSeoData['UF_DESCRIPTION']) {
-        $APPLICATION->SetPageProperty("description", $pageSeoData['UF_DESCRIPTION']);
+    if ($arResult['pageSeoData']['UF_DESCRIPTION']) {
+        $APPLICATION->SetPageProperty("description", $arResult['pageSeoData']['UF_DESCRIPTION']);
     }
 } else {
-    $APPLICATION->SetTitle($titleSEO);
-    $APPLICATION->SetPageProperty("custom_title", $h1SEO);
-    $APPLICATION->SetPageProperty("description", $descriptionSEO);
+    $APPLICATION->SetTitle($arResult['titleSEO']);
+    $APPLICATION->SetPageProperty("custom_title", $arResult['h1SEO']);
+    $APPLICATION->SetPageProperty("description", $arResult['descriptionSEO']);
 }
 
 if (!count($arPageSections)) {
     $APPLICATION->AddHeadString('<meta name="robots" content="noindex">', true);
 }
 
-if (empty($chpy)) {
+if (empty($arResult['CHPY'])) {
     $APPLICATION->AddHeadString('<link rel="canonical" href="' . HTTP_HOST . $APPLICATION->GetCurPage() . '">', true);
 }
 
-if ($chpy['UF_CANONICAL']) {
-    $APPLICATION->AddHeadString('<link rel="canonical" href="' . HTTP_HOST . $chpy['UF_CANONICAL'] . '">', true);
+if ($arResult['CHPY']['UF_CANONICAL']) {
+    $APPLICATION->AddHeadString('<link rel="canonical" href="' . HTTP_HOST . $arResult['CHPY']['UF_CANONICAL'] . '">', true);
 } ?>
 
 
@@ -775,13 +112,13 @@ if ($chpy['UF_CANONICAL']) {
                     <div class="fake-filter_catalog">
                         <div class="fake-filter_inputs">
                             <div class="fake-filter_location">
-                                <?= ($arFilterValues["SEARCH_TEXT"]) ? $arFilterValues["SEARCH_TEXT"] :  Loc::getMessage('FILTER_PLACE') ?>
+                                <?= ($arResult['SECTION_FILTER_VALUES']["SEARCH_TEXT"]) ? $arResult['SECTION_FILTER_VALUES']["SEARCH_TEXT"] :  Loc::getMessage('FILTER_PLACE') ?>
                             </div>
                             <div class="fake-filter_date">
-                                <span class="from"><?= ($dateFrom) ? $dateFrom : 'Заезд' ?></span>
+                                <span class="from"><?= ($arResult['arUriParams']['dateFrom']) ? $arResult['arUriParams']['dateFrom'] : 'Заезд' ?></span>
                                 &nbsp;-&nbsp;
-                                <span class="to"><?= ($dateTo) ? $dateTo : 'Выезд' ?></span>
-                                <span class="fake-filter_guest"><?= $_GET['guests'] ? '<span class="dot"></span>' . $guests + $children . ' ' . $guestsDeclension->get($guests + $children) : '' ?></span>
+                                <span class="to"><?= ($arResult['arUriParams']['dateTo']) ? $arResult['arUriParams']['dateTo'] : 'Выезд' ?></span>
+                                <span class="fake-filter_guest"><?= $arResult['arUriParams']['guests'] ? '<span class="dot"></span>' . $arResult['arUriParams']['guests'] + $arResult['arUriParams']['children'] . ' ' . $arResult['guestsDeclension']->get($arResult['arUriParams']['guests'] + $arResult['arUriParams']['children']) : '' ?></span>
                             </div>
                         </div>
                         <div class="fake-filter_btn">
@@ -796,9 +133,9 @@ if ($chpy['UF_CANONICAL']) {
                             <div class="form_group_wrapper">
                                 <div class="form__item item_name">
                                     <div class="field field_autocomplete" data-autocomplete="/ajax/autocomplete.php">
-                                        <input type="hidden" data-autocomplete-result value='<?= ($arFilterValues["SEARCH"]) ? $arFilterValues["SEARCH"] : null ?>'>
+                                        <input type="hidden" data-autocomplete-result value='<?= ($arResult['SECTION_FILTER_VALUES']["SEARCH"]) ? $arResult['SECTION_FILTER_VALUES']["SEARCH"] : null ?>'>
                                         <label for="field-place"><?= Loc::getMessage('FILTER_PLACE') ?></label>
-                                        <input class="field__input" type="text" name="name" placeholder="" data-autocomplete-field value='<?= ($arFilterValues["SEARCH_TEXT"]) ? $arFilterValues["SEARCH_TEXT"] : null ?>'>
+                                        <input class="field__input" type="text" name="name" placeholder="" data-autocomplete-field value='<?= ($arResult['SECTION_FILTER_VALUES']["SEARCH_TEXT"]) ? $arResult['SECTION_FILTER_VALUES']["SEARCH_TEXT"] : null ?>'>
                                         <div class="autocomplete-dropdown-wrap">
                                             <div class="autocomplete-dropdown-search">
                                                 <input class="field__input" id="field-place" type="text" name="name" placeholder="Регионы или локации" data-autocomplete-field-mobile>
@@ -818,37 +155,37 @@ if ($chpy['UF_CANONICAL']) {
                                         <div class="form__item">
                                             <div class="field field_icon field_calendar">
                                                 <label><?= Loc::getMessage('FILTER_FROM') ?></label>
-                                                <div class="field__input" data-calendar-label="data-calendar-label" data-date-from><?= ($dateFrom) ? $dateFrom : '<span></span>' ?></div>
+                                                <div class="field__input" data-calendar-label="data-calendar-label" data-date-from><?= ($arResult['arUriParams']['dateFrom']) ? $arResult['arUriParams']['dateFrom'] : '<span></span>' ?></div>
                                             </div>
                                         </div>
                                         <div class="form__item">
                                             <div class="field field_icon field_calendar">
                                                 <label><?= Loc::getMessage('FILTER_TO') ?></label>
-                                                <div class="field__input" data-calendar-label="data-calendar-label" data-date-to><?= ($dateTo) ? $dateTo : '<span></span>' ?>
+                                                <div class="field__input" data-calendar-label="data-calendar-label" data-date-to><?= ($arResult['arUriParams']['dateTo']) ? $arResult['arUriParams']['dateTo'] : '<span></span>' ?>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="calendar__dropdown" data-calendar-dropdown="data-calendar-dropdown">
                                             <div class="calendar__navigation">
                                                 <div class="calendar__navigation-item calendar__navigation-item_months">
-                                                    <div class="calendar__navigation-label" data-calendar-navigation="data-calendar-navigation"><span><?= $currMonthName ?></span></div>
+                                                    <div class="calendar__navigation-label" data-calendar-navigation="data-calendar-navigation"><span><?= $arResult['currMonthName'] ?></span></div>
                                                     <ul class="list">
                                                         <?
                                                         $k = 0;
                                                         ?>
-                                                        <? foreach ($arDates[0] as $monthName) : ?>
+                                                        <? foreach ($arResult['arDates'][0] as $monthName) : ?>
                                                             <li class="list__item<? if ($k == 0) : ?> list__item_active<? endif; ?>">
-                                                                <button data-calendar-year="<?= $currYear ?>" data-calendar-month-select="<?= $k ?>" type="button"><?= $monthName ?></button>
+                                                                <button data-calendar-year="<?= $arResult['currYear'] ?>" data-calendar-month-select="<?= $k ?>" type="button"><?= $monthName ?></button>
                                                             </li>
                                                             <? $k++; ?>
                                                         <? endforeach ?>
 
-                                                        <? foreach ($arDates[1] as $key => $monthName) : ?>
+                                                        <? foreach ($arResult['arDates'][1] as $key => $monthName) : ?>
 
                                                             <li class="list__item">
-                                                                <button data-calendar-year="<?= $nextYear ?>" data-calendar-month-select="<?= $k ?>" type="button"><?= $monthName ?></button>
+                                                                <button data-calendar-year="<?= $arResult['nextYear'] ?>" data-calendar-month-select="<?= $k ?>" type="button"><?= $monthName ?></button>
                                                                 <? if ($key === 0): ?>
-                                                                    <div class="list__item-year"><?= $nextYear ?></div>
+                                                                    <div class="list__item-year"><?= $arResult['nextYear'] ?></div>
                                                                 <? endif; ?>
                                                             </li>
                                                             <? $k++; ?>
@@ -857,13 +194,13 @@ if ($chpy['UF_CANONICAL']) {
                                                 </div>
 
                                                 <div class="calendar__navigation-item calendar__navigation-item_years">
-                                                    <div class="calendar__navigation-label" data-calendar-navigation="data-calendar-navigation"><span><?= $currYear ?></span></div>
+                                                    <div class="calendar__navigation-label" data-calendar-navigation="data-calendar-navigation"><span><?= $arResult['currYear'] ?></span></div>
                                                     <ul class="list">
                                                         <li class="list__item list__item_active">
-                                                            <button data-calendar-year-select="<?= $currYear ?>" type="button"><?= $currYear ?></button>
+                                                            <button data-calendar-year-select="<?= $arResult['currYear'] ?>" type="button"><?= $arResult['currYear'] ?></button>
                                                         </li>
                                                         <li class="list__item">
-                                                            <button data-calendar-year-select="<?= $nextYear ?>" type="button"><?= $nextYear ?></button>
+                                                            <button data-calendar-year-select="<?= $arResult['nextYear'] ?>" type="button"><?= $arResult['nextYear'] ?></button>
                                                         </li>
                                                     </ul>
                                                 </div>
@@ -880,7 +217,7 @@ if ($chpy['UF_CANONICAL']) {
                                     </div>
                                     <div class="form__item guest">
                                         <div class="field field_icon guests" data-guests="data-guests">
-                                            <div class="field__input" data-guests-control="data-guests-control"><?= $guests + $children ?> <?= $guestsDeclension->get($guests + $children) ?></div>
+                                            <div class="field__input" data-guests-control="data-guests-control"><?= $arResult['arUriParams']['guests'] + $arResult['arUriParams']['children'] ?> <?= $arResult['guestsDeclension']->get($arResult['arUriParams']['guests'] + $arResult['arUriParams']['children']) ?></div>
                                             <div class="guests__dropdown">
                                                 <div class="guests__guests">
                                                     <div class="guests__item">
@@ -892,7 +229,7 @@ if ($chpy['UF_CANONICAL']) {
                                                             <button class="counter__minus" type="button"></button>
                                                             <input type="text" disabled="disabled"
                                                                 data-guests-adults-count="data-guests-adults-count"
-                                                                name="guests-adults-count" value="<?= $guests ?>"
+                                                                name="guests-adults-count" value="<?= $arResult['arUriParams']['guests'] ?>"
                                                                 data-min="1">
                                                             <button class="counter__plus" type="button"></button>
                                                         </div>
@@ -906,7 +243,7 @@ if ($chpy['UF_CANONICAL']) {
                                                             <button class="counter__minus" type="button"></button>
                                                             <input type="text" disabled="disabled"
                                                                 data-guests-children-count="data-guests-children-count"
-                                                                name="guests-children-count" value="<?= $children ?>"
+                                                                name="guests-children-count" value="<?= $arResult['arUriParams']['children'] ?>"
                                                                 data-min="0">
                                                             <button class="counter__plus" type="button"></button>
                                                         </div>
@@ -914,8 +251,8 @@ if ($chpy['UF_CANONICAL']) {
                                                 </div>
                                                 <div class="guests__children"
                                                     data-guests-children="data-guests-children">
-                                                    <?php if ($arChildrenAge): ?>
-                                                        <?php foreach ($arChildrenAge as $keyAge => $valueAge): ?>
+                                                    <?php if ($arResult['arUriParams']['childrenAge']): ?>
+                                                        <?php foreach ($arResult['arUriParams']['childrenAge'] as $keyAge => $valueAge): ?>
                                                             <div class="guests__item">
                                                                 <div class="guests__label">
                                                                     <div><?= GetMessage('FILTER_CHILD_AGE') ?></div>
@@ -967,13 +304,13 @@ if ($chpy['UF_CANONICAL']) {
                         <button class="button button-clear" data-filter-reset><?= Loc::getMessage('FILTER_RESET') ?></button>
                     </div>
                     <? if ($APPLICATION->GetCurPage() == '/catalog/'): ?>
-                        <? if (isset($houseTypeData) && !empty($houseTypeData)): ?>
+                        <? if (isset($arResult['houseTypeData']) && !empty($arResult['houseTypeData'])): ?>
                             <div class="house-type container">
                                 <div class="house-type__wrapper">
                                     <div class="house-type__shadow left"></div>
                                     <div class="swiper-container">
                                         <ul class="swiper-wrapper">
-                                            <? foreach ($houseTypeData as $houseType) {
+                                            <? foreach ($arResult['houseTypeData'] as $houseType) {
                                                 if (!$houseType['UF_IMG']) {
                                                     continue;
                                                 }
@@ -1039,7 +376,7 @@ if ($chpy['UF_CANONICAL']) {
                                 </a>
                             <?php endif; ?>
                             <a class="button filter" href="#filters-modal" data-modal="data-modal">
-                                <span>Фильтры</span> <?= ($filterCount !== 0) ? '<span class="filter-count">' . $filterCount . '</span>' : '' ?>
+                                <span>Фильтры</span> <?= ($arResult['FILTER_COUNT'] !== 0) ? '<span class="filter-count">' . $arResult['FILTER_COUNT'] . '</span>' : '' ?>
                             </a>
                             <div class="price-filter__wrap">
                                 <a class="button price" href="#">
@@ -1053,12 +390,12 @@ if ($chpy['UF_CANONICAL']) {
                                     <div class="price-inputs__wrap">
                                         <div class="price-input__wrap">
                                             <label for="min-price">от</label>
-                                            <input type="text" class="min-price" data-price-value="<?= $minPrice ?>" name="min-price" value="<?= $minPrice ?>" size="5">
+                                            <input type="text" class="min-price" data-price-value="<?= $arResult['minPrice'] ?>" name="min-price" value="<?= $arResult['minPrice'] ?>" size="5">
                                             <span>&nbsp;₽</span>
                                         </div>
                                         <div class="price-input__wrap">
                                             <label for="max-price">до</label>
-                                            <input type="text" class="max-price" data-price-value="<?= $maxPrice ?>" name="max-price" value="<?= $maxPrice ?>" size="5">
+                                            <input type="text" class="max-price" data-price-value="<?= $arResult['maxPrice'] ?>" name="max-price" value="<?= $arResult['maxPrice'] ?>" size="5">
                                             <span>&nbsp;₽</span>
                                         </div>
                                     </div>
@@ -1084,8 +421,8 @@ if ($chpy['UF_CANONICAL']) {
                                 </div>
                                 <ul class="sort__list">
                                     <li class="list__item">
-                                        <?php if ($sortBy == "popular"): ?>
-                                            <span class="list__link" data-sort="popular" data-type="<?= $orderReverse ?>">
+                                        <?php if ($arResult['sortBy'] == "popular"): ?>
+                                            <span class="list__link" data-sort="popular" data-type="<?= $arResult['orderReverse'] ?>">
                                                 <span>Популярные</span>
                                                 <input type="radio" id="radio-1" checked>
                                                 <label for="radio-1"></label>
@@ -1099,8 +436,8 @@ if ($chpy['UF_CANONICAL']) {
                                         <?php endif; ?>
                                     </li>
                                     <li class="list__item">
-                                        <?php if ($sortBy == "price" && $_GET['order'] == 'asc'): ?>
-                                            <span class="list__link" data-sort="price" data-type="<?= $orderReverse ?>">
+                                        <?php if ($arResult['sortBy'] == "price" && $_GET['order'] == 'asc'): ?>
+                                            <span class="list__link" data-sort="price" data-type="<?= $arResult['orderReverse'] ?>">
                                                 <span>Сначала дешевле</span>
                                                 <input type="radio" id="radio-2" checked>
                                                 <label for="radio-2"></label>
@@ -1114,8 +451,8 @@ if ($chpy['UF_CANONICAL']) {
                                         <?php endif; ?>
                                     </li>
                                     <li class="list__item">
-                                        <?php if ($sortBy == "price" && $_GET['order'] == 'desc'): ?>
-                                            <span class="list__link" data-sort="price" data-type="<?= $orderReverse ?>">
+                                        <?php if ($arResult['sortBy'] == "price" && $_GET['order'] == 'desc'): ?>
+                                            <span class="list__link" data-sort="price" data-type="<?= $arResult['orderReverse'] ?>">
                                                 <span>Сначала дороже</span>
                                                 <input type="radio" id="radio-3" checked>
                                                 <label for="radio-3"></label>
@@ -1129,8 +466,8 @@ if ($chpy['UF_CANONICAL']) {
                                         <?php endif; ?>
                                     </li>
                                     <li class="list__item">
-                                        <?php if ($sortBy == "rating"): ?>
-                                            <span class="list__link" data-sort="rating" data-type="<?= $orderReverse ?>">
+                                        <?php if ($arResult['sortBy'] == "rating"): ?>
+                                            <span class="list__link" data-sort="rating" data-type="<?= $arResult['orderReverse'] ?>">
                                                 <span>Рейтинг</span>
                                                 <input type="radio" id="radio-4" checked>
                                                 <label for="radio-4"></label>
@@ -1159,39 +496,39 @@ if ($chpy['UF_CANONICAL']) {
                         "naturalist:empty",
                         "catalog_filters",
                         array(
-                            "arFilterValues" => $arFilterValues,
-                            "dateFrom" => $dateFrom,
-                            "dateTo" => $dateTo,
-                            "arDates" => $arDates,
-                            "currMonthName" => $currMonthName,
-                            "currYear" => $currYear,
-                            "nextYear" => $nextYear,
-                            "guests" => $guests,
-                            "children" => $children,
-                            "guestsDeclension" => $guestsDeclension,
-                            "arChildrenAge" => $arChildrenAge,
-                            "arHLTypes" => $arHLTypes,
-                            "arFilterTypes" => $arFilterTypes,
-                            "arServices" => $arServices,
-                            "arHLFood" => $arHLFood,
-                            "arFilterFood" => $arFilterFood,
-                            "arHLFeatures" => $arHLFeatures,
-                            "arFilterFeatures" => $arFilterFeatures,
-                            "arFilterServices" => $arFilterServices,
-                            "houseTypes" => $houseTypeData,
-                            "arFilterHouseTypes" => $arFilterHousetypes,
-                            "restVariants" => $restVariants,
-                            "arFilterRestVariants" => $arFilterRestVariants,
-                            "objectComforts" => $objectComforts,
-                            "arFilterObjectComforts" => $arFilterObjectComforts,
-                            "water" => $water,
-                            "arFilterWater" => $arFilterWater,
-                            "commonWater" => $commonWater,
-                            "difFilter" => $difFilter,
-                            "arFilterCommonWater" => $arFilterCommonWater,
-                            "arDifFilters" => $arDifFilters,
-                            "maxPrice" => $maxPrice,
-                            "minPrice" => $minPrice,
+                            "arFilterValues" => $arResult['SECTION_FILTER_VALUES'],
+                            "dateFrom" => $arResult['arUriParams']['dateFrom'],
+                            "dateTo" => $arResult['arUriParams']['dateTo'],
+                            "arDates" => $arResult['arDates'],
+                            "currMonthName" => $arResult['currMonthName'],
+                            "currYear" => $arResult['currYear'],
+                            "nextYear" => $arResult['nextYear'],
+                            "guests" => $arResult['arUriParams']['guests'],
+                            "children" => $arResult['arUriParams']['children'],
+                            "guestsDeclension" => $arResult['guestsDeclension'],
+                            "arChildrenAge" => $arResult['arUriParams']['childrenAge'],
+                            "arHLTypes" => $arResult['arHLTypes'],
+                            "arFilterTypes" => $arResult['arFilterTypes'],
+                            "arServices" => $arResult['arServices'],
+                            "arHLFood" => $arResult['arHLFood'],
+                            "arFilterFood" => $arResult['arFilterFood'],
+                            "arHLFeatures" => $arResult['arHLFeatures'],
+                            "arFilterFeatures" => $arResult['arFilterFeatures'],
+                            "arFilterServices" => $arResult['arFilterServices'],
+                            "houseTypes" => $arResult['houseTypeData'],
+                            "arFilterHouseTypes" => $arResult['arFilterHousetypes'],
+                            "restVariants" => $arResult['restVariants'],
+                            "arFilterRestVariants" => $arResult['arFilterRestVariants'],
+                            "objectComforts" => $arResult['objectComforts'],
+                            "arFilterObjectComforts" => $arResult['arFilterObjectComforts'],
+                            "water" => $arResult['water'],
+                            "arFilterWater" => $arResult['arFilterWater'],
+                            "commonWater" => $arResult['commonWater'],
+                            "difFilter" => $arResult['difFilter'],
+                            "arFilterCommonWater" => $arResult['arFilterCommonWater'],
+                            "arDifFilters" => $arResult['arDifFilters'],
+                            "maxPrice" => $arResult['maxPrice'],
+                            "minPrice" => $arResult['minPrice'],
                         )
                     );
                     ?>
@@ -1210,37 +547,36 @@ if ($chpy['UF_CANONICAL']) {
                         "naturalist:empty",
                         "catalog",
                         array(
-                            "sortBy" => $sortBy,
-                            "orderReverse" => $orderReverse,
-                            "page" => $arParams["REAL_PAGE"] ? $arParams["REAL_PAGE"] : $page,
+                            "sortBy" => $arResult['sortBy'],
+                            "orderReverse" => $arResult['orderReverse'],
+                            "page" => $arParams["REAL_PAGE"] ? $arParams["REAL_PAGE"] : $arResult['page'],
                             "pageCount" => $pageCount,
-                            "allCount" => $allCount,
-                            "countDeclension" => $countDeclension,
-                            "reviewsDeclension" => $reviewsDeclension,
+                            "allCount" => count($arResult['SECTIONS']),
+                            "countDeclension" => $arResult['countDeclension'],
+                            "reviewsDeclension" => $arResult['reviewsDeclension'],
                             "arPageSections" => $arPageSections,
-                            "arReviewsAvg" => $arReviewsAvg,
-                            "arFavourites" => $arFavourites,
-                            "arHLTypes" => $arHLTypes,
-                            "arHLFeatures" => $arHLFeatures,
-                            "arServices" => $arServices,
-                            "arSearchedRegions" => is_array($arRegionIds) ? array_unique($arRegionIds) : '',
-                            "searchedRegionData" => $searchedRegionData,
-                            "searchName" => $searchName ?? $search,
-                            "arFilterValues" => $arFilterValues,
-                            "dateFrom" => $dateFrom,
-                            "dateTo" => $dateTo,
-                            "arDates" => $arDates,
-                            "currMonthName" => $currMonthName,
-                            "currYear" => $currYear,
-                            "nextYear" => $nextYear,
-                            "guests" => $guests,
-                            "children" => $children,
-                            "guestsDeclension" => $guestsDeclension,
-                            "arChildrenAge" => $arChildrenAge,
+                            "arReviewsAvg" => $arResult['arReviewsAvg'],
+                            "arFavourites" => $arResult['FAVORITES'],
+                            "arHLTypes" => $arResult['arHLTypes'],
+                            "arHLFeatures" => $arResult['arHLFeatures'],
+                            "arServices" => $arResult['arServices'],
+                            "arSearchedRegions" => is_array($arResult['arRegionIds']) ? array_unique($arResult['arRegionIds']) : '',
+                            "searchedRegionData" => $arResult['searchedRegionData'],
+                            "searchName" => $arResult['searchName'] ?? $arResult['search'],
+                            "arFilterValues" => $arResult['SECTION_FILTER_VALUES'],
+                            "dateFrom" => $arResult['arUriParams']['dateFrom'],
+                            "dateTo" => $arResult['arUriParams']['dateTo'],
+                            "arDates" => $arResult['arDates'],
+                            "currMonthName" => $arResult['currMonthName'],
+                            "currYear" => $arResult['currYear'],
+                            "nextYear" => $arResult['nextYear'],
+                            "guests" => $arResult['arUriParams']['guests'],
+                            "children" => $arResult['arUriParams']['children'],
+                            "guestsDeclension" => $arResult['guestsDeclension'],
+                            "arChildrenAge" => $arResult['arUriParams']['childrenAge'],
                             "itemsCount" => $arParams["ITEMS_COUNT"],
                             'filterData' => $filterData,
-                            "arHLTypes" => $arHLTypes,
-                            "arFilterTypes" => $arFilterTypes,
+                            "arFilterTypes" => $arResult['arFilterTypes'],
                         )
                     );
                     ?>
@@ -1259,16 +595,16 @@ if ($chpy['UF_CANONICAL']) {
                                 "",
                                 array(
                                     "AREA_FILE_SHOW" => "file",
-                                    "PATH" => '/include/' . $seoFile . '-seo-text.php',
+                                    "PATH" => '/include/' . $arResult['SEO_FILE'] . '-seo-text.php',
                                     "EDIT_TEMPLATE" => ""
                                 )
                             );
-                            $isSeoText = false;
-                        } else if ($chySeoText) {
-                            echo $chySeoText;
                             $isSeoText = true;
-                        } else if (isset($pageSeoData) && isset($pageSeoData['UF_SEO_TEXT'])) {
-                            echo $pageSeoData['UF_SEO_TEXT'];
+                        } else if ($arResult['CHPY_SEO_TEXT']) {
+                            echo $arResult['CHPY_SEO_TEXT'];
+                            $isSeoText = true;
+                        } else if (isset($arResult['pageSeoData']) && isset($arResult['pageSeoData']['UF_SEO_TEXT'])) {
+                            echo $arResult['pageSeoData']['UF_SEO_TEXT'];
                             $isSeoText = true;
                         } ?>
                     </div>
@@ -1315,9 +651,9 @@ if ($chpy['UF_CANONICAL']) {
             "naturalist:empty",
             "catalog_scripts",
             array(
-                "arSections" => $arSections,
-                "arFavourites" => $arFavourites,
-                "arReviewsAvg" => $arReviewsAvg,
+                "arSections" => $arResult['SECTIONS'],
+                "arFavourites" => $arResult['FAVORITES'],
+                "arReviewsAvg" => $arResult['arReviewsAvg'],
                 "map" => $arParams["MAP"]
             )
         );

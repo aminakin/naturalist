@@ -2,6 +2,8 @@
 
 use Naturalist\Reviews;
 use Naturalist\Products;
+use Naturalist\Utils;
+use Naturalist\Regions;
 use Bitrix\Main\Web\Uri;
 use Bitrix\Highloadblock\HighloadBlockTable;
 
@@ -28,6 +30,7 @@ $arCampingIDs = array_map(function ($a) {
     return $a["ID"];
 }, $arResult["SECTIONS"]);
 $arReviewsAvg = Reviews::getCampingRating($arCampingIDs);
+$arResult['arReviewsAvg'] = $arReviewsAvg;
 
 foreach ($arResult["SECTIONS"] as &$arSection) {
     $arSection["RATING"] = $arReviewsAvg[$arSection["ID"]]["avg"] ?? 0;
@@ -72,17 +75,18 @@ $arUriParamsSort = array(
 $arUriParams = array_merge($arUriParams, $arUriParamsSort);
 
 // Выборка по наиболее близким координатам
-foreach ($arResult["SECTIONS"] as $arSection) {
+foreach ($arResult["SECTIONS"] as &$arSection) {
     if (empty($arSection["UF_COORDS"]) || empty($arParams["SECTION_COORDS"][0])) {
         continue;
     }
-    //xprint($arSection["UF_COORDS"]);
-    //xprint($arParams["SECTION_COORDS"]);
 
     $arSection["COORDS"] = explode(",", $arSection["UF_COORDS"]);
 
-    //xprint(abs((float)$arSection["COORDS"][0] - (float)$arParams["SECTION_COORDS"][0]));
-    //xprint(abs((float)$arSection["COORDS"][1] - (float)$arParams["SECTION_COORDS"][1]));
+    $searchedRegionData = Regions::getRegionById($arParams['AR_SECTION']['UF_REGION'] ?? false);
+    if ($searchedRegionData['CENTER_UF_REGION']) {
+        $arSection['DISCTANCE'] = Utils::calculateTheDistance($arParams['SECTION_COORDS'][0], $arParams['SECTION_COORDS'][1], $arSection['COORDS'][0], $arSection['COORDS'][1]);
+        $arSection['DISCTANCE_TO_REGION'] = $searchedRegionData['UF_CENTER_NAME_RU'];
+    }
 
     if ((abs((float)$arSection["COORDS"][0] - (float)$arParams["SECTION_COORDS"][0]) <= (float)$arParams["COORDS_RANGE"]) && (abs((float)$arSection["COORDS"][1] - (float)$arParams["SECTION_COORDS"][1]) <= (float)$arParams["COORDS_RANGE"])) {
         $uri = new Uri($arSection["SECTION_PAGE_URL"]);
@@ -105,13 +109,12 @@ if (isset($_GET['childrenAge'])) {
     if (is_array($_GET['childrenAge'])) {
         $arChildrenAge = $_GET['childrenAge'];
     } else {
-        $arChildrenAge = explode(',' , $_GET['childrenAge']);
+        $arChildrenAge = explode(',', $_GET['childrenAge']);
     }
 } else {
     $arChildrenAge = [];
 }
 
-//xprint($arSortedSections);
 if (!empty($dateFrom) && !empty($dateTo) && !empty($_GET['guests'])) {
     $daysCount = abs(strtotime($dateTo) - strtotime($dateFrom)) / 86400;
 
@@ -135,7 +138,7 @@ if (Cmodule::IncludeModule('asd.iblock')) {
 }
 
 foreach ($arResult["SECTIONS"] as &$arItem) {
-    
+
     foreach ($arFields['UF_SEASON'] as $season) {
         if ($season == 'Лето') {
             if ($arItem["UF_PHOTOS"]) {
