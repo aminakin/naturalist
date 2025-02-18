@@ -14,6 +14,7 @@ use Bronevik\HotelsConnector\Element\RateType;
 use Bronevik\HotelsConnector\Element\SearchOfferCriterionNumberOfGuests;
 use Bronevik\HotelsConnector\Element\SearchOfferCriterionOnlyOnline;
 use Bronevik\HotelsConnector\Element\SearchOfferCriterionPaymentRecipient;
+use Bronevik\HotelsConnector\Element\SkipElements;
 use Bronevik\HotelsConnector\Enum\CurrencyCodes;
 use CIBlockElement;
 use Naturalist\bronevik\repository\Bronevik;
@@ -64,6 +65,9 @@ class SearchRoomsBronevik
         $onlyOnline = new SearchOfferCriterionOnlyOnline();
         $searchCriteria[] = $onlyOnline;
 
+        $skipElements = new SkipElements();
+        $skipElements->addElement('dailyPrices');
+
         $result = $this->bronevik->searchHotelOffersResponse(
             date('Y-m-d', strtotime($dateFrom)),
             date('Y-m-d', strtotime($dateTo)),
@@ -71,6 +75,7 @@ class SearchRoomsBronevik
             null,
             $searchCriteria,
             [$externalId],
+            $skipElements->getElement(),
         );
 
         $offers = $this->saveOffers($result);
