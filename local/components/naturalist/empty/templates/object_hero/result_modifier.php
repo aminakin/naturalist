@@ -2,28 +2,6 @@
 use Bitrix\Highloadblock as HL; 
 use Bitrix\Main\Entity;
 
-$arParams["TYPE"] = "";
-if(CModule::IncludeModule("highloadblock")){
-    if(isset($arParams['arSection']["UF_TYPE_EXTRA"][0]) && !empty($arParams['arSection']["UF_TYPE_EXTRA"][0])){
-
-        $hlbl = 2; // Указываем ID нашего highloadblock блока к которому будет делать запросы.
-        $hlblock = HL\HighloadBlockTable::getById($hlbl)->fetch(); 
-
-        $entity = HL\HighloadBlockTable::compileEntity($hlblock); 
-        $entity_data_class = $entity->getDataClass(); 
-
-        $rsData = $entity_data_class::getList(array(
-        "select" => array("*"),
-        "order" => array("ID" => "ASC"),
-        "filter" => array("ID"=> $arParams['arSection']["UF_TYPE_EXTRA"][0])
-        ));
-
-        while($arData = $rsData->Fetch()){
-            $arParams["TYPE"] = $arData["UF_NAME"]." ";
-        }
-    }
-} 
-
 $arResult = array(
     "arSection" => $arParams['arSection'],
     "arFavourites" => $arParams['arFavourites'],
