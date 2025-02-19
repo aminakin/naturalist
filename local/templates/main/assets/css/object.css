@@ -1386,7 +1386,7 @@
 .mini-balloon__content {
   display: grid;
   grid-template-columns: 1fr max-content;
-  width: 100%;
+  width: 70%;
   padding: 8px;
   gap: 8px 11px;
 }
