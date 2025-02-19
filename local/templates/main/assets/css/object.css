@@ -2795,7 +2795,10 @@
 .review .list_gallery {
   display: flex;
   gap: 2px;
-  width: max-content;
+  /* width: max-content; */
+  overflow: hidden;
+  border-radius: 12px;
+  overflow-x: auto;
 }
 
 .review .list_gallery .list__item {
@@ -2803,6 +2806,8 @@
 
 .review .list_gallery .list__link {
   display: block;
+  height: 67px;
+  min-width: 67px;
 }
 
 .review .list_gallery .list__link:hover {
@@ -3477,13 +3482,13 @@
     -ms-flex-wrap: nowrap;
     flex-wrap: nowrap;
     max-width: 100%;
-    overflow: hidden;
+    /* overflow: hidden; */
     border-radius: 12px;
   }
 
-  .review .list_gallery .list__item {
+  /* .review .list_gallery .list__item {
     display: none;
-  }
+  } */
 
   .review .list_gallery .list__item:first-child,
   .review .list_gallery .list__item:nth-child(2),
