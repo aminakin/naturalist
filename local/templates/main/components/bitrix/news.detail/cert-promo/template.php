@@ -33,9 +33,20 @@ $this->setFrameMode(true);
 </style>
 <section class="certs__top-banner">
 	<div class="certs__top-banner-inner">
-		<p class="certs__top-banner-text1"><?= $arResult['PROPERTIES']['BLOCK1_TITLE']['~VALUE']['TEXT'] ?></p>
-		<p class="certs__top-banner-text2"><?= $arResult['PROPERTIES']['BLOCK1_SUBTITLE']['~VALUE']['TEXT'] ?></p>
-		<a href="<?= $arResult['PROPERTIES']['BLOCK1_LINK']['VALUE'] ?>" class="certs__top-banner-link"><?= $arResult['PROPERTIES']['BLOCK1_LINK_TEXT']['VALUE'] ?></a>
+        <?php if (isset($arResult['PROPERTIES']['BLOCK1_TITLE']['~VALUE']['TEXT'])) {
+            ?><p class="certs__top-banner-text1"><?= $arResult['PROPERTIES']['BLOCK1_TITLE']['~VALUE']['TEXT'] ?></p><?
+        } ?>
+        <?php if (isset($arResult['PROPERTIES']['BLOCK1_SUBTITLE']['~VALUE']['TEXT'])) {
+            ?><p class="certs__top-banner-text1"><?= $arResult['PROPERTIES']['BLOCK1_SUBTITLE']['~VALUE']['TEXT'] ?></p><?
+        } ?>
+
+        <?php if (
+                isset($arResult['PROPERTIES']['BLOCK1_TITLE']['~VALUE']['TEXT']) &&
+                isset($arResult['PROPERTIES']['BLOCK1_SUBTITLE']['~VALUE']['TEXT']) &&
+                isset($arResult['PROPERTIES']['BLOCK1_LINK']['VALUE'])
+                ) {
+            ?><a href="<?= $arResult['PROPERTIES']['BLOCK1_LINK']['VALUE'] ?>" class="certs__top-banner-link"><?= $arResult['PROPERTIES']['BLOCK1_LINK_TEXT']['VALUE'] ?></a><?
+        } ?>
 	</div>
 </section>
 <section class="certs__elec">
