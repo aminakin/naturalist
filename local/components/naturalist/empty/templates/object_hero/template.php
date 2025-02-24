@@ -137,7 +137,7 @@ global $isMobile;
                                 </div>
 
                                 <div class="about__text-show">
-                                    <div class="about__text-hide additional-text" style="text-decoration: underline">...</div>
+                                    <!-- <div class="about__text-hide additional-text" style="text-decoration: underline">...</div> -->
                                     <a href="#" data-text-show-control data-text-show-more="Развернуть"
                                        data-text-show-hide="Скрыть"></a>
                                 </div>
