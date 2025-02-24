@@ -5,6 +5,9 @@ if(!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true)
 }
 
 use \Bitrix\Conversion\Internals\MobileDetect;
+use Bitrix\Main\Context;
+use Bitrix\Main\HttpRequest;
+use Naturalist\Filters\UrlHandler;
 
 class PageNavigationComponent extends CBitrixComponent
 {
@@ -47,7 +50,7 @@ class PageNavigationComponent extends CBitrixComponent
 			return;
 		}
 		/** @var \Bitrix\Main\UI\PageNavigation $nav */
-		$nav = $this->arParams["~NAV_OBJECT"];
+		$nav = $this->arParams["~NAV_OBJECT"]; 
 
 		$this->arResult["RECORD_COUNT"] = $nav->getRecordCount();
 		$this->arResult["PAGE_COUNT"] = $nav->getPageCount();
@@ -85,11 +88,17 @@ class PageNavigationComponent extends CBitrixComponent
 		}
 		else
 		{
+			global $APPLICATION;
 			$uri = new \Bitrix\Main\Web\Uri($this->request->getRequestUri());
 			$uri->deleteParams(\Bitrix\Main\HttpRequest::getSystemParameters());
 			$nav->clearParams($uri, $this->arParams["SEF_MODE"]);
+
+			if(isset(UrlHandler::getByRealUrl($uri->getUri(), SITE_ID)["UF_NEW_URL"])){
+				$uri = new \Bitrix\Main\Web\Uri(UrlHandler::getByRealUrl($uri->getUri(), SITE_ID)["UF_NEW_URL"]);
+			}
+			
 		}
-		$this->arResult["URL"] = $uri->getUri();		
+		$this->arResult["URL"] = $uri->getUri();	
 		$this->arResult["URL_TEMPLATE"] = $nav->addParams($uri, $this->arParams["SEF_MODE"], "--page--", (count($this->arResult["PAGE_SIZES"]) > 1? "--size--" : null))->getUri();
 	}
 
