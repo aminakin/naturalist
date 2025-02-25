@@ -24,6 +24,7 @@ class SearchRoomsBronevik
     private Bronevik $bronevik;
 
     private HotelRoomBronevik $hotelRoomBronevi;
+    private HotelRoomOfferBronevik $hotelRoomOfferBronevik;
 
     private HotelBronevik $hotelBronevik;
 
@@ -32,6 +33,7 @@ class SearchRoomsBronevik
         $this->bronevik = new Bronevik();
         $this->hotelRoomBronevi = new HotelRoomBronevik();
         $this->hotelBronevik = new HotelBronevik();
+        $this->hotelRoomOfferBronevik = new HotelRoomOfferBronevik();
     }
 
     /**
@@ -51,16 +53,18 @@ class SearchRoomsBronevik
         $criterionPaymentRecipient = new SearchOfferCriterionPaymentRecipient;
         $criterionPaymentRecipient->addPaymentRecipient('agency');
         $searchCriteria[] = $criterionPaymentRecipient;
-        $criterionNumberOfGuests = new SearchOfferCriterionNumberOfGuests();
-        $criterionNumberOfGuests->setAdults($guests);
-        foreach ($arChildrenAge as $childAge) {
-            $child = new Child();
-            $child->setAge($childAge);
-            $child->setCount(1);
-            $criterionNumberOfGuests->addChild($child);
-        }
+        if (count($arChildrenAge)) {
+            $criterionNumberOfGuests = new SearchOfferCriterionNumberOfGuests();
+            $criterionNumberOfGuests->setAdults($guests);
+            foreach ($arChildrenAge as $childAge) {
+                $child = new Child();
+                $child->setAge($childAge);
+                $child->setCount(1);
+                $criterionNumberOfGuests->addChild($child);
+            }
 
-        $searchCriteria[] = $criterionNumberOfGuests;
+            $searchCriteria[] = $criterionNumberOfGuests;
+        }
 
         $onlyOnline = new SearchOfferCriterionOnlyOnline();
         $searchCriteria[] = $onlyOnline;
@@ -212,7 +216,7 @@ class SearchRoomsBronevik
     private function upsertOffer(array $offer)
     {
         $code = $offer['PROPERTY_VALUES']['CODE'];
-        $arExistElement = $this->hotelRoomBronevi->list(["PROPERTY_CODE" => $code], false);
+        $arExistElement = $this->hotelRoomOfferBronevik->list(["PROPERTY_CODE" => $code], false);
 
         $iE = new CIBlockElement;
         if (count($arExistElement)) {
@@ -222,7 +226,7 @@ class SearchRoomsBronevik
             $itemId = $iE->Add($offer);
         }
 
-        return current($this->hotelRoomBronevi->list(["ID" => $itemId], false));
+        return current($this->hotelRoomOfferBronevik->list(["ID" => $itemId], false));
     }
 
     private function getRateType(RateType $rateType)

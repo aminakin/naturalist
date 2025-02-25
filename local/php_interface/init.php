@@ -48,6 +48,7 @@ Loader::registerAutoLoadClasses(null, array(
     'Naturalist\bronevik\SearchRoomsBronevik' => '/local/php_interface/classes/bronevik/SearchRoomsBronevik.php',
     'Naturalist\bronevik\ImportHotelRoomOffersBronevik' => '/local/php_interface/classes/bronevik/ImportHotelRoomOffersBronevik.php',
     'Naturalist\bronevik\HotelRoomBronevik' => '/local/php_interface/classes/bronevik/HotelRoomBronevik.php',
+    'Naturalist\bronevik\HotelRoomOfferBronevik' => '/local/php_interface/classes/bronevik/HotelRoomOfferBronevik.php',
     'Naturalist\bronevik\HotelBronevik' => '/local/php_interface/classes/bronevik/HotelBronevik.php',
     'Naturalist\bronevik\enums\RateTypeNamesEnum' => '/local/php_interface/classes/bronevik/enums/RateTypeNamesEnum.php',
     'Naturalist\bronevik\enums\RoomTypeEnum' => '/local/php_interface/classes/bronevik/enums/RoomTypeEnum.php',
