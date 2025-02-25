@@ -2,6 +2,7 @@
 
 namespace Naturalist\bronevik;
 
+use Bronevik\HotelsConnector\Element\Hotel;
 use CFile;
 use CIBlockSection;
 use Naturalist\bronevik\repository\Bronevik;
@@ -56,13 +57,17 @@ class ImportHotelsBronevik
         return $siteHotelIds;
     }
 
-    private function getHotelData($data): array
+    private function getHotelData(Hotel $data): array
     {
         $arFields = [];
 
         $sectionCode = \CUtil::translit($data->name, "ru");
         $arFields["IBLOCK_ID"] = CATALOG_IBLOCK_ID;
         $arFields["UF_EXTERNAL_ID"] = $data->id;
+        $arFields["UF_INFORMATIONS"] = json_encode($data?->informationForGuest?->notification);
+        $arFields["UF_TAXES"] = $data->hasTaxes ? json_encode($data?->taxes?->tax) : '';
+        $arFields["UF_ADDITIONAL_INFO"] = json_encode($data?->additionalInfo);
+        $arFields["UF_ALLOWABLE_TIME"] = json_encode(['allowableCheckinTime' => $data?->allowableCheckinTime, 'allowableCheckoutTime' => $data?->allowableCheckoutTime]);
         $arFields["UF_EXTERNAL_SERVICE"] = self::EXTERNAL_SERVICE_ID;
         $arFields["UF_ADDRESS"] = $data->cityName . '. ' . $data->address;
         $arFields["UF_TIME_FROM"] = $data->checkinTime;
@@ -117,8 +122,7 @@ class ImportHotelsBronevik
 
             $iS = new CIBlockSection();
             if ($arSection) {
-                // Не увидел процесс изменения данных отеля у бново. Тут так же
-                // $iS->Update($arSection['ID'], $data)
+                $iS->Update($arSection['ID'], array_filter($data, function ($k) { return in_array($k, ['UF_TAXES', 'UF_INFORMATIONS', 'UF_ADDITIONAL_INFO', 'UF_TIME_FROM', 'UF_TIME_TO', 'UF_ALLOWABLE_TIME']); }, ARRAY_FILTER_USE_KEY));
                 if (true) {
                     return $arSection['ID'];
                 }

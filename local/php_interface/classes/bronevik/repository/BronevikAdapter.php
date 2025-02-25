@@ -13,6 +13,7 @@ use Bronevik\HotelsConnector\Element\Meal;
 use Bronevik\HotelsConnector\Element\Order;
 use Bronevik\HotelsConnector\Element\OrderServices;
 use Bronevik\HotelsConnector\Element\SearchOfferCriterion;
+use Bronevik\HotelsConnector\Element\SearchOrderCriterionServiceReferenceId;
 use Bronevik\HotelsConnector\Element\ServiceAccommodation;
 use Bronevik\HotelsConnector\Enum\CurrencyCodes;
 use Naturalist\bronevik\connector\HotelsConnector;
@@ -84,11 +85,7 @@ class BronevikAdapter
     {
         $connector = HotelsConnector::getInstance();
 
-        try {
-            return $connector->getHotelInfo($ids);
-        } catch (\Exception $e) {
-            throw new \Exception($this->getLastResponse());
-        }
+        return $connector->getHotelInfo($ids);
     }
 
     /**
@@ -158,7 +155,7 @@ class BronevikAdapter
     /**
      * @throws \SoapFault
      */
-    public function OrderCreate(string $offerCode, array $arGuests, array $arChildren): Order
+    public function OrderCreate(int $orderId, string $offerCode, array $arGuests, array $arChildren): Order
     {
         $connector = HotelsConnector::getInstance();
 
@@ -166,6 +163,7 @@ class BronevikAdapter
         $request->setCurrency(CurrencyCodes::RUB);
         $service = new ServiceAccommodation();
         $service->setOfferCode($offerCode);
+        $service->setReferenceId($orderId);
         $guests = new Guests();
         foreach($arGuests as $guestItem) {
             $guest = new Guest();
@@ -205,6 +203,25 @@ class BronevikAdapter
         $connector = HotelsConnector::getInstance();
 
         return $connector->getOrder($orderId);
+    }
+
+    /**
+     * @throws \SoapFault
+     */
+    public function searchOrderByReferenceId(int $referenceId): ?Order
+    {
+        $connector = HotelsConnector::getInstance();
+        $criterionReferenceId = new SearchOrderCriterionServiceReferenceId();
+        $criterionReferenceId->setReferenceId($referenceId);
+        $criteria = [
+            $criterionReferenceId,
+        ];
+        $orders = $connector->searchOrders($criteria);
+        if (count($orders->order)) {
+            return $orders->order[0];
+        }
+
+        return null;
     }
 
     /**

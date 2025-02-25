@@ -10,6 +10,8 @@ use Bronevik\HotelsConnector\Element\OrderServices;
 use Bronevik\HotelsConnector\Element\ServiceAccommodation;
 use Exception;
 use Throwable;
+use SoapFault;
+use Closure;
 
 /**
  * @method string test
@@ -19,9 +21,10 @@ use Throwable;
  * @method Hotels searchHotelOffersResponse(string $arrivalDate, string $departureDate, string $currency, ?int $cityId = null, array $searchCriteria = [], array $hotelIds = [], array $skipElements = [], ?GeoLocation $geolocation = null)
  * @method array getMeals()
  * @method string getMeal(int $id)
- * @method Order OrderCreate(string $offerCode, array $arGuests, array $arChildren)
+ * @method Order OrderCreate(int $orderId, string $offerCode, array $arGuests, array $arChildren)
  * @method bool CancelOrder(int $orderId)
  * @method Order getOrder(int $orderId)
+ * @method Order|null searchOrderByReferenceId(int $orderId)
  * @method OrderServices getHotelOfferPricing(ServiceAccommodation $serviceAccommodation)
  * @method string getLastResponse()
  * @see BronevikAdapter
@@ -34,8 +37,11 @@ class Bronevik
 
     private int $sleepSecond = 5;
 
+    private ?Closure $checkCallback;
+
     public function __construct()
     {
+        $this->checkCallback = null;
         $this->bronevikAdapter = new BronevikAdapter();
 
         $this->setAttempt();
@@ -59,11 +65,19 @@ class Bronevik
 
     }
 
-    public function setSleepSecond(int $seconds)
+    public function setSleepSecond(int $seconds): void
     {
         $this->sleepSecond = $seconds;
     }
 
+    /**
+     * @param Closure|null $callback return false need if skip exception.
+     * @return void
+     */
+    public function setCheckBeforeAttemptCallback(?Closure $callback): void
+    {
+        $this->checkCallback = $callback;
+    }
     /**
      * @throws Exception
      */
@@ -84,13 +98,39 @@ class Bronevik
     {
         try {
             return $this->customCall($methodName, $arguments);
-        } catch (Throwable $e) {
-            if ($attempt < $this->attempt) {
-                sleep($this->sleepSecond);
-                $this->attemptCustomCall($methodName, $arguments, ++$attempt);
+        }
+        catch (SoapFault $e) {
+            $check = true;
+            if ($this->checkCallback !== null) {
+                $check = call_user_func($this->checkCallback, $arguments, $attempt);
+            }
+
+            if ($check) {
+                if ($attempt < $this->attempt) {
+                    sleep($this->sleepSecond);
+                    return $this->attemptCustomCall($methodName, $arguments, ++$attempt);
+                } else {
+                    throw new Exception($methodName . '; code: ' . $e->getCode() . '; message: ' . $e->getMessage());
+                }
             } else {
-                throw new Exception($methodName . ' end attempts ' . $e->getMessage());
-                throw $e;
+                return null;
+            }
+        }
+        catch (Throwable $e) {
+            $check = true;
+            if ($this->checkCallback !== null) {
+                $check = call_user_func($this->checkCallback, $arguments, $attempt);
+            }
+
+            if ($check) {
+                if ($attempt < $this->attempt) {
+                    sleep($this->sleepSecond);
+                    return $this->attemptCustomCall($methodName, $arguments, ++$attempt);
+                } else {
+                    throw new Exception($methodName . ' end attempts ' . $e->getMessage());
+                }
+            } else {
+                return null;
             }
         }
     }

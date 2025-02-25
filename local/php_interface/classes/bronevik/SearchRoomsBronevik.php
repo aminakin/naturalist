@@ -78,6 +78,8 @@ class SearchRoomsBronevik
             $skipElements->getElement(),
         );
 
+        $this->updateHotels($result);
+
         $offers = $this->saveOffers($result);
 
         $hotelSectionService = $this->hotelBronevik->showByExternalId($externalId);
@@ -114,6 +116,24 @@ class SearchRoomsBronevik
 
         return $result;
     }
+
+    private function updateHotels(Hotels $hotels): void
+    {
+        /** @var HotelWithOffers $hotel */
+        foreach ($hotels->hotel as $hotel) {
+            $data = [
+                'UF_INFORMATIONS' => json_encode($hotel?->informationForGuest?->notification),
+                'UF_TAXES' => $hotel->hasTaxes ? json_encode($hotel?->taxes?->tax) : '',
+                'UF_ADDITIONAL_INFO' => json_encode($hotel->additionalInfo),
+                'UF_TIME_FROM' => json_encode($hotel->additionalInfo),
+                'UF_TIME_TO' => json_encode($hotel->additionalInfo),
+                'UF_ALLOWABLE_TIME' => json_encode(['allowableCheckinTime' => $hotel?->allowableCheckinTime, 'allowableCheckoutTime' => $hotel?->allowableCheckoutTime]),
+
+            ];
+            $this->hotelBronevik->update(null, $hotel->getId(), $data);
+        }
+    }
+
     private function saveOffers(Hotels $hotels): array
     {
         $offers = [];
