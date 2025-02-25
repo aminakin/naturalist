@@ -2207,9 +2207,15 @@
 }
 
 .rooms__more a {
+  padding: 10px 20px;
+  background-color: var(--color-btn);
+  border-radius: 8px;
+  font-size: 14px;
+  line-height: 20px;
   font-family: Lato;
   font-family: var(--header-text-font-family);
   font-weight: 500;
+  border: 0px;
 }
 
 .room {
