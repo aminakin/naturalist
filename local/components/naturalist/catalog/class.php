@@ -148,8 +148,20 @@ class NaturalistCatalog extends \CBitrixComponent
             'dateTo' => $this->request->get('dateTo'),
             'guests' => $this->request->get('guests') ? $this->request->get('guests') : 2,
             'children' => $this->request->get('children') ? $this->request->get('children') : 0,
-            'childrenAge' => $this->request->get('childrenAge') ? explode(',', $this->request->get('childrenAge')) : [],
         ];
+
+
+        $this->arUriParams['childrenAge'] = [];
+        if ($this->request->get('childrenAge')) {
+            if (is_array($this->request->get('childrenAge'))) {
+
+                $this->arUriParams['childrenAge'] = $this->request->get('childrenAge');
+            }
+
+            if (is_string($this->request->get('childrenAge'))) {
+                $this->arUriParams['childrenAge'] = explode(',', $this->request->get('childrenAge'));
+            }
+        }
     }
 
     private function makeCalendar()
