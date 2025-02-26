@@ -20,6 +20,9 @@ foreach ($arParams['VARS'] as $key => $value) {
             center: mapCenter,
             zoom: 15,
             controls: []
+        }, {
+            suppressMapOpenBlock: true,
+            yandexMapDisablePoiInteractivity: true
         })
 
         const balloonLayout = ymaps.templateLayoutFactory.createClass(`
@@ -30,7 +33,7 @@ foreach ($arParams['VARS'] as $key => $value) {
                     <div class="mini-balloon__content">
                         <div class="h6"><?= $arSection["NAME"] ?></div>
                         <div class="score"><img src="<?= SITE_TEMPLATE_PATH ?>/assets/img/star-score.svg" alt=""><span><?= $avgRating ?></span></div>
-                        <div class="area-info">                            
+                        <div class="area-info">
                             <span class="map-price"><?= number_format($minPrice, 0, '.', ' ') ?> ₽</span>
                             <span class="map-ellips"></span>
                             <span class="map-text">Цена за одну ночь</span>
@@ -68,7 +71,9 @@ foreach ($arParams['VARS'] as $key => $value) {
             zoom: 16,
             controls: ['zoomControl', 'trafficControl', 'typeSelector', 'geolocationControl', 'routeButtonControl']
         }, {
-            minZoom: 5
+            minZoom: 5,
+            suppressMapOpenBlock: true,
+            yandexMapDisablePoiInteractivity: true
         })
 
         const largeMapPlacemark = new ymaps.Placemark(largeMap.getCenter(), {}, placemarkOptions)
