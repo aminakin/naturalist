@@ -5,6 +5,7 @@ use Naturalist\Morpher;
 use Naturalist\Products;
 use Naturalist\Regions;
 use Naturalist\Utils;
+use Bitrix\Main\Context;
 
 $arResult = array(
     "sortBy" => $arParams['sortBy'],
@@ -40,6 +41,8 @@ $arResult = array(
     "arHLTypes" => $arParams["arHLTypes"],
     "arFilterTypes" => $arParams["arFilterTypes"],
 );
+
+$request = Context::getCurrent()->getRequest();
 
 if (is_array($arParams["arFilterTypes"]) && count($arParams["arFilterTypes"]) == 1) {
     $arResult['filteredHouseType'] = $arParams["arHLTypes"][$arParams["arFilterTypes"][0]]['UF_NAME'];
@@ -82,11 +85,11 @@ if ($arResult['arSearchedRegions']) {
         if ($minimalDisctanceRegionId > 0) {
 
             // Заезд, выезд, кол-во гостей
-            $dateFrom = $_GET['dateFrom'];
-            $dateTo = $_GET['dateTo'];
-            $guests = $_GET['guests'] ?? 2;
-            $children = $_GET['children'] ?? 0;
-            $arChildrenAge = (isset($_GET['childrenAge'])) ? explode(',', $_GET['childrenAge']) : [];
+            $dateFrom = $request->getQuery('dateFrom');
+            $dateTo = $request->getQuery('dateTo');
+            $guests = $request->getQuery('guests');
+            $children = $request->getQuery('children');
+            $arChildrenAge = $request->getQuery('childrenAge') ? explode(',', $request->getQuery('childrenAge')) : [];
             $arUriParams = array(
                 'dateFrom' => $dateFrom,
                 'dateTo' => $dateTo,
@@ -95,7 +98,7 @@ if ($arResult['arSearchedRegions']) {
                 'childrenAge' => $arChildrenAge,
             );
 
-            if (!empty($dateFrom) && !empty($dateTo) && !empty($_GET['guests'])) {
+            if (!empty($dateFrom) && !empty($dateTo) && !empty($request->getQuery('guests'))) {
                 $daysCount = abs(strtotime($dateTo) - strtotime($dateFrom)) / 86400;
 
                 // Запрос в апи на получение списка кемпингов со свободными местами в выбранный промежуток
@@ -110,9 +113,10 @@ if ($arResult['arSearchedRegions']) {
 
 
             /* Сортировка */
-            $sortBy = (!empty($_GET['sort']) && isset($_GET['sort'])) ? strtolower($_GET['sort']) : "sort";
-            $sortOrder = (!empty($_GET['order']) && isset($_GET['order'])) ? strtolower($_GET['order']) : "asc";
-            $orderReverse = (!empty($_GET['order']) && isset($_GET['order']) && $_GET['order'] == 'asc') ? "desc" : "asc";
+            $orderRequest = $request->getQuery('order');
+            $sortBy = (!empty($request->getQuery('sort')) && $request->getQuery('sort')) ? strtolower($request->getQuery('sort')) : "sort";
+            $sortOrder = (!empty($orderRequest)) ? strtolower($orderRequest) : "asc";
+            $orderReverse = (!empty($orderRequest)  && $orderRequest == 'asc') ? "desc" : "asc";
             switch ($sortBy) {
                 case 'popular':
                     $sort = 'UF_RESERVE_COUNT';
@@ -257,11 +261,18 @@ if ($arResult['arSearchedRegions']) {
                 $arSection["DELETE_LINK"] = $arButtons["edit"]["delete_element"]["ACTION_URL"];
 
                 $arResult['SECTIONS'][$arSection["ID"]] = $arSection;
+
             }
+
         }
 
-        usort($arResult['SECTIONS'], function ($a, $b) {
-            return ($a['DISCTANCE'] - $b['DISCTANCE']);
-        });
+        if(is_array($arResult['SECTIONS']) && count($arResult['SECTIONS']) > 3){
+            shuffle($arResult['SECTIONS']);
+        }
+        else {
+            usort($arResult['SECTIONS'], function ($a, $b) {
+                return ($a['DISCTANCE'] - $b['DISCTANCE']);
+            });
+        }
     }
 }
