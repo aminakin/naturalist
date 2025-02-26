@@ -266,12 +266,13 @@ if ($arResult['arSearchedRegions']) {
 
         }
 
-      //  if(is_array($arResult['SECTIONS']) && count($arResult['SECTIONS']) > 3){
-           // shuffle($arResult['SECTIONS']);
-       // }
-
-        usort($arResult['SECTIONS'], function ($a, $b) {
-            return ($a['DISCTANCE'] - $b['DISCTANCE']);
-        });
+        if(is_array($arResult['SECTIONS']) && count($arResult['SECTIONS']) > 3){
+            shuffle($arResult['SECTIONS']);
+        }
+        else {
+            usort($arResult['SECTIONS'], function ($a, $b) {
+                return ($a['DISCTANCE'] - $b['DISCTANCE']);
+            });
+        }
     }
-} shuffle($arResult['SECTIONS']);
+}
