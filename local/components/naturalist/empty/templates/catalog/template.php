@@ -272,6 +272,11 @@ foreach ($arResult as $key => $value) {
                 <?php } ?>
 
                 <div class="objects__list">
+                    <?
+                    if(count($arResult['SECTIONS']) > 3){
+                        shuffle($arResult["SECTIONS"]);
+                    }
+                   ?>
                     <?php foreach ($arResult["SECTIONS"] as $arSection): ?>
                         <?php
                         $this->AddEditAction($arItem['ID'], $arItem['EDIT_LINK'], CIBlock::GetArrayByID($arItem["IBLOCK_ID"], "ELEMENT_EDIT"));
