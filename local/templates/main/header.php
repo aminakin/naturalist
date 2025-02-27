@@ -121,6 +121,11 @@ use Naturalist\Users;
     <link rel="stylesheet" href="<?= SITE_TEMPLATE_PATH ?>/assets/css/jquery-ui.min.css?v=<?= filemtime($_SERVER['DOCUMENT_ROOT'] . SITE_TEMPLATE_PATH . '/assets/css/jquery-ui.min.css'); ?>">
     <link rel="stylesheet" href="<?= SITE_TEMPLATE_PATH ?>/assets/css/custom.css?v=<?= filemtime($_SERVER['DOCUMENT_ROOT'] . SITE_TEMPLATE_PATH . '/assets/css/custom.css'); ?>">
 
+    <?php if (CSite::InDir('/flights')) : ?>
+        <link rel="stylesheet" href="<?= SITE_TEMPLATE_PATH ?>/assets/css/index.css?v=<?= filemtime($_SERVER['DOCUMENT_ROOT'] . SITE_TEMPLATE_PATH . '/assets/css/index.css'); ?>">
+        <script async src="https://tp.media/content?currency=rub&trs=386385&shmarker=604057&show_hotels=true&powered_by=true&locale=ru&searchUrl=avia.naturalist.travel%2Fflights&primary_override=%23E6C48E&color_button=%23E39250&color_icons=%23E39250&dark=%23262626&light=%23FFFFFF&secondary=%23FFFFFF&special=%23C4C4C4&color_focused=%23E6C48E&border_radius=0&plain=false&promo_id=7879&campaign_id=100" charset="utf-8"></script>
+    <?php endif; ?>
+
     <?php if (CSite::InDir('/promo/')) : ?>
         <!-- Marquiz script start --> 
         <script>
