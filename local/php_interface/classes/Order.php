@@ -335,7 +335,6 @@ class Orders
             }
         }
 
-        $this->applyPenaltyCanceledOrder($orderId);
         //$res = CSaleOrder::CancelOrder($orderId, "Y", $reason);
         if ($cancelReservation) {
             // Выставляем заказу статус "С" (Отменен)

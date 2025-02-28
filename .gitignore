@@ -12,7 +12,7 @@
 /local/php_interface/init_constants.php
 /local/cron/*.log
 
-/local/modules/sprint.migration
+/local/modules
 .htaccess
 robots.txt
 
