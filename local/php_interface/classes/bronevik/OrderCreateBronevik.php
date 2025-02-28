@@ -2,12 +2,6 @@
 
 namespace Naturalist\bronevik;
 
-use Bitrix\Main\ArgumentException;
-use Bitrix\Main\ArgumentNullException;
-use Bitrix\Main\ArgumentOutOfRangeException;
-use Bitrix\Main\NotImplementedException;
-use Bitrix\Main\ObjectPropertyException;
-use Bitrix\Main\SystemException;
 use Bitrix\Sale\Order;
 use Naturalist\bronevik\repository\Bronevik;
 use SoapFault;
@@ -45,41 +39,16 @@ class OrderCreateBronevik
             }
         }
 
-        $this->bronevik->setAttempt(2);
-        $this->bronevik->setCheckBeforeAttemptCallback(function ($arguments, $attempt) use ($orderId, $reservationPropId) {
-            if (($order = $this->bronevik->searchOrderByReferenceId($orderId)) === null) {
-                return true;
-            }
+        $orderResult = $this->bronevik->OrderCreate($offerCode, $guests, $children);
 
-            $this->setExternalIdToOrder($orderId, $order->getId(), $reservationPropId);
-
-            return false;
-        });
-        $orderResult = $this->bronevik->OrderCreate($orderId, $offerCode, $guests, $children);
-        $this->bronevik->setCheckBeforeAttemptCallback(null);
-
-        return $this->setExternalIdToOrder($orderId, $orderResult->getId(), $reservationPropId);
-
-    }
-
-    /**
-     * @throws ObjectPropertyException
-     * @throws NotImplementedException
-     * @throws ArgumentNullException
-     * @throws ArgumentOutOfRangeException
-     * @throws ArgumentException
-     * @throws SystemException
-     */
-    private function setExternalIdToOrder($orderId, $externalId, $reservationPropId)
-    {
         $order = Order::load($orderId);
         $propertyCollection = $order->getPropertyCollection();
         $propertyValue = $propertyCollection->getItemByOrderPropertyId($reservationPropId);
-        $propertyValue->setValue($externalId);
+        $propertyValue->setValue($orderResult->getId());
         $res = $order->save();
 
         if ($res->isSuccess()) {
-            return $externalId;
+            return $orderResult->getId();
         } else {
             return [
                 "ERROR" => "Ошибка сохранения ID бронирования."
