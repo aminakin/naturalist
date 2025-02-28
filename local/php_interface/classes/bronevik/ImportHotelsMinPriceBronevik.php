@@ -9,6 +9,8 @@ use Naturalist\bronevik\repository\Bronevik;
 
 class ImportHotelsMinPriceBronevik
 {
+    use AttemptBronevik;
+
     private HotelBronevik $hotelBronevik;
     private Bronevik $bronevik;
 
@@ -18,11 +20,13 @@ class ImportHotelsMinPriceBronevik
         $this->hotelBronevik = new HotelBronevik();
     }
 
-    public function __invoke()
+    public function __invoke(?array $sectionIds = null, bool $isActive = true)
     {
-        $arSectionIds = $this->getSectionIds();
-        $arHotelsPrice = $this->getHotelAvailabilityMinPrice($arSectionIds);
-        $this->updateSectionPrice($arHotelsPrice);
+        $arSectionIds = $this->getSectionIds($sectionIds, $isActive);
+        if (count($arSectionIds)) {
+            $arHotelsPrice = $this->getHotelAvailabilityMinPrice($arSectionIds);
+            $this->updateSectionPrice($arHotelsPrice);
+        }
     }
 
     private function updateSectionPrice(array $arSectionIds): void
@@ -62,9 +66,16 @@ class ImportHotelsMinPriceBronevik
         return $result;
     }
 
-    private function getSectionIds(): array
+    private function getSectionIds(?array $sectionIds = null, bool $isActive = true): array
     {
-        $rsSections = $this->hotelBronevik->listFetch(["ACTIVE" => "Y", "!UF_EXTERNAL_ID" => false, "UF_EXTERNAL_SERVICE" => ImportHotelsBronevik::EXTERNAL_SERVICE_ID], false, ["ID", "UF_EXTERNAL_ID"]);
+        $filter = ["!UF_EXTERNAL_ID" => false, "UF_EXTERNAL_SERVICE" => ImportHotelsBronevik::EXTERNAL_SERVICE_ID];
+        if ($isActive == true) {
+            $filter["ACTIVE"] = "Y";
+        }
+        if ($sectionIds !== null) {
+            $filter['ID'] = $sectionIds;
+        }
+        $rsSections = $this->hotelBronevik->listFetch($filter, false, ["ID", "UF_EXTERNAL_ID"]);
         $arSectionExternalIDs = [];
         foreach ($rsSections as $arSection) {
             $arSectionExternalIDs[$arSection["UF_EXTERNAL_ID"]] = (string)$arSection['ID'];

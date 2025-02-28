@@ -2,12 +2,14 @@
 
 namespace Naturalist\bronevik;
 
+use Bronevik\HotelsConnector\Element\Hotel;
 use CFile;
 use CIBlockSection;
 use Naturalist\bronevik\repository\Bronevik;
 
 class ImportHotelsBronevik
 {
+    use AttemptBronevik;
     const EXTERNAL_SERVICE_ID = 6;
 
     private Bronevik $bronevik;
@@ -26,8 +28,9 @@ class ImportHotelsBronevik
     /**
      * @throws \SoapFault
      */
-    public function __invoke(int | array $ids): void
+    public function __invoke(int | array $ids, bool $isLoadHotels = true, bool $isLoadHotelRooms = true): array
     {
+        $siteHotelIds = [];
         if (gettype($ids) === 'integer') {
             $ids = [$ids];
         }
@@ -35,20 +38,36 @@ class ImportHotelsBronevik
         $hotels = $this->bronevik->getHotelInfo($ids);
         foreach ($hotels->hotel as $hotel) {
             $data = $this->getHotelData($hotel);
-            if ($id = $this->upsert($data))
-            {
+            $id = null;
+            if ($isLoadHotels && $id = $this->upsert($data)) {
+                $siteHotelIds[] = $id;
+            }
+
+            if (! $isLoadHotels) {
+                $id = $this->getId($data);
+                $siteHotelIds[] = $id;
+            }
+
+            if ($isLoadHotelRooms && gettype($id) == 'integer') {
                 ($this->importnerHotelRoomsBronevik)($id, $hotel?->rooms?->room);
             }
+
         }
+
+        return $siteHotelIds;
     }
 
-    private function getHotelData($data): array
+    private function getHotelData(Hotel $data): array
     {
         $arFields = [];
 
         $sectionCode = \CUtil::translit($data->name, "ru");
         $arFields["IBLOCK_ID"] = CATALOG_IBLOCK_ID;
         $arFields["UF_EXTERNAL_ID"] = $data->id;
+        $arFields["UF_INFORMATIONS"] = json_encode($data?->informationForGuest?->notification);
+        $arFields["UF_TAXES"] = $data->hasTaxes ? json_encode($data?->taxes?->tax) : '';
+        $arFields["UF_ADDITIONAL_INFO"] = json_encode($data?->additionalInfo);
+        $arFields["UF_ALLOWABLE_TIME"] = json_encode(['allowableCheckinTime' => $data?->allowableCheckinTime, 'allowableCheckoutTime' => $data?->allowableCheckoutTime]);
         $arFields["UF_EXTERNAL_SERVICE"] = self::EXTERNAL_SERVICE_ID;
         $arFields["UF_ADDRESS"] = $data->cityName . '. ' . $data->address;
         $arFields["UF_TIME_FROM"] = $data->checkinTime;
@@ -73,9 +92,22 @@ class ImportHotelsBronevik
         return $result;
     }
 
-    private function upsert(array $data): int|null|bool
+    private function getId(array $data): ?int
     {
         $arSection = $this->hotelBronevik->listFetch(["UF_EXTERNAL_ID" => $data["UF_EXTERNAL_ID"]], false, ["IBLOCK_ID", "ID", "NAME", "CODE", "SORT", "UF_*"]);
+        if (count($arSection)) {
+            $arSection = current($arSection);
+
+            return $arSection['ID'];
+        }
+
+        return null;
+    }
+
+    private function upsert(array $data): int|bool
+    {
+        $arSection = $this->hotelBronevik->listFetch(["UF_EXTERNAL_ID" => $data["UF_EXTERNAL_ID"]], false, ["IBLOCK_ID", "ID", "NAME", "CODE", "SORT", "UF_*"]);
+        $iS = new CIBlockSection();
         if (count($arSection)) {
             $arSection = current($arSection);
             $isLoadImage = true;
@@ -89,17 +121,13 @@ class ImportHotelsBronevik
                 $data['UF_PHOTOS'] = $photos;
             }
 
-            $iS = new CIBlockSection();
-            if ($arSection) {
-                if ($iS->Update($arSection['ID'], $data)) {
-                    return $arSection['ID'];
-                }
-            } else {
-                return $iS->Add($data);
+            $iS->Update($arSection['ID'], array_filter($data, function ($k) { return in_array($k, ['UF_TAXES', 'UF_INFORMATIONS', 'UF_ADDITIONAL_INFO', 'UF_TIME_FROM', 'UF_TIME_TO', 'UF_ALLOWABLE_TIME']); }, ARRAY_FILTER_USE_KEY));
+            if (true) {
+                return $arSection['ID'];
             }
+        } else {
+            return $iS->Add($data);
         }
-
-        return null;
     }
 
     private static function getImages($arImagesUrl)
