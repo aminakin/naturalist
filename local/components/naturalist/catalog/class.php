@@ -945,12 +945,13 @@ class NaturalistCatalog extends \CBitrixComponent
         $this->arResult['arUriParams'] = $this->arUriParams;
         $this->arResult['FAVORITES'] = Users::getFavourites();
         $this->arResult['SECTION'] = $this->arSections;
-        $this->arResult['guestsDeclension'] = new Declension('гость', 'гостя', 'гостей');
+        $this->arResult['guestsDeclension'] = new Declension('взрослый', 'взрослого', 'взрослых');
         $this->arResult['childrenDeclension'] = new Declension('ребенок', 'детей', 'детей');
         $this->arResult['reviewsDeclension'] = new Declension('отзыв', 'отзыва', 'отзывов');
         $this->arResult['daysDeclension'] = new Declension('ночь', 'ночи', 'ночей');
         $this->arResult['roomsDeclension'] = new Declension('комната', 'комнаты', 'комнат');
         $this->arResult['bedsDeclension'] = new Declension('спальное место', 'спальных места', 'спальных мест');
+        $this->arResult['humenDeclension'] = new Declension('взрослый', 'взрослых','взрослых' );
         $this->arResult['titleSEO'] = $this->titleSEO;
         $this->arResult['descriptionSEO'] = $this->descriptionSEO;
         $this->arResult['h1SEO'] = $this->h1SEO;
@@ -1149,7 +1150,9 @@ class NaturalistCatalog extends \CBitrixComponent
                 'PROPERTY_ROOMS',
                 'PROPERTY_BEDS',
                 'PROPERTY_ROOMTOUR',
-                'PROPERTY_WITH_PETS'
+                'PROPERTY_WITH_PETS',
+                'PROPERTY_QUANTITY_HUMEN',
+                'PROPERTY_QUANTITY_CHILD'
             ));
 
         $this->arElements = array();

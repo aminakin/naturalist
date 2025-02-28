@@ -137,6 +137,11 @@ foreach ($arParams['VARS'] as $key => $value) {
                                     Можно с животными
                                 </div>
                             <? } ?>
+                            <?if(!is_null($arElement['PROPERTY_QUANTITY_HUMEN_VALUE']) || !is_null($arElement['PROPERTY_QUANTITY_CHILD_VALUE'])):?>
+                                <div class="room__features">
+                                    <?=$arElement['PROPERTY_QUANTITY_HUMEN_VALUE'] .' '. $guestsDeclension->get($arElement['PROPERTY_QUANTITY_HUMEN_VALUE'])?>, <?=!is_null($arElement['PROPERTY_QUANTITY_CHILD_VALUE']) ? $arElement['PROPERTY_QUANTITY_CHILD_VALUE'].' '.$childrenDeclension->get($arElement['PROPERTY_QUANTITY_CHILD_VALUE']): "бзе детей" ?>
+                                </div>
+                            <?endif?>
                             <a class="room__features-more" href="#" elementId="<?= $arElement['ID'] ?>" data-room-more="<?= $checksum ?>">Подробнее о номере</a>
                         </div>
                     </div>
