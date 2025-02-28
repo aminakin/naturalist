@@ -16,8 +16,18 @@ class Utils
      *
      * Возвращает км
      */
-    public static function calculateTheDistance($latitudeFirstPoint, $longitudeFirstPoint, $latitudeSecondPoint, $longitudeSecondPoint)
-    {
+    public static function calculateTheDistance(
+        float $latitudeFirstPoint,
+        float $longitudeFirstPoint,
+        float $latitudeSecondPoint,
+        float $longitudeSecondPoint
+    ):float {
+        // преобразование параметров в float
+        $latitudeFirstPoint = $latitudeFirstPoint;
+        $longitudeFirstPoint = $longitudeFirstPoint;
+        $latitudeSecondPoint = $latitudeSecondPoint;
+        $longitudeSecondPoint = $longitudeSecondPoint;
+
         // перевести координаты в радианы
         $latitudeFirstPointToRad = $latitudeFirstPoint * M_PI / 180;
         $latitudeSecondPointToRad = $latitudeSecondPoint * M_PI / 180;
