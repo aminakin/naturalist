@@ -1979,9 +1979,9 @@
   overflow: hidden!important;
 }
 
-.about__text-hide p {
+/* .about__text-hide p {
   line-height: 16px !important;
-}
+} */
 
 .about__text_hide .about__text-show a:before {
   content: attr(data-text-show-more);
