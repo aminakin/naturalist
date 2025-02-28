@@ -1,0 +1,1 @@
+DROP TABLE if exists b_bronevik_advance_hotels;
