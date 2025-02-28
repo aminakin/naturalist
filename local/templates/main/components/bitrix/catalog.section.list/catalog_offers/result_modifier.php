@@ -84,7 +84,13 @@ foreach ($arResult["SECTIONS"] as &$arSection) {
 
     $searchedRegionData = Regions::getRegionById($arParams['AR_SECTION']['UF_REGION'] ?? false);
     if ($searchedRegionData['CENTER_UF_REGION']) {
-        $arSection['DISCTANCE'] = Utils::calculateTheDistance($arParams['SECTION_COORDS'][0], $arParams['SECTION_COORDS'][1], $arSection['COORDS'][0], $arSection['COORDS'][1]);
+        $arSection['DISCTANCE'] = Utils::calculateTheDistance(
+            (float)$arParams['SECTION_COORDS'][0],
+            (float)$arParams['SECTION_COORDS'][1],
+            (float)$arSection['COORDS'][0],
+            (float)$arSection['COORDS'][1]
+        );
+
         $arSection['DISCTANCE_TO_REGION'] = $searchedRegionData['UF_CENTER_NAME_RU'];
     }
 
