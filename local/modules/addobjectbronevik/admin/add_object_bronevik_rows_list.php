@@ -4,7 +4,7 @@ use Bitrix\Main\Entity\ExpressionField;
 use Bitrix\Highloadblock as HL;
 
 // admin initialization
-define("ADMIN_MODULE_NAME", "add_object_bronevik");
+define("ADMIN_MODULE_NAME", "addobjectbronevik");
 require_once($_SERVER["DOCUMENT_ROOT"]."/bitrix/modules/main/include/prolog_admin_before.php");
 
 global $APPLICATION, $USER, $USER_FIELD_MANAGER;
@@ -294,7 +294,7 @@ require_once($_SERVER["DOCUMENT_ROOT"]."/bitrix/modules/main/include/prolog_admi
         // import { Process, ProcessManager } from 'ui.stepprocessing';
         BX.UI.StepProcessing.ProcessManager.create(<?= \Bitrix\Main\Web\Json::encode([
             'id' => 'import', // Уникальный идентификатор процесса в контексте страницы
-            'controller' => 'bitrix:add_object_bronevik.api.hotel', // дефолтый контроллер процесса
+            'controller' => 'bitrix:addobjectbronevik.api.hotel', // дефолтый контроллер процесса
             'messages' => [
                 // Для всех сообщений уже имеются фразы по-умолчанию.
                 // Переопределение фразы необходимо для кастомизации под конкретную задачу.
@@ -313,14 +313,14 @@ require_once($_SERVER["DOCUMENT_ROOT"]."/bitrix/modules/main/include/prolog_admi
             // Очередь заданий
             'queue' => [
                 [
-                    'controller' => 'bitrix:add_object_bronevik.api.hotel', // отдельный контроллер на шаге /bitrix/services/main/ajax.php?action=add_object_bronevik.api.hotel.store
+                    'controller' => 'bitrix:addobjectbronevik.api.hotel', // отдельный контроллер на шаге /bitrix/services/main/ajax.php?action=add_object_bronevik.api.hotel.store
                     'params' => ['params' => ['item' => 55, 'items' => 555]], // дополнительные параметры, добавляемые в запрос
                     'action' => 'init',
                     'title' => \Bitrix\Main\Localization\Loc::getMessage('INDEX', ['#NUM#' => 3, '#LEN#' => 3]),
                     'progressBarTitle' => \Bitrix\Main\Localization\Loc::getMessage('INDEX_PROGRESS'),
                 ],
                 [
-                    'controller' => 'bitrix:add_object_bronevik.api.hotel', // отдельный контроллер на шаге /bitrix/services/main/ajax.php?action=add_object_bronevik.api.hotel.store
+                    'controller' => 'bitrix:addobjectbronevik.api.hotel', // отдельный контроллер на шаге /bitrix/services/main/ajax.php?action=add_object_bronevik.api.hotel.store
                     'params' => ['params' => ['item' => 55, 'items' => 555]], // дополнительные параметры, добавляемые в запрос
                     'action' => 'store',
                     'title' => \Bitrix\Main\Localization\Loc::getMessage('INDEX', ['#NUM#' => 3, '#LEN#' => 3]),
@@ -398,10 +398,6 @@ require_once($_SERVER["DOCUMENT_ROOT"]."/bitrix/modules/main/include/prolog_admi
                     }
                 }
             }
-
-            // TODO: EXAMPLE
-            expType = false
-            hotelIds = ["244", "565", "1405","244", "565", "1405","244", "565", "1405","244", "565", "1405","244", "565", "1405","244", "565", "1405"]
 
             var process = BX.UI.StepProcessing.ProcessManager.get('import')
                 process.setHandler('RequestStart', function(FormData ){

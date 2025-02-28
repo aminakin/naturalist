@@ -6,5 +6,5 @@ if (!$_SERVER['DOCUMENT_ROOT']) {
 }
 include_once $_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_before.php";
 
-CModule::IncludeModule("add_object_bronevik");
+CModule::IncludeModule("addobjectbronevik");
 \Local\AddObjectBronevik\Agents\AddObjectBronevikParserAgent::parser();

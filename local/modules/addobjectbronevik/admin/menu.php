@@ -8,7 +8,7 @@
 if($APPLICATION->GetGroupRight("seo") > "D") {
     $aMenu = [[
         "parent_menu" => "global_menu_services", // поместим в раздел "Сервис"
-        "section" => "add_object_bronevik",
+        "section" => "addobjectbronevik",
         "sort" => 3000,                    // сортировка пункта меню
         "url" => "add_object_bronevik_rows_list.php?lang=" . LANG,  // ссылка на пункте меню
         "text" => 'Добавить объект Bronevik',       // текст пункта меню

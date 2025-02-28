@@ -12,8 +12,8 @@ class AddObjectBronevikLoadFileRepository
 
     public function __construct()
     {
-        $this->login = \COption::GetOptionString('add_object_bronevik', 'dump_login', 'naturalist_api_dump');
-        $this->password = \COption::GetOptionString('add_object_bronevik', 'dump_password', 'ywvUt3s');
+        $this->login = \COption::GetOptionString('addobjectbronevik', 'dump_login', 'naturalist_api_dump');
+        $this->password = \COption::GetOptionString('addobjectbronevik', 'dump_password', 'ywvUt3s');
     }
 
     public function getFileName()

@@ -1,7 +1,7 @@
 <?
-Class add_object_bronevik extends CModule
+Class addobjectbronevik extends CModule
 {
-    var $MODULE_ID = "add_object_bronevik";
+    var $MODULE_ID = "addobjectbronevik";
     var $MODULE_VERSION;
     var $MODULE_VERSION_DATE;
     var $MODULE_NAME;
@@ -18,16 +18,16 @@ Class add_object_bronevik extends CModule
             $this->MODULE_VERSION = $arModuleVersion["VERSION"];
             $this->MODULE_VERSION_DATE = $arModuleVersion["VERSION_DATE"];
         }
-        $this->MODULE_NAME = "add_object_bronevik – модуль";
+        $this->MODULE_NAME = "addobjectbronevik – модуль";
         $this->MODULE_DESCRIPTION = "После установки вы сможете пользоваться модулем";
     }
     function InstallFiles()
     {
 //        CopyDirFiles($_SERVER["DOCUMENT_ROOT"]."/local/modules/add_object_bronevik/install/components",
 //            $_SERVER["DOCUMENT_ROOT"]."/bitrix/components", true, true);
-        CopyDirFiles($_SERVER['DOCUMENT_ROOT'] . '/local/modules/add_object_bronevik/install/cron/addObjectBronevikParserCron.php',
+        CopyDirFiles($_SERVER['DOCUMENT_ROOT'] . '/local/modules/addobjectbronevik/install/cron/addObjectBronevikParserCron.php',
             $_SERVER["DOCUMENT_ROOT"].'/local/cron/addObjectBronevikParserCron.php');
-        CopyDirFiles($_SERVER['DOCUMENT_ROOT'] . '/local/modules/add_object_bronevik/install/admin/add_object_bronevik_rows_list.php',
+        CopyDirFiles($_SERVER['DOCUMENT_ROOT'] . '/local/modules/addobjectbronevik/install/admin/add_object_bronevik_rows_list.php',
             $_SERVER["DOCUMENT_ROOT"].'/bitrix/admin/add_object_bronevik_rows_list.php');
 
         return true;
@@ -44,7 +44,7 @@ Class add_object_bronevik extends CModule
         global $DOCUMENT_ROOT, $APPLICATION;
         $this->InstallFiles();
         $this->InstallDB();
-        RegisterModule("add_object_bronevik");
+        RegisterModule("addobjectbronevik");
 //        $APPLICATION->IncludeAdminFile("Установка модуля add_object_bronevik", $DOCUMENT_ROOT."/local/modules/add_object_bronevik/install/step.php");
     }
     function DoUninstall()
@@ -52,7 +52,7 @@ Class add_object_bronevik extends CModule
         global $DOCUMENT_ROOT, $APPLICATION;
         $this->UnInstallFiles();
         $this->UnInstallDB();
-        UnRegisterModule("add_object_bronevik");
+        UnRegisterModule("addobjectbronevik");
 //        $APPLICATION->IncludeAdminFile("Деинсталляция модуля add_object_bronevik", $DOCUMENT_ROOT."/local/modules/add_object_bronevik/install/unstep.php");
     }
 
@@ -63,10 +63,10 @@ Class add_object_bronevik extends CModule
 
         if (!$DB->TableExists('b_bronevik_advance_hotels'))
         {
-            $this->errors = $DB->RunSQLBatch($_SERVER['DOCUMENT_ROOT'] . '/local/modules/add_object_bronevik/install/db//install.sql');
+            $this->errors = $DB->RunSQLBatch($_SERVER['DOCUMENT_ROOT'] . '/local/modules/addobjectbronevik/install/db//install.sql');
         }
 
-        CAgent::AddAgent('Local\AddObjectBronevik\Agents\AddObjectBronevikParserAgent::parser()', 'add_object_bronevik', 'N', 43200, '', '');
+        CAgent::AddAgent('Local\AddObjectBronevik\Agents\AddObjectBronevikParserAgent::parser()', 'addobjectbronevik', 'N', 43200, '', '');
 
         return true;
     }
@@ -76,10 +76,10 @@ Class add_object_bronevik extends CModule
         global $DB;
         $this->errors = false;
 
-        $this->errors = $DB->RunSQLBatch($_SERVER['DOCUMENT_ROOT'] . "/local/modules/add_object_bronevik/install/db/uninstall.sql");
+        $this->errors = $DB->RunSQLBatch($_SERVER['DOCUMENT_ROOT'] . "/local/modules/addobjectbronevik/install/db/uninstall.sql");
 
-        CAgent::RemoveAgent('add_object_bronevik');
-        \COption::RemoveOption('add_object_bronevik');
+        CAgent::RemoveAgent('addobjectbronevik');
+        \COption::RemoveOption('addobjectbronevik');
     }
 }
 ?>

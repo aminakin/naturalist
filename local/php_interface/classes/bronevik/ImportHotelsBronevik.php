@@ -104,9 +104,10 @@ class ImportHotelsBronevik
         return null;
     }
 
-    private function upsert(array $data): int|null|bool
+    private function upsert(array $data): int|bool
     {
         $arSection = $this->hotelBronevik->listFetch(["UF_EXTERNAL_ID" => $data["UF_EXTERNAL_ID"]], false, ["IBLOCK_ID", "ID", "NAME", "CODE", "SORT", "UF_*"]);
+        $iS = new CIBlockSection();
         if (count($arSection)) {
             $arSection = current($arSection);
             $isLoadImage = true;
@@ -120,18 +121,13 @@ class ImportHotelsBronevik
                 $data['UF_PHOTOS'] = $photos;
             }
 
-            $iS = new CIBlockSection();
-            if ($arSection) {
-                $iS->Update($arSection['ID'], array_filter($data, function ($k) { return in_array($k, ['UF_TAXES', 'UF_INFORMATIONS', 'UF_ADDITIONAL_INFO', 'UF_TIME_FROM', 'UF_TIME_TO', 'UF_ALLOWABLE_TIME']); }, ARRAY_FILTER_USE_KEY));
-                if (true) {
-                    return $arSection['ID'];
-                }
-            } else {
-                return $iS->Add($data);
+            $iS->Update($arSection['ID'], array_filter($data, function ($k) { return in_array($k, ['UF_TAXES', 'UF_INFORMATIONS', 'UF_ADDITIONAL_INFO', 'UF_TIME_FROM', 'UF_TIME_TO', 'UF_ALLOWABLE_TIME']); }, ARRAY_FILTER_USE_KEY));
+            if (true) {
+                return $arSection['ID'];
             }
+        } else {
+            return $iS->Add($data);
         }
-
-        return null;
     }
 
     private static function getImages($arImagesUrl)

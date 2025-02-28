@@ -24,10 +24,10 @@ class HotelsConnector extends BronevikHotelsConnector
     public static function getInstance(): self
     {
         if (!isset(self::$instance)) {
-            self::$login = COption::GetOptionString( 'add_object_bronevik', 'login', 'naturalist_test');
-            self::$password = COption::GetOptionString( 'add_object_bronevik', 'password', 'naturalist_test');
-            self::$clientKey = COption::GetOptionString( 'add_object_bronevik', 'key', 'naturalist_test');
-            $stand = COption::GetOptionString( 'add_object_bronevik', 'stand', Endpoints::SECURE_DEVELOPMENT);
+            self::$login = COption::GetOptionString( 'addobjectbronevik', 'login', 'naturalist_test');
+            self::$password = COption::GetOptionString( 'addobjectbronevik', 'password', 'naturalist_test');
+            self::$clientKey = COption::GetOptionString( 'addobjectbronevik', 'key', 'naturalist_test');
+            $stand = COption::GetOptionString( 'addobjectbronevik', 'stand', Endpoints::SECURE_DEVELOPMENT);
 
             $secureEndpoint = Endpoints::SECURE_DEVELOPMENT;
             $debugMode = true;

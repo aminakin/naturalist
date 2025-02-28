@@ -2,7 +2,7 @@
 
 use Bronevik\HotelsConnector\Enum\Endpoints;
 
-$sModuleId  = 'add_object_bronevik';
+$sModuleId  = 'addobjectbronevik';
 
 CModule::IncludeModule( $sModuleId );
 

@@ -26,12 +26,12 @@ class HotelService
         
         $hotelIds = $this->getHotelIds($expType, $hotelIds);
 
-        COption::SetOptionString('add_object_bronevik', 'importHotelIds', json_encode($hotelIds));
-        COption::SetOptionString('add_object_bronevik', 'importHotelIndex', 0);
+        COption::SetOptionString('addobjectbronevik', 'importHotelIds', json_encode($hotelIds));
+        COption::SetOptionString('addobjectbronevik', 'importHotelIndex', 0);
 
-        COption::SetOptionString('add_object_bronevik', 'importLoadHotels', isset($arRequest['loadHotels']));
-        COption::SetOptionString('add_object_bronevik', 'importLoadHotelRooms', isset($arRequest['loadHotelRooms']));
-        COption::SetOptionString('add_object_bronevik', 'importLoadHotelMinimalPrice', isset($arRequest['loadHotelsMinimalPrice']));
+        COption::SetOptionString('addobjectbronevik', 'importLoadHotels', isset($arRequest['loadHotels']));
+        COption::SetOptionString('addobjectbronevik', 'importLoadHotelRooms', isset($arRequest['loadHotelRooms']));
+        COption::SetOptionString('addobjectbronevik', 'importLoadHotelMinimalPrice', isset($arRequest['loadHotelsMinimalPrice']));
 
         return [
             "PROCESSED_ITEMS" => 0,
@@ -46,11 +46,11 @@ class HotelService
      */
     public function store(): array
     {
-        $ids = COption::GetOptionString('add_object_bronevik', 'importHotelIds');
-        $index = COption::GetOptionString('add_object_bronevik', 'importHotelIndex', 0);
-        $isLoadHotels = COption::GetOptionString('add_object_bronevik', 'importLoadHotels') === '1';
-        $isLoadHotelRooms = COption::GetOptionString('add_object_bronevik', 'importLoadHotelRooms') === '1';
-        $isLoadHotelMinimalPrice = COption::GetOptionString('add_object_bronevik', 'importLoadHotelMinimalPrice') === '1';
+        $ids = COption::GetOptionString('addobjectbronevik', 'importHotelIds');
+        $index = COption::GetOptionString('addobjectbronevik', 'importHotelIndex', 0);
+        $isLoadHotels = COption::GetOptionString('addobjectbronevik', 'importLoadHotels') === '1';
+        $isLoadHotelRooms = COption::GetOptionString('addobjectbronevik', 'importLoadHotelRooms') === '1';
+        $isLoadHotelMinimalPrice = COption::GetOptionString('addobjectbronevik', 'importLoadHotelMinimalPrice') === '1';
         $ids = json_decode($ids);
 
         if ($index < count($ids)){
@@ -58,7 +58,10 @@ class HotelService
 
             $importHotelsBronevik = new ImportHotelsBronevik();
             $importHotelsBronevik->setAttempt(5);
-            $siteHotelIds = $importHotelsBronevik($currentId, $isLoadHotels, $isLoadHotelRooms);
+
+            $element = AddObjectBronevikTable::getById($currentId)->fetch();
+            $externalId = $element['CODE'];
+            $siteHotelIds = $importHotelsBronevik($externalId, $isLoadHotels, $isLoadHotelRooms);
 
             if ($isLoadHotelMinimalPrice && count($siteHotelIds)) {
                 $importHotelsMinPriceBronevik = new ImportHotelsMinPriceBronevik();
@@ -67,7 +70,7 @@ class HotelService
             }
 
             $index++;
-            COption::SetOptionString('add_object_bronevik', 'importHotelIndex', $index);
+            COption::SetOptionString('addobjectbronevik', 'importHotelIndex', $index);
 
             return [
                 "PROCESSED_ITEMS" => $index,

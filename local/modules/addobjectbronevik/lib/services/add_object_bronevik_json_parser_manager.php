@@ -40,18 +40,18 @@ class AddObjectBronevikJsonParserManager
     public function parse()
     {
         if ($this->setFilePathInParser()) {
-            $needLoad = \COption::GetOptionString('add_object_bronevik', 'needLoad', true);
+            $needLoad = \COption::GetOptionString('addobjectbronevik', 'needLoad', true);
 
             if ($needLoad) {
                 $this->setStartLine();
 
                 while ($data = $this->parser->getNextElement()) {
                     $this->writerRepository->upsert($data);
-                    \COption::SetOptionString('add_object_bronevik', 'parserLastRow', $data->line);
+                    \COption::SetOptionString('addobjectbronevik', 'parserLastRow', $data->line);
                 }
                 if ($data === false) {
-                    \COption::SetOptionString('add_object_bronevik', 'needLoad', false);
-                    \COption::SetOptionString('add_object_bronevik', 'endLoad', (new \Bitrix\Main\Type\DateTime()));
+                    \COption::SetOptionString('addobjectbronevik', 'needLoad', false);
+                    \COption::SetOptionString('addobjectbronevik', 'endLoad', (new \Bitrix\Main\Type\DateTime()));
                     $this->deleteNotUpdated();
                 }
             }
@@ -60,7 +60,7 @@ class AddObjectBronevikJsonParserManager
 
     private function deleteNotUpdated()
     {
-        $dateStart = \Bitrix\Main\Type\DateTime::createFromText(\COption::GetOptionString('add_object_bronevik', 'startLoad'));
+        $dateStart = \Bitrix\Main\Type\DateTime::createFromText(\COption::GetOptionString('addobjectbronevik', 'startLoad'));
 
         $result = AddObjectBronevikTable::getList(
             [
@@ -80,7 +80,7 @@ class AddObjectBronevikJsonParserManager
     {
         /** @var IAddObjectBronevikJsonLinePosition $this ->parser */
         if ($this->parser instanceof IAddObjectBronevikJsonLinePosition) {
-            $this->parser->setStartLine(\COption::GetOptionString('add_object_bronevik', 'parserLastRow', 1));
+            $this->parser->setStartLine(\COption::GetOptionString('addobjectbronevik', 'parserLastRow', 1));
         }
     }
 
@@ -88,7 +88,7 @@ class AddObjectBronevikJsonParserManager
     {
         $this->downloadFile();
 
-        $this->path = \COption::GetOptionString('add_object_bronevik', 'loadJsonPath');
+        $this->path = \COption::GetOptionString('addobjectbronevik', 'loadJsonPath');
 
         $this->parser->setFilePath($this->path);
 
@@ -97,17 +97,17 @@ class AddObjectBronevikJsonParserManager
 
     private function downloadFile(): void
     {
-        $jsonPath = \COption::GetOptionString('add_object_bronevik', 'loadJsonPath');
+        $jsonPath = \COption::GetOptionString('addobjectbronevik', 'loadJsonPath');
         if (empty($this->path) || ! file_exists($jsonPath)) {
             $remoteLastModifier = $this->fileRepository->getHeaderLastModifier();
-            $dbLastModifier = \COption::GetOptionString('add_object_bronevik', 'lastModifier');
+            $dbLastModifier = \COption::GetOptionString('addobjectbronevik', 'lastModifier');
 
             if ($remoteLastModifier != $dbLastModifier  || ! file_exists($jsonPath)) {
                 $fileName = $this->fileRepository->getFileName();
                 $newPath = Application::getDocumentRoot() . '/upload/' . $fileName;
                 $this->fileRepository->downloadFile($newPath);
-                \COption::SetOptionString('add_object_bronevik', 'lastModifier', $remoteLastModifier);
-                \COption::SetOptionString('add_object_bronevik', 'loadJsonPath', $newPath);
+                \COption::SetOptionString('addobjectbronevik', 'lastModifier', $remoteLastModifier);
+                \COption::SetOptionString('addobjectbronevik', 'loadJsonPath', $newPath);
                 if (file_exists($jsonPath) && $jsonPath !== $newPath) {
                     unlink($jsonPath);
                 }
@@ -119,8 +119,8 @@ class AddObjectBronevikJsonParserManager
 
     private function clearStepVariables(): void
     {
-        \COption::RemoveOption('add_object_bronevik', 'parserLastRow');
-        \COption::SetOptionString('add_object_bronevik', 'needLoad', true);
-        \COption::SetOptionString('add_object_bronevik', 'startLoad', (new \Bitrix\Main\Type\DateTime()));
+        \COption::RemoveOption('addobjectbronevik', 'parserLastRow');
+        \COption::SetOptionString('addobjectbronevik', 'needLoad', true);
+        \COption::SetOptionString('addobjectbronevik', 'startLoad', (new \Bitrix\Main\Type\DateTime()));
     }
 }

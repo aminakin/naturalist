@@ -3,7 +3,7 @@
 use \Bitrix\Main\Loader;
 
 Loader::registerAutoLoadClasses(
-    'add_object_bronevik',
+    'addobjectbronevik',
     [
         'Local\AddObjectBronevik\Lib\AddObjectBronevikJsonParserManager' => 'lib/services/add_object_bronevik_json_parser_manager.php',
         'Local\AddObjectBronevik\Parser\IAddObjectBronevikParser' => 'parser/i_add_object_bronevik_parser.php',
