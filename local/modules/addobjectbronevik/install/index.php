@@ -1,5 +1,5 @@
 <?
-Class addobjectbronevik extends CModule
+class addobjectbronevik extends CModule
 {
     var $MODULE_ID = "addobjectbronevik";
     var $MODULE_VERSION;

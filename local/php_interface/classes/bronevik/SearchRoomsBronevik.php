@@ -231,10 +231,7 @@ class SearchRoomsBronevik
 
     private function getRateType(RateType $rateType)
     {
-        $hlblockId = 34;
-
-        $hlblock = HighloadBlockTable::getById($hlblockId)->fetch();
-        $entity = HighloadBlockTable::compileEntity($hlblock);
+        $entity = HighloadBlockTable::compileEntity(BRONEVIK_RATE_TYPE_HL_ENTITY);
         $entityDataClass = $entity->getDataClass();
 
         $existingValue = $entityDataClass::getList([
