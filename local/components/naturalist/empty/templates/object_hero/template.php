@@ -90,15 +90,18 @@ global $isMobile;
                     </div>
                 <? } else { ?>
                     <div class="object__galery <?= count($arSection["PICTURES"]) == 1 ? 'alone' : '' ?>">
-                        <a href="#gallery" data-modal class="object__galery-item first">
+                        <!-- <a href="#gallery" data-modal class="object__galery-item first"> -->
+                        <a data-fancybox="gallery" href="<?= $arSection["PICTURES"][0]['big'] ? $arSection["PICTURES"][0]['big'] : $arSection["PICTURES"][0]['src'] ?>"  data-modal class="object__galery-item first">
                             <img src="<?= $arSection["PICTURES"][0]['big'] ? $arSection["PICTURES"][0]['big'] : $arSection["PICTURES"][0]['src'] ?>"
                                  loading="lazy" alt="">
                         </a>
                         <? if (count($arSection["PICTURES"]) > 1) { ?>
-                            <a href="#gallery" data-modal class="object__galery-item">
+                            <!-- <a href="#gallery" data-modal class="object__galery-item"> -->
+                            <a data-fancybox="gallery" href="<?= $arSection["PICTURES"][1]['src'] ?>" data-modal class="object__galery-item">
                                 <img src="<?= $arSection["PICTURES"][1]['src'] ?>" loading="lazy" alt="">
                             </a>
                             <a href="#gallery" data-modal class="object__galery-item">
+                            <!-- <a data-fancybox="gallery" href="<?= $arSection["PICTURES"][2]['src'] ?>" data-modal class="object__galery-item"> -->
                                 <img src="<?= $arSection["PICTURES"][2]['src'] ?>" loading="lazy" alt="">
                                 <span>
                                     <svg xmlns="http://www.w3.org/2000/svg" width="21" height="20" viewBox="0 0 21 20"
