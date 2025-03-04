@@ -507,6 +507,8 @@ $(function () {
             window.objectsGallery();
             window.scrollToElement("#rooms-anchor");
             window.history.replaceState(null, null, url);
+            $(".catalog_filter").css("display", "none");
+            $(".catalog-filter_close").css("display", "none");
           } else {
             var error = $(html).find(".search-error").text();
             window.infoModal("Ну вот....", error);
@@ -519,6 +521,8 @@ $(function () {
             } else {
               $("section.object-hero__form").after(updContentHtmlRelated);
             }
+            $(".catalog_filter").css("display", "none");
+            $(".catalog-filter_close").css("display", "none");
             window.objectsGallery();
             window.sliderRelated();
           }
