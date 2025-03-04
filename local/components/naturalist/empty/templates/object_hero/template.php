@@ -4,6 +4,19 @@ foreach ($arResult as $key => $value) {
 }
 
 global $isMobile;
+
+if(!isset($arResult["arSection"]["ID"])){
+    if (!defined("ERROR_404"))
+	define("ERROR_404", "Y");
+
+    \CHTTP::setStatus("404 Not Found");
+
+    if ($APPLICATION->RestartWorkarea())
+    {
+        require(\Bitrix\Main\Application::getDocumentRoot() . "/404.php");
+        die();
+    }
+}
 ?>
 <section class="section section_object">
     <div class="container">
