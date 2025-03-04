@@ -10,8 +10,6 @@ use Naturalist\Products;
 
 class ImportHotelRoomsBronevik
 {
-    const EXTERNAL_SERVICE = 24;
-
     private HotelRoomBronevik $hotelRoomBronevik;
 
 
@@ -31,7 +29,7 @@ class ImportHotelRoomsBronevik
     {
         $id = $data['PROPERTY_VALUES']['EXTERNAL_ID'];
 
-        $arExistElement = $this->hotelRoomBronevik->list(array("IBLOCK_ID" => CATALOG_IBLOCK_ID, "PROPERTY_EXTERNAL_ID" => $id, "PROPERTY_EXTERNAL_SERVICE" => self::EXTERNAL_SERVICE), false);
+        $arExistElement = $this->hotelRoomBronevik->list(array("IBLOCK_ID" => CATALOG_IBLOCK_ID, "PROPERTY_EXTERNAL_ID" => $id, "PROPERTY_EXTERNAL_SERVICE" => CATALOG_IBLOCK_ELEMENT_EXTERNAL_SERVICE_ID), false);
         if (count($arExistElement)) {
             $itemExistElement = current($arExistElement);
             $itemId = $itemExistElement['ID'];
@@ -72,7 +70,7 @@ class ImportHotelRoomsBronevik
                 "PHOTO_ARRAY" => json_encode($arrayPhotos),
                 "PHOTOS" => self::getImages($arrayPhotos),
                 "EXTERNAL_ID" => $room->id,
-                "EXTERNAL_SERVICE" => self::EXTERNAL_SERVICE,
+                "EXTERNAL_SERVICE" => CATALOG_IBLOCK_ELEMENT_EXTERNAL_SERVICE_ID,
                 "SQUARE" => $room->size,
             ),
         ];
