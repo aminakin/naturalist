@@ -84,7 +84,6 @@ foreach ($arParams['VARS'] as $key => $value) {
                             });
                         </script>
                     <? endif; ?>
-
                     <div class="room__content">
                         <div class="room__description">
                             <div class="room__description-title"><?= $arElement["NAME"] ?></div>
@@ -126,7 +125,7 @@ foreach ($arParams['VARS'] as $key => $value) {
                                     <?= $arElement["PROPERTY_BEDS_VALUE"] . ' ' . $bedsDeclension->get($arElement["PROPERTY_BEDS_VALUE"]) ?>
                                 </div>
                             <? endif; ?>
-                            <? if (in_array(4, $arSection['UF_REST_VARIANTS'])) { ?>
+                            <? if (!is_null($arElement['PROPERTY_WITH_PETS_VALUE']) && $arElement['PROPERTY_WITH_PETS_VALUE'] === "Y") { ?>
                                 <div class="room__features">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
                                         <path d="M16.0783 6.73408C16.489 6.6994 16.9388 6.81365 17.26 7.0783C17.6796 7.42405 17.8902 7.93488 17.9368 8.46869C17.999 9.1818 17.7269 9.92307 17.272 10.4673C16.8783 10.9383 16.3122 11.3411 15.6852 11.3974L15.6689 11.3997C15.2211 11.4579 14.8056 11.3243 14.4532 11.0474C14.0974 10.768 13.8637 10.2919 13.8114 9.84627C13.719 9.05996 13.9614 8.31129 14.4504 7.69356C14.852 7.18631 15.4274 6.8102 16.0783 6.73408Z" fill="black" />
@@ -138,6 +137,11 @@ foreach ($arParams['VARS'] as $key => $value) {
                                     Можно с животными
                                 </div>
                             <? } ?>
+                            <?if(!is_null($arElement['PROPERTY_QUANTITY_HUMEN_VALUE']) || !is_null($arElement['PROPERTY_QUANTITY_CHILD_VALUE'])):?>
+                                <div class="room__features">
+                                    <?=$arElement['PROPERTY_QUANTITY_HUMEN_VALUE'] .' '. $guestsDeclension->get($arElement['PROPERTY_QUANTITY_HUMEN_VALUE'])?>, <?=!is_null($arElement['PROPERTY_QUANTITY_CHILD_VALUE']) ? $arElement['PROPERTY_QUANTITY_CHILD_VALUE'].' '.$childrenDeclension->get($arElement['PROPERTY_QUANTITY_CHILD_VALUE']): "бзе детей" ?>
+                                </div>
+                            <?endif?>
                             <a class="room__features-more" href="#" elementId="<?= $arElement['ID'] ?>" data-room-more="<?= $checksum ?>">Подробнее о номере</a>
                         </div>
                     </div>
