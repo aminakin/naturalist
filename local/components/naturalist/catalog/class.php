@@ -945,8 +945,8 @@ class NaturalistCatalog extends \CBitrixComponent
         $this->arResult['arUriParams'] = $this->arUriParams;
         $this->arResult['FAVORITES'] = Users::getFavourites();
         $this->arResult['SECTION'] = $this->arSections;
-        $this->arResult['guestsDeclension'] = new Declension('взрослый', 'взрослого', 'взрослых');
-        $this->arResult['childrenDeclension'] = new Declension('ребенок', 'детей', 'детей');
+        $this->arResult['guestsDeclension'] = new Declension('взрослый', 'взрослых', 'взрослых');
+        $this->arResult['childrenDeclension'] = new Declension('ребенок', 'ребенка', 'детей');
         $this->arResult['reviewsDeclension'] = new Declension('отзыв', 'отзыва', 'отзывов');
         $this->arResult['daysDeclension'] = new Declension('ночь', 'ночи', 'ночей');
         $this->arResult['roomsDeclension'] = new Declension('комната', 'комнаты', 'комнат');
