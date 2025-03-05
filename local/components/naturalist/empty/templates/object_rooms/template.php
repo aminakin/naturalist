@@ -398,7 +398,7 @@ foreach ($arParams['VARS'] as $key => $value) {
                                                 Можно с животными
                                             </div>
                                         <? } ?>
-                                        <a class="room__features-more" href="#" data-room-more="<?= $arElement['ID'] . '-' . $arTariff['tariffId'] ?>">Подробнее о номере</a>
+                                        <a class="room__features-more" href="#" elementId="<?= $arElement['ID'] ?>" data-room-more="<?= $arElement['ID'] . '-' . $arTariff['tariffId'] ?>">Подробнее о номере</a>
                                     </div>
                                 </div>
                             </div>
