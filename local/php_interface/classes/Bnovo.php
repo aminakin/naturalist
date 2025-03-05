@@ -1854,6 +1854,8 @@ class Bnovo
             "roomtypes" => (array)$arCategories
         );
 
+//        Debug::writeToFile($data, 'curl', '_plans_data.log');
+
         $ch = curl_init();
         curl_setopt_array($ch, array(
             CURLOPT_URL => $url . '?' . http_build_query($data),
@@ -1862,6 +1864,9 @@ class Bnovo
         ));
         $response = curl_exec($ch);
         $arData = json_decode($response, true);
+
+
+//        Debug::writeToFile($response, '', '_plans_responce_data.json');
 
         //xprint($arData);
 
@@ -1999,6 +2004,7 @@ class Bnovo
             "roomtypes" => $roomTypes
         );
 
+//        Debug::writeToFile($data, '', '_availability_data.log');
         //Debug::writeToFile($data, 'BNOVO_REQUEST_' . $hotelId . date('Y-m-d H:i:s'), '__BNOVO_REQUEST.log');
 
         $ch = curl_init();
@@ -2010,6 +2016,7 @@ class Bnovo
         $response = curl_exec($ch);
         $arData = json_decode($response, true);
 
+//        Debug::writeToFile($response, '', '_availability_responce_data.json');
         //Debug::writeToFile($arData, 'BNOVO_RESPONSE_' . $hotelId . date('Y-m-d H:i:s'), '__BNOVO_RESPONSE.log');
 
         if (empty($arData) || (isset($arData['code']) && $arData['code'] != 200)) {
