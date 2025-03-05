@@ -40,4 +40,21 @@ class HotelBronevik
 
         return $result;
     }
+
+    public function store()
+    {
+
+    }
+
+    public function update(?int $id, ?int $externalId, array $data): bool|null
+    {
+        $iS = new CIBlockSection();
+
+        if ($externalId) {
+            $hotel = $this->showByExternalId($externalId);
+            $id = $hotel['ID'];
+        }
+
+        return $iS->Update($id, $data);
+    }
 }
