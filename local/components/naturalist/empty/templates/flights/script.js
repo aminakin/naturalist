@@ -1,5 +1,7 @@
 $(function () {
   window.preloader.show();
+
+
   setTimeout(function(){
     let widgets = document.querySelectorAll('tp-cascoon')
     const flights_form = document.querySelector('.flights-form')
@@ -86,3 +88,42 @@ $(function () {
     }
   });
 });
+
+
+  $(document).ready(function() {
+  var swiper = new Swiper(' .gg .swiper-container', {
+    loop: true,
+    slidesPerView: 4,
+    spaceBetween: 30,
+    navigation: {
+      nextEl: '.swiper-button-next',
+      prevEl: '.swiper-button-prev',
+    },
+    on: {
+      slideChangeTransitionEnd: function () {
+        // Получаем текущее значение трансформации
+        var translateValue = this.getTranslate();
+
+        // Проверяем, если значение меньше -3280px
+        if (translateValue < -3280) {
+          // Если меньше, устанавливаем его на -3280
+          this.setTranslate(-3280);
+        }
+      }
+    }
+});
+
+    var swiperTwo = new Swiper('.tt .swiper-container', {
+      loop: true, // Включение бесконечной прокрутки
+      slidesPerView: 1, // Количество видимых слайдов
+      navigation: {
+        nextEl: '.swiper-button-next',
+        prevEl: '.swiper-button-prev',
+      },
+      pagination: {
+        el: '.swiper-pagination',
+        clickable: true,
+      },
+    });
+});
+
