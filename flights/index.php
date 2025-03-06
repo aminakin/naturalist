@@ -14,34 +14,6 @@ $APPLICATION->IncludeComponent(
     array()
 );
 ?>
-<style>
-    tp-cascoon {
-    z-index: 100;
-    top: 56px;
-    margin-top: 0px;
-    position: absolute;
-}
-.wrapper {
-    margin-top: 200px;
-}
-@media (min-width: 1025px){
-    body {
-        position: relative;
-    }
-    tp-cascoon {
-        max-width: calc(var(--container-max-width));
-        padding: 0px 0px;
-        margin-right: auto;
-        left: 50%;
-        transform: translateX(-50%)
-    }
-}
-@media (max-width: 767px){
-    .wrapper {
-        margin-top: 420px;
-    }
-}
-</style>
 <?
 require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/footer.php");
 ?>
