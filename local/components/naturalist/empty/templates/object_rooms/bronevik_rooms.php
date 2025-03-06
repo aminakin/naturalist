@@ -124,7 +124,7 @@ foreach ($arElements as $arElement): ?>
                                     Можно с животными
                                 </div>
                             <? } ?>
-                            <a class="room__features-more" href="#" elementId="<?= $arElement['ID'] ?>">Подробнее о номере</a>
+                            <a class="room__features-more" elementId="<?= $arElement['ID'] ?>" href="#" elementId="<?= $arElement['ID'] ?>">Подробнее о номере</a>
                         </div>
                     </div>
                 </div>
