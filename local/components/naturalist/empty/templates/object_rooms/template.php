@@ -195,7 +195,7 @@ foreach ($arParams['VARS'] as $key => $value) {
             } elseif ($arSection["UF_EXTERNAL_SERVICE"] == "bronevik"){
                 require 'bronevik_rooms.php';
             } else {
-                require 'naturalist_rooms.php';
+                require 'traveline_rooms.php';
             } ?>
         </div>
 
