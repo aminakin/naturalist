@@ -60,6 +60,10 @@ Loader::registerAutoLoadClasses(null, array(
     'Naturalist\bronevik\OrderBronevik' => '/local/php_interface/classes/bronevik/OrderBronevik.php',
     'Naturalist\bronevik\HotelOfferPricingCheckPriceBronevik' => '/local/php_interface/classes/bronevik/HotelOfferPricingCheckPriceBronevik.php',
     'Naturalist\bronevik\AttemptBronevik' => '/local/php_interface/classes/bronevik/AttemptBronevik.php',
+    'Naturalist\bronevik\OrderChangeLog' => '/local/php_interface/classes/bronevik/OrderChangeLog.php',
+    'Naturalist\bronevik\OrderChangeStatus' => '/local/php_interface/classes/bronevik/OrderChangeStatus.php',
+    'Naturalist\bronevik\OrderChangeBronevik' => '/local/php_interface/classes/bronevik/OrderChangeBronevik.php',
+    'Naturalist\bronevik\enums\StatusOrderEnum' => '/local/php_interface/classes/bronevik/enums/StatusOrderEnum.php',
     'Naturalist\Handlers\HigloadHandler' => '/local/php_interface/classes/Handlers/HigloadHandler.php',
 ));
 

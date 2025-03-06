@@ -102,7 +102,7 @@ class order_bronevik_status20250228114807 extends Version
         \CModule::IncludeModule("sale");
         $arResult = OrderPropsTable::getList([
             'filter' => [
-                'CODE' => 'BRONEVIK_STATUS', 'PERSON_TYPE_ID' => 1
+                'CODE' => 'BRONEVIK_STATUS'
             ],
         ])->fetch();
         if ($arResult) {
