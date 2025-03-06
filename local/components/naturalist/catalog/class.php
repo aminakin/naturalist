@@ -950,12 +950,13 @@ class NaturalistCatalog extends \CBitrixComponent
         $this->arResult['arUriParams'] = $this->arUriParams;
         $this->arResult['FAVORITES'] = Users::getFavourites();
         $this->arResult['SECTION'] = $this->arSections;
-        $this->arResult['guestsDeclension'] = new Declension('гость', 'гостя', 'гостей');
-        $this->arResult['childrenDeclension'] = new Declension('ребенок', 'детей', 'детей');
+        $this->arResult['guestsDeclension'] = new Declension('взрослый', 'взрослых', 'взрослых');
+        $this->arResult['childrenDeclension'] = new Declension('ребенок', 'ребенка', 'детей');
         $this->arResult['reviewsDeclension'] = new Declension('отзыв', 'отзыва', 'отзывов');
         $this->arResult['daysDeclension'] = new Declension('ночь', 'ночи', 'ночей');
         $this->arResult['roomsDeclension'] = new Declension('комната', 'комнаты', 'комнат');
         $this->arResult['bedsDeclension'] = new Declension('спальное место', 'спальных места', 'спальных мест');
+        $this->arResult['humenDeclension'] = new Declension('взрослый', 'взрослых','взрослых' );
         $this->arResult['titleSEO'] = $this->titleSEO;
         $this->arResult['descriptionSEO'] = $this->descriptionSEO;
         $this->arResult['h1SEO'] = $this->h1SEO;
@@ -1135,7 +1136,30 @@ class NaturalistCatalog extends \CBitrixComponent
     private function getRooms()
     {
         // Список номеров
-        $rsElements = CIBlockElement::GetList(array("SORT" => "ASC"), $this->arFilter, false, false, array("IBLOCK_ID", "ID", "IBLOCK_SECTION_ID", "NAME", "DETAIL_TEXT", "PROPERTY_PHOTOS", "PROPERTY_FEATURES", "PROPERTY_EXTERNAL_ID", "PROPERTY_EXTERNAL_CATEGORY_ID", "PROPERTY_SQUARE", "PROPERTY_PARENT_ID", 'PROPERTY_ROOMS', 'PROPERTY_BEDS', 'PROPERTY_ROOMTOUR'));
+        $rsElements = CIBlockElement::GetList(
+            array("SORT" => "ASC"),
+            $this->arFilter,
+            false,
+            false,
+            array(
+                "IBLOCK_ID",
+                "ID",
+                "IBLOCK_SECTION_ID",
+                "NAME", "DETAIL_TEXT",
+                "PROPERTY_PHOTOS",
+                "PROPERTY_FEATURES",
+                "PROPERTY_EXTERNAL_ID",
+                "PROPERTY_EXTERNAL_CATEGORY_ID",
+                "PROPERTY_SQUARE",
+                "PROPERTY_PARENT_ID",
+                'PROPERTY_ROOMS',
+                'PROPERTY_BEDS',
+                'PROPERTY_ROOMTOUR',
+                'PROPERTY_WITH_PETS',
+                'PROPERTY_QUANTITY_HUMEN',
+                'PROPERTY_QUANTITY_CHILD'
+            ));
+
         $this->arElements = array();
         while ($arElement = $rsElements->Fetch()) {
             if ($arElement["PROPERTY_PHOTOS_VALUE"]) {
