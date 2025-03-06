@@ -1,18 +1,13 @@
-<?php
+<?
 
 use Naturalist\Users;
 
-global $isAuthorized, $isMobile;
+/** @var TYPE_NAME $arElements */
 
-foreach ($arParams['VARS'] as $key => $value) {
-    ${$key} = $value;
-}
-
-?>
-<div class="rooms" data-object-container>
-    <? if (empty($arExternalInfo)) { ?>
-        <? foreach ($arElements as $arElement): ?>
-            <div class="room room__empty">
+foreach ($arElements as $arElement): ?>
+    <? if ($arExternalInfo[$arElement["ID"]]): ?>
+        <? foreach ($arExternalInfo[$arElement["ID"]] as $arExternalItem): ?>
+            <div class="room">
                 <div class="room__top">
                     <? if ($arElement["PICTURES"]): ?>
                         <div class="room__images">
@@ -84,6 +79,7 @@ foreach ($arParams['VARS'] as $key => $value) {
                             });
                         </script>
                     <? endif; ?>
+
                     <div class="room__content">
                         <div class="room__description">
                             <div class="room__description-title"><?= $arElement["NAME"] ?></div>
@@ -104,25 +100,6 @@ foreach ($arParams['VARS'] as $key => $value) {
                                     <?= $arElement["PROPERTY_ROOMS_VALUE"] . ' ' . $roomsDeclension->get($arElement["PROPERTY_ROOMS_VALUE"]) ?>
                                 </div>
                             <? endif; ?>
-                            <? if (false): ?>
-                                <div class="room__features">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
-                                        <path fill-rule="evenodd" clip-rule="evenodd" d="M4.75137 12.5754C3.45346 9.49595 5.66865 6.0415 9.00166 6.0415H10.9979C14.3309 6.0415 16.5461 9.49595 15.2482 12.5754C14.9949 13.1763 14.4095 13.5736 13.7537 13.5736H13.1374L12.2516 17.1764C11.9958 18.217 11.072 18.9582 9.99977 18.9582C8.92752 18.9582 8.00373 18.217 7.7479 17.1764L6.86209 13.5736H6.24589C5.59004 13.5736 5.00465 13.1763 4.75137 12.5754ZM9.00166 7.2915C6.59481 7.2915 4.9401 9.80474 5.90324 12.0899C5.96492 12.2362 6.10217 12.3236 6.24589 12.3236H6.94887C7.48002 12.3236 7.93216 12.6903 8.05675 13.1971L8.96175 16.878C9.08333 17.3725 9.51593 17.7082 9.99977 17.7082C10.4836 17.7082 10.9162 17.3725 11.0378 16.878L11.9428 13.1971C12.0674 12.6903 12.5195 12.3236 13.0507 12.3236H13.7537C13.8974 12.3236 14.0346 12.2362 14.0963 12.0899C15.0594 9.80474 13.4047 7.2915 10.9979 7.2915H9.00166Z" fill="#141B34" />
-                                        <path fill-rule="evenodd" clip-rule="evenodd" d="M10 2.2915C8.96447 2.2915 8.125 3.13097 8.125 4.1665C8.125 5.20204 8.96447 6.0415 10 6.0415C11.0355 6.0415 11.875 5.20204 11.875 4.1665C11.875 3.13097 11.0355 2.2915 10 2.2915ZM6.875 4.1665C6.875 2.44061 8.27411 1.0415 10 1.0415C11.7259 1.0415 13.125 2.44061 13.125 4.1665C13.125 5.89239 11.7259 7.2915 10 7.2915C8.27411 7.2915 6.875 5.89239 6.875 4.1665Z" fill="#141B34" />
-                                    </svg>
-                                    <?= 'test'; ?>
-                                </div>
-                            <? endif; ?>
-                            <?if(!is_null($arElement['PROPERTY_QUANTITY_HUMEN_VALUE']) || !is_null($arElement['PROPERTY_QUANTITY_CHILD_VALUE'])):?>
-                                <div class="room__features">
-                                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path fill-rule="evenodd" clip-rule="evenodd" d="M4.75137 12.5754C3.45346 9.49595 5.66865 6.0415 9.00166 6.0415H10.9979C14.3309 6.0415 16.5461 9.49595 15.2482 12.5754C14.9949 13.1763 14.4095 13.5736 13.7537 13.5736H13.1374L12.2516 17.1764C11.9958 18.217 11.072 18.9582 9.99977 18.9582C8.92752 18.9582 8.00373 18.217 7.7479 17.1764L6.86209 13.5736H6.24589C5.59004 13.5736 5.00465 13.1763 4.75137 12.5754ZM9.00166 7.2915C6.59481 7.2915 4.9401 9.80474 5.90324 12.0899C5.96492 12.2362 6.10217 12.3236 6.24589 12.3236H6.94887C7.48002 12.3236 7.93216 12.6903 8.05675 13.1971L8.96175 16.878C9.08333 17.3725 9.51593 17.7082 9.99977 17.7082C10.4836 17.7082 10.9162 17.3725 11.0378 16.878L11.9428 13.1971C12.0674 12.6903 12.5195 12.3236 13.0507 12.3236H13.7537C13.8974 12.3236 14.0346 12.2362 14.0963 12.0899C15.0594 9.80474 13.4047 7.2915 10.9979 7.2915H9.00166Z" fill="#141B34"/>
-                                        <path fill-rule="evenodd" clip-rule="evenodd" d="M10 2.2915C8.96447 2.2915 8.125 3.13097 8.125 4.1665C8.125 5.20204 8.96447 6.0415 10 6.0415C11.0355 6.0415 11.875 5.20204 11.875 4.1665C11.875 3.13097 11.0355 2.2915 10 2.2915ZM6.875 4.1665C6.875 2.44061 8.27411 1.0415 10 1.0415C11.7259 1.0415 13.125 2.44061 13.125 4.1665C13.125 5.89239 11.7259 7.2915 10 7.2915C8.27411 7.2915 6.875 5.89239 6.875 4.1665Z" fill="#141B34"/>
-                                    </svg>
-
-                                    <?=$arElement['PROPERTY_QUANTITY_HUMEN_VALUE'] .' '. $guestsDeclension->get($arElement['PROPERTY_QUANTITY_HUMEN_VALUE'])?>, <?=!is_null($arElement['PROPERTY_QUANTITY_CHILD_VALUE']) ? $arElement['PROPERTY_QUANTITY_CHILD_VALUE'].' '.$childrenDeclension->get($arElement['PROPERTY_QUANTITY_CHILD_VALUE']): "бзе детей" ?>
-                                </div>
-                            <?endif?>
                             <? if (!empty($arElement["PROPERTY_BEDS_VALUE"])): ?>
                                 <div class="room__features">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
@@ -135,7 +112,7 @@ foreach ($arParams['VARS'] as $key => $value) {
                                     <?= $arElement["PROPERTY_BEDS_VALUE"] . ' ' . $bedsDeclension->get($arElement["PROPERTY_BEDS_VALUE"]) ?>
                                 </div>
                             <? endif; ?>
-                            <? if (!is_null($arElement['PROPERTY_WITH_PETS_VALUE']) && $arElement['PROPERTY_WITH_PETS_VALUE'] === "Y") { ?>
+                            <? if (in_array(4, $arSection['UF_REST_VARIANTS'])) { ?>
                                 <div class="room__features">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
                                         <path d="M16.0783 6.73408C16.489 6.6994 16.9388 6.81365 17.26 7.0783C17.6796 7.42405 17.8902 7.93488 17.9368 8.46869C17.999 9.1818 17.7269 9.92307 17.272 10.4673C16.8783 10.9383 16.3122 11.3411 15.6852 11.3974L15.6689 11.3997C15.2211 11.4579 14.8056 11.3243 14.4532 11.0474C14.0974 10.768 13.8637 10.2919 13.8114 9.84627C13.719 9.05996 13.9614 8.31129 14.4504 7.69356C14.852 7.18631 15.4274 6.8102 16.0783 6.73408Z" fill="black" />
@@ -147,63 +124,99 @@ foreach ($arParams['VARS'] as $key => $value) {
                                     Можно с животными
                                 </div>
                             <? } ?>
-
-                            <a class="room__features-more" href="#" elementId="<?= $arElement['ID'] ?>" data-room-more="<?= $checksum ?>">Подробнее о номере</a>
+                            <a class="room__features-more" href="#" elementId="<?= $arElement['ID'] ?>">Подробнее о номере</a>
                         </div>
                     </div>
                 </div>
-                <div class="room__order">
-                    <div class="room__left">
-                        <? if (empty($dateFrom) && empty($dateTo)) { ?>
-                            <div class="no-date">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48" fill="none">
-                                    <path d="M24 0C10.7447 0 0 10.7449 0 23.9994C0 37.2539 10.7447 48 24 48C37.2553 48 48 37.2551 48 23.9994C48 10.7438 37.2542 0 24 0Z" fill="#1B2E50" />
-                                    <path d="M30.3323 12.7465V10.6665C30.3323 10.1198 29.879 9.6665 29.3323 9.6665C28.7857 9.6665 28.3323 10.1198 28.3323 10.6665V12.6665H19.6657V10.6665C19.6657 10.1198 19.2123 9.6665 18.6657 9.6665C18.119 9.6665 17.6657 10.1198 17.6657 10.6665V12.7465C14.0657 13.0798 12.319 15.2265 12.0523 18.4132C12.0257 18.7998 12.3457 19.1198 12.719 19.1198H35.279C35.6657 19.1198 35.9857 18.7865 35.9457 18.4132C35.679 15.2265 33.9323 13.0798 30.3323 12.7465Z" fill="#E39250" />
-                                    <path d="M34.6667 21.1201H13.3333C12.6 21.1201 12 21.7201 12 22.4535V30.6668C12 34.6668 14 37.3335 18.6667 37.3335H25.24C26.16 37.3335 26.8 36.4401 26.5067 35.5735C26.24 34.8001 26.0133 33.9468 26.0133 33.3335C26.0133 29.2935 29.3067 26.0001 33.3467 26.0001C33.7333 26.0001 34.12 26.0268 34.4933 26.0935C35.2933 26.2134 36.0133 25.5868 36.0133 24.7868V22.4668C36 21.7201 35.4 21.1201 34.6667 21.1201ZM20.28 31.6134C20.0267 31.8534 19.68 32.0001 19.3333 32.0001C19.16 32.0001 18.9867 31.9601 18.8267 31.8935C18.6667 31.8268 18.52 31.7334 18.3867 31.6134C18.1467 31.3601 18 31.0268 18 30.6668C18 30.4935 18.04 30.3201 18.1067 30.1601C18.1733 29.9868 18.2667 29.8535 18.3867 29.7201C18.52 29.6001 18.6667 29.5068 18.8267 29.4401C19.3067 29.2268 19.9067 29.3468 20.28 29.7201C20.4 29.8535 20.4933 29.9868 20.56 30.1601C20.6267 30.3201 20.6667 30.4935 20.6667 30.6668C20.6667 31.0268 20.52 31.3601 20.28 31.6134ZM20.28 26.9468C20.0267 27.1868 19.68 27.3335 19.3333 27.3335C19.16 27.3335 18.9867 27.3068 18.8267 27.2268C18.6667 27.1601 18.52 27.0668 18.3867 26.9468C18.1467 26.6935 18 26.3468 18 26.0001C18 25.8268 18.04 25.6535 18.1067 25.4935C18.1733 25.3335 18.2667 25.1868 18.3867 25.0535C18.52 24.9335 18.6667 24.8401 18.8267 24.7735C19.3067 24.5735 19.9067 24.6801 20.28 25.0535C20.4 25.1868 20.4933 25.3335 20.56 25.4935C20.6267 25.6535 20.6667 25.8268 20.6667 26.0001C20.6667 26.3468 20.52 26.6935 20.28 26.9468ZM25.2267 26.5068C25.16 26.6668 25.0667 26.8135 24.9467 26.9468C24.8133 27.0668 24.6667 27.1601 24.5067 27.2268C24.3467 27.3068 24.1733 27.3335 24 27.3335C23.6533 27.3335 23.3067 27.1868 23.0533 26.9468C22.9333 26.8135 22.84 26.6668 22.7733 26.5068C22.7067 26.3468 22.6667 26.1735 22.6667 26.0001C22.6667 25.6535 22.8133 25.3068 23.0533 25.0535C23.4267 24.6801 24.0133 24.5601 24.5067 24.7735C24.6667 24.8401 24.8133 24.9335 24.9467 25.0535C25.1867 25.3068 25.3333 25.6535 25.3333 26.0001C25.3333 26.1735 25.3067 26.3468 25.2267 26.5068Z" fill="#E39250" />
-                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M37.6402 30.3598C37.7866 30.5063 37.7866 30.7437 37.6402 30.8902L30.8902 37.6402C30.7437 37.7866 30.5063 37.7866 30.3598 37.6402C30.2134 37.4937 30.2134 37.2563 30.3598 37.1098L37.1098 30.3598C37.2563 30.2134 37.4937 30.2134 37.6402 30.3598Z" fill="white" />
-                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M30.3598 30.3598C30.5063 30.2134 30.7437 30.2134 30.8902 30.3598L37.6402 37.1098C37.7866 37.2563 37.7866 37.4937 37.6402 37.6402C37.4937 37.7866 37.2563 37.7866 37.1098 37.6402L30.3598 30.8902C30.2134 30.7437 30.2134 30.5063 30.3598 30.3598Z" fill="white" />
-                                </svg>
-                                Чтобы увидеть цены, выберите даты
+
+                <? if ($arExternalItem['OFFERS'] != null): ?>
+                    <? foreach ($arExternalItem['OFFERS'] as $offer) {
+
+                        $elementOldPrice = 0;
+                        $elementCurrentPrice = $offer['PROPERTIES']['PRICE']['VALUE'];
+                        if ($arElement['DISCOUNT_DATA']) {
+                            if ($arElement['DISCOUNT_DATA']['VALUE_TYPE'] == 'P') {
+                                $elementPrice = $elementCurrentPrice * (100 - $arElement['DISCOUNT_DATA']['VALUE']) / 100;
+                            } else {
+                                $elementPrice = $elementCurrentPrice - $arElement['DISCOUNT_DATA']['VALUE'];
+                            }
+                            $elementOldPrice = $elementCurrentPrice;
+                        } else {
+                            $elementPrice = $elementCurrentPrice;
+                        } ?>
+
+                        <div class="room__order">
+                            <div class="room__left">
+                                <? if (strlen($offer['PROPERTIES']['CANCELLATION_POLICIES']['VALUE'])) { ?>
+                                    <div class="room__cancelation">
+                                        <div class="room__cancelation-title">
+                                            Условия отмены
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" fill="none">
+                                                <path d="M9 17.0625C4.5525 17.0625 0.9375 13.4475 0.9375 9C0.9375 4.5525 4.5525 0.9375 9 0.9375C13.4475 0.9375 17.0625 4.5525 17.0625 9C17.0625 13.4475 13.4475 17.0625 9 17.0625ZM9 2.0625C5.175 2.0625 2.0625 5.175 2.0625 9C2.0625 12.825 5.175 15.9375 9 15.9375C12.825 15.9375 15.9375 12.825 15.9375 9C15.9375 5.175 12.825 2.0625 9 2.0625Z" fill="black" />
+                                                <path fill-rule="evenodd" clip-rule="evenodd" d="M9 6.5625C8.43899 6.5625 8.0625 6.97212 8.0625 7.38462C8.0625 7.69528 7.81066 7.94712 7.5 7.94712C7.18934 7.94712 6.9375 7.69528 6.9375 7.38462C6.9375 6.26771 7.90415 5.4375 9 5.4375C10.0958 5.4375 11.0625 6.26771 11.0625 7.38462C11.0625 7.78173 10.9362 8.14981 10.7238 8.45453C10.5926 8.64269 10.4397 8.82172 10.3 8.98201C10.2743 9.01149 10.2491 9.04031 10.2243 9.06858C10.1083 9.2011 10.0026 9.32194 9.90482 9.44595C9.66069 9.75567 9.5625 9.97137 9.5625 10.1538V10.5C9.5625 10.8107 9.31066 11.0625 9 11.0625C8.68934 11.0625 8.4375 10.8107 8.4375 10.5V10.1538C8.4375 9.57162 8.74634 9.09836 9.0213 8.74953C9.13876 8.60052 9.26748 8.45354 9.38384 8.32067C9.40711 8.29411 9.42987 8.26812 9.45196 8.24278C9.59095 8.08333 9.70791 7.94456 9.80089 7.81118C9.88929 7.68437 9.9375 7.53879 9.9375 7.38462C9.9375 6.97212 9.56101 6.5625 9 6.5625Z" fill="black" />
+                                                <path fill-rule="evenodd" clip-rule="evenodd" d="M8.4375 12.375C8.4375 12.0643 8.68934 11.8125 9 11.8125H9.00674C9.3174 11.8125 9.56924 12.0643 9.56924 12.375C9.56924 12.6857 9.3174 12.9375 9.00674 12.9375H9C8.68934 12.9375 8.4375 12.6857 8.4375 12.375Z" fill="black" />
+                                            </svg>
+                                        </div>
+                                        <div class="room__cancelation-tooltip">
+                                            <div class="room__cancelation-tooltip-title">Условия отмены бронирования</div>
+                                            <ul>
+                                                <li><?= $offer['PROPERTIES']['CANCELLATION_POLICIES']['VALUE'] ?></li>
+                                            </ul>
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="10" height="5" viewBox="0 0 10 5" fill="none">
+                                                <path d="M9.5 0L5 5L0.5 0H9.5Z" fill="#E0C695" />
+                                            </svg>
+                                        </div>
+                                    </div>
+                                <? } ?>
                             </div>
-                        <? } else { ?>
-                            <div class="no-date">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48" fill="none">
-                                    <path d="M24 0C10.7447 0 0 10.7449 0 23.9994C0 37.2539 10.7447 48 24 48C37.2553 48 48 37.2551 48 23.9994C48 10.7438 37.2542 0 24 0Z" fill="#1B2E50" />
-                                    <path d="M35.8309 20.0276C35.8309 30.9667 23.9999 39.887 23.9999 39.887C23.9999 39.887 12.1689 31.0317 12.1689 20.0276C12.1689 16.8675 13.4154 13.8368 15.6342 11.6023C17.8529 9.36769 20.8621 8.1123 23.9999 8.1123C27.1377 8.1123 30.147 9.36769 32.3657 11.6023C34.5844 13.8368 35.8309 16.8675 35.8309 20.0276Z" fill="#E39250" />
-                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M29.4602 14.7898C29.6799 15.0094 29.6799 15.3656 29.4602 15.5852L19.3352 25.7102C19.1156 25.9299 18.7594 25.9299 18.5398 25.7102C18.3201 25.4906 18.3201 25.1344 18.5398 24.9148L28.6648 14.7898C28.8844 14.5701 29.2406 14.5701 29.4602 14.7898Z" fill="white" />
-                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M18.5398 14.7898C18.7594 14.5701 19.1156 14.5701 19.3352 14.7898L29.4602 24.9148C29.6799 25.1344 29.6799 25.4906 29.4602 25.7102C29.2406 25.9299 28.8844 25.9299 28.6648 25.7102L18.5398 15.5852C18.3201 15.3656 18.3201 15.0094 18.5398 14.7898Z" fill="white" />
-                                </svg>
-                                <div class="no-date__text">
-                                    На выбранные даты нет свободных мест
-                                    <? if ($searchError) { ?>
-                                        <span><?= $searchError ?></span>
+
+                            <div class="room__price">
+                                <div class="room__price-per-night">
+                                    <span class="room__final-price"><?= number_format($elementPrice, 0, '.', ' ') ?> <span>₽</span></span>
+                                    <? if ($elementOldPrice) { ?>
+                                        <span class="room__old-price"><span class="number"><?= number_format($elementOldPrice, 0, '.', ' ') ?></span> <span class="rub">₽</span></span>
                                     <? } ?>
+                                    <span class="room__nights"> <?= $daysCount ?> <?= $daysDeclension->get($daysCount) ?></span>
+                                </div>
+                                <div class="split-wrap" <?= $elementPrice - Users::getInnerScore() <= 0 ? 'style="display: none"' : '' ?>>
+                                    <yandex-pay-badge
+                                            merchant-id="d82873ad-61ce-4050-b05e-1f4599f0bb7b"
+                                            type="bnpl"
+                                            amount="<?= $elementPrice - Users::getInnerScore() ?>"
+                                            size="l"
+                                            variant="detailed"
+                                            theme="light"
+                                            align="left"
+                                            color="transparent" />
                                 </div>
                             </div>
-                        <? } ?>
-                    </div>
-                    <a class="button button_primary" data-scroll-to href="<?= $isMobile ? '#fake-filter_catalog' : '#form-object-filter' ?>"><?= empty($dateFrom) && empty($dateTo) ? 'Выбрать даты' : 'Изменить даты' ?></a>
-                </div>
+
+                            <a class="button button_primary"
+                               onclick="VK.Goal('customize_product')"
+                               data-section-external-id="<?= $arSection['UF_EXTERNAL_ID'] ?>"
+                               data-add-basket
+                               data-object-title="<?= $arSection['NAME'] ?>"
+                               data-id="<?= $arElement["ID"] ?>"
+                               data-price="<?= $arExternalItem['price'] ?>"
+                               data-guests="<?= $guests ?>"
+                               data-children-age="<?= $_GET['childrenAge'] ?>"
+                               data-date-from="<?= $dateFrom ?>"
+                               data-date-to="<?= $dateTo ?>"
+                               data-external-id="<?= $arElement["PROPERTY_EXTERNAL_ID_VALUE"] ?>"
+                               data-external-service="<?= $arSection["UF_EXTERNAL_SERVICE"] ?>"
+                               data-category-id="<?= $arElement["PROPERTY_EXTERNAL_CATEGORY_ID_VALUE"] ?>"
+                               data-cancel-amount="<?= $arExternalItem['cancelAmount'] ?>"
+                               data-people="<?= $arExternalItem['fullPlacementsName'] ?>"
+                               data-room-title="<?= $arElement["NAME"] ?>"
+                               data-room-photo="<?= $arElement["PICTURES"][array_key_first($arElement["PICTURES"])]['src'] ?>"
+                               href="#">Забронировать</a>
+                        </div>
+
+
+                    <? } ?>
+
+                <? endif; ?>
             </div>
         <? endforeach; ?>
-    <? } else { ?>
-        <div class="rooms__heading">Выберите размещение <span><?= $daysRange ?>, <?= $guests ?> <?= $guestsDeclension->get($guests) ?><? if ($children > 0): ?>, <?= $children ?> <?= $childrenDeclension->get($children) ?><? endif; ?></span></div>
-
-        <div class="rooms__list">
-            <? if ($arSection["UF_EXTERNAL_SERVICE"] == "bnovo") {
-                require 'bnovo_rooms.php';
-            } elseif ($arSection["UF_EXTERNAL_SERVICE"] == "bronevik"){
-                require 'bronevik_rooms.php';
-            } else {
-                require 'naturalist_rooms.php';
-            } ?>
-        </div>
-
-        <? if ($page < $pageCount): ?>
-            <div class="rooms__more">
-                <a href="#" data-object-showmore data-page="<?= $page + 1 ?>">Показать ещё</a>
-            </div>
-        <? endif; ?>
-
-    <? } ?>
-</div>
+    <? endif; ?>
+<? endforeach;
