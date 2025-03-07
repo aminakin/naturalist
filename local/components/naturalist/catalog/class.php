@@ -492,7 +492,12 @@ class NaturalistCatalog extends \CBitrixComponent
 
                 $this->searchedRegionData['COORDS'] = explode(',', $this->searchedRegionData['UF_COORDS']);
 
-                $arSection['DISCTANCE'] = Utils::calculateTheDistance($this->searchedRegionData['COORDS'][0], $this->searchedRegionData['COORDS'][1], $arSection['COORDS'][0], $arSection['COORDS'][1]);
+                $arSection['DISCTANCE'] = Utils::calculateTheDistance(
+                    (float)$this->searchedRegionData['COORDS'][0],
+                    (float)$this->searchedRegionData['COORDS'][1],
+                    (float)$arSection['COORDS'][0],
+                    (float)$arSection['COORDS'][1]
+                );
                 $arSection['DISCTANCE_TO_REGION'] = $this->searchedRegionData['UF_CENTER_NAME_RU'] ?? $this->searchedRegionData['CENTER_UF_NAME'];
 
                 $arSection['DISCTANCE_TO_REGION'] = ucfirst($arSection['DISCTANCE_TO_REGION']);

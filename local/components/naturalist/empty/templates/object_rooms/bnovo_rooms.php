@@ -217,7 +217,7 @@ foreach ($arExternalInfo as $idNumber => $arTariffs):
                             Можно с животными
                         </div>
                     <? } ?>
-                    <a class="room__features-more" href="#" data-room-more="<?= $arElement['ID'] . '-' . $arTariff['tariffId'] ?>">Подробнее о номере</a>
+                    <a class="room__features-more" elementId="<?= $arElement['ID'] ?>" href="#" data-room-more="<?= $arElement['ID'] . '-' . $arTariff['tariffId'] ?>">Подробнее о номере</a>
                 </div>
             </div>
         </div>
