@@ -81,7 +81,7 @@ class Bnovo
         $token = $arResponse['token'];
         $this->token = $token;
 
-        $this->debugBotTelegram = DebugBot::bot('7584944033:AAEUAXdKj_3xxc71rirrAwHeD_yGxpUgKvE');
+        $this->debugBotTelegram = DebugBot::bot(DEBUG_TELEGRAM_BOT_TOKEN);
     }
 
     /* Получение списка свободных объектов в выбранный промежуток */
