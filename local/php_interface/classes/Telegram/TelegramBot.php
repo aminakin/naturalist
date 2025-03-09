@@ -2,7 +2,10 @@
 
 namespace Naturalist\Telegram;
 
-use Natural\Http\CurlHttpFetch;
+use Bitrix\Main\ArgumentException;
+use Bitrix\Main\ObjectPropertyException;
+use Bitrix\Main\SystemException;
+use Naturalist\Http\CurlHttpFetch;
 use Bitrix\Highloadblock\HighloadBlockTable;
 use Bitrix\Highloadblock\HighloadBlock;
 
@@ -27,7 +30,13 @@ class TelegramBot
         return self::$instance;
     }
 
-    private function getUsers():array{
+    /**
+     * @throws ObjectPropertyException
+     * @throws SystemException
+     * @throws ArgumentException
+     */
+    protected function getUsers():array{
+
         $hiLoadId = 34;
         $hiLoad = HighloadBlockTable::getById($hiLoadId)->fetch();
         if($hiLoad){
@@ -53,8 +62,11 @@ class TelegramBot
     {
         $url = $this->telegramApi . "/sendMessage";
 
-        foreach ($this->getUsers() as $user){
-            $this->http->post($url,$user);
+        foreach ($this->getUsers() as $chatId){
+            $this->http->post($url,[
+                'chat_id' => $chatId,
+                'text' => $text,
+            ]);
         }
 
     }

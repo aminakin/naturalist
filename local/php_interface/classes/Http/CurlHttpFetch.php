@@ -1,5 +1,5 @@
 <?php
-namespace Natural\Http;
+namespace Naturalist\Http;
 
 use Naturalist\Http\HttpFetchInterface;
 class CurlHttpFetch implements HttpFetchInterface {
