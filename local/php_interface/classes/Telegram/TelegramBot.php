@@ -49,7 +49,7 @@ class TelegramBot
         return [];
     }
 
-    public function sendMessage(string $chatId, string $text): void
+    public function sendMessage(string $text): void
     {
         $url = $this->telegramApi . "/sendMessage";
 
