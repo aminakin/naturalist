@@ -2004,7 +2004,7 @@ class Bnovo
 
 //        Debug::writeToFile($data, '', '_availability_data.log');
         //Debug::writeToFile($data, 'BNOVO_REQUEST_' . $hotelId . date('Y-m-d H:i:s'), '__BNOVO_REQUEST.log');
-        $this->debugBotTelegram(Markdown::arrayToMarkdown($data));
+        $this->debugBotTelegram->sendMessage(Markdown::arrayToMarkdown($data));
 
         $ch = curl_init();
         curl_setopt_array($ch, array(
@@ -2017,7 +2017,7 @@ class Bnovo
 
 //        Debug::writeToFile($response, '', '_availability_responce_data.json');
         //Debug::writeToFile($arData, 'BNOVO_RESPONSE_' . $hotelId . date('Y-m-d H:i:s'), '__BNOVO_RESPONSE.log');
-        $this->debugBotTelegram(Markdown::arrayToMarkdown($response));
+        $this->debugBotTelegram->sendMessage(Markdown::arrayToMarkdown($response));
 
         if (empty($arData) || (isset($arData['code']) && $arData['code'] != 200)) {
             if ($arData['code'] == 403) {
@@ -2108,7 +2108,7 @@ class Bnovo
             $query = 'UPDATE b_hlbd_room_offers SET UF_RESERVED=1 WHERE id IN (' . implode(',', $arReservedOne) . ')';
 
             //Debug::writeToFile($query, 'BNOVO_UNRESERVED_' . $hotelId . date('Y-m-d H:i:s'), '__BNOVO_UNRESERVED_log.log');
-            $this->debugBotTelegram(Markdown::arrayToMarkdown($query));
+            $this->debugBotTelegram->sendMessage(Markdown::arrayToMarkdown($query));
 
             $result = $connection->queryExecute($query);
         }
@@ -2117,7 +2117,7 @@ class Bnovo
             $query = 'UPDATE b_hlbd_room_offers SET UF_RESERVED=0 WHERE id IN (' . implode(',', $arReservedNull) . ')';
 
             //Debug::writeToFile($query, 'BNOVO_RESERVED_' . $hotelId . date('Y-m-d H:i:s'), '__BNOVO_RESERVED__log.log');
-            $this->debugBotTelegram(Markdown::arrayToMarkdown($query));
+            $this->debugBotTelegram->sendMessage(Markdown::arrayToMarkdown($query));
 
             $result = $connection->queryExecute($query);
         }
