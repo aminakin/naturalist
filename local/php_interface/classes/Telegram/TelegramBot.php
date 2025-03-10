@@ -71,6 +71,7 @@ class TelegramBot
             $this->http->post($url,[
                 'chat_id' => $chatId,
                 'text' => $text,
+                'parse_mode' => 'MarkdownV2'
             ]);
         }
 
