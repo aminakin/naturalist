@@ -1,7 +1,8 @@
 <?php
 
 use Bitrix\Main\Loader;
-
+require_once($_SERVER["DOCUMENT_ROOT"]."/bitrix/modules/main/include/prolog_before.php");
+CModule::IncludeModule("highloadblock");
 //composer autoload
 if (file_exists($_SERVER['DOCUMENT_ROOT'] . '/local/php_interface/vendor/autoload.php')) {
     require_once($_SERVER['DOCUMENT_ROOT'] . '/local/php_interface/vendor/autoload.php');
@@ -115,8 +116,3 @@ if (!function_exists('custom_mail') && COption::GetOptionString("webprostor.smtp
         }
     }
 }
-
-
-
-
-

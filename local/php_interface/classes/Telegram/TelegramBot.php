@@ -35,13 +35,12 @@ class TelegramBot
      * @throws SystemException
      * @throws ArgumentException
      */
-    protected function getUsers():array{
-
+    protected function getUsers(): array {
         $hiLoadId = 34;
         $hiLoad = HighloadBlockTable::getById($hiLoadId)->fetch();
-        if($hiLoad){
-            $entity = HighloadBlock::compileEntity($hiLoad);
-            $dataClass = $entity->getDataClass();
+
+        if ($hiLoad) {
+            $dataClass = HighloadBlockTable::compileEntity($hiLoad)->getDataClass();
 
             $result = $dataClass::getList([
                 'select' => ['UF_CHAT_ID'],
@@ -50,14 +49,20 @@ class TelegramBot
 
             $response = [];
 
-            while($item = $result->fetch()){
+            while ($item = $result->fetch()) {
                 $response[] = $item['UF_CHAT_ID'];
             }
             return $response;
         }
+
         return [];
     }
 
+    /**
+     * @throws ObjectPropertyException
+     * @throws SystemException
+     * @throws ArgumentException
+     */
     public function sendMessage(string $text): void
     {
         $url = $this->telegramApi . "/sendMessage";
