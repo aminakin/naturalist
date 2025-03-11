@@ -3955,6 +3955,7 @@
 .getDetail {
   transition: all 0.25s;
   border-bottom: 1px solid transparent;
+  text-decoration: underline;
 }
 
 .object__comforst-more:hover {
