@@ -1,6 +1,7 @@
 <?php
 
 use Bitrix\Main\Loader;
+
 //composer autoload
 if (file_exists($_SERVER['DOCUMENT_ROOT'] . '/local/php_interface/vendor/autoload.php')) {
     require_once($_SERVER['DOCUMENT_ROOT'] . '/local/php_interface/vendor/autoload.php');
@@ -69,6 +70,7 @@ Loader::registerAutoLoadClasses(null, array(
     'Naturalist\Http\CurlHttpFetch' => '/local/php_interface/classes/Http/CurlHttpFetch.php',
     'Naturalist\Telegram\TelegramBot' => '/local/php_interface/classes/Telegram/TelegramBot.php',
     'Naturalist\Telegram\DebugBot' => '/local/php_interface/classes/Telegram/DebugBot.php',
+    'Naturalist\Handlers\OnAdminIBlockSectionEdit' => '/local/php_interface/classes/Handlers/OnAdminIBlockSectionEdit.php',
 ));
 
 // Константы
@@ -94,12 +96,12 @@ function menuAdminNewItem(&$adminMenu, &$moduleMenu)
         "section" => "add_object_bnovo",
         "sort" => 2000,                    // сортировка пункта меню
         "url" => "add_object_bnovo.php?lang=" . LANG,  // ссылка на пункте меню
-        "text" => 'Добавить объект Bnovo',   // текст пункта меню
+        "text" => 'Добавить объект Bnovo',       // текст пункта меню
         "title" => 'Добавить объект Bnovo', // текст всплывающей подсказки
         "icon" => "form_menu_icon", // малая иконка
         "page_icon" => "form_page_icon", // большая иконка
         "items_id" => "add_object_bnovo",  // идентификатор ветви
-        "items" => array() // остальные уровни меню сформируем ниже.
+        "items" => array()          // остальные уровни меню сформируем ниже.
     );
 }
 
