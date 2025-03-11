@@ -5,9 +5,7 @@
     src: url(../../../../../templates/main/assets/fonts/TTTravelsNext-Regular.woff2) format("woff2"),
     url(../../../../../templates/main/assets/fonts/TTTravelsNext-Regular.woff) format("woff");
 }
-.preloader{
-    background: #dbaa81;
-}
+
 .wrapper {
     margin-top: 200px;
 }
@@ -55,7 +53,8 @@
     max-width:1200px;
     min-width:360px;
     box-sizing: border-box;
-    width: 100%;
+
+
 }
 
 .d-f{
@@ -132,9 +131,5 @@
         justify-content: center;
     }
 
-}
-
-img[src='https://www.travelpayouts.com/powered_by/img/as.png']{
-    display:none;
 }
 

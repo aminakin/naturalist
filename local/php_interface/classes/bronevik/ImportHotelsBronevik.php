@@ -10,6 +10,7 @@ use Naturalist\bronevik\repository\Bronevik;
 class ImportHotelsBronevik
 {
     use AttemptBronevik;
+    const EXTERNAL_SERVICE_ID = 6;
 
     private Bronevik $bronevik;
 
@@ -67,7 +68,7 @@ class ImportHotelsBronevik
         $arFields["UF_TAXES"] = $data->hasTaxes ? json_encode($data?->taxes?->tax) : '';
         $arFields["UF_ADDITIONAL_INFO"] = json_encode($data?->additionalInfo);
         $arFields["UF_ALLOWABLE_TIME"] = json_encode(['allowableCheckinTime' => $data?->allowableCheckinTime, 'allowableCheckoutTime' => $data?->allowableCheckoutTime]);
-        $arFields["UF_EXTERNAL_SERVICE"] = CATALOG_IBLOCK_SECTION_UF_EXTERNAL_SERVICE_ID;
+        $arFields["UF_EXTERNAL_SERVICE"] = self::EXTERNAL_SERVICE_ID;
         $arFields["UF_ADDRESS"] = $data->cityName . '. ' . $data->address;
         $arFields["UF_TIME_FROM"] = $data->checkinTime;
         $arFields["UF_TIME_TO"] = $data->checkoutTime;

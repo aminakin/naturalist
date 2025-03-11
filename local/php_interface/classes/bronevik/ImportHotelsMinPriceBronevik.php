@@ -68,7 +68,7 @@ class ImportHotelsMinPriceBronevik
 
     private function getSectionIds(?array $sectionIds = null, bool $isActive = true): array
     {
-        $filter = ["!UF_EXTERNAL_ID" => false, "UF_EXTERNAL_SERVICE" => CATALOG_IBLOCK_SECTION_UF_EXTERNAL_SERVICE_ID];
+        $filter = ["!UF_EXTERNAL_ID" => false, "UF_EXTERNAL_SERVICE" => ImportHotelsBronevik::EXTERNAL_SERVICE_ID];
         if ($isActive == true) {
             $filter["ACTIVE"] = "Y";
         }

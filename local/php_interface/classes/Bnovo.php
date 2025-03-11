@@ -3,18 +3,21 @@
 namespace Naturalist;
 
 use Bitrix\Highloadblock\HighloadBlockTable;
-use Bitrix\Main\Config\Option;
-use Bitrix\Main\Grid\Declension;
+use Bitrix\Main\Application;
+use Bitrix\Main\Context;
 use Bitrix\Main\Loader;
+use Bitrix\Main\Entity;
 use Bitrix\Sale\Order;
-use CIBlockElement;
 use CIBlockSection;
-use DateInterval;
+use CIBlockElement;
 use DatePeriod;
 use DateTime;
-use Naturalist\Markdown;
-use Naturalist\Telegram\DebugBot;
-use Naturalist\Telegram\TelegramBot;
+use DateInterval;
+use http\Params;
+use Naturalist\Products;
+use Bitrix\Main\Grid\Declension;
+use Bitrix\Main\Config\Option;
+use Bitrix\Main\Diag\Debug;
 
 Loader::IncludeModule("iblock");
 Loader::IncludeModule("catalog");
@@ -54,8 +57,6 @@ class Bnovo
 
     private $token;
 
-    private TelegramBot $debugBotTelegram;
-
     public function __construct()
     {
         $url = $this->bnovoApiURL . '/auth';
@@ -81,8 +82,6 @@ class Bnovo
 
         $token = $arResponse['token'];
         $this->token = $token;
-
-        $this->debugBotTelegram = DebugBot::bot(DEBUG_TELEGRAM_BOT_TOKEN);
     }
 
     /* Получение списка свободных объектов в выбранный промежуток */
@@ -1834,7 +1833,6 @@ class Bnovo
         return $arImages;
     }
 
-
     /* Обновление цен и броней */
     public function updateReservationData($hotelId, $arTariffs, $arCategories, $arDates)
     {
@@ -1856,7 +1854,7 @@ class Bnovo
             "roomtypes" => (array)$arCategories
         );
 
-        $this->debugBotTelegram()->sendMessage(Markdown::arrayToMarkdown($data));
+//        Debug::writeToFile($data, 'curl', '_plans_data.log');
 
         $ch = curl_init();
         curl_setopt_array($ch, array(
@@ -1867,7 +1865,10 @@ class Bnovo
         $response = curl_exec($ch);
         $arData = json_decode($response, true);
 
-        $this->debugBotTelegram()->sendMessage(Markdown::arrayToMarkdown($response));
+
+//        Debug::writeToFile($response, '', '_plans_responce_data.json');
+
+        //xprint($arData);
 
         if (empty($arData) || (isset($arData['code']) && $arData['code'] != 200)) {
             if ($arData['code'] == 403) {
@@ -2005,7 +2006,6 @@ class Bnovo
 
 //        Debug::writeToFile($data, '', '_availability_data.log');
         //Debug::writeToFile($data, 'BNOVO_REQUEST_' . $hotelId . date('Y-m-d H:i:s'), '__BNOVO_REQUEST.log');
-        $this->debugBotTelegram->sendMessage(Markdown::arrayToMarkdown($data));
 
         $ch = curl_init();
         curl_setopt_array($ch, array(
@@ -2018,7 +2018,6 @@ class Bnovo
 
 //        Debug::writeToFile($response, '', '_availability_responce_data.json');
         //Debug::writeToFile($arData, 'BNOVO_RESPONSE_' . $hotelId . date('Y-m-d H:i:s'), '__BNOVO_RESPONSE.log');
-        $this->debugBotTelegram->sendMessage(Markdown::arrayToMarkdown($response));
 
         if (empty($arData) || (isset($arData['code']) && $arData['code'] != 200)) {
             if ($arData['code'] == 403) {
@@ -2109,7 +2108,6 @@ class Bnovo
             $query = 'UPDATE b_hlbd_room_offers SET UF_RESERVED=1 WHERE id IN (' . implode(',', $arReservedOne) . ')';
 
             //Debug::writeToFile($query, 'BNOVO_UNRESERVED_' . $hotelId . date('Y-m-d H:i:s'), '__BNOVO_UNRESERVED_log.log');
-            $this->debugBotTelegram->sendMessage(Markdown::arrayToMarkdown($query));
 
             $result = $connection->queryExecute($query);
         }
@@ -2118,7 +2116,6 @@ class Bnovo
             $query = 'UPDATE b_hlbd_room_offers SET UF_RESERVED=0 WHERE id IN (' . implode(',', $arReservedNull) . ')';
 
             //Debug::writeToFile($query, 'BNOVO_RESERVED_' . $hotelId . date('Y-m-d H:i:s'), '__BNOVO_RESERVED__log.log');
-            $this->debugBotTelegram->sendMessage(Markdown::arrayToMarkdown($query));
 
             $result = $connection->queryExecute($query);
         }
