@@ -54,7 +54,7 @@ class Bnovo
 
     private $token;
 
-    private DebugBot $debugBotTelegram;
+    private TelegramBot $debugBotTelegram;
 
     public function __construct()
     {
