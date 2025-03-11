@@ -2,6 +2,11 @@
 namespace Naturalist;
 
 class Markdown {
+    public static function escapeMarkdownV2($text) {
+        return preg_replace_callback('/([._*[\]()~`>#+\-=|{}])/u', function ($matches) {
+            return '\\' . $matches[0];
+        }, $text);
+    }
     public static function arrayToMarkdown(array $array, int $level = 0):string {
         $markdown = '';
         $indent = str_repeat('  ', $level);
