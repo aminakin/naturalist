@@ -1,4 +1,30 @@
 $(function () {
+  window.preloader.show();
+
+
+  setTimeout(function(){
+    let widgets = document.querySelectorAll('tp-cascoon')
+    const flights_form = document.querySelector('.flights-form')
+    flights_form.appendChild(widgets[0])
+  },3000)
+
+  for(let i = 1; i <= 4; i++){
+    setTimeout(function(){
+          let widgets = document.querySelectorAll('tp-cascoon')
+          const popular_places__widget_items = document.querySelector('.popular-places__widget-items')
+          popular_places__widget_items.appendChild(widgets[i])
+        },
+        3000)
+  }
+
+  setTimeout(function(){
+    let widgets = document.querySelectorAll('tp-cascoon')
+    const flights_map = document.querySelector('.flights-map')
+    flights_map.appendChild(widgets[widgets.length - 1])
+    window.preloader.hide();
+  }, 3000)
+
+
   // Поиск объектов на главной
   $(document).on("click", "[data-main-search]", function (event) {
     event.preventDefault();
@@ -63,24 +89,41 @@ $(function () {
   });
 });
 
-setTimeout(function(){
-  let widgets = document.querySelectorAll('tp-cascoon')
-  const flights_form = document.querySelector('.flights-form')
-  flights_form.appendChild(widgets[0])
-},1000)
 
+  $(document).ready(function() {
+  var swiper = new Swiper(' .gg .swiper-container', {
+    loop: true,
+    slidesPerView: 4,
+    spaceBetween: 30,
+    navigation: {
+      nextEl: '.swiper-button-next',
+      prevEl: '.swiper-button-prev',
+    },
+    on: {
+      slideChangeTransitionEnd: function () {
+        // Получаем текущее значение трансформации
+        var translateValue = this.getTranslate();
 
-for(let i = 1; i <= 4; i++){
-  setTimeout(function(){
-        let widgets = document.querySelectorAll('tp-cascoon')
-        const popular_places__widget_items = document.querySelector('.popular-places__widget-items')
-        popular_places__widget_items.appendChild(widgets[i])
+        // Проверяем, если значение меньше -3280px
+        if (translateValue < -3280) {
+          // Если меньше, устанавливаем его на -3280
+          this.setTranslate(-3280);
+        }
+      }
+    }
+});
+
+    var swiperTwo = new Swiper('.tt .swiper-container', {
+      loop: true, // Включение бесконечной прокрутки
+      slidesPerView: 1, // Количество видимых слайдов
+      navigation: {
+        nextEl: '.swiper-button-next',
+        prevEl: '.swiper-button-prev',
       },
-      2000)
-}
+      pagination: {
+        el: '.swiper-pagination',
+        clickable: true,
+      },
+    });
+});
 
-setTimeout(function(){
-  let widgets = document.querySelectorAll('tp-cascoon')
-  const flights_map = document.querySelector('.flights-map')
-  flights_map.appendChild(widgets[widgets.length - 1])
-}, 3000)
