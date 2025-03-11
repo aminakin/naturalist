@@ -14,6 +14,7 @@ use DatePeriod;
 use DateTime;
 use Naturalist\Markdown;
 use Naturalist\Telegram\DebugBot;
+use Naturalist\Telegram\TelegramBot;
 
 Loader::IncludeModule("iblock");
 Loader::IncludeModule("catalog");
@@ -53,7 +54,7 @@ class Bnovo
 
     private $token;
 
-    private DebugBot $debugBotTelegram;
+    private TelegramBot $debugBotTelegram;
 
     public function __construct()
     {
@@ -341,7 +342,7 @@ class Bnovo
                     $minDays = $arItem['UF_MIN_STAY'] ? $arItem['UF_MIN_STAY'] : $arItem['UF_MIN_STAY_ARRIVAL'];
                     $error = 'Бронирование возможно от ' . $minDays . ' ' . $daysDeclension->get($minDays);
 
-                    // Удаляем элементы из первоначального массива дат, т.к. он далее будет использоваться для поиска цен                    
+                    // Удаляем элементы из первоначального массива дат, т.к. он далее будет использоваться для поиска цен
                     foreach ($arDataGrouped[$key] as $toDel) {
                         unset($arData[$toDel['ID']]);
                     }
@@ -495,7 +496,7 @@ class Bnovo
         }
 
         while ($arOccupancy = $rsOccupancies->Fetch()) {
-            // Складываем в отедльный массив все наценки            
+            // Складываем в отедльный массив все наценки
             if ($arOccupancy['PROPERTY_IS_MARKUP_VALUE'] == 'Да') {
                 if (!empty($children) && isset($filteredChildrenAgesId[$arOccupancy["PROPERTY_CHILDREN_AGES_VALUE"][0]])) {
                     $markups[$arOccupancy["PROPERTY_CATEGORY_ID_VALUE"]][$arOccupancy["CODE"]] = $arOccupancy;
@@ -548,7 +549,7 @@ class Bnovo
 
         $arCategoriesFilterredIDs = array_unique($arCategoriesFilterredIDs);
 
-        // Номера        
+        // Номера
         if ($arCategoriesFilterredIDs && $arTariffsIDs) {
             $rsElements = CIBlockElement::GetList(
                 false,
@@ -646,7 +647,7 @@ class Bnovo
                                             unset($test[$key]);
                                             break;
                                         }
-                                        // убираем дубли                                    
+                                        // убираем дубли
                                         if (str_contains($acc, $value['ID'])) {
                                             $countDouble += 1;
                                             if ($countDouble > $value['COUNT']) {
@@ -690,7 +691,7 @@ class Bnovo
                                 }
                             }
 
-                            // вычисление мест                            
+                            // вычисление мест
                             foreach ($markupVariants as $variant) {
                                 $arMarkupPrices = [];
                                 $variantName = '';
@@ -1756,7 +1757,7 @@ class Bnovo
      * Добавление/обновление размещения в виде наценки
      *
      * @return void
-     * 
+     *
      */
     private function markupHandler($childrenAgesId, $elementIdCat, $sectionIdOccupancies, $arRoom, $childrenAges): void
     {
@@ -1855,7 +1856,7 @@ class Bnovo
             "roomtypes" => (array)$arCategories
         );
 
-        $this->debugBotTelegram()->sendMessage(Markdown::arrayToMarkdown($data));
+        $this->debugBotTelegram->sendMessage(Markdown::arrayToMarkdown($data));
 
         $ch = curl_init();
         curl_setopt_array($ch, array(
@@ -1866,7 +1867,7 @@ class Bnovo
         $response = curl_exec($ch);
         $arData = json_decode($response, true);
 
-        $this->debugBotTelegram()->sendMessage(Markdown::arrayToMarkdown($response));
+        $this->debugBotTelegram->sendMessage(Markdown::arrayToMarkdown($response));
 
         if (empty($arData) || (isset($arData['code']) && $arData['code'] != 200)) {
             if ($arData['code'] == 403) {
@@ -2355,14 +2356,14 @@ class Bnovo
 
     /**
      * Возвращает все разделы (отели) Bnovo
-     * 
+     *
      * @param string $limit Ограничение элементов.
      * @param string $offset С какого элемента выбирать.
      * @param string $countTotal Подсчёт общего количества.
      * @param boolean $raw Вернуть не обработанный объект.
-     * 
+     *
      * @return array
-     * 
+     *
      */
     private function getSections($limit = '', $offset = '', $countTotal = '', $raw = false)
     {
@@ -2388,7 +2389,7 @@ class Bnovo
      * Обновляет тарифы по всем объектам
      *
      * @return array
-     * 
+     *
      */
     public function updateTariffs()
     {
@@ -2406,7 +2407,7 @@ class Bnovo
      * Загружает цены за 2 ближайших месяца
      *
      * @return void
-     * 
+     *
      */
     public function getNearPrices(): void
     {
@@ -2461,7 +2462,7 @@ class Bnovo
      * Проверяет все объекты Бново на подключение к каналу продаж
      *
      * @return void
-     * 
+     *
      */
     public function checkDisabledBnovoObjects(): void
     {
@@ -2495,7 +2496,7 @@ class Bnovo
      * Проверяет наличие наценок для номеров объекта
      *
      * @return void
-     * 
+     *
      */
     public function checkMarkups(): void
     {
@@ -2542,9 +2543,9 @@ class Bnovo
      * Возвращает массив номеров объекта
      *
      * @param int $hotelId
-     * 
+     *
      * @return array
-     * 
+     *
      */
     private function getRoomsFromApi(int $hotelId): array
     {
