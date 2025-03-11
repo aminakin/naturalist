@@ -1,7 +1,8 @@
 <?php
 
 use Bitrix\Main\Loader;
-
+require_once($_SERVER["DOCUMENT_ROOT"]."/bitrix/modules/main/include/prolog_before.php");
+CModule::IncludeModule("highloadblock");
 //composer autoload
 if (file_exists($_SERVER['DOCUMENT_ROOT'] . '/local/php_interface/vendor/autoload.php')) {
     require_once($_SERVER['DOCUMENT_ROOT'] . '/local/php_interface/vendor/autoload.php');
@@ -9,6 +10,7 @@ if (file_exists($_SERVER['DOCUMENT_ROOT'] . '/local/php_interface/vendor/autoloa
 
 // Автозагрузка классов
 Loader::registerAutoLoadClasses(null, array(
+
     'Naturalist\Users' => '/local/php_interface/classes/Users.php',
     'Naturalist\Orders' => '/local/php_interface/classes/Order.php',
     'Naturalist\Baskets' => '/local/php_interface/classes/Basket.php',
@@ -65,6 +67,11 @@ Loader::registerAutoLoadClasses(null, array(
     'Naturalist\bronevik\OrderChangeBronevik' => '/local/php_interface/classes/bronevik/OrderChangeBronevik.php',
     'Naturalist\bronevik\enums\StatusOrderEnum' => '/local/php_interface/classes/bronevik/enums/StatusOrderEnum.php',
     'Naturalist\Handlers\HigloadHandler' => '/local/php_interface/classes/Handlers/HigloadHandler.php',
+    'Naturalist\Markdown' => '/local/php_interface/classes/Markdown.php',
+    'Naturalist\Http\HttpFetchInterface' => '/local/php_interface/classes/Http/HttpFetchInterface.php',
+    'Naturalist\Http\CurlHttpFetch' => '/local/php_interface/classes/Http/CurlHttpFetch.php',
+    'Naturalist\Telegram\TelegramBot' => '/local/php_interface/classes/Telegram/TelegramBot.php',
+    'Naturalist\Telegram\DebugBot' => '/local/php_interface/classes/Telegram/DebugBot.php',
 ));
 
 // Константы
