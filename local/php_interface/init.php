@@ -1,8 +1,6 @@
 <?php
 
 use Bitrix\Main\Loader;
-require_once($_SERVER["DOCUMENT_ROOT"]."/bitrix/modules/main/include/prolog_before.php");
-CModule::IncludeModule("highloadblock");
 //composer autoload
 if (file_exists($_SERVER['DOCUMENT_ROOT'] . '/local/php_interface/vendor/autoload.php')) {
     require_once($_SERVER['DOCUMENT_ROOT'] . '/local/php_interface/vendor/autoload.php');
@@ -10,7 +8,6 @@ if (file_exists($_SERVER['DOCUMENT_ROOT'] . '/local/php_interface/vendor/autoloa
 
 // Автозагрузка классов
 Loader::registerAutoLoadClasses(null, array(
-
     'Naturalist\Users' => '/local/php_interface/classes/Users.php',
     'Naturalist\Orders' => '/local/php_interface/classes/Order.php',
     'Naturalist\Baskets' => '/local/php_interface/classes/Basket.php',
@@ -97,12 +94,12 @@ function menuAdminNewItem(&$adminMenu, &$moduleMenu)
         "section" => "add_object_bnovo",
         "sort" => 2000,                    // сортировка пункта меню
         "url" => "add_object_bnovo.php?lang=" . LANG,  // ссылка на пункте меню
-        "text" => 'Добавить объект Bnovo',       // текст пункта меню
+        "text" => 'Добавить объект Bnovo',   // текст пункта меню
         "title" => 'Добавить объект Bnovo', // текст всплывающей подсказки
         "icon" => "form_menu_icon", // малая иконка
         "page_icon" => "form_page_icon", // большая иконка
         "items_id" => "add_object_bnovo",  // идентификатор ветви
-        "items" => array()          // остальные уровни меню сформируем ниже.
+        "items" => array() // остальные уровни меню сформируем ниже.
     );
 }
 
@@ -120,3 +117,22 @@ if (!function_exists('custom_mail') && COption::GetOptionString("webprostor.smtp
         }
     }
 }
+use Naturalist\Telegram\DebugBot;
+use Naturalist\Markdown;
+// тестовая отправка ботом
+
+function sendTestMessage(){
+    $bot = DebugBot::bot(DEBUG_TELEGRAM_BOT_TOKEN);
+
+    $clientIp = trim((string)$_SERVER['REMOTE_ADDR']);
+    $currentTime = trim((string)date("Y-m-d H:i:s"));
+
+    $message = Markdown::arrayToMarkdown(Markdown::escapeMarkdownV2([
+        'На тестовую страницу выполнен вход с IP' => $clientIp,
+        'Вход выполнен' => $currentTime
+    ]));
+
+    $bot->sendMessage($message);
+}
+
+

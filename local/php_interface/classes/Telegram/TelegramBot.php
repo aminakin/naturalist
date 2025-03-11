@@ -8,6 +8,7 @@ use Bitrix\Main\SystemException;
 use Naturalist\Http\CurlHttpFetch;
 use Bitrix\Highloadblock\HighloadBlockTable;
 use Bitrix\Highloadblock\HighloadBlock;
+use Bitrix\Main\Loader;
 
 class TelegramBot
 {
@@ -21,6 +22,7 @@ class TelegramBot
     ) {
         $this->telegramApi = 'https://api.telegram.org/bot' . $this->telegramToken;
         $this->http = new CurlHttpFetch();
+
     }
 
     public static function bot(string $token):self{
@@ -37,8 +39,11 @@ class TelegramBot
      */
     protected function getUsers(): array {
         $hiLoadId = 34;
-        $hiLoad = HighloadBlockTable::getById($hiLoadId)->fetch();
 
+        if (!Loader::includeModule("highloadblock")) {
+            throw new \Exception("Не удалось подключить модуль highloadblock.");
+        }
+        $hiLoad = HighloadBlockTable::getById($hiLoadId)->fetch();
         if ($hiLoad) {
             $dataClass = HighloadBlockTable::compileEntity($hiLoad)->getDataClass();
 
