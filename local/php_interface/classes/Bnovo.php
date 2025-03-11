@@ -54,7 +54,7 @@ class Bnovo
 
     private $token;
 
-    private TelegramBot $debugBotTelegram;
+    private DebugBot $debugBotTelegram;
 
     public function __construct()
     {
@@ -1856,7 +1856,7 @@ class Bnovo
             "roomtypes" => (array)$arCategories
         );
 
-        $this->debugBotTelegram()->sendMessage(Markdown::arrayToMarkdown($data));
+        $this->debugBotTelegram->sendMessage(Markdown::arrayToMarkdown($data));
 
         $ch = curl_init();
         curl_setopt_array($ch, array(
@@ -1867,7 +1867,7 @@ class Bnovo
         $response = curl_exec($ch);
         $arData = json_decode($response, true);
 
-        $this->debugBotTelegram()->sendMessage(Markdown::arrayToMarkdown($response));
+        $this->debugBotTelegram->sendMessage(Markdown::arrayToMarkdown($response));
 
         if (empty($arData) || (isset($arData['code']) && $arData['code'] != 200)) {
             if ($arData['code'] == 403) {
