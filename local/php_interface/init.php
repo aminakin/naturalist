@@ -60,17 +60,7 @@ Loader::registerAutoLoadClasses(null, array(
     'Naturalist\bronevik\OrderBronevik' => '/local/php_interface/classes/bronevik/OrderBronevik.php',
     'Naturalist\bronevik\HotelOfferPricingCheckPriceBronevik' => '/local/php_interface/classes/bronevik/HotelOfferPricingCheckPriceBronevik.php',
     'Naturalist\bronevik\AttemptBronevik' => '/local/php_interface/classes/bronevik/AttemptBronevik.php',
-    'Naturalist\bronevik\OrderChangeLog' => '/local/php_interface/classes/bronevik/OrderChangeLog.php',
-    'Naturalist\bronevik\OrderChangeStatus' => '/local/php_interface/classes/bronevik/OrderChangeStatus.php',
-    'Naturalist\bronevik\OrderChangeBronevik' => '/local/php_interface/classes/bronevik/OrderChangeBronevik.php',
-    'Naturalist\bronevik\enums\StatusOrderEnum' => '/local/php_interface/classes/bronevik/enums/StatusOrderEnum.php',
     'Naturalist\Handlers\HigloadHandler' => '/local/php_interface/classes/Handlers/HigloadHandler.php',
-    'Naturalist\Markdown' => '/local/php_interface/classes/Markdown.php',
-    'Naturalist\Http\HttpFetchInterface' => '/local/php_interface/classes/Http/HttpFetchInterface.php',
-    'Naturalist\Http\CurlHttpFetch' => '/local/php_interface/classes/Http/CurlHttpFetch.php',
-    'Naturalist\Telegram\TelegramBot' => '/local/php_interface/classes/Telegram/TelegramBot.php',
-    'Naturalist\Telegram\DebugBot' => '/local/php_interface/classes/Telegram/DebugBot.php',
-    'Naturalist\Handlers\OnAdminIBlockSectionEdit' => '/local/php_interface/classes/Handlers/OnAdminIBlockSectionEdit.php',
 ));
 
 // Константы
@@ -119,22 +109,3 @@ if (!function_exists('custom_mail') && COption::GetOptionString("webprostor.smtp
         }
     }
 }
-use Naturalist\Telegram\DebugBot;
-use Naturalist\Markdown;
-// тестовая отправка ботом
-
-function sendTestMessage(){
-    $bot = DebugBot::bot(DEBUG_TELEGRAM_BOT_TOKEN);
-
-    $clientIp = trim((string)$_SERVER['REMOTE_ADDR']);
-    $currentTime = trim((string)date("Y-m-d H:i:s"));
-
-    $message = Markdown::arrayToMarkdown(Markdown::escapeMarkdownV2([
-        'На тестовую страницу выполнен вход с IP' => $clientIp,
-        'Вход выполнен' => $currentTime
-    ]));
-
-    $bot->sendMessage($message);
-}
-
-

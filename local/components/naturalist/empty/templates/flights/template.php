@@ -58,7 +58,7 @@ use Bitrix\Main\Localization\Loc;
         </div>
     </div>
 </section>
-<div class="tt">
+
 <? $APPLICATION->IncludeComponent(
     "bitrix:news.list",
     "main_slider",
@@ -117,9 +117,8 @@ use Bitrix\Main\Localization\Loc;
         "AJAX_OPTION_ADDITIONAL" => "",
     )
 ); ?>
-</div>
 
-<div class="gg">
+
 <? $APPLICATION->IncludeComponent(
     "bitrix:news.list",
     "impressions_slider",
@@ -178,7 +177,7 @@ use Bitrix\Main\Localization\Loc;
         "AJAX_OPTION_ADDITIONAL" => "",
     )
 ); ?>
-</div>
+
 
 <!-- main-->
 <title>Дешевые авиабилеты и отели</title>

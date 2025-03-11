@@ -14,8 +14,8 @@ enum RoomTypeEnum: string
     {
         return match ($this) {
             RoomTypeEnum::SINGLE => 'Одноместное размещение',
-            RoomTypeEnum::DOUBLE => 'Двухместное размещение (1 кровать. Тип кровати не гарантирован)',
-            RoomTypeEnum::TWIN => 'Двухместное размещение (2 кровати. Тип кровати не гарантирован)',
+            RoomTypeEnum::DOUBLE => 'Двухместное размещение (1 кровать)',
+            RoomTypeEnum::TWIN => 'Двухместное размещение (2 кровати)',
             RoomTypeEnum::TRIPLE => 'Трехместное размещение',
             RoomTypeEnum::QUADRUPLE => 'Четырехместное размещение',
             default => throw new \Exception('Unexpected match value'),

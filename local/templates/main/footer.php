@@ -447,9 +447,6 @@ global $arSettings, $currPage;
 <? if (CSite::InDir('/index.php') || CSite::InDir('/certificates') || CSite::InDir('/promo-cert')) : ?>
     <script defer src="<?= SITE_TEMPLATE_PATH ?>/assets/js/index.js?v=<?= filemtime($_SERVER["DOCUMENT_ROOT"] . '/' . SITE_TEMPLATE_PATH . '/assets/js/index.js') ?>"></script>
 <? endif; ?>
-<? if(CSite::inDir('/flights')):?>
-
-<? endif ?>
 <? if (CSite::InDir('/catalog')) : ?>
     <? if ($currPage === "/catalog/" || strpos($currPage, "/catalog/vpechatleniya/") !== false) : ?>
         <script defer src="<?= SITE_TEMPLATE_PATH ?>/assets/js/catalog.js?v=<?= filemtime($_SERVER["DOCUMENT_ROOT"] . '/' . SITE_TEMPLATE_PATH . '/assets/js/catalog.js') ?>"></script>

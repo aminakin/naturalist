@@ -123,15 +123,11 @@ use Naturalist\Users;
 
     <?php if (CSite::InDir('/flights')) : ?>
         <link rel="stylesheet" href="<?= SITE_TEMPLATE_PATH ?>/assets/css/index.css?v=<?= filemtime($_SERVER['DOCUMENT_ROOT'] . SITE_TEMPLATE_PATH . '/assets/css/index.css'); ?>">
-
-
-        <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
-
-        <script async src="https://tp.media/content?currency=rub&trs=386385&shmarker=604057&show_hotels=false&powered_by=true&locale=ru&searchUrl=avia.naturalist.travel%2Fflights&primary_override=%2332a8dd&color_button=%23E39250&color_icons=%23F9EED8&dark=%23262626&light=%23FFFFFF&secondary=%23F9EED8&special=%23C4C4C400&color_focused=%2332a8dd&border_radius=0&no_labels=&plain=true&promo_id=7879&campaign_id=100" charset="utf-8"></script>
-        <script async src="https://tp.media/content?currency=rub&trs=386385&shmarker=604057&destination=MOW&target_host=www.aviasales.ru%2Fsearch&locale=ru&limit=6&powered_by=true&width=243&primary=%23e69d62&promo_id=4044&campaign_id=100" charset="utf-8"></script>
-        <script async src="https://tp.media/content?currency=rub&trs=386385&shmarker=604057&destination=LED&target_host=www.aviasales.ru%2Fsearch&locale=ru&limit=6&powered_by=true&width=243&primary=%23e69d62&promo_id=4044&campaign_id=100" charset="utf-8"></script>
-        <script async src="https://tp.media/content?currency=rub&trs=386385&shmarker=604057&destination=VOG&target_host=www.aviasales.ru%2Fsearch&locale=ru&limit=6&powered_by=true&width=243&primary=%23e69d62&promo_id=4044&campaign_id=100" charset="utf-8"></script>
-        <script async src="https://tp.media/content?currency=rub&trs=386385&shmarker=604057&destination=KGD&target_host=www.aviasales.ru%2Fsearch&locale=ru&limit=6&powered_by=true&width=243&primary=%23e69d62&promo_id=4044&campaign_id=100" charset="utf-8"></script>
+        <script async src="https://tp.media/content?currency=rub&trs=386385&shmarker=604057&show_hotels=false&powered_by=true&locale=ru&searchUrl=www.aviasales.ru%2Fsearch&primary_override=%2332a8dd&color_button=%23E39250&color_icons=%23F9EED8&dark=%23262626&light=%23FFFFFF&secondary=%23F9EED8&special=%23C4C4C400&color_focused=%2332a8dd&border_radius=0&no_labels=&plain=true&promo_id=7879&campaign_id=100" charset="utf-8"></script>
+        <script async src="https://tp.media/content?currency=rub&trs=386385&shmarker=604057&destination=MOW&target_host=www.aviasales.ru%2Fsearch&locale=ru&limit=6&powered_by=true&width=243&primary=%234CC519ff&promo_id=4044&campaign_id=100" charset="utf-8"></script>
+        <script async src="https://tp.media/content?currency=usd&trs=386385&shmarker=604057&destination=LED&target_host=www.aviasales.ru%2Fsearch&locale=ru&limit=6&powered_by=true&width=243&primary=%234CC519ff&promo_id=4044&campaign_id=100" charset="utf-8"></script>
+        <script async src="https://tp.media/content?currency=usd&trs=386385&shmarker=604057&destination=VOG&target_host=www.aviasales.ru%2Fsearch&locale=ru&limit=6&powered_by=true&width=243&primary=%234CC519ff&promo_id=4044&campaign_id=100" charset="utf-8"></script>
+        <script async src="https://tp.media/content?currency=usd&trs=386385&shmarker=604057&destination=KGD&target_host=www.aviasales.ru%2Fsearch&locale=ru&limit=6&powered_by=true&width=243&primary=%234CC519ff&promo_id=4044&campaign_id=100" charset="utf-8"></script>
         <script async src="https://tp.media/content?currency=rub&trs=386385&shmarker=604057&lat=&lng=&powered_by=true&search_host=www.aviasales.ru%2Fsearch&locale=ru&value_min=0&value_max=1000000&round_trip=true&only_direct=false&radius=1&draggable=true&disable_zoom=false&show_logo=false&scrollwheel=true&primary=%23E39250&secondary=%233FABDB&light=%23ffffff&width=1212&height=420&zoom=1&promo_id=4054&campaign_id=100" charset="utf-8"></script>
     <?php endif; ?>
 

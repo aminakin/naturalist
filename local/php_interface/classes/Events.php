@@ -15,7 +15,6 @@ use CIBlockSection;
 use CIBlockElement;
 use CFile;
 use Naturalist\Handlers\HigloadHandler;
-use Naturalist\Handlers\OnAdminIBlockSectionEdit;
 use Naturalist\Users;
 use Naturalist\Orders;
 use Naturalist\Settings;
@@ -60,10 +59,6 @@ class Events
 
         $event->addEventHandler('', OBJECT_COMFORT_HL_ENTITY. DataManager::EVENT_ON_BEFORE_ADD, [HigloadHandler::class, 'handle']);
         $event->addEventHandler('', OBJECT_COMFORT_HL_ENTITY. DataManager::EVENT_ON_BEFORE_UPDATE, [HigloadHandler::class, 'handle']);
-
-        /* События административной панели */
-        $event->addEventHandler('main','OnAdminIBlockSectionEdit', [OnAdminIBlockSectionEdit::class, 'handle']);
-
     }
 
     public static function deleteKernelJs(&$content)

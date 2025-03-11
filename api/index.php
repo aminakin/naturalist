@@ -37,7 +37,7 @@ if ($method == 'POST' && $resource == 'auth') {
     list($authType, $token) = explode(' ', $arHeaders["Authorization"]);
 
     $validation = $api->login($token);
-    if ($validation === TRUE || $resource == 'bronevik') {
+    if ($validation === TRUE) {
         $isExist = false;
 
         if (isset($resource) && !empty($resource)) {
@@ -58,16 +58,6 @@ if ($method == 'POST' && $resource == 'auth') {
 
                 case 'POST':
                     switch ($resource) {
-                        case 'bronevik':
-                            $match = [];
-                            preg_match('/^\/api\/([a-z0-9]+)\/([a-z0-9]+)$/', $_SERVER['REQUEST_URI'], $match);
-                            $type = $match[1];
-                            $action = $match[2];
-                            if ($type == 'bronevik' && $action == 'orders') {
-                                (new \Naturalist\bronevik\OrderChangeBronevik)($_SERVER, $params);
-                            }
-                            die();
-                            break;
                         case 'catalog':
                             $arOutput = $api->updateCatalog($params);
                             $responseCode = $arOutput['code'];

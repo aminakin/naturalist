@@ -220,7 +220,7 @@ class SearchRoomsBronevik
 
         $iE = new CIBlockElement;
         if (count($arExistElement)) {
-            $itemId = $arExistElement[0]['ID'];
+            $itemId = $arExistElement['ID'];
             $iE->Update($itemId, $offer);
         } else {
             $itemId = $iE->Add($offer);
