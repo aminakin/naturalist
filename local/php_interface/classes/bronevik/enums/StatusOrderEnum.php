@@ -30,4 +30,20 @@ enum StatusOrderEnum: int
             StatusOrderEnum::CANCELLED_FINE => 'Аннулировано, штраф',
         };
     }
+
+    public function siteStatusCode(): string
+    {
+        return match ($this) {
+            StatusOrderEnum::NEW => 'N',//'Новый',
+            StatusOrderEnum::IN_PROCESSING => 'N',//'В обработке',
+            StatusOrderEnum::AWAITING_CONFIRMATION => 'N', //'Ожидает подтверждения',
+            StatusOrderEnum::CONFIRMED => 'N', // 'Подтвержден',
+            StatusOrderEnum::NOT_CONFIRMED => 'C', //'Не подтвержден',
+            StatusOrderEnum::WAITING_FOR_CLIENT_CONFIRMATION => 'N', // 'Ожидает подтверждения клиента',
+            StatusOrderEnum::CANCELLATION_ORDERED => 'C', // 'Заказана аннуляция',
+            StatusOrderEnum::AWAITING_CANCELLATION => 'N', // 'Ожидает аннуляции',
+            StatusOrderEnum::CANCELLED_WITHOUT_PENALTY => 'C', //'Аннулировано, без штрафа',
+            StatusOrderEnum::CANCELLED_FINE => 'C', //'Аннулировано, штраф',
+        };
+    }
 }
