@@ -39,7 +39,7 @@ class TelegramBot
      */
     protected function getUsers(): array
     {
-        $highloadBlockName = 'TelegramUsers';
+        $highloadBlockName = TELEGRAM_USERS_HL_ENTITY;
 
         if (!Loader::includeModule("highloadblock")) {
             throw new \Exception("Не удалось подключить модуль highloadblock.");
