@@ -14,6 +14,7 @@ use DatePeriod;
 use DateTime;
 use Naturalist\Markdown;
 use Naturalist\Telegram\DebugBot;
+use Naturalist\Telegram\TelegramBot;
 
 Loader::IncludeModule("iblock");
 Loader::IncludeModule("catalog");
@@ -53,7 +54,7 @@ class Bnovo
 
     private $token;
 
-    private DebugBot $debugBotTelegram;
+    private TelegramBot $debugBotTelegram;
 
     public function __construct()
     {
