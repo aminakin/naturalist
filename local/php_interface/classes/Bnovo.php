@@ -342,7 +342,7 @@ class Bnovo
                     $minDays = $arItem['UF_MIN_STAY'] ? $arItem['UF_MIN_STAY'] : $arItem['UF_MIN_STAY_ARRIVAL'];
                     $error = 'Бронирование возможно от ' . $minDays . ' ' . $daysDeclension->get($minDays);
 
-                    // Удаляем элементы из первоначального массива дат, т.к. он далее будет использоваться для поиска цен                    
+                    // Удаляем элементы из первоначального массива дат, т.к. он далее будет использоваться для поиска цен
                     foreach ($arDataGrouped[$key] as $toDel) {
                         unset($arData[$toDel['ID']]);
                     }
@@ -496,7 +496,7 @@ class Bnovo
         }
 
         while ($arOccupancy = $rsOccupancies->Fetch()) {
-            // Складываем в отедльный массив все наценки            
+            // Складываем в отедльный массив все наценки
             if ($arOccupancy['PROPERTY_IS_MARKUP_VALUE'] == 'Да') {
                 if (!empty($children) && isset($filteredChildrenAgesId[$arOccupancy["PROPERTY_CHILDREN_AGES_VALUE"][0]])) {
                     $markups[$arOccupancy["PROPERTY_CATEGORY_ID_VALUE"]][$arOccupancy["CODE"]] = $arOccupancy;
@@ -549,7 +549,7 @@ class Bnovo
 
         $arCategoriesFilterredIDs = array_unique($arCategoriesFilterredIDs);
 
-        // Номера        
+        // Номера
         if ($arCategoriesFilterredIDs && $arTariffsIDs) {
             $rsElements = CIBlockElement::GetList(
                 false,
@@ -647,7 +647,7 @@ class Bnovo
                                             unset($test[$key]);
                                             break;
                                         }
-                                        // убираем дубли                                    
+                                        // убираем дубли
                                         if (str_contains($acc, $value['ID'])) {
                                             $countDouble += 1;
                                             if ($countDouble > $value['COUNT']) {
@@ -691,7 +691,7 @@ class Bnovo
                                 }
                             }
 
-                            // вычисление мест                            
+                            // вычисление мест
                             foreach ($markupVariants as $variant) {
                                 $arMarkupPrices = [];
                                 $variantName = '';
@@ -778,6 +778,7 @@ class Bnovo
 
         if (empty($arItems) && $error == '') {
             $error = 'Не найдено номеров на выбранные даты';
+            $this->debugBotTelegram->sendMessage($error);
         }
 
         //xprint($arItems);
@@ -1757,7 +1758,7 @@ class Bnovo
      * Добавление/обновление размещения в виде наценки
      *
      * @return void
-     * 
+     *
      */
     private function markupHandler($childrenAgesId, $elementIdCat, $sectionIdOccupancies, $arRoom, $childrenAges): void
     {
@@ -1871,13 +1872,16 @@ class Bnovo
 
         if (empty($arData) || (isset($arData['code']) && $arData['code'] != 200)) {
             if ($arData['code'] == 403) {
+                $this->debugBotTelegram->sendMessage('Объект отключен от вашего канала продаж');
                 return 'Объект отключен от вашего канала продаж';
             } else {
+                $this->debugBotTelegram->sendMessage('Непредвиденная ошибка. Код ошибки - ' . $arData['code'] . '. Сообщение - ' . $arData['message']);
                 return 'Непредвиденная ошибка. Код ошибки - ' . $arData['code'] . '. Сообщение - ' . $arData['message'];
             }
         }
 
         if (!empty($arData) && empty($arData["plans_data"])) {
+            $this->debugBotTelegram->sendMessage('Пустой массив. По объекту нет доступных тарифов');
             return 'Пустой массив. По объекту нет доступных тарифов';
         }
 
@@ -2022,13 +2026,16 @@ class Bnovo
 
         if (empty($arData) || (isset($arData['code']) && $arData['code'] != 200)) {
             if ($arData['code'] == 403) {
+                $this->debugBotTelegram->sendMessage('Объект отключен от вашего канала продаж');
                 return 'Объект отключен от вашего канала продаж';
             } else {
+                $this->debugBotTelegram->sendMessage('Непредвиденная ошибка. Код ошибки - ' . $arData['code'] . '. Сообщение - ' . $arData['message']);
                 return 'Непредвиденная ошибка. Код ошибки - ' . $arData['code'] . '. Сообщение - ' . $arData['message'];
             }
         }
 
         if (!empty($arData) && empty($arData["availability"])) {
+            $this->debugBotTelegram->sendMessage('Пустой массив. По объекту нет доступных тарифов');
             return 'Пустой массив. По объекту нет доступных тарифов';
         }
 
@@ -2076,6 +2083,7 @@ class Bnovo
             $arResData = $entityClass->getDataAll();
 
             if (empty($arResData)) {
+                $this->debugBotTelegram->sendMessage('Нет данных по объекту bnovoId: ' . $hotelId . ' bnovoCategoryId ' . $categoryId . ' на переданные в запросе даты');
                 return 'Нет данных по объекту bnovoId: ' . $hotelId . ' bnovoCategoryId ' . $categoryId . ' на переданные в запросе даты';
             }
             foreach ($arResData as $key => $arEntity) {
@@ -2216,11 +2224,17 @@ class Bnovo
             if ($res->isSuccess()) {
                 return $reservationId;
             } else {
+                $this->debugBotTelegram->sendMessage(Markdown::arrayToMarkdown(Markdown::escapeMarkdownV2([
+                    "ERROR" => "Ошибка сохранения ID бронирования."
+                ])));
                 return [
                     "ERROR" => "Ошибка сохранения ID бронирования."
                 ];
             }
         } else {
+            $this->debugBotTelegram->sendMessage(Markdown::arrayToMarkdown(Markdown::escapeMarkdownV2([
+                "ERROR" => "Ошибка запроса бронирования."
+            ])));
             return [
                 "ERROR" => "Ошибка запроса бронирования."
             ];
@@ -2340,7 +2354,8 @@ class Bnovo
 
     private function sendMessage($arSend)
     {
-        \CEvent::Send($this->sendEventName, SITE_ID, $arSend);
+        $this->debugBotTelegram->sendMessage(Markdown::arrayToMarkdown(Markdown::escapeMarkdownV2($arSend)));
+       // \CEvent::Send($this->sendEventName, SITE_ID, $arSend);
     }
 
     private function writeToFile($data, $function, $hotelId)
@@ -2356,14 +2371,14 @@ class Bnovo
 
     /**
      * Возвращает все разделы (отели) Bnovo
-     * 
+     *
      * @param string $limit Ограничение элементов.
      * @param string $offset С какого элемента выбирать.
      * @param string $countTotal Подсчёт общего количества.
      * @param boolean $raw Вернуть не обработанный объект.
-     * 
+     *
      * @return array
-     * 
+     *
      */
     private function getSections($limit = '', $offset = '', $countTotal = '', $raw = false)
     {
@@ -2389,7 +2404,7 @@ class Bnovo
      * Обновляет тарифы по всем объектам
      *
      * @return array
-     * 
+     *
      */
     public function updateTariffs()
     {
@@ -2407,7 +2422,7 @@ class Bnovo
      * Загружает цены за 2 ближайших месяца
      *
      * @return void
-     * 
+     *
      */
     public function getNearPrices(): void
     {
@@ -2462,7 +2477,7 @@ class Bnovo
      * Проверяет все объекты Бново на подключение к каналу продаж
      *
      * @return void
-     * 
+     *
      */
     public function checkDisabledBnovoObjects(): void
     {
@@ -2479,16 +2494,21 @@ class Bnovo
             foreach ($sections as $section) {
                 $result = $this->updateAvailabilityData($section['UF_EXTERNAL_ID'], [], [$startDate, $endDate], true);
                 if (!is_array($result)) {
+
                     $message .= "Ошибка при проверке данных по объекту " . $section['NAME'] . "\r\n";
                     $message .= "Текст ошибки: " . $result . "\r\n\r\n";
+                    $this->debugBotTelegram->sendMessage($message);
                 }
             }
         }
 
         if ($message != '') {
-            \CEvent::Send('BNOVO_DATA_ERROR', 's1', [
+//            \CEvent::Send('BNOVO_DATA_ERROR', 's1', [
+//                'MESSAGE' => $message,
+//            ]);
+            $this->debugBotTelegram->sendMessage(Markdown::arrayToMarkdown(Markdown::escapeMarkdownV2([
                 'MESSAGE' => $message,
-            ]);
+            ])));
         }
     }
 
@@ -2496,7 +2516,7 @@ class Bnovo
      * Проверяет наличие наценок для номеров объекта
      *
      * @return void
-     * 
+     *
      */
     public function checkMarkups(): void
     {
@@ -2543,9 +2563,9 @@ class Bnovo
      * Возвращает массив номеров объекта
      *
      * @param int $hotelId
-     * 
+     *
      * @return array
-     * 
+     *
      */
     private function getRoomsFromApi(int $hotelId): array
     {

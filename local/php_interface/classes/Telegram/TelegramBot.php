@@ -37,13 +37,22 @@ class TelegramBot
      * @throws SystemException
      * @throws ArgumentException
      */
-    protected function getUsers(): array {
-        $hiLoadId = 34;
+    protected function getUsers(): array
+    {
+        $highloadBlockName = TELEGRAM_USERS_HL_ENTITY;
 
         if (!Loader::includeModule("highloadblock")) {
             throw new \Exception("Не удалось подключить модуль highloadblock.");
         }
-        $hiLoad = HighloadBlockTable::getById($hiLoadId)->fetch();
+
+        $hlId = HighloadBlockTable::getList([
+            'filter' => ['NAME' => $highloadBlockName],
+            'select' => ['ID']
+        ])->fetch();
+
+        if ($hlId) {
+
+        $hiLoad = HighloadBlockTable::getById($hlId['ID'])->fetch();
         if ($hiLoad) {
             $dataClass = HighloadBlockTable::compileEntity($hiLoad)->getDataClass();
 
@@ -59,6 +68,7 @@ class TelegramBot
             }
             return $response;
         }
+    }
 
         return [];
     }
