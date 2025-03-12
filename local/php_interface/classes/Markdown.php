@@ -2,17 +2,23 @@
 namespace Naturalist;
 
 class Markdown {
-    public static function escapeMarkdownV2($text) {
+    public static function escapeMarkdownV2(string $text):string  {
         return preg_replace_callback('/([._*[\]()~`>#+\-=|{}])/u', function ($matches) {
             return '\\' . $matches[0];
         }, $text);
     }
 
-    public static function arrayToMarkdown($input, int $level = 0): string {
+    public static function arrayToMarkdown(string|array $input, int $level = 0): string {
+        if (is_string($input) && trim($input) === '') {
+            return "параметр не является массивом";
+        }
+
         if (is_string($input)) {
-            json_decode($input);
+            $decoded = json_decode($input, true);
             if (json_last_error() === JSON_ERROR_NONE) {
-                $input = json_decode($input, true);
+                $input = $decoded;
+            } else {
+                return "Ошибка декодирования JSON: " . json_last_error_msg();
             }
         }
 
