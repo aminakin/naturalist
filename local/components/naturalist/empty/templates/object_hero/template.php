@@ -176,7 +176,7 @@ if(!isset($arResult["arSection"]["ID"])){
                                             <span><?= $houseTypeData[$suitType]['UF_NAME'] ?></span>
                                         </div>
                                     <? } ?>
-                                    <? if (isset($arSection['UF_SUIT_TYPE']) && count($arSection['UF_SUIT_TYPE']) > 4) { ?>
+                                    <? if (isset($arSection['UF_SUIT_TYPE']) &&  is_array($arSection['UF_SUIT_TYPE']) && count($arSection['UF_SUIT_TYPE']) > 4) { ?>
                                         <a href="#houses" data-modal
                                            class="object__house-more">Ещё <?= intval(count($arSection['UF_SUIT_TYPE']) - 4) ?></a>
                                     <? } ?>
