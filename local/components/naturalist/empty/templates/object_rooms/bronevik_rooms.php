@@ -124,7 +124,7 @@ foreach ($arElements as $arElement): ?>
                                     Можно с животными
                                 </div>
                             <? } ?>
-                            <a class="room__features-more" href="#" elementId="<?= $arElement['ID'] ?>">Подробнее о номере</a>
+                            <a class="room__features-more" elementId="<?= $arElement['ID'] ?>" href="#" elementId="<?= $arElement['ID'] ?>">Подробнее о номере</a>
                         </div>
                     </div>
                 </div>
@@ -197,13 +197,14 @@ foreach ($arElements as $arElement): ?>
                                data-add-basket
                                data-object-title="<?= $arSection['NAME'] ?>"
                                data-id="<?= $arElement["ID"] ?>"
-                               data-price="<?= $arExternalItem['price'] ?>"
+                               data-price="<?= $elementCurrentPrice?>"
                                data-guests="<?= $guests ?>"
                                data-children-age="<?= $_GET['childrenAge'] ?>"
                                data-date-from="<?= $dateFrom ?>"
                                data-date-to="<?= $dateTo ?>"
                                data-external-id="<?= $arElement["PROPERTY_EXTERNAL_ID_VALUE"] ?>"
                                data-external-service="<?= $arSection["UF_EXTERNAL_SERVICE"] ?>"
+                               data-bronevik-offer-external-id="<?= $offer["PROPERTIES"]['CODE']['VALUE'] ?>"
                                data-category-id="<?= $arElement["PROPERTY_EXTERNAL_CATEGORY_ID_VALUE"] ?>"
                                data-cancel-amount="<?= $arExternalItem['cancelAmount'] ?>"
                                data-people="<?= $arExternalItem['fullPlacementsName'] ?>"
