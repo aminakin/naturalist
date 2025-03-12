@@ -7,11 +7,23 @@ class Markdown {
             return '\\' . $matches[0];
         }, $text);
     }
-    public static function arrayToMarkdown(array $array, int $level = 0):string {
+
+    public static function arrayToMarkdown($input, int $level = 0): string {
+        if (is_string($input)) {
+            json_decode($input);
+            if (json_last_error() === JSON_ERROR_NONE) {
+                $input = json_decode($input, true);
+            }
+        }
+
+        if (!is_array($input)) {
+            return "параметр не является массивом";
+        }
+
         $markdown = '';
         $indent = str_repeat('  ', $level);
 
-        foreach ($array as $key => $value) {
+        foreach ($input as $key => $value) {
             if (is_array($value)) {
                 $markdown .= "{$indent}*{$key}:*\n";
                 $markdown .= self::arrayToMarkdown($value, $level + 1);

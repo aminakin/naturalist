@@ -78,14 +78,14 @@ class TelegramBot
      * @throws SystemException
      * @throws ArgumentException
      */
-    public function sendMessage(string $text): void
+    public function sendMessage(string $text, string $type = null): void
     {
         $url = $this->telegramApi . "/sendMessage";
 
         foreach ($this->getUsers() as $chatId){
             $this->http->post($url,[
                 'chat_id' => $chatId,
-                'text' => $text,
+                'text' => !is_null($type) ? $type.': '.$text : $text,
                 'parse_mode' => 'MarkdownV2'
             ]);
         }
