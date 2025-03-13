@@ -861,12 +861,12 @@ class Orders
         $basket = Basket::loadItemsForFUser(Fuser::getId(), $siteId);
 
         // Проверка доступности броневикаa
-        if (! (new HotelOfferPricingCheckPriceBronevik())($basket, ['LAST_NAME' => $arUser['LAST_NAME'], 'FIRST_NAME' => $arUser['NAME']])) {
-            return json_encode([
-                "ACTION" => "reload",
-                "ERROR" => "Произошло изменение цены. Пожалуйста, ознакомьтесь!",
-            ]);
-        }
+//        if (! (new HotelOfferPricingCheckPriceBronevik())($basket, ['LAST_NAME' => $arUser['LAST_NAME'], 'FIRST_NAME' => $arUser['NAME']])) {
+//            return json_encode([
+//                "ACTION" => "reload",
+//                "ERROR" => "Произошло изменение цены. Пожалуйста, ознакомьтесь!",
+//            ]);
+//        }
 
         // Создание нового заказа
         $order = Order::create($siteId, $userId);
