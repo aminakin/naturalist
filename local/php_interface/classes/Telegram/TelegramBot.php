@@ -37,13 +37,22 @@ class TelegramBot
      * @throws SystemException
      * @throws ArgumentException
      */
-    protected function getUsers(): array {
-        $hiLoadId = 34;
+    protected function getUsers(): array
+    {
+        $highloadBlockName = TELEGRAM_USERS_HL_ENTITY;
 
         if (!Loader::includeModule("highloadblock")) {
             throw new \Exception("Не удалось подключить модуль highloadblock.");
         }
-        $hiLoad = HighloadBlockTable::getById($hiLoadId)->fetch();
+
+        $hlId = HighloadBlockTable::getList([
+            'filter' => ['NAME' => $highloadBlockName],
+            'select' => ['ID']
+        ])->fetch();
+
+        if ($hlId) {
+
+        $hiLoad = HighloadBlockTable::getById($hlId['ID'])->fetch();
         if ($hiLoad) {
             $dataClass = HighloadBlockTable::compileEntity($hiLoad)->getDataClass();
 
@@ -59,6 +68,7 @@ class TelegramBot
             }
             return $response;
         }
+    }
 
         return [];
     }
@@ -68,14 +78,14 @@ class TelegramBot
      * @throws SystemException
      * @throws ArgumentException
      */
-    public function sendMessage(string $text): void
+    public function sendMessage(string $text, string $type = null): void
     {
         $url = $this->telegramApi . "/sendMessage";
 
         foreach ($this->getUsers() as $chatId){
             $this->http->post($url,[
                 'chat_id' => $chatId,
-                'text' => $text,
+                'text' => !is_null($type) ? $type.': '.$text : $text,
                 'parse_mode' => 'MarkdownV2'
             ]);
         }

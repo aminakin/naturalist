@@ -28,7 +28,7 @@ class order_bronevik_notification20250306143806 extends Version
             $helper->Event()->saveEventType('BRONEVIK_ORDER_CHANGE', array (
   'LID' => 'en',
   'EVENT_TYPE' => 'email',
-  'NAME' => '',
+  'NAME' => 'Change order by API',
   'DESCRIPTION' => '',
   'SORT' => '150',
 ));
