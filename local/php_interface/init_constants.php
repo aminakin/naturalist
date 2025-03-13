@@ -20,7 +20,6 @@ if (!defined("CERT_VALUE_PROP_ID")) define(("CERT_VALUE_PROP_ID"), 30); // Св�
 if (!defined("SMI_IBLOCK_ID")) define(("SMI_IBLOCK_ID"), 27); // ID ИБ Сми о нас
 if (!defined("MAIN_SLIDER_IBLOCK_ID")) define(("MAIN_SLIDER_IBLOCK_ID"), 28); // ID ИБ Слайдер на главной
 if (!defined("CATALOG_BRONEVIK_OFFERS_IBLOCK_ID")) define(("CATALOG_BRONEVIK_OFFERS_IBLOCK_ID"), 32); // ID ИБ предложений бронивека
-if (!defined("BRONEVIK_RATE_TYPE_HL_ENTITY")) define(("BRONEVIK_RATE_TYPE_HL_ENTITY"), 34); // ID ИБ предложений бронивека
 if (!defined("CATALOG_IBLOCK_SECTION_UF_EXTERNAL_SERVICE_ID")) define(("CATALOG_IBLOCK_SECTION_UF_EXTERNAL_SERVICE_ID"), 6); // ID ИБ предложений бронивека
 if (!defined("CATALOG_IBLOCK_ELEMENT_EXTERNAL_SERVICE_ID")) define(("CATALOG_IBLOCK_ELEMENT_EXTERNAL_SERVICE_ID"), 24); // ID ИБ предложений бронивека
 
@@ -68,6 +67,8 @@ const ORDER_PROP_CERT_FORMAT = 38;
 const ORDER_PROP_CERT_ADDRESS = 39;
 const ORDER_PROP_CERT_FILE = 40;
 const ORDER_PROP_ENTERED_COUPON = 41;
+const ORDER_PROP_BRONEVIK_OFFER_ID = 43;
+
 
 // Оплаты для сертификатов
 const CERT_YANDEX_PAYSYSTEM_ID = 7;
@@ -109,7 +110,6 @@ const TRAVELINE_CHECKSUMM_HL_ENTITY = 'CheckSumms';
 const BRONEVIK_RATE_TYPE_HL_ENTITY = 'Ratetypebronevik';
 
 const BNOVO_FILES_HL_ENTITY = 'PriceFiles';
-const BRONEVIK_RATE_TYPE_HL_ENTITY = 'Ratetypebronevik';
 
 const OPEN_CERT_ELEMENT_ID = 15974;
 

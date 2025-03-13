@@ -90,7 +90,7 @@ class Orders
         'PROP_CONGRATS' => ORDER_PROP_CONGRATS,
         'PROP_CERT_PRICE' => ORDER_PROP_CERT_PRICE,
         'CERT_ADDRESS' => ORDER_PROP_CERT_ADDRESS,
-        'BRONEVIK_OFFER_ID' => BRONEVIK_OFFER_ID,
+        'BRONEVIK_OFFER_ID' => ORDER_PROP_BRONEVIK_OFFER_ID,
     );
     public $statusNames = array(
         "N" => "Не оплачено",
