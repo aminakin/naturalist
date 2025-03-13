@@ -778,7 +778,6 @@ class Bnovo
 
         if (empty($arItems) && $error == '') {
             $error = 'Не найдено номеров на выбранные даты';
-            $this->debugBotTelegram->sendMessage($error);
         }
 
         //xprint($arItems);
