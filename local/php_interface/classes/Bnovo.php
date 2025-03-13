@@ -1857,7 +1857,7 @@ class Bnovo
             "roomtypes" => (array)$arCategories
         );
 
-        $this->debugBotTelegram->sendMessage(Markdown::arrayToMarkdown($data));
+//        $this->debugBotTelegram->sendMessage(Markdown::arrayToMarkdown($data),'send data updateReservationData ' . $hotelId);
 
         $ch = curl_init();
         curl_setopt_array($ch, array(
@@ -1868,11 +1868,11 @@ class Bnovo
         $response = curl_exec($ch);
         $arData = json_decode($response, true);
 
-        $this->debugBotTelegram->sendMessage(Markdown::arrayToMarkdown($response));
+//        $this->debugBotTelegram->sendMessage(Markdown::arrayToMarkdown($response));
 
         if (empty($arData) || (isset($arData['code']) && $arData['code'] != 200)) {
             if ($arData['code'] == 403) {
-                $this->debugBotTelegram->sendMessage('Объект отключен от вашего канала продаж');
+                $this->debugBotTelegram->sendMessage('Объект отключен от вашего канала продаж: ' . $hotelId);
                 return 'Объект отключен от вашего канала продаж';
             } else {
                 $this->debugBotTelegram->sendMessage('Непредвиденная ошибка. Код ошибки - ' . $arData['code'] . '. Сообщение - ' . $arData['message']);
@@ -1881,7 +1881,7 @@ class Bnovo
         }
 
         if (!empty($arData) && empty($arData["plans_data"])) {
-            $this->debugBotTelegram->sendMessage('Пустой массив. По объекту нет доступных тарифов');
+            $this->debugBotTelegram->sendMessage('Пустой массив. По объекту нет доступных тарифов: ' . $hotelId);
             return 'Пустой массив. По объекту нет доступных тарифов';
         }
 
@@ -2009,7 +2009,7 @@ class Bnovo
 
 //        Debug::writeToFile($data, '', '_availability_data.log');
         //Debug::writeToFile($data, 'BNOVO_REQUEST_' . $hotelId . date('Y-m-d H:i:s'), '__BNOVO_REQUEST.log');
-        $this->debugBotTelegram->sendMessage(Markdown::arrayToMarkdown($data));
+//        $this->debugBotTelegram->sendMessage(Markdown::arrayToMarkdown($data));
 
         $ch = curl_init();
         curl_setopt_array($ch, array(
@@ -2022,11 +2022,11 @@ class Bnovo
 
 //        Debug::writeToFile($response, '', '_availability_responce_data.json');
         //Debug::writeToFile($arData, 'BNOVO_RESPONSE_' . $hotelId . date('Y-m-d H:i:s'), '__BNOVO_RESPONSE.log');
-        $this->debugBotTelegram->sendMessage(Markdown::arrayToMarkdown($response));
+//        $this->debugBotTelegram->sendMessage(Markdown::arrayToMarkdown($response));
 
         if (empty($arData) || (isset($arData['code']) && $arData['code'] != 200)) {
             if ($arData['code'] == 403) {
-                $this->debugBotTelegram->sendMessage('Объект отключен от вашего канала продаж');
+                $this->debugBotTelegram->sendMessage('Объект отключен от вашего канала продаж:' . $hotelId);
                 return 'Объект отключен от вашего канала продаж';
             } else {
                 $this->debugBotTelegram->sendMessage('Непредвиденная ошибка. Код ошибки - ' . $arData['code'] . '. Сообщение - ' . $arData['message']);
@@ -2035,7 +2035,7 @@ class Bnovo
         }
 
         if (!empty($arData) && empty($arData["availability"])) {
-            $this->debugBotTelegram->sendMessage('Пустой массив. По объекту нет доступных тарифов');
+            $this->debugBotTelegram->sendMessage('Пустой массив. По объекту нет доступных тарифов:' . $hotelId);
             return 'Пустой массив. По объекту нет доступных тарифов';
         }
 
@@ -2117,7 +2117,7 @@ class Bnovo
             $query = 'UPDATE b_hlbd_room_offers SET UF_RESERVED=1 WHERE id IN (' . implode(',', $arReservedOne) . ')';
 
             //Debug::writeToFile($query, 'BNOVO_UNRESERVED_' . $hotelId . date('Y-m-d H:i:s'), '__BNOVO_UNRESERVED_log.log');
-            $this->debugBotTelegram->sendMessage(Markdown::arrayToMarkdown($query));
+//            $this->debugBotTelegram->sendMessage(Markdown::arrayToMarkdown($query));
 
             $result = $connection->queryExecute($query);
         }
@@ -2126,7 +2126,7 @@ class Bnovo
             $query = 'UPDATE b_hlbd_room_offers SET UF_RESERVED=0 WHERE id IN (' . implode(',', $arReservedNull) . ')';
 
             //Debug::writeToFile($query, 'BNOVO_RESERVED_' . $hotelId . date('Y-m-d H:i:s'), '__BNOVO_RESERVED__log.log');
-            $this->debugBotTelegram->sendMessage(Markdown::arrayToMarkdown($query));
+//            $this->debugBotTelegram->sendMessage(Markdown::arrayToMarkdown($query));
 
             $result = $connection->queryExecute($query);
         }
@@ -2225,7 +2225,7 @@ class Bnovo
                 return $reservationId;
             } else {
                 $this->debugBotTelegram->sendMessage(Markdown::arrayToMarkdown(Markdown::escapeMarkdownV2([
-                    "ERROR" => "Ошибка сохранения ID бронирования."
+                    "ERROR" => "Ошибка сохранения ID бронирования." . $orderId
                 ])));
                 return [
                     "ERROR" => "Ошибка сохранения ID бронирования."
@@ -2233,7 +2233,7 @@ class Bnovo
             }
         } else {
             $this->debugBotTelegram->sendMessage(Markdown::arrayToMarkdown(Markdown::escapeMarkdownV2([
-                "ERROR" => "Ошибка запроса бронирования."
+                "ERROR" => "Ошибка запроса бронирования." . $orderId
             ])));
             return [
                 "ERROR" => "Ошибка запроса бронирования."
