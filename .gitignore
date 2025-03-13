@@ -9,7 +9,7 @@
 /upload
 /local/php_interface/data/*
 /local/php_interface/log
-/local/php_interface/init_constants.php
+#/local/php_interface/init_constants.php
 /local/cron/*.log
 
 /local/modules/sprint.migration
