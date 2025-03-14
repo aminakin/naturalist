@@ -1,4 +1,4 @@
-<?
+<?php
 /** @var  $arElements */
 /** @var  $arExternalInfo */
 
@@ -11,7 +11,7 @@ $arParentView = [];
 
 foreach ($arExternalInfo as $idNumber => $arTariffs):
     ?>
-    <? foreach ($arTariffs as $keyTariff => $arTariff):
+    <?php foreach ($arTariffs as $keyTariff => $arTariff):
     if (empty($arTariff['prices']) || empty($arElementsTariffs[$idNumber])) {
         continue;
     }
@@ -34,9 +34,9 @@ foreach ($arExternalInfo as $idNumber => $arTariffs):
     ?>
     <div class="room">
         <div class="room__top">
-            <? if ($arElement["PICTURES"]): ?>
+            <?php if ($arElement["PICTURES"]): ?>
                 <div class="room__images">
-                    <? if ($arElement['PROPERTY_ROOMTOUR_VALUE']) { ?>
+                    <?php if ($arElement['PROPERTY_ROOMTOUR_VALUE']) { ?>
                         <a class="room__tour" href="<?= CFile::GetPath($arElement['PROPERTY_ROOMTOUR_VALUE']) ?>" data-fancybox="gallery_<?= $arElement['ID'] ?>" data-caption="<?= $arElement["NAME"] ?>">
                             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" fill="none">
                                 <path d="M11.0471 1.5H6.95215V4.77H11.0471V1.5Z" fill="black" />
@@ -46,32 +46,32 @@ foreach ($arExternalInfo as $idNumber => $arTariffs):
                             </svg>
                             Румтур
                         </a>
-                    <? } ?>
+                    <?php } ?>
                     <div class="swiper slider-gallery" data-slider-object="data-slider-object">
                         <div class="swiper-wrapper">
-                            <? $keyPhoto = 1; ?>
-                            <? foreach ($arElement["PICTURES"] as $arPhoto): ?>
-                                <? if (count($arElement["PICTURES"]) > 1): ?>
-                                    <?
+                            <?php $keyPhoto = 1; ?>
+                            <?php foreach ($arElement["PICTURES"] as $arPhoto): ?>
+                                <?php if (count($arElement["PICTURES"]) > 1): ?>
+                                    <?php
                                     $alt = $arResult["arSection"]["NAME"] . " " . $arElement["NAME"] . " рис." . $keyPhoto;;
                                     $title = "Фото - " . $arElement["NAME"] . " рис." . $keyPhoto;
                                     ?>
-                                <? else: ?>
-                                    <?
+                                <?php else: ?>
+                                    <?php
                                     $alt = $arResult["arSection"]["NAME"] . " " . $arElement["NAME"];
                                     $title = "Фото - " . $arElement["NAME"];
                                     ?>
-                                <? endif; ?>
+                                <?php endif; ?>
                                 <div class="swiper-slide">
                                     <a href="<?= $arPhoto["big"] ?>" data-fancybox="gallery_<?= $arElement['ID'] ?>" data-caption="<?= $arElement["NAME"] ?>">
                                         <img class="" loading="lazy" alt="<?= $alt; ?>" title="<?= $title; ?>" src="<?= $arPhoto["src"] ?>">
                                     </a>
                                 </div>
-                                <? $keyPhoto++; ?>
-                            <? endforeach; ?>
+                                <?php $keyPhoto++; ?>
+                            <?php endforeach; ?>
                         </div>
 
-                        <? if (count($arElement["PICTURES"]) > 1): ?>
+                        <?php if (count($arElement["PICTURES"]) > 1): ?>
                             <div class="swiper-button-prev">
                                 <svg class="icon icon_arrow-small" viewbox="0 0 16 16" style="width: 1.6rem; height: 1.6rem;">
                                     <use xlink:href="#arrow-small" />
@@ -83,7 +83,7 @@ foreach ($arExternalInfo as $idNumber => $arTariffs):
                                 </svg>
                             </div>
                             <div class="swiper-pagination"></div>
-                        <? endif; ?>
+                        <?php endif; ?>
                     </div>
                 </div>
                 <script>
@@ -103,20 +103,20 @@ foreach ($arExternalInfo as $idNumber => $arTariffs):
                         },
                     });
                 </script>
-            <? endif; ?>
+            <?php endif; ?>
 
             <div class="room__content">
                 <div class="room__description">
                     <div class="room__description-title"><?= $arElement["NAME"] . ' ' . ($arTariff['value']['PROPERTY_NAME_DETAIL_VALUE'] ?? $arTariff['value']['NAME']) ?></div>
-                    <? if (!empty($arElement["PROPERTY_SQUARE_VALUE"])): ?>
+                    <?php if (!empty($arElement["PROPERTY_SQUARE_VALUE"])): ?>
                         <div class="room__features">
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
                                 <path d="M10.0001 18.9583C9.95013 18.9583 9.90013 18.95 9.85846 18.9417C9.80846 18.9333 9.75846 18.9083 9.70846 18.8833L7.8668 17.9667C7.55847 17.8083 7.43346 17.4333 7.58346 17.125C7.7418 16.8167 8.1168 16.6917 8.42513 16.8417L9.37513 17.3167V16.0167C9.37513 15.675 9.65846 15.3917 10.0001 15.3917C10.3418 15.3917 10.6251 15.675 10.6251 16.0167V17.3167L11.5751 16.8417C11.8835 16.6917 12.2585 16.8167 12.4168 17.125C12.5751 17.4333 12.4501 17.8083 12.1335 17.9667L10.2918 18.8833C10.2418 18.9083 10.1918 18.925 10.1418 18.9417C10.0918 18.95 10.0501 18.9583 10.0001 18.9583ZM15.5585 16.1833C15.3335 16.1833 15.1085 16.0583 15.0001 15.8417C14.8418 15.5333 14.9668 15.1583 15.2835 15L16.7918 14.25V12.325C16.7918 11.9833 17.0751 11.7 17.4168 11.7C17.7585 11.7 18.0418 11.9833 18.0418 12.325V14.6417C18.0418 14.875 17.9085 15.0917 17.7001 15.2L15.8501 16.125C15.7418 16.1583 15.6501 16.1833 15.5585 16.1833ZM4.4418 16.1833C4.35013 16.1833 4.25013 16.1583 4.1668 16.1167L2.3168 15.1917C2.10846 15.0833 1.97513 14.8667 1.97513 14.6333V12.3167C1.97513 11.975 2.25847 11.6917 2.60013 11.6917C2.9418 11.6917 3.22513 11.975 3.22513 12.3167V14.2417L4.73346 14.9917C5.0418 15.15 5.16679 15.525 5.01679 15.8333C4.89179 16.05 4.67513 16.1833 4.4418 16.1833ZM10.0001 12.0167C9.65846 12.0167 9.37513 11.7333 9.37513 11.3917V9.46666L7.8668 8.71667C7.55847 8.55833 7.43346 8.18332 7.58346 7.87499C7.7418 7.56666 8.1168 7.44166 8.42513 7.59166L10.0001 8.375L11.5751 7.59166C11.8835 7.44166 12.2585 7.55832 12.4168 7.87499C12.5751 8.19166 12.4501 8.55833 12.1335 8.71667L10.6251 9.46666V11.3917C10.6251 11.7333 10.3418 12.0167 10.0001 12.0167ZM17.4085 8.30833C17.0668 8.30833 16.7835 8.02499 16.7835 7.68333V6.38333L15.8335 6.85832C15.5251 7.01666 15.1501 6.89166 14.9918 6.57499C14.8335 6.26666 14.9585 5.89166 15.2751 5.73333L16.0085 5.36666L15.2751 4.99999C14.9668 4.84166 14.8418 4.46666 14.9918 4.15833C15.1501 3.85 15.5251 3.72499 15.8335 3.87499L17.6751 4.79166C17.6918 4.79999 17.7168 4.80832 17.7335 4.82499C17.7835 4.84999 17.8251 4.89166 17.8668 4.93333C17.8918 4.96666 17.9168 4.99999 17.9418 5.03332C17.9751 5.09165 18.0001 5.14999 18.0168 5.21666C18.0251 5.26666 18.0335 5.31665 18.0335 5.35832V5.36666V7.66666C18.0335 8.03332 17.7501 8.30833 17.4085 8.30833ZM2.5918 8.30833C2.25013 8.30833 1.9668 8.02499 1.9668 7.68333V5.38333V5.37499C1.9668 5.32499 1.97513 5.27499 1.98346 5.23333C2.00013 5.16666 2.02513 5.10833 2.05846 5.04999C2.08346 5.00832 2.10846 4.97499 2.1418 4.94165C2.17513 4.90832 2.2168 4.875 2.25846 4.85C2.27513 4.84167 2.30013 4.82499 2.3168 4.81666L4.15846 3.89999C4.46679 3.74999 4.8418 3.86666 5.00013 4.18333C5.15846 4.5 5.03347 4.86666 4.7168 5.02499L3.98346 5.39166L4.7168 5.75833C5.02513 5.91666 5.15013 6.29166 5.00013 6.59999C4.8418 6.90833 4.47513 7.03332 4.15846 6.88332L3.20846 6.40833V7.70833C3.2168 8.03333 2.9418 8.30833 2.5918 8.30833ZM11.8501 3.21666C11.7585 3.21666 11.6585 3.19166 11.5751 3.14999L10.0001 2.36666L8.42513 3.14999C8.1168 3.30833 7.7418 3.18333 7.58346 2.86666C7.42513 2.55833 7.55013 2.18332 7.8668 2.02499L9.7168 1.1C9.8918 1.00833 10.1001 1.00833 10.2751 1.1L12.1251 2.02499C12.4335 2.18332 12.5585 2.55833 12.4085 2.86666C12.3001 3.09166 12.0835 3.21666 11.8501 3.21666Z" fill="black" />
                             </svg>
                             <?= $arElement["PROPERTY_SQUARE_VALUE"] ?> м²
                         </div>
-                    <? endif; ?>
-                    <? if (!empty($arElement["PROPERTY_ROOMS_VALUE"])): ?>
+                    <?php endif; ?>
+                    <?php if (!empty($arElement["PROPERTY_ROOMS_VALUE"])): ?>
                         <div class="room__features">
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
                                 <path fill-rule="evenodd" clip-rule="evenodd" d="M9.95203 1.4585H10.0473C11.8729 1.45848 13.3068 1.45848 14.4263 1.60899C15.5735 1.76323 16.4837 2.08576 17.1989 2.80092C17.9141 3.51609 18.2366 4.4263 18.3908 5.57352C18.5414 6.69303 18.5414 8.12693 18.5413 9.95252V10.0478C18.5414 11.8734 18.5414 13.3073 18.3908 14.4268C18.2366 15.574 17.9141 16.4842 17.1989 17.1994C16.4837 17.9146 15.5735 18.2371 14.4263 18.3913C13.3068 18.5418 11.8729 18.5418 10.0473 18.5418H9.95204C8.12644 18.5418 6.69254 18.5418 5.57303 18.3913C4.42581 18.2371 3.5156 17.9146 2.80044 17.1994C2.08527 16.4842 1.76274 15.574 1.6085 14.4268C1.45799 13.3073 1.458 11.8734 1.45801 10.0478V9.95252C1.458 8.12693 1.45799 6.69303 1.6085 5.57352C1.76274 4.4263 2.08527 3.51609 2.80044 2.80092C3.5156 2.08576 4.42581 1.76323 5.57303 1.60899C6.69254 1.45848 8.12644 1.45848 9.95203 1.4585ZM5.73959 2.84784C4.73098 2.98345 4.12852 3.2406 3.68432 3.68481C3.24012 4.12901 2.98296 4.73147 2.84736 5.74008C2.70934 6.76666 2.70801 8.11652 2.70801 10.0002C2.70801 11.8838 2.70934 13.2337 2.84736 14.2602C2.98296 15.2689 3.24012 15.8713 3.68432 16.3155C4.12852 16.7597 4.73098 17.0169 5.73959 17.1525C6.76617 17.2905 8.11603 17.2918 9.99967 17.2918C11.8833 17.2918 13.2332 17.2905 14.2598 17.1525C15.2684 17.0169 15.8708 16.7597 16.315 16.3155C16.7592 15.8713 17.0164 15.2689 17.152 14.2602C17.29 13.2337 17.2913 11.8838 17.2913 10.0002C17.2913 8.11652 17.29 6.76666 17.152 5.74008C17.0164 4.73147 16.7592 4.12901 16.315 3.68481C15.8708 3.2406 15.2684 2.98345 14.2598 2.84784C13.2332 2.70982 11.8833 2.7085 9.99967 2.7085C8.11603 2.7085 6.76617 2.70982 5.73959 2.84784Z" fill="black" />
@@ -124,15 +124,15 @@ foreach ($arExternalInfo as $idNumber => $arTariffs):
                             </svg>
                             <?= $arElement["PROPERTY_ROOMS_VALUE"] . ' ' . $roomsDeclension->get($arElement["PROPERTY_ROOMS_VALUE"]) ?>
                         </div>
-                    <? endif; ?>
-                    <? $text = plural_form($guests, array('взрослый на основном месте', 'взрослых на основных местах', 'взрослых на основных местах')); ?>
-                    <? if (count($arTariff['variants'])) { ?>
+                    <?php endif; ?>
+                    <?php $text = plural_form($guests, array('взрослый на основном месте', 'взрослых на основных местах', 'взрослых на основных местах')); ?>
+                    <?php if (count($arTariff['variants'])) { ?>
                         <div class="room__variants">
-                            <? if (count($arTariff['variants']) > 1) { ?>
+                            <?php if (count($arTariff['variants']) > 1) { ?>
                                 <p class="room__variants-title">Выберите вариант размещения</p>
-                            <? } ?>
-                            <? foreach ($arTariff['variants'] as $key => $variant) { ?>
-                                <?
+                            <?php } ?>
+                            <?php foreach ($arTariff['variants'] as $key => $variant) { ?>
+                                <?php
                                 if (isset($arTariff['seatDispence']['childrenIsAdults'])) {
                                     if (($arTariff['seatDispence']['main'] - $arTariff['seatDispence']['childrenIsAdults'] - $arTariff['seatDispence']['extra']) != 0) {
                                         $variantName = plural_form($arTariff['seatDispence']['main'] - $arTariff['seatDispence']['childrenIsAdults'] - $arTariff['seatDispence']['extra'], array('взрослый на основном месте', 'взрослых на основных местах', 'взрослых на основных местах')) . ', ' . plural_form($arTariff['seatDispence']['childrenIsAdults'], array('ребёнок на основном месте', 'детей на основных местах', 'детей на основных местах')) . '<br>' . $variant['NAME'];
@@ -155,10 +155,10 @@ foreach ($arExternalInfo as $idNumber => $arTariffs):
                                         </div>
                                     </label>
                                 </div>
-                            <? } ?>
+                            <?php } ?>
                         </div>
-                    <? } ?>
-                    <?
+                    <?php } ?>
+                    <?php
                     if ($children > 0) {
                         if (!empty($arSection['UF_MIN_AGE'])) {
                             $miniChildren = 0;
@@ -184,7 +184,7 @@ foreach ($arExternalInfo as $idNumber => $arTariffs):
                     }
                     $text .= '.';
                     ?>
-                    <? if (!count($arTariff['variants'])) { ?>
+                    <?php if (!count($arTariff['variants'])) { ?>
                         <div class="room__features">
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
                                 <path fill-rule="evenodd" clip-rule="evenodd" d="M4.75137 12.5754C3.45346 9.49595 5.66865 6.0415 9.00166 6.0415H10.9979C14.3309 6.0415 16.5461 9.49595 15.2482 12.5754C14.9949 13.1763 14.4095 13.5736 13.7537 13.5736H13.1374L12.2516 17.1764C11.9958 18.217 11.072 18.9582 9.99977 18.9582C8.92752 18.9582 8.00373 18.217 7.7479 17.1764L6.86209 13.5736H6.24589C5.59004 13.5736 5.00465 13.1763 4.75137 12.5754ZM9.00166 7.2915C6.59481 7.2915 4.9401 9.80474 5.90324 12.0899C5.96492 12.2362 6.10217 12.3236 6.24589 12.3236H6.94887C7.48002 12.3236 7.93216 12.6903 8.05675 13.1971L8.96175 16.878C9.08333 17.3725 9.51593 17.7082 9.99977 17.7082C10.4836 17.7082 10.9162 17.3725 11.0378 16.878L11.9428 13.1971C12.0674 12.6903 12.5195 12.3236 13.0507 12.3236H13.7537C13.8974 12.3236 14.0346 12.2362 14.0963 12.0899C15.0594 9.80474 13.4047 7.2915 10.9979 7.2915H9.00166Z" fill="#141B34" />
@@ -192,8 +192,20 @@ foreach ($arExternalInfo as $idNumber => $arTariffs):
                             </svg>
                             <?= $text; ?>
                         </div>
-                    <? } ?>
-                    <? if (!empty($arElement["PROPERTY_BEDS_VALUE"])): ?>
+                    <?php } ?>
+
+                    <?if(!is_null($arElement['PROPERTY_QUANTITY_HUMEN_VALUE']) || !is_null($arElement['PROPERTY_QUANTITY_CHILD_VALUE'])):?>
+                        <div class="room__features">
+                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd" clip-rule="evenodd" d="M4.75137 12.5754C3.45346 9.49595 5.66865 6.0415 9.00166 6.0415H10.9979C14.3309 6.0415 16.5461 9.49595 15.2482 12.5754C14.9949 13.1763 14.4095 13.5736 13.7537 13.5736H13.1374L12.2516 17.1764C11.9958 18.217 11.072 18.9582 9.99977 18.9582C8.92752 18.9582 8.00373 18.217 7.7479 17.1764L6.86209 13.5736H6.24589C5.59004 13.5736 5.00465 13.1763 4.75137 12.5754ZM9.00166 7.2915C6.59481 7.2915 4.9401 9.80474 5.90324 12.0899C5.96492 12.2362 6.10217 12.3236 6.24589 12.3236H6.94887C7.48002 12.3236 7.93216 12.6903 8.05675 13.1971L8.96175 16.878C9.08333 17.3725 9.51593 17.7082 9.99977 17.7082C10.4836 17.7082 10.9162 17.3725 11.0378 16.878L11.9428 13.1971C12.0674 12.6903 12.5195 12.3236 13.0507 12.3236H13.7537C13.8974 12.3236 14.0346 12.2362 14.0963 12.0899C15.0594 9.80474 13.4047 7.2915 10.9979 7.2915H9.00166Z" fill="#141B34"/>
+                                <path fill-rule="evenodd" clip-rule="evenodd" d="M10 2.2915C8.96447 2.2915 8.125 3.13097 8.125 4.1665C8.125 5.20204 8.96447 6.0415 10 6.0415C11.0355 6.0415 11.875 5.20204 11.875 4.1665C11.875 3.13097 11.0355 2.2915 10 2.2915ZM6.875 4.1665C6.875 2.44061 8.27411 1.0415 10 1.0415C11.7259 1.0415 13.125 2.44061 13.125 4.1665C13.125 5.89239 11.7259 7.2915 10 7.2915C8.27411 7.2915 6.875 5.89239 6.875 4.1665Z" fill="#141B34"/>
+                            </svg>
+
+                            <?=$arElement['PROPERTY_QUANTITY_HUMEN_VALUE'] .' '. $guestsDeclension->get($arElement['PROPERTY_QUANTITY_HUMEN_VALUE'])?>, <?=!is_null($arElement['PROPERTY_QUANTITY_CHILD_VALUE']) ? $arElement['PROPERTY_QUANTITY_CHILD_VALUE'].' '.$childrenDeclension->get($arElement['PROPERTY_QUANTITY_CHILD_VALUE']): "без детей" ?>
+                        </div>
+                    <?endif?>
+
+                    <?php if (!empty($arElement["PROPERTY_BEDS_VALUE"])): ?>
                         <div class="room__features">
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
                                 <path fill-rule="evenodd" clip-rule="evenodd" d="M1.04199 14.5835C1.04199 14.2383 1.32181 13.9585 1.66699 13.9585L18.3337 13.9585C18.6788 13.9585 18.9587 14.2383 18.9587 14.5835C18.9587 14.9287 18.6788 15.2085 18.3337 15.2085L1.66699 15.2085C1.32181 15.2085 1.04199 14.9287 1.04199 14.5835Z" fill="#141B34" />
@@ -204,8 +216,8 @@ foreach ($arExternalInfo as $idNumber => $arTariffs):
                             </svg>
                             <?= $arElement["PROPERTY_BEDS_VALUE"] . ' ' . $bedsDeclension->get($arElement["PROPERTY_BEDS_VALUE"]) ?>
                         </div>
-                    <? endif; ?>
-                    <? if (is_array($arSection['UF_REST_VARIANTS']) && in_array(4, $arSection['UF_REST_VARIANTS'])) { ?>
+                    <?php endif; ?>
+                    <?php if (!is_null($arElement['PROPERTY_WITH_PETS_VALUE']) && $arElement['PROPERTY_WITH_PETS_VALUE'] === "Y") { ?>
                         <div class="room__features">
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
                                 <path d="M16.0783 6.73408C16.489 6.6994 16.9388 6.81365 17.26 7.0783C17.6796 7.42405 17.8902 7.93488 17.9368 8.46869C17.999 9.1818 17.7269 9.92307 17.272 10.4673C16.8783 10.9383 16.3122 11.3411 15.6852 11.3974L15.6689 11.3997C15.2211 11.4579 14.8056 11.3243 14.4532 11.0474C14.0974 10.768 13.8637 10.2919 13.8114 9.84627C13.719 9.05996 13.9614 8.31129 14.4504 7.69356C14.852 7.18631 15.4274 6.8102 16.0783 6.73408Z" fill="black" />
@@ -216,14 +228,14 @@ foreach ($arExternalInfo as $idNumber => $arTariffs):
                             </svg>
                             Можно с животными
                         </div>
-                    <? } ?>
+                    <?php } ?>
                     <a class="room__features-more" elementId="<?= $arElement['ID'] ?>" href="#" data-room-more="<?= $arElement['ID'] . '-' . $arTariff['tariffId'] ?>">Подробнее о номере</a>
                 </div>
             </div>
         </div>
-        <? if ($arTariff['price']): ?>
-            <? $elementOldPrice = 0; ?>
-            <? if ($arElement['DISCOUNT_DATA']) {
+        <?php if ($arTariff['price']): ?>
+            <?php $elementOldPrice = 0; ?>
+            <?php if ($arElement['DISCOUNT_DATA']) {
                 if ($arElement['DISCOUNT_DATA']['VALUE_TYPE'] == 'P') {
                     $elementPrice = $arTariff['price'] * (100 - $arElement['DISCOUNT_DATA']['VALUE']) / 100;
                 } else {
@@ -253,38 +265,38 @@ foreach ($arExternalInfo as $idNumber => $arTariffs):
                                 <? endif; */ ?>
 
                 <div class="room__left">
-                    <? $cancelation = []; ?>
-                    <? if (!empty($arTariff['value']['PROPERTY_CANCELLATION_FINE_TYPE_VALUE']) && $arTariff['value']['PROPERTY_CANCELLATION_FINE_TYPE_VALUE'] == '2') { ?>
-                        <? if (!empty($arTariff['value']['PROPERTY_CANCELLATION_RULES_VALUE'])) {
+                    <?php $cancelation = []; ?>
+                    <?php if (!empty($arTariff['value']['PROPERTY_CANCELLATION_FINE_TYPE_VALUE']) && $arTariff['value']['PROPERTY_CANCELLATION_FINE_TYPE_VALUE'] == '2') { ?>
+                        <?php if (!empty($arTariff['value']['PROPERTY_CANCELLATION_RULES_VALUE'])) {
                             array_push($cancelation, $arTariff['value']['PROPERTY_CANCELLATION_RULES_VALUE']);
                         } else {
                             array_push($cancelation, 'Штраф за отмену бронирования — ' . $arTariff['price'] * ($arTariff['value']['PROPERTY_CANCELLATION_FINE_AMOUNT_VALUE'] / 100) . ' ₽');
                         } ?>
-                    <? } elseif (!empty($arTariff['value']['PROPERTY_CANCELLATION_FINE_TYPE_VALUE']) && $arTariff['value']['PROPERTY_CANCELLATION_FINE_TYPE_VALUE'] == '5') { ?>
-                        <? if (!empty($arTariff['value']['PROPERTY_CANCELLATION_RULES_VALUE'])) {
+                    <?php } elseif (!empty($arTariff['value']['PROPERTY_CANCELLATION_FINE_TYPE_VALUE']) && $arTariff['value']['PROPERTY_CANCELLATION_FINE_TYPE_VALUE'] == '5') { ?>
+                        <?php if (!empty($arTariff['value']['PROPERTY_CANCELLATION_RULES_VALUE'])) {
                             array_push($cancelation, $arTariff['value']['PROPERTY_CANCELLATION_RULES_VALUE']);
                         }
                         array_push($cancelation, 'Штраф за отмену бронирования — ' . $arTariff['price'] . ' ₽');
                         ?>
-                    <? } elseif (!empty($arTariff['value']['PROPERTY_CANCELLATION_FINE_TYPE_VALUE']) && $arTariff['value']['PROPERTY_CANCELLATION_FINE_TYPE_VALUE'] == '4') { ?>
-                        <? if (!empty($arTariff['value']['PROPERTY_CANCELLATION_RULES_VALUE'])) {
+                    <?php } elseif (!empty($arTariff['value']['PROPERTY_CANCELLATION_FINE_TYPE_VALUE']) && $arTariff['value']['PROPERTY_CANCELLATION_FINE_TYPE_VALUE'] == '4') { ?>
+                        <?php if (!empty($arTariff['value']['PROPERTY_CANCELLATION_RULES_VALUE'])) {
                             array_push($cancelation, $arTariff['value']['PROPERTY_CANCELLATION_RULES_VALUE']);
                         }
                         array_push($cancelation, 'Штраф за отмену бронирования — ' . array_shift($arTariff['prices']) . ' ₽');
                         ?>
-                    <? } elseif (!empty($arTariff['value']['PROPERTY_CANCELLATION_FINE_TYPE_VALUE'])) { ?>
-                        <? if (!empty($arTariff['value']['PROPERTY_CANCELLATION_RULES_VALUE'])) {
+                    <?php } elseif (!empty($arTariff['value']['PROPERTY_CANCELLATION_FINE_TYPE_VALUE'])) { ?>
+                        <?php if (!empty($arTariff['value']['PROPERTY_CANCELLATION_RULES_VALUE'])) {
                             array_push($cancelation,  $arTariff['value']['PROPERTY_CANCELLATION_RULES_VALUE']);
                         }
                         array_push($cancelation,  'Штраф за отмену бронирования — ' . $arTariff['value']['PROPERTY_CANCELLATION_FINE_AMOUNT_VALUE'] . ' ₽');
                         ?>
-                    <? } else { ?>
-                        <? if (!empty($arTariff['value']['PROPERTY_CANCELLATION_RULES_VALUE'])) {
+                    <?php } else { ?>
+                        <?php if (!empty($arTariff['value']['PROPERTY_CANCELLATION_RULES_VALUE'])) {
                             array_push($cancelation, $arTariff['value']['PROPERTY_CANCELLATION_RULES_VALUE']);
                         }
                         array_push($cancelation, 'Бесплатная отмена бронирования'); ?>
-                    <? } ?>
-                    <? if (count($cancelation)) { ?>
+                    <?php } ?>
+                    <?php if (count($cancelation)) { ?>
                         <div class="room__cancelation">
                             <div class="room__cancelation-title">
                                 Условия отмены
@@ -297,24 +309,24 @@ foreach ($arExternalInfo as $idNumber => $arTariffs):
                             <div class="room__cancelation-tooltip">
                                 <div class="room__cancelation-tooltip-title">Условия отмены бронирования</div>
                                 <ul>
-                                    <? foreach ($cancelation as $calcel) { ?>
+                                    <?php foreach ($cancelation as $calcel) { ?>
                                         <li><?= $calcel ?></li>
-                                    <? } ?>
+                                    <?php } ?>
                                 </ul>
                                 <svg xmlns="http://www.w3.org/2000/svg" width="10" height="5" viewBox="0 0 10 5" fill="none">
                                     <path d="M9.5 0L5 5L0.5 0H9.5Z" fill="#E0C695" />
                                 </svg>
                             </div>
                         </div>
-                    <? } ?>
+                    <?php } ?>
                 </div>
 
                 <div class="room__price">
                     <div class="room__price-per-night">
                         <span class="room__final-price"><?= number_format($elementPrice, 0, '.', ' ') ?> <span>₽</span></span>
-                        <? if ($elementOldPrice) { ?>
+                        <?php if ($elementOldPrice) { ?>
                             <span class="room__old-price"><span class="number"><?= number_format($elementOldPrice, 0, '.', ' ') ?></span> <span class="rub">₽</span></span>
-                        <? } ?>
+                        <?php } ?>
                         <span class="room__nights">за <?= $daysCount ?> <?= $daysDeclension->get($daysCount) ?></span>
                     </div>
                     <div class="split-wrap" <?= $elementPrice - Users::getInnerScore() <= 0 ? 'style="display: none"' : '' ?>>
@@ -352,7 +364,7 @@ foreach ($arExternalInfo as $idNumber => $arTariffs):
                    data-room-photo="<?= $arElement["PICTURES"][array_key_first($arElement["PICTURES"])]['src'] ?>"
                    href="#">Забронировать</a>
             </div>
-        <? endif; ?>
+        <?php endif; ?>
     </div>
-<? endforeach; ?>
-<? endforeach;
+<?php endforeach; ?>
+<?php endforeach;
