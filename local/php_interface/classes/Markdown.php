@@ -10,17 +10,17 @@ class Markdown {
 
     public static function arrayToMarkdown(string|array $input, int $level = 0): string {
         if (is_string($input) && trim($input) === '') {
-            return "параметр не является массивом";
+            return self::escapeMarkdownV2($input);
         }
 
-        if (is_string($input)) {
-            $decoded = json_decode($input, true);
-            if (json_last_error() === JSON_ERROR_NONE) {
-                $input = $decoded;
-            } else {
-                return "Ошибка декодирования JSON: " . json_last_error_msg();
-            }
-        }
+//        if (is_string($input)) {
+//            $decoded = json_decode($input, true);
+//            if (json_last_error() === JSON_ERROR_NONE) {
+//                $input = $decoded;
+//            } else {
+//                return "Ошибка декодирования JSON: " . json_last_error_msg();
+//            }
+//        }
 
         if (!is_array($input)) {
             return "параметр не является массивом";

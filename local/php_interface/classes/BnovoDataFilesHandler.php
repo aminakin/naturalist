@@ -34,7 +34,7 @@ class BnovoDataFilesHandler
     {
         $isBusy = Option::get("main", "bnovo_files_working");
         if ($isBusy == 'Y') {
-            //echo "Процесс занят \r\n";
+            echo "Процесс занят \r\n";
             return;
         }
 
@@ -54,11 +54,12 @@ class BnovoDataFilesHandler
             if ($result['code'] == 200) {
                 $this->entity::update($file['ID'], ['UF_LOADED' => 1]);
             }
+            var_export($result);
         }
 
         Option::set("main", "bnovo_files_working", 'N');
 
-        //echo "Агент отработал \r\n";
+        echo "Агент отработал \r\n";
     }
 
     /**
@@ -71,7 +72,7 @@ class BnovoDataFilesHandler
         $info = $this->entity::query()
             ->addSelect('*')
             ->where('UF_LOADED', 0)
-            ->setLimit(3)
+            ->setLimit(10)
             ?->fetchAll();
 
         if (empty($info)) {

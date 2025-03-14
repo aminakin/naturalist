@@ -655,7 +655,7 @@ class Rest
 
     public function sendError($arSend)
     {
-        $this->debugBotTelegram->sendMessage(Markdown::arrayToMarkdown(Markdown::escapeMarkdownV2($arSend)), 'Обработка пушей BNOVO. ');
+        $this->debugBotTelegram->sendMessage(Markdown::arrayToMarkdown($arSend), 'Обработка пушей BNOVO. ');
 //        \CEvent::Send('ERROR_IMPORT', 's1', $arSend);
     }
 
