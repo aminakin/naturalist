@@ -11,10 +11,7 @@ global $arUser, $isAuthorized;
 global $arFavourites;
 
 // Тип объекта
-$hlId = 2;
-$hlblock = HighloadBlockTable::getById($hlId)->fetch();
-$entity = HighloadBlockTable::compileEntity($hlblock);
-$entityClass = $entity->getDataClass();
+$entityClass = HighloadBlockTable::compileEntity(TYPES_HL_ENTITY)->getDataClass();
 $rsData = $entityClass::getList([
     "select" => ["*"],
     "order" => ["UF_SORT" => "ASC"],
