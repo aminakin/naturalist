@@ -9,7 +9,7 @@ class Markdown {
     }
 
     public static function arrayToMarkdown(string|array $input, int $level = 0): string {
-        if (is_string($input) && trim($input) === '') {
+        if (is_string($input)) {
             return self::escapeMarkdownV2($input);
         }
 
