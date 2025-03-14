@@ -116,10 +116,7 @@ $(function () {
     var swiperTwo = new Swiper('.tt .swiper-container', {
       loop: true, // Включение бесконечной прокрутки
       slidesPerView: 1, // Количество видимых слайдов
-      navigation: {
-        nextEl: '.swiper-button-next',
-        prevEl: '.swiper-button-prev',
-      },
+
       pagination: {
         el: '.swiper-pagination',
         clickable: true,
