@@ -160,7 +160,7 @@
 @media (max-width: 1078px){
     .popular-places__widget-items{
         justify-content: center;
-        gap: 76px;
+        gap: 40px;
     }
 
 }
@@ -196,6 +196,10 @@
         background-size: cover; /* Измените на contain, если нужно */
         background-position: center; /* Центрируем изображение */
         background-repeat: no-repeat; /* Не повторять изображение */
+    }
+    .popular-places__widget-items{
+        justify-content: center;
+        gap: 76px;
     }
 }
 
