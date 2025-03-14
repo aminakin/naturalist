@@ -1,4 +1,4 @@
-<?
+<?php
 
 namespace Naturalist;
 
@@ -9,6 +9,8 @@ use Bitrix\Main\Loader;
 use Bitrix\Main\Diag\Debug;
 use CIBlockSection;
 use CIBlockElement;
+use Naturalist\Telegram\DebugBot;
+use Naturalist\Telegram\TelegramBot;
 
 Loader::IncludeModule("iblock");
 Loader::IncludeModule("catalog");
@@ -37,6 +39,14 @@ class Rest
 
     private $authSalt = "cqDC7cnhD";
     private $refreshSalt = "ISB1QyPGP";
+
+    private TelegramBot $debugBotTelegram;
+
+
+    public function __construct()
+    {
+        $this->debugBotTelegram = DebugBot::bot(DEBUG_TELEGRAM_BOT_TOKEN);
+    }
 
     public function getToken($clientId, $clientSecret)
     {
@@ -631,6 +641,7 @@ class Rest
                 $filesDataClass = HighloadBlockTable::compileEntity(BNOVO_FILES_HL_ENTITY)->getDataClass();
                 $filesDataClass::add([
                     'UF_FILE_NAME' => $importFilePath,
+                    'UF_HOTEL_ID' => $val["hotel_id"],
                 ]);
             }
 
@@ -644,7 +655,8 @@ class Rest
 
     public function sendError($arSend)
     {
-        \CEvent::Send('ERROR_IMPORT', 's1', $arSend);
+        $this->debugBotTelegram->sendMessage(Markdown::arrayToMarkdown(Markdown::escapeMarkdownV2($arSend)), 'Обработка пушей BNOVO. ');
+//        \CEvent::Send('ERROR_IMPORT', 's1', $arSend);
     }
 
     private function getEntityClass($hlId = 11)
