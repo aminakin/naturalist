@@ -119,22 +119,4 @@ if (!function_exists('custom_mail') && COption::GetOptionString("webprostor.smtp
         }
     }
 }
-use Naturalist\Telegram\DebugBot;
-use Naturalist\Markdown;
-// тестовая отправка ботом
-
-function sendTestMessage(){
-    $bot = DebugBot::bot(DEBUG_TELEGRAM_BOT_TOKEN);
-
-    $clientIp = trim((string)$_SERVER['REMOTE_ADDR']);
-    $currentTime = trim((string)date("Y-m-d H:i:s"));
-
-    $message = Markdown::arrayToMarkdown(Markdown::escapeMarkdownV2([
-        'На тестовую страницу выполнен вход с IP' => $clientIp,
-        'Вход выполнен' => $currentTime
-    ]));
-
-    $bot->sendMessage($message);
-}
-
 
