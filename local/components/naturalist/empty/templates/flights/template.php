@@ -8,7 +8,7 @@ foreach ($arResult as $key => $value) {
 use Bitrix\Main\Localization\Loc;
 ?>
 
-<div class="flights-widget" style="background: url(<?= SITE_TEMPLATE_PATH ?>/assets/img/background-widget.png);">
+<div class="flights-widget" >
     <div class="flights-widget__preview d-f j-c a-c f-d-c">
         <div class="preview__title">
             <img src="<?= SITE_TEMPLATE_PATH ?>/assets/img/naturalist_logo.png" alt="logo_naturalist">
