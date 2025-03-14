@@ -2223,17 +2223,13 @@ class Bnovo
             if ($res->isSuccess()) {
                 return $reservationId;
             } else {
-                $this->debugBotTelegram->sendMessage(Markdown::arrayToMarkdown(Markdown::escapeMarkdownV2([
-                    "ERROR" => "Ошибка сохранения ID бронирования." . $orderId
-                ])));
+                $this->debugBotTelegram->sendMessage(Markdown::arrayToMarkdown("Ошибка сохранения ID бронирования." . $orderId));
                 return [
                     "ERROR" => "Ошибка сохранения ID бронирования."
                 ];
             }
         } else {
-            $this->debugBotTelegram->sendMessage(Markdown::arrayToMarkdown(Markdown::escapeMarkdownV2([
-                "ERROR" => "Ошибка запроса бронирования." . $orderId
-            ])));
+            $this->debugBotTelegram->sendMessage(Markdown::arrayToMarkdown( "Ошибка запроса бронирования." . $orderId));
             return [
                 "ERROR" => "Ошибка запроса бронирования."
             ];
@@ -2353,7 +2349,7 @@ class Bnovo
 
     private function sendMessage($arSend)
     {
-        $this->debugBotTelegram->sendMessage(Markdown::arrayToMarkdown(Markdown::escapeMarkdownV2($arSend)));
+        $this->debugBotTelegram->sendMessage(Markdown::arrayToMarkdown($arSend));
        // \CEvent::Send($this->sendEventName, SITE_ID, $arSend);
     }
 
@@ -2505,9 +2501,7 @@ class Bnovo
 //            \CEvent::Send('BNOVO_DATA_ERROR', 's1', [
 //                'MESSAGE' => $message,
 //            ]);
-            $this->debugBotTelegram->sendMessage(Markdown::arrayToMarkdown(Markdown::escapeMarkdownV2([
-                'MESSAGE' => $message,
-            ])));
+            $this->debugBotTelegram->sendMessage(Markdown::arrayToMarkdown($message));
         }
     }
 
