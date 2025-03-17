@@ -113,14 +113,5 @@ $(function () {
     }
 });
 
-    var swiperTwo = new Swiper('.tt .swiper-container', {
-      loop: true, // Включение бесконечной прокрутки
-      slidesPerView: 1, // Количество видимых слайдов
-
-      pagination: {
-        el: '.swiper-pagination',
-        clickable: true,
-      },
-    });
 });
 
