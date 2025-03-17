@@ -11,9 +11,13 @@
 /*    max-width: 109rem;*/
 /*    width: 100%;*/
 /*}*/
+
+.gg .container, .tt .container, .why-naturalist .container{
+    padding:unset;
+}
 .wrapper-f{
-    width: 90%; /* или любое другое значение, например, 80% */
-    max-width: 93rem; /* Максимальная ширина для больших экранов */
+    width: calc(100% - 40px); /* 40px - это общие отступы (20px слева и 20px справа) */
+    max-width: 1200px; /* Максимальная ширина 1200px */
     margin: 0 auto;
     margin-top: 50px;
 
@@ -126,15 +130,6 @@
 .flights-map tp-cascoon{
     width: 100% !important;
 }
-
-@media (max-width: 1200px){
-    .flights-map {
-        width: 90%;
-    }
-    .flights-form tp-cascoon{
-        width: 90%;
-    }
-}
 @media (min-width: 800px){
     body {
         position: relative;
@@ -149,6 +144,15 @@
     }
 
 }
+@media (max-width: 1200px){
+    .flights-map {
+        width: 90%;
+    }
+    .flights-form tp-cascoon{
+        width: 90%;
+    }
+}
+
 @media (min-width: 792px){
 
     #cascoon-autocomplete_1{
@@ -202,5 +206,16 @@
 
 img[src='https://www.travelpayouts.com/powered_by/img/as.png']{
     display:none;
+}
+
+@media(min-width: 1899px) and (max-width:900px)
+{
+    .wrapper-f {
+        width: 90%;
+        max-width: 110rem;
+        margin: 0 auto;
+        margin-top: 0px;
+        margin-top: 50px;
+    }
 }
 
