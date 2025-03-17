@@ -50,7 +50,6 @@ $APPLICATION->AddHeadString('<meta name="description" content="' . $arResult['de
     </section>
     <!-- section-->
 
-
     <?
     $APPLICATION->IncludeComponent(
         "naturalist:empty",

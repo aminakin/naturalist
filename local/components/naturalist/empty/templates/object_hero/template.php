@@ -847,7 +847,6 @@ if(!isset($arResult["arSection"]["ID"])){
                 </div>
             </div>
 
-
             <? /*<div class="object-hero__heading">
                     <div class="object-hero__controls">
                         <div class="share">
@@ -891,7 +890,6 @@ if(!isset($arResult["arSection"]["ID"])){
                         </div>
                     </div>
                 </div>*/ ?>
-
         </div>
     </div>
 </section>
