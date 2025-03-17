@@ -160,7 +160,7 @@ foreach ($arExternalInfo as $idNumber => $arTariffs):
                     <?php } ?>
                     <?php
                     if ($children > 0) {
-                        if (!empty($arSection['UF_MIN_AGE'])) {
+                        if (!empty($arSection['UF_MIN_AGE']) && is_string($_GET['childrenAge'])) {
                             $miniChildren = 0;
                             $bigChildren = 0;
                             $arChildrenAges = explode(',', $_GET['childrenAge']);
