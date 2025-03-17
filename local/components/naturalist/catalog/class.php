@@ -75,6 +75,7 @@ class NaturalistCatalog extends \CBitrixComponent
     private $arSort = [];
     private $season = [];
     private $arExternalInfo = [];
+    private $arExternalAvail = [];
     private $arSections = [];
     private $arHLTypes = [];
     private $houseTypeData = [];
@@ -956,7 +957,7 @@ class NaturalistCatalog extends \CBitrixComponent
         $this->arResult['daysDeclension'] = new Declension('ночь', 'ночи', 'ночей');
         $this->arResult['roomsDeclension'] = new Declension('комната', 'комнаты', 'комнат');
         $this->arResult['bedsDeclension'] = new Declension('спальное место', 'спальных места', 'спальных мест');
-        $this->arResult['humenDeclension'] = new Declension('взрослый', 'взрослых','взрослых' );
+        $this->arResult['humenDeclension'] = new Declension('взрослый', 'взрослых', 'взрослых');
         $this->arResult['titleSEO'] = $this->titleSEO;
         $this->arResult['descriptionSEO'] = $this->descriptionSEO;
         $this->arResult['h1SEO'] = $this->h1SEO;
@@ -1100,7 +1101,6 @@ class NaturalistCatalog extends \CBitrixComponent
                 $this->arObjectComfortsIds[] = $objectComfort['UF_XML_ID'];
             }
         }
-
     }
 
     private function setMinPrice()
@@ -1134,7 +1134,7 @@ class NaturalistCatalog extends \CBitrixComponent
     }
 
     private function getRooms()
-    {
+    {   
         // Список номеров
         $rsElements = CIBlockElement::GetList(
             array("SORT" => "ASC"),
@@ -1145,7 +1145,8 @@ class NaturalistCatalog extends \CBitrixComponent
                 "IBLOCK_ID",
                 "ID",
                 "IBLOCK_SECTION_ID",
-                "NAME", "DETAIL_TEXT",
+                "NAME",
+                "DETAIL_TEXT",
                 "PROPERTY_PHOTOS",
                 "PROPERTY_FEATURES",
                 "PROPERTY_EXTERNAL_ID",
@@ -1158,7 +1159,8 @@ class NaturalistCatalog extends \CBitrixComponent
                 'PROPERTY_WITH_PETS',
                 'PROPERTY_QUANTITY_HUMEN',
                 'PROPERTY_QUANTITY_CHILD'
-            ));
+            )
+        );
 
         $this->arElements = array();
         while ($arElement = $rsElements->Fetch()) {
@@ -1173,9 +1175,18 @@ class NaturalistCatalog extends \CBitrixComponent
                 $arElement["PICTURES"][0]["src"] = SITE_TEMPLATE_PATH . "/img/no_photo.png";
             }
 
+            //if (!empty($this->arExternalInfo)) {
+            //    $roomElement = current($this->arExternalInfo[$arElement["ID"]]);
+            //    $arElement["PRICE"] = $roomElement["price"];
+            //} else {
+            //    $arElement["PRICE"] = 0;
+            //}
+
             if (!empty($this->arExternalInfo)) {
-                $roomElement = current($this->arExternalInfo[$arElement["ID"]]);
-                $arElement["PRICE"] = $roomElement["price"];
+                if (isset($this->arExternalInfo[$arElement["ID"]])) {
+                    $roomElement = $this->arExternalInfo[$arElement["ID"]];
+                    $arElement["PRICE"] = $roomElement["price"];
+                }
             } else {
                 $arElement["PRICE"] = 0;
             }
@@ -1187,16 +1198,22 @@ class NaturalistCatalog extends \CBitrixComponent
                 $arElement['DISCOUNT_DATA']['VALUE_TYPE'] = $discountData['DISCOUNT']['VALUE_TYPE'];
             }
 
+            $arElement['AVAILABLE_ID'] = false;
+            if (is_array($this->arExternalAvail['ID']) && in_array($arElement['ID'], $this->arExternalAvail['ID'])) {
+                $arElement['AVAILABLE_ID'] = true;
+            }
+
             $this->arElements[$arElement['ID']] = $arElement;
         }
 
         if ($this->arSections["UF_EXTERNAL_SERVICE"] == "bnovo") {
+
             foreach ($this->arElements as $arElement) {
                 if ((int)$arElement["PROPERTY_PARENT_ID_VALUE"] > 0) {
                     if (!isset($parentExternalIds) || !in_array(
-                            $arElement["PROPERTY_PARENT_ID_VALUE"],
-                            $parentExternalIds
-                        )) {
+                        $arElement["PROPERTY_PARENT_ID_VALUE"],
+                        $parentExternalIds
+                    )) {
                         $parentExternalIds[] = $arElement["PROPERTY_PARENT_ID_VALUE"];
                     }
                 }
@@ -1221,6 +1238,7 @@ class NaturalistCatalog extends \CBitrixComponent
                     $this->arElementsParent[$arElement['PROPERTY_EXTERNAL_ID_VALUE']] = $arElement;
                 }
             }
+            
         }
 
         // Сортировка номеров по убыванию цены
@@ -1228,9 +1246,8 @@ class NaturalistCatalog extends \CBitrixComponent
             return ($a['PRICE'] - $b['PRICE']);
         });
 
-        if ($this->arSections["UF_EXTERNAL_SERVICE"] == "bnovo") {
-            $this->arParams["DETAIL_ITEMS_COUNT"] = 999;
-        }
+        // Временненое решение для вывода всех номеров для traveline
+        $this->arParams["DETAIL_ITEMS_COUNT"] = 999;
     }
 
     private function getDetailServices()
@@ -1342,16 +1359,23 @@ class NaturalistCatalog extends \CBitrixComponent
             $arExternalResult = Products::searchRooms($this->arSections['ID'], $this->arSections['UF_EXTERNAL_ID'], $this->arSections['UF_EXTERNAL_SERVICE'], $this->arUriParams['guests'], $this->arUriParams['childrenAge'], $this->arUriParams['dateFrom'], $this->arUriParams['dateTo'], $this->arSections['UF_MIN_CHIELD_AGE']);
             $this->arExternalInfo = $arExternalResult['arRooms'];
             $this->searchError = $arExternalResult['error'];
+
+            //if ($this->arExternalInfo) {
+            //    $this->arFilter["ID"] = array_keys($this->arExternalInfo);
+            //} else {
+            //    $this->arFilter["ID"] = false;
+            //}
+
             if ($this->arExternalInfo) {
-                $this->arFilter["ID"] = array_keys($this->arExternalInfo);
+                $this->arExternalAvail["ID"] = array_keys($this->arExternalInfo);
             } else {
-                $this->arFilter["ID"] = false;
+                $this->arExternalAvail["ID"] = false;
             }
         }
 
-        if (!isset($this->arFilter["ID"]) || empty($this->arFilter["ID"])) {
+        if (!isset($this->arExternalAvail["ID"]) || empty($this->arExternalAvail["ID"])) {
             $this->arFilter['PROPERTY_IS_FAVORITE_VALUE'] = 'Да';
-            unset($this->arFilter['ID']);
+            unset($this->arExternalAvail['ID']);
         }
     }
 
@@ -1415,4 +1439,3 @@ class NaturalistCatalog extends \CBitrixComponent
         $this->includeComponentTemplate($this->componentPage);
     }
 }
-
