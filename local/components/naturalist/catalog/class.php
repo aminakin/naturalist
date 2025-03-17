@@ -1182,10 +1182,6 @@ class NaturalistCatalog extends \CBitrixComponent
             //    $arElement["PRICE"] = 0;
             //}
 
-           //echo '<pre>';
-           //var_export($this->arExternalInfo[$arElement["ID"]]);
-           //echo '</pre>';
-
             if (!empty($this->arExternalInfo)) {
                 if (isset($this->arExternalInfo[$arElement["ID"]])) {
                     $roomElement = $this->arExternalInfo[$arElement["ID"]];
@@ -1252,11 +1248,6 @@ class NaturalistCatalog extends \CBitrixComponent
 
         // Временненое решение для вывода всех номеров для traveline
         $this->arParams["DETAIL_ITEMS_COUNT"] = 999;
-
-        if ($this->arSections["UF_EXTERNAL_SERVICE"] == "bnovo") {
-            $this->arParams["DETAIL_ITEMS_COUNT"] = 999;
-        }
-        
     }
 
     private function getDetailServices()
@@ -1382,9 +1373,9 @@ class NaturalistCatalog extends \CBitrixComponent
             }
         }
 
-        if (!isset($this->arFilter["ID"]) || empty($this->arFilter["ID"])) {
-            //$this->arFilter['PROPERTY_IS_FAVORITE_VALUE'] = 'Да';
-            unset($this->arFilter['ID']);
+        if (!isset($this->arExternalAvail["ID"]) || empty($this->arExternalAvail["ID"])) {
+            $this->arFilter['PROPERTY_IS_FAVORITE_VALUE'] = 'Да';
+            unset($this->arExternalAvail['ID']);
         }
     }
 
