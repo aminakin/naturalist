@@ -3950,7 +3950,7 @@
 
 .getDetail:hover {
   color: var(--color-orange);
-  border-bottom: 1px solid var(--color-orange);
+  border-bottom: 1px solid transparent;
 }
 
 .modal_comfort-more .modal__container {

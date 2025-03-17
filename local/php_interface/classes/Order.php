@@ -90,7 +90,7 @@ class Orders
         'PROP_CONGRATS' => ORDER_PROP_CONGRATS,
         'PROP_CERT_PRICE' => ORDER_PROP_CERT_PRICE,
         'CERT_ADDRESS' => ORDER_PROP_CERT_ADDRESS,
-        'BRONEVIK_OFFER_ID' => BRONEVIK_OFFER_ID,
+        'BRONEVIK_OFFER_ID' => ORDER_PROP_BRONEVIK_OFFER_ID,
     );
     public $statusNames = array(
         "N" => "Не оплачено",
@@ -861,12 +861,12 @@ class Orders
         $basket = Basket::loadItemsForFUser(Fuser::getId(), $siteId);
 
         // Проверка доступности броневикаa
-        if (! (new HotelOfferPricingCheckPriceBronevik())($basket, ['LAST_NAME' => $arUser['LAST_NAME'], 'FIRST_NAME' => $arUser['NAME']])) {
-            return json_encode([
-                "ACTION" => "reload",
-                "ERROR" => "Произошло изменение цены. Пожалуйста, ознакомьтесь!",
-            ]);
-        }
+//        if (! (new HotelOfferPricingCheckPriceBronevik())($basket, ['LAST_NAME' => $arUser['LAST_NAME'], 'FIRST_NAME' => $arUser['NAME']])) {
+//            return json_encode([
+//                "ACTION" => "reload",
+//                "ERROR" => "Произошло изменение цены. Пожалуйста, ознакомьтесь!",
+//            ]);
+//        }
 
         // Создание нового заказа
         $order = Order::create($siteId, $userId);

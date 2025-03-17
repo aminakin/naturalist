@@ -1,5 +1,4 @@
-<?
-
+<?php
 /** @var  $arElements */
 /** @var  $arExternalInfo */
 
@@ -11,11 +10,11 @@ endforeach;
 $arParentView = [];
 
 foreach ($arExternalInfo as $idNumber => $arTariffs):
-?>
-    <? foreach ($arTariffs as $keyTariff => $arTariff):
-        if (empty($arTariff['prices']) || empty($arElementsTariffs[$idNumber])) {
-            continue;
-        }
+    ?>
+    <?php foreach ($arTariffs as $keyTariff => $arTariff):
+    if (empty($arTariff['prices']) || empty($arElementsTariffs[$idNumber])) {
+        continue;
+    }
 
         $arElement = $arElementsTariffs[$idNumber];
 

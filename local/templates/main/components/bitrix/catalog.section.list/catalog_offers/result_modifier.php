@@ -12,10 +12,7 @@ global $arFavourites;
 $arResult["FAVOURITES"] = $arFavourites;
 
 // Тип объекта
-$hlId = 2;
-$hlblock = HighloadBlockTable::getById($hlId)->fetch();
-$entity = HighloadBlockTable::compileEntity($hlblock);
-$entityClass = $entity->getDataClass();
+$entityClass = HighloadBlockTable::compileEntity(TYPES_HL_ENTITY)->getDataClass();
 $rsData = $entityClass::getList([
     "select" => ["*"],
     "order" => ["UF_SORT" => "ASC"],
@@ -144,7 +141,7 @@ if (Cmodule::IncludeModule('asd.iblock')) {
 }
 
 foreach ($arResult["SECTIONS"] as &$arItem) {
-
+    $arDataFullGallery = [];
     foreach ($arFields['UF_SEASON'] as $season) {
         if ($season == 'Лето') {
             if ($arItem["UF_PHOTOS"]) {

@@ -1250,7 +1250,7 @@ class NaturalistCatalog extends \CBitrixComponent
             return ($a['PRICE'] - $b['PRICE']);
         });
 
-        // временненое решение для вывода всех номеров для traveline
+        // Временненое решение для вывода всех номеров для traveline
         $this->arParams["DETAIL_ITEMS_COUNT"] = 999;
 
         if ($this->arSections["UF_EXTERNAL_SERVICE"] == "bnovo") {

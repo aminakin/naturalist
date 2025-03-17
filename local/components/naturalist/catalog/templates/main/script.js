@@ -406,6 +406,9 @@ $(function () {
 
           var updPagerHtml = $(html).find(ajaxPagerContainer).html() ?? "";
           $(ajaxPagerContainer).html(updPagerHtml);
+          if (updPagerHtml == "") {
+            $(ajaxPagerContainer).hide();
+          }
 
           window.objectsGallery();
         },

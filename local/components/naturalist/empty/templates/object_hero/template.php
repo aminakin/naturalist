@@ -176,7 +176,7 @@ if(!isset($arResult["arSection"]["ID"])){
                                             <span><?= $houseTypeData[$suitType]['UF_NAME'] ?></span>
                                         </div>
                                     <? } ?>
-                                    <? if (isset($arSection['UF_SUIT_TYPE']) && count($arSection['UF_SUIT_TYPE']) > 4) { ?>
+                                    <? if (isset($arSection['UF_SUIT_TYPE']) &&  is_array($arSection['UF_SUIT_TYPE']) && count($arSection['UF_SUIT_TYPE']) > 4) { ?>
                                         <a href="#houses" data-modal
                                            class="object__house-more">Ещё <?= intval(count($arSection['UF_SUIT_TYPE']) - 4) ?></a>
                                     <? } ?>
@@ -196,7 +196,7 @@ if(!isset($arResult["arSection"]["ID"])){
                         <div class="about__item">
                             <div class="about__item-title">Важная информация</div>
                             <div class="about__item-content about__item-important">
-                                <? if (in_array(4, $arSection['UF_REST_VARIANTS'])) { ?>
+                                <? if (is_array($arSection['UF_REST_VARIANTS']) && in_array(4, $arSection['UF_REST_VARIANTS'])) { ?>
                                     <div class="about__item-domestic">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
                                              viewBox="0 0 20 20" fill="none">
