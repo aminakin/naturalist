@@ -119,6 +119,7 @@
 }
 .popular-places__title h2{
     font-weight:700;
+    font-size:
 }
 .popular-places__widget-items{
     flex-wrap:wrap;
@@ -165,7 +166,7 @@
     text-shadow: 1px 1px 1px black;
     max-width:388px;
 }
-.custom-banner__prev a{
+.a-btn{
     text-align:center;
 
     width: 175px;
@@ -208,7 +209,11 @@
         width: 90%;
     }
 }
-
+@media (max-width: 768px) {
+    .popular-places__title h2{
+        font-size:20px;
+    }
+}
 @media (min-width: 792px){
 
     #cascoon-autocomplete_1{
@@ -235,14 +240,18 @@
         align-items: end;
         padding-bottom: 20px;
     }
+    .preview__slogan h1{
+        font-size: 16px;
+    }
 
     .custom-banner{
         background: url(/local/templates/main/assets/img/custom-banner-mobile.png) no-repeat center center;
         background-size: cover;
         padding:11px;
+        height:260px;
 
     }
-    .custom-banner__prev a{
+    .a-btn{
         width: 175px;
         padding-top: 12px;
         padding-bottom: 12px;
