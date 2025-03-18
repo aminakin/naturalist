@@ -58,13 +58,15 @@ use Bitrix\Main\Localization\Loc;
         </div>
     </div>
 </section>
-
-<div class="custom-banner">
-    <div class="custom-banner__prev">
-        <span>Все лучшиее  глэмпинги на сайте</span>
-        <a href="/">Узнать больше</a>
+<a href="/">
+    <div class="custom-banner">
+        <div class="custom-banner__prev">
+            <span>Все лучшиее  глэмпинги на сайте</span>
+            <div class="a-btn" href="/">Узнать больше</div>
+        </div>
     </div>
-</div>
+</a>
+
 
 <div class="gg">
 <? $APPLICATION->IncludeComponent(
