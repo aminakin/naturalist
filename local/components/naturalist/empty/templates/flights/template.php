@@ -44,16 +44,16 @@ use Bitrix\Main\Localization\Loc;
         </div>
         <div class="why-naturalist__wrapper">
             <div class="why-naturalist__block">
-                <? $APPLICATION->IncludeFile("/include/why-naturalist/why-block1.php"); ?>
+                <? $APPLICATION->IncludeFile("/include/why-naturalist/flights/why-block1.php"); ?>
             </div>
             <div class="why-naturalist__block">
-                <? $APPLICATION->IncludeFile("/include/why-naturalist/why-block2.php"); ?>
+                <? $APPLICATION->IncludeFile("/include/why-naturalist/flights/why-block2.php"); ?>
             </div>
             <div class="why-naturalist__block">
-                <? $APPLICATION->IncludeFile("/include/why-naturalist/why-block3.php"); ?>
+                <? $APPLICATION->IncludeFile("/include/why-naturalist/flights/why-block3.php"); ?>
             </div>
             <div class="why-naturalist__block">
-                <? $APPLICATION->IncludeFile("/include/why-naturalist/why-block4.php"); ?>
+                <? $APPLICATION->IncludeFile("/include/why-naturalist/flights/why-block4.php"); ?>
             </div>
         </div>
     </div>
