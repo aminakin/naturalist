@@ -91,6 +91,7 @@ class Orders
         'PROP_CERT_PRICE' => ORDER_PROP_CERT_PRICE,
         'CERT_ADDRESS' => ORDER_PROP_CERT_ADDRESS,
         'BRONEVIK_OFFER_ID' => ORDER_PROP_BRONEVIK_OFFER_ID,
+        'IS_ORDER_TEST_PROP_ID' => IS_ORDER_TEST_PROP_ID,
     );
     public $statusNames = array(
         "N" => "Не оплачено",
@@ -992,6 +993,14 @@ class Orders
             $prices = $arBasketItems['ITEMS'][0]['PROPS']['PRICES'];
             $propertyValue = $propertyCollection->getItemByOrderPropertyId($this->arPropsIDs['PRICES']);
             $propertyValue->setValue(serialize($prices));
+        }
+        //тестовый заказ
+        $list = CUser::GetList('', '', ['ID' => $userId], ['SELECT' => ['UF_TEST_USER']]);
+        if ($fetch = $list->fetch()) {
+            if ($fetch['UF_TEST_USER']) {
+                $propertyValue = $propertyCollection->getItemByOrderPropertyId($this->arPropsIDs['IS_ORDER_TEST_PROP_ID']);
+                $propertyValue->setValue('Y');
+            }
         }
 
         // Пересчёт заказа
