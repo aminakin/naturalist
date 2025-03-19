@@ -706,7 +706,7 @@ class Orders
 
     /* Добавляет купон к заказу */
 
-    public function enterCoupon($coupon)
+    public function enterCoupon($coupon, $summ)
     {
         $coupon = htmlspecialchars_decode(trim($coupon));
         if (!empty($coupon)) {
@@ -714,18 +714,63 @@ class Orders
             if ($getCoupon['ACTIVE'] === 'Y') {
                 DiscountCouponsManager::add($coupon);
                 $rule = \CSaleDiscount::GetByID($getCoupon['DISCOUNT_ID']);
+
                 if ($rule['ACTIVE'] === 'Y') {
                     $action = unserialize($rule['ACTIONS'])['CHILDREN'][0]['DATA'];
+
                     $info = ["DISCOUNT_TYPE" => $action['Unit'], "DISCOUNT_VALUE" => $action['Value']];
                 } else {
                     $info = ["DISCOUNT_TYPE" => '', "DISCOUNT_VALUE" => 0];
                 }
 
-                return json_encode([
-                    "MESSAGE" => "Купон применён",
-                    "INFO" => $info,
-                    "STATUS" => "SUCCESS"
-                ]);
+
+                foreach (unserialize($rule['ACTIONS'])['CHILDREN'][0]['CHILDREN'] as $action) {
+                    if ($action['CLASS_ID'] == 'CondBsktFldPrice') {
+                        $CondBsktFldPrice['LOGIC'] = $action['DATA']['logic'];
+                        $CondBsktFldPrice['VALUE'] = $action['DATA']['value'];
+                    }
+                }
+
+                //echo '<pre>';
+                //var_export($CondBsktFldPrice);
+                //var_export(intval($summ));
+                //var_export($CondBsktFldPrice['VALUE'] < intval( $summ));
+                //echo '</pre>';
+                if ($CondBsktFldPrice['LOGIC'] == 'Less') {
+                    if ($CondBsktFldPrice['VALUE'] < intval($summ)) {
+                        return $this->lessErrorCoupon($CondBsktFldPrice);
+                    } else {
+                        return $this->succesCoupon($info);
+                    }
+                }
+
+                if ($CondBsktFldPrice['LOGIC'] == 'Great') {
+                    if ($CondBsktFldPrice['VALUE'] > intval($summ)) {
+                        return $this->greatErrorCoupon($CondBsktFldPrice);
+                    } else {
+                        return $this->succesCoupon($info);
+                    }
+                }
+
+                if ($CondBsktFldPrice['LOGIC'] == 'EqLs') {
+                    if ($CondBsktFldPrice['VALUE'] <= intval($summ)) {
+                        return $this->lessErrorCoupon($CondBsktFldPrice);
+                    } else {
+                        return $this->succesCoupon($info);
+                    }
+                }
+
+                if ($CondBsktFldPrice['LOGIC'] == 'EqGr') {
+                    if ($CondBsktFldPrice['VALUE'] >= intval($summ)) {
+                        return $this->greatErrorCoupon($CondBsktFldPrice);
+                    } else {
+                        return $this->succesCoupon($info);
+                    }
+                }
+
+                if (empty($CondBsktFldPrice)) {
+                    return $this->succesCoupon($info);
+                }
             } else {
                 return json_encode([
                     "MESSAGE" => "Такого промокода не существует или его срок действия истёк. Пожалуйста воспользуйтесь другим промокодом.",
@@ -733,6 +778,31 @@ class Orders
                 ]);
             }
         }
+    }
+
+    public function succesCoupon($info)
+    {
+        return json_encode([
+            "MESSAGE" => "Купон применён",
+            "INFO" => $info,
+            "STATUS" => "SUCCESS"
+        ]);
+    }
+
+    public function lessErrorCoupon($CondBsktFldPrice)
+    {
+        return json_encode([
+            "MESSAGE" => "Купон не может быть применён, стоимость сертификата больше " . $CondBsktFldPrice['VALUE'] . "",
+            "STATUS" => "ERROR"
+        ]);
+    }
+
+    public function greatErrorCoupon($CondBsktFldPrice)
+    {
+        return json_encode([
+            "MESSAGE" => "Купон не может быть применён, стоимость сертификата меньше " . $CondBsktFldPrice['VALUE'] . "",
+            "STATUS" => "ERROR"
+        ]);
     }
 
     /**
@@ -862,12 +932,12 @@ class Orders
         $basket = Basket::loadItemsForFUser(Fuser::getId(), $siteId);
 
         // Проверка доступности броневикаa
-//        if (! (new HotelOfferPricingCheckPriceBronevik())($basket, ['LAST_NAME' => $arUser['LAST_NAME'], 'FIRST_NAME' => $arUser['NAME']])) {
-//            return json_encode([
-//                "ACTION" => "reload",
-//                "ERROR" => "Произошло изменение цены. Пожалуйста, ознакомьтесь!",
-//            ]);
-//        }
+        //        if (! (new HotelOfferPricingCheckPriceBronevik())($basket, ['LAST_NAME' => $arUser['LAST_NAME'], 'FIRST_NAME' => $arUser['NAME']])) {
+        //            return json_encode([
+        //                "ACTION" => "reload",
+        //                "ERROR" => "Произошло изменение цены. Пожалуйста, ознакомьтесь!",
+        //            ]);
+        //        }
 
         // Создание нового заказа
         $order = Order::create($siteId, $userId);
@@ -1031,8 +1101,8 @@ class Orders
                     $user = new CUser();
                     $user->Update($userId, array(
                         "UF_GUESTS_DATA" => json_encode($arSaveGuests),
-//                        "NAME" => json_encode($arSaveGuests),
-//                        "LAST_NAME" => json_encode($arSaveGuests)
+                        //                        "NAME" => json_encode($arSaveGuests),
+                        //                        "LAST_NAME" => json_encode($arSaveGuests)
                     ));
                 }
 
