@@ -25,7 +25,7 @@ use Bitrix\Main\Localization\Loc;
 
 <div class="popular-places">
     <div class="popular-places__title">
-        <h2>Популярный направления перелетов</h2>
+        <h2>Популярные направления перелетов</h2>
     </div>
 
     <div class="popular-places__widget-items d-f j-s-b f-w ">
@@ -44,80 +44,29 @@ use Bitrix\Main\Localization\Loc;
         </div>
         <div class="why-naturalist__wrapper">
             <div class="why-naturalist__block">
-                <? $APPLICATION->IncludeFile("/include/why-naturalist/why-block1.php"); ?>
+                <? $APPLICATION->IncludeFile("/include/why-naturalist/flights/why-block1.php"); ?>
             </div>
             <div class="why-naturalist__block">
-                <? $APPLICATION->IncludeFile("/include/why-naturalist/why-block2.php"); ?>
+                <? $APPLICATION->IncludeFile("/include/why-naturalist/flights/why-block2.php"); ?>
             </div>
             <div class="why-naturalist__block">
-                <? $APPLICATION->IncludeFile("/include/why-naturalist/why-block3.php"); ?>
+                <? $APPLICATION->IncludeFile("/include/why-naturalist/flights/why-block3.php"); ?>
             </div>
             <div class="why-naturalist__block">
-                <? $APPLICATION->IncludeFile("/include/why-naturalist/why-block4.php"); ?>
+                <? $APPLICATION->IncludeFile("/include/why-naturalist/flights/why-block4.php"); ?>
             </div>
         </div>
     </div>
 </section>
-<div class="tt">
-<? $APPLICATION->IncludeComponent(
-    "bitrix:news.list",
-    "main_slider",
-    array(
-        "DISPLAY_DATE" => "Y",
-        "DISPLAY_NAME" => "Y",
-        "DISPLAY_PICTURE" => "Y",
-        "DISPLAY_PREVIEW_TEXT" => "Y",
-        "AJAX_MODE" => "N",
-        "IBLOCK_TYPE" => "",
-        "IBLOCK_ID" => MAIN_SLIDER_IBLOCK_ID,
-        "NEWS_COUNT" => "1000",
-        "SORT_BY1" => "SORT",
-        "SORT_ORDER1" => "ASC",
-        "SORT_BY2" => "ACTIVE_FROM",
-        "SORT_ORDER2" => "DESC",
-        "FILTER_NAME" => "",
-        "FIELD_CODE" => [0 => 'DETAIL_PICTURE'],
-        "PROPERTY_CODE" => [0 => 'LINK'],
-        "CHECK_DATES" => "Y",
-        "DETAIL_URL" => "",
-        "PREVIEW_TRUNCATE_LEN" => "",
-        "ACTIVE_DATE_FORMAT" => "d.m.Y",
-        "SET_TITLE" => "N",
-        "SET_BROWSER_TITLE" => "N",
-        "SET_META_KEYWORDS" => "N",
-        "SET_META_DESCRIPTION" => "N",
-        "SET_LAST_MODIFIED" => "N",
-        "INCLUDE_IBLOCK_INTO_CHAIN" => "N",
-        "ADD_SECTIONS_CHAIN" => "N",
-        "HIDE_LINK_WHEN_NO_DETAIL" => "Y",
-        "PARENT_SECTION" => "",
-        "PARENT_SECTION_CODE" => "",
-        "INCLUDE_SUBSECTIONS" => "Y",
-        "CACHE_TYPE" => "N",
-        "CACHE_TIME" => "3600",
-        "CACHE_FILTER" => "Y",
-        "CACHE_GROUPS" => "N",
-        "DISPLAY_TOP_PAGER" => "Y",
-        "DISPLAY_BOTTOM_PAGER" => "Y",
-        "PAGER_TITLE" => "",
-        "PAGER_SHOW_ALWAYS" => "Y",
-        "PAGER_TEMPLATE" => "",
-        "PAGER_DESC_NUMBERING" => "Y",
-        "PAGER_DESC_NUMBERING_CACHE_TIME" => "36000",
-        "PAGER_SHOW_ALL" => "Y",
-        "PAGER_BASE_LINK_ENABLE" => "Y",
-        "SET_STATUS_404" => "N",
-        "SHOW_404" => "N",
-        "MESSAGE_404" => "",
-        "PAGER_BASE_LINK" => "",
-        "PAGER_PARAMS_NAME" => "arrPager",
-        "AJAX_OPTION_JUMP" => "N",
-        "AJAX_OPTION_STYLE" => "Y",
-        "AJAX_OPTION_HISTORY" => "N",
-        "AJAX_OPTION_ADDITIONAL" => "",
-    )
-); ?>
-</div>
+<a href="/">
+    <div class="custom-banner">
+        <div class="custom-banner__prev">
+            <span>Все лучшиее  глэмпинги на сайте</span>
+            <div class="a-btn" href="/">Узнать больше</div>
+        </div>
+    </div>
+</a>
+
 
 <div class="gg">
 <? $APPLICATION->IncludeComponent(
