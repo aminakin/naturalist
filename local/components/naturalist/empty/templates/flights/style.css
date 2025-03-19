@@ -15,9 +15,9 @@
 .gg .container, .tt .container, .why-naturalist .container{
     padding:unset;
 }
-.wrapper{
-    margin-top: 45px;
-}
+/*.wrapper{*/
+/*    margin-top: 45px;*/
+/*}*/
 .wrapper-f{
     width: calc(100% - 40px); /* 40px - это общие отступы (20px слева и 20px справа) */
     max-width: 1200px; /* Максимальная ширина 1200px */
