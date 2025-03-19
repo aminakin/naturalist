@@ -68,6 +68,10 @@ class BuyCert {
   outerDeliveries = [3, 4, 5];
 
   bindEvents() {
+    if(this.promoInput.querySelector("input").value !== ''){
+      this.removeCoupon(this.promoInput.querySelector("input").value);
+    }
+    
     this.customPriceInputHandler();
     this.certsSelectHandler();
     this.electroSelectHandler();
@@ -107,9 +111,12 @@ class BuyCert {
     if (enteredCoupon == "" || target.style.display == "none") {
       return;
     }
+    let summ = this.prodCostElement.innerText;
+
     let data = {
       coupon: enteredCoupon,
       action: "couponAdd",
+      summ: summ.replace(/[^0-9]/g, ''),
     };
     jQuery.ajax({
       type: "POST",

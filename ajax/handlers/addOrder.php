@@ -37,7 +37,7 @@ if ($request->get("params")) {
 	$res = $orders->add($params);
 	echo $res;
 } else if ($request->get('action') == 'couponAdd') {
-	$res = $orders->enterCoupon($request->get('coupon'));
+	$res = $orders->enterCoupon($request->get('coupon'), $request->get('summ'));
 	echo $res;
 } else if ($request->get('action') == 'couponDelete') {
 	$res = $orders->removeCoupon($request->get('coupon'));
