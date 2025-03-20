@@ -2775,7 +2775,7 @@
 }
 
 .review__text_hide .review__text-container {
-  -webkit-line-clamp: 4;
+  -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   display: -webkit-box;
   overflow: hidden;
