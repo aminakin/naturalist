@@ -21,7 +21,7 @@ $APPLICATION->IncludeComponent(
 			"detail" => array(),
 		),
 		"ITEMS_COUNT" => 10,
-		"DETAIL_ITEMS_COUNT" => 8,
+		"DETAIL_ITEMS_COUNT" => 6,
 		"DETAIL_REVIEWS_COUNT" => 3,
 		"MAP" => true,
 	)

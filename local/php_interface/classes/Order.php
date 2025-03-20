@@ -731,11 +731,6 @@ class Orders
                     }
                 }
 
-                //echo '<pre>';
-                //var_export($CondBsktFldPrice);
-                //var_export(intval($summ));
-                //var_export($CondBsktFldPrice['VALUE'] < intval( $summ));
-                //echo '</pre>';
                 if ($CondBsktFldPrice['LOGIC'] == 'Less') {
                     if ($CondBsktFldPrice['VALUE'] < intval($summ)) {
                         return $this->lessErrorCoupon($CondBsktFldPrice);

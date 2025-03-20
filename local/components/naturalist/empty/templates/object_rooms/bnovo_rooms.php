@@ -3,6 +3,7 @@
 /** @var  $arExternalInfo */
 
 use Naturalist\Users;
+use PhpParser\Node\Stmt\Echo_;
 
 foreach ($arElements as $arElement):
     $arElementsTariffs[$arElement['ID']] = $arElement;
@@ -10,8 +11,11 @@ endforeach;
 $arParentView = [];
 
 foreach ($arExternalInfo as $idNumber => $arTariffs):
-    ?>
+    
+   ?>
     <?php foreach ($arTariffs as $keyTariff => $arTariff):
+
+
     if (empty($arTariff['prices']) || empty($arElementsTariffs[$idNumber])) {
         continue;
     }
@@ -30,8 +34,8 @@ foreach ($arExternalInfo as $idNumber => $arTariffs):
         $arElement = $arElementsParent[$arElement['PROPERTY_PARENT_ID_VALUE']];
         $arElement["ID"] = $arElementsTariffs[$idNumber]["ID"];
         $arElement["PROPERTY_EXTERNAL_ID_VALUE"] = $arElementsTariffs[$idNumber]["PROPERTY_EXTERNAL_ID_VALUE"];
-    }
-    ?>
+    }?>
+
     <div class="room">
         <div class="room__top">
             <?php if ($arElement["PICTURES"]): ?>
@@ -53,7 +57,7 @@ foreach ($arExternalInfo as $idNumber => $arTariffs):
                             <?php foreach ($arElement["PICTURES"] as $arPhoto): ?>
                                 <?php if (count($arElement["PICTURES"]) > 1): ?>
                                     <?php
-                                    $alt = $arResult["arSection"]["NAME"] . " " . $arElement["NAME"] . " рис." . $keyPhoto;;
+                                    $alt = $arResult["arSection"]["NAME"] . " " . $arElement["NAME"] . " рис." . $keyPhoto;
                                     $title = "Фото - " . $arElement["NAME"] . " рис." . $keyPhoto;
                                     ?>
                                 <?php else: ?>
@@ -351,18 +355,20 @@ foreach ($arExternalInfo as $idNumber => $arTariffs):
         </div>
     <? endforeach; ?>
 <? endforeach;
-
+$printed = false;
 foreach ($arElements as $key => $arElement):
-    if ($key == 0) { ?>
-        <div class="rooms__empty-list">
-            <div>Не осталось свободных мест</div>
-        </div>
-    <? }
 
     if ($arElement['AVAILABLE_ID'] == true):
         continue;
     endif;
 
+    if (!$printed) { ?>
+        <div class="rooms__empty-list">
+            <div>Не осталось свободных мест</div>
+        </div>
+        <? $printed = true;
+    }
+    
     require 'empty_rooms.php';
 
 endforeach;
