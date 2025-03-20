@@ -1162,6 +1162,8 @@ class NaturalistCatalog extends \CBitrixComponent
             )
         );
 
+        
+
         $this->arElements = array();
         while ($arElement = $rsElements->Fetch()) {
             if ($arElement["PROPERTY_PHOTOS_VALUE"]) {
@@ -1185,7 +1187,7 @@ class NaturalistCatalog extends \CBitrixComponent
             if (!empty($this->arExternalInfo)) {
                 if (isset($this->arExternalInfo[$arElement["ID"]])) {
                     $roomElement = $this->arExternalInfo[$arElement["ID"]];
-                    $arElement["PRICE"] = $roomElement["price"];
+                    $arElement["PRICE"] = $roomElement[0]["price"];
                 }
             } else {
                 $arElement["PRICE"] = 0;
@@ -1203,12 +1205,11 @@ class NaturalistCatalog extends \CBitrixComponent
                 $arElement['AVAILABLE_ID'] = true;
             }
 
-            $this->arElements[$arElement['ID']] = $arElement;
+            $this->arElements[$arElement['ID']] = $arElement; 
         }
 
         if ($this->arSections["UF_EXTERNAL_SERVICE"] == "bnovo") {
-
-            foreach ($this->arElements as $arElement) {
+            foreach ($this->arElements as $key => $arElement) {
                 if ((int)$arElement["PROPERTY_PARENT_ID_VALUE"] > 0) {
                     if (!isset($parentExternalIds) || !in_array(
                         $arElement["PROPERTY_PARENT_ID_VALUE"],
@@ -1216,6 +1217,10 @@ class NaturalistCatalog extends \CBitrixComponent
                     )) {
                         $parentExternalIds[] = $arElement["PROPERTY_PARENT_ID_VALUE"];
                     }
+                }
+                
+                if($arElement["PRICE"] == NULL){
+                    unset($key);
                 }
             }
 
@@ -1238,16 +1243,20 @@ class NaturalistCatalog extends \CBitrixComponent
                     $this->arElementsParent[$arElement['PROPERTY_EXTERNAL_ID_VALUE']] = $arElement;
                 }
             }
-            
+        }
+
+        foreach ($this->arElements as $key => $arElement){
+            if($arElement['AVAILABLE_ID'] == false){
+                $element = $this->arElements[$key];
+                unset($this->arElements[$key]);
+                array_push($this->arElements, $element);
+            }
         }
 
         // Сортировка номеров по убыванию цены
         usort($this->arElements, function ($a, $b) {
             return ($a['PRICE'] - $b['PRICE']);
         });
-
-        // Временненое решение для вывода всех номеров для traveline
-        $this->arParams["DETAIL_ITEMS_COUNT"] = 999;
     }
 
     private function getDetailServices()
