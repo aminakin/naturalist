@@ -113,7 +113,7 @@ $(function () {
     breakpoints: {
       550: {
         slidesPerView: 1, // 1 слайд
-        spaceBetween: 30, // Меньшее пространство между слайдами
+        spaceBetween: 50, // Меньшее пространство между слайдами
       },
       551: {
         slidesPerView: 4, // 4 слайда
