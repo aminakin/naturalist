@@ -9,14 +9,16 @@ use Bitrix\Main\Localization\Loc;
 ?>
 
 <div class="flights-widget" >
-    <div class="flights-widget__preview d-f j-c a-c f-d-c">
-        <div class="preview__title">
-            <img src="<?= SITE_TEMPLATE_PATH ?>/assets/img/naturalist_logo.png" alt="logo_naturalist">
-        </div>
-        <div class="preview__slogan">
-            <h1>Поиск авиабилетов <br> к лучшим глэмпингам</h1>
-        </div>
-    </div>
+<!--    <div class="flights-widget__preview d-f j-c a-c f-d-c">-->
+<!--        <div class="preview__title">-->
+<!--            <img src="--><?php //= SITE_TEMPLATE_PATH ?><!--/assets/img/naturalist_logo.png" alt="logo_naturalist">-->
+<!--        </div>-->
+<!--        <div class="preview__slogan">-->
+<!--            <h1>Поиск авиабилетов <br> к лучшим глэмпингам</h1>-->
+<!--        </div>-->
+<!--    </div>-->
+    <img class="banner-decstop" src="<?= SITE_TEMPLATE_PATH ?>/assets/img/dec-b.png" alt="">
+    <img class="banner-mobile" src="<?= SITE_TEMPLATE_PATH ?>/assets/img/mob-b.png" alt="">
 </div>
 
 <div class="flights-form d-f j-c a-c">
@@ -60,10 +62,12 @@ use Bitrix\Main\Localization\Loc;
 </section>
 <a href="/">
     <div class="custom-banner">
-        <div class="custom-banner__prev">
-            <span>Все лучшиее  глэмпинги на сайте</span>
-            <div class="a-btn" href="/">Узнать больше</div>
-        </div>
+<!--        <div class="custom-banner__prev">-->
+<!--            <span>Все лучшиее  глэмпинги на сайте</span>-->
+<!--            <div class="a-btn" href="/">Узнать больше</div>-->
+<!--        </div>-->
+        <img class="banner-decstop" src="/local/templates/main/assets/img/Banner_2_web.png" alt="">
+        <img class="banner-mobile" src="/local/templates/main/assets/img/banner-mob.png" alt="">
     </div>
 </a>
 
