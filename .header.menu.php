@@ -36,6 +36,13 @@ $aMenuLinks = Array(
 		Array("ALWAYS_ORANGE"=>"Y"), 
 		"" 
 	),
+    Array(
+        "Авиабилеты",
+        SITE_DIR."/flights/",
+        Array(),
+        Array(),
+        ""
+    ),
 	Array(
 		"О проекте", 
 		SITE_DIR."/about/", 
@@ -43,5 +50,6 @@ $aMenuLinks = Array(
 		Array(), 
 		"" 
 	),
+
 );
 ?>

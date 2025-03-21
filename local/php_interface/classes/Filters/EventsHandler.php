@@ -61,6 +61,13 @@ class EventsHandler
         $url_parts = explode("?", $context->getRequest()->getRequestUri());
         $url_parts[0] = rawurlencode(rawurldecode($url_parts[0]));
         $url_parts[0] = str_replace('%2F', '/', $url_parts[0]);
+
+        $queryString = parse_url($context->getRequest()->getRequestUri(), PHP_URL_QUERY);
+        parse_str($queryString, $queryParams);
+        $guests = isset($queryParams['guests']) ? $queryParams['guests'] : null;
+
+
+
         //Debug::writeToFile($url_parts, 'url_parts', '__bx_log.log');
         $str = '';
         // $str = Option::get(
@@ -112,8 +119,12 @@ class EventsHandler
                     $url_parts[1] = '';
                 }
 
+                $additionalQueryString = '';
+                if (intval($guests) > 2) {
+                    $additionalQueryString = '?guests=' . $guests;
+                }
                 LocalRedirect(
-                    $instance['UF_NEW_URL'] /*. ($url_parts[1] != '' ? "?" . $url_parts[1] : '')*/,
+                    $instance['UF_NEW_URL'] . $additionalQueryString/*. ($url_parts[1] != '' ? "?" . $url_parts[1] : '')*/,
                     false,
                     '301 Moved Permanently'
                 );

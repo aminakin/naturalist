@@ -453,22 +453,22 @@ class NaturalistCatalog extends \CBitrixComponent
 
     private function fillSections()
     {
-        if (!isset($this->arFilter['UF_EXTERNAL_ID'])) {
-            $cache = Cache::createInstance();
+        //кеш каталог а временно выключен на переработку
+//        if (!isset($this->arFilter['UF_EXTERNAL_ID'])) {
 
+//            $cache = Cache::createInstance();
+//            $arFilterCacheKey = Utils::recursiveImplode($this->arFilter, '_');
+//            $cacheKey = 'without_date_search_' . $arFilterCacheKey;
 
-            $arFilterCacheKey = Utils::recursiveImplode($this->arFilter, '_');
-            $cacheKey = 'without_date_search_' . $arFilterCacheKey;
-
-            if ($cache->initCache(86400, $cacheKey)) {
-                $this->arSections = $cache->getVars();
-            } elseif ($cache->startDataCache()) {
-                $this->sectionsQuery();
-                $cache->endDataCache($this->arSections);
-            }
-        } else {
+//            if ($cache->initCache(86400, $cacheKey)) {
+//                $this->arSections = $cache->getVars();
+//            } elseif ($cache->startDataCache()) {
+//                $this->sectionsQuery();
+//                $cache->endDataCache($this->arSections);
+//            }
+//        } else {
             $this->sectionsQuery();
-        }
+//        }
 
         $this->searchedRegionData = Regions::getRegionById($this->arRegionIds[0] ?? false);
         foreach ($this->arSections as &$arSection) {

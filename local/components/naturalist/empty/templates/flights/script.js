@@ -93,8 +93,7 @@ $(function () {
   $(document).ready(function() {
   var swiper = new Swiper(' .gg .swiper-container', {
     loop: true,
-    slidesPerView: 4,
-    spaceBetween: 30,
+
     navigation: {
       nextEl: '.swiper-button-next',
       prevEl: '.swiper-button-prev',
@@ -110,17 +109,17 @@ $(function () {
           this.setTranslate(-3280);
         }
       }
+    },
+    breakpoints: {
+      550: {
+        slidesPerView: 1, // 1 слайд
+      },
+      551: {
+        slidesPerView: 4, // 4 слайда
+      },
+
     }
 });
 
-    var swiperTwo = new Swiper('.tt .swiper-container', {
-      loop: true, // Включение бесконечной прокрутки
-      slidesPerView: 1, // Количество видимых слайдов
-
-      pagination: {
-        el: '.swiper-pagination',
-        clickable: true,
-      },
-    });
 });
 
