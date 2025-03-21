@@ -13506,9 +13506,9 @@
     const mainSliderWrap = document.querySelector(
       ".main-slider .swiper-container"
     );
-    const mainSliderSpeed = mainSliderWrap.getAttribute("data-speed");
-
     if (mainSliderWrap !== null) {
+      const mainSliderSpeed = mainSliderWrap.getAttribute("data-speed");
+
       new core(mainSliderWrap, {
         slidesPerView: 1,
         spaceBetween: 20,
@@ -18085,16 +18085,22 @@
           .classList.toggle("objects__heading_show");
       });
     }
-    /* CALENDAR
-   -------------------------------------------------- */
 
-    var rangeCalendar = new range_calendar();
-    rangeCalendar.init();
-    /* AUTOCOMPLETE
-   -------------------------------------------------- */
+    const currentPath = window.location.pathname;
+    const flightsRegex = /^\/flights(\/.*)?$/;
+    if (!flightsRegex.test(currentPath)) {
 
-    var searchAutocomplete = new search_autocomplete();
-    searchAutocomplete.init();
+      /* CALENDAR
+     -------------------------------------------------- */
+      var rangeCalendar = new range_calendar();
+      rangeCalendar.init();
+      /* AUTOCOMPLETE
+     -------------------------------------------------- */
+
+      var searchAutocomplete = new search_autocomplete();
+      searchAutocomplete.init();
+    }
+
   })();
   /******/
 })();
