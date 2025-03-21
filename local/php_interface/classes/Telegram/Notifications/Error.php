@@ -1,16 +1,17 @@
 <?php
 namespace Naturalist\Telegram\Notifications;
+use CIBlockSection;
 use Naturalist\Telegram\DebugBot;
 use Naturalist\Telegram\TelegramBot;
 
 class Error {
     private static TelegramBot $bot;
 
-    private function setBot():void{
+    private static  function setBot():void{
         self::$bot = DebugBot::bot(DEBUG_TELEGRAM_BOT_TOKEN);
     }
 
-    private function getBot():TelegramBot{
+    private static function getBot():TelegramBot{
         self::setBot();
         return self::$bot;
     }
