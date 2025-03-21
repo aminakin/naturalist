@@ -249,18 +249,18 @@ foreach ($arElements as $arElement): ?>
     <? endif; ?>
     <? endforeach;
 
-$printed = false;
+$printedEmpty = false;
 foreach ($arElements as $key => $arElement):
 
     if ($arElement['AVAILABLE_ID'] == true):
         continue;
     endif;
 
-    if (!$printed) { ?>
+    if (!$printedEmpty) { ?>
         <div class="rooms__empty-list">
             <div>Не осталось свободных мест</div>
         </div>
-        <? $printed = true;
+        <? $printedEmpty = true;
     }
 
     require 'empty_rooms.php';
