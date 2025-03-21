@@ -160,7 +160,7 @@ foreach ($arExternalInfo as $idNumber => $arTariffs):
                     <?php } ?>
                     <?php
                     if ($children > 0) {
-                        if (!empty($arSection['UF_MIN_AGE'])) {
+                        if (!empty($arSection['UF_MIN_AGE']) && is_string($_GET['childrenAge'])) {
                             $miniChildren = 0;
                             $bigChildren = 0;
                             $arChildrenAges = explode(',', $_GET['childrenAge']);
@@ -246,23 +246,6 @@ foreach ($arExternalInfo as $idNumber => $arTariffs):
                 $elementPrice = $arTariff['price'];
             } ?>
             <div class="room__order">
-
-                <?php /* if ($USER->IsAdmin()): ?>
-                                    <?php if (
-                                        $elementPrice > Users::getInnerScore()
-                                        && intval(Users::getInnerScore()) !== 0
-                                        && $isAuthorized
-                                    ): ?>
-                                        <div class="room__price_cert_price">
-                                            <div class="room__price_cert_price-item">
-                                                <span>Доплата</span>
-                                                <span>
-                                                    <?= number_format($elementPrice - Users::getInnerScore(), 0, '.', ' ') ?> ₽
-                                                </span>
-                                            </div>
-                                        </div>
-                                    <? endif; ?>
-                                <? endif; */ ?>
 
                 <div class="room__left">
                     <?php $cancelation = []; ?>
@@ -369,16 +352,19 @@ foreach ($arExternalInfo as $idNumber => $arTariffs):
     <? endforeach; ?>
 <? endforeach;
 
+$printedEmpty = false;
 foreach ($arElements as $key => $arElement):
-    if ($key == 0) { ?>
-        <div class="rooms__empty-list">
-            <div>Не осталось свободных мест</div>
-        </div>
-    <? }
 
     if ($arElement['AVAILABLE_ID'] == true):
         continue;
     endif;
+
+    if (!$printedEmpty) { ?>
+        <div class="rooms__empty-list">
+            <div>Не осталось свободных мест</div>
+        </div>
+        <? $printedEmpty = true;
+    }
 
     require 'empty_rooms.php';
 

@@ -111,16 +111,16 @@ foreach ($arElements as $arElement): ?>
                                 </div>
                             <? endif; ?>
 
-                            <?if(!is_null($arElement['PROPERTY_QUANTITY_HUMEN_VALUE']) || !is_null($arElement['PROPERTY_QUANTITY_CHILD_VALUE'])):?>
+                            <? if (!is_null($arElement['PROPERTY_QUANTITY_HUMEN_VALUE']) || !is_null($arElement['PROPERTY_QUANTITY_CHILD_VALUE'])): ?>
                                 <div class="room__features">
                                     <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path fill-rule="evenodd" clip-rule="evenodd" d="M4.75137 12.5754C3.45346 9.49595 5.66865 6.0415 9.00166 6.0415H10.9979C14.3309 6.0415 16.5461 9.49595 15.2482 12.5754C14.9949 13.1763 14.4095 13.5736 13.7537 13.5736H13.1374L12.2516 17.1764C11.9958 18.217 11.072 18.9582 9.99977 18.9582C8.92752 18.9582 8.00373 18.217 7.7479 17.1764L6.86209 13.5736H6.24589C5.59004 13.5736 5.00465 13.1763 4.75137 12.5754ZM9.00166 7.2915C6.59481 7.2915 4.9401 9.80474 5.90324 12.0899C5.96492 12.2362 6.10217 12.3236 6.24589 12.3236H6.94887C7.48002 12.3236 7.93216 12.6903 8.05675 13.1971L8.96175 16.878C9.08333 17.3725 9.51593 17.7082 9.99977 17.7082C10.4836 17.7082 10.9162 17.3725 11.0378 16.878L11.9428 13.1971C12.0674 12.6903 12.5195 12.3236 13.0507 12.3236H13.7537C13.8974 12.3236 14.0346 12.2362 14.0963 12.0899C15.0594 9.80474 13.4047 7.2915 10.9979 7.2915H9.00166Z" fill="#141B34"/>
-                                        <path fill-rule="evenodd" clip-rule="evenodd" d="M10 2.2915C8.96447 2.2915 8.125 3.13097 8.125 4.1665C8.125 5.20204 8.96447 6.0415 10 6.0415C11.0355 6.0415 11.875 5.20204 11.875 4.1665C11.875 3.13097 11.0355 2.2915 10 2.2915ZM6.875 4.1665C6.875 2.44061 8.27411 1.0415 10 1.0415C11.7259 1.0415 13.125 2.44061 13.125 4.1665C13.125 5.89239 11.7259 7.2915 10 7.2915C8.27411 7.2915 6.875 5.89239 6.875 4.1665Z" fill="#141B34"/>
+                                        <path fill-rule="evenodd" clip-rule="evenodd" d="M4.75137 12.5754C3.45346 9.49595 5.66865 6.0415 9.00166 6.0415H10.9979C14.3309 6.0415 16.5461 9.49595 15.2482 12.5754C14.9949 13.1763 14.4095 13.5736 13.7537 13.5736H13.1374L12.2516 17.1764C11.9958 18.217 11.072 18.9582 9.99977 18.9582C8.92752 18.9582 8.00373 18.217 7.7479 17.1764L6.86209 13.5736H6.24589C5.59004 13.5736 5.00465 13.1763 4.75137 12.5754ZM9.00166 7.2915C6.59481 7.2915 4.9401 9.80474 5.90324 12.0899C5.96492 12.2362 6.10217 12.3236 6.24589 12.3236H6.94887C7.48002 12.3236 7.93216 12.6903 8.05675 13.1971L8.96175 16.878C9.08333 17.3725 9.51593 17.7082 9.99977 17.7082C10.4836 17.7082 10.9162 17.3725 11.0378 16.878L11.9428 13.1971C12.0674 12.6903 12.5195 12.3236 13.0507 12.3236H13.7537C13.8974 12.3236 14.0346 12.2362 14.0963 12.0899C15.0594 9.80474 13.4047 7.2915 10.9979 7.2915H9.00166Z" fill="#141B34" />
+                                        <path fill-rule="evenodd" clip-rule="evenodd" d="M10 2.2915C8.96447 2.2915 8.125 3.13097 8.125 4.1665C8.125 5.20204 8.96447 6.0415 10 6.0415C11.0355 6.0415 11.875 5.20204 11.875 4.1665C11.875 3.13097 11.0355 2.2915 10 2.2915ZM6.875 4.1665C6.875 2.44061 8.27411 1.0415 10 1.0415C11.7259 1.0415 13.125 2.44061 13.125 4.1665C13.125 5.89239 11.7259 7.2915 10 7.2915C8.27411 7.2915 6.875 5.89239 6.875 4.1665Z" fill="#141B34" />
                                     </svg>
 
-                                    <?=$arElement['PROPERTY_QUANTITY_HUMEN_VALUE'] .' '. $guestsDeclension->get($arElement['PROPERTY_QUANTITY_HUMEN_VALUE'])?>, <?=!is_null($arElement['PROPERTY_QUANTITY_CHILD_VALUE']) ? $arElement['PROPERTY_QUANTITY_CHILD_VALUE'].' '.$childrenDeclension->get($arElement['PROPERTY_QUANTITY_CHILD_VALUE']): "без детей" ?>
+                                    <?= $arElement['PROPERTY_QUANTITY_HUMEN_VALUE'] . ' ' . $guestsDeclension->get($arElement['PROPERTY_QUANTITY_HUMEN_VALUE']) ?>, <?= !is_null($arElement['PROPERTY_QUANTITY_CHILD_VALUE']) ? $arElement['PROPERTY_QUANTITY_CHILD_VALUE'] . ' ' . $childrenDeclension->get($arElement['PROPERTY_QUANTITY_CHILD_VALUE']) : "без детей" ?>
                                 </div>
-                            <?endif?>
+                            <? endif ?>
 
                             <? if (!empty($arElement["PROPERTY_BEDS_VALUE"])): ?>
                                 <div class="room__features">
@@ -163,23 +163,6 @@ foreach ($arElements as $arElement): ?>
                         $elementPrice = $arExternalItem['price'];
                     } ?>
                     <div class="room__order">
-
-                        <?php /*if ($USER->IsAdmin()): ?>
-                                        <?php if (
-                                            $elementPrice > Users::getInnerScore()
-                                            && intval(Users::getInnerScore()) !== 0
-                                            && $isAuthorized
-                                        ): ?>
-                                            <div class="room__price_cert_price">
-                                                <div class="room__price_cert_price-item">
-                                                    <span>Доплата</span>
-                                                    <span>
-                                                        <?= number_format($elementPrice - Users::getInnerScore(), 0, '.', ' ') ?> ₽
-                                                    </span>
-                                                </div>
-                                            </div>
-                                        <? endif; ?>
-                                    <? endif; */ ?>
 
                         <div class="room__left">
                             <? $cancelation = []; ?>
@@ -266,18 +249,20 @@ foreach ($arElements as $arElement): ?>
     <? endif; ?>
     <? endforeach;
 
+$printedEmpty = false;
 foreach ($arElements as $key => $arElement):
-
-    if ($key == 0) { ?>
-        <div class="rooms__empty-list">
-            <div>Не осталось свободных мест</div>
-        </div>
-    <? }
 
     if ($arElement['AVAILABLE_ID'] == true):
         continue;
-    endif; 
-    
+    endif;
+
+    if (!$printedEmpty) { ?>
+        <div class="rooms__empty-list">
+            <div>Не осталось свободных мест</div>
+        </div>
+        <? $printedEmpty = true;
+    }
+
     require 'empty_rooms.php';
 
 endforeach;

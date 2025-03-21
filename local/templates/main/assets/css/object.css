@@ -2226,6 +2226,14 @@
   margin-top: 16px;
 }
 
+.room.room__empty + .rooms__empty-list{
+  display: none;
+}
+
+.rooms__empty-list + .room.room__empty{
+  margin-top: 16px;
+}
+
 .room__images {
   -webkit-box-flex: 0;
   -ms-flex: none;
@@ -4684,7 +4692,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin: 28px 0;
+  margin: 28px 0 12px;
 }
 
 .rooms__empty-list div {
