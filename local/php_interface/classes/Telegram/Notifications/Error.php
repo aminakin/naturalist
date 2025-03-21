@@ -3,7 +3,7 @@ namespace Naturalist\Telegram\Notifications;
 use CIBlockSection;
 use Naturalist\Telegram\DebugBot;
 use Naturalist\Telegram\TelegramBot;
-
+use Bitrix\Main\Data\Cache;
 class Error {
     private static TelegramBot $bot;
 
@@ -15,38 +15,42 @@ class Error {
         self::setBot();
         return self::$bot;
     }
+
     private static function sectionByHotelId($hotelId): array {
+        $cache = Cache::createInstance();
         $cacheKey = 'hotel_sections_' . $hotelId;
         $cacheDuration = 7200;
-        $cachedData = apcu_fetch($cacheKey);
 
-        if (!$cachedData) {
-            return $cachedData;
-        }
-
-        $items = [];
-
-        $data = CIBlockSection::GetList(
-            false,
-            array("IBLOCK_ID" => CATALOG_IBLOCK_ID, "UF_EXTERNAL_ID" => $hotelId),
-            false,
-            array("ID", "NAME"),
-            false
-        );
-
-        if ($section = $data->Fetch()) {
-            $items[] = [
-                'ID' => $section['ID'],
-                'NAME' => $section['NAME'],
-            ];
-
-            apcu_store($cacheKey, $items, $cacheDuration);
+        if ($cache->initCache($cacheDuration, $cacheKey)) {
+            $items = $cache->getVars();
         } else {
-            throw new \Exception("ошибка при выборке раздела отелей ");
-        }
+            $items = [];
 
+            $data = CIBlockSection::GetList(
+                false,
+                array("IBLOCK_ID" => CATALOG_IBLOCK_ID, "UF_EXTERNAL_ID" => $hotelId),
+                false,
+                array("ID", "NAME"),
+                false
+            );
+
+            if($section = $data->Fetch()) {
+                $items[] = [
+                    'ID' => $section['ID'],
+                    'NAME' => $section['NAME'],
+                ];
+            }
+
+            if (!empty($items)) {
+                $cache->startDataCache();
+                $cache->endDataCache($items);
+            } else {
+                throw new \Exception("Ошибка при выборке раздела отелей / ошибка кеширования");
+            }
+        }
         return $items;
     }
+
     public static function internal(int|string $hotelId, string $service, string $message):void{
         try{
             self::getBot()->sendMessage("
