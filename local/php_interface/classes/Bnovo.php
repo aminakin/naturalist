@@ -2511,21 +2511,15 @@ class Bnovo
         if (!empty($sections)) {
             foreach ($sections as $section) {
                 $result = $this->updateAvailabilityData($section['UF_EXTERNAL_ID'], [], [$startDate, $endDate], true);
-                if (!is_array($result)) {
-
-                    $message .= "Ошибка при проверке данных по объекту " . $section['NAME'] . "\r\n";
-                    $message .= "Текст ошибки: " . $result . "\r\n\r\n";
-                    $this->debugBotTelegram->sendMessage($message);
-                }
+//                if (!is_array($result)) {
+//
+//                    $message .= "Ошибка при проверке данных по объекту " . $section['NAME'] . "\r\n";
+//                    $message .= "Текст ошибки: " . $result . "\r\n\r\n";
+//                    $this->debugBotTelegram->sendMessage($message);
+//                }
             }
         }
 
-        if ($message != '') {
-//            \CEvent::Send('BNOVO_DATA_ERROR', 's1', [
-//                'MESSAGE' => $message,
-//            ]);
-            $this->debugBotTelegram->sendMessage(Markdown::arrayToMarkdown($message));
-        }
     }
 
     /**
