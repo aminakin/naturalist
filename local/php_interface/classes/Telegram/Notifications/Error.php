@@ -39,13 +39,6 @@ class Error {
                 'NAME' => $section['NAME'],
             ];
 
-            while ($section = $data->Fetch()) {
-                $items[] = [
-                    'ID' => $section['ID'],
-                    'NAME' => $section['NAME'],
-                ];
-            }
-
             apcu_store($cacheKey, $items, $cacheDuration);
         } else {
             throw new \Exception("ошибка при выборке раздела отелей ");
