@@ -351,6 +351,7 @@ foreach ($arExternalInfo as $idNumber => $arTariffs):
         </div>
     <? endforeach; ?>
 <? endforeach;
+
 $printedEmpty = false;
 foreach ($arElements as $key => $arElement):
 

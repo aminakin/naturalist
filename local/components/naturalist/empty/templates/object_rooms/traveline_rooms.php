@@ -164,23 +164,6 @@ foreach ($arElements as $arElement): ?>
                     } ?>
                     <div class="room__order">
 
-                        <?php /*if ($USER->IsAdmin()): ?>
-                                        <?php if (
-                                            $elementPrice > Users::getInnerScore()
-                                            && intval(Users::getInnerScore()) !== 0
-                                            && $isAuthorized
-                                        ): ?>
-                                            <div class="room__price_cert_price">
-                                                <div class="room__price_cert_price-item">
-                                                    <span>Доплата</span>
-                                                    <span>
-                                                        <?= number_format($elementPrice - Users::getInnerScore(), 0, '.', ' ') ?> ₽
-                                                    </span>
-                                                </div>
-                                            </div>
-                                        <? endif; ?>
-                                    <? endif; */ ?>
-
                         <div class="room__left">
                             <? $cancelation = []; ?>
                             <? if ($arExternalItem['cancelPossible'] && $arExternalItem['cancelAmount'] > 0) {
