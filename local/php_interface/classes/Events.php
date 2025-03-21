@@ -324,6 +324,12 @@ class Events
         }
 
         $propertyCollection = $order->getPropertyCollection();
+        // Если тестовый заказ, выходим
+        $isTest = $propertyCollection->getItemByOrderPropertyId(IS_ORDER_TEST_PROP_ID)->getValue();
+        if ($isTest == 'Y') {
+            return;
+        };
+
         $arFields = $propertyCollection->getArray();
         $basket = $order->getBasket();
         $basketItems = $basket->getBasketItems();
