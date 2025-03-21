@@ -15,6 +15,9 @@ use DateTime;
 use Naturalist\Markdown;
 use Naturalist\Telegram\DebugBot;
 use Naturalist\Telegram\TelegramBot;
+use Bitrix\Iblock\SectionTable;
+use Bitrix\Iblock\PropertyTable;
+use Naturalist\Telegram\Notifications\Error;
 
 Loader::IncludeModule("iblock");
 Loader::IncludeModule("catalog");
@@ -83,6 +86,27 @@ class Bnovo
         $this->token = $token;
 
         $this->debugBotTelegram = DebugBot::bot(DEBUG_TELEGRAM_BOT_TOKEN);
+    }
+
+    private function sectionByHotelId($hotelId): array {
+        $items = [];
+
+        $data = CIBlockSection::GetList(
+            false,
+            array("IBLOCK_ID" => CATALOG_IBLOCK_ID, "UF_EXTERNAL_ID" => $hotelId),
+            false,
+            array("ID", "NAME"),
+            false
+        );
+
+        while ($section = $data->Fetch()) {
+            $items[] = [
+                'ID' => $section['ID'],
+                'NAME' => $section['NAME'],
+            ];
+        }
+
+        return $items;
     }
 
     /* Получение списка свободных объектов в выбранный промежуток */
@@ -1871,16 +1895,16 @@ class Bnovo
 
         if (empty($arData) || (isset($arData['code']) && $arData['code'] != 200)) {
             if ($arData['code'] == 403) {
-                $this->debugBotTelegram->sendMessage('Объект отключен от вашего канала продаж: ' . $hotelId);
+                Error::objectDisabled($hotelId, "Bnovo");
                 return 'Объект отключен от вашего канала продаж';
             } else {
-                $this->debugBotTelegram->sendMessage('Непредвиденная ошибка. Код ошибки - ' . $arData['code'] . '. Сообщение - ' . $arData['message']);
-                return 'Непредвиденная ошибка. Код ошибки - ' . $arData['code'] . '. Сообщение - ' . $arData['message'];
+                Error::internal($hotelId, "Bnovo", $arData['message']);
+                return 'Непредвиденная ошибка. Код ошибки - ' . $arData['code'] . '. Сообщение - ' . $arData['message'] ;
             }
         }
 
         if (!empty($arData) && empty($arData["plans_data"])) {
-            $this->debugBotTelegram->sendMessage('Пустой массив. По объекту нет доступных тарифов: ' . $hotelId);
+            Error::notTariffs($hotelId, 'Bnovo');
             return 'Пустой массив. По объекту нет доступных тарифов';
         }
 
@@ -2025,16 +2049,16 @@ class Bnovo
 
         if (empty($arData) || (isset($arData['code']) && $arData['code'] != 200)) {
             if ($arData['code'] == 403) {
-                $this->debugBotTelegram->sendMessage('Объект отключен от вашего канала продаж:' . $hotelId);
+                Error::objectDisabled($hotelId, "Bnovo");
                 return 'Объект отключен от вашего канала продаж';
             } else {
-                $this->debugBotTelegram->sendMessage('Непредвиденная ошибка. Код ошибки - ' . $arData['code'] . '. Сообщение - ' . $arData['message']);
+                Error::internal($hotelId, "Bnovo", $arData['message']);
                 return 'Непредвиденная ошибка. Код ошибки - ' . $arData['code'] . '. Сообщение - ' . $arData['message'];
             }
         }
 
         if (!empty($arData) && empty($arData["availability"])) {
-            $this->debugBotTelegram->sendMessage('Пустой массив. По объекту нет доступных тарифов:' . $hotelId);
+            Error::notTariffs($hotelId, "Bnovo");
             return 'Пустой массив. По объекту нет доступных тарифов';
         }
 
@@ -2082,7 +2106,7 @@ class Bnovo
             $arResData = $entityClass->getDataAll();
 
             if (empty($arResData)) {
-                $this->debugBotTelegram->sendMessage('Нет данных по объекту bnovoId: ' . $hotelId . ' bnovoCategoryId ' . $categoryId . ' на переданные в запросе даты');
+                Error::notFreeNums($hotelId, "Bnovo");
                 return 'Нет данных по объекту bnovoId: ' . $hotelId . ' bnovoCategoryId ' . $categoryId . ' на переданные в запросе даты';
             }
             foreach ($arResData as $key => $arEntity) {
@@ -2487,21 +2511,15 @@ class Bnovo
         if (!empty($sections)) {
             foreach ($sections as $section) {
                 $result = $this->updateAvailabilityData($section['UF_EXTERNAL_ID'], [], [$startDate, $endDate], true);
-                if (!is_array($result)) {
-
-                    $message .= "Ошибка при проверке данных по объекту " . $section['NAME'] . "\r\n";
-                    $message .= "Текст ошибки: " . $result . "\r\n\r\n";
-                    $this->debugBotTelegram->sendMessage($message);
-                }
+//                if (!is_array($result)) {
+//
+//                    $message .= "Ошибка при проверке данных по объекту " . $section['NAME'] . "\r\n";
+//                    $message .= "Текст ошибки: " . $result . "\r\n\r\n";
+//                    $this->debugBotTelegram->sendMessage($message);
+//                }
             }
         }
 
-        if ($message != '') {
-//            \CEvent::Send('BNOVO_DATA_ERROR', 's1', [
-//                'MESSAGE' => $message,
-//            ]);
-            $this->debugBotTelegram->sendMessage(Markdown::arrayToMarkdown($message));
-        }
     }
 
     /**
