@@ -31,6 +31,7 @@
 }
 
 .flights-widget{
+    padding-top: 46px;
     margin: 0 auto;
     width: 100%;
     min-height: 360px;
@@ -330,5 +331,10 @@ img[src='https://www.travelpayouts.com/powered_by/img/as.png']{
     .wrapper-f{
         width: calc(100% - 32px);
     }
+}
+
+/* перебивка стилей */
+.impressions-slider .swiper-slide {
+    mr20
 }
 
