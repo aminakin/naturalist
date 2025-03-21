@@ -48,7 +48,8 @@ class Error {
                 throw new \Exception("Ошибка при выборке раздела отелей / ошибка кеширования");
             }
         }
-        return $items;
+
+        return ['ID' => current($items)['ID'], 'NAME' => current($items)['NAME'] ];
     }
 
     public static function internal(int|string $hotelId, string $service, string $message):void{
