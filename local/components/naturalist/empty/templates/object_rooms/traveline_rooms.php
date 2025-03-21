@@ -1,5 +1,7 @@
-<?
-/** @var TYPE_NAME $arElements */
+<?php
+
+/** @var  $arElements */
+/** @var  $arExternalInfo */
 
 use Naturalist\Users;
 
@@ -238,28 +240,44 @@ foreach ($arElements as $arElement): ?>
                         </div>
 
                         <a class="button button_primary"
-                           onclick="VK.Goal('customize_product')"
-                           data-section-external-id="<?= $arSection['UF_EXTERNAL_ID'] ?>"
-                           data-add-basket
-                           data-object-title="<?= $arSection['NAME'] ?>"
-                           data-id="<?= $arElement["ID"] ?>"
-                           data-price="<?= $arExternalItem['price'] ?>"
-                           data-guests="<?= $guests ?>"
-                           data-children-age="<?= $_GET['childrenAge'] ?>"
-                           data-date-from="<?= $dateFrom ?>"
-                           data-date-to="<?= $dateTo ?>"
-                           data-external-id="<?= $arElement["PROPERTY_EXTERNAL_ID_VALUE"] ?>"
-                           data-external-service="<?= $arSection["UF_EXTERNAL_SERVICE"] ?>"
-                           data-category-id="<?= $arElement["PROPERTY_EXTERNAL_CATEGORY_ID_VALUE"] ?>"
-                           data-traveline-checksum="<?= $checksum ?>"
-                           data-cancel-amount="<?= $arExternalItem['cancelAmount'] ?>"
-                           data-people="<?= $arExternalItem['fullPlacementsName'] ?>"
-                           data-room-title="<?= $arElement["NAME"] ?>"
-                           data-room-photo="<?= $arElement["PICTURES"][array_key_first($arElement["PICTURES"])]['src'] ?>"
-                           href="#">Забронировать</a>
+                            onclick="VK.Goal('customize_product')"
+                            data-section-external-id="<?= $arSection['UF_EXTERNAL_ID'] ?>"
+                            data-add-basket
+                            data-object-title="<?= $arSection['NAME'] ?>"
+                            data-id="<?= $arElement["ID"] ?>"
+                            data-price="<?= $arExternalItem['price'] ?>"
+                            data-guests="<?= $guests ?>"
+                            data-children-age="<?= $_GET['childrenAge'] ?>"
+                            data-date-from="<?= $dateFrom ?>"
+                            data-date-to="<?= $dateTo ?>"
+                            data-external-id="<?= $arElement["PROPERTY_EXTERNAL_ID_VALUE"] ?>"
+                            data-external-service="<?= $arSection["UF_EXTERNAL_SERVICE"] ?>"
+                            data-category-id="<?= $arElement["PROPERTY_EXTERNAL_CATEGORY_ID_VALUE"] ?>"
+                            data-traveline-checksum="<?= $checksum ?>"
+                            data-cancel-amount="<?= $arExternalItem['cancelAmount'] ?>"
+                            data-people="<?= $arExternalItem['fullPlacementsName'] ?>"
+                            data-room-title="<?= $arElement["NAME"] ?>"
+                            data-room-photo="<?= $arElement["PICTURES"][array_key_first($arElement["PICTURES"])]['src'] ?>"
+                            href="#">Забронировать</a>
                     </div>
                 <? endif; ?>
             </div>
         <? endforeach; ?>
     <? endif; ?>
-<? endforeach;
+    <? endforeach;
+
+foreach ($arElements as $key => $arElement):
+
+    if ($key == 0) { ?>
+        <div class="rooms__empty-list">
+            <div>Не осталось свободных мест</div>
+        </div>
+    <? }
+
+    if ($arElement['AVAILABLE_ID'] == true):
+        continue;
+    endif; 
+    
+    require 'empty_rooms.php';
+
+endforeach;

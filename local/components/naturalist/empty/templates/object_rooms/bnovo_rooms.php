@@ -160,7 +160,7 @@ foreach ($arExternalInfo as $idNumber => $arTariffs):
                     <?php } ?>
                     <?php
                     if ($children > 0) {
-                        if (!empty($arSection['UF_MIN_AGE']) && is_string($_GET['childrenAge'])) {
+                        if (!empty($arSection['UF_MIN_AGE'])) {
                             $miniChildren = 0;
                             $bigChildren = 0;
                             $arChildrenAges = explode(',', $_GET['childrenAge']);
@@ -342,29 +342,44 @@ foreach ($arExternalInfo as $idNumber => $arTariffs):
                     </div>
                 </div>
 
-                <a class="button button_primary"
-                   onclick="VK.Goal('customize_product')"
-                   data-section-external-id="<?= $arSection['UF_EXTERNAL_ID'] ?>"
-                   data-add-basket
-                   data-object-title="<?= $arSection['NAME'] ?>"
-                   data-id="<?= $arElement["ID"] ?>"
-                   data-price="<?= $arTariff['price'] ?>"
-                   data-guests="<?= $guests ?>"
-                   data-children-age="<?= $_GET['childrenAge'] ?>"
-                   data-date-from="<?= $dateFrom ?>"
-                   data-date-to="<?= $dateTo ?>"
-                   data-external-id="<?= $arElement["PROPERTY_EXTERNAL_ID_VALUE"] ?>"
-                   data-external-service="<?= $arSection["UF_EXTERNAL_SERVICE"] ?>"
-                   data-tariff-id='<?= $arTariff['tariffId'] ?>'
-                   data-category-id="<?= $arTariff['categoryId'] ?>"
-                   data-prices='<?= serialize($arTariff['prices']) ?>'
-                   data-cancel-amount="<?= $arTariff['cancelAmount'] ?>"
-                   data-people="<?= $text ?>"
-                   data-room-title="<?= $arElement["NAME"] . ' ' . ($arTariff['value']['PROPERTY_NAME_DETAIL_VALUE'] ?? $arTariff['value']['NAME']) ?>"
-                   data-room-photo="<?= $arElement["PICTURES"][array_key_first($arElement["PICTURES"])]['src'] ?>"
-                   href="#">Забронировать</a>
-            </div>
-        <?php endif; ?>
-    </div>
-<?php endforeach; ?>
-<?php endforeach;
+                    <a class="button button_primary"
+                        onclick="VK.Goal('customize_product')"
+                        data-section-external-id="<?= $arSection['UF_EXTERNAL_ID'] ?>"
+                        data-add-basket
+                        data-object-title="<?= $arSection['NAME'] ?>"
+                        data-id="<?= $arElement["ID"] ?>"
+                        data-price="<?= $arTariff['price'] ?>"
+                        data-guests="<?= $guests ?>"
+                        data-children-age="<?= $_GET['childrenAge'] ?>"
+                        data-date-from="<?= $dateFrom ?>"
+                        data-date-to="<?= $dateTo ?>"
+                        data-external-id="<?= $arElement["PROPERTY_EXTERNAL_ID_VALUE"] ?>"
+                        data-external-service="<?= $arSection["UF_EXTERNAL_SERVICE"] ?>"
+                        data-tariff-id='<?= $arTariff['tariffId'] ?>'
+                        data-category-id="<?= $arTariff['categoryId'] ?>"
+                        data-prices='<?= serialize($arTariff['prices']) ?>'
+                        data-cancel-amount="<?= $arTariff['cancelAmount'] ?>"
+                        data-people="<?= $text ?>"
+                        data-room-title="<?= $arElement["NAME"] . ' ' . ($arTariff['value']['PROPERTY_NAME_DETAIL_VALUE'] ?? $arTariff['value']['NAME']) ?>"
+                        data-room-photo="<?= $arElement["PICTURES"][array_key_first($arElement["PICTURES"])]['src'] ?>"
+                        href="#">Забронировать</a>
+                </div>
+            <? endif; ?>
+        </div>
+    <? endforeach; ?>
+<? endforeach;
+
+foreach ($arElements as $key => $arElement):
+    if ($key == 0) { ?>
+        <div class="rooms__empty-list">
+            <div>Не осталось свободных мест</div>
+        </div>
+    <? }
+
+    if ($arElement['AVAILABLE_ID'] == true):
+        continue;
+    endif;
+
+    require 'empty_rooms.php';
+
+endforeach;
