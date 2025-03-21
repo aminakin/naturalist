@@ -107,6 +107,7 @@ class ImportHotelsBronevik
     {
         $arSection = $this->hotelBronevik->listFetch(["UF_EXTERNAL_ID" => $data["UF_EXTERNAL_ID"]], false, ["IBLOCK_ID", "ID", "NAME", "CODE", "SORT", "UF_*"]);
         $iS = new CIBlockSection();
+        $arrayFilter = ['UF_TAXES', 'UF_INFORMATIONS', 'UF_ADDITIONAL_INFO', 'UF_TIME_FROM', 'UF_TIME_TO', 'UF_ALLOWABLE_TIME'];
         if (count($arSection)) {
             $arSection = current($arSection);
             $isLoadImage = true;
@@ -118,13 +119,20 @@ class ImportHotelsBronevik
             $photos = $this->downloadSectionImages($data, $isLoadImage);
             if (is_array($photos)) {
                 $data['UF_PHOTOS'] = $photos;
+                $arrayFilter[] = 'UF_PHOTOS';
+                $arrayFilter[] = 'UF_PHOTO_ARRAY';
             }
 
-            $iS->Update($arSection['ID'], array_filter($data, function ($k) { return in_array($k, ['UF_TAXES', 'UF_INFORMATIONS', 'UF_ADDITIONAL_INFO', 'UF_TIME_FROM', 'UF_TIME_TO', 'UF_ALLOWABLE_TIME']); }, ARRAY_FILTER_USE_KEY));
+            $iS->Update($arSection['ID'], array_filter($data, function ($k) use ($arrayFilter){ return in_array($k, $arrayFilter); }, ARRAY_FILTER_USE_KEY));
             if (true) {
                 return $arSection['ID'];
             }
         } else {
+            $photos = $this->downloadSectionImages($data, true);
+            if (is_array($photos)) {
+                $data['UF_PHOTOS'] = $photos;
+            }
+
             return $iS->Add($data);
         }
     }
