@@ -17,6 +17,7 @@ use Naturalist\Telegram\DebugBot;
 use Naturalist\Telegram\TelegramBot;
 use Bitrix\Iblock\SectionTable;
 use Bitrix\Iblock\PropertyTable;
+use Naturalist\Telegram\Notifications\Error;
 
 Loader::IncludeModule("iblock");
 Loader::IncludeModule("catalog");
@@ -1894,34 +1895,16 @@ class Bnovo
 
         if (empty($arData) || (isset($arData['code']) && $arData['code'] != 200)) {
             if ($arData['code'] == 403) {
-                $this->debugBotTelegram->sendMessage('Объект отключен от вашего канала продаж: 
-                Объект: '.$this->sectionByHotelId($hotelId)["NAME"].
-                "ID: ".$this->sectionByHotelId($hotelId)["ID"].
-                "Сервис: Bnovo"
-                );
+                Error::objectDisabled($hotelId, "Bnovo");
                 return 'Объект отключен от вашего канала продаж';
             } else {
-                $this->debugBotTelegram->sendMessage('
-                Нет ответа от Bnovo, при запросе данных 
-                Объект: '.$this->sectionByHotelId($hotelId)['NAME']
-                .'ID: '.$this->sectionByHotelId($hotelId)['ID']
-                .'link: '
-                .'Тип запроса: 
-                Сообщение от Bnovo: '.$arData['message']
-                );
+                Error::internal($hotelId, "Bnovo", $arData['message']);
                 return 'Непредвиденная ошибка. Код ошибки - ' . $arData['code'] . '. Сообщение - ' . $arData['message'] ;
             }
         }
 
         if (!empty($arData) && empty($arData["plans_data"])) {
-            $this->debugBotTelegram->sendMessage("
-            По объекту нет доступных тарифов
-            Объект: {$this->sectionByHotelId($hotelId)['NAME']}
-            ID: {$this->sectionByHotelId($hotelId)['ID']}
-            link: 
-            Сервис: Bnovo
-
-            ");
+            Error::notTariffs($hotelId, 'Bnovo');
             return 'Пустой массив. По объекту нет доступных тарифов';
         }
 
@@ -2066,33 +2049,16 @@ class Bnovo
 
         if (empty($arData) || (isset($arData['code']) && $arData['code'] != 200)) {
             if ($arData['code'] == 403) {
-                $this->debugBotTelegram->sendMessage('Объект отключен от вашего канала продаж: 
-                Объект: '.$this->sectionByHotelId($hotelId)["NAME"].
-                    "ID: ".$this->sectionByHotelId($hotelId)["ID"].
-                    "Сервис: Bnovo"
-                );
+                Error::objectDisabled($hotelId, "Bnovo");
                 return 'Объект отключен от вашего канала продаж';
             } else {
-                $this->debugBotTelegram->sendMessage('
-                Нет ответа от Bnovo, при запросе данных 
-                Объект: '.$this->sectionByHotelId($hotelId)['NAME']
-                    .'ID: '.$this->sectionByHotelId($hotelId)['ID']
-                    .'link: '
-                    .'Тип запроса: 
-                Сообщение от Bnovo: '.$arData['message']
-                );
+                Error::internal($hotelId, "Bnovo", $arData['message']);
                 return 'Непредвиденная ошибка. Код ошибки - ' . $arData['code'] . '. Сообщение - ' . $arData['message'];
             }
         }
 
         if (!empty($arData) && empty($arData["availability"])) {
-            $this->debugBotTelegram->sendMessage("
-            По объекту нет доступных тарифов
-            Объект: {$this->sectionByHotelId($hotelId)['NAME']}
-            ID: {$this->sectionByHotelId($hotelId)['ID']}
-            link: 
-            Сервис: Bnovo
-            ");
+            Error::notTariffs($hotelId, "Bnovo");
             return 'Пустой массив. По объекту нет доступных тарифов';
         }
 
@@ -2140,13 +2106,7 @@ class Bnovo
             $arResData = $entityClass->getDataAll();
 
             if (empty($arResData)) {
-                $this->debugBotTelegram->sendMessage("
-                Ошибка при проверке данных по объекту о доступности, отсутвуют номера на сайте
-                Объект: {$this->sectionByHotelId($hotelId)['NAME']}
-                ID: {$this->sectionByHotelId($hotelId)['ID']}
-                Тип запроса: availability
-                Сервис: Bnovo
-                ");
+                Error::notFreeNums($hotelId, "Bnovo");
                 return 'Нет данных по объекту bnovoId: ' . $hotelId . ' bnovoCategoryId ' . $categoryId . ' на переданные в запросе даты';
             }
             foreach ($arResData as $key => $arEntity) {
