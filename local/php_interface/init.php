@@ -72,6 +72,7 @@ Loader::registerAutoLoadClasses(null, array(
     'Naturalist\Telegram\TelegramBot' => '/local/php_interface/classes/Telegram/TelegramBot.php',
     'Naturalist\Telegram\DebugBot' => '/local/php_interface/classes/Telegram/DebugBot.php',
     'Naturalist\Handlers\OnAdminIBlockSectionEdit' => '/local/php_interface/classes/Handlers/OnAdminIBlockSectionEdit.php',
+    'Naturalist\Telegram\Notifications\Error' => '/local/php_interface/classes/Telegram/Notifications/Error.php',
 ));
 
 // Константы
