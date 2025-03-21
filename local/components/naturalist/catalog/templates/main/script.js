@@ -287,7 +287,7 @@ $(function () {
       }
     }
 
-    if (dateFrom == "" && dateTo == "" && guests > 0) {
+    if (dateFrom == "" && dateTo == "" && guests <= 2) {
       delete params["dateFrom"];
       delete params["dateTo"];
       delete params["guests"];
