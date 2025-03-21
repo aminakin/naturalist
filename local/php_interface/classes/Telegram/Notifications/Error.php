@@ -55,7 +55,7 @@ class Error {
     }
     public static function internal(int|string $hotelId, string $service, string $message):void{
         try{
-            self::$bot->sendMessage("
+            self::getBot()->sendMessage("
             Нет ответа от ".$service.", при запросе данных
             Объект: ".self::sectionByHotelId($hotelId)['NAME']."
             ID: ".self::sectionByHotelId($hotelId)['ID']."
@@ -70,7 +70,7 @@ class Error {
 
     public static function objectDisabled(int|string $hotelId, string $service):void{
         try{
-            self::$bot->sendMessage("
+            self::getBot()->sendMessage("
             Объект отключен от вашего канала продаж:
             Объект: ".self::sectionByHotelId($hotelId)['NAME']."
             ID: ".self::sectionByHotelId($hotelId)['ID']."
@@ -84,7 +84,7 @@ class Error {
 
     public static function notTariffs(int|string $hotelId, string $service):void{
         try{
-            self::$bot->sendMessage("
+            self::getBot()->sendMessage("
             По объекту нет доступных тарифов:
             Объект: ".self::sectionByHotelId($hotelId)['NAME']."
             ID: ".self::sectionByHotelId($hotelId)['ID']."
@@ -98,7 +98,7 @@ class Error {
 
     public static function notFreeNums(int|string $hotelId, string $service):void{
         try{
-            self::$bot->sendMessage("
+            self::getBot()->sendMessage("
             Ошибка при проверке данных по объекту о доступности, отсутвуют номера на сайте:
             Объект: ".self::sectionByHotelId($hotelId)['NAME']."
             ID: ".self::sectionByHotelId($hotelId)['ID']."
