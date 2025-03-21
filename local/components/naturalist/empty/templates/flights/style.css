@@ -27,7 +27,7 @@
 
 }
 .preloader{
-    background: #dbaa81;
+    background: var(--color-beige-light);
 }
 
 .flights-widget{
