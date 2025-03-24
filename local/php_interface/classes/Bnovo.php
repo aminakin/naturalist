@@ -2555,7 +2555,7 @@ class Bnovo
                                     $message .= "Новые наценки у объекта Bnovo:
                                         Объект: " . $section['NAME'] . "
                                         ID: " . $section['ID'] . "
-                                        Тип запроса: room_types
+                                        Тип запроса: roomtypes
                                         Сервис: Bnovo";
 
 //                                    $message .= "У объекта " . $section['NAME'] . " доступны наценки \r\n";
