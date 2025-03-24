@@ -384,7 +384,7 @@ class Traveline
                 if ($sectionId) {
                     echo "Добавлен раздел (" . $sectionId . ") \"" . $sectionName . "\"<br>\r\n";
                 } else {
-                    Error::errorDownloadObject($sectionId, $sectionName, $iS->LAST_ERROR);
+                    Error::errorDownloadObject($arSection["id"], $sectionName, $iS->LAST_ERROR);
                 }
             }
 
