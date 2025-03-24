@@ -164,23 +164,6 @@ foreach ($arElements as $arElement): ?>
                     } ?>
                     <div class="room__order">
 
-                        <?php /*if ($USER->IsAdmin()): ?>
-                                        <?php if (
-                                            $elementPrice > Users::getInnerScore()
-                                            && intval(Users::getInnerScore()) !== 0
-                                            && $isAuthorized
-                                        ): ?>
-                                            <div class="room__price_cert_price">
-                                                <div class="room__price_cert_price-item">
-                                                    <span>Доплата</span>
-                                                    <span>
-                                                        <?= number_format($elementPrice - Users::getInnerScore(), 0, '.', ' ') ?> ₽
-                                                    </span>
-                                                </div>
-                                            </div>
-                                        <? endif; ?>
-                                    <? endif; */ ?>
-
                         <div class="room__left">
                             <? $cancelation = []; ?>
                             <? if ($arExternalItem['cancelPossible'] && $arExternalItem['cancelAmount'] > 0) {
@@ -266,18 +249,18 @@ foreach ($arElements as $arElement): ?>
     <? endif; ?>
     <? endforeach;
 
-$printed = false;
+$printedEmpty = false;
 foreach ($arElements as $key => $arElement):
 
     if ($arElement['AVAILABLE_ID'] == true):
         continue;
     endif;
 
-    if (!$printed) { ?>
+    if (!$printedEmpty) { ?>
         <div class="rooms__empty-list">
             <div>Не осталось свободных мест</div>
         </div>
-        <? $printed = true;
+        <? $printedEmpty = true;
     }
 
     require 'empty_rooms.php';

@@ -1162,8 +1162,6 @@ class NaturalistCatalog extends \CBitrixComponent
             )
         );
 
-        
-
         $this->arElements = array();
         while ($arElement = $rsElements->Fetch()) {
             if ($arElement["PROPERTY_PHOTOS_VALUE"]) {
@@ -1245,17 +1243,14 @@ class NaturalistCatalog extends \CBitrixComponent
             }
         }
 
-        foreach ($this->arElements as $key => $arElement){
-            if($arElement['AVAILABLE_ID'] == false){
-                $element = $this->arElements[$key];
-                unset($this->arElements[$key]);
-                array_push($this->arElements, $element);
-            }
-        }
-
-        // Сортировка номеров по убыванию цены
         usort($this->arElements, function ($a, $b) {
-            return ($a['PRICE'] - $b['PRICE']);
+            // Сначала сортируем по AVAILABLE_ID (true идет первым)
+            if ($a['AVAILABLE_ID'] === $b['AVAILABLE_ID']) {
+                // Если AVAILABLE_ID одинаковы, сортируем по PRICE по убыванию
+                return $b['PRICE'] <=> $a['PRICE'];
+            }
+
+            return $b['AVAILABLE_ID'] <=> $a['AVAILABLE_ID'];
         });
     }
 
