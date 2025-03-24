@@ -2247,13 +2247,13 @@ class Bnovo
             if ($res->isSuccess()) {
                 return $reservationId;
             } else {
-                $this->debugBotTelegram->sendMessage(Markdown::arrayToMarkdown("Ошибка сохранения ID бронирования." . $orderId));
+                Error::saveOrder($orderId, "Bnovo");
                 return [
                     "ERROR" => "Ошибка сохранения ID бронирования."
                 ];
             }
         } else {
-            $this->debugBotTelegram->sendMessage(Markdown::arrayToMarkdown( "Ошибка запроса бронирования." . $orderId));
+            Error::validateOrder($orderId, "Bnovo");
             return [
                 "ERROR" => "Ошибка запроса бронирования."
             ];
@@ -2331,6 +2331,7 @@ class Bnovo
         if ($arResponse['canceled_bookings'][0]['ota_booking_id'] == $reservationId) {
             return true;
         } else {
+            Error::cancelOrder($arOrder['ID'], 'Bnovo');
             return false;
         }
     }
