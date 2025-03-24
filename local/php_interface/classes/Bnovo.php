@@ -2550,7 +2550,15 @@ class Bnovo
                                     'filter' => ['CATEGORY_ID.VALUE' => $arRoomsRequest['ID'], 'IS_MARKUP.VALUE' => 17],
                                 ])->fetch();
                                 if (!$arAccRequest['ID']) {
-                                    $message .= "У объекта " . $section['NAME'] . " доступны наценки \r\n";
+
+//                                    Error::markupsMessage($section['UF_EXTERNAL_ID'], "Bnovo");
+                                    $message .= "Новые наценки у объекта Bnovo:
+                                        Объект: " . $section['NAME'] . "
+                                        ID: " . $section['ID'] . "
+                                        Тип запроса: room_types
+                                        Сервис: Bnovo";
+
+//                                    $message .= "У объекта " . $section['NAME'] . " доступны наценки \r\n";
                                     break;
                                 }
                             }
@@ -2561,9 +2569,10 @@ class Bnovo
         }
 
         if ($message != '') {
-            \CEvent::Send('BNOVO_MARKUP', 's1', [
-                'MESSAGE' => $message,
-            ]);
+            Error::sendCompMessage($message);
+//            \CEvent::Send('BNOVO_MARKUP', 's1', [
+//                'MESSAGE' => $message,
+//            ]);
         }
 
         Option::set("main", "bnovo_last_download", 'N');
