@@ -161,4 +161,69 @@ class Error
         }
     }
 
+
+
+    public static function validateOrder(int|string $orderId, string $service, string $message = ''): void
+    {
+        try {
+            self::getBot()->sendMessage("
+            Ошибка верификации бронирования:
+            Заказ: " . $orderId . "
+            Сервис: " . $service . "
+            " . $message . "
+            ");
+        } catch (\Exception $ex) {
+            throw new \Exception("Ошибка отправки уведомления: " . $ex->getMessage());
+        }
+    }
+
+    public static function saveOrder(int|string $orderId, string $service): void
+    {
+        try {
+            self::getBot()->sendMessage("
+            Ошибка сохранения бронирования:
+            Заказ: " . $orderId . "
+            Сервис: " . $service . "
+            ");
+        } catch (\Exception $ex) {
+            throw new \Exception("Ошибка отправки уведомления: " . $ex->getMessage());
+        }
+    }
+
+    public static function cancelOrder(int|string $orderId, string $service): void
+    {
+        try {
+            self::getBot()->sendMessage("
+            Ошибка отмены бронирования:
+            Заказ: " . $orderId . "
+            Сервис: " . $service . "
+            ");
+        } catch (\Exception $ex) {
+            throw new \Exception("Ошибка отправки уведомления: " . $ex->getMessage());
+        }
+    }
+
+    /**
+     * Ошибка загрузки объектов тревелайн
+     *
+     * @param int|string $hotelId
+     * @param string $service
+     * @return void
+     * @throws \Exception
+     */
+    public static function errorDownloadObject(int|string $hotelId, int|string $hotelName, string $errorMessage): void
+    {
+        try {
+            self::getBot()->sendMessage("
+            При загрузке объекта из сервиса Traveline, произошла ошибка
+            Объект: " . $hotelName . "
+            ID Traveline: " . $hotelId . "
+            Сервис: Traveline"
+            . $errorMessage . "
+            ");
+        } catch (\Exception $ex) {
+            throw new \Exception("Ошибка отправки уведомления: " . $ex->getMessage());
+        }
+    }
+
 }
