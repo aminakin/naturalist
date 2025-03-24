@@ -12,7 +12,7 @@ $arParentView = [];
 foreach ($arExternalInfo as $idNumber => $arTariffs):
     ?>
     <?php foreach ($arTariffs as $keyTariff => $arTariff):
-    if (empty($arTariff['prices']) || empty($arElementsTariffs[$idNumber])) {
+    if (!is_array($arTariff) || empty($arTariff['prices']) || empty($arElementsTariffs[$idNumber])) {
         continue;
     }
 
