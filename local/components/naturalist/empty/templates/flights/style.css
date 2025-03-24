@@ -27,7 +27,7 @@
 
 }
 .preloader{
-    background: #dbaa81;
+    background: var(--color-beige-light);
 }
 
 .flights-widget{
@@ -331,5 +331,10 @@ img[src='https://www.travelpayouts.com/powered_by/img/as.png']{
     .wrapper-f{
         width: calc(100% - 32px);
     }
+}
+
+/* перебивка стилей */
+.impressions-slider .swiper-slide {
+    mr20
 }
 
