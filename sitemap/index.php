@@ -70,6 +70,30 @@ global $arSettings;
                     </div>
                     <a class="button button_primary" href="#feedback" data-modal>Связаться с нами</a>
                 </div>
+                <div class="content__sitemap">
+                    <div class="sidebar-navigation__sitemap">
+                        <!-- <div class="sidebar-navigation__label" data-navigation-control="data-navigation-control"><span><?//= $arSettings['sitemap_title'] ?></span></div> -->
+                        <?
+                        $APPLICATION->IncludeComponent(
+                            "bitrix:menu",
+                            "sitemap",
+                            array(
+                                "ROOT_MENU_TYPE" => "sitemap",
+                                "MAX_LEVEL" => "2",
+                                "CHILD_MENU_TYPE" => "content",
+                                "USE_EXT" => "N",
+                                "DELAY" => "N",
+                                "ALLOW_MULTI_SELECT" => "Y",
+                                "MENU_CACHE_TYPE" => "N",
+                                "MENU_CACHE_TIME" => "3600",
+                                "MENU_CACHE_USE_GROUPS" => "Y",
+                                "MENU_CACHE_GET_VARS" => ""
+                            ),
+                            false
+                        );
+                        ?>
+                    </div>
+                </div>
 
                 <div class="content__article">
                     <h1 class="h3"><?= $h1SEO ?></h1>
