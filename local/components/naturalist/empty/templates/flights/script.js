@@ -2,22 +2,22 @@ $(function () {
   window.preloader.show();
 
 
-  setTimeout(function(){
+  setTimeout(function () {
     let widgets = document.querySelectorAll('tp-cascoon')
     const flights_form = document.querySelector('.flights-form')
     flights_form.appendChild(widgets[0])
-  },3000)
+  }, 3000)
 
-  for(let i = 1; i <= 4; i++){
-    setTimeout(function(){
-          let widgets = document.querySelectorAll('tp-cascoon')
-          const popular_places__widget_items = document.querySelector('.popular-places__widget-items')
-          popular_places__widget_items.appendChild(widgets[i])
-        },
-        3000)
+  for (let i = 1; i <= 4; i++) {
+    setTimeout(function () {
+      let widgets = document.querySelectorAll('tp-cascoon')
+      const popular_places__widget_items = document.querySelector('.popular-places__widget-items')
+      popular_places__widget_items.appendChild(widgets[i])
+    },
+      3000)
   }
 
-  setTimeout(function(){
+  setTimeout(function () {
     let widgets = document.querySelectorAll('tp-cascoon')
     const flights_map = document.querySelector('.flights-map')
     flights_map.appendChild(widgets[widgets.length - 1])
@@ -90,36 +90,36 @@ $(function () {
 });
 
 
-  $(document).ready(function() {
-  var swiper = new Swiper(' .gg .swiper-container', {
-    loop: true,
+/*$(document).ready(function() {
+var swiper = new Swiper(' .gg .swiper-container', {
+  loop: true,
 
-    navigation: {
-      nextEl: '.swiper-button-next',
-      prevEl: '.swiper-button-prev',
-    },
-    on: {
-      slideChangeTransitionEnd: function () {
-        // Получаем текущее значение трансформации
-        var translateValue = this.getTranslate();
+  navigation: {
+    nextEl: '.swiper-button-next',
+    prevEl: '.swiper-button-prev',
+  },
+  on: {
+    slideChangeTransitionEnd: function () {
+      // Получаем текущее значение трансформации
+      var translateValue = this.getTranslate();
 
-        // Проверяем, если значение меньше -3280px
-        if (translateValue < -3280) {
-          // Если меньше, устанавливаем его на -3280
-          this.setTranslate(-3280);
-        }
+      // Проверяем, если значение меньше -3280px
+      if (translateValue < -3280) {
+        // Если меньше, устанавливаем его на -3280
+        this.setTranslate(-3280);
       }
-    },
-    breakpoints: {
-      550: {
-        slidesPerView: 1, // 1 слайд
-      },
-      551: {
-        slidesPerView: 4, // 4 слайда
-      },
-
     }
+  },
+  breakpoints: {
+    550: {
+      slidesPerView: 1, // 1 слайд
+    },
+    551: {
+      slidesPerView: 4, // 4 слайда
+    },
+
+  }
 });
 
-});
+});*/
 
