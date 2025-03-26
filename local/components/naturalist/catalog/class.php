@@ -454,21 +454,21 @@ class NaturalistCatalog extends \CBitrixComponent
     private function fillSections()
     {
         //кеш каталог а временно выключен на переработку
-//        if (!isset($this->arFilter['UF_EXTERNAL_ID'])) {
+        //        if (!isset($this->arFilter['UF_EXTERNAL_ID'])) {
 
-//            $cache = Cache::createInstance();
-//            $arFilterCacheKey = Utils::recursiveImplode($this->arFilter, '_');
-//            $cacheKey = 'without_date_search_' . $arFilterCacheKey;
+        //            $cache = Cache::createInstance();
+        //            $arFilterCacheKey = Utils::recursiveImplode($this->arFilter, '_');
+        //            $cacheKey = 'without_date_search_' . $arFilterCacheKey;
 
-//            if ($cache->initCache(86400, $cacheKey)) {
-//                $this->arSections = $cache->getVars();
-//            } elseif ($cache->startDataCache()) {
-//                $this->sectionsQuery();
-//                $cache->endDataCache($this->arSections);
-//            }
-//        } else {
-            $this->sectionsQuery();
-//        }
+        //            if ($cache->initCache(86400, $cacheKey)) {
+        //                $this->arSections = $cache->getVars();
+        //            } elseif ($cache->startDataCache()) {
+        //                $this->sectionsQuery();
+        //                $cache->endDataCache($this->arSections);
+        //            }
+        //        } else {
+        $this->sectionsQuery();
+        //        }
 
         $this->searchedRegionData = Regions::getRegionById($this->arRegionIds[0] ?? false);
         foreach ($this->arSections as &$arSection) {
@@ -1134,7 +1134,7 @@ class NaturalistCatalog extends \CBitrixComponent
     }
 
     private function getRooms()
-    {   
+    {
         // Список номеров
         $rsElements = CIBlockElement::GetList(
             array("SORT" => "ASC"),
@@ -1203,7 +1203,7 @@ class NaturalistCatalog extends \CBitrixComponent
                 $arElement['AVAILABLE_ID'] = true;
             }
 
-            $this->arElements[$arElement['ID']] = $arElement; 
+            $this->arElements[$arElement['ID']] = $arElement;
         }
 
         if ($this->arSections["UF_EXTERNAL_SERVICE"] == "bnovo") {
@@ -1216,8 +1216,8 @@ class NaturalistCatalog extends \CBitrixComponent
                         $parentExternalIds[] = $arElement["PROPERTY_PARENT_ID_VALUE"];
                     }
                 }
-                
-                if($arElement["PRICE"] == NULL){
+
+                if ($arElement["PRICE"] == NULL) {
                     unset($key);
                 }
             }
@@ -1388,7 +1388,12 @@ class NaturalistCatalog extends \CBitrixComponent
         $this->arFilter = array(
             "IBLOCK_ID" => CATALOG_IBLOCK_ID,
             "ACTIVE" => "Y",
-            "SECTION_ID" => $this->arSections["ID"]
+            "SECTION_ID" => $this->arSections["ID"],
+            [
+                "LOGIC" => "OR",
+                ["PROPERTY_PARENT_ID" => NULL],
+                ["PROPERTY_PARENT_ID" => 0]
+            ]
         );
     }
 
