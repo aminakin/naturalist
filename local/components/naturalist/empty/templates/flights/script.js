@@ -90,7 +90,7 @@ $(function () {
 });
 
 
-  $(document).ready(function() {
+  /*$(document).ready(function() {
   var swiper = new Swiper(' .gg .swiper-container', {
     loop: true,
 
@@ -122,4 +122,4 @@ $(function () {
 });
 
 });
-
+*/
