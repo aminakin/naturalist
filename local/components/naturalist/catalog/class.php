@@ -1388,12 +1388,7 @@ class NaturalistCatalog extends \CBitrixComponent
         $this->arFilter = array(
             "IBLOCK_ID" => CATALOG_IBLOCK_ID,
             "ACTIVE" => "Y",
-            "SECTION_ID" => $this->arSections["ID"],
-            [
-                "LOGIC" => "OR",
-                ["PROPERTY_PARENT_ID" => NULL],
-                ["PROPERTY_PARENT_ID" => 0]
-            ]
+            "SECTION_ID" => $this->arSections["ID"]
         );
     }
 
