@@ -2554,10 +2554,10 @@ class Bnovo
 
 //                                    Error::markupsMessage($section['UF_EXTERNAL_ID'], "Bnovo");
                                     $message .= "Новые наценки у объекта Bnovo:
-                                        Объект: " . $section['NAME'] . "
-                                        ID: " . $section['ID'] . "
-                                        Тип запроса: roomtypes
-                                        Сервис: Bnovo";
+                                    Объект: " . $section['NAME'] . "
+                                    ID: " . $section['ID'] . "
+                                    Тип запроса: roomtypes
+                                    Сервис: Bnovo";
 
 //                                    $message .= "У объекта " . $section['NAME'] . " доступны наценки \r\n";
                                     break;
