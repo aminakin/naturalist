@@ -1164,6 +1164,7 @@ class NaturalistCatalog extends \CBitrixComponent
 
         $this->arElements = array();
         while ($arElement = $rsElements->Fetch()) {
+            
             if ($arElement["PROPERTY_PHOTOS_VALUE"]) {
                 foreach ($arElement["PROPERTY_PHOTOS_VALUE"] as $photoId) {
                     $arElement["PICTURES"][$photoId] = [
@@ -1384,12 +1385,16 @@ class NaturalistCatalog extends \CBitrixComponent
     }
 
     private function setDetailFilter()
-    {
+    {   
         $this->arFilter = array(
             "IBLOCK_ID" => CATALOG_IBLOCK_ID,
             "ACTIVE" => "Y",
             "SECTION_ID" => $this->arSections["ID"]
         );
+
+        if ($this->arSections["UF_EXTERNAL_SERVICE"] == "bnovo") {
+            $this->arFilter['PROPERTY_PARENT_ID'] = 0;
+        }  
     }
 
     private function fillDetailSeoParams()
