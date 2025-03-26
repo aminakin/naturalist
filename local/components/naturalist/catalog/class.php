@@ -1389,7 +1389,7 @@ class NaturalistCatalog extends \CBitrixComponent
         $this->arFilter = array(
             "IBLOCK_ID" => CATALOG_IBLOCK_ID,
             "ACTIVE" => "Y",
-            "SECTION_ID" => $this->arSections["ID"],
+            "SECTION_ID" => $this->arSections["ID"]
         );
 
         if ($this->arSections["UF_EXTERNAL_SERVICE"] == "bnovo") {
