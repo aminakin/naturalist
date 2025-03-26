@@ -7,10 +7,13 @@ if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) die();
 // echo "<pre>";
 ?>
 
-<?if(!empty($arResult)):?>
+<?
+$styleClass = ["A", "B", "C", "D", "E", "F", "G"];
+if(!empty($arResult)):?>
 <div class="catalog_menu" id="catalog_menu">
     <div class="filters-attrs__block">
-        <div class="form__dropdown form__dropdown_show">
+        <div class="form__dropdown form__dropdown_show box1">
+            <?$count = 0;?>
             <?foreach($arResult as $key=>$arItem):?>
                 <?if($key==0):?>
                     <div class="form__dropdown-heading_menu h6">
@@ -18,11 +21,11 @@ if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) die();
                         </div>
                         <div class="form__dropdown-body">
                             <ul class="list list_checkboxes">
-                <?elseif($arItem["LINK"] == "#"):?>
+                <?elseif($arItem["LINK"] == "#"): $count = $count + 1?>
                                 </ul>
                             </div>
                         </div>
-                        <div class="form__dropdown form__dropdown_show">
+                        <div class="form__dropdown form__dropdown_show box<?=$count+1?>">
 
                         <div class="form__dropdown-heading_menu h6">
                             <?=$arItem["TEXT"]?>
