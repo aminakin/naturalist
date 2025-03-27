@@ -36,6 +36,9 @@ global $arSettings;
                     ?>
                 </ul>
             </div>
+            <div class="wrapper_title_catalog_page">
+                <h1 class="page_title">Карта сайта</h1>
+            </div>
         </div>
     </section>
     <!-- section-->
@@ -68,7 +71,7 @@ global $arSettings;
                             ?>
                         </ul>
                     </div>
-                    <a class="button button_primary" href="#feedback" data-modal>Связаться с нами</a>
+                    <!-- <a class="button button_primary" href="#feedback" data-modal>Связаться с нами</a> -->
                 </div>
                 <div class="content__sitemap">
                     <div class="sidebar-navigation__sitemap">

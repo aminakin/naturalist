@@ -25,7 +25,7 @@ global $arSettings;
             <div class="location__group active" data-group="regions">
                 <? foreach ($arResult['REGIONS'] as $region) { ?>
                     <a href="<?= $region['URL'] ?>" class="location__item">
-                        <img width="64" height="64" src="<?= CFile::getPath($region['UF_ICON']) ?>" alt="">
+                        <img width="64" height="64" src="<?= CFile::getPath($region['UF_ICON']) ?>" alt="<?= $region['UF_NAME'] ?>" title="<?= $region['UF_NAME'] ?> РФ">
                         <span class="location__item-name"><?= $region['UF_NAME'] ?></span>
                     </a>
                 <? } ?>

@@ -3,6 +3,8 @@
 require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/header.php");
 
 global $arSettings;
+
+$APPLICATION->SetTitle("Подборки");
 ?>
 
 <main class="main">
@@ -24,6 +26,9 @@ global $arSettings;
                     );
                     ?>
                 </ul>
+            </div>
+            <div class="wrapper_title_catalog_page">
+                <h1 class="page_title"><? $APPLICATION->ShowTitle() ?></h1>
             </div>
         </div>
     </section>
