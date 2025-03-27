@@ -100,98 +100,127 @@ $aMenuLinks = Array(
 	),
 
 
-
 	Array(
-		"Подборки", 
+		"Впечатления", 
 		"#", 
 		Array(""), 
 		Array(""),
 		"" 
 	),
 	Array(
-		"Впечатления для любителей рыбалки", 
-		SITE_DIR."catalog/vpechatleniya/dlya-lyubiteley-rybalki/", 
-		Array(), 
+        "Базы отдыха с арендой лодок", 
+        SITE_DIR."catalog/bazy-otdykha/s-arendoy-lodok/", 
+        Array(), 
+        Array(""), 
+        "" 
+    ),
+    Array(
+        "Базы отдыха с йогой", 
+        SITE_DIR."catalog/bazy-otdykha/s-yogoy/", 
+        Array(), 
+        Array(""), 
+        "" 
+    ),
+    Array(
+        "Глэмпинги с велопрогулками", 
+        SITE_DIR."catalog/glempingi/s-veloprogulkami/", 
+        Array(), 
+        Array(""), 
+        "" 
+    ),
+    Array(
+        "Глэмпинги с конными прогулками", 
+        SITE_DIR."catalog/glempingi/s-konnymi-progulkami/", 
+        Array(), 
+        Array(""), 
+        "" 
+    ),
+    Array(
+        "Кемпинги с арендой сапов", 
+        SITE_DIR."catalog/kempingi/s-arendoy-sapov/", 
+        Array(), 
+        Array(""), 
+        "" 
+    ),
+    Array(
+        "Базы отдыха со сплавами по реке", 
+        SITE_DIR."catalog/bazy-otdykha/so-splavami-po-reke/", 
+        Array(), 
+        Array(""), 
+        "" 
+    ),
+    Array(
+        "Базы отдыха с банным чаном и купелью", 
+        SITE_DIR."catalog/bazy-otdykha/s-bannym-chanom-i-kupelyu/", 
+        Array(), 
+        Array(""), 
+        "" 
+    ),
+    Array(
+        "Базы отдыха с крытым бассейном", 
+        SITE_DIR."catalog/bazy-otdykha/s-krytym-basseynom/", 
+        Array(), 
+        Array(""), 
+        "" 
+    ),
+    Array(
+        "Базы отдыха с открытым бассейном", 
+        SITE_DIR."catalog/bazy-otdykha/s-otkrytym-basseynom/", 
+        Array(), 
+        Array(""), 
+        "" 
+    ),
+    Array(
+        "Базы отдыха с фермой", 
+        SITE_DIR."catalog/bazy-otdykha/s-fermoy/", 
+        Array(), 
+        Array(""), 
+        "" 
+    ),
+    Array(
+        "Базы отдыха со SPA", 
+        SITE_DIR."catalog/bazy-otdykha/so-spa/", 
+        Array(), 
+        Array(""), 
+        "" 
+    ),
+    Array(
+        "С катанием на собачьих упряжках", 
+        SITE_DIR."catalog/s-kataniem-na-sobachikh-upryazhkakh/", 
+        Array(), 
+        Array(""), 
+        "" 
+	),
+
+
+	Array(
+		"Окружение", 
+		"#", 
 		Array(""), 
+		Array(""),
 		"" 
 	),
 	Array(
-		"Впечатления с баней", 
-		SITE_DIR."catalog/vpechatleniya/s-baney/", 
-		Array(), 
-		Array(""), 
-		"" 
-	),
-	Array(
-		"Впечатления в Подмосковье", 
-		SITE_DIR."catalog/vpechatleniya/podmoskove/", 
-		Array(), 
-		Array(""), 
-		"" 
-	),
-	Array(
-		"Впечатления рядом с тропами", 
-		SITE_DIR."catalog/vpechatleniya/ryadom-s-tropami/", 
-		Array(), 
-		Array(""), 
-		"" 
-	),
-	Array(
-		"Впечатления в горах", 
-		SITE_DIR."catalog/vpechatleniya/v-gorakh/", 
-		Array(), 
-		Array(""), 
-		"" 
-	),
-	Array(
-		"Впечатления на берегу", 
-		SITE_DIR."catalog/vpechatleniya/na-beregu/", 
-		Array(), 
-		Array(""), 
-		"" 
-	),
-	Array(
-		"Впечатления для отдыха с детьми", 
-		SITE_DIR."catalog/vpechatleniya/dlya-otdykha-s-detmi/", 
-		Array(), 
-		Array(""), 
-		"" 
-	),
-	Array(
-		"Впечатления на Алтае", 
-		SITE_DIR."catalog/vpechatleniya/altay/", 
-		Array(), 
-		Array(""), 
-		"" 
-	),
-	Array(
-		"Впечатления на Кавказе", 
-		SITE_DIR."catalog/vpechatleniya/kavkaz/", 
-		Array(), 
-		Array(""), 
-		"" 
-	),
-	Array(
-		"Впечатления в Краснодарском крае", 
-		SITE_DIR."catalog/vpechatleniya/krasnodarskiy-kray/", 
-		Array(), 
-		Array(""), 
-		"" 
-	),
-	Array(
-		"Впечатления в Ленинградской области", 
-		SITE_DIR."catalog/vpechatleniya/leningradskaya-oblast/", 
-		Array(), 
-		Array(""), 
-		"" 
-	),
-	Array(
-        "Впечатления в горах", 
+        "В горах", 
         SITE_DIR."catalog/vpechatleniya/v-gorakh/", 
         Array(), 
         Array(""), 
         "" 
     ),
+    Array(
+        "В лесу", 
+        SITE_DIR."catalog/vpechatleniya/v-lesu/", 
+        Array(), 
+        Array(""), 
+        "" 
+    ),
+    Array(
+        "У водоемов (глэмпинги)", 
+        SITE_DIR."catalog/glempingi/u-vodoemov/", 
+        Array(), 
+        Array(""), 
+        "" 
+	),
 
 	
     Array(
@@ -201,49 +230,21 @@ $aMenuLinks = Array(
 		Array(""),
 		"" 
 	),
-	Array(
-        "Впечатления в лесу", 
-        SITE_DIR."catalog/vpechatleniya/v-lesu/", 
-        Array(), 
-        Array(""), 
-        "" 
-    ),
     Array(
-        "Глэмпинги у водоемов", 
-        SITE_DIR."catalog/glempingi/u-vodoemov/", 
-        Array(), 
-        Array(""), 
-        "" 
-	),
-
-	Array(
-		"Варианты отдыха", 
-		"#", 
-		Array(""), 
-		Array(""),
-		"" 
-	),
-	Array(
-        "Базы отдыха для семейного отдыха", 
+        "Для семейного отдыха", 
         SITE_DIR."catalog/bazy-otdykha/dlya-semeynogo-otdykha/", 
         Array(), 
         Array(""), 
         "" 
     ),
     Array(
-        "Кемпинги для двоих", 
+        "Для двоих", 
         SITE_DIR."catalog/kempingi/dlya-dvoikh/", 
         Array(), 
         Array(""), 
         "" 
-    ),
-    Array(
-        "Впечатления pet-friendly", 
-        SITE_DIR."catalog/vpechatleniya/pet-friendly/", 
-        Array(), 
-        Array(""), 
-        "" 
 	),
+
 
 	Array(
 		"Тип размещения", 
@@ -374,98 +375,6 @@ $aMenuLinks = Array(
         Array(""), 
         "" 
 	),
-
-	Array(
-		"Впечатления", 
-		"#", 
-		Array(""), 
-		Array(""),
-		"" 
-	),
-	Array(
-        "Базы отдыха с арендой лодок", 
-        SITE_DIR."catalog/bazy-otdykha/s-arendoy-lodok/", 
-        Array(), 
-        Array(""), 
-        "" 
-    ),
-    Array(
-        "Базы отдыха с йогой", 
-        SITE_DIR."catalog/bazy-otdykha/s-yogoy/", 
-        Array(), 
-        Array(""), 
-        "" 
-    ),
-    Array(
-        "Глэмпинги с велопрогулками", 
-        SITE_DIR."catalog/glempingi/s-veloprogulkami/", 
-        Array(), 
-        Array(""), 
-        "" 
-    ),
-    Array(
-        "Глэмпинги с конными прогулками", 
-        SITE_DIR."catalog/glempingi/s-konnymi-progulkami/", 
-        Array(), 
-        Array(""), 
-        "" 
-    ),
-    Array(
-        "Кемпинги с арендой сапов", 
-        SITE_DIR."catalog/kempingi/s-arendoy-sapov/", 
-        Array(), 
-        Array(""), 
-        "" 
-    ),
-    Array(
-        "Базы отдыха со сплавами по реке", 
-        SITE_DIR."catalog/bazy-otdykha/so-splavami-po-reke/", 
-        Array(), 
-        Array(""), 
-        "" 
-    ),
-    Array(
-        "Базы отдыха с банным чаном и купелью", 
-        SITE_DIR."catalog/bazy-otdykha/s-bannym-chanom-i-kupelyu/", 
-        Array(), 
-        Array(""), 
-        "" 
-    ),
-    Array(
-        "Базы отдыха с крытым бассейном", 
-        SITE_DIR."catalog/bazy-otdykha/s-krytym-basseynom/", 
-        Array(), 
-        Array(""), 
-        "" 
-    ),
-    Array(
-        "Базы отдыха с открытым бассейном", 
-        SITE_DIR."catalog/bazy-otdykha/s-otkrytym-basseynom/", 
-        Array(), 
-        Array(""), 
-        "" 
-    ),
-    Array(
-        "Базы отдыха с фермой", 
-        SITE_DIR."catalog/bazy-otdykha/s-fermoy/", 
-        Array(), 
-        Array(""), 
-        "" 
-    ),
-    Array(
-        "Базы отдыха со SPA", 
-        SITE_DIR."catalog/bazy-otdykha/so-spa/", 
-        Array(), 
-        Array(""), 
-        "" 
-    ),
-    Array(
-        "С катанием на собачьих упряжках", 
-        SITE_DIR."catalog/s-kataniem-na-sobachikh-upryazhkakh/", 
-        Array(), 
-        Array(""), 
-        "" 
-    )
 
 );
 ?>

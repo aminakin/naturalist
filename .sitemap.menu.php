@@ -330,7 +330,7 @@ $aMenuLinks = Array(
 
 	
     Array(
-		"Варианты отдыха", 
+		"Окружение", 
 		"#", 
 		Array(""), 
 		Array(""),
