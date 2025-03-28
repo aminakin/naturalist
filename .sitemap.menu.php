@@ -320,13 +320,6 @@ $aMenuLinks = Array(
 		Array(""), 
 		"" 
 	),
-	Array(
-        "Впечатления в горах", 
-        SITE_DIR."catalog/vpechatleniya/v-gorakh/", 
-        Array(), 
-        Array(""), 
-        "" 
-    ),
 
 	
     Array(
@@ -336,6 +329,13 @@ $aMenuLinks = Array(
 		Array(""),
 		"" 
 	),
+	Array(
+        "Впечатления в горах", 
+        SITE_DIR."catalog/vpechatleniya/v-gorakh/", 
+        Array(), 
+        Array(""), 
+        "" 
+    ),
 	Array(
         "Впечатления в лесу", 
         SITE_DIR."catalog/vpechatleniya/v-lesu/", 
@@ -460,7 +460,7 @@ $aMenuLinks = Array(
         "" 
     ),
     Array(
-        "Базы отдыха 'всё включено'", 
+        "Базы отдыха \"Всё включено\"", 
         SITE_DIR."catalog/bazy-otdykha/vse-vklyucheno/", 
         Array(), 
         Array(""), 

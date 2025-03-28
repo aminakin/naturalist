@@ -1,6 +1,9 @@
 <?php
 require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/header.php");
-$APPLICATION->SetTitle("Купить"); ?>
+$APPLICATION->SetPageProperty("title","Купить подарочный сертификат | Naturalist.travel");
+$APPLICATION->AddHeadString('<meta name="description" content="Купите подарочный сертификат на уникальные приключения с Naturalist Travel. Подарите своим близким незабываемые путешествия и встречи с природой." />');
+
+$APPLICATION->SetTitle("Продажа сертификатов"); ?>
 <script src="https://pay.yandex.ru/sdk/v1/pay.js" onload="onYaPayLoad()" async></script>
 <main class="main">
     <section class="section section_crumbs">
@@ -21,6 +24,9 @@ $APPLICATION->SetTitle("Купить"); ?>
                     );
                     ?>
                 </ul>
+            </div>
+            <div class="wrapper_title_catalog_page">
+                <h1 class="page_title"><? $APPLICATION->ShowTitle(false) ?></h1>
             </div>
         </div>
     </section>

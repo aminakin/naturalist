@@ -14,7 +14,7 @@ if(!empty($metaTags[$currentURLDir])) {
     $APPLICATION->AddHeadString('<meta name="description" content="Главная | Naturalist.travel" />');
 }
 ?>
-
+<h1 style="display:none;">БРОНИРОВАНИЕ ГЛЭМПИНГОВ И ЭКО-ОТЕЛЕЙ</h1>
 <?
 $APPLICATION->IncludeComponent(
     "naturalist:empty", 

@@ -157,6 +157,13 @@ $aMenuLinks = Array(
         "" 
     ),
     Array(
+        "Для любителей рыбалки", 
+        SITE_DIR."catalog/vpechatleniya/dlya-lyubiteley-rybalki/", 
+        Array(), 
+        Array(""), 
+        "" 
+    ),
+    Array(
         "Базы отдыха с крытым бассейном", 
         SITE_DIR."catalog/bazy-otdykha/s-krytym-basseynom/", 
         Array(), 
@@ -244,6 +251,13 @@ $aMenuLinks = Array(
         Array(""), 
         "" 
 	),
+    Array(
+        "Впечатления pet-friendly", 
+        SITE_DIR."catalog/vpechatleniya/pet-friendly/", 
+        Array(), 
+        Array(""), 
+        "" 
+	),
 
 
 	Array(
@@ -326,7 +340,7 @@ $aMenuLinks = Array(
         "" 
     ),
     Array(
-        "Базы отдыха 'всё включено'", 
+        "Базы отдыха \"Всё включено\"", 
         SITE_DIR."catalog/bazy-otdykha/vse-vklyucheno/", 
         Array(), 
         Array(""), 
