@@ -70,6 +70,7 @@ class AddObjectBronevikJsonLineParser implements IAddObjectBronevikParser, IAddO
         return new AdvanceHotelDTO(
             name: $data['name'],
             code: $data['id'],
+            type: $data['type'],
             address: $data['address'],
             city: $data['cityName'],
             country: $data['descriptionDetails']['countryName'],
