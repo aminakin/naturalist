@@ -8,6 +8,14 @@ $arUrlRewrite=array (
     'PATH' => '/bitrix/services/yandexpay.pay/trading/index.php',
     'SORT' => 1,
   ),
+  5 => 
+  array (
+    'CONDITION' => '#^/bitrix/services/yandex.market/trading/#',
+    'RULE' => '',
+    'ID' => '',
+    'PATH' => '/bitrix/services/yandex.market/trading/index.php',
+    'SORT' => 100,
+  ),
   4 => 
   array (
     'CONDITION' => '#^/impressions/#',

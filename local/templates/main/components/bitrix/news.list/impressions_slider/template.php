@@ -23,7 +23,7 @@ Loc::loadMessages(__FILE__);
 							<a class="list__link" href="<?= $arItem["PROPERTIES"]["LINK"]["VALUE"] ?>">
 								<div class="list__item-image">
 
-									<img class="lazy" data-src="<?=
+									<img class="lazy" data-src="<?=  
 																CFile::ResizeImageGet(
 																	$arItem["PREVIEW_PICTURE"]["ID"],
 																	array('width' => 570, 'height' => 570),

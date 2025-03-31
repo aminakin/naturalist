@@ -1,22 +1,29 @@
 <?php
+
 namespace Naturalist\Telegram\Notifications;
+
 use CIBlockSection;
 use Naturalist\Telegram\DebugBot;
 use Naturalist\Telegram\TelegramBot;
 use Bitrix\Main\Data\Cache;
-class Error {
+
+class Error
+{
     private static TelegramBot $bot;
 
-    private static  function setBot():void{
+    private static function setBot(): void
+    {
         self::$bot = DebugBot::bot(DEBUG_TELEGRAM_BOT_TOKEN);
     }
 
-    private static function getBot():TelegramBot{
+    private static function getBot(): TelegramBot
+    {
         self::setBot();
         return self::$bot;
     }
 
-    private static function sectionByHotelId($hotelId): array {
+    public static function sectionByHotelId($hotelId): array
+    {
         $cache = Cache::createInstance();
         $cacheKey = 'hotel_sections_' . $hotelId;
         $cacheDuration = 7200;
@@ -34,7 +41,7 @@ class Error {
                 false
             );
 
-            if($section = $data->Fetch()) {
+            if ($section = $data->Fetch()) {
                 $items[] = [
                     'ID' => $section['ID'],
                     'NAME' => $section['NAME'],
@@ -49,64 +56,174 @@ class Error {
             }
         }
 
-        return ['ID' => current($items)['ID'], 'NAME' => current($items)['NAME'] ];
+        return ['ID' => current($items)['ID'], 'NAME' => current($items)['NAME']];
     }
 
-    public static function internal(int|string $hotelId, string $service, string $message):void{
-        try{
+    public static function internal(int|string $hotelId, string $service, string $message): void
+    {
+        try {
             self::getBot()->sendMessage("
-            Нет ответа от ".$service.", при запросе данных
-            Объект: ".self::sectionByHotelId($hotelId)['NAME']."
-            ID: ".self::sectionByHotelId($hotelId)['ID']."
+            Нет ответа от " . $service . ", при запросе данных
+            Объект: " . self::sectionByHotelId($hotelId)['NAME'] . "
+            ID: " . self::sectionByHotelId($hotelId)['ID'] . "
             link:
             Тип запроса:
-            Сообщение от ".$service.": ".$message."
+            Сообщение от " . $service . ": " . $message . "
             ");
-        }catch(\Exception $ex){
-            throw new \Exception("Ошибка отправвки уведомления: ". $ex->getMessage());
+        } catch (\Exception $ex) {
+            throw new \Exception("Ошибка отправки уведомления: " . $ex->getMessage());
         }
     }
 
-    public static function objectDisabled(int|string $hotelId, string $service):void{
-        try{
+    public static function objectDisabled(int|string $hotelId, string $service): void
+    {
+        try {
             self::getBot()->sendMessage("
             Объект отключен от вашего канала продаж:
-            Объект: ".self::sectionByHotelId($hotelId)['NAME']."
-            ID: ".self::sectionByHotelId($hotelId)['ID']."
+            Объект: " . self::sectionByHotelId($hotelId)['NAME'] . "
+            ID: " . self::sectionByHotelId($hotelId)['ID'] . "
             link:
-            Сервис: ".$service."
+            Сервис: " . $service . "
             ");
-        }catch(\Exception $ex){
-            throw new \Exception("Ошибка отправвки уведомления: ". $ex->getMessage());
+        } catch (\Exception $ex) {
+            throw new \Exception("Ошибка отправки уведомления: " . $ex->getMessage());
         }
     }
 
-    public static function notTariffs(int|string $hotelId, string $service):void{
-        try{
+    public static function notTariffs(int|string $hotelId, string $service): void
+    {
+        try {
             self::getBot()->sendMessage("
             По объекту нет доступных тарифов:
-            Объект: ".self::sectionByHotelId($hotelId)['NAME']."
-            ID: ".self::sectionByHotelId($hotelId)['ID']."
+            Объект: " . self::sectionByHotelId($hotelId)['NAME'] . "
+            ID: " . self::sectionByHotelId($hotelId)['ID'] . "
             link:
-            Сервис: ".$service."
+            Сервис: " . $service . "
             ");
-        }catch(\Exception $ex){
-            throw new \Exception("Ошибка отправвки уведомления: ". $ex->getMessage());
+        } catch (\Exception $ex) {
+            throw new \Exception("Ошибка отправки уведомления: " . $ex->getMessage());
         }
     }
 
-    public static function notFreeNums(int|string $hotelId, string $service):void{
-        try{
+    public static function notFreeNums(int|string $hotelId, string $service): void
+    {
+        try {
             self::getBot()->sendMessage("
             Ошибка при проверке данных по объекту о доступности, отсутвуют номера на сайте:
-            Объект: ".self::sectionByHotelId($hotelId)['NAME']."
-            ID: ".self::sectionByHotelId($hotelId)['ID']."
+            Объект: " . self::sectionByHotelId($hotelId)['NAME'] . "
+            ID: " . self::sectionByHotelId($hotelId)['ID'] . "
             Тип запроса: availability
             link:
-            Сервис: ".$service."
+            Сервис: " . $service . "
             ");
-        }catch(\Exception $ex){
-            throw new \Exception("Ошибка отправвки уведомления: ". $ex->getMessage());
+        } catch (\Exception $ex) {
+            throw new \Exception("Ошибка отправки уведомления: " . $ex->getMessage());
         }
     }
+
+    /**
+     * Сообщение о наценках
+     *
+     * @param int|string $hotelId
+     * @param string $service
+     * @return void
+     * @throws \Exception
+     */
+    public static function markupsMessage(int|string $hotelId, string $service): void
+    {
+        try {
+            self::getBot()->sendMessage("
+            Новые наценки у объекта Bnovo:
+            Объект: " . self::sectionByHotelId($hotelId)['NAME'] . "
+            ID: " . self::sectionByHotelId($hotelId)['ID'] . "
+            Тип запроса: room_types
+            link:
+            Сервис: " . $service . "
+            ");
+        } catch (\Exception $ex) {
+            throw new \Exception("Ошибка отправки уведомления: " . $ex->getMessage());
+        }
+    }
+
+    /**
+     * Отправка большого сообщения разом
+     *
+     * @param string $message
+     * @return void
+     * @throws \Exception\
+     */
+    public static function sendCompMessage(string $message): void
+    {
+        try {
+            self::getBot()->sendMessage($message);
+        } catch (\Exception $ex) {
+            throw new \Exception("Ошибка отправки уведомления: " . $ex->getMessage());
+        }
+    }
+
+
+
+    public static function validateOrder(int|string $orderId, string $service, string $message = ''): void
+    {
+        try {
+            self::getBot()->sendMessage("
+            Ошибка верификации бронирования:
+            Заказ: " . $orderId . "
+            Сервис: " . $service . "
+            " . $message . "
+            ");
+        } catch (\Exception $ex) {
+            throw new \Exception("Ошибка отправки уведомления: " . $ex->getMessage());
+        }
+    }
+
+    public static function saveOrder(int|string $orderId, string $service): void
+    {
+        try {
+            self::getBot()->sendMessage("
+            Ошибка сохранения бронирования:
+            Заказ: " . $orderId . "
+            Сервис: " . $service . "
+            ");
+        } catch (\Exception $ex) {
+            throw new \Exception("Ошибка отправки уведомления: " . $ex->getMessage());
+        }
+    }
+
+    public static function cancelOrder(int|string $orderId, string $service): void
+    {
+        try {
+            self::getBot()->sendMessage("
+            Ошибка отмены бронирования:
+            Заказ: " . $orderId . "
+            Сервис: " . $service . "
+            ");
+        } catch (\Exception $ex) {
+            throw new \Exception("Ошибка отправки уведомления: " . $ex->getMessage());
+        }
+    }
+
+    /**
+     * Ошибка загрузки объектов тревелайн
+     *
+     * @param int|string $hotelId
+     * @param string $service
+     * @return void
+     * @throws \Exception
+     */
+    public static function errorDownloadObject(int|string $hotelId, int|string $hotelName, string $errorMessage): void
+    {
+        try {
+            self::getBot()->sendMessage("
+            При загрузке объекта из сервиса Traveline, произошла ошибка
+            Объект: " . $hotelName . "
+            ID Traveline: " . $hotelId . "
+            Сервис: Traveline"
+            . $errorMessage . "
+            ");
+        } catch (\Exception $ex) {
+            throw new \Exception("Ошибка отправки уведомления: " . $ex->getMessage());
+        }
+    }
+
 }

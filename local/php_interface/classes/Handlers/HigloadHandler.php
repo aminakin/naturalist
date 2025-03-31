@@ -23,6 +23,9 @@ class HigloadHandler
 
         $event->setParameter("fields", $arFields);
 
+        // 121338 не затирать картинку модификациями
+        unset($arFields['UF_ICON']);
+
         $result = new EventResult();
 
         $result->modifyFields($arFields);

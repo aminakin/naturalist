@@ -2247,13 +2247,13 @@ class Bnovo
             if ($res->isSuccess()) {
                 return $reservationId;
             } else {
-                $this->debugBotTelegram->sendMessage(Markdown::arrayToMarkdown("Ошибка сохранения ID бронирования." . $orderId));
+                Error::saveOrder($orderId, "Bnovo");
                 return [
                     "ERROR" => "Ошибка сохранения ID бронирования."
                 ];
             }
         } else {
-            $this->debugBotTelegram->sendMessage(Markdown::arrayToMarkdown( "Ошибка запроса бронирования." . $orderId));
+            Error::validateOrder($orderId, "Bnovo");
             return [
                 "ERROR" => "Ошибка запроса бронирования."
             ];
@@ -2331,6 +2331,7 @@ class Bnovo
         if ($arResponse['canceled_bookings'][0]['ota_booking_id'] == $reservationId) {
             return true;
         } else {
+            Error::cancelOrder($arOrder['ID'], 'Bnovo');
             return false;
         }
     }
@@ -2550,7 +2551,15 @@ class Bnovo
                                     'filter' => ['CATEGORY_ID.VALUE' => $arRoomsRequest['ID'], 'IS_MARKUP.VALUE' => 17],
                                 ])->fetch();
                                 if (!$arAccRequest['ID']) {
-                                    $message .= "У объекта " . $section['NAME'] . " доступны наценки \r\n";
+
+//                                    Error::markupsMessage($section['UF_EXTERNAL_ID'], "Bnovo");
+                                    $message .= "Новые наценки у объекта Bnovo:
+                                    Объект: " . $section['NAME'] . "
+                                    ID: " . $section['ID'] . "
+                                    Тип запроса: roomtypes
+                                    Сервис: Bnovo";
+
+//                                    $message .= "У объекта " . $section['NAME'] . " доступны наценки \r\n";
                                     break;
                                 }
                             }
@@ -2561,9 +2570,10 @@ class Bnovo
         }
 
         if ($message != '') {
-            \CEvent::Send('BNOVO_MARKUP', 's1', [
-                'MESSAGE' => $message,
-            ]);
+            Error::sendCompMessage($message);
+//            \CEvent::Send('BNOVO_MARKUP', 's1', [
+//                'MESSAGE' => $message,
+//            ]);
         }
 
         Option::set("main", "bnovo_last_download", 'N');

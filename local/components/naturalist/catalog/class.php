@@ -951,7 +951,7 @@ class NaturalistCatalog extends \CBitrixComponent
         $this->arResult['arUriParams'] = $this->arUriParams;
         $this->arResult['FAVORITES'] = Users::getFavourites();
         $this->arResult['SECTION'] = $this->arSections;
-        $this->arResult['guestsDeclension'] = new Declension('взрослый', 'взрослых', 'взрослых');
+        $this->arResult['guestsDeclension'] = new Declension('гость', 'гостя', 'гостей');
         $this->arResult['childrenDeclension'] = new Declension('ребенок', 'ребенка', 'детей');
         $this->arResult['reviewsDeclension'] = new Declension('отзыв', 'отзыва', 'отзывов');
         $this->arResult['daysDeclension'] = new Declension('ночь', 'ночи', 'ночей');
@@ -1164,6 +1164,7 @@ class NaturalistCatalog extends \CBitrixComponent
 
         $this->arElements = array();
         while ($arElement = $rsElements->Fetch()) {
+            
             if ($arElement["PROPERTY_PHOTOS_VALUE"]) {
                 foreach ($arElement["PROPERTY_PHOTOS_VALUE"] as $photoId) {
                     $arElement["PICTURES"][$photoId] = [
@@ -1384,7 +1385,7 @@ class NaturalistCatalog extends \CBitrixComponent
     }
 
     private function setDetailFilter()
-    {
+    {   
         $this->arFilter = array(
             "IBLOCK_ID" => CATALOG_IBLOCK_ID,
             "ACTIVE" => "Y",
@@ -1395,6 +1396,10 @@ class NaturalistCatalog extends \CBitrixComponent
                 ["PROPERTY_PARENT_ID" => 0]
             ]
         );
+
+        if ($this->arSections["UF_EXTERNAL_SERVICE"] == "bnovo") {
+            $this->arFilter['PROPERTY_PARENT_ID'] = 0;
+        }  
     }
 
     private function fillDetailSeoParams()
