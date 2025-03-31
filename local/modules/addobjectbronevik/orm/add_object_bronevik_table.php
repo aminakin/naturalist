@@ -30,6 +30,10 @@ class AddObjectBronevikTable extends \Bitrix\Main\Entity\DataManager
                 'data_type' => 'text',
                 'title' => 'CODE'
             ],
+            'TYPE' => [
+                'data_type' => 'text',
+                'title' => 'TYPE'
+            ],
             'ADDRESS' => [
                 'data_type' => 'text',
                 'title' => 'ADDRESS'
