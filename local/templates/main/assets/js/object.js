@@ -17306,6 +17306,24 @@
       }
     });
 
+    let surchangeBlock = document.querySelectorAll(".room__surcharge-info");
+    if (surchangeBlock) {
+      surchangeBlock.forEach(function (item) {
+        item.addEventListener("click",  function () {
+          item.classList.remove("active");
+        });
+      });
+    }
+
+    let surchange = document.querySelectorAll(".room__surcharge-info-btn");
+    if (surchange) {
+      surchange.forEach(function (item) {
+        item.addEventListener("click",  function () {
+          item.nextElementSibling.classList.toggle("active");
+        });
+      });
+    }
+
     window.markupSelectHandler = function (input) {
       let price = input.value;
       let priceText = new Intl.NumberFormat("ru-RU", {

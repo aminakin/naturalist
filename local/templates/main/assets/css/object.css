@@ -2226,11 +2226,11 @@
   margin-top: 16px;
 }
 
-.room.room__empty + .rooms__empty-list{
+.room.room__empty+.rooms__empty-list {
   display: none;
 }
 
-.rooms__empty-list + .room.room__empty{
+.rooms__empty-list+.room.room__empty {
   margin-top: 16px;
 }
 
@@ -2597,6 +2597,75 @@
   font-size: 14px;
   line-height: 20px;
   font-weight: 400;
+}
+
+.room__surcharge {
+  display: flex;
+  border-radius: 4px;
+  padding: 2px 6px;
+  background: #F4E6CB;
+  margin-bottom: 8px;
+  position: relative;
+  align-items: center;
+  width: fit-content;
+}
+
+.room__surcharge span {
+  white-space: nowrap;
+}
+
+.room__surcharge span:nth-child(1),
+.room__surcharge span:nth-child(2) {
+  font-weight: 500;
+  font-size: 13px;
+  line-height: 18px;
+}
+
+.room__surcharge-info-btn {
+  margin-left: 4px;
+  cursor: pointer;
+  height: 16px;
+}
+
+.room__surcharge .room__surcharge-info {
+  width: 310px;
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 12px;
+  line-height: 16px;
+  background-color: #E0C695;
+  position: absolute;
+  white-space: wrap;
+  bottom: 31px;
+  left: -26px;
+  display: none;
+  z-index: 1;
+  cursor: pointer;
+}
+
+.room__surcharge-info::before {
+  content: '';
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 5px;
+  border-color: transparent transparent transparent #E0C695;
+  position: absolute;
+  transform: rotate(90deg);
+  bottom: -10px;
+  margin-left: -5px;
+}
+
+.room__surcharge .room__surcharge-info.active{
+  display: block;
+}
+
+@media (max-width: 900px) {
+  .room__surcharge .room__surcharge-info{
+    width: 226px;
+    left: 16px;
+  }
 }
 
 .reviews__heading {
