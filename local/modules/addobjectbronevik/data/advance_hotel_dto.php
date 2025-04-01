@@ -7,6 +7,7 @@ class AdvanceHotelDTO
     public function __construct(
         public string $name,
         public string $code,
+        public string $type,
         public string $address,
         public string $city,
         public string $country,
@@ -23,6 +24,7 @@ class AdvanceHotelDTO
         return [
             'NAME' => $this->name,
             'CODE' => $this->code,
+            'TYPE' => $this->type,
             'ADDRESS' => $this->address,
             'CITY' => $this->city,
             'COUNTRY' => $this->country,

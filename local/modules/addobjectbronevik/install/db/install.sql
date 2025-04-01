@@ -5,6 +5,7 @@ create table if not exists b_bronevik_advance_hotels
     CODE varchar(50) NOT NULL,
     ADDRESS varchar(255) NULL,
     CITY varchar(255) NULL,
+    TYPE varchar(255) NULL,
     COUNTRY varchar(255) NULL,
     ZIP varchar(255) NULL,
     LAT varchar(255) NULL,
