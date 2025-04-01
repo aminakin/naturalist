@@ -537,8 +537,12 @@ class NaturalistCatalog extends \CBitrixComponent
             $arSection["DELETE_LINK"] = $arButtons["edit"]["delete_element"]["ACTION_URL"];
 
             if ($this->request->get('maxPrice') || $this->request->get('minPrice')) {
-                if (($arSection["PRICE"] <= $this->request->get('maxPrice') && $arSection["PRICE"] >= $this->request->get('minPrice')) && $arSection["PRICE"] !== NULL) {
+                if (($arSection["PRICE"] <= $this->request->get('maxPrice') &&
+                        $arSection["PRICE"] >= $this->request->get('minPrice')) &&
+                    $arSection["PRICE"] !== NULL) {
                     $this->arSections[$arSection["ID"]] = $arSection;
+                } else{
+                   unset($this->arSections[$arSection["ID"]]);
                 }
             } else {
                 $this->arSections[$arSection["ID"]] = $arSection;
