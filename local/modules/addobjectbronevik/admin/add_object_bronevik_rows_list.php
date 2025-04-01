@@ -51,6 +51,12 @@ $arHeaders = array(
         'sort' => 'CODE',
     ],
     [
+        'id' => 'TYPE',
+        'content' => 'TYPE' ,
+        'title' => 'TYPE',
+        'sort' => 'TYPE',
+    ],
+    [
         'id' => 'COUNTRY',
         'content' => 'COUNTRY',
         'title' => 'COUNTRY',
@@ -99,9 +105,9 @@ if (!in_array($by, $lAdmin->GetVisibleHeaderColumns(), true))
 // add filter
 $filter = null;
 
-$filterFields = array('find_id', 'find_name', 'find_code');
+$filterFields = array('find_id', 'find_name', 'find_code', 'find_type');
 $filterValues = array();
-$filterTitles = array('ID', 'NAME', 'CODE');
+$filterTitles = array('ID', 'NAME', 'CODE', 'TYPE');
 
 $filter = $lAdmin->InitFilter($filterFields);
 
@@ -116,6 +122,10 @@ if (!empty($find_name))
 if (!empty($find_code))
 {
     $filterValues['CODE'] = $find_code;
+}
+if (!empty($find_type))
+{
+    $filterValues['TYPE'] = $find_type;
 }
 
 $filter = new CAdminFilter(
@@ -211,10 +221,26 @@ else
     $rsData->NavStart();
 }
 
+$typeList = [
+        'hotel' => 'Отель',
+        'hostel' => 'Хостел',
+        'city-serviced-apartments' => 'Апартаменты в разных районах города',
+        'mini-hotel' => 'Мини-отель',
+        'health-resort' => 'Санаторий',
+        'turbaza' => 'Турбаза',
+        'pension' => 'Пансионат',
+        'living-quarters' => 'Жилые помещения',
+        'furnished-rooms' => 'Меблированные комнаты',
+        'aparthotel' => 'Апарт-отель',
+        'motel' => 'Мотель',
+        'camping' => 'Кемпинг',
+        'glamping' => 'Глэмпинг',
+];
 // build list
 $lAdmin->NavText($rsData->GetNavPrint(GetMessage("PAGES")));
 while($arRes = $rsData->NavNext(true, "f_"))
 {
+    $arRes['TYPE'] = $typeList[$arRes['TYPE']];
     $row = $lAdmin->AddRow($f_ID, $arRes);
 //    $row->AddViewField('ID', '<a href="' . 'highloadblock_row_edit.php?ENTITY_ID='.$hlblock['ID'].'&ID='.$f_ID.'&lang='.LANGUAGE_ID . '">'.$f_ID.'</a>');
 
@@ -284,6 +310,18 @@ require_once($_SERVER["DOCUMENT_ROOT"]."/bitrix/modules/main/include/prolog_admi
         <tr>
             <td><font class="tableheadtext"><b>CODE:</b></td>
             <td><input type="text" name="find_code" value="<?echo ($find_code <> '') ? htmlspecialcharsbx($find_code) : ""?>" size="38"></td>
+        </tr>
+        <tr>
+            <td><font class="tableheadtext"><b>TYPE:</b></td>
+            <td>
+                <select name="find_type">
+                    <option value="">...</option>
+                    <?php
+                    foreach ($typeList as $key => $value) { ?>
+                        <option value="<?= $key ?>"><?= $value ?></option>
+                    <?php } ?>
+                </select>
+<!--                <input type="text" name="find_type" value="--><?//echo ($find_type <> '') ? htmlspecialcharsbx($find_type) : ""?><!--" size="38"></td>-->
         </tr>
         <?
         $filter->Buttons(array("table_id"=>$sTableID, "url"=>$APPLICATION->GetCurPage(), "form"=>"find_form"));
