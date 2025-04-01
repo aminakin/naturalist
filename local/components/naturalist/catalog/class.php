@@ -362,7 +362,17 @@ class NaturalistCatalog extends \CBitrixComponent
                         $arSection["PICTURES"][] = $preResult;
                     }
                 } else {
-                    $arSection["PICTURES"][0]["src"] = SITE_TEMPLATE_PATH . "/img/big_no_photo.png";
+                    if ($arSection["UF_WINTER_PHOTOS"]) {
+                        foreach ($arSection["UF_WINTER_PHOTOS"] as $photoId) {
+                            $imageOriginal = CFile::GetFileArray($photoId);
+                            $arDataFullGallery[] = "\"" . $imageOriginal["SRC"] . "\"";
+                            $preResult = CFile::ResizeImageGet($photoId, array('width' => 590, 'height' => 390), BX_RESIZE_IMAGE_EXACT, true);
+                            $preResult['big'] = $imageOriginal['SRC'];
+                            $arSection["PICTURES"][] = $preResult;
+                        }
+                    }else{
+                        $arSection["PICTURES"][0]["src"] = SITE_TEMPLATE_PATH . "/img/big_no_photo.png";
+                    } 
                 }
                 if ($arSection['UF_STORIES_SUMMER'] && $arSection['UF_STORIES_PREVIEW_SUMMER']) {
                     foreach ($arSection['UF_STORIES_SUMMER'] as $key => $story) {
