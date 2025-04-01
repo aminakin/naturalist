@@ -11,7 +11,7 @@
 .sidebar-navigation__sitemap {
     display: grid;
     /* grid-template-columns: 1fr 1fr; */
-    gap: 3%;
+    gap: 24px;
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     grid-template-rows: minmax(0, 1fr);
 }
