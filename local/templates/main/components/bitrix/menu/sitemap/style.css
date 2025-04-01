@@ -10,8 +10,10 @@
 }
 .sidebar-navigation__sitemap {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    /* grid-template-columns: 1fr 1fr; */
     gap: 3%;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-rows: minmax(0, 1fr);
 }
 .sidebar-navigation__sitemap .list__link {
     font-family: Lato;
