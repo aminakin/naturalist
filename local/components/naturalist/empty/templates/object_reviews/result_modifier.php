@@ -6,7 +6,7 @@ $commonYandexReviewsClass = HighloadBlockTable::compileEntity('YandexReviews')->
 $commonYandexReviews = $commonYandexReviewsClass::query()
     ->addSelect('*')
     ->setOrder(['ID' => 'ASC'])
-    ->setFilter(['UF_ID_OBJECT' => $arResult["sectionId"]])
+    ->setFilter(['UF_ID_OBJECT' => $arParams["sectionId"]])
     ->setCacheTtl(36000000)
     ?->fetchAll();
 
