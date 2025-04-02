@@ -9,8 +9,8 @@ if(!empty($metaTags[$currentURLDir])) {
     $APPLICATION->AddHeadString('<meta name="description" content="'.$metaTags[$currentURLDir]["~PROPERTY_DESCRIPTION_VALUE"]["TEXT"].'" />');
 
 } else {
-	$APPLICATION->SetTitle("Локации | Naturalist.travel");
-    $APPLICATION->AddHeadString('<meta name="description" content="Локации | Naturalist.travel" />');
+	$APPLICATION->SetTitle("Уникальные регионы для путешествий | Naturalist.travel");
+    $APPLICATION->AddHeadString('<meta name="description" content="Исследуйте удивительные регионы мира с Naturalist Travel. Откройте для себя уникальные природные уголки, культурные достопримечательности и приключения, которые ждут вас в самых живописных местах." />');
 }
 
 global $arSettings;

@@ -58,7 +58,7 @@ use Naturalist\Users;
     <title><?php $APPLICATION->ShowTitle() ?></title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="format-detection" content="telephone=no">
-    <?php if ($APPLICATION->GetCurPage() != '/catalog/') { ?>
+    <?php if (!strripos($APPLICATION->GetCurPage(false),'catalog') && !strripos($APPLICATION->GetCurPage(false),'map/')) { ?>
         <link rel="canonical" href="<?= HTTP_HOST . $APPLICATION->GetCurPage() ?>">
     <?php } ?>
 
@@ -397,5 +397,24 @@ use Naturalist\Users;
                     </ul>
                 </div>
             </div>
+            <?
+            $APPLICATION->IncludeComponent(
+                "bitrix:menu",
+                "header_catalog",
+                array(
+                    "ROOT_MENU_TYPE" => "header_catalog",
+                    "MAX_LEVEL" => "2",
+                    "CHILD_MENU_TYPE" => "",
+                    "USE_EXT" => "N",
+                    "DELAY" => "N",
+                    "ALLOW_MULTI_SELECT" => "Y",
+                    "MENU_CACHE_TYPE" => "N",
+                    "MENU_CACHE_TIME" => "3600",
+                    "MENU_CACHE_USE_GROUPS" => "Y",
+                    "MENU_CACHE_GET_VARS" => ""
+                ),
+                false
+            );
+            ?>
         </header>
         <!-- header-->

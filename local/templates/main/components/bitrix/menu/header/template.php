@@ -11,31 +11,34 @@ if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) die();
 		<?endif;?>
 
 		<?if($arItem["IS_PARENT"]):?>
-		    <li class="list__item 
+		    <li class="list__item <?if($arItem["TEXT"] == "Каталог"): echo'list__item_catalog'; endif;?>
 					<?if($arItem["PARAMS"]["IS_MOBILE"] == "Y"):?>list__item_mobile<?endif;?> 
 					<?if($arItem["SELECTED"]):?> list__item_active<?endif;?>
 					"
+					<?if($arItem["TEXT"] == "Каталог"): echo'id="list__item_catalog"'; endif;?>
 			>
 		        <a class="list__link" href="<?=$arItem["LINK"]?>"><?=$arItem["TEXT"]?></a>
 
 		        <ul class="list list_sub">
 		<?else:?>
 			<?if($arItem["DEPTH_LEVEL"] == 1):?>
-				<li class="list__item 
+				<li class="list__item <?if($arItem["TEXT"] == "Каталог"): echo'list__item_catalog'; endif;?>
 						<?if($arItem["PARAMS"]["IS_MOBILE"] == "Y"):?>list__item_mobile<?endif;?> 
 						<?if($arItem["PARAMS"]["HIGHLIGHT_BROWN"] == "Y"):?>highlight_orange<?endif;?>
 						<?if($arItem["PARAMS"]["ALWAYS_ORANGE"] == "Y"):?>always_orange<?endif;?>
 						<?if($arItem["SELECTED"]):?> list__item_active<?endif;?>
 					"
+					<?if($arItem["TEXT"] == "Каталог"): echo'id="list__item_catalog"'; endif;?>
 				>
 					<a class="list__link" href="<?=$arItem["LINK"]?>"><?=$arItem["TEXT"]?></a>
 				</li>
 		    <?else:?>
-				<li class="list__item 
+				<li class="list__item <?if($arItem["TEXT"] == "Каталог"): echo'list__item_catalog'; endif;?>
 						<?if($arItem["PARAMS"]["IS_MOBILE"] == "Y"):?>list__item_mobile<?endif;?> 
 						<?if($arItem["PARAMS"]["HIGHLIGHT_BROWN"] == "Y"):?>highlight_orange<?endif;?> 
 						<?if($arItem["SELECTED"]):?> list__item_active<?endif;?>
 					"
+					<?if($arItem["TEXT"] == "Каталог"): echo'id="list__item_catalog"'; endif;?>
 				>
 					<a class="list__link" href="<?=$arItem["LINK"]?>"><?=$arItem["TEXT"]?></a>
 				</li>

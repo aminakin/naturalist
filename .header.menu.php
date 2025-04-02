@@ -50,6 +50,20 @@ $aMenuLinks = Array(
 		Array(), 
 		"" 
 	),
+	Array(
+		"Контакты", 
+		SITE_DIR."/contacts/", 
+		Array(), 
+		Array(), 
+		"" 
+	),
+	Array(
+		"Локации", 
+		SITE_DIR."/regions/", 
+		Array(), 
+		Array(), 
+		"" 
+	),
 
 );
 ?>
