@@ -2288,6 +2288,11 @@
   line-height: 20px;
 }
 
+.room__features svg{
+  width: 100%;
+  max-width: 20px;
+}
+
 .room__features ul:not([class]) {
   list-style-position: inside;
 }

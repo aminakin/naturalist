@@ -9,7 +9,7 @@ use Bitrix\Main\ArgumentOutOfRangeException;
 use Bitrix\Main\ArgumentTypeException;
 use Bitrix\Main\Config\Option;
 use Bitrix\Main\Context;
-use Bitrix\Main\Diag\Debug;
+use Bitrix\Main\Grid\Declension;
 use Bitrix\Main\Loader;
 use Bitrix\Main\NotImplementedException;
 use Bitrix\Main\NotSupportedException;
@@ -17,30 +17,20 @@ use Bitrix\Main\ObjectException;
 use Bitrix\Main\ObjectNotFoundException;
 use Bitrix\Main\ObjectPropertyException;
 use Bitrix\Main\SystemException;
-use Bitrix\Sale\BasketItem;
-use Bitrix\Sale\BasketPropertyItem;
-use Bitrix\Sale\Order;
 use Bitrix\Sale\Basket;
-use Bitrix\Sale\PaySystem;
-use Bitrix\Sale\Fuser;
-use Bitrix\Main\Mail\Event;
 use Bitrix\Sale\DiscountCouponsManager;
+use Bitrix\Sale\Fuser;
+use Bitrix\Sale\Order;
+use Bitrix\Sale\PaySystem;
+use CIBlockSection;
+use CUser;
 use Naturalist\bronevik\HotelOfferPricingCheckPriceBronevik;
-use Naturalist\bronevik\HotelRoomOfferPenaltyBronevik;
 use Naturalist\bronevik\OrderCancelBronevik;
 use Naturalist\bronevik\OrderCanceledPenaltyBronevik;
 use Naturalist\bronevik\OrderCreateBronevik;
-use Naturalist\CreateOrderPdf;
-use Bitrix\Main\Grid\Declension;
-
-use CIBlockSection;
-use CSaleOrder;
-use CUser;
 use Sberbank\Payments\Gateway;
 use function NormalizePhone;
 use function randString;
-
-use Naturalist\Users;
 
 defined("B_PROLOG_INCLUDED") && B_PROLOG_INCLUDED === true || die();
 
@@ -527,7 +517,6 @@ class Orders
     }
 
 
-
     public function updatePayment($order)
     {
         Loader::includeModule('sberbank.ecom2');
@@ -804,9 +793,9 @@ class Orders
      * Устанавливает оплату для заказа
      *
      * @param mixed $paymentCollection
-     * 
+     *
      * @return [type]
-     * 
+     *
      */
     private function setOrderPayment(&$order, $paySystemId, $summ, $isPayed)
     {
@@ -926,13 +915,15 @@ class Orders
         $siteId = Context::getCurrent()->getSite();
         $basket = Basket::loadItemsForFUser(Fuser::getId(), $siteId);
 
-        // Проверка доступности броневикаa
-        //        if (! (new HotelOfferPricingCheckPriceBronevik())($basket, ['LAST_NAME' => $arUser['LAST_NAME'], 'FIRST_NAME' => $arUser['NAME']])) {
-        //            return json_encode([
-        //                "ACTION" => "reload",
-        //                "ERROR" => "Произошло изменение цены. Пожалуйста, ознакомьтесь!",
-        //            ]);
-        //        }
+        // Проверка доступности броневика
+        if ($externalService == $this->bronevikSectionPropEnumId) {
+            if (!(new HotelOfferPricingCheckPriceBronevik())($basket, ['LAST_NAME' => $arUser['LAST_NAME'], 'FIRST_NAME' => $arUser['NAME']])) {
+                return json_encode([
+                    "ACTION" => "reload",
+                    "ERROR" => "Произошло изменение цены. Пожалуйста, ознакомьтесь!",
+                ]);
+            }
+        }
 
         // Создание нового заказа
         $order = Order::create($siteId, $userId);
@@ -1215,9 +1206,9 @@ class Orders
      * Возвращает список гостей
      *
      * @param array $item
-     * 
+     *
      * @return string
-     * 
+     *
      */
     private function getGuests($item): string
     {
