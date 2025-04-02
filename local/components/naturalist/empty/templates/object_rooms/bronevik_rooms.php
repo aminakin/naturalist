@@ -101,16 +101,16 @@ foreach ($arElements as $arElement): ?>
                                 </div>
                             <? endif; ?>
 
-                            <?if(!is_null($arElement['PROPERTY_QUANTITY_HUMEN_VALUE']) || !is_null($arElement['PROPERTY_QUANTITY_CHILD_VALUE'])):?>
+                            <? if (!is_null($arElement['PROPERTY_QUANTITY_HUMEN_VALUE']) || !is_null($arElement['PROPERTY_QUANTITY_CHILD_VALUE'])): ?>
                                 <div class="room__features">
                                     <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path fill-rule="evenodd" clip-rule="evenodd" d="M4.75137 12.5754C3.45346 9.49595 5.66865 6.0415 9.00166 6.0415H10.9979C14.3309 6.0415 16.5461 9.49595 15.2482 12.5754C14.9949 13.1763 14.4095 13.5736 13.7537 13.5736H13.1374L12.2516 17.1764C11.9958 18.217 11.072 18.9582 9.99977 18.9582C8.92752 18.9582 8.00373 18.217 7.7479 17.1764L6.86209 13.5736H6.24589C5.59004 13.5736 5.00465 13.1763 4.75137 12.5754ZM9.00166 7.2915C6.59481 7.2915 4.9401 9.80474 5.90324 12.0899C5.96492 12.2362 6.10217 12.3236 6.24589 12.3236H6.94887C7.48002 12.3236 7.93216 12.6903 8.05675 13.1971L8.96175 16.878C9.08333 17.3725 9.51593 17.7082 9.99977 17.7082C10.4836 17.7082 10.9162 17.3725 11.0378 16.878L11.9428 13.1971C12.0674 12.6903 12.5195 12.3236 13.0507 12.3236H13.7537C13.8974 12.3236 14.0346 12.2362 14.0963 12.0899C15.0594 9.80474 13.4047 7.2915 10.9979 7.2915H9.00166Z" fill="#141B34"/>
-                                        <path fill-rule="evenodd" clip-rule="evenodd" d="M10 2.2915C8.96447 2.2915 8.125 3.13097 8.125 4.1665C8.125 5.20204 8.96447 6.0415 10 6.0415C11.0355 6.0415 11.875 5.20204 11.875 4.1665C11.875 3.13097 11.0355 2.2915 10 2.2915ZM6.875 4.1665C6.875 2.44061 8.27411 1.0415 10 1.0415C11.7259 1.0415 13.125 2.44061 13.125 4.1665C13.125 5.89239 11.7259 7.2915 10 7.2915C8.27411 7.2915 6.875 5.89239 6.875 4.1665Z" fill="#141B34"/>
+                                        <path fill-rule="evenodd" clip-rule="evenodd" d="M4.75137 12.5754C3.45346 9.49595 5.66865 6.0415 9.00166 6.0415H10.9979C14.3309 6.0415 16.5461 9.49595 15.2482 12.5754C14.9949 13.1763 14.4095 13.5736 13.7537 13.5736H13.1374L12.2516 17.1764C11.9958 18.217 11.072 18.9582 9.99977 18.9582C8.92752 18.9582 8.00373 18.217 7.7479 17.1764L6.86209 13.5736H6.24589C5.59004 13.5736 5.00465 13.1763 4.75137 12.5754ZM9.00166 7.2915C6.59481 7.2915 4.9401 9.80474 5.90324 12.0899C5.96492 12.2362 6.10217 12.3236 6.24589 12.3236H6.94887C7.48002 12.3236 7.93216 12.6903 8.05675 13.1971L8.96175 16.878C9.08333 17.3725 9.51593 17.7082 9.99977 17.7082C10.4836 17.7082 10.9162 17.3725 11.0378 16.878L11.9428 13.1971C12.0674 12.6903 12.5195 12.3236 13.0507 12.3236H13.7537C13.8974 12.3236 14.0346 12.2362 14.0963 12.0899C15.0594 9.80474 13.4047 7.2915 10.9979 7.2915H9.00166Z" fill="#141B34" />
+                                        <path fill-rule="evenodd" clip-rule="evenodd" d="M10 2.2915C8.96447 2.2915 8.125 3.13097 8.125 4.1665C8.125 5.20204 8.96447 6.0415 10 6.0415C11.0355 6.0415 11.875 5.20204 11.875 4.1665C11.875 3.13097 11.0355 2.2915 10 2.2915ZM6.875 4.1665C6.875 2.44061 8.27411 1.0415 10 1.0415C11.7259 1.0415 13.125 2.44061 13.125 4.1665C13.125 5.89239 11.7259 7.2915 10 7.2915C8.27411 7.2915 6.875 5.89239 6.875 4.1665Z" fill="#141B34" />
                                     </svg>
 
-                                    <?=$arElement['PROPERTY_QUANTITY_HUMEN_VALUE'] .' '. $guestsDeclension->get($arElement['PROPERTY_QUANTITY_HUMEN_VALUE'])?>, <?=!is_null($arElement['PROPERTY_QUANTITY_CHILD_VALUE']) ? $arElement['PROPERTY_QUANTITY_CHILD_VALUE'].' '.$childrenDeclension->get($arElement['PROPERTY_QUANTITY_CHILD_VALUE']): "без детей" ?>
+                                    <?= $arElement['PROPERTY_QUANTITY_HUMEN_VALUE'] . ' ' . $guestsDeclension->get($arElement['PROPERTY_QUANTITY_HUMEN_VALUE']) ?>, <?= !is_null($arElement['PROPERTY_QUANTITY_CHILD_VALUE']) ? $arElement['PROPERTY_QUANTITY_CHILD_VALUE'] . ' ' . $childrenDeclension->get($arElement['PROPERTY_QUANTITY_CHILD_VALUE']) : "без детей" ?>
                                 </div>
-                            <?endif?>
+                            <? endif ?>
 
                             <? if (!empty($arElement["PROPERTY_BEDS_VALUE"])): ?>
                                 <div class="room__features">
@@ -192,39 +192,55 @@ foreach ($arElements as $arElement): ?>
                                 </div>
                                 <div class="split-wrap" <?= $elementPrice - Users::getInnerScore() <= 0 ? 'style="display: none"' : '' ?>>
                                     <yandex-pay-badge
-                                            merchant-id="d82873ad-61ce-4050-b05e-1f4599f0bb7b"
-                                            type="bnpl"
-                                            amount="<?= $elementPrice - Users::getInnerScore() ?>"
-                                            size="l"
-                                            variant="detailed"
-                                            theme="light"
-                                            align="left"
-                                            color="transparent" />
+                                        merchant-id="d82873ad-61ce-4050-b05e-1f4599f0bb7b"
+                                        type="bnpl"
+                                        amount="<?= $elementPrice - Users::getInnerScore() ?>"
+                                        size="l"
+                                        variant="detailed"
+                                        theme="light"
+                                        align="left"
+                                        color="transparent" />
                                 </div>
                             </div>
-
-                            <a class="button button_primary"
-                               onclick="VK.Goal('customize_product')"
-                               data-section-external-id="<?= $arSection['UF_EXTERNAL_ID'] ?>"
-                               data-add-basket
-                               data-object-title="<?= $arSection['NAME'] ?>"
-                               data-id="<?= $arElement["ID"] ?>"
-                               data-price="<?= $elementCurrentPrice?>"
-                               data-guests="<?= $guests ?>"
-                               data-children-age="<?= $_GET['childrenAge'] ?>"
-                               data-date-from="<?= $dateFrom ?>"
-                               data-date-to="<?= $dateTo ?>"
-                               data-external-id="<?= $arElement["PROPERTY_EXTERNAL_ID_VALUE"] ?>"
-                               data-external-service="<?= $arSection["UF_EXTERNAL_SERVICE"] ?>"
-                               data-bronevik-offer-external-id="<?= $offer["PROPERTIES"]['CODE']['VALUE'] ?>"
-                               data-category-id="<?= $arElement["PROPERTY_EXTERNAL_CATEGORY_ID_VALUE"] ?>"
-                               data-cancel-amount="<?= $arExternalItem['cancelAmount'] ?>"
-                               data-people="<?= $arExternalItem['fullPlacementsName'] ?>"
-                               data-room-title="<?= $arElement["NAME"] ?>"
-                               data-room-photo="<?= $arElement["PICTURES"][array_key_first($arElement["PICTURES"])]['src'] ?>"
-                               href="#">Забронировать</a>
+                            <div class="room__button-wrap">
+                                <div class="room__surcharge">
+                                    <span><?= GetMessage('SURCHANGE') ?></span>
+                                    <span>
+                                        <?= number_format($elementPrice - Users::getInnerScore(), 0, '.', ' ') ?> ₽
+                                    </span>
+                                    <span class="room__surcharge-info-btn">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                            <path d="M8.00065 15.1666C4.04732 15.1666 0.833984 11.9533 0.833984 7.99992C0.833984 4.04659 4.04732 0.833252 8.00065 0.833252C11.954 0.833252 15.1673 4.04659 15.1673 7.99992C15.1673 11.9533 11.954 15.1666 8.00065 15.1666ZM8.00065 1.83325C4.60065 1.83325 1.83398 4.59992 1.83398 7.99992C1.83398 11.3999 4.60065 14.1666 8.00065 14.1666C11.4007 14.1666 14.1673 11.3999 14.1673 7.99992C14.1673 4.59992 11.4007 1.83325 8.00065 1.83325Z" fill="black" />
+                                            <path fill-rule="evenodd" clip-rule="evenodd" d="M7.99935 5.83325C7.50068 5.83325 7.16602 6.19736 7.16602 6.56402C7.16602 6.84016 6.94216 7.06402 6.66602 7.06402C6.38987 7.06402 6.16602 6.84016 6.16602 6.56402C6.16602 5.57121 7.02526 4.83325 7.99935 4.83325C8.97344 4.83325 9.83268 5.57121 9.83268 6.56402C9.83268 6.91701 9.72041 7.24419 9.5316 7.51505C9.41501 7.68231 9.2791 7.84145 9.1549 7.98393C9.13205 8.01014 9.10964 8.03575 9.08764 8.06088C8.98454 8.17867 8.89053 8.28608 8.80364 8.39632C8.58663 8.67163 8.49935 8.86336 8.49935 9.02556V9.33325C8.49935 9.60939 8.27549 9.83325 7.99935 9.83325C7.72321 9.83325 7.49935 9.60939 7.49935 9.33325V9.02556C7.49935 8.50802 7.77387 8.08735 8.01828 7.77727C8.12269 7.64482 8.23711 7.51418 8.34054 7.39607C8.36122 7.37246 8.38146 7.34936 8.40109 7.32684C8.52464 7.1851 8.6286 7.06175 8.71125 6.94319C8.78983 6.83047 8.83268 6.70107 8.83268 6.56402C8.83268 6.19736 8.49802 5.83325 7.99935 5.83325Z" fill="black" />
+                                            <path fill-rule="evenodd" clip-rule="evenodd" d="M7.5 11C7.5 10.7239 7.72386 10.5 8 10.5H8.00599C8.28213 10.5 8.50599 10.7239 8.50599 11C8.50599 11.2761 8.28213 11.5 8.00599 11.5H8C7.72386 11.5 7.5 11.2761 7.5 11Z" fill="black" />
+                                        </svg>
+                                    </span>
+                                    <span class="room__surcharge-info">
+                                        <?= GetMessage('SURCHANGE_INFO') ?>
+                                    </span>
+                                </div>
+                                <a class="button button_primary"
+                                    onclick="VK.Goal('customize_product')"
+                                    data-section-external-id="<?= $arSection['UF_EXTERNAL_ID'] ?>"
+                                    data-add-basket
+                                    data-object-title="<?= $arSection['NAME'] ?>"
+                                    data-id="<?= $arElement["ID"] ?>"
+                                    data-price="<?= $elementCurrentPrice ?>"
+                                    data-guests="<?= $guests ?>"
+                                    data-children-age="<?= $_GET['childrenAge'] ?>"
+                                    data-date-from="<?= $dateFrom ?>"
+                                    data-date-to="<?= $dateTo ?>"
+                                    data-external-id="<?= $arElement["PROPERTY_EXTERNAL_ID_VALUE"] ?>"
+                                    data-external-service="<?= $arSection["UF_EXTERNAL_SERVICE"] ?>"
+                                    data-bronevik-offer-external-id="<?= $offer["PROPERTIES"]['CODE']['VALUE'] ?>"
+                                    data-category-id="<?= $arElement["PROPERTY_EXTERNAL_CATEGORY_ID_VALUE"] ?>"
+                                    data-cancel-amount="<?= $arExternalItem['cancelAmount'] ?>"
+                                    data-people="<?= $arExternalItem['fullPlacementsName'] ?>"
+                                    data-room-title="<?= $arElement["NAME"] ?>"
+                                    data-room-photo="<?= $arElement["PICTURES"][array_key_first($arElement["PICTURES"])]['src'] ?>"
+                                    href="#">Забронировать</a>
+                            </div>
                         </div>
-
 
                     <? } ?>
 

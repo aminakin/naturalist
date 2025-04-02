@@ -156,8 +156,8 @@ if ($arResult['arSearchedRegions']) {
             while ($arSection = $rsSections->GetNext()) {
                 $arDataFullGallery = [];
 
-                foreach($arFields['UF_SEASON'] as $season){
-                    if($season == 'Лето'){
+                foreach ($arFields['UF_SEASON'] as $season) {
+                    if ($season == 'Лето') {
                         if ($arSection["UF_PHOTOS"]) {
                             foreach ($arSection["UF_PHOTOS"] as $photoId) {
                                 $imageOriginal = CFile::GetFileArray($photoId);
@@ -165,9 +165,17 @@ if ($arResult['arSearchedRegions']) {
                                 $arSection["PICTURES"][$photoId] = CFile::ResizeImageGet($photoId, array('width' => 590, 'height' => 390), BX_RESIZE_IMAGE_EXACT, true);
                             }
                         } else {
-                            $arSection["PICTURES"][0]["src"] = SITE_TEMPLATE_PATH . "/img/big_no_photo.png";
+                            if ($arSection["UF_WINTER_PHOTOS"]) {
+                                foreach ($arSection["UF_WINTER_PHOTOS"] as $photoId) {
+                                    $imageOriginal = CFile::GetFileArray($photoId);
+                                    $arDataFullGallery[] = "\"" . $imageOriginal["SRC"] . "\"";
+                                    $arSection["PICTURES"][$photoId] = CFile::ResizeImageGet($photoId, array('width' => 590, 'height' => 390), BX_RESIZE_IMAGE_EXACT, true);
+                                }
+                            } else {
+                                $arSection["PICTURES"][0]["src"] = SITE_TEMPLATE_PATH . "/img/big_no_photo.png";
+                            }
                         }
-                    }elseif($season == 'Зима'){
+                    } elseif ($season == 'Зима') {
                         if ($arSection["UF_WINTER_PHOTOS"]) {
                             foreach ($arSection["UF_WINTER_PHOTOS"] as $photoId) {
                                 $imageOriginal = CFile::GetFileArray($photoId);
@@ -185,7 +193,7 @@ if ($arResult['arSearchedRegions']) {
                                 $arSection["PICTURES"][0]["src"] = SITE_TEMPLATE_PATH . "/img/big_no_photo.png";
                             }
                         }
-                    }elseif($season == 'Осень+Весна'){
+                    } elseif ($season == 'Осень+Весна') {
                         if ($arSection["UF_MIDSEASON_PHOTOS"]) {
                             foreach ($arSection["UF_MIDSEASON_PHOTOS"] as $photoId) {
                                 $imageOriginal = CFile::GetFileArray($photoId);
@@ -266,15 +274,12 @@ if ($arResult['arSearchedRegions']) {
                 $arSection["DELETE_LINK"] = $arButtons["edit"]["delete_element"]["ACTION_URL"];
 
                 $arResult['SECTIONS'][$arSection["ID"]] = $arSection;
-
             }
-
         }
 
-        if(is_array($arResult['SECTIONS']) && count($arResult['SECTIONS']) > 3){
+        if (is_array($arResult['SECTIONS']) && count($arResult['SECTIONS']) > 3) {
             shuffle($arResult['SECTIONS']);
-        }
-        else {
+        } else {
             usort($arResult['SECTIONS'], function ($a, $b) {
                 return ($a['DISCTANCE'] - $b['DISCTANCE']);
             });

@@ -1,4 +1,5 @@
 <?
+
 use Naturalist\Users;
 use Naturalist\Reviews;
 use Naturalist\Products;
@@ -48,14 +49,14 @@ if ($arFavourites) {
     $dateTo = $_GET['dateTo'];
     $guests = $_GET['guests'] ?? 2;
     $children = $_GET['children'] ?? 0;
-    $arChildrenAge = (isset($_GET['childrenAge'])) ? explode(',' , $_GET['childrenAge']) : [];
+    $arChildrenAge = (isset($_GET['childrenAge'])) ? explode(',', $_GET['childrenAge']) : [];
     if (!empty($dateFrom) && !empty($dateTo) && !empty($_GET['guests'])) {
         $daysCount = abs(strtotime($dateTo) - strtotime($dateFrom)) / 86400;
 
         // Запрос в апи на получение списка кемпингов со свободными местами в выбранный промежуток
         $arExternalInfo = Products::search($guests, $arChildrenAge, $dateFrom, $dateTo, false);
         $arExternalIDs = array_keys($arExternalInfo);
-        if($arExternalIDs) {
+        if ($arExternalIDs) {
             $arFilter["UF_EXTERNAL_ID"] = $arExternalIDs;
         } else {
             $arFilter["UF_EXTERNAL_ID"] = false;
@@ -77,8 +78,8 @@ if ($arFavourites) {
         } else {
             $arFavourite["PICTURES"][0]["src"] = SITE_TEMPLATE_PATH."/img/no_photo.png";
         }*/
-        foreach($arFields['UF_SEASON'] as $season){
-            if($season == 'Лето'){
+        foreach ($arFields['UF_SEASON'] as $season) {
+            if ($season == 'Лето') {
                 if ($arFavourite["UF_PHOTOS"]) {
                     foreach ($arFavourite["UF_PHOTOS"] as $photoId) {
                         $imageOriginal = CFile::GetFileArray($photoId);
@@ -86,9 +87,17 @@ if ($arFavourites) {
                         $arFavourite["PICTURES"][$photoId] = CFile::ResizeImageGet($photoId, array('width' => 590, 'height' => 390), BX_RESIZE_IMAGE_EXACT, true);
                     }
                 } else {
-                    $arFavourite["PICTURES"][0]["src"] = SITE_TEMPLATE_PATH . "/img/big_no_photo.png";
+                    if ($arFavourite["UF_WINTER_PHOTOS"]) {
+                        foreach ($arFavourite["UF_WINTER_PHOTOS"] as $photoId) {
+                            $imageOriginal = CFile::GetFileArray($photoId);
+                            $arDataFullGallery[] = "\"" . $imageOriginal["SRC"] . "\"";
+                            $arFavourite["PICTURES"][$photoId] = CFile::ResizeImageGet($photoId, array('width' => 590, 'height' => 390), BX_RESIZE_IMAGE_EXACT, true);
+                        }
+                    } else {
+                        $arFavourite["PICTURES"][0]["src"] = SITE_TEMPLATE_PATH . "/img/big_no_photo.png";
+                    }
                 }
-            }elseif($season == 'Зима'){
+            } elseif ($season == 'Зима') {
                 if ($arFavourite["UF_WINTER_PHOTOS"]) {
                     foreach ($arFavourite["UF_WINTER_PHOTOS"] as $photoId) {
                         $imageOriginal = CFile::GetFileArray($photoId);
@@ -106,7 +115,7 @@ if ($arFavourites) {
                         $arSearFavouritection["PICTURES"][0]["src"] = SITE_TEMPLATE_PATH . "/img/big_no_photo.png";
                     }
                 }
-            }elseif($season == 'Осень+Весна'){
+            } elseif ($season == 'Осень+Весна') {
                 if ($arFavourite["UF_MIDSEASON_PHOTOS"]) {
                     foreach ($arFavourite["UF_MIDSEASON_PHOTOS"] as $photoId) {
                         $imageOriginal = CFile::GetFileArray($photoId);
@@ -136,13 +145,12 @@ if ($arFavourites) {
             $arFavourite["COORDS"] = explode(',', $arFavourite["UF_COORDS"]);
         }
 
-        if($arExternalInfo) {
+        if ($arExternalInfo) {
             $sectionPrice = $arExternalInfo[$arFavourite["UF_EXTERNAL_ID"]];
             // Если это Traveline, то делим цену на кол-во дней
-            if($arFavourite["UF_EXTERNAL_SERVICE"] == 1) {
+            if ($arFavourite["UF_EXTERNAL_SERVICE"] == 1) {
                 $sectionPrice = round($sectionPrice / $daysCount);
             }
-
         } else {
             $sectionPrice = $arFavourite["UF_MIN_PRICE"];
         }
