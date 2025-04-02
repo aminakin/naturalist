@@ -63,7 +63,13 @@ foreach ($arFields['UF_SEASON'] as $season) {
                 $arSection["PICTURES"][$photoId] = CFile::ResizeImageGet($photoId, array('width' => 590, 'height' => 390), BX_RESIZE_IMAGE_EXACT, true);
             }
         } else {
-            $arSection["PICTURES"][0]["src"] = SITE_TEMPLATE_PATH . "/img/big_no_photo.png";
+            if ($arSection["UF_WINTER_PHOTOS"]) {
+                foreach ($arSection["UF_WINTER_PHOTOS"] as $photoId) {
+                    $arSection["PICTURES"][$photoId] = CFile::ResizeImageGet($photoId, array('width' => 590, 'height' => 390), BX_RESIZE_IMAGE_EXACT, true);
+                }
+            } else {
+                $arSection["PICTURES"][0]["src"] = SITE_TEMPLATE_PATH . "/img/big_no_photo.png";
+            }
         }
     } elseif ($season == 'Зима') {
         if ($arSection["UF_WINTER_PHOTOS"]) {
