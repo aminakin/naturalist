@@ -154,8 +154,6 @@ global $arUser, $userId, $isAuthorized;
                         <? endif; ?>
                     </div>
                 <? endforeach; ?>
-            <? else: ?>
-                пока нет отзывов
             <? endif; ?>
         </div>
 
