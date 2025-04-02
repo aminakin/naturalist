@@ -1,5 +1,14 @@
 <?php
+
 use Bitrix\Highloadblock\HighloadBlockTable;
+
+$commonYandexReviewsClass = HighloadBlockTable::compileEntity('YandexReviews')->getDataClass();
+$commonYandexReviews = $commonYandexReviewsClass::query()
+    ->addSelect('*')
+    ->setOrder(['ID' => 'ASC'])
+    ->setFilter(['UF_ID_OBJECT' => $arResult["sectionId"]])
+    ->setCacheTtl(36000000)
+    ?->fetchAll();
 
 $arResult = array(
     "avgRating" => $arParams['avgRating'],
@@ -12,20 +21,7 @@ $arResult = array(
     "arReviewsUsers" => $arParams['arReviewsUsers'],
     "reviewsPage" => $arParams['reviewsPage'],
     "reviewsPageCount" => $arParams['reviewsPageCount'],
+    "reviewsYandex" => $commonYandexReviews,
     "sectionId" => $arParams['sectionId'],
     "isUserReview" => $arParams['isUserReview'],
 );
-
-
-$commonYandexReviewsClass = HighloadBlockTable::compileEntity('YandexReviews')->getDataClass();
-$commonYandexReviews = $commonYandexReviewsClass::query()
-    ->addSelect('*')
-    ->setOrder(['ID' => 'ASC'])
-    ->setFilter(['ID' => $arResult["sectionId"]])
-    ->setCacheTtl(36000000)
-    ?->fetchAll();
-
-    
-echo '<pre>';
-var_export($commonYandexReviews);
-echo '</pre>';
