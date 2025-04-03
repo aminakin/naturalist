@@ -1169,8 +1169,9 @@
 .object-hero .sort .list {
   display: grid;
   flex-wrap: wrap;
-  grid-template-columns: 1fr 1fr 1fr;
-  gap: 2px;
+  /*grid-template-columns: 1fr 1fr 1fr;*/
+  grid-template-columns: 1fr 1fr;
+  gap: 4px;
   padding: 4px;
   background-color: var(--color-btn);
   border-radius: 12px;
@@ -1192,9 +1193,19 @@
   padding: 6px;
   border-radius: 8px;
   transition: all 0.25s;
+  cursor: pointer;
 }
 
-.reviews__reviews .sort .list span.list__link,
+/*.reviews__reviews .sort .list span.list__link,
+.reviews__reviews .sort .list .list__link:hover {
+  background-color: var(--color-beige-light);
+  box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.12);
+  font-weight: 400;
+}*/
+.reviews__reviews .sort .list .list__link.active{
+  cursor: default;
+}
+.reviews__reviews .sort .list .list__link.active,
 .reviews__reviews .sort .list .list__link:hover {
   background-color: var(--color-beige-light);
   box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.12);
@@ -1203,10 +1214,14 @@
 
 .reviews__list {
   margin-top: 20px;
-  display: flex;
+  display: none;
   flex-direction: column;
   gap: 20px;
   gap: 20px;
+}
+
+.reviews__list.active{
+  display: flex;
 }
 
 .share {
@@ -4531,7 +4546,8 @@
   }
 
   .object-hero .sort .list {
-    grid-template-columns: auto auto auto;
+    /*grid-template-columns: auto auto auto;*/
+    grid-template-columns: auto auto;
   }
 
   .review .list_gallery .list__link img {
