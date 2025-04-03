@@ -10,10 +10,12 @@
     /* height: 100vh; */
     /* top: 60px; */
     left: var(--container-gap);
-    background: #f4e6cb;
+    background: #F9EED8;
     opacity: 1;
     z-index: 100;
     /* overflow-y: scroll; */
+    border-bottom-left-radius: 16px;
+    border-bottom-right-radius: 16px;
 }
 /* .header__menu {
     position: relative;
