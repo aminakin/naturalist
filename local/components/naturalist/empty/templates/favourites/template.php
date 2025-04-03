@@ -289,7 +289,7 @@ foreach($arResult as $key => $value) {
                                                 </div>
                                             </div>
                                             <div class="object__price">
-                                                <?= number_format($arSection["PRICE"], 0, '.', ' ') ?> ₽
+                                                <?= number_format((float)$arSection["PRICE"], 0, '.', ' ') ?> ₽
                                             </div>
                                         </div>
                                         <a class="button button_transparent" href="<?=$arSection["URL"]?>"><?= Loc::getMessage('FILTER_CHOOSE')?></a>

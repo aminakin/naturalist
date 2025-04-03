@@ -34,7 +34,7 @@ foreach ($arParams['VARS'] as $key => $value) {
                         <div class="h6"><?= $arSection["NAME"] ?></div>
                         <div class="score"><img src="<?= SITE_TEMPLATE_PATH ?>/assets/img/star-score.svg" alt=""><span><?= $avgRating ?></span></div>
                         <div class="area-info">
-                            <span class="map-price"><?= number_format($minPrice, 0, '.', ' ') ?> ₽</span>
+                            <span class="map-price"><?= number_format((float)$minPrice, 0, '.', ' ') ?> ₽</span>
                             <span class="map-ellips"></span>
                             <span class="map-text">Цена за одну ночь</span>
                         </div>

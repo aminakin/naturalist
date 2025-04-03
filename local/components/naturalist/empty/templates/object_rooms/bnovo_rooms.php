@@ -152,7 +152,7 @@ foreach ($arExternalInfo as $idNumber => $arTariffs):
                                                 <div>
                                                     <?= count($arTariff['variants']) > 1 ? $variantName : str_replace('<br>', ', ', $variantName) ?><br>
                                                 </div>
-                                                <b><?= number_format($variant['PRICE'], 0, '.', ' ') ?> ₽</b>
+                                                <b><?= number_format((float)$variant['PRICE'], 0, '.', ' ') ?> ₽</b>
                                             </div>
                                         </label>
                                     </div>
@@ -307,9 +307,9 @@ foreach ($arExternalInfo as $idNumber => $arTariffs):
 
                     <div class="room__price">
                         <div class="room__price-per-night">
-                            <span class="room__final-price"><?= number_format($elementPrice, 0, '.', ' ') ?> <span>₽</span></span>
+                            <span class="room__final-price"><?= number_format((float)$elementPrice, 0, '.', ' ') ?> <span>₽</span></span>
                             <?php if ($elementOldPrice) { ?>
-                                <span class="room__old-price"><span class="number"><?= number_format($elementOldPrice, 0, '.', ' ') ?></span> <span class="rub">₽</span></span>
+                                <span class="room__old-price"><span class="number"><?= number_format((float)$elementOldPrice, 0, '.', ' ') ?></span> <span class="rub">₽</span></span>
                             <?php } ?>
                             <span class="room__nights">за <?= $daysCount ?> <?= $daysDeclension->get($daysCount) ?></span>
                         </div>
@@ -326,12 +326,12 @@ foreach ($arExternalInfo as $idNumber => $arTariffs):
                         </div>
                     </div>
                     <div class="room__button-wrap">
-                        <? $surchargePrice = number_format($elementPrice - Users::getInnerScore(), 0, '.', ' ') ?>
-                        <? if (number_format(Users::getInnerScore(), 0, '.', ' ') > 0 && $surchargePrice > 0): ?>
+                        <? $surchargePrice = number_format((float)$elementPrice - (float)Users::getInnerScore(), 0, '.', ' ') ?>
+                        <? if (number_format((float)Users::getInnerScore(), 0, '.', ' ') > 0 && $surchargePrice > 0): ?>
                             <div class="room__surcharge">
                                 <span><?= GetMessage('SURCHANGE') ?></span>
                                 <span>
-                                    <?= number_format($elementPrice - Users::getInnerScore(), 0, '.', ' ') ?> ₽
+                                    <?= number_format((float)$elementPrice - (float)Users::getInnerScore(), 0, '.', ' ') ?> ₽
                                 </span>
                                 <span class="room__surcharge-info-btn">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">

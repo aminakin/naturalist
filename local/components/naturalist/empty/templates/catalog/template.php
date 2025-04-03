@@ -205,7 +205,7 @@ foreach ($arResult as $key => $value) {
                                 <?php if ($arSection["PRICE"] > 0): ?>
 
                                     <div class="object-row__price_wrapper">
-                                        <div><?= number_format($arSection["PRICE"], 0, '.', ' ') ?> ₽</div>
+                                        <div><?= number_format((float)$arSection["PRICE"], 0, '.', ' ') ?> ₽</div>
                                         <span class="dot"></span>
                                         <span>Цена за одну ночь</span>
                                     </div>
@@ -219,7 +219,7 @@ foreach ($arResult as $key => $value) {
                                             <div class="object-row__cert-price">
                                                 <span>Доплата</span>
                                                 <span>
-                                                    <?= number_format($arSection["PRICE"] - Users::getInnerScore(), 0, '.', ' ') ?>₽
+                                                    <?= number_format((float)$arSection["PRICE"] - (float)Users::getInnerScore(), 0, '.', ' ') ?>₽
                                                 </span>
                                             </div>
                                         <? endif; ?>
@@ -374,7 +374,7 @@ foreach ($arResult as $key => $value) {
                                     <div class="object-row__price">
                                         <?php if ($arSection["PRICE"] > 0): ?>
                                             <div class="object-row__price_wrapper">
-                                                <div><?= number_format($arSection["PRICE"], 0, '.', ' ') ?> ₽</div>
+                                                <div><?= number_format((float)$arSection["PRICE"], 0, '.', ' ') ?> ₽</div>
                                                 <span class="dot"></span>
                                                 <span>Цена за одну ночь</span>
                                             </div>
@@ -388,7 +388,7 @@ foreach ($arResult as $key => $value) {
                                                     <div class="object-row__cert-price">
                                                         <span>Доплата</span>
                                                         <span>
-                                                            <?= number_format($arSection["PRICE"] - Users::getInnerScore(), 0, '.', ' ') ?>₽
+                                                            <?= number_format((float)$arSection["PRICE"] - (float)Users::getInnerScore(), 0, '.', ' ') ?>₽
                                                         </span>
                                                     </div>
                                                 <? endif; ?>
