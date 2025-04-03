@@ -74,7 +74,7 @@ if (Cmodule::IncludeModule('asd.iblock')) {
 }
 
 foreach ($arResult["SECTIONS"] as &$arItem) {
-    
+
     foreach ($arFields['UF_SEASON'] as $season) {
         if ($season == 'Лето') {
             if ($arItem["UF_PHOTOS"]) {
@@ -84,7 +84,15 @@ foreach ($arResult["SECTIONS"] as &$arItem) {
                     $arItem["PICTURES"][$photoId] = CFile::ResizeImageGet($photoId, array('width' => 590, 'height' => 390), BX_RESIZE_IMAGE_EXACT, true);
                 }
             } else {
-                $arItem["PICTURES"][0]["src"] = SITE_TEMPLATE_PATH . "/img/big_no_photo.png";
+                if ($arItem["UF_WINTER_PHOTOS"]) {
+                    foreach ($arItem["UF_WINTER_PHOTOS"] as $photoId) {
+                        $imageOriginal = CFile::GetFileArray($photoId);
+                        $arDataFullGallery[] = "\"" . $imageOriginal["SRC"] . "\"";
+                        $arItem["PICTURES"][$photoId] = CFile::ResizeImageGet($photoId, array('width' => 590, 'height' => 390), BX_RESIZE_IMAGE_EXACT, true);
+                    }
+                } else {
+                    $arItem["PICTURES"][0]["src"] = SITE_TEMPLATE_PATH . "/img/big_no_photo.png";
+                }
             }
         } elseif ($season == 'Зима') {
             if ($arItem["UF_WINTER_PHOTOS"]) {
