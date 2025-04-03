@@ -65,6 +65,7 @@ Loader::registerAutoLoadClasses(null, array(
     'Naturalist\bronevik\OrderChangeStatus' => '/local/php_interface/classes/bronevik/OrderChangeStatus.php',
     'Naturalist\bronevik\OrderChangeBronevik' => '/local/php_interface/classes/bronevik/OrderChangeBronevik.php',
     'Naturalist\bronevik\enums\StatusOrderEnum' => '/local/php_interface/classes/bronevik/enums/StatusOrderEnum.php',
+    'Naturalist\bronevik\enums\TarifEnum' => '/local/php_interface/classes/bronevik/enums/TarifEnum.php',
     'Naturalist\Handlers\HigloadHandler' => '/local/php_interface/classes/Handlers/HigloadHandler.php',
     'Naturalist\Markdown' => '/local/php_interface/classes/Markdown.php',
     'Naturalist\Http\HttpFetchInterface' => '/local/php_interface/classes/Http/HttpFetchInterface.php',
