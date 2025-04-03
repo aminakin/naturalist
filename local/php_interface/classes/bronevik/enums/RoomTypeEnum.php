@@ -10,6 +10,12 @@ enum RoomTypeEnum: string
     case TRIPLE = 'triple';
     case QUADRUPLE = 'quadruple';
 
+    /**
+     * Возвращает локализованное описание типа размещения.
+     *
+     * @return string Локализованное описание типа размещения.
+     * @throws \Exception Если значение перечисления неожиданное.
+     */
     public function translateValue(): string
     {
         return match ($this) {
@@ -19,6 +25,23 @@ enum RoomTypeEnum: string
             RoomTypeEnum::TRIPLE => 'Трехместное размещение',
             RoomTypeEnum::QUADRUPLE => 'Четырехместное размещение',
             default => throw new \Exception('Unexpected match value'),
+        };
+    }
+
+    /**
+     * Возвращает вариант перечисления по числу.
+     *
+     * @param int $number
+     * @return self|null
+     */
+    public static function fromNumber(int $number): ?self
+    {
+        return match ($number) {
+            1 => self::SINGLE,
+            2 => self::DOUBLE,
+            3 => self::TRIPLE,
+            4 => self::QUADRUPLE,
+            default => null, // Если число не соответствует ни одному варианту
         };
     }
 }
