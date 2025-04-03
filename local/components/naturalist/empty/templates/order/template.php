@@ -123,7 +123,7 @@ foreach ($arResult as $key => $value) {
                         <input type="hidden" name="externalId" value="<?= $arSection["UF_EXTERNAL_ID"] ?>" />
                         <input type="hidden" name="externalElementId" value="<?= $arElement["PROPERTY_EXTERNAL_ID_VALUE"] ?>" />
                         <input type="hidden" name="price" value="<?= $totalPrice ?>" />
-                        <input type="hidden" name="user_balance" value="<?= number_format(Users::getInnerScore(), 0, '.', '') ?>">
+                        <input type="hidden" name="user_balance" value="<?= number_format((float)Users::getInnerScore(), 0, '.', '') ?>">
                         <? if ($arSection["UF_EXTERNAL_SERVICE"] == 1): ?>
                             <input type="hidden" name="travelineCategoryId" value="<?= $arElement["PROPERTY_EXTERNAL_CATEGORY_ID_VALUE"] ?>" />
                             <input type="hidden" name="travelineChecksum" value="<?= $checksum ?>" />
@@ -182,7 +182,7 @@ foreach ($arResult as $key => $value) {
                     <?= $daysCount ?> <?= $daysDeclension->get($daysCount) ?>
                 </div>
                 <div class="reservation-form__pre-total <?= $arResult['finalPrice']['REAL_DISCOUNT'] != 0 ? 'discount' : '' ?>">
-                    <?= number_format($totalPrice, 0, '.', ' ') ?> <?= Loc::getMessage('ORDER_RUBLE') ?>
+                    <?= number_format((float)$totalPrice, 0, '.', ' ') ?> <?= Loc::getMessage('ORDER_RUBLE') ?>
                 </div>
             </div>
             <? if (intval(Users::getInnerScore()) === 0) { ?>
@@ -201,7 +201,7 @@ foreach ($arResult as $key => $value) {
                                 <path fill-rule="evenodd" clip-rule="evenodd" d="M6.2449 7.98458L1.46104 13.3204L3.49136 15.1407L8.27522 9.80487L13.8369 14.7912L15.6572 12.7609L10.0955 7.77455L15.3077 1.961L13.2773 0.140717L8.06519 5.95426L2.47751 0.944625L0.657227 2.97494L6.2449 7.98458Z" fill="#E63623" />
                             </svg>
                         </button>
-                        <span class="reservation-form__discount-price"><?= number_format($arResult['finalPrice']['REAL_PRICE'], 0, '.', ' ') ?> <?= Loc::getMessage('ORDER_RUBLE') ?></span>
+                        <span class="reservation-form__discount-price"><?= number_format((float)$arResult['finalPrice']['REAL_PRICE'], 0, '.', ' ') ?> <?= Loc::getMessage('ORDER_RUBLE') ?></span>
                     </div>
                 <? else: ?>
                     <div id="form__coupons" class="form__coupons" style="display: none">
@@ -212,7 +212,7 @@ foreach ($arResult as $key => $value) {
             <? } ?>
             <div class="reservation-form__price">
                 <span>Итого</span>
-                <div class="h1"><?= number_format($arResult['finalPrice']['REAL_PRICE'], 0, '.', ' ') ?> <?= Loc::getMessage('ORDER_RUBLE') ?></div>
+                <div class="h1"><?= number_format((float)$arResult['finalPrice']['REAL_PRICE'], 0, '.', ' ') ?> <?= Loc::getMessage('ORDER_RUBLE') ?></div>
             </div>
 
             <?php if (
@@ -224,13 +224,13 @@ foreach ($arResult as $key => $value) {
                     <div class="reservation-form__price-cert__item">
                         <span>Ваш баланс</span>
                         <span>
-                            <?= number_format(Users::getInnerScore(), 0, '.', ' ') ?> ₽
+                            <?= number_format((float)Users::getInnerScore(), 0, '.', ' ') ?> ₽
                         </span>
                     </div>
                     <div class="reservation-form__price-cert__item">
                         <span>Доплата</span>
                         <span>
-                            <?= number_format($arResult['finalPrice']['REAL_PRICE'] - Users::getInnerScore(), 0, '.', ' ') ?> ₽
+                            <?= number_format((float)$arResult['finalPrice']['REAL_PRICE'] - Users::getInnerScore(), 0, '.', ' ') ?> ₽
                         </span>
                     </div>
                 </div>
@@ -243,13 +243,13 @@ foreach ($arResult as $key => $value) {
                     <div class="reservation-form__price-cert__item">
                         <span>Ваш баланс</span>
                         <span>
-                            <?= number_format(Users::getInnerScore(), 0, '.', ' ') ?> ₽
+                            <?= number_format((float)Users::getInnerScore(), 0, '.', ' ') ?> ₽
                         </span>
                     </div>
                     <div class="reservation-form__price-cert__item">
                         <span>Остаток на счёте</span>
                         <span>
-                            <?= number_format(Users::getInnerScore() - $arResult['finalPrice']['REAL_PRICE'], 0, '.', ' ') ?> ₽
+                            <?= number_format((float)Users::getInnerScore() - $arResult['finalPrice']['REAL_PRICE'], 0, '.', ' ') ?> ₽
                         </span>
                     </div>
                 </div>

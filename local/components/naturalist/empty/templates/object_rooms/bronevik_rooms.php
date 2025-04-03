@@ -242,10 +242,10 @@ foreach ($arElements as $arElement): ?>
 
                             <div class="room__price">
                                 <div class="room__price-per-night">
-                                    <span class="room__final-price"><?= number_format($elementPrice, 0, '.', ' ') ?> <span>₽</span></span>
+                                    <span class="room__final-price"><?= number_format((float)$elementPrice, 0, '.', ' ') ?> <span>₽</span></span>
                                     <? if ($elementOldPrice) { ?>
                                         <span class="room__old-price"><span
-                                                    class="number"><?= number_format($elementOldPrice, 0, '.', ' ') ?></span> <span
+                                                    class="number"><?= number_format((float)$elementOldPrice, 0, '.', ' ') ?></span> <span
                                                     class="rub">₽</span></span>
                                     <? } ?>
                                     <span class="room__nights"> <?= $daysCount ?> <?= $daysDeclension->get($daysCount) ?></span>
@@ -263,12 +263,12 @@ foreach ($arElements as $arElement): ?>
                                 </div>
                             </div>
                             <div class="room__button-wrap">
-                                <? $surchargePrice = number_format($elementPrice - Users::getInnerScore(), 0, '.', ' ') ?>
-                                <? if (number_format(Users::getInnerScore(), 0, '.', ' ') > 0 && $surchargePrice > 0): ?>
+                                <? $surchargePrice = number_format((float)$elementPrice - (float)Users::getInnerScore(), 0, '.', ' ') ?>
+                                <? if (number_format((float)Users::getInnerScore(), 0, '.', ' ') > 0 && $surchargePrice > 0): ?>
                                     <div class="room__surcharge">
                                         <span><?= GetMessage('SURCHANGE') ?></span>
                                         <span>
-                                            <?= number_format($elementPrice - Users::getInnerScore(), 0, '.', ' ') ?> ₽
+                                            <?= number_format((float)$elementPrice - (float)Users::getInnerScore(), 0, '.', ' ') ?> ₽
                                         </span>
                                         <span class="room__surcharge-info-btn">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
