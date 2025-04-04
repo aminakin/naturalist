@@ -90,7 +90,9 @@ class ImportHotelRoomsBronevik
     {
         $arImages = [];
         foreach ($arImagesUrl as $key => $arImage) {
-            $arFile = CFile::MakeFileArray($arImage["url"]);
+
+            $newUrl = str_replace('/250x250a/', '/', $arImage["url"]);
+            $arFile = CFile::MakeFileArray($newUrl);
 
             $pathParts = pathinfo($arFile['name']);
             if (empty($pathParts['extension'])) {
