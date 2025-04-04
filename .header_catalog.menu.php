@@ -1,5 +1,6 @@
 <?
 $aMenuLinks = Array(
+    /** Тип дома */ 
 	Array(
 		"Тип дома", 
 		"#", 
@@ -99,7 +100,7 @@ $aMenuLinks = Array(
 		"" 
 	),
 
-
+    /** Развлечения */ 
 	Array(
 		"Развлечения", 
 		"#", 
@@ -192,68 +193,8 @@ $aMenuLinks = Array(
         "" 
 	),
 
-
-	Array(
-		"Окружение", 
-		"#", 
-		Array(""), 
-		Array(""),
-		"" 
-	),
-	Array(
-        "Горы", 
-        SITE_DIR."catalog/vpechatleniya/v-gorakh/", 
-        Array(), 
-        Array(""), 
-        "" 
-    ),
+    /** Тип размещения*/
     Array(
-        "Лес", 
-        SITE_DIR."catalog/vpechatleniya/v-lesu/", 
-        Array(), 
-        Array(""), 
-        "" 
-    ),
-    Array(
-        "Водоемы", 
-        SITE_DIR."catalog/glempingi/u-vodoemov/", 
-        Array(), 
-        Array(""), 
-        "" 
-	),
-
-	
-    Array(
-		"Варианты отдыха", 
-		"#", 
-		Array(""), 
-		Array(""),
-		"" 
-	),
-    Array(
-        "Для семейного отдыха", 
-        SITE_DIR."catalog/bazy-otdykha/dlya-semeynogo-otdykha/", 
-        Array(), 
-        Array(""), 
-        "" 
-    ),
-    Array(
-        "Для двоих", 
-        SITE_DIR."catalog/kempingi/dlya-dvoikh/", 
-        Array(), 
-        Array(""), 
-        "" 
-	),
-    Array(
-        "Впечатления pet-friendly", 
-        SITE_DIR."catalog/vpechatleniya/pet-friendly/", 
-        Array(), 
-        Array(""), 
-        "" 
-	),
-
-
-	Array(
 		"Тип размещения", 
 		"#", 
 		Array(""), 
@@ -303,8 +244,8 @@ $aMenuLinks = Array(
         "" 
 	),
 
-
-	Array(
+    /** Питание */
+    Array(
 		"Питание", 
 		"#", 
 		Array(""), 
@@ -326,7 +267,7 @@ $aMenuLinks = Array(
         "" 
     ),
     Array(
-        "Полный пансион (завтрак, обед и ужин)", 
+        "Полный пансион <br>(завтрак, обед и ужин)", 
         SITE_DIR."catalog/zagorodnye-oteli/s-zavtrakom-obedom-i-uzhinom/", 
         Array(), 
         Array(""), 
@@ -347,7 +288,8 @@ $aMenuLinks = Array(
         "" 
 	),
 
-	Array(
+    /** Удобства */
+    Array(
 		"Удобства", 
 		"#", 
 		Array(""), 
@@ -382,6 +324,71 @@ $aMenuLinks = Array(
         Array(""), 
         "" 
 	),
+
+    /** Окружение */
+	Array(
+		"Окружение", 
+		"#", 
+		Array(""), 
+		Array(""),
+		"" 
+	),
+	Array(
+        "Горы", 
+        SITE_DIR."catalog/vpechatleniya/v-gorakh/", 
+        Array(), 
+        Array(""), 
+        "" 
+    ),
+    Array(
+        "Лес", 
+        SITE_DIR."catalog/vpechatleniya/v-lesu/", 
+        Array(), 
+        Array(""), 
+        "" 
+    ),
+    Array(
+        "Водоемы", 
+        SITE_DIR."catalog/glempingi/u-vodoemov/", 
+        Array(), 
+        Array(""), 
+        "" 
+	),
+
+	/** Варианты отдыха  */
+    Array(
+		"Варианты отдыха", 
+		"#", 
+		Array(""), 
+		Array(""),
+		"" 
+	),
+    Array(
+        "Для семейного отдыха", 
+        SITE_DIR."catalog/bazy-otdykha/dlya-semeynogo-otdykha/", 
+        Array(), 
+        Array(""), 
+        "" 
+    ),
+    Array(
+        "Для двоих", 
+        SITE_DIR."catalog/kempingi/dlya-dvoikh/", 
+        Array(), 
+        Array(""), 
+        "" 
+	),
+    Array(
+        "Впечатления pet-friendly", 
+        SITE_DIR."catalog/vpechatleniya/pet-friendly/", 
+        Array(), 
+        Array(""), 
+        "" 
+	),
+
+
+	
+
+	
 
 );
 ?>
