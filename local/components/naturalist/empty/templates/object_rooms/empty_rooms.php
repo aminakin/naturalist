@@ -115,7 +115,7 @@
                         $text .= ', ' . plural_form($children, array('ребенок на основном месте', 'детей на основных местах', 'детей на основных местах'));
                     }
                 }
-                $text .= '.';
+                $text .= '';
                 ?>
                 <div class="room__features">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">

@@ -183,7 +183,7 @@ foreach ($arExternalInfo as $idNumber => $arTariffs):
                                 $text .= ', ' . plural_form($children, array('ребенок на основном месте', 'детей на основных местах', 'детей на основных местах'));
                             }
                         }
-                        $text .= '.';
+                        $text .= '';
                         ?>
                         <?php if (!count($arTariff['variants'])) { ?>
                             <div class="room__features">
