@@ -1262,7 +1262,7 @@ class NaturalistCatalog extends \CBitrixComponent
             // Сначала сортируем по AVAILABLE_ID (true идет первым)
             if ($a['AVAILABLE_ID'] === $b['AVAILABLE_ID']) {
                 // Если AVAILABLE_ID одинаковы, сортируем по PRICE по убыванию
-                return $b['PRICE'] <=> $a['PRICE'];
+                return $a['PRICE'] <=> $b['PRICE'];
             }
 
             return $b['AVAILABLE_ID'] <=> $a['AVAILABLE_ID'];

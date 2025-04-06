@@ -141,7 +141,9 @@ class ImportHotelsBronevik
     {
         $arImages = array();
         foreach ($arImagesUrl as $key => $arImage) {
-            $arFile = CFile::MakeFileArray($arImage["url"]);
+
+            $newUrl = str_replace('/250x250a/', '/', $arImage["url"]);
+            $arFile = CFile::MakeFileArray($newUrl);
 
             if ($arFile) {
                 $arImages[] = $arFile;

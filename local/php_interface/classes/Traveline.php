@@ -327,8 +327,18 @@ class Traveline
         // Все удобства в номерах
         $arUpdatedAmenities = self::getAmenities();
 
+        $since = Option::get("main", "traveline_since") ?? '';
         // Ответ от эндпоинта
-        $arTravelineItems = self::getResponse(self::$travellineHotelsRequestLink, ["include" => "all"]);
+        $arTravelineItems = self::getResponse(self::$travellineHotelsRequestLink,
+            [
+                "since" => $since,
+                "include" => "all",
+            ]);
+
+        Option::set("main", "traveline_since", '');
+        if ($arTravelineItems['next']) {
+            Option::set("main", "traveline_since", $arTravelineItems['next']);
+        }
 
         $iS = new CIBlockSection();
         $iE = new CIBlockElement();

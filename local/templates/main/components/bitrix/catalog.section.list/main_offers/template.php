@@ -168,7 +168,7 @@ $reviewsDeclension = new Declension('отзыв', 'отзыва', 'отзыво�
                             </div*/ ?>
                         </div>
                         <div class="object__price">
-                            <span><?= number_format($arItem["UF_MIN_PRICE"], 0, '.', ' ') ?> ₽</span>
+                            <span><?= number_format((float)$arItem["UF_MIN_PRICE"], 0, '.', ' ') ?> ₽</span>
                             <span class="dot"></span>
                             <span><?= Loc::getMessage('PRICE_ONE_NIGHT') ?></span>
                         </div>
