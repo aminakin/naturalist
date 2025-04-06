@@ -21,5 +21,9 @@
         }
     },
     "minimum-stability": "dev",
-    "prefer-stable": true
+    "prefer-stable": true,
+    "repositories": [{
+            "type": "composer",
+            "url": "https://gitlab.addamant-work.ru/api/v4/group/72/-/packages/composer/"
+        }]
 }
