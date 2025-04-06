@@ -1,6 +1,6 @@
 <?php
 
-namespace Calculator\Kploader\HLLoader;
+namespace Exel\Loader\HLLoader;
 
 use Bitrix\Highloadblock\HighloadBlockTable;
 use Bitrix\Main\SystemException;

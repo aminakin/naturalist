@@ -1,6 +1,6 @@
 <?php
 
-namespace Calculator\Kploader\DocumentParser;
+namespace Exel\Loader\DocumentParser;
 
 use Bitrix\Bizproc\Service\Debug;
 use PhpOffice\PhpSpreadsheet\IOFactory;
@@ -25,7 +25,10 @@ class DocumentParser
         self::$file = $file;
 
         if (self::$file['type'] == 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
-            $data = self::readFile();
+            $data = self::readFileXLSX();
+        }
+        if ( self::$file['type'] == 'application/vnd.ms-excel') {
+            $data = self::readFileXLS();
         }
 //        $data = self::parseCSV();
 
@@ -68,9 +71,21 @@ class DocumentParser
      *
      * @return array
      */
-    private static function readFile() : array
+    private static function readFileXLSX() : array
     {
         $reader = IOFactory::createReader("Xlsx");
+        $spreadsheet = $reader->load(self::$file['tmp_name']);
+        return $spreadsheet->getActiveSheet()->toArray(null, true, true, false);
+    }
+
+    /**
+     * Получает массив данных из файлы.
+     *
+     * @return array
+     */
+    private static function readFileXLS() : array
+    {
+        $reader = IOFactory::createReader("Xls");
         $spreadsheet = $reader->load(self::$file['tmp_name']);
         return $spreadsheet->getActiveSheet()->toArray(null, true, true, false);
     }

@@ -3,7 +3,7 @@
 use Bitrix\Main\Application;
 use Bitrix\Main\Loader;
 use Bitrix\Main\Localization\Loc;
-use Calculator\Kploader\Handlers\FormSave;
+use Exel\Loader\Handlers\FormSave;
 
 require_once($_SERVER['DOCUMENT_ROOT'] . '/bitrix/modules/main/include/prolog_before.php');
 
