@@ -179,7 +179,7 @@ $aMenuLinks = Array(
         "" 
     ),
     Array(
-        "БSPA", 
+        "SPA", 
         SITE_DIR."catalog/bazy-otdykha/so-spa/", 
         Array(), 
         Array(""), 
@@ -378,17 +378,11 @@ $aMenuLinks = Array(
         "" 
 	),
     Array(
-        "Впечатления pet-friendly", 
+        "pet-friendly", 
         SITE_DIR."catalog/vpechatleniya/pet-friendly/", 
         Array(), 
         Array(""), 
         "" 
 	),
-
-
-	
-
-	
-
 );
 ?>
