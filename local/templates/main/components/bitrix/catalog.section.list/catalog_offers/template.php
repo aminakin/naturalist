@@ -119,7 +119,7 @@ Loc::loadMessages(__FILE__);
                                 $arItem["PRICE"] = $sectionPrice; ?>
                                 <div class="object-row__order">
                                     <div class="object__price">
-                                        <span><?= number_format($arItem["PRICE"], 0, '.', ' ') ?> ₽</span>
+                                        <span><?= number_format((float)$arItem["PRICE"], 0, '.', ' ') ?> ₽</span>
                                         <span class="dot"></span>
                                         <span><?= Loc::getMessage('PRICE_ONE_NIGHT') ?></span>
                                     </div>

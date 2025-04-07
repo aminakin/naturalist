@@ -152,7 +152,7 @@ foreach ($arExternalInfo as $idNumber => $arTariffs):
                                                 <div>
                                                     <?= count($arTariff['variants']) > 1 ? $variantName : str_replace('<br>', ', ', $variantName) ?><br>
                                                 </div>
-                                                <b><?= number_format($variant['PRICE'], 0, '.', ' ') ?> ₽</b>
+                                                <b><?= number_format((float)$variant['PRICE'], 0, '.', ' ') ?> ₽</b>
                                             </div>
                                         </label>
                                     </div>
@@ -183,7 +183,7 @@ foreach ($arExternalInfo as $idNumber => $arTariffs):
                                 $text .= ', ' . plural_form($children, array('ребенок на основном месте', 'детей на основных местах', 'детей на основных местах'));
                             }
                         }
-                        $text .= '.';
+                        $text .= '';
                         ?>
                         <?php if (!count($arTariff['variants'])) { ?>
                             <div class="room__features">
@@ -307,9 +307,9 @@ foreach ($arExternalInfo as $idNumber => $arTariffs):
 
                     <div class="room__price">
                         <div class="room__price-per-night">
-                            <span class="room__final-price"><?= number_format($elementPrice, 0, '.', ' ') ?> <span>₽</span></span>
+                            <span class="room__final-price"><?= number_format((float)$elementPrice, 0, '.', ' ') ?> <span>₽</span></span>
                             <?php if ($elementOldPrice) { ?>
-                                <span class="room__old-price"><span class="number"><?= number_format($elementOldPrice, 0, '.', ' ') ?></span> <span class="rub">₽</span></span>
+                                <span class="room__old-price"><span class="number"><?= number_format((float)$elementOldPrice, 0, '.', ' ') ?></span> <span class="rub">₽</span></span>
                             <?php } ?>
                             <span class="room__nights">за <?= $daysCount ?> <?= $daysDeclension->get($daysCount) ?></span>
                         </div>
@@ -326,22 +326,25 @@ foreach ($arExternalInfo as $idNumber => $arTariffs):
                         </div>
                     </div>
                     <div class="room__button-wrap">
-                        <div class="room__surcharge">
-                            <span><?= GetMessage('SURCHANGE')?></span>
-                            <span>
-                                <?= number_format($elementPrice - Users::getInnerScore(), 0, '.', ' ') ?> ₽
-                            </span>
-                            <span class="room__surcharge-info-btn">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
-                                    <path d="M8.00065 15.1666C4.04732 15.1666 0.833984 11.9533 0.833984 7.99992C0.833984 4.04659 4.04732 0.833252 8.00065 0.833252C11.954 0.833252 15.1673 4.04659 15.1673 7.99992C15.1673 11.9533 11.954 15.1666 8.00065 15.1666ZM8.00065 1.83325C4.60065 1.83325 1.83398 4.59992 1.83398 7.99992C1.83398 11.3999 4.60065 14.1666 8.00065 14.1666C11.4007 14.1666 14.1673 11.3999 14.1673 7.99992C14.1673 4.59992 11.4007 1.83325 8.00065 1.83325Z" fill="black" />
-                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M7.99935 5.83325C7.50068 5.83325 7.16602 6.19736 7.16602 6.56402C7.16602 6.84016 6.94216 7.06402 6.66602 7.06402C6.38987 7.06402 6.16602 6.84016 6.16602 6.56402C6.16602 5.57121 7.02526 4.83325 7.99935 4.83325C8.97344 4.83325 9.83268 5.57121 9.83268 6.56402C9.83268 6.91701 9.72041 7.24419 9.5316 7.51505C9.41501 7.68231 9.2791 7.84145 9.1549 7.98393C9.13205 8.01014 9.10964 8.03575 9.08764 8.06088C8.98454 8.17867 8.89053 8.28608 8.80364 8.39632C8.58663 8.67163 8.49935 8.86336 8.49935 9.02556V9.33325C8.49935 9.60939 8.27549 9.83325 7.99935 9.83325C7.72321 9.83325 7.49935 9.60939 7.49935 9.33325V9.02556C7.49935 8.50802 7.77387 8.08735 8.01828 7.77727C8.12269 7.64482 8.23711 7.51418 8.34054 7.39607C8.36122 7.37246 8.38146 7.34936 8.40109 7.32684C8.52464 7.1851 8.6286 7.06175 8.71125 6.94319C8.78983 6.83047 8.83268 6.70107 8.83268 6.56402C8.83268 6.19736 8.49802 5.83325 7.99935 5.83325Z" fill="black" />
-                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M7.5 11C7.5 10.7239 7.72386 10.5 8 10.5H8.00599C8.28213 10.5 8.50599 10.7239 8.50599 11C8.50599 11.2761 8.28213 11.5 8.00599 11.5H8C7.72386 11.5 7.5 11.2761 7.5 11Z" fill="black" />
-                                </svg>
-                            </span>
-                            <span class="room__surcharge-info">
-                                <?= GetMessage('SURCHANGE_INFO')?>
-                            </span>
-                        </div>
+                        <? $surchargePrice = number_format((float)$elementPrice - (float)Users::getInnerScore(), 0, '.', ' ') ?>
+                        <? if (number_format((float)Users::getInnerScore(), 0, '.', ' ') > 0 && $surchargePrice > 0): ?>
+                            <div class="room__surcharge">
+                                <span><?= GetMessage('SURCHANGE') ?></span>
+                                <span>
+                                    <?= number_format((float)$elementPrice - (float)Users::getInnerScore(), 0, '.', ' ') ?> ₽
+                                </span>
+                                <span class="room__surcharge-info-btn">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                        <path d="M8.00065 15.1666C4.04732 15.1666 0.833984 11.9533 0.833984 7.99992C0.833984 4.04659 4.04732 0.833252 8.00065 0.833252C11.954 0.833252 15.1673 4.04659 15.1673 7.99992C15.1673 11.9533 11.954 15.1666 8.00065 15.1666ZM8.00065 1.83325C4.60065 1.83325 1.83398 4.59992 1.83398 7.99992C1.83398 11.3999 4.60065 14.1666 8.00065 14.1666C11.4007 14.1666 14.1673 11.3999 14.1673 7.99992C14.1673 4.59992 11.4007 1.83325 8.00065 1.83325Z" fill="black" />
+                                        <path fill-rule="evenodd" clip-rule="evenodd" d="M7.99935 5.83325C7.50068 5.83325 7.16602 6.19736 7.16602 6.56402C7.16602 6.84016 6.94216 7.06402 6.66602 7.06402C6.38987 7.06402 6.16602 6.84016 6.16602 6.56402C6.16602 5.57121 7.02526 4.83325 7.99935 4.83325C8.97344 4.83325 9.83268 5.57121 9.83268 6.56402C9.83268 6.91701 9.72041 7.24419 9.5316 7.51505C9.41501 7.68231 9.2791 7.84145 9.1549 7.98393C9.13205 8.01014 9.10964 8.03575 9.08764 8.06088C8.98454 8.17867 8.89053 8.28608 8.80364 8.39632C8.58663 8.67163 8.49935 8.86336 8.49935 9.02556V9.33325C8.49935 9.60939 8.27549 9.83325 7.99935 9.83325C7.72321 9.83325 7.49935 9.60939 7.49935 9.33325V9.02556C7.49935 8.50802 7.77387 8.08735 8.01828 7.77727C8.12269 7.64482 8.23711 7.51418 8.34054 7.39607C8.36122 7.37246 8.38146 7.34936 8.40109 7.32684C8.52464 7.1851 8.6286 7.06175 8.71125 6.94319C8.78983 6.83047 8.83268 6.70107 8.83268 6.56402C8.83268 6.19736 8.49802 5.83325 7.99935 5.83325Z" fill="black" />
+                                        <path fill-rule="evenodd" clip-rule="evenodd" d="M7.5 11C7.5 10.7239 7.72386 10.5 8 10.5H8.00599C8.28213 10.5 8.50599 10.7239 8.50599 11C8.50599 11.2761 8.28213 11.5 8.00599 11.5H8C7.72386 11.5 7.5 11.2761 7.5 11Z" fill="black" />
+                                    </svg>
+                                </span>
+                                <span class="room__surcharge-info">
+                                    <?= GetMessage('SURCHANGE_INFO') ?>
+                                </span>
+                            </div>
+                        <? endif; ?>
                         <a class="button button_primary"
                             onclick="VK.Goal('customize_product')"
                             data-section-external-id="<?= $arSection['UF_EXTERNAL_ID'] ?>"

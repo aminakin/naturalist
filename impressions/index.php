@@ -3,6 +3,10 @@
 require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/header.php");
 
 global $arSettings;
+$APPLICATION->SetPageProperty("title","Путеводитель по природным чудесам | Naturalist.travel");
+$APPLICATION->AddHeadString('<meta name="description" content="Откройте мир удивительных путешествий и незабываемых впечатлений с Naturalist Travel. Погрузитесь в уникальные истории наших путешественников и вдохновитесь на новые приключения." />');
+
+$APPLICATION->SetTitle("Подборки");
 ?>
 
 <main class="main">
@@ -24,6 +28,9 @@ global $arSettings;
                     );
                     ?>
                 </ul>
+            </div>
+            <div class="wrapper_title_catalog_page">
+                <h1 class="page_title"><? $APPLICATION->ShowTitle(false) ?></h1>
             </div>
         </div>
     </section>

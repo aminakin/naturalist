@@ -112,7 +112,7 @@ foreach ($arResult as $key => $value) {
                                             <div class="cert-order__number">Заказ №<?= $arOrder["FIELDS"]["ACCOUNT_NUMBER"] ?></div>
                                             <span class="cert-order__prop">Дата покупки: <?=$dateFrom?></span>
                                             <span class="cert-order__prop">Срок действия: до <?=$dateTo?></span>
-                                            <span class="cert-order__prop">Номинал: <?= number_format($arOrder['PROPS']['PROP_CERT_PRICE'], 0, '.', ' ') ?> ₽</span>
+                                            <span class="cert-order__prop">Номинал: <?= number_format((float)$arOrder['PROPS']['PROP_CERT_PRICE'], 0, '.', ' ') ?> ₽</span>
                                             <span class="cert-order__prop">Формат: <?= $arOrder['PROPS']['CERT_FORMAT'] == 'fiz' ? 'offline' : 'online'?></span>                                            
                                             <?if ($arOrder['PROPS']['CERT_ADDRESS']) {?>
                                                 <span class="cert-order__prop">Адрес доставки: <?=$arOrder['PROPS']['CERT_ADDRESS']?></span>
@@ -123,7 +123,7 @@ foreach ($arResult as $key => $value) {
                                             <div class="cert-order__col-row">
                                                 <span class="cert-order__sum-title">Общая сумма заказа</span>
                                                 <div class="object-row__price">
-                                                    <div><?= number_format($arOrder["FIELDS"]["PRICE"], 0, '.', ' ') ?> ₽</div>
+                                                    <div><?= number_format((float)$arOrder["FIELDS"]["PRICE"], 0, '.', ' ') ?> ₽</div>
                                                 </div>
                                                 <div class="tag"><?= $arOrder["DATA"]["STATUS"] ?></div>
                                                 <?if ($arOrder["FIELDS"]["IS_PAYED"] == 1) {?>
@@ -162,7 +162,7 @@ foreach ($arResult as $key => $value) {
                                             <div class="cert-order__col-row">
                                                 <span class="cert-order__sum-title">Номинал<br> сертификата</span>
                                                 <div class="object-row__price">
-                                                    <div><?= number_format($arOrder['UF_COST'], 0, '.', ' ') ?> ₽</div>
+                                                    <div><?= number_format((float)$arOrder['UF_COST'], 0, '.', ' ') ?> ₽</div>
                                                 </div>
                                                 <div class="tag"><?= $arOrder['ORDER'][$arOrder['UF_ORDER_ID']]["DATA"]["STATUS"] ?></div>
                                                 <a href="#" class="cart-order__get-pdf">Скачать сертификат</a>

@@ -29,6 +29,13 @@
   line-height: 40px;
   margin-right: 20px;
 }
+.page_title {
+  font-size: 32px!important;
+  font-weight: 700!important;
+  line-height: 40px!important;
+  margin-right: 20px!important;
+  margin-bottom: 0px!important;
+}
 
 .location__title-wrap > a {
   font-size: 14px;
@@ -265,6 +272,11 @@
     font-size: 20px;
     font-weight: 700;
     line-height: 24px;
+  }
+  .page_title {
+    font-size: 20px!important;
+    font-weight: 700!important;
+    line-height: 24px!important;
   }
 
   .crumbs {

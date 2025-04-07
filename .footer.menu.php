@@ -57,4 +57,25 @@ $aMenuLinks = array(
 		array(),
 		""
 	),
+	array(
+		"Оплата",
+		SITE_DIR . "/payment/",
+		array(),
+		array(),
+		""
+	),
+	array(
+		"Реквизиты",
+		SITE_DIR . "/details/",
+		array(),
+		array(),
+		""
+	),
+	array(
+		"Локации",
+		SITE_DIR . "/regions/",
+		array(),
+		array(),
+		""
+	),
 );

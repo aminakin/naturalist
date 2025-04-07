@@ -53,18 +53,23 @@ class SearchRoomsBronevik
         $criterionPaymentRecipient = new SearchOfferCriterionPaymentRecipient;
         $criterionPaymentRecipient->addPaymentRecipient('agency');
         $searchCriteria[] = $criterionPaymentRecipient;
-        if (count($arChildrenAge)) {
+
+        if (count($arChildrenAge) || $guests > 0) {
             $criterionNumberOfGuests = new SearchOfferCriterionNumberOfGuests();
             $criterionNumberOfGuests->setAdults($guests);
-            foreach ($arChildrenAge as $childAge) {
-                $child = new Child();
-                $child->setAge($childAge);
-                $child->setCount(1);
-                $criterionNumberOfGuests->addChild($child);
+
+            if (count($arChildrenAge)) {
+                foreach ($arChildrenAge as $childAge) {
+                    $child = new Child();
+                    $child->setAge($childAge);
+                    $child->setCount(1);
+                    $criterionNumberOfGuests->addChild($child);
+                }
             }
 
             $searchCriteria[] = $criterionNumberOfGuests;
         }
+
 
         $onlyOnline = new SearchOfferCriterionOnlyOnline();
         $searchCriteria[] = $onlyOnline;

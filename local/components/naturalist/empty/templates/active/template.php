@@ -170,7 +170,7 @@ foreach($arResult as $key => $value) {
 
                                         <div class="object-row__order">
                                             <div class="object-row__price">
-                                                <div><?= number_format($totalPrice, 0, '.', ' ') ?> ₽</div>
+                                                <div><?= number_format((float)$totalPrice, 0, '.', ' ') ?> ₽</div>
                                             </div>
                                             <div class="profile__status">
                                                 <div class="tag"><?=$arOrder["DATA"]["STATUS"]?></div>

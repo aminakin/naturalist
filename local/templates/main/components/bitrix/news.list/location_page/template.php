@@ -10,7 +10,8 @@ global $arSettings;
 <section class="location__wrapper">
     <div class="container">
         <div class="location__title-wrap">
-            <span><?= Loc::getMessage('LOCATION_TITLE') ?></span>
+            <h1 class="page_title"><?= Loc::getMessage('LOCATION_TITLE') ?></h1>
+            <!-- <span><?//= Loc::getMessage('LOCATION_TITLE') ?></span> -->
             <div class="location__btn-list">
                 <a href="#" data-btn="regions" class="location__btn-item active">
                     <?= Loc::getMessage('LOCATION_REGIONS') ?>
@@ -25,7 +26,7 @@ global $arSettings;
                 <div class="location__group-wrap">
                     <? foreach ($arResult['REGIONS'] as $region) { ?>
                         <a href="<?= $region['URL'] ?>" class="location__item">
-                            <img width="64" height="64" src="<?= CFile::getPath($region['UF_ICON']) ?>" alt="">
+                            <img width="64" height="64" src="<?= CFile::getPath($region['UF_ICON']) ?>" alt="<?= $region['UF_NAME'] ?>" title="<?= $region['UF_NAME'] ?> РФ">
                             <span class="location__item-name"><?= $region['UF_NAME'] ?></span>
                         </a>
                     <? } ?>

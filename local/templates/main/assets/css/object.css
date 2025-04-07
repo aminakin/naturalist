@@ -2303,6 +2303,11 @@
   line-height: 20px;
 }
 
+.room__features svg{
+  width: 100%;
+  max-width: 20px;
+}
+
 .room__features ul:not([class]) {
   list-style-position: inside;
 }
@@ -2443,6 +2448,15 @@
   background-color: var(--color-new-1);
 }
 
+
+.room_offer {
+  position: relative;
+  padding: 2px 8px;
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 22px;
+}
+
 .room__cancelation {
   position: relative;
   padding: 8px;
@@ -2565,6 +2579,10 @@
   font-size: 1rem;
   font-weight: 500;
   line-height: 1.8;
+
+  padding: 9px 16px;
+  background-color: #F4E6CB;
+  border-radius: 8px;
 }
 
 .room__price-per-night {
