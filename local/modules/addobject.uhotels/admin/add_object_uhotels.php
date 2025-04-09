@@ -1,9 +1,15 @@
 <?php
 
+
+use Addobject\Uhotels\Import\ImportData;
+
 require_once($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_admin_before.php");
-require_once($_SERVER["DOCUMENT_ROOT"] . "/local/modules/uhotels.uploader/include.php");
 
 IncludeModuleLangFile(__FILE__);
+
+$test = \Bitrix\Main\Loader::includeModule("addobject.uhotels");
+$test = \Bitrix\Main\Loader::includeModule("iblock");
+
 
 // Список закладок
 $aTabs = [
@@ -17,7 +23,6 @@ $aTabs = [
 
 $tabControl = new CAdminTabControl("tabControl", $aTabs);
 
-$ID = intval($ID); // Идентификатор редактируемой записи
 $message = null; // Сообщение об ошибке
 $bVarsFromForm = false; // Флаг "Данные получены с формы"
 
@@ -28,7 +33,8 @@ $bVarsFromForm = false; // Флаг "Данные получены с формы
 if ($_SERVER["REQUEST_METHOD"] === "POST" && check_bitrix_sessid() && !empty($_REQUEST["object_id"])) {
 
     //тут код загрузки
-    \Bitrix\Main\Diag\Debug::writeToFile(var_export($_REQUEST, true));
+    $ImportData = new ImportData();
+    $object = $ImportData->import($_REQUEST["object_id"], (bool)$_REQUEST["only_rooms"], (bool)$_REQUEST["only_tariffs"]);
 
     if (!empty($object["MESSAGE"]["ERRORS"])) {
         $arMsg = array_map(fn($error) => ["id" => "NULL", "text" => $error], $object["MESSAGE"]["ERRORS"]);

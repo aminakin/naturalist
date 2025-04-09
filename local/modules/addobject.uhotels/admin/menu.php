@@ -13,7 +13,7 @@ $menuText = Loc::getMessage("DD_BM_INNER_MENU_ADD_OBJECT_UHOTELS");
 $lang = LANGUAGE_ID;
 
 // Проверяем права доступа для вашего модуля
-if ($APPLICATION->GetGroupRight("uhotels.uploader") > "D") {
+if ($APPLICATION->GetGroupRight("addobject.uhotels") > "D") {
     return [
         "parent_menu" => "global_menu_services", // Раздел "Сервисы"
         "sort"        => 4000,                  // Сортировка
