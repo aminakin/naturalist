@@ -12691,7 +12691,7 @@
             spaceBetween: 0,
             speed: 250,
             effect: "slide",
-            loop: $item.querySelectorAll(".swiper-slide").length > 1,
+            loop: false, //$item.querySelectorAll(".swiper-slide").length > 1,
             watchOverflow: true,
             watchSlidesProgress: true,
             preloadImages: false,
