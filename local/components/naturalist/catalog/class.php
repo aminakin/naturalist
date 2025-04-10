@@ -1384,11 +1384,25 @@ class NaturalistCatalog extends \CBitrixComponent
             //} else {
             //    $this->arFilter["ID"] = false;
             //}
+            
+            if ($this->arSections["UF_EXTERNAL_SERVICE"] == "bronevik") {
+                foreach ($this->arExternalInfo as $key => $value) {
+                    if($value[0]['OFFERS']){
+                        $avail[] = $key;
+                    }
+                }
 
-            if ($this->arExternalInfo) {
-                $this->arExternalAvail["ID"] = array_keys($this->arExternalInfo);
-            } else {
-                $this->arExternalAvail["ID"] = false;
+                if ($this->arExternalInfo) {
+                    $this->arExternalAvail["ID"] = $avail;
+                } else {
+                    $this->arExternalAvail["ID"] = false;
+                }
+            }else{
+                if ($this->arExternalInfo) {
+                    $this->arExternalAvail["ID"] = array_keys($this->arExternalInfo);
+                } else {
+                    $this->arExternalAvail["ID"] = false;
+                }
             }
         }
 
