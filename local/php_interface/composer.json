@@ -2,7 +2,8 @@
     "require": {
         "andreyryabin/sprint.migration": "dev-master",
         "webonyx/graphql-php": "^15.13",
-        "bronevik/hotels-connector": "^5.2"
+        "bronevik/hotels-connector": "^5.2",
+        "uhotels/api-client": "^1.1"
     },
     "autoload": {
         "psr-4": {"Local\\" : "lib/"}
@@ -21,5 +22,9 @@
         }
     },
     "minimum-stability": "dev",
-    "prefer-stable": true
+    "prefer-stable": true,
+    "repositories": [{
+            "type": "composer",
+            "url": "https://gitlab.addamant-work.ru/api/v4/group/72/-/packages/composer/"
+        }]
 }
