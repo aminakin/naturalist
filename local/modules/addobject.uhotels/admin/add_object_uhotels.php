@@ -34,13 +34,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && check_bitrix_sessid() && !empty($_R
 
     //тут код загрузки
     $ImportData = new ImportData();
-    $object = $ImportData->import($_REQUEST["object_id"], (bool)$_REQUEST["only_rooms"], (bool)$_REQUEST["only_tariffs"]);
+    $object = $ImportData->import($_REQUEST["object_id"]);
 
     if (!empty($object["MESSAGE"]["ERRORS"])) {
-        $arMsg = array_map(fn($error) => ["id" => "NULL", "text" => $error], $object["MESSAGE"]["ERRORS"]);
-        $e = new CAdminException($arMsg);
-        $GLOBALS["APPLICATION"]->ThrowException($e);
-        $message = new CAdminMessage($object["MESSAGE"]["ERRORS"], $e);
+        $message = new CAdminMessage($object["MESSAGE"]["ERRORS"]);
     }
 }
 
@@ -57,7 +54,7 @@ require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_admin_a
 
 if (!$message && !empty($object["MESSAGE"]["SUCCESS"])) {
     $message = new CAdminMessage([
-        "MESSAGE" => $object["MESSAGE"]["SUCCESS"],
+        "MESSAGE" => implode("<br>", $object["MESSAGE"]["SUCCESS"]),
         "TYPE" => "OK"
     ]);
     echo $message->Show();
@@ -85,7 +82,7 @@ if (!$message && !empty($object["MESSAGE"]["SUCCESS"])) {
         <tr>
             <td style="padding: 10px 0 0 0;"><?= GetMessage("MODULE_INSERT_ID") ?></td>
         </tr>
-        <tr>
+        <?/*<tr>
             <td style="padding: 10px 0 0 0;">
                 <label>
                     <input type="checkbox" name="only_rooms" id="only_rooms" value="Y">
@@ -101,6 +98,7 @@ if (!$message && !empty($object["MESSAGE"]["SUCCESS"])) {
                 </label>
             </td>
         </tr>
+        */?>
 
         <?php $tabControl->Buttons(); ?>
         <input type="hidden" name="lang" value="<?= LANG ?>">
