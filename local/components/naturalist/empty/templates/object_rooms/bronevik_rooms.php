@@ -1,11 +1,15 @@
+
 <?
 
 use Naturalist\bronevik\enums\TarifEnum;
-use Naturalist\Users;
+use Naturalist\Users; 
 
 /** @var TYPE_NAME $arElements */
 
-foreach ($arElements as $arElement): ?>
+foreach ($arElements as $arElement): 
+    if ($arElement['AVAILABLE_ID'] == false):
+        continue;
+    endif;?>
     <? if ($arExternalInfo[$arElement["ID"]]): ?>
         <? foreach ($arExternalInfo[$arElement["ID"]] as $arExternalItem): ?>
             <div class="room">
@@ -315,6 +319,19 @@ foreach ($arElements as $arElement): ?>
 
                 <? endif; ?>
             </div>
-        <? endforeach; ?>
+        <? endforeach; ?>      
     <? endif; ?>
 <? endforeach;
+$printedEmpty = false;
+foreach ($arElements as $key => $arElement):
+    if ($arElement['AVAILABLE_ID'] == true):
+        continue;
+    endif;
+    if (!$printedEmpty) { ?>
+        <div class="rooms__empty-list">
+            <div>Не осталось свободных мест</div>
+        </div>
+    <? $printedEmpty = true;
+    }
+    require 'empty_rooms.php';
+endforeach;
