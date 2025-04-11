@@ -581,6 +581,7 @@ class Orders
      */
     public function makeReservation($orderId)
     {
+        $supportNotification = '';
         $orderId = intval($orderId);
         $arOrder = $this->get($orderId);
         if ($arOrder["ERROR"]) {
@@ -600,6 +601,7 @@ class Orders
 
         if ($service == $this->bronevikSectionPropEnumId) {
             $reservationRes = (new OrderCreateBronevik())($orderId, $arOrder, $arUser, $reservationPropId);
+            $supportNotification = 'Бронь по объекту из Броневика';
         } elseif ($service == $this->bnovoSectionPropEnumId) {
             $bnovo = new Bnovo();
             $reservationRes = $bnovo->makeReservation($orderId, $arOrder, $arUser, $reservationPropId);
@@ -639,7 +641,8 @@ class Orders
                     "ORDER_ID" => $orderId,
                     "NAME" => $clientLastName . ' ' . $clientName,
                     "RESERVATION_ID" => $reservationRes,
-                    "LINK" => 'https://' . $_SERVER['SERVER_NAME'] . '/personal/active/'
+                    "LINK" => 'https://' . $_SERVER['SERVER_NAME'] . '/personal/active/',
+                    "SUPPORT_NOTIFICATION" => "<br/>" . $supportNotification . "<br/>",
                 ), [$_SERVER["DOCUMENT_ROOT"] . $file]);
 
                 $sendMAnagerRes = Users::sendEmail("MANAGER_MAIL", "70", array(
