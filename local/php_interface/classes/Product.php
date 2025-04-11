@@ -10,6 +10,7 @@ use CCatalogDiscount;
 use CCatalogProduct;
 use CPrice;
 use Naturalist\bronevik\SearchRoomsBronevik;
+use Object\Uhotels\Data\Search;
 
 defined("B_PROLOG_INCLUDED") && B_PROLOG_INCLUDED === true || die();
 /**
@@ -25,6 +26,7 @@ class Products
     private static $travelinePropEnumXmlId = 'traveline';
     private static $bnovoPropEnumXmlId = 'bnovo';
     private static $bronevikPropEnumXmlId = 'bronevik';
+    private static $uhotelsPropEnumXmlId = 'uhotels';
 
     /* Получение товаров */
     public function getList($arSort = false, $arFilter = false, $arSelect = false)
@@ -115,6 +117,8 @@ class Products
         $bnovo = new Bnovo();
         $arResultIDs["bnovo"] = $bnovo->search($guests, $arChildrenAge, $dateFrom, $dateTo, $sectionIds);
 
+
+
         return ($isGroup) ? $arResultIDs : $arResultIDs["traveline"] + $arResultIDs["bnovo"];
     }
 
@@ -140,6 +144,14 @@ class Products
             $arResult = (new SearchRoomsBronevik())($sectionId, $externalId, $guests, $arChildrenAge, $dateFrom, $dateTo, $minChildAge);
             $arRooms = $arResult['arItems'];
             $error = $arResult['error'];
+        } elseif ($serviceType == self::$uhotelsPropEnumXmlId) {
+            // Uhotels
+            if (Loader::includeModule('object.uhotels')) {
+                $UhotelsSearch = new Search($externalId);
+                $arResult = $UhotelsSearch->searchHotels($sectionId, $externalId, $guests, $arChildrenAge, $dateFrom, $dateTo, $minChildAge);
+                $arRooms = $arResult['arItems'];
+                $error = $arResult['error'];
+            }
         }
 
         return [

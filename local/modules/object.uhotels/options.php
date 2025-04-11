@@ -18,4 +18,4 @@ if (!$USER->isAdmin()) {
     $APPLICATION->authForm('Nope');
 }
 
-Loader::includeModule('addobject.uhotels');
+Loader::includeModule('object.uhotels');
