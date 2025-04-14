@@ -636,7 +636,7 @@ class Orders
                 $PDF = new CreateOrderPdf();
                 $file = json_decode($PDF->getPdfLink($orderId))->SHORT;
 
-                $sendRes = Users::sendEmail("USER_RESERVATION", "55", array(
+                $sendRes = Users::sendEmail("USER_RESERVATION", 0, array(
                     "EMAIL" => $clientEmail,
                     "ORDER_ID" => $orderId,
                     "NAME" => $clientLastName . ' ' . $clientName,
