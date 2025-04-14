@@ -1,13 +1,13 @@
 <?php
 
 
-use Addobject\Uhotels\Import\ImportData;
+use Object\Uhotels\Import\ImportData;
 
 require_once($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_admin_before.php");
 
 IncludeModuleLangFile(__FILE__);
 
-$test = \Bitrix\Main\Loader::includeModule("addobject.uhotels");
+$test = \Bitrix\Main\Loader::includeModule("object.uhotels");
 $test = \Bitrix\Main\Loader::includeModule("iblock");
 
 

@@ -190,6 +190,15 @@ class BuyCert {
         .value.toLocaleLowerCase()
         .trim();
 
+      if (enteredCoupon == 'VESNA7') {
+        this.promoInfo.textContent =
+            "Данный промокод не действует на сертификаты";
+        this.promoInfo.style.display = "block";
+        this.promoWrap.classList.add("error");
+
+        return false;
+      }
+
       if (enteredCoupon == "volya" && this.prodSumm < 5000) {
         this.promoInfo.textContent =
           "Данный промокод действует на заказ от 5000 руб";

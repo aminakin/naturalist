@@ -1,10 +1,10 @@
 <?php
 
-namespace Addobject\Uhotels\Import;
+namespace Object\Uhotels\Import;
 
 use Bitrix\Highloadblock\HighloadBlockTable;
 use Bitrix\Main\Diag\Debug;
-use Addobject\Uhotels\Connector\UhotelsConnector;
+use Object\Uhotels\Connector\UhotelsConnector;
 use Bitrix\Main\Loader;
 use CIBlockElement;
 use CIBlockSection;
@@ -126,6 +126,7 @@ class ImportData
             "UF_TIME_FROM" => $hotel->times->in,
             "UF_TIME_TO" => $hotel->times->out,
             "UF_COORDS" => implode(',', $address->coords),
+            "UF_MIN_PRICE" => 5000,
         ];
 
         $section = new CIBlockSection();
