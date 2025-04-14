@@ -186,11 +186,11 @@ foreach ($arElements as $arElement): ?>
                 </div>
 
 
-                <? if ($arExternalItem['OFFERS'] != null): ?>
-                    <? foreach ($arExternalItem['OFFERS'] as $offer) {
+                <? if ($arExternalItem != null): ?>
+                    <? foreach ($arExternalItem as $offer) {
 
                         $elementOldPrice = 0;
-                        $elementCurrentPrice = $offer['PROPERTIES']['PRICE']['VALUE'];
+                        $elementCurrentPrice = $offer['price'];
                         if ($arElement['DISCOUNT_DATA']) {
                             if ($arElement['DISCOUNT_DATA']['VALUE_TYPE'] == 'P') {
                                 $elementPrice = $elementCurrentPrice * (100 - $arElement['DISCOUNT_DATA']['VALUE']) / 100;
@@ -204,13 +204,13 @@ foreach ($arElements as $arElement): ?>
 
                         <div class="room__order">
                             <div class="room__left">
-                                <? if (strlen($offer['PROPERTIES']['RATE_TYPE']['VALUE'])) { ?>
+                                <?/* if (strlen($offer['PROPERTIES']['RATE_TYPE']['VALUE'])) { ?>
                                     <div class="room_offer">
                                         <?=TarifEnum::getLocalizedValue($offer['PROPERTIES']['RATE_TYPE']['VALUE']); ?>
                                     </div>
-                                <? } ?>
+                                <? } */?>
 
-                                <? if (strlen($offer['PROPERTIES']['CANCELLATION_POLICIES']['VALUE'])) { ?>
+                                <? /*if (strlen($offer['PROPERTIES']['CANCELLATION_POLICIES']['VALUE'])) { ?>
                                     <div class="room__cancelation">
                                         <div class="room__cancelation-title">
                                             Условия отмены
@@ -238,7 +238,7 @@ foreach ($arElements as $arElement): ?>
                                             </svg>
                                         </div>
                                     </div>
-                                <? } ?>
+                                <? } */?>
                             </div>
 
                             <div class="room__price">
@@ -304,8 +304,6 @@ foreach ($arElements as $arElement): ?>
                                    data-external-service="<?= $arSection["UF_EXTERNAL_SERVICE"] ?>"
                                    data-bronevik-offer-external-id="<?= $offer["PROPERTIES"]['CODE']['VALUE'] ?>"
                                    data-category-id="<?= $arElement["PROPERTY_EXTERNAL_CATEGORY_ID_VALUE"] ?>"
-                                   data-cancel-amount="<?= $arExternalItem['cancelAmount'] ?>"
-                                   data-people="<?= $arExternalItem['fullPlacementsName'] ?>"
                                    data-room-title="<?= $arElement["NAME"] ?>"
                                    data-room-photo="<?= $arElement["PICTURES"][array_key_first($arElement["PICTURES"])]['src'] ?>"
                                    href="#">Забронировать</a>

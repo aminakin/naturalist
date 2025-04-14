@@ -2,6 +2,7 @@
 
 namespace Naturalist;
 
+use Bitrix\Main\Diag\Debug;
 use Bitrix\Main\Loader;
 use CIBlockElement;
 use CIBlockSection;

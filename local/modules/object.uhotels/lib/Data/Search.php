@@ -3,8 +3,10 @@
 namespace Object\Uhotels\Data;
 
 use Bitrix\Main\Diag\Debug;
+use CIBlockElement;
 use Exception;
 use Object\Uhotels\Connector\UhotelsConnector;
+use Object\Uhotels\Enum\OccupancyEnum;
 use UHotels\ApiClient\Dto\Quota\QuotaDto;
 
 class Search
@@ -46,14 +48,43 @@ class Search
 
         $arItems = [];
         if (!empty($arQuotaData) && $arQuotaData['0'] != NULL) {
+
+            $rsElements = CIBlockElement::GetList(
+                ["ID" => "ASC"],
+                [
+                    "IBLOCK_ID" => CATALOG_IBLOCK_ID,
+                    "ACTIVE"    => "Y",
+                    "SECTION_ID" => $sectionId,
+                ],
+                false,
+                false,
+                ["IBLOCK_ID", "ID", "PROPERTY_EXTERNAL_ID", "PROPERTY_EXTERNAL_CATEGORY_ID"]
+            );
+
+            $arElementsIDs = [];
+            while ($arElement = $rsElements->Fetch()) {
+                $arElementsIDs[$arElement["PROPERTY_EXTERNAL_ID_VALUE"]] = $arElement["ID"];
+            }
+
             $availableRooms = [];
             foreach ($arQuotaData as $quota) {
                 $availableRooms = $this->processQuota($quota);
             }
 
+            // Если есть квота по номеру и его можно забронировать на выбранные дни
             if (!empty($availableRooms)) {
                 foreach ($availableRooms as $roomId) {
-                    $arItems[$roomId] = $this->processRoomData($roomId, $startDate, $endDate);
+                    $offers = $this->processRoomData($roomId, $startDate, $endDate, $guests, $arChildrenAge, $minChildAge);
+
+                    //если номер доступен и по нему есть цены
+                    if (!empty($offers)) {
+                        $elementId = $arElementsIDs[$roomId];
+                        if ($elementId) {
+                            Debug::writeToFile(var_export($elementId, true), true);
+                            $arItems[$elementId] = ['offers' => $offers];
+                        }
+
+                    }
                 }
             }
         }
@@ -98,41 +129,61 @@ class Search
      * @param $dateTo
      * @return array
      */
-    private function processRoomData($roomId, $dateFrom, $dateTo)
+    private function processRoomData($roomId, $dateFrom, $dateTo, $guests, $arChildrenAge, $minChildAge)
     {
         $offers = [];
 
         /** @var \UHotels\ApiClient\Dto\Tariff\TariffDto $tariff */
         foreach ($this->tariffList as $tariff) {
 
-            $priceData = $this->processOccupancy($roomId, $dateFrom, $dateTo, $tariff->id);
+            $occupancyData = $this->processOccupancy($roomId, $dateFrom, $dateTo, $tariff->id);
 
-//            $offers[$tariff->id] = [
-//                'price' => $this->processOccupancy($roomId, $dateFrom, $dateTo, $tariff->id),
-//                'tariffData' => [
-//                    'id' => $tariff->id,
-//                    'name' => $tariff->name,
-//                    'desc' => $tariff->desc,
-//                ],
-//            ];
+            if (!empty($occupancyData)) {
+                foreach ($occupancyData as $occupancyCode => $occupancyPriceData) {
+
+                    if (OccupancyEnum::getValueByCode($occupancyCode) == (int)$guests) {
+                        /** @var \UHotels\ApiClient\Dto\Occupancy\OccupancyDetailDto $occupancyPriceData */
+
+                        $offers[$tariff->id] = [
+                            'price' => $occupancyPriceData->amount,
+                            'tariffData' => [
+                                'id' => $tariff->id,
+                                'name' => $tariff->name,
+                                'desc' => $tariff->desc,
+                            ],
+                        ];
+
+                    }
+                }
+            }
         }
 
-        //price
-        //tariffData
-        // отмена
-        return [
-            'offers' => []
-        ];
+        return $offers;
     }
 
+    /**
+     * Получение цен на тарифы, тут жее возвращаются рамеры номеров (1,2,3 ...) но
+     *
+     * @param $roomId
+     * @param $dateFrom
+     * @param $dateTo
+     * @param $tariffId
+     * @return array
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
     private function processOccupancy($roomId, $dateFrom, $dateTo, $tariffId): array
     {
         $occupancyData = [];
         $roomOccupancy = $this->connector->getOccupancy($dateFrom, $dateTo, $roomId, $tariffId);
 
-        if (isset($roomOccupancy[0])){
+        if (isset($roomOccupancy[0]->occupancies[0]->occupancy)){
 
-            Debug::writeToFile(var_export($roomOccupancy[0], true));
+            foreach ($roomOccupancy[0]->occupancies[0]->occupancy as $occupancy) {
+                /** @var \UHotels\ApiClient\Dto\Occupancy\OccupancyDetailDto $occupancy */
+                if ($occupancy->amount > 0) {
+                    $occupancyData[$occupancy->occupancy_code] = $occupancy;
+                }
+            }
         }
 
         return $occupancyData;
