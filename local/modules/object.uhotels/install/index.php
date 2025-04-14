@@ -53,7 +53,7 @@ class object_uhotels extends CModule
     public function InstallFiles()
     {
         $sourcePath = $_SERVER['DOCUMENT_ROOT'] . '/local/modules/' . $this->MODULE_ID . '/install/admin/object_uhotels.php';
-        $targetPath = $_SERVER['DOCUMENT_ROOT'] . '/bitrix/admin/OBJECT_UHOTELS.php';
+        $targetPath = $_SERVER['DOCUMENT_ROOT'] . '/bitrix/admin/object_uhotels.php';
 
         CopyDirFiles($sourcePath, $targetPath, true, true);
         return true;
