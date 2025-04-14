@@ -204,11 +204,11 @@ foreach ($arElements as $arElement): ?>
 
                         <div class="room__order">
                             <div class="room__left">
-                                <?/* if (strlen($offer['PROPERTIES']['RATE_TYPE']['VALUE'])) { ?>
+                                <? if (strlen($offer['tariffData']['name'])) { ?>
                                     <div class="room_offer">
-                                        <?=TarifEnum::getLocalizedValue($offer['PROPERTIES']['RATE_TYPE']['VALUE']); ?>
+                                        <?=$offer['tariffData']['name']; ?>
                                     </div>
-                                <? } */?>
+                                <? } ?>
 
                                 <? /*if (strlen($offer['PROPERTIES']['CANCELLATION_POLICIES']['VALUE'])) { ?>
                                     <div class="room__cancelation">
