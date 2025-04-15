@@ -1,6 +1,7 @@
 
 <?
 
+use Naturalist\bronevik\enums\RoomTypeEnum;
 use Naturalist\bronevik\enums\TarifEnum;
 use Naturalist\Users; 
 
@@ -212,6 +213,39 @@ foreach ($arElements as $arElement):
                                         <?=TarifEnum::getLocalizedValue($offer['PROPERTIES']['RATE_TYPE']['VALUE']); ?>
                                     </div>
                                 <? } ?>
+
+
+
+                                <? if (strlen($offer['PROPERTIES']['ROOM_TYPE']['VALUE'])) { ?>
+                                    <div class="room__cancelation" s>
+                                        <div class="room__cancelation-title">
+                                            Условия размещения
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18"
+                                                 viewBox="0 0 18 18" fill="none">
+                                                <path d="M9 17.0625C4.5525 17.0625 0.9375 13.4475 0.9375 9C0.9375 4.5525 4.5525 0.9375 9 0.9375C13.4475 0.9375 17.0625 4.5525 17.0625 9C17.0625 13.4475 13.4475 17.0625 9 17.0625ZM9 2.0625C5.175 2.0625 2.0625 5.175 2.0625 9C2.0625 12.825 5.175 15.9375 9 15.9375C12.825 15.9375 15.9375 12.825 15.9375 9C15.9375 5.175 12.825 2.0625 9 2.0625Z"
+                                                      fill="black"/>
+                                                <path fill-rule="evenodd" clip-rule="evenodd"
+                                                      d="M9 6.5625C8.43899 6.5625 8.0625 6.97212 8.0625 7.38462C8.0625 7.69528 7.81066 7.94712 7.5 7.94712C7.18934 7.94712 6.9375 7.69528 6.9375 7.38462C6.9375 6.26771 7.90415 5.4375 9 5.4375C10.0958 5.4375 11.0625 6.26771 11.0625 7.38462C11.0625 7.78173 10.9362 8.14981 10.7238 8.45453C10.5926 8.64269 10.4397 8.82172 10.3 8.98201C10.2743 9.01149 10.2491 9.04031 10.2243 9.06858C10.1083 9.2011 10.0026 9.32194 9.90482 9.44595C9.66069 9.75567 9.5625 9.97137 9.5625 10.1538V10.5C9.5625 10.8107 9.31066 11.0625 9 11.0625C8.68934 11.0625 8.4375 10.8107 8.4375 10.5V10.1538C8.4375 9.57162 8.74634 9.09836 9.0213 8.74953C9.13876 8.60052 9.26748 8.45354 9.38384 8.32067C9.40711 8.29411 9.42987 8.26812 9.45196 8.24278C9.59095 8.08333 9.70791 7.94456 9.80089 7.81118C9.88929 7.68437 9.9375 7.53879 9.9375 7.38462C9.9375 6.97212 9.56101 6.5625 9 6.5625Z"
+                                                      fill="black"/>
+                                                <path fill-rule="evenodd" clip-rule="evenodd"
+                                                      d="M8.4375 12.375C8.4375 12.0643 8.68934 11.8125 9 11.8125H9.00674C9.3174 11.8125 9.56924 12.0643 9.56924 12.375C9.56924 12.6857 9.3174 12.9375 9.00674 12.9375H9C8.68934 12.9375 8.4375 12.6857 8.4375 12.375Z"
+                                                      fill="black"/>
+                                            </svg>
+                                        </div>
+                                        <div class="room__cancelation-tooltip">
+                                            <div class="room__cancelation-tooltip-title">Условия размещения
+                                            </div>
+                                            <ul>
+                                                <li><?=RoomTypeEnum::getDescriptionByString($offer['PROPERTIES']['ROOM_TYPE']['VALUE']); ?></li>
+                                            </ul>
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="10" height="5"
+                                                 viewBox="0 0 10 5" fill="none">
+                                                <path d="M9.5 0L5 5L0.5 0H9.5Z" fill="#E0C695"/>
+                                            </svg>
+                                        </div>
+                                    </div>
+                                <? } ?>
+
 
                                 <? if (strlen($offer['PROPERTIES']['CANCELLATION_POLICIES']['VALUE'])) { ?>
                                     <div class="room__cancelation">

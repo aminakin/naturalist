@@ -44,4 +44,32 @@ enum RoomTypeEnum: string
             default => null, // Если число не соответствует ни одному варианту
         };
     }
+
+    /**
+     * Возвращает вариант перечисления по строковому значению.
+     *
+     * @param string $value Строковое значение типа размещения (например, "single", "double").
+     * @return self|null Соответствующий вариант перечисления или null, если значение не найдено.
+     */
+    public static function fromString(string $value): ?self
+    {
+        foreach (self::cases() as $case) {
+            if ($case->value === $value) {
+                return $case;
+            }
+        }
+        return null; // Если строка не соответствует ни одному варианту
+    }
+
+    /**
+     * Возвращает локализованное описание типа размещения по строковому значению.
+     *
+     * @param string $value Строковое значение типа размещения (например, "single", "double").
+     * @return string|null Локализованное описание или null, если значение не найдено.
+     */
+    public static function getDescriptionByString(string $value): ?string
+    {
+        $roomType = self::fromString($value);
+        return $roomType?->translateValue();
+    }
 }
