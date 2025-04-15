@@ -10,19 +10,24 @@ use CIBlockElement;
 use CIBlockSection;
 use CUtil;
 use Exception;
+use Object\Uhotels\Settings\Settings;
 use UHotels\ApiClient\Dto\Hotel\HotelDto;
 use UHotels\ApiClient\Dto\Room\RoomDto;
 
 class ImportData
 {
     private int $catalogIBlockID;
-    private int $roomsFeaturesHLId = 8;
-    private int $uhotelsSectionPropEnumId = 13;
-    private int $uhotelselementPropEnumId = 39;
+    private int $roomsFeaturesHLId;
+    private int $uhotelsSectionPropEnumId;
+    private int $uhotelsElementPropEnumId;
 
     public function __construct()
     {
         $this->catalogIBlockID = CATALOG_IBLOCK_ID;
+
+        $this->roomsFeaturesHLId = Settings::RoomsFeaturesHLId;
+        $this->uhotelsSectionPropEnumId = Settings::UhotelsSectionPropEnumId;
+        $this->uhotelsElementPropEnumId = Settings::UhotelsElementPropEnumId;
     }
 
     /**
@@ -163,7 +168,7 @@ class ImportData
                 "IBLOCK_ID" => $this->catalogIBlockID,
                 "SECTION_ID" => $section['ID'],
                 "PROPERTY_EXTERNAL_ID" => $roomData->id,
-                "PROPERTY_EXTERNAL_SERVICE" => $this->uhotelselementPropEnumId
+                "PROPERTY_EXTERNAL_SERVICE" => $this->uhotelsElementPropEnumId
             ],
             false,
             false,
@@ -197,7 +202,7 @@ class ImportData
     {
         $properties = [
             //"PHOTOS" => $this->processRoomImages($roomData),
-            "EXTERNAL_SERVICE" => $this->uhotelselementPropEnumId,
+            "EXTERNAL_SERVICE" => $this->uhotelsElementPropEnumId,
             "EXTERNAL_ID" => $roomData->id,
             "BEDS" => $roomData->places,
             "FEATURES" => $roomData->equipments_main ? $this->getRoomFeatures($roomData->equipments_main) : false,

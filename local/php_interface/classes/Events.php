@@ -47,10 +47,10 @@ class Events
         $event->addEventHandler('main', 'OnBeforeProlog', [self::class, "tgAuth"]);
         $event->addEventHandler('main', 'OnEndBufferContent', [self::class, "deleteKernelJs"]);
         $event->addEventHandler('main', 'OnEndBufferContent', [self::class, "deleteKernelCss"]);
-        $event->addEventHandler('sale', 'OnSaleOrderSaved', [self::class, "createB24Deal"]);
-        $event->addEventHandler('sale', 'OnSaleOrderSaved', [self::class, "makeReservation"]);
-        $event->addEventHandler('sale', 'OnSaleOrderSaved', [self::class, "makeOrderCert"]);
-        $event->addEventHandler('sale', 'OnSaleOrderSaved', [self::class, "cancelOrder"]);
+//        $event->addEventHandler('sale', 'OnSaleOrderSaved', [self::class, "createB24Deal"]);
+//        $event->addEventHandler('sale', 'OnSaleOrderSaved', [self::class, "makeReservation"]);
+//        $event->addEventHandler('sale', 'OnSaleOrderSaved', [self::class, "makeOrderCert"]);
+//        $event->addEventHandler('sale', 'OnSaleOrderSaved', [self::class, "cancelOrder"]);
         $event->addEventHandler('iblock', 'OnBeforeIBlockSectionDelete', [self::class, "OnBeforeIBlockSectionDeleteHandler"]);
         $event->addEventHandler('iblock', 'OnBeforeIBlockElementDelete', [self::class, "OnBeforeIBlockElementDeleteHandler"]);
 

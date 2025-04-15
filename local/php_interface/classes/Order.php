@@ -28,6 +28,7 @@ use Naturalist\bronevik\HotelOfferPricingCheckPriceBronevik;
 use Naturalist\bronevik\OrderCancelBronevik;
 use Naturalist\bronevik\OrderCanceledPenaltyBronevik;
 use Naturalist\bronevik\OrderCreateBronevik;
+use Object\Uhotels\Connector\UhotelsBookingData;
 use Sberbank\Payments\Gateway;
 use function NormalizePhone;
 use function randString;
@@ -605,6 +606,12 @@ class Orders
             $reservationRes = $bnovo->makeReservation($orderId, $arOrder, $arUser, $reservationPropId);
         } elseif ($service == $this->travelineSectionPropEnumId) {
             $reservationRes = Traveline::makeReservation($orderId, $arOrder, $arUser, $reservationPropId);
+        } else {
+            if (Loader::includeModule('object.uhotels')) {
+                if($service == \Object\Uhotels\Settings\Settings::UhotelsSectionPropEnumId) {
+                    $reservationRes = UhotelsBookingData::makeReservation($orderId, $arOrder, $arUser, $reservationPropId);
+                }
+            }
         }
 
         if ($reservationRes) {

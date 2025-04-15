@@ -27,8 +27,10 @@ $photo = isset($_REQUEST["photo"]) ? $_REQUEST["photo"] : '';
 $bronevikOfferExternalId = isset($_REQUEST["bronevikOfferExternalId"]) ? $_REQUEST["bronevikOfferExternalId"] : '';
 
 $externalService = $_REQUEST["externalService"];
-if ($externalService == 'bronevik') {
-
+if ($externalService == 'uhotels') {
+    //
+} elseif ($externalService == 'bronevik') {
+    //
 } elseif ($externalService == "bnovo") {
 	$tariffId = $_REQUEST["tariffId"];
 	$categoryId = $_REQUEST["categoryId"];
@@ -118,7 +120,10 @@ $arProps = array(
 		'VALUE' => $photo,
 	]
 );
-if ($externalService == 'bronevik') {
+
+if ($externalService == 'uhotels') {
+    //
+} elseif ($externalService == 'bronevik') {
     $arProps = array_merge($arProps, [
         [
             'CODE' => 'BRONEVIK_OFFER_ID',

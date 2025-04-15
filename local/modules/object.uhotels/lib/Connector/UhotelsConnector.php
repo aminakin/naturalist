@@ -5,8 +5,11 @@ namespace Object\Uhotels\Connector;
 use Exception;
 use GuzzleHttp\Exception\GuzzleException;
 use UHotels\ApiClient\Client;
+use UHotels\ApiClient\Dto\Booking\BookingDto;
 use UHotels\ApiClient\Dto\Quota\QuotaDto;
+use UHotels\ApiClient\Dto\Room\RoomDto;
 use UHotels\ApiClient\Dto\Tariff\TariffDto;
+use UHotels\ApiClient\Service\BookingService;
 use UHotels\ApiClient\Service\HotelService;
 use UHotels\ApiClient\Service\OccupancyService;
 use UHotels\ApiClient\Service\QuotaService;
@@ -23,6 +26,7 @@ class UhotelsConnector
     private TariffService $tariffService;
     private QuotaService $quotaService;
     private OccupancyService $occupancyService;
+    private BookingService $bookingService;
 
     /**
      * Конструктор класса.
@@ -45,6 +49,7 @@ class UhotelsConnector
         $this->tariffService = new TariffService($client);
         $this->quotaService = new QuotaService($client);
         $this->occupancyService = new OccupancyService($client);
+        $this->bookingService = new BookingService($client);
     }
 
     /**
@@ -113,5 +118,51 @@ class UhotelsConnector
     public function getOccupancy(?string $dateStart = null, ?string $dateFinish = null, ?int $roomId = null, ?int $tariffId = null)
     {
         return $this->occupancyService->getList($dateStart, $dateFinish, $roomId, $tariffId);
+    }
+
+    /**
+     *  Метод регистрации бронирования
+     *
+     * @param $bookingCreateData
+     * @return BookingDto
+     * @throws GuzzleException
+     */
+    public function addBooking($bookingCreateData): BookingDto
+    {
+        return $this->bookingService->create($bookingCreateData);
+    }
+
+    /**
+     * Отмена бронирования
+     *
+     * @param $bookingId
+     * @return BookingDto
+     * @throws GuzzleException
+     */
+    public function cancelBooking($bookingId): BookingDto
+    {
+        return $this->bookingService->cancel($bookingId);
+    }
+
+    /**
+     * Получение информации о бронировании по номеру
+     *
+     * @param $bookingId
+     * @return BookingDto
+     * @throws GuzzleException
+     */
+    public function getBookingById($bookingId): BookingDto
+    {
+        return $this->bookingService->get($bookingId);
+    }
+
+    /**
+     * Получение списка бронирований
+     * @return array
+     * @throws GuzzleException
+     */
+    public function getBookingList(): array
+    {
+        return $this->bookingService->getList();
     }
 }
