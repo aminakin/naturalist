@@ -166,7 +166,7 @@ if ($arResult['ERROR']) {
             <div class="form__el-variant">
                 <?php foreach ($arResult['POCKET'] as $pocket) {?>
                     <label>
-                        <input cost="<?=$arParams['POCKET_COST']?>" type="checkbox" name="cert_pocket" value="<?=$arResult['LOCAL_HOST'].CFile::getPath($pocket['UF_FILE'])?>" class="visually-hidden">
+                        <input cost="<?=$arParams['POCKET_COST']?>" type="checkbox" name="cert_pocket" value="<?=$arResult['LOCAL_HOST'].CFile::getPath($pocket['UF_FILE'])?>" class="visually-hidden" required>
                         <span class="el-variant__title"><?=$pocket['UF_NAME']?></span>
                         <div class="variant__img-wrap">
                             <img src="<?=CFile::ResizeImageGet($pocket['UF_FILE'], array('width' => 600, 'height' => 763), BX_RESIZE_IMAGE_EXACT, true)['src']?>" alt="">
