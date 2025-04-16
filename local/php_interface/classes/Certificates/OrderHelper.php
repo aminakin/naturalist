@@ -18,7 +18,7 @@ use Naturalist\CatalogProvider;
 
 class OrderHelper
 {
-
+    private $arComponentParams;
     private $userId;
     private $siteId;
     private $params = [];
@@ -44,12 +44,13 @@ class OrderHelper
         'promo_code' => ORDER_PROP_ENTERED_COUPON,
     ];
 
-    public function __construct(array $params)
+    public function __construct(array $params, array $arComponentParams)
     {
         Loader::includeModule("sale");
 
         $this->siteId = Context::getCurrent()->getSite();
         $this->params = $params;
+        $this->arComponentParams = $arComponentParams;
     }
 
 
@@ -142,16 +143,16 @@ class OrderHelper
         $this->itemPrice = $item->getBasePrice();
 
         // Цена сетрификата для дальнейших рассчётов
-        $itemPrice = $item->getPrice();
+        $itemPrice = abs($item->getPrice());
 
         // Проверка на доплату за физический формат и упаковку
         if ($this->params['cert_format'] == 'fiz') {
             if (isset($this->params['cert_variant']) && $this->params['cert_variant'] != '') {
-                $itemPrice += $this->params['variant_cost'];
+                $itemPrice += abs($this->arComponentParams['VARIANT_COST']);
             }
 
             if (isset($this->params['cert_pocket']) && $this->params['cert_pocket'] != '') {
-                $itemPrice += $this->params['pocket_cost'];
+                $itemPrice += abs($this->arComponentParams['POCKET_COST']);
             }
 
             $arFields['PRICE'] = $itemPrice;
