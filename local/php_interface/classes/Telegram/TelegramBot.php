@@ -10,6 +10,7 @@ use Bitrix\Highloadblock\HighloadBlockTable;
 use Bitrix\Highloadblock\HighloadBlock;
 use Bitrix\Main\Loader;
 use CEventLog;
+use Naturalist\Markdown;
 
 class TelegramBot
 {
@@ -83,6 +84,7 @@ class TelegramBot
     {
         $url = $this->telegramApi . "/sendMessage";
 
+        $text = Markdown::escapeMarkdownV2($text);
         foreach ($this->getUsers() as $chatId){
             $responce = $this->http->post($url,[
                 'chat_id' => $chatId,
