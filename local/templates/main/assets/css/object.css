@@ -1555,6 +1555,7 @@
 
 .object__galery-item.first {
   grid-row: 1 / 3;
+  max-height: 528px;
 }
 
 .object-hero__gallery img {

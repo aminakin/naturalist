@@ -102,7 +102,7 @@ class CertBuy extends \CBitrixComponent
         $request = Context::getCurrent()->getRequest();
         $this->postList = $request->getPostList()->toArray();
         if (count($this->postList)) {
-            $order = new OrderHelper($this->postList);
+            $order = new OrderHelper($this->postList, $this->arParams);
             $orderId = $order->add();
             if ($orderId) {
                 $this->getPaymentUrl($orderId);

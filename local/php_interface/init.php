@@ -54,6 +54,7 @@ Loader::registerAutoLoadClasses(null, array(
     'Naturalist\bronevik\HotelBronevik' => '/local/php_interface/classes/bronevik/HotelBronevik.php',
     'Naturalist\bronevik\enums\RateTypeNamesEnum' => '/local/php_interface/classes/bronevik/enums/RateTypeNamesEnum.php',
     'Naturalist\bronevik\enums\RoomTypeEnum' => '/local/php_interface/classes/bronevik/enums/RoomTypeEnum.php',
+    'Naturalist\bronevik\enums\RoomTypeFrontEnum' => '/local/php_interface/classes/bronevik/enums/RoomTypeFrontEnum.php',
     'Naturalist\bronevik\enums\PaymentRecipientEnum' => '/local/php_interface/classes/bronevik/enums/PaymentRecipientEnum.php',
     'Naturalist\bronevik\OrderCreateBronevik' => '/local/php_interface/classes/bronevik/OrderCreateBronevik.php',
     'Naturalist\bronevik\OrderCancelBronevik' => '/local/php_interface/classes/bronevik/OrderCancelBronevik.php',

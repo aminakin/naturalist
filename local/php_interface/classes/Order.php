@@ -380,6 +380,7 @@ class Orders
         if ($res) {
             if (!isset($res["ERROR"])) {
                 // Отсылка уведомлений на почту
+                $penaltyAmount = Traveline::beforeCancelReservation($arOrder);
 
                 $sendRes = Users::sendEmail("USER_RESERVATION_CANCEL", "71", array(
                     "EMAIL" => $arOrder['PROPS']['EMAIL'],
@@ -390,8 +391,6 @@ class Orders
                 ));
 
                 if ($arUser["UF_SUBSCRIBE_EMAIL_1"]) {
-                    $penaltyAmount = Traveline::beforeCancelReservation($arOrder);
-
                     $sendRes = Users::sendEmail("USER_RESERVATION_CANCEL", "56", array(
                         "EMAIL" => $arOrder['PROPS']['EMAIL'],
                         "ORDER_ID" => $orderId,
@@ -920,6 +919,9 @@ class Orders
 
         // Проверка доступности броневика
         if ($externalService == $this->bronevikSectionPropEnumId) {
+            $arUser["NAME"] = !empty($arUser["NAME"]) ? $arUser["NAME"] : $params["name"];
+            $arUser["LAST_NAME"] = !empty($arUser["LAST_NAME"]) ? $arUser["LAST_NAME"] : $params["last_name"];
+
             if (!(new HotelOfferPricingCheckPriceBronevik())($basket, ['LAST_NAME' => $arUser['LAST_NAME'], 'FIRST_NAME' => $arUser['NAME']])) {
                 return json_encode([
                     "ACTION" => "reload",

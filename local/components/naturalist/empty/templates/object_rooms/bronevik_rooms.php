@@ -1,6 +1,7 @@
+<?php
 
-<?
-
+use Naturalist\bronevik\enums\RoomTypeEnum;
+use Naturalist\bronevik\enums\RoomTypeFrontEnum;
 use Naturalist\bronevik\enums\TarifEnum;
 use Naturalist\Users; 
 
@@ -10,13 +11,13 @@ foreach ($arElements as $arElement):
     if ($arElement['AVAILABLE_ID'] == false):
         continue;
     endif;?>
-    <? if ($arExternalInfo[$arElement["ID"]]): ?>
-        <? foreach ($arExternalInfo[$arElement["ID"]] as $arExternalItem): ?>
+    <?php if ($arExternalInfo[$arElement["ID"]]): ?>
+    <?php foreach ($arExternalInfo[$arElement["ID"]] as $arExternalItem): ?>
             <div class="room">
                 <div class="room__top">
-                    <? if ($arElement["PICTURES"]): ?>
+                    <?php if ($arElement["PICTURES"]): ?>
                         <div class="room__images">
-                            <? if ($arElement['PROPERTY_ROOMTOUR_VALUE']) { ?>
+                            <?php if ($arElement['PROPERTY_ROOMTOUR_VALUE']) { ?>
                                 <a class="room__tour"
                                    href="<?= CFile::GetPath($arElement['PROPERTY_ROOMTOUR_VALUE']) ?>"
                                    data-fancybox="gallery_<?= $arElement['ID'] ?>"
@@ -33,22 +34,22 @@ foreach ($arElements as $arElement):
                                     </svg>
                                     Румтур
                                 </a>
-                            <? } ?>
+                            <?php } ?>
                             <div class="swiper slider-gallery" data-slider-object="data-slider-object">
                                 <div class="swiper-wrapper">
-                                    <? $keyPhoto = 1; ?>
-                                    <? foreach ($arElement["PICTURES"] as $arPhoto): ?>
-                                        <? if (count($arElement["PICTURES"]) > 1): ?>
-                                            <?
+                                    <?php $keyPhoto = 1; ?>
+                                    <?php foreach ($arElement["PICTURES"] as $arPhoto): ?>
+                                        <?php if (count($arElement["PICTURES"]) > 1): ?>
+                                            <?php
                                             $alt = $arResult["arSection"]["NAME"] . " " . $arElement["NAME"] . " рис." . $keyPhoto;;
                                             $title = "Фото - " . $arElement["NAME"] . " рис." . $keyPhoto;
                                             ?>
-                                        <? else: ?>
-                                            <?
+                                        <?php else: ?>
+                                            <?php
                                             $alt = $arResult["arSection"]["NAME"] . " " . $arElement["NAME"];
                                             $title = "Фото - " . $arElement["NAME"];
                                             ?>
-                                        <? endif; ?>
+                                        <?php endif; ?>
                                         <div class="swiper-slide">
                                             <a href="<?= $arPhoto["big"] ?>"
                                                data-fancybox="gallery_<?= $arElement['ID'] ?>"
@@ -57,11 +58,11 @@ foreach ($arElements as $arElement):
                                                      src="<?= $arPhoto["src"] ?>">
                                             </a>
                                         </div>
-                                        <? $keyPhoto++; ?>
-                                    <? endforeach; ?>
+                                        <?php $keyPhoto++; ?>
+                                    <?php endforeach; ?>
                                 </div>
 
-                                <? if (count($arElement["PICTURES"]) > 1): ?>
+                                <?php if (count($arElement["PICTURES"]) > 1): ?>
                                     <div class="swiper-button-prev">
                                         <svg class="icon icon_arrow-small" viewbox="0 0 16 16"
                                              style="width: 1.6rem; height: 1.6rem;">
@@ -75,7 +76,7 @@ foreach ($arElements as $arElement):
                                         </svg>
                                     </div>
                                     <div class="swiper-pagination"></div>
-                                <? endif; ?>
+                                <?php endif; ?>
                             </div>
                         </div>
                         <script>
@@ -95,12 +96,12 @@ foreach ($arElements as $arElement):
                                 },
                             });
                         </script>
-                    <? endif; ?>
+                    <?php endif; ?>
 
                     <div class="room__content">
                         <div class="room__description">
                             <div class="room__description-title"><?= $arElement["NAME"] ?></div>
-                            <? if (!empty($arElement["PROPERTY_SQUARE_VALUE"])): ?>
+                            <?php if (!empty($arElement["PROPERTY_SQUARE_VALUE"])): ?>
                                 <div class="room__features">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20"
                                          fill="none">
@@ -109,8 +110,8 @@ foreach ($arElements as $arElement):
                                     </svg>
                                     <?= $arElement["PROPERTY_SQUARE_VALUE"] ?> м²
                                 </div>
-                            <? endif; ?>
-                            <? if (!empty($arElement["PROPERTY_ROOMS_VALUE"])): ?>
+                            <?php endif; ?>
+                            <?php if (!empty($arElement["PROPERTY_ROOMS_VALUE"])): ?>
                                 <div class="room__features">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20"
                                          fill="none">
@@ -123,9 +124,9 @@ foreach ($arElements as $arElement):
                                     </svg>
                                     <?= $arElement["PROPERTY_ROOMS_VALUE"] . ' ' . $roomsDeclension->get($arElement["PROPERTY_ROOMS_VALUE"]) ?>
                                 </div>
-                            <? endif; ?>
+                            <?php endif; ?>
 
-                            <? if (!is_null($arElement['PROPERTY_QUANTITY_HUMEN_VALUE']) || !is_null($arElement['PROPERTY_QUANTITY_CHILD_VALUE'])): ?>
+                            <?php if (!is_null($arElement['PROPERTY_QUANTITY_HUMEN_VALUE']) || !is_null($arElement['PROPERTY_QUANTITY_CHILD_VALUE'])): ?>
                                 <div class="room__features">
                                     <svg width="20" height="20" viewBox="0 0 20 20" fill="none"
                                          xmlns="http://www.w3.org/2000/svg">
@@ -140,9 +141,9 @@ foreach ($arElements as $arElement):
                                     <?= $arElement['PROPERTY_QUANTITY_HUMEN_VALUE'] . ' ' . $guestsDeclension->get($arElement['PROPERTY_QUANTITY_HUMEN_VALUE']) ?>
                                     , <?= !is_null($arElement['PROPERTY_QUANTITY_CHILD_VALUE']) ? $arElement['PROPERTY_QUANTITY_CHILD_VALUE'] . ' ' . $childrenDeclension->get($arElement['PROPERTY_QUANTITY_CHILD_VALUE']) : "без детей" ?>
                                 </div>
-                            <? endif ?>
+                            <?php endif ?>
 
-                            <? if (!empty($arElement["PROPERTY_BEDS_VALUE"])): ?>
+                            <?php if (!empty($arElement["PROPERTY_BEDS_VALUE"])): ?>
                                 <div class="room__features">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20"
                                          fill="none">
@@ -164,7 +165,7 @@ foreach ($arElements as $arElement):
                                     </svg>
                                     <?= $arElement["PROPERTY_BEDS_VALUE"] . ' ' . $bedsDeclension->get($arElement["PROPERTY_BEDS_VALUE"]) ?>
                                 </div>
-                            <? endif; ?>
+                            <?php endif; ?>
                             <?php if (!is_null($arElement['PROPERTY_WITH_PETS_VALUE']) && $arElement['PROPERTY_WITH_PETS_VALUE'] === "Y") { ?>
                                 <div class="room__features">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20"
@@ -189,8 +190,8 @@ foreach ($arElements as $arElement):
                     </div>
                 </div>
 
-                <? if ($arExternalItem['OFFERS'] != null): ?>
-                    <? foreach ($arExternalItem['OFFERS'] as $offer) {
+                <?php if ($arExternalItem['OFFERS'] != null): ?>
+                    <?php foreach ($arExternalItem['OFFERS'] as $offer) {
 
                         $elementOldPrice = 0;
                         $elementCurrentPrice = $offer['PROPERTIES']['PRICE']['VALUE'];
@@ -207,13 +208,20 @@ foreach ($arElements as $arElement):
 
                         <div class="room__order">
                             <div class="room__left">
-                                <? if (strlen($offer['PROPERTIES']['RATE_TYPE']['VALUE'])) { ?>
+                                <?php if (strlen($offer['PROPERTIES']['RATE_TYPE']['VALUE'])) { ?>
                                     <div class="room_offer">
                                         <?=TarifEnum::getLocalizedValue($offer['PROPERTIES']['RATE_TYPE']['VALUE']); ?>
-                                    </div>
-                                <? } ?>
 
-                                <? if (strlen($offer['PROPERTIES']['CANCELLATION_POLICIES']['VALUE'])) { ?>
+                                        <?php if (strlen($offer['PROPERTIES']['ROOM_TYPE']['VALUE'])) { ?>
+                                            <?=RoomTypeFrontEnum::getDescriptionByString($offer['PROPERTIES']['ROOM_TYPE']['VALUE']); ?>
+                                        <?php } ?>
+                                    </div>
+                                <?php } ?>
+
+
+
+
+                                <?php if (strlen($offer['PROPERTIES']['CANCELLATION_POLICIES']['VALUE'])) { ?>
                                     <div class="room__cancelation">
                                         <div class="room__cancelation-title">
                                             Условия отмены
@@ -241,17 +249,17 @@ foreach ($arElements as $arElement):
                                             </svg>
                                         </div>
                                     </div>
-                                <? } ?>
+                                <?php } ?>
                             </div>
 
                             <div class="room__price">
                                 <div class="room__price-per-night">
                                     <span class="room__final-price"><?= number_format((float)$elementPrice, 0, '.', ' ') ?> <span>₽</span></span>
-                                    <? if ($elementOldPrice) { ?>
+                                    <?php if ($elementOldPrice) { ?>
                                         <span class="room__old-price"><span
                                                     class="number"><?= number_format((float)$elementOldPrice, 0, '.', ' ') ?></span> <span
                                                     class="rub">₽</span></span>
-                                    <? } ?>
+                                    <?php } ?>
                                     <span class="room__nights"> <?= $daysCount ?> <?= $daysDeclension->get($daysCount) ?></span>
                                 </div>
                                 <div class="split-wrap" <?= $elementPrice - Users::getInnerScore() <= 0 ? 'style="display: none"' : '' ?>>
@@ -267,8 +275,8 @@ foreach ($arElements as $arElement):
                                 </div>
                             </div>
                             <div class="room__button-wrap">
-                                <? $surchargePrice = number_format((float)$elementPrice - (float)Users::getInnerScore(), 0, '.', ' ') ?>
-                                <? if (number_format((float)Users::getInnerScore(), 0, '.', ' ') > 0 && $surchargePrice > 0): ?>
+                                <?php $surchargePrice = number_format((float)$elementPrice - (float)Users::getInnerScore(), 0, '.', ' ') ?>
+                                <?php if (number_format((float)Users::getInnerScore(), 0, '.', ' ') > 0 && $surchargePrice > 0): ?>
                                     <div class="room__surcharge">
                                         <span><?= GetMessage('SURCHANGE') ?></span>
                                         <span>
@@ -291,7 +299,7 @@ foreach ($arElements as $arElement):
                                             <?= GetMessage('SURCHANGE_INFO') ?>
                                         </span>
                                     </div>
-                                <? endif; ?>
+                                <?php endif; ?>
                                 <a class="button button_primary"
                                    onclick="VK.Goal('customize_product')"
                                    data-section-external-id="<?= $arSection['UF_EXTERNAL_ID'] ?>"
@@ -315,13 +323,13 @@ foreach ($arElements as $arElement):
                             </div>
                         </div>
 
-                    <? } ?>
+                    <?php } ?>
 
-                <? endif; ?>
+                <?php endif; ?>
             </div>
-        <? endforeach; ?>      
-    <? endif; ?>
-<? endforeach;
+    <?php endforeach; ?>
+<?php endif; ?>
+<?php endforeach;
 $printedEmpty = false;
 foreach ($arElements as $key => $arElement):
     if ($arElement['AVAILABLE_ID'] == true):
@@ -331,7 +339,7 @@ foreach ($arElements as $key => $arElement):
         <div class="rooms__empty-list">
             <div>Не осталось свободных мест</div>
         </div>
-    <? $printedEmpty = true;
+        <?php $printedEmpty = true;
     }
     require 'empty_rooms.php';
 endforeach;
