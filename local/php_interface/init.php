@@ -1,6 +1,7 @@
 <?php
 
 use Bitrix\Main\Loader;
+use Bitrix\Main\Application;
 
 //composer autoload
 if (file_exists($_SERVER['DOCUMENT_ROOT'] . '/local/php_interface/vendor/autoload.php')) {
@@ -75,6 +76,10 @@ Loader::registerAutoLoadClasses(null, array(
     'Naturalist\Handlers\OnAdminIBlockSectionEdit' => '/local/php_interface/classes/Handlers/OnAdminIBlockSectionEdit.php',
     'Naturalist\Telegram\Notifications\Error' => '/local/php_interface/classes/Telegram/Notifications/Error.php',
 ));
+
+$documentRoot = Application::getDocumentRoot();
+
+require_once($documentRoot . '/local/php_interface/lib/logger/init.php');
 
 // Константы
 require_once($_SERVER["DOCUMENT_ROOT"] . "/local/php_interface/init_constants.php");
