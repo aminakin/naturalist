@@ -71,7 +71,10 @@ class Bronevik
                 return $this->customCall($methodName, $arguments);
             }
         } catch (Throwable $e) {
-            $this->logger->error($methodName . ':' . PHP_EOL . $e->getMessage() . PHP_EOL . $e->getTraceAsString());
+            if (! empty($this->logger)) {
+                $this->logger->error($methodName . ':' . PHP_EOL . $e->getMessage() . PHP_EOL . $e->getTraceAsString());
+            }
+
             throw $e;
         }
     }

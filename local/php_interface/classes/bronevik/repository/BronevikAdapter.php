@@ -32,7 +32,7 @@ class BronevikAdapter
 
     protected function sendLog($level, $message, array $context = []): void
     {
-        if (isset($this->logger)) {
+        if (! empty($this->logger)) {
             $this->logger->{$level}($message, $context);
         }
     }
