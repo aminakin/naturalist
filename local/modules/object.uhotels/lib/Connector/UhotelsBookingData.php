@@ -2,6 +2,7 @@
 
 namespace Object\Uhotels\Connector;
 
+use Bitrix\Main\Diag\Debug;
 use UHotels\ApiClient\Dto\Booking\BookingRequestCreateDto;
 use UHotels\ApiClient\Dto\Booking\RequestStayDto;
 use UHotels\ApiClient\Dto\Booking\ServiceInDto;
@@ -15,37 +16,49 @@ class UhotelsBookingData
      */
     public static function makeReservation($orderId, $arOrder, $arUser, $reservationPropId)
     {
-        $guestItem = current($arOrder['PROPS']['GUEST_LIST']);
-        $arGuestItem = explode(' ', $guestItem, 2);
-        $arGuestItem = ['lastName' => $arGuestItem[0], 'firstName' => $arGuestItem[1]];
-        $guests = [];
-        for ($i = 0; $i < $arOrder['ITEMS'][0]['ITEM_BAKET_PROPS']['GUESTS_COUNT']['VALUE']; $i++) {
-            $guests[] = $arGuestItem;
-        }
+        $arFields['TARIFF_ID'] = $arOrder['ITEMS'][0]['ITEM_BAKET_PROPS']['UHOTELS_TARIFF_ID']['VALUE'];
+        $arFields['ROOM_ID'] = $arOrder['ITEMS'][0]['ITEM']['PROPERTIES']['EXTERNAL_ID']['VALUE'];
+        $arFields['DATE_IN'] = date('Y-m-d', strtotime($arOrder['PROPS']['DATE_FROM']));
+        $arFields['DATE_OUT'] = date('Y-m-d', strtotime($arOrder['PROPS']['DATE_TO']));
+        $arFields['COMMENTS'] = $arOrder['FIELDS']['COMMENTS'];
+        $arFields['NAME'] = $arOrder['PROPS']['NAME'];
+        $arFields['EMAIL'] = $arOrder['PROPS']['EMAIL'];
+        $arFields['PHONE'] = $arOrder['PROPS']['PHONE'];
 
-        $children = [];
+        $prices = unserialize($arOrder['ITEMS'][0]['ITEM_BAKET_PROPS']['PRICES']['VALUE']);
+        // привести к формату  "2025-02-25" => 1000,
+        // есть
+        // array (
+        //  'room_id' => 1223,
+        //  'start_at' => '2025-05-15',
+        //  'end_at' => '2025-05-17',
+        //  'occupancy_code' => 'main_p2',
+        //  'amount' => 3000.0,
+        //)
+
+        // a:5:{s:7:"room_id";i:1223;s:8:"start_at";s:10:"2025-05-15";s:6:"end_at";s:10:"2025-05-17";s:14:"occupancy_code";s:7:"main_p2";s:6:"amount";d:3000;}
+        $formatPrices = [];
+//        foreach ($prices as $price) {
+            $formatPrices[$prices['start_at']] = $prices['amount'];
+//        }
+        $arFields['DAYS_PRICE'] = $formatPrices;
+
+        $arFields['ADULT'] = $arOrder["ITEMS"][0]["ITEM_BAKET_PROPS"]["GUESTS_COUNT"]['VALUE'];
+
+        $arFields['CHILD_AGE'] = [];
         $childrenStr = $arOrder['ITEMS'][0]['ITEM_BAKET_PROPS']['CHILDREN']['VALUE'];
         if (!empty(trim($childrenStr))) {
             $arChild = explode(',', $childrenStr);
-            foreach ($arChild as $childItem) {
-                $children[] = ['count' => 1, 'age' => $childItem];
-            }
+            $arFields['CHILD_AGE'] = $arChild;
         }
 
-//        $this->bronevik->setAttempt(2);
-//        $this->bronevik->setCheckBeforeAttemptCallback(function ($arguments, $attempt) use ($orderId, $reservationPropId) {
-//            if (($order = $this->bronevik->searchOrderByReferenceId($orderId)) === null) {
-//                return true;
-//            }
-//
-//            $this->setExternalIdToOrder($orderId, $order->getId(), $reservationPropId);
-//
-//            return false;
-//        });
-//        $orderResult = $this->bronevik->OrderCreate($orderId, $offerCode, $guests, $children);
-//        $this->bronevik->setCheckBeforeAttemptCallback(null);
-//
-//        return $this->setExternalIdToOrder($orderId, $orderResult->getId(), $reservationPropId);
+        $arFields['GUESTS'] = $arOrder['PROPS']['GUEST_LIST'];
+
+        $token = $arOrder['ITEMS'][0]['ITEM']['SECTION']['UF_EXTERNAL_ID'];
+        $UhotelsConnector = new UhotelsConnector($token);
+        $resultBooking = $UhotelsConnector->addBooking(self::createBookingDataFromOrder($arFields));
+
+        return $resultBooking->toArray() ?? false;
     }
     /**
      * Формирует данные для создания букинга из заказа
@@ -53,43 +66,29 @@ class UhotelsBookingData
      * @param $orderId
      * @return BookingRequestCreateDto
      */
-    private static function createBookingDataFromOrder($orderId): BookingRequestCreateDto
+    private static function createBookingDataFromOrder($arFields): BookingRequestCreateDto
     {
-
-        $bookingCreateData = BookingRequestCreateDto::fromArray([
-            'room_id' => 1223,
-            'tariff_id' => 28,
-            'date_in' => "2025-02-25",
-            'date_out' => "2025-02-28",
-            'comment' => 'commentary',
-
+        return  BookingRequestCreateDto::fromArray([
+            'room_id' => $arFields['ROOM_ID'],
+            'tariff_id' => $arFields['TARIFF_ID'],
+            'date_in' => $arFields['DATE_IN'],
+            'date_out' => $arFields['DATE_OUT'],
+            'comment' => $arFields['COMMENTS'],
+            'pay_method_id' => 219, ///
             'currency' => 'RUB',
             'lang' => 'ru',
-            'name' => 'Создание Тест',
-            'email' => 'test@create.test',
-            'phone' => '999999999',
+            'name' => $arFields['NAME'],
+            'email' => $arFields['EMAIL'],
+            'phone' => $arFields['PHONE'],
 
             'stays' => [
                 RequestStayDto::fromArray([
-                    'days_price' => [
-                        "2025-02-25" => 1000,
-                        "2025-02-26" => 2000,
-                        "2025-02-27" => 3000,
-                    ],
-                    'adult' => 2,
-                    'child_age' => [
-                        0,
-                        "2",
-                        "1",
-                    ],
-                    'guests' => [
-                        "Тестовый Создатель",
-                        "Второй тестовый"
-                    ],
+                    'days_price' => $arFields['DAYS_PRICE'],
+                    'adult' => $arFields['ADULT'],
+                    'child_age' => $arFields['CHILD_AGE'],
+                    'guests' => $arFields['GUESTS'],
                 ])
             ],
         ]);
-
-        return new BookingRequestCreateDto();
     }
 }
