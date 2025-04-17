@@ -302,7 +302,8 @@ foreach ($arElements as $arElement): ?>
                                    data-date-to="<?= $dateTo ?>"
                                    data-external-id="<?= $arElement["PROPERTY_EXTERNAL_ID_VALUE"] ?>"
                                    data-external-service="<?= $arSection["UF_EXTERNAL_SERVICE"] ?>"
-                                   data-bronevik-offer-external-id="<?= $offer["PROPERTIES"]['CODE']['VALUE'] ?>"
+                                   data-prices='<?= serialize($offer['days_price']) ?>'
+                                   data-uhotels-taariff="<?= $offer['tariffData']['id'] ?>"
                                    data-category-id="<?= $arElement["PROPERTY_EXTERNAL_CATEGORY_ID_VALUE"] ?>"
                                    data-room-title="<?= $arElement["NAME"] ?>"
                                    data-room-photo="<?= $arElement["PICTURES"][array_key_first($arElement["PICTURES"])]['src'] ?>"

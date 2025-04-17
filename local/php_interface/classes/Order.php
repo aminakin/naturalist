@@ -28,6 +28,7 @@ use Naturalist\bronevik\HotelOfferPricingCheckPriceBronevik;
 use Naturalist\bronevik\OrderCancelBronevik;
 use Naturalist\bronevik\OrderCanceledPenaltyBronevik;
 use Naturalist\bronevik\OrderCreateBronevik;
+use Object\Uhotels\Connector\UhotelsBookingData;
 use Sberbank\Payments\Gateway;
 use function NormalizePhone;
 use function randString;
@@ -43,6 +44,7 @@ class Orders
     public $travelineSectionPropEnumId = '1';
     public $bnovoSectionPropEnumId = '2';
     public $bronevikSectionPropEnumId = '6';
+
 
     public $arPropsIDs = array(
         'PHONE' => 1,
@@ -83,6 +85,7 @@ class Orders
         'BRONEVIK_OFFER_ID' => ORDER_PROP_BRONEVIK_OFFER_ID,
         'IS_ORDER_TEST_PROP_ID' => IS_ORDER_TEST_PROP_ID,
     );
+
     public $statusNames = array(
         "N" => "Не оплачено",
         "P" => "Оплачен",
@@ -103,6 +106,7 @@ class Orders
     public function __construct()
     {
         Loader::includeModule("sale");
+        Loader::includeModule("object.uhotels");
     }
 
     /* авторегистрация пользователя */
@@ -605,6 +609,12 @@ class Orders
             $reservationRes = $bnovo->makeReservation($orderId, $arOrder, $arUser, $reservationPropId);
         } elseif ($service == $this->travelineSectionPropEnumId) {
             $reservationRes = Traveline::makeReservation($orderId, $arOrder, $arUser, $reservationPropId);
+        } else {
+            if (Loader::includeModule('object.uhotels')) {
+                if($service == \Object\Uhotels\Settings\Settings::UhotelsSectionPropEnumId) {
+                    $reservationRes = UhotelsBookingData::makeReservation($orderId, $arOrder, $arUser, $reservationPropId);
+                }
+            }
         }
 
         if ($reservationRes) {
@@ -1028,6 +1038,12 @@ class Orders
             $propertyValue->setValue(intval($params['userbalance']));
         }
 
+        if (Loader::includeModule('object.uhotels')) {
+            if ($externalService == \Object\Uhotels\Settings\Settings::UhotelsSectionPropEnumId) {
+
+
+            }
+        }
         if ($externalService == $this->bronevikSectionPropEnumId) {
             $offerId = $arBasketItems['ITEMS'][0]['PROPS']['BRONEVIK_OFFER_ID'];
             $propertyValue = $propertyCollection->getItemByOrderPropertyId($this->arPropsIDs['BRONEVIK_OFFER_ID']);

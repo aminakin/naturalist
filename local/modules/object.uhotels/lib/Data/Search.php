@@ -141,6 +141,8 @@ class Search
             if (!empty($occupancyData)) {
                 foreach ($occupancyData as $occupancyCode => $occupancyPriceData) {
 
+                    Debug::writeToFile(var_export($occupancyPriceData, true), true);
+
                     if (OccupancyEnum::getValueByCode($occupancyCode) == (int)$guests) {
                         /** @var \UHotels\ApiClient\Dto\Occupancy\OccupancyDetailDto $occupancyPriceData */
 
@@ -151,6 +153,7 @@ class Search
                                 'name' => $tariff->name,
                                 'desc' => $tariff->desc,
                             ],
+                            'days_price' => $occupancyPriceData->toArray(),
                         ];
 
                     }
