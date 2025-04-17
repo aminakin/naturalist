@@ -35,10 +35,9 @@
 }
 
 @media screen and (min-width: 1024px){
-
-    .list__item_catalog:hover .catalog_menu {
+    /*.list__item_catalog:hover .catalog_menu {
         display: block;
-    }
+    }*/
 }
 
 .box1 {
