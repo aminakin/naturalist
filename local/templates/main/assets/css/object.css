@@ -1216,13 +1216,11 @@
 .section_reviews .reviews__list {
   margin-top: 20px;
   display: none;
-  flex-direction: column;
-  gap: 20px;
   gap: 20px;
 }
 
-.section_reviews .reviews__list.active {
-  display: flex;
+.section_reviews .reviews__list.active{
+  display: grid;
 }
 
 .share {
@@ -2910,17 +2908,9 @@
 }
 
 .review__gallery {
-  border-top-left-radius: 12px;
-  border-bottom-left-radius: 12px;
   overflow: hidden;
   width: 100%;
   border-radius: 12px;
-}
-
-.review__gallery>ul>li:last-child {
-  border-top-right-radius: 12px;
-  border-bottom-right-radius: 12px;
-  overflow: auto;
 }
 
 .review .list_gallery {

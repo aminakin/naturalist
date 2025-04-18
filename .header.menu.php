@@ -30,6 +30,13 @@ $aMenuLinks = Array(
 		"" 
 	),
 	Array(
+		"Локации", 
+		SITE_DIR."/regions/", 
+		Array(), 
+		Array(), 
+		"" 
+	),
+	Array(
 		"Сертификат", 
 		SITE_DIR."/certificates/", 
 		Array(), 
@@ -53,13 +60,6 @@ $aMenuLinks = Array(
 	Array(
 		"Контакты", 
 		SITE_DIR."/contacts/", 
-		Array(), 
-		Array(), 
-		"" 
-	),
-	Array(
-		"Локации", 
-		SITE_DIR."/regions/", 
 		Array(), 
 		Array(), 
 		"" 

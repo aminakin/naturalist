@@ -21,6 +21,8 @@ foreach ($arParams['VARS'] as $key => $value) {
                 require 'bnovo_rooms.php';
             } elseif ($arSection["UF_EXTERNAL_SERVICE"] == "bronevik") {
                 require 'bronevik_rooms.php';
+            } elseif ($arSection["UF_EXTERNAL_SERVICE"] == "uhotels") {
+                require 'uhotels_rooms.php';
             } else {
                 require 'traveline_rooms.php';
             } ?>
