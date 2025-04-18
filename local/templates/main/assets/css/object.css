@@ -1091,7 +1091,7 @@
   border-top: 0.1rem solid var(--color-black);
 }
 
-#zuck-modal-content .story-viewer .head .left .info{
+#zuck-modal-content .story-viewer .head .left .info {
   border: unset;
 }
 
@@ -1202,9 +1202,10 @@
   box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.12);
   font-weight: 400;
 }*/
-.reviews__reviews .sort .list .list__link.active{
+.reviews__reviews .sort .list .list__link.active {
   cursor: default;
 }
+
 .reviews__reviews .sort .list .list__link.active,
 .reviews__reviews .sort .list .list__link:hover {
   background-color: var(--color-beige-light);
@@ -2301,7 +2302,7 @@
   line-height: 20px;
 }
 
-.room__features svg{
+.room__features svg {
   width: 100%;
   max-width: 20px;
 }
@@ -2692,12 +2693,12 @@
   margin-left: -5px;
 }
 
-.room__surcharge .room__surcharge-info.active{
+.room__surcharge .room__surcharge-info.active {
   display: block;
 }
 
 @media (max-width: 900px) {
-  .room__surcharge .room__surcharge-info{
+  .room__surcharge .room__surcharge-info {
     width: 226px;
     left: 16px;
   }
@@ -2785,6 +2786,23 @@
   background-color: var(--color-btn);
 }
 
+.reviews__list-empty {
+  background: #F4E6CB;
+  border-radius: 16px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 32px;
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 24px;
+  width: 100%;
+}
+
+.reviews__list-empty svg {
+  margin-right: 16px;
+}
+
 .review {
   padding: 4px;
   background-color: var(--color-new-1);
@@ -2796,8 +2814,6 @@
   border-radius: 50%;
   overflow: hidden;
 }
-
-.review__image img {}
 
 .review__content {
   padding: 8px;
@@ -3554,10 +3570,6 @@
     min-width: 1px;
   }
 
-  .reviews .sort {
-    margin-bottom: 2.4rem;
-  }
-
   .reviews__list {
     grid-column-gap: 5rem;
     -webkit-box-align: start;
@@ -3604,6 +3616,7 @@
 }
 
 @media (max-width: 767px) {
+
   .objects__heading-control {
     font-size: 1.5rem;
     padding-right: 2.4rem;
@@ -3760,6 +3773,20 @@
 
   .reviews__list {
     grid-template-columns: 1fr;
+  }
+
+  .reviews__list-empty {
+    padding: 12px;
+    font-weight: 500;
+    font-size: 13px;
+    line-height: 18px;
+    margin-top: -8px;
+  }
+
+  .reviews__list-empty svg {
+    width: 26px;
+    height: 26px;
+    margin-right: 8px;
   }
 }
 
