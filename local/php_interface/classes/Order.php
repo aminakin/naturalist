@@ -922,12 +922,12 @@ class Orders
             $arUser["NAME"] = !empty($arUser["NAME"]) ? $arUser["NAME"] : $params["name"];
             $arUser["LAST_NAME"] = !empty($arUser["LAST_NAME"]) ? $arUser["LAST_NAME"] : $params["last_name"];
 
-            if (!(new HotelOfferPricingCheckPriceBronevik())($basket, ['LAST_NAME' => $arUser['LAST_NAME'], 'FIRST_NAME' => $arUser['NAME']])) {
-                return json_encode([
-                    "ACTION" => "reload",
-                    "ERROR" => "Произошло изменение цены. Пожалуйста, ознакомьтесь!",
-                ]);
-            }
+			//if (!(new HotelOfferPricingCheckPriceBronevik())($basket, ['LAST_NAME' => $arUser['LAST_NAME'], 'FIRST_NAME' => $arUser['NAME']])) {
+			//   return json_encode([
+			//      "ACTION" => "reload",
+			//      "ERROR" => "Произошло изменение цены. Пожалуйста, ознакомьтесь!",
+			//  ]);
+			//}
         }
 
         // Создание нового заказа
