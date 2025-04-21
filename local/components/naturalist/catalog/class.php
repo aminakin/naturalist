@@ -73,6 +73,7 @@ class NaturalistCatalog extends \CBitrixComponent
     private $arRegionIds = [];
     private $arSeoImpressions = [];
     private $arSort = [];
+    private $arNavParams = false;
     private $season = [];
     private $arExternalInfo = [];
     private $arExternalAvail = [];
@@ -455,16 +456,30 @@ class NaturalistCatalog extends \CBitrixComponent
 
     private function sectionsQuery()
     {
-        $rsSections = CIBlockSection::GetList($this->arSort, $this->arFilter, false, ["IBLOCK_ID", "ID", "NAME", "CODE", "SECTION_PAGE_URL", "UF_*"], false);
+        $rsSections = CIBlockSection::GetList(
+            $this->arSort,
+            $this->arFilter,
+            false,
+            ["IBLOCK_ID", "ID", "NAME", "CODE", "SECTION_PAGE_URL", "UF_*"],
+            $this->arNavParams);
         while ($arSection = $rsSections->GetNext()) {
             $this->arSections[$arSection['ID']] = $arSection;
         }
+
+        $totalElements = CIBlockSection::GetList(
+            $this->arSort,
+            $this->arFilter,
+            false,
+            ['ID'],
+            false);
+
+        $this->allCount = $totalElements->SelectedRowsCount();
     }
 
     private function fillSections()
     {
         //кеш каталог а временно выключен на переработку
-//        if (!isset($this->arFilter['UF_EXTERNAL_ID'])) {
+        if (!isset($this->arFilter['UF_EXTERNAL_ID'])) {
 
 //            $cache = Cache::createInstance();
 //            $arFilterCacheKey = Utils::recursiveImplode($this->arFilter, '_');
@@ -473,12 +488,16 @@ class NaturalistCatalog extends \CBitrixComponent
 //            if ($cache->initCache(86400, $cacheKey)) {
 //                $this->arSections = $cache->getVars();
 //            } elseif ($cache->startDataCache()) {
-//                $this->sectionsQuery();
+                $this->arNavParams = [
+                    'nPageSize' => $this->arParams['ITEMS_COUNT'],
+                    'iNumPage' => $this->page
+                ];
+                $this->sectionsQuery();
 //                $cache->endDataCache($this->arSections);
 //            }
-//        } else {
+        } else {
             $this->sectionsQuery();
-//        }
+        }
 
         $this->searchedRegionData = Regions::getRegionById($this->arRegionIds[0] ?? false);
         foreach ($this->arSections as &$arSection) {
@@ -957,6 +976,7 @@ class NaturalistCatalog extends \CBitrixComponent
         $this->arResult['searchedRegionData'] = $this->searchedRegionData;
         $this->arResult['searchName'] = $this->searchName;
         $this->arResult['search'] = $this->search;
+        $this->arResult['allCount'] = $this->allCount;
     }
 
     protected function prepareDetail()
