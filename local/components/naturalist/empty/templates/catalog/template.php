@@ -237,6 +237,7 @@ foreach ($arResult as $key => $value) {
 
         <div class="catalog__more">
             <?
+
             $nav = new \Bitrix\Main\UI\PageNavigation("page");
             $nav->allowAllRecords(false)
                 ->setPageSize($arResult['itemsCount'])
