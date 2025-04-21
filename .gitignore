@@ -8,6 +8,7 @@
 !/bitrix/modules/add_object_bnovo/
 /upload
 /local/php_interface/data/*
+/local/php_interface/lib/logger/logs/*.log
 /local/php_interface/log
 #/local/php_interface/init_constants.php
 /local/cron/*.log
