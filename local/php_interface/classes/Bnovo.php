@@ -1860,7 +1860,7 @@ class Bnovo
 
 
     /* Обновление цен и броней */
-    public function updateReservationData($hotelId, $arTariffs, $arCategories, $arDates)
+    public function updateReservationData($hotelId, $arTariffs, $arCategories, $arDates, $checkAvailability = true)
     {
         $url = $this->bnovoApiURL . '/plans_data';
         $headers = array(
@@ -1894,12 +1894,16 @@ class Bnovo
 //        $this->debugBotTelegram->sendMessage(Markdown::arrayToMarkdown($response));
 
         if (empty($arData) || (isset($arData['code']) && $arData['code'] != 200)) {
-            if ($arData['code'] == 403) {
-                Error::objectDisabled($hotelId, "Bnovo");
-                return 'Объект отключен от вашего канала продаж';
+            if ($checkAvailability) {
+                if ($arData['code'] == 403) {
+                    Error::objectDisabled($hotelId, "Bnovo");
+                    return 'Объект отключен от вашего канала продаж';
+                } else {
+                    Error::internal($hotelId, "Bnovo", 'Непредвиденная ошибка: ' . implode(";", $arData));
+                    return 'Непредвиденная ошибка. Код ошибки - ' . $arData['code'] . '. Сообщение - ' . $arData['message'];
+                }
             } else {
-                Error::internal($hotelId, "Bnovo", $arData['message']);
-                return 'Непредвиденная ошибка. Код ошибки - ' . $arData['code'] . '. Сообщение - ' . $arData['message'] ;
+                return 'Объект отключен от вашего канала продаж';
             }
         }
 
@@ -2005,7 +2009,7 @@ class Bnovo
     }
 
     /* Обновление наличия */
-    public function updateAvailabilityData($hotelId, $arCategories, $arDates, $fromOrder = false)
+    public function updateAvailabilityData($hotelId, $arCategories, $arDates, $fromOrder = false, $checkAvailability = true)
     {
         $url = $this->bnovoApiURL . '/availability';
         $headers = array(
@@ -2048,12 +2052,16 @@ class Bnovo
 //        $this->debugBotTelegram->sendMessage(Markdown::arrayToMarkdown($response));
 
         if (empty($arData) || (isset($arData['code']) && $arData['code'] != 200)) {
-            if ($arData['code'] == 403) {
-                Error::objectDisabled($hotelId, "Bnovo");
-                return 'Объект отключен от вашего канала продаж';
+            if ($checkAvailability) {
+                if ($arData['code'] == 403) {
+                    Error::objectDisabled($hotelId, "Bnovo");
+                    return 'Объект отключен от вашего канала продаж';
+                } else {
+                    Error::internal($hotelId, "Bnovo", 'Непредвиденная ошибка: ' . implode(";", $arData));
+                    return 'Непредвиденная ошибка. Код ошибки - ' . $arData['code'] . '. Сообщение - ' . $arData['message'];
+                }
             } else {
-                Error::internal($hotelId, "Bnovo", $arData['message']);
-                return 'Непредвиденная ошибка. Код ошибки - ' . $arData['code'] . '. Сообщение - ' . $arData['message'];
+                return 'Объект отключен от вашего канала продаж';
             }
         }
 
@@ -2486,8 +2494,8 @@ class Bnovo
 
         if (!empty($sections)) {
             foreach ($sections as $section) {
-                $this->updateReservationData($section['UF_EXTERNAL_ID'], [], [], [$startDate, $endDate]);
-                $this->updateAvailabilityData($section['UF_EXTERNAL_ID'], [], [$startDate, $endDate]);
+                $this->updateReservationData($section['UF_EXTERNAL_ID'], [], [], [$startDate, $endDate], false);
+                $this->updateAvailabilityData($section['UF_EXTERNAL_ID'], [], [$startDate, $endDate], false, false);
             }
         }
     }
