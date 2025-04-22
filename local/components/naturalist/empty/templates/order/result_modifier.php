@@ -220,7 +220,7 @@ $paySystemResult = \Bitrix\Sale\PaySystem\Manager::getList(array(
     'filter'  => array(
         'ACTIVE' => 'Y',
         '!ACTION_FILE' => 'inner',
-        '!CODE' => 'CERT',
+        '!CODE' => ['CERT', 'write_off', 'aladdin', 'yandex', 'flowwow', 'giftery', 'digift'],
     ),
     'order' => ['sort' => 'asc']
 ))->fetchAll();
