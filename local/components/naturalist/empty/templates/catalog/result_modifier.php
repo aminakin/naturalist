@@ -151,7 +151,7 @@ if ($arResult['arSearchedRegions']) {
             }
 
             $viewedIds = [];
-            // Используем array_map для обхода массива
+
             array_map(function ($item) use (&$viewedIds) {
                 if (isset($item['ID'])) {
                     $viewedIds[] = $item['ID'];
