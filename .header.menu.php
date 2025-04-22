@@ -2,68 +2,59 @@
 $aMenuLinks = Array(
 	Array(
 		"Главная", 
-		SITE_DIR."/", 
+		"//", 
 		Array(), 
 		Array("IS_MOBILE"=>"Y"), 
 		"" 
 	),
 	Array(
 		"Каталог", 
-		SITE_DIR."/catalog/", 
+		"//catalog/", 
 		Array(), 
 		Array(), 
 		"" 
 	),
 	Array(
 		"Карта", 
-		SITE_DIR."/map/", 
+		"//map/", 
 		Array(), 
 		Array(), 
 		"" 
 	),
-	
 	Array(
 		"Подборки", 
-		SITE_DIR."/impressions/", 
+		"//impressions/", 
 		Array(), 
 		Array(), 
 		"" 
 	),
 	Array(
 		"Сертификат", 
-		SITE_DIR."/certificates/", 
+		"//certificates/", 
 		Array(), 
 		Array("ALWAYS_ORANGE"=>"Y"), 
 		"" 
 	),
-    Array(
-        "Авиабилеты",
-        SITE_DIR."/flights/",
-        Array(),
-        Array(),
-        ""
-    ),
 	Array(
-		"О проекте", 
-		SITE_DIR."/about/", 
+		"Авиабилеты", 
+		"//flights/", 
 		Array(), 
 		Array(), 
 		"" 
 	),
 	Array(
-		"Контакты", 
-		SITE_DIR."/contacts/", 
+		"О проекте", 
+		"//about/", 
 		Array(), 
 		Array(), 
 		"" 
 	),
 	Array(
 		"Локации", 
-		SITE_DIR."/regions/", 
+		"//regions/", 
 		Array(), 
 		Array(), 
 		"" 
-	),
-
+	)
 );
 ?>
