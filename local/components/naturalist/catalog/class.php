@@ -1302,8 +1302,12 @@ class NaturalistCatalog extends \CBitrixComponent
     private function getDetailReviews()
     {
         /* Отзывы */
-        $this->reviewsSortType = (!empty($_GET['sort']) && isset($_GET['sort'])) ? strtolower($_GET['sort']) : "date";
+        $this->reviewsSortType = (!empty($_GET['sort']) && isset($_GET['sort'])) ? strtolower($_GET['sort']) : "sort";
         switch ($this->reviewsSortType) {
+            case 'sort':
+                $arReviewsSort = array("SORT" => "ASC");
+                break;
+
             case 'date':
                 $arReviewsSort = array("ACTIVE_FROM" => "DESC");
                 break;
