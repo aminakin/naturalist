@@ -163,6 +163,6 @@ global $arUser, $userId, $isAuthorized;
     </div>
     <div class="reviews__list yandex_review<?= !empty($arReviews) ? '' : ' active' ?>">
         <script src="https://res.smartwidgets.ru/app.js" ; defer></script>
-        <div class="sw-app" data-app="<?= $arResult['reviewsYandex'][0]['UF_ID_YANDEX'] ?>"></div>
+        <div class="sw-app" data-app="<?= $arResult['reviewsYandex']['UF_ID_YANDEX'] ?>"></div>
     </div>
 </div>

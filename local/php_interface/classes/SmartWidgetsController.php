@@ -21,11 +21,11 @@ class SmartWidgetsController
      * @return mixed Данные, полученные от API (JSON декодируется в массив).
      * @throws Exception В случае ошибки запроса.
      */
-    public function getWidgetData($widgetIds)
+    public static function getWidgetData(array $widgetIds)
     {
         $payload = [
             'key' => self::CLIENT_KEY,
-            'widgets' => $widgetIds
+            'widgets' => array_values($widgetIds)
         ];
 
         // Инициализация cURL
@@ -67,20 +67,20 @@ class SmartWidgetsController
         return $data;
     }
 
-    /**
-     * Получает общее количество отзывов и средний рейтинг для всех источников.
-     *
-     * @param array $responseData Данные, полученные от API.
-     * @return array Ассоциативный массив с total_count и average_rating.
-     */
-    public function calculateReviewsSummary($responseData)
-    {
-        $totalCount = 0;
-        $totalRating = 0;
-        $sourceCount = 0;
 
+    /**
+     * Рассчитывает total_count и average_rating для каждого виджета и добавляет их в массив.
+     *
+     * @param array &$responseData Массив данных, полученных от API (передается по ссылке).
+     */
+    public static function calculateReviewsSummary(&$responseData)
+    {
         // Проходим по всем виджетам
-        foreach ($responseData as $widgetId => $widgetData) {
+        foreach ($responseData as &$widgetData) {
+            $totalCount = 0;
+            $totalRating = 0;
+            $sourceCount = 0;
+
             if (isset($widgetData['item']['review_yandex_map'])) {
                 // Проходим по каждому источнику отзывов
                 foreach ($widgetData['item']['review_yandex_map'] as $source) {
@@ -91,14 +91,13 @@ class SmartWidgetsController
                     }
                 }
             }
+
+            // Вычисляем средний рейтинг
+            $averageRating = $sourceCount > 0 ? ($totalRating / $sourceCount) : 0;
+
+            // Добавляем total_count и average_rating в данные виджета
+            $widgetData['total_count'] = $totalCount;
+            $widgetData['average_rating'] = round($averageRating, 2);
         }
-
-        // Вычисляем средний рейтинг
-        $averageRating = $sourceCount > 0 ? ($totalRating / $sourceCount) : 0;
-
-        return [
-            'total_count' => $totalCount,
-            'average_rating' => round($averageRating, 2)
-        ];
     }
 }

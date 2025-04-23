@@ -15,6 +15,7 @@ use Bitrix\Iblock\Elements\ElementFeaturesdetailTable;
 use Bitrix\Main\Data\Cache;
 use Naturalist\Products;
 use Naturalist\Filters\Components;
+use Naturalist\SmartWidgetsController;
 use Naturalist\Users;
 use Naturalist\Regions;
 use Naturalist\Utils;
@@ -109,6 +110,40 @@ class NaturalistCatalog extends \CBitrixComponent
     private $nextYear;
     private $daysRange;
 
+
+    /**
+     * @param $sectionId
+     * @return array
+     */
+    private function getYandexReviews($sectionIds): array
+    {
+        $commonYandexReviewsClass = HighloadBlockTable::compileEntity('YandexReviews')->getDataClass();
+        $commonYandexReviews = $commonYandexReviewsClass::query()
+            ->addSelect('*')
+            ->setOrder(['ID' => 'ASC'])
+            ->setFilter(['UF_ID_OBJECT' => $sectionIds])
+            ->setCacheTtl(36000000)
+            ?->fetchAll();
+
+        $arYandexIDs = array_column($commonYandexReviews, 'UF_ID_YANDEX', 'UF_ID_OBJECT');
+
+        if (is_array($commonYandexReviews) && !empty($commonYandexReviews)) {
+
+            $widgetData = SmartWidgetsController::getWidgetData($arYandexIDs);
+
+            foreach ($commonYandexReviews as &$item) {
+                $yandexId = $item['UF_ID_YANDEX'];
+                if (isset($widgetData['data'][$yandexId])) {
+                    $item = array_merge($item, $widgetData['data'][$yandexId]);
+                }
+            }
+            unset($item);
+
+            SmartWidgetsController::calculateReviewsSummary($commonYandexReviews);
+        }
+
+        return $commonYandexReviews;
+    }
 
     private function fillSectionVariables()
     {
@@ -593,9 +628,25 @@ class NaturalistCatalog extends \CBitrixComponent
 
         if (isset($arCampingIDs) && !empty($arCampingIDs)) {
             $this->arReviewsAvg = Reviews::getCampingRating($arCampingIDs);
+
             foreach ($this->arReviewsAvg as $id => $review) {
                 $this->arSections[$id]["RATING"] = $review["avg"];
             }
+
+            $yandexReviews = $this->getYandexReviews($arCampingIDs);
+            foreach ($yandexReviews as $yandexReview) {
+
+                if (!isset($this->arSections[$yandexReview['UF_ID_OBJECT']]["RATING"]) || $this->arSections[$yandexReview['UF_ID_OBJECT']]["RATING"] == null) {
+                    $this->arSections[$yandexReview['UF_ID_OBJECT']]["RATING"] = $yandexReview["average_rating"];
+                }
+
+                if (isset($this->arReviewsAvg[$yandexReview['UF_ID_OBJECT']])) {
+                    $this->arReviewsAvg[$yandexReview['UF_ID_OBJECT']]['count'] += $yandexReview["total_count"];
+                } else {
+                    $this->arReviewsAvg[$yandexReview['UF_ID_OBJECT']]['count'] = $yandexReview["total_count"];
+                }
+            }
+
         }
     }
 
@@ -1392,6 +1443,7 @@ class NaturalistCatalog extends \CBitrixComponent
         }
     }
 
+
     private function getDetailExternalInfo()
     {
         if (!empty($this->arSections) && !empty($this->arUriParams['dateFrom']) && !empty($this->arUriParams['dateTo']) && !empty($this->arUriParams['guests'])) {
@@ -1499,4 +1551,5 @@ class NaturalistCatalog extends \CBitrixComponent
         $this->prepareResultArray();
         $this->includeComponentTemplate($this->componentPage);
     }
+
 }
