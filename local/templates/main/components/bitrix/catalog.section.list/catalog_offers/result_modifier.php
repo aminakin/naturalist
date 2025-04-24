@@ -26,18 +26,36 @@ while ($arEntity = $rsData->Fetch()) {
 $arCampingIDs = array_map(function ($a) {
     return $a["ID"];
 }, $arResult["SECTIONS"]);
+
 $arReviewsAvg = Reviews::getCampingRating($arCampingIDs);
 $arResult['arReviewsAvg'] = $arReviewsAvg;
 
-foreach ($arResult["SECTIONS"] as &$arSection) {
-    $arSection["RATING"] = $arReviewsAvg[$arSection["ID"]]["avg"] ?? 0;
-}
 
 //отзывы яндекс
-//$NaturalistCatalog = new NaturalistCatalog();
-//$yandexReviews = $NaturalistCatalog->getYandexReviews($arCampingIDs);
-//\Bitrix\Main\Diag\Debug::dump($yandexReviews);
+$NaturalistCatalog = new NaturalistCatalog();
+$yandexReviews = $NaturalistCatalog->getYandexReviews($arCampingIDs);
 
+foreach ($yandexReviews as $review) {
+    if (isset($review['UF_ID_OBJECT'])) {
+
+        if (isset($arResult['arReviewsAvg'][$review['UF_ID_OBJECT']])) {
+            $arResult['arReviewsAvg'][$review['UF_ID_OBJECT']]['count'] += $review['total_count'];
+
+            if ($arResult['arReviewsAvg'][$review['UF_ID_OBJECT']]['avg'] == 0) {
+                $arResult['arReviewsAvg'][$review['UF_ID_OBJECT']]['avg'] = $review['average_rating'];
+            }
+        }else{
+            $arResult['arReviewsAvg'][$review['UF_ID_OBJECT']]['count'] = $review['total_count'];
+            $arResult['arReviewsAvg'][$review['UF_ID_OBJECT']]['avg'] = $review['average_rating'];
+        }
+    }
+}
+
+foreach ($arResult["SECTIONS"] as &$arSection) {
+    $arSection["RATING"] = $arReviewsAvg[$arSection["ID"]]["avg"] ?? 0;
+
+}
+unset($arSection);
 
 $arSortedSections = array();
 // Выборка по наиболее близкому рейтингу
@@ -107,6 +125,7 @@ foreach ($arResult["SECTIONS"] as &$arSection) {
         $arSectionsIds[] = $arSection["ID"];
     }
 }
+unset($arSection);
 
 
 // Заезд, выезд, кол-во гостей
