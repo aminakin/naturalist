@@ -1,5 +1,6 @@
 <?
 $aMenuLinks = Array(
+    /** Тип дома */ 
 	Array(
 		"Тип дома", 
 		"#", 
@@ -99,168 +100,101 @@ $aMenuLinks = Array(
 		"" 
 	),
 
-
+    /** Развлечения */ 
 	Array(
-		"Впечатления", 
+		"Развлечения", 
 		"#", 
 		Array(""), 
 		Array(""),
 		"" 
 	),
 	Array(
-        "Базы отдыха с арендой лодок", 
+        "Аренда лодок", 
         SITE_DIR."catalog/bazy-otdykha/s-arendoy-lodok/", 
         Array(), 
         Array(""), 
         "" 
     ),
     Array(
-        "Базы отдыха с йогой", 
+        "Йога", 
         SITE_DIR."catalog/bazy-otdykha/s-yogoy/", 
         Array(), 
         Array(""), 
         "" 
     ),
     Array(
-        "Глэмпинги с велопрогулками", 
+        "Велопрогулка", 
         SITE_DIR."catalog/glempingi/s-veloprogulkami/", 
         Array(), 
         Array(""), 
         "" 
     ),
     Array(
-        "Глэмпинги с конными прогулками", 
+        "Конные прогулки", 
         SITE_DIR."catalog/glempingi/s-konnymi-progulkami/", 
         Array(), 
         Array(""), 
         "" 
     ),
     Array(
-        "Кемпинги с арендой сапов", 
+        "Аренда сапов", 
         SITE_DIR."catalog/kempingi/s-arendoy-sapov/", 
         Array(), 
         Array(""), 
         "" 
     ),
     Array(
-        "Базы отдыха со сплавами по реке", 
+        "Сплав по реке", 
         SITE_DIR."catalog/bazy-otdykha/so-splavami-po-reke/", 
         Array(), 
         Array(""), 
         "" 
     ),
     Array(
-        "Базы отдыха с банным чаном и купелью", 
+        "Чан и купель", 
         SITE_DIR."catalog/bazy-otdykha/s-bannym-chanom-i-kupelyu/", 
         Array(), 
         Array(""), 
         "" 
     ),
     Array(
-        "Для любителей рыбалки", 
-        SITE_DIR."catalog/vpechatleniya/dlya-lyubiteley-rybalki/", 
-        Array(), 
-        Array(""), 
-        "" 
-    ),
-    Array(
-        "Базы отдыха с крытым бассейном", 
+        "Крытый бассейн", 
         SITE_DIR."catalog/bazy-otdykha/s-krytym-basseynom/", 
         Array(), 
         Array(""), 
         "" 
     ),
     Array(
-        "Базы отдыха с открытым бассейном", 
+        "Открытый бассейном", 
         SITE_DIR."catalog/bazy-otdykha/s-otkrytym-basseynom/", 
         Array(), 
         Array(""), 
         "" 
     ),
     Array(
-        "Базы отдыха с фермой", 
+        "Фермой", 
         SITE_DIR."catalog/bazy-otdykha/s-fermoy/", 
         Array(), 
         Array(""), 
         "" 
     ),
     Array(
-        "Базы отдыха со SPA", 
+        "SPA", 
         SITE_DIR."catalog/bazy-otdykha/so-spa/", 
         Array(), 
         Array(""), 
         "" 
     ),
     Array(
-        "С катанием на собачьих упряжках", 
+        "Cобачья упряжка", 
         SITE_DIR."catalog/s-kataniem-na-sobachikh-upryazhkakh/", 
         Array(), 
         Array(""), 
         "" 
 	),
 
-
-	Array(
-		"Окружение", 
-		"#", 
-		Array(""), 
-		Array(""),
-		"" 
-	),
-	Array(
-        "В горах", 
-        SITE_DIR."catalog/vpechatleniya/v-gorakh/", 
-        Array(), 
-        Array(""), 
-        "" 
-    ),
+    /** Тип размещения*/
     Array(
-        "В лесу", 
-        SITE_DIR."catalog/vpechatleniya/v-lesu/", 
-        Array(), 
-        Array(""), 
-        "" 
-    ),
-    Array(
-        "У водоемов (глэмпинги)", 
-        SITE_DIR."catalog/glempingi/u-vodoemov/", 
-        Array(), 
-        Array(""), 
-        "" 
-	),
-
-	
-    Array(
-		"Варианты отдыха", 
-		"#", 
-		Array(""), 
-		Array(""),
-		"" 
-	),
-    Array(
-        "Для семейного отдыха", 
-        SITE_DIR."catalog/bazy-otdykha/dlya-semeynogo-otdykha/", 
-        Array(), 
-        Array(""), 
-        "" 
-    ),
-    Array(
-        "Для двоих", 
-        SITE_DIR."catalog/kempingi/dlya-dvoikh/", 
-        Array(), 
-        Array(""), 
-        "" 
-	),
-    Array(
-        "Впечатления pet-friendly", 
-        SITE_DIR."catalog/vpechatleniya/pet-friendly/", 
-        Array(), 
-        Array(""), 
-        "" 
-	),
-
-
-	Array(
 		"Тип размещения", 
 		"#", 
 		Array(""), 
@@ -310,8 +244,8 @@ $aMenuLinks = Array(
         "" 
 	),
 
-
-	Array(
+    /** Питание */
+    Array(
 		"Питание", 
 		"#", 
 		Array(""), 
@@ -319,42 +253,43 @@ $aMenuLinks = Array(
 		"" 
 	),
 	Array(
-        "Базы отдыха с доставкой еды", 
+        "Доставка", 
         SITE_DIR."catalog/bazy-otdykha/s-dostavkoy-edy/", 
         Array(), 
         Array(""), 
         "" 
     ),
     Array(
-        "Базы отдыха с завтраком", 
+        "Завтрак", 
         SITE_DIR."catalog/bazy-otdykha/s-zavtrakom/", 
         Array(), 
         Array(""), 
         "" 
     ),
     Array(
-        "Загородные отели с завтраком, обедом и ужином", 
+        "Полный пансион <br>(завтрак, обед и ужин)", 
         SITE_DIR."catalog/zagorodnye-oteli/s-zavtrakom-obedom-i-uzhinom/", 
         Array(), 
         Array(""), 
         "" 
     ),
     Array(
-        "Базы отдыха \"Всё включено\"", 
+        "Всe включено", 
         SITE_DIR."catalog/bazy-otdykha/vse-vklyucheno/", 
         Array(), 
         Array(""), 
         "" 
     ),
     Array(
-        "Базы отдыха с кафе или рестораном", 
+        "Кафе и рестораном", 
         SITE_DIR."catalog/bazy-otdykha/s-kafe-ili-restoranom/", 
         Array(), 
         Array(""), 
         "" 
 	),
 
-	Array(
+    /** Удобства */
+    Array(
 		"Удобства", 
 		"#", 
 		Array(""), 
@@ -362,33 +297,92 @@ $aMenuLinks = Array(
 		"" 
 	),
 	Array(
-        "Кемпинги с Wi-Fi", 
+        "Wi-Fi", 
         SITE_DIR."catalog/kempingi/s-wi-fi/", 
         Array(), 
         Array(""), 
         "" 
     ),
     Array(
-        "Базы отдыха с зоной барбекю", 
+        "Зона барбекю", 
         SITE_DIR."catalog/bazy-otdykha/s-zonoy-barbekyu/", 
         Array(), 
         Array(""), 
         "" 
     ),
     Array(
-        "Загородные отели с парковкой", 
+        "Парковка", 
         SITE_DIR."catalog/zagorodnye-oteli/s-parkovkoy/", 
         Array(), 
         Array(""), 
         "" 
     ),
     Array(
-        "Базы отдыха с детской площадкой", 
+        "Детская площадка", 
         SITE_DIR."catalog/bazy-otdykha/s-detskoy-ploshchadkoy/", 
         Array(), 
         Array(""), 
         "" 
 	),
 
+    /** Окружение */
+	Array(
+		"Окружение", 
+		"#", 
+		Array(""), 
+		Array(""),
+		"" 
+	),
+	Array(
+        "Горы", 
+        SITE_DIR."catalog/vpechatleniya/v-gorakh/", 
+        Array(), 
+        Array(""), 
+        "" 
+    ),
+    Array(
+        "Лес", 
+        SITE_DIR."catalog/vpechatleniya/v-lesu/", 
+        Array(), 
+        Array(""), 
+        "" 
+    ),
+    Array(
+        "Водоемы", 
+        SITE_DIR."catalog/glempingi/u-vodoemov/", 
+        Array(), 
+        Array(""), 
+        "" 
+	),
+
+	/** Варианты отдыха  */
+    Array(
+		"Варианты отдыха", 
+		"#", 
+		Array(""), 
+		Array(""),
+		"" 
+	),
+    Array(
+        "Для семейного отдыха", 
+        SITE_DIR."catalog/bazy-otdykha/dlya-semeynogo-otdykha/", 
+        Array(), 
+        Array(""), 
+        "" 
+    ),
+    Array(
+        "Для двоих", 
+        SITE_DIR."catalog/kempingi/dlya-dvoikh/", 
+        Array(), 
+        Array(""), 
+        "" 
+	),
+    Array(
+        "pet-friendly", 
+        SITE_DIR."catalog/vpechatleniya/pet-friendly/", 
+        Array(), 
+        Array(""), 
+        "" 
+	),
 );
 ?>
