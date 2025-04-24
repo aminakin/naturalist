@@ -61,7 +61,7 @@ global $arUser, $userId, $isAuthorized;
 
                     <? if ($arResult['yandexReview'][0]): ?>
                     <li class="list__item reviews__item">
-                        <div class="list__link<?= (empty($arReviews) && isset($arResult['yandexReview'][0])) ? '' : ' active' ?>" data-tab="yandex_review"><?= Loc::getMessage('YANDEX_REVIEWS'); ?></div>
+                        <div class="list__link <?= (empty($arReviews) && isset($arResult['yandexReview'][0])) ? 'active' : '' ?>" data-tab="yandex_review"><?= Loc::getMessage('YANDEX_REVIEWS'); ?></div>
                     </li>
                     <? endif; ?>
 
@@ -155,7 +155,7 @@ global $arUser, $userId, $isAuthorized;
             <? endif; ?>
         </div>
 
-        <div class="reviews__list yandex_review <?=!isset($arResult['yandexReview'][0]) ? 'active' : '' ?>">
+        <div class="reviews__list yandex_review <?= (empty($arReviews) && isset($arResult['yandexReview'][0])) ? 'active' : '' ?>">
             <? if ($arResult['yandexReview'][0]['UF_ID_YANDEX']): ?>
                 <script src="https://res.smartwidgets.ru/app.js" ; defer></script>
                 <div class="sw-app" data-app="<?= $arResult['yandexReview'][0]['UF_ID_YANDEX'] ?>"></div>

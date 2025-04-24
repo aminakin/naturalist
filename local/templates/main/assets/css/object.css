@@ -1218,6 +1218,9 @@
   display: none;
   gap: 20px;
 }
+.section_reviews .reviews__list .sw-app-body {
+  width: auto !important;
+}
 
 .section_reviews .reviews__list.active{
   display: grid;
