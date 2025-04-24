@@ -1,14 +1,9 @@
 <?php
 
 use Bitrix\Highloadblock\HighloadBlockTable;
+use Naturalist\SmartWidgetsController;
 
-$commonYandexReviewsClass = HighloadBlockTable::compileEntity('YandexReviews')->getDataClass();
-$commonYandexReviews = $commonYandexReviewsClass::query()
-    ->addSelect('*')
-    ->setOrder(['ID' => 'ASC'])
-    ->setFilter(['UF_ID_OBJECT' => $arParams["sectionId"]])
-    ->setCacheTtl(36000000)
-    ?->fetchAll();
+/** @var  $arParams */
 
 $arResult = array(
     "avgRating" => $arParams['avgRating'],
@@ -21,7 +16,7 @@ $arResult = array(
     "arReviewsUsers" => $arParams['arReviewsUsers'],
     "reviewsPage" => $arParams['reviewsPage'],
     "reviewsPageCount" => $arParams['reviewsPageCount'],
-    "reviewsYandex" => $commonYandexReviews,
     "sectionId" => $arParams['sectionId'],
     "isUserReview" => $arParams['isUserReview'],
+    "yandexReview" => $arParams['yandexReview'],
 );

@@ -4,6 +4,8 @@ use Bitrix\Main\Localization\Loc;
 
 Loc::loadMessages(__FILE__);
 
+/** @var  $arResult */
+
 foreach ($arResult as $key => $value) {
     ${$key} = $value;
 }
@@ -25,8 +27,7 @@ global $arUser, $userId, $isAuthorized;
             </div>
         <? endif; ?>
     </div>
-    <? //$arReviews = []
-    ?>
+
     <div class="reviews__invite">
         <? if ($isUserReview == 'Y') { ?>
             <span>Вы уже оставляли отзыв на этот объект</span>
@@ -47,28 +48,31 @@ global $arUser, $userId, $isAuthorized;
             <? } ?>
         <? } ?>
     </div>
-    <? if (!empty($arReviews) || $arResult['reviewsYandex'][0]['UF_ID_YANDEX']): ?>
-        <div class="reviews__reviews" data-object-reviews-container>
-            <a class="anchor"></a>
+    <? if (!empty($arReviews) || $arResult['yandexReview'][0]['UF_ID_YANDEX']): ?>
+    <div class="reviews__reviews" data-object-reviews-container>
+        <a class="anchor"></a>
+            <div class="sort">
+                <ul class="list">
+                    <? if ($arReviews): ?>
+                    <li class="list__item reviews__item">
+                        <div class="list__link<?= !empty($arReviews) ? ' active' : '' ?>" data-tab="naturalist_review"><?= Loc::getMessage('NATURALIST_REVIEWS'); ?></div>
+                    </li>
+                    <? endif; ?>
 
-            <? if ($arReviews || $arResult['reviewsYandex']): ?>
-                <div class="sort">
-                    <ul class="list">
-                        <li class="list__item reviews__item">
-                            <div class="list__link<?= !empty($arReviews) ? ' active' : '' ?>" data-tab="naturalist_review"><?= Loc::getMessage('NATURALIST_REVIEWS'); ?></div>
-                        </li>
-                        <li class="list__item reviews__item">
-                            <div class="list__link<?= !empty($arReviews) ? '' : ' active' ?>" data-tab="yandex_review"><?= Loc::getMessage('YANDEX_REVIEWS'); ?></div>
-                        </li>
-                    </ul>
-                </div>
-            <? endif; ?>
-            <div class="reviews__list naturalist_review<?= !empty($arReviews) ? ' active' : '' ?>">
-                <? if ($arReviews): ?>
-                    <? foreach ($arReviews as $arItem) : ?>
-                        <?
-                        $isAuthor = ($arReviewsLikesData["USERS"][$arItem["ID"]] == $userId);
-                        $value = $arReviewsLikesData["ITEMS"][$arItem["ID"]][$userId];
+                    <? if ($arResult['yandexReview'][0]): ?>
+                    <li class="list__item reviews__item">
+                        <div class="list__link <?= (empty($arReviews) && isset($arResult['yandexReview'][0])) ? 'active' : '' ?>" data-tab="yandex_review"><?= Loc::getMessage('YANDEX_REVIEWS'); ?></div>
+                    </li>
+                    <? endif; ?>
+
+                </ul>
+            </div>
+        <div class="reviews__list naturalist_review<?= !empty($arReviews) ? ' active' : '' ?>">
+            <? if ($arReviews): ?>
+                <? foreach ($arReviews as $arItem) : ?>
+                    <?
+                    $isAuthor = ($arReviewsLikesData["USERS"][$arItem["ID"]] == $userId);
+                    $value = $arReviewsLikesData["ITEMS"][$arItem["ID"]][$userId];
 
                         $this->AddEditAction($arItem['ID'], $arItem['EDIT_LINK'], CIBlock::GetArrayByID($arItem["IBLOCK_ID"], "ELEMENT_EDIT"));
                         $this->AddDeleteAction($arItem['ID'], $arItem['DELETE_LINK'], CIBlock::GetArrayByID($arItem["IBLOCK_ID"], "ELEMENT_DELETE"), array("CONFIRM" => Loc::GetMessage('CT_BNL_ELEMENT_DELETE_CONFIRM')));
@@ -150,10 +154,11 @@ global $arUser, $userId, $isAuthorized;
                 <a class="reviews__more" href="#" data-object-reviews-showmore data-page="<?= $reviewsPage + 1 ?>">Показать ещё</a>
             <? endif; ?>
         </div>
-        <div class="reviews__list yandex_review<?= empty($arReviews) ? ' active' : '' ?>">
-            <? if ($arResult['reviewsYandex'][0]['UF_ID_YANDEX']): ?>
+
+        <div class="reviews__list yandex_review <?= (empty($arReviews) && isset($arResult['yandexReview'][0])) ? 'active' : '' ?>">
+            <? if ($arResult['yandexReview'][0]['UF_ID_YANDEX']): ?>
                 <script src="https://res.smartwidgets.ru/app.js" ; defer></script>
-                <div class="sw-app" data-app="<?= $arResult['reviewsYandex'][0]['UF_ID_YANDEX'] ?>"></div>
+                <div class="sw-app" data-app="<?= $arResult['yandexReview'][0]['UF_ID_YANDEX'] ?>"></div>
             <? else: ?>
                 <div class="reviews__list-empty">
                     <svg xmlns="http://www.w3.org/2000/svg" width="65" height="64" viewBox="0 0 65 64" fill="none">

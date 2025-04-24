@@ -99,6 +99,7 @@ $APPLICATION->AddHeadString('<meta name="description" content="' . $arResult['de
             'bedsDeclension' => $arResult['bedsDeclension'],
             'arObjectComforts' => $arResult['arObjectComforts'],
             'searchError' => $arResult['searchError'],
+            'yandexReview' => $arResult['yandexReview'],
         )
     );
     ?>

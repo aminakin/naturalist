@@ -7,6 +7,8 @@ use Naturalist\Regions;
 use Naturalist\Utils;
 use Bitrix\Main\Context;
 
+/** @var  $arParams */
+
 $arResult = array(
     "sortBy" => $arParams['sortBy'],
     "orderReverse" => $arParams['orderReverse'],
@@ -37,7 +39,6 @@ $arResult = array(
     "arChildrenAge" => $arParams['arChildrenAge'],
     "itemsCount" => $arParams["itemsCount"],
     "filterData" => $arParams["filterData"],
-    "arHouseTypes" => $houseTypeData,
     "arHLTypes" => $arParams["arHLTypes"],
     "arFilterTypes" => $arParams["arFilterTypes"],
 );
@@ -135,6 +136,7 @@ if ($arResult['arSearchedRegions']) {
             while ($arReview = $rsReviews->Fetch()) {
                 $arReviews[$arReview["PROPERTY_CAMPING_ID_VALUE"]][$arReview["ID"]] = $arReview["PROPERTY_RATING_VALUE"];
             }
+
             $arReviewsAvg = array_map(function ($a) {
                 return round(array_sum($a) / count($a), 1);
             }, $arReviews);
@@ -162,6 +164,8 @@ if ($arResult['arSearchedRegions']) {
             //список кемпингов по региону
             $rsSections = CIBlockSection::GetList($arSort, $arFilter, false, array("IBLOCK_ID", "ID", "NAME", "CODE", "SECTION_PAGE_URL", "UF_*"), false);
             $arSections = array();
+            $NaturalistCatalog = new NaturalistCatalog();
+
             while ($arSection = $rsSections->GetNext()) {
                 $arDataFullGallery = [];
 
@@ -225,8 +229,17 @@ if ($arResult['arSearchedRegions']) {
                 unset($arSection["UF_PHOTOS"]);
                 $arSection["FULL_GALLERY"] = implode(",", $arDataFullGallery);
 
+
+
                 $arSection["RATING"] = (isset($arReviewsAvg[$arSection["ID"]])) ? $arReviewsAvg[$arSection["ID"]] : 0;
                 $arSection["REVIEWS_COUNT"] = (isset($arReviews[$arSection["ID"]])) ? count($arReviews[$arSection["ID"]]) : 0;
+
+
+                $yandexReviews = $NaturalistCatalog->getYandexReviews([$arSection["ID"]]);
+                if ($arSection["RATING"] == 0) {
+                    $arSection["RATING"] = $yandexReviews[0]['average_rating'];
+                }
+                $arSection["REVIEWS_COUNT"] =+ $yandexReviews[0]['total_count'];
 
                 if ($arSection["UF_COORDS"]) {
                     $arSection["COORDS"] = explode(',', $arSection["UF_COORDS"]);

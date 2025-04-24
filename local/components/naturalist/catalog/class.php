@@ -15,6 +15,7 @@ use Bitrix\Iblock\Elements\ElementFeaturesdetailTable;
 use Bitrix\Main\Data\Cache;
 use Naturalist\Products;
 use Naturalist\Filters\Components;
+use Naturalist\SmartWidgetsController;
 use Naturalist\Users;
 use Naturalist\Regions;
 use Naturalist\Utils;
@@ -108,7 +109,42 @@ class NaturalistCatalog extends \CBitrixComponent
     private $currYear;
     private $nextYear;
     private $daysRange;
+    private $yandexReview = [];
 
+
+    /**
+     * @param $sectionId
+     * @return array
+     */
+    public function getYandexReviews($sectionIds): array
+    {
+        $commonYandexReviewsClass = HighloadBlockTable::compileEntity('YandexReviews')->getDataClass();
+        $commonYandexReviews = $commonYandexReviewsClass::query()
+            ->addSelect('*')
+            ->setOrder(['ID' => 'ASC'])
+            ->setFilter(['UF_ID_OBJECT' => $sectionIds])
+            ->setCacheTtl(36000000)
+            ?->fetchAll();
+
+        $arYandexIDs = array_column($commonYandexReviews, 'UF_ID_YANDEX', 'UF_ID_OBJECT');
+
+        if (is_array($commonYandexReviews) && !empty($commonYandexReviews)) {
+
+            $widgetData = SmartWidgetsController::getWidgetData($arYandexIDs);
+
+            foreach ($commonYandexReviews as &$item) {
+                $yandexId = $item['UF_ID_YANDEX'];
+                if (isset($widgetData['data'][$yandexId])) {
+                    $item = array_merge($item, $widgetData['data'][$yandexId]);
+                }
+            }
+            unset($item);
+
+            SmartWidgetsController::calculateReviewsSummary($commonYandexReviews);
+        }
+
+        return $commonYandexReviews;
+    }
 
     private function fillSectionVariables()
     {
@@ -593,9 +629,29 @@ class NaturalistCatalog extends \CBitrixComponent
 
         if (isset($arCampingIDs) && !empty($arCampingIDs)) {
             $this->arReviewsAvg = Reviews::getCampingRating($arCampingIDs);
+
             foreach ($this->arReviewsAvg as $id => $review) {
                 $this->arSections[$id]["RATING"] = $review["avg"];
             }
+
+            $yandexReviews = $this->getYandexReviews($arCampingIDs);
+            foreach ($yandexReviews as $yandexReview) {
+
+                if (!isset($this->arSections[$yandexReview['UF_ID_OBJECT']]["RATING"]) || $this->arSections[$yandexReview['UF_ID_OBJECT']]["RATING"] == null) {
+                    $this->arSections[$yandexReview['UF_ID_OBJECT']]["RATING"] = $yandexReview["average_rating"];
+                }
+
+                if (!isset($this->arReviewsAvg[$yandexReview['UF_ID_OBJECT']])) {
+                    $this->arReviewsAvg[$yandexReview['UF_ID_OBJECT']]['avg'] = $yandexReview["average_rating"];
+                }
+
+                if (isset($this->arReviewsAvg[$yandexReview['UF_ID_OBJECT']])) {
+                    $this->arReviewsAvg[$yandexReview['UF_ID_OBJECT']]['count'] += $yandexReview["total_count"];
+                } else {
+                    $this->arReviewsAvg[$yandexReview['UF_ID_OBJECT']]['count'] = $yandexReview["total_count"];
+                }
+            }
+
         }
     }
 
@@ -1025,6 +1081,7 @@ class NaturalistCatalog extends \CBitrixComponent
         $this->arResult['arHLRoomFeatures'] = $this->arHLRoomFeatures;
         $this->arResult['arHouseTypes'] = $this->arHouseTypes;
         $this->arResult['arObjectComforts'] = $this->arObjectComforts;
+        $this->arResult['yandexReview'] = $this->yandexReview;
     }
 
     protected function fillDetailVariables()
@@ -1390,7 +1447,28 @@ class NaturalistCatalog extends \CBitrixComponent
                 $this->arReviews[$reviewId]["LIKES"] = $arLikes;
             }
         }
+
+        $yandexReviews = $this->getYandexReviews([$this->arSections["ID"]]);
+
+        if (isset($yandexReviews[0])) {
+            $this->reviewsCount =+ $yandexReviews[0]['total_count'];
+
+            if ($this->avgRating == 0) {
+                $this->avgRating = $yandexReviews[0]['average_rating'];
+            }
+
+            $commonYandexReviewsClass = HighloadBlockTable::compileEntity('YandexReviews')->getDataClass();
+
+            $this->yandexReview = $commonYandexReviewsClass::query()
+                ->addSelect('*')
+                ->setOrder(['ID' => 'ASC'])
+                ->setFilter(['UF_ID_OBJECT' => $this->arSections["ID"]])
+                ->setCacheTtl(36000000)
+                ?->fetchAll();
+        }
+
     }
+
 
     private function getDetailExternalInfo()
     {
@@ -1504,4 +1582,5 @@ class NaturalistCatalog extends \CBitrixComponent
         $this->prepareResultArray();
         $this->includeComponentTemplate($this->componentPage);
     }
+
 }
