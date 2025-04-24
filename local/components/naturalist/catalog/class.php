@@ -109,13 +109,14 @@ class NaturalistCatalog extends \CBitrixComponent
     private $currYear;
     private $nextYear;
     private $daysRange;
+    private $yandexReview = [];
 
 
     /**
      * @param $sectionId
      * @return array
      */
-    private function getYandexReviews($sectionIds): array
+    public function getYandexReviews($sectionIds): array
     {
         $commonYandexReviewsClass = HighloadBlockTable::compileEntity('YandexReviews')->getDataClass();
         $commonYandexReviews = $commonYandexReviewsClass::query()
@@ -640,6 +641,10 @@ class NaturalistCatalog extends \CBitrixComponent
                     $this->arSections[$yandexReview['UF_ID_OBJECT']]["RATING"] = $yandexReview["average_rating"];
                 }
 
+                if (!isset($this->arReviewsAvg[$yandexReview['UF_ID_OBJECT']])) {
+                    $this->arReviewsAvg[$yandexReview['UF_ID_OBJECT']]['avg'] = $yandexReview["average_rating"];
+                }
+
                 if (isset($this->arReviewsAvg[$yandexReview['UF_ID_OBJECT']])) {
                     $this->arReviewsAvg[$yandexReview['UF_ID_OBJECT']]['count'] += $yandexReview["total_count"];
                 } else {
@@ -1076,6 +1081,7 @@ class NaturalistCatalog extends \CBitrixComponent
         $this->arResult['arHLRoomFeatures'] = $this->arHLRoomFeatures;
         $this->arResult['arHouseTypes'] = $this->arHouseTypes;
         $this->arResult['arObjectComforts'] = $this->arObjectComforts;
+        $this->arResult['yandexReview'] = $this->yandexReview;
     }
 
     protected function fillDetailVariables()
@@ -1441,6 +1447,26 @@ class NaturalistCatalog extends \CBitrixComponent
                 $this->arReviews[$reviewId]["LIKES"] = $arLikes;
             }
         }
+
+        $yandexReviews = $this->getYandexReviews([$this->arSections["ID"]]);
+
+        if (isset($yandexReviews[0])) {
+            $this->reviewsCount =+ $yandexReviews[0]['total_count'];
+
+            if ($this->avgRating == 0) {
+                $this->avgRating = $yandexReviews[0]['average_rating'];
+            }
+
+            $commonYandexReviewsClass = HighloadBlockTable::compileEntity('YandexReviews')->getDataClass();
+
+            $this->yandexReview = $commonYandexReviewsClass::query()
+                ->addSelect('*')
+                ->setOrder(['ID' => 'ASC'])
+                ->setFilter(['UF_ID_OBJECT' => $this->arSections["ID"]])
+                ->setCacheTtl(36000000)
+                ?->fetchAll();
+        }
+
     }
 
 

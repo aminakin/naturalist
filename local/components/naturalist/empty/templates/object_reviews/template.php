@@ -49,41 +49,24 @@ global $arUser, $userId, $isAuthorized;
 
     <div class="reviews__reviews" data-object-reviews-container>
         <a class="anchor"></a>
-        <? if ($arReviews && $arResult['reviewsYandex']): ?>
             <div class="sort">
+                <? if ($arReviews || $arResult['yandexReview'][0]): ?>
                 <ul class="list">
-                    <?/*li class="list__item">
-                    <?if ($reviewsSortType == "date") : ?>
-                        <span class="list__link" data-sort="date">Свежие</span>
-                    <? else : ?>
-                        <a class="list__link" href="#" data-sort="date">Свежие</a>
-                    <? endif; ?>
-                    <div class="list__link active"><?= Loc::getMessage('NATURALIST_REVIEWS'); ?></div>
-                </li>
-                <li class="list__item">
-                    <? if ($reviewsSortType == "positive") : ?>
-                        <span class="list__link" data-sort="positive">Положительные</span>
-                    <? else : ?>
-                        <a class="list__link" href="#" data-sort="positive">Положительные</a>
-                    <? endif;  ?>
-                    <div class="list__link"><?= Loc::getMessage('YANDEX_REVIEWS'); ?></div>
-                </li>
-                <?li class="list__item">
-                    <? if ($reviewsSortType == "negative") : ?>
-                        <span class="list__link" data-sort="negative">Отрицательные</span>
-                    <? else : ?>
-                        <a class="list__link" href="#" data-sort="negative">Отрицательные</a>
-                    <? endif; ?>
-                </li*/ ?>
+                    <? if ($arReviews): ?>
                     <li class="list__item reviews__item">
                         <div class="list__link<?= !empty($arReviews) ? ' active' : '' ?>" data-tab="naturalist_review"><?= Loc::getMessage('NATURALIST_REVIEWS'); ?></div>
                     </li>
+
+                    <? endif; ?>
+                    <? if ($arResult['yandexReview'][0]): ?>
                     <li class="list__item reviews__item">
                         <div class="list__link<?= !empty($arReviews) ? '' : ' active' ?>" data-tab="yandex_review"><?= Loc::getMessage('YANDEX_REVIEWS'); ?></div>
                     </li>
+
+                    <? endif; ?>
                 </ul>
+                <? endif; ?>
             </div>
-        <? endif; ?>
         <div class="reviews__list naturalist_review<?= !empty($arReviews) ? ' active' : '' ?>">
             <? if ($arReviews): ?>
                 <? foreach ($arReviews as $arItem) : ?>
@@ -161,8 +144,8 @@ global $arUser, $userId, $isAuthorized;
             <a class="reviews__more" href="#" data-object-reviews-showmore data-page="<?= $reviewsPage + 1 ?>">Показать ещё</a>
         <? endif; ?>
     </div>
-    <div class="reviews__list yandex_review<?= !empty($arReviews) ? '' : ' active' ?>">
+    <div class="reviews__list yandex_review<?= !isset($arResult['yandexReview'][0]) ? '' : ' active' ?>">
         <script src="https://res.smartwidgets.ru/app.js" ; defer></script>
-        <div class="sw-app" data-app="<?= $arResult['reviewsYandex']['UF_ID_YANDEX'] ?>"></div>
+        <div class="sw-app" data-app="<?= $arResult['yandexReview'][0]['UF_ID_YANDEX'] ?>"></div>
     </div>
 </div>

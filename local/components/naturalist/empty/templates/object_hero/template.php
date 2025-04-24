@@ -662,6 +662,7 @@ if (!isset($arResult["arSection"]["ID"])) {
                                 "reviewsPageCount" => $reviewsPageCount,
                                 "sectionId" => $arSection['ID'],
                                 "isUserReview" => $isUserReview,
+                                'yandexReview' => $yandexReview,
                             )
                         );
                         ?>

@@ -33,6 +33,12 @@ foreach ($arResult["SECTIONS"] as &$arSection) {
     $arSection["RATING"] = $arReviewsAvg[$arSection["ID"]]["avg"] ?? 0;
 }
 
+//отзывы яндекс
+//$NaturalistCatalog = new NaturalistCatalog();
+//$yandexReviews = $NaturalistCatalog->getYandexReviews($arCampingIDs);
+//\Bitrix\Main\Diag\Debug::dump($yandexReviews);
+
+
 $arSortedSections = array();
 // Выборка по наиболее близкому рейтингу
 /*foreach($arResult["SECTIONS"] as $arSection) {

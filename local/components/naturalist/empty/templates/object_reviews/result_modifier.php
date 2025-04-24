@@ -5,7 +5,6 @@ use Naturalist\SmartWidgetsController;
 
 /** @var  $arParams */
 
-
 $arResult = array(
     "avgRating" => $arParams['avgRating'],
     "reviewsDeclension" => $arParams['reviewsDeclension'],
@@ -17,8 +16,7 @@ $arResult = array(
     "arReviewsUsers" => $arParams['arReviewsUsers'],
     "reviewsPage" => $arParams['reviewsPage'],
     "reviewsPageCount" => $arParams['reviewsPageCount'],
-    "reviewsYandex" => $commonYandexReviews,
-    "reviewsYandexInfo" => $commonYandexReviewsInfo,
     "sectionId" => $arParams['sectionId'],
     "isUserReview" => $arParams['isUserReview'],
+    "yandexReview" => $arParams['yandexReview'],
 );
