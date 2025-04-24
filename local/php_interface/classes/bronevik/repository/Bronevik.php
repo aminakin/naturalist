@@ -2,6 +2,7 @@
 
 namespace Naturalist\bronevik\repository;
 
+use Bitrix\Main\Diag\Logger;
 use Bronevik\HotelsConnector\Element\GeoLocation;
 use Bronevik\HotelsConnector\Element\Hotels;
 use Bronevik\HotelsConnector\Element\HotelsWithInfo;
@@ -9,6 +10,8 @@ use Bronevik\HotelsConnector\Element\Order;
 use Bronevik\HotelsConnector\Element\OrderServices;
 use Bronevik\HotelsConnector\Element\ServiceAccommodation;
 use Exception;
+use Logger\Channels\LoggerChannel;
+use Psr\Log\LoggerInterface;
 use Throwable;
 use SoapFault;
 use Closure;
@@ -39,10 +42,14 @@ class Bronevik
 
     private ?Closure $checkCallback;
 
+    private ?LoggerInterface $logger;
+
     public function __construct()
     {
         $this->checkCallback = null;
         $this->bronevikAdapter = new BronevikAdapter();
+        $this->logger = LoggerChannel::create('BronevikLogger');
+        $this->bronevikAdapter->setLogger($this->logger);
 
         $this->setAttempt();
     }
@@ -53,16 +60,23 @@ class Bronevik
     }
 
     /**
-     * @throws Exception
+     * @throws Throwable
      */
     public function __call($methodName, $arguments = array())
     {
-        if ($this->attempt > 0) {
-            return $this->attemptCustomCall($methodName, $arguments);
-        } else {
-            return $this->customCall($methodName, $arguments);
-        }
+        try {
+            if ($this->attempt > 0) {
+                return $this->attemptCustomCall($methodName, $arguments);
+            } else {
+                return $this->customCall($methodName, $arguments);
+            }
+        } catch (Throwable $e) {
+            if (! empty($this->logger)) {
+                $this->logger->error($methodName . ':' . PHP_EOL . $e->getMessage() . PHP_EOL . $e->getTraceAsString());
+            }
 
+            throw $e;
+        }
     }
 
     public function setSleepSecond(int $seconds): void

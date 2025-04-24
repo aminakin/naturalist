@@ -150,6 +150,15 @@ if ($arResult['arSearchedRegions']) {
                 $arFields = CASDiblockTools::GetIBUF(CATALOG_IBLOCK_ID);
             }
 
+            $viewedIds = [];
+
+            array_map(function ($item) use (&$viewedIds) {
+                if (isset($item['ID'])) {
+                    $viewedIds[] = $item['ID'];
+                }
+            }, $arParams['arPageSections']);
+
+            $arFilter['!ID'] = $viewedIds;
             //список кемпингов по региону
             $rsSections = CIBlockSection::GetList($arSort, $arFilter, false, array("IBLOCK_ID", "ID", "NAME", "CODE", "SECTION_PAGE_URL", "UF_*"), false);
             $arSections = array();

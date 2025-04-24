@@ -384,6 +384,7 @@ class Orders
         if ($res) {
             if (!isset($res["ERROR"])) {
                 // Отсылка уведомлений на почту
+                $penaltyAmount = Traveline::beforeCancelReservation($arOrder);
 
                 $sendRes = Users::sendEmail("USER_RESERVATION_CANCEL", "71", array(
                     "EMAIL" => $arOrder['PROPS']['EMAIL'],
@@ -394,8 +395,6 @@ class Orders
                 ));
 
                 if ($arUser["UF_SUBSCRIBE_EMAIL_1"]) {
-                    $penaltyAmount = Traveline::beforeCancelReservation($arOrder);
-
                     $sendRes = Users::sendEmail("USER_RESERVATION_CANCEL", "56", array(
                         "EMAIL" => $arOrder['PROPS']['EMAIL'],
                         "ORDER_ID" => $orderId,
@@ -585,6 +584,7 @@ class Orders
      */
     public function makeReservation($orderId)
     {
+        $supportNotification = '';
         $orderId = intval($orderId);
         $arOrder = $this->get($orderId);
         if ($arOrder["ERROR"]) {
@@ -604,6 +604,7 @@ class Orders
 
         if ($service == $this->bronevikSectionPropEnumId) {
             $reservationRes = (new OrderCreateBronevik())($orderId, $arOrder, $arUser, $reservationPropId);
+            $supportNotification = 'Бронь по объекту из Броневика';
         } elseif ($service == $this->bnovoSectionPropEnumId) {
             $bnovo = new Bnovo();
             $reservationRes = $bnovo->makeReservation($orderId, $arOrder, $arUser, $reservationPropId);
@@ -644,12 +645,13 @@ class Orders
                 $PDF = new CreateOrderPdf();
                 $file = json_decode($PDF->getPdfLink($orderId))->SHORT;
 
-                $sendRes = Users::sendEmail("USER_RESERVATION", "55", array(
+                $sendRes = Users::sendEmail("USER_RESERVATION", 0, array(
                     "EMAIL" => $clientEmail,
                     "ORDER_ID" => $orderId,
                     "NAME" => $clientLastName . ' ' . $clientName,
                     "RESERVATION_ID" => $reservationRes,
-                    "LINK" => 'https://' . $_SERVER['SERVER_NAME'] . '/personal/active/'
+                    "LINK" => 'https://' . $_SERVER['SERVER_NAME'] . '/personal/active/',
+                    "SUPPORT_NOTIFICATION" => "<br/>" . $supportNotification . "<br/>",
                 ), [$_SERVER["DOCUMENT_ROOT"] . $file]);
 
                 $sendMAnagerRes = Users::sendEmail("MANAGER_MAIL", "70", array(
@@ -927,12 +929,15 @@ class Orders
 
         // Проверка доступности броневика
         if ($externalService == $this->bronevikSectionPropEnumId) {
-            if (!(new HotelOfferPricingCheckPriceBronevik())($basket, ['LAST_NAME' => $arUser['LAST_NAME'], 'FIRST_NAME' => $arUser['NAME']])) {
-                return json_encode([
-                    "ACTION" => "reload",
-                    "ERROR" => "Произошло изменение цены. Пожалуйста, ознакомьтесь!",
-                ]);
-            }
+            $arUser["NAME"] = !empty($arUser["NAME"]) ? $arUser["NAME"] : $params["name"];
+            $arUser["LAST_NAME"] = !empty($arUser["LAST_NAME"]) ? $arUser["LAST_NAME"] : $params["last_name"];
+
+			//if (!(new HotelOfferPricingCheckPriceBronevik())($basket, ['LAST_NAME' => $arUser['LAST_NAME'], 'FIRST_NAME' => $arUser['NAME']])) {
+			//   return json_encode([
+			//      "ACTION" => "reload",
+			//      "ERROR" => "Произошло изменение цены. Пожалуйста, ознакомьтесь!",
+			//  ]);
+			//}
         }
 
         // Создание нового заказа

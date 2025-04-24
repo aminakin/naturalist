@@ -134,8 +134,8 @@ class SearchRoomsBronevik
                 'UF_INFORMATIONS' => json_encode($hotel?->informationForGuest?->notification),
                 'UF_TAXES' => $hotel->hasTaxes ? json_encode($hotel?->taxes?->tax) : '',
                 'UF_ADDITIONAL_INFO' => json_encode($hotel->additionalInfo),
-                'UF_TIME_FROM' => json_encode($hotel->additionalInfo),
-                'UF_TIME_TO' => json_encode($hotel->additionalInfo),
+                'UF_TIME_FROM' => (new \DateTime($hotel->checkinTime))->format('H:i'),
+                'UF_TIME_TO' => (new \DateTime($hotel->checkoutTime))->format('H:i'),
                 'UF_ALLOWABLE_TIME' => json_encode(['allowableCheckinTime' => $hotel?->allowableCheckinTime, 'allowableCheckoutTime' => $hotel?->allowableCheckoutTime]),
 
             ];

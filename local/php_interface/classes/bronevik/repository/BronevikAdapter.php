@@ -17,18 +17,37 @@ use Bronevik\HotelsConnector\Element\SearchOrderCriterionServiceReferenceId;
 use Bronevik\HotelsConnector\Element\ServiceAccommodation;
 use Bronevik\HotelsConnector\Enum\CurrencyCodes;
 use Naturalist\bronevik\connector\HotelsConnector;
+use Psr\Log\LoggerInterface;
 
 class BronevikAdapter
 {
     private static array $meals;
+
+    private ?LoggerInterface $logger;
+
+    public function setLogger(?LoggerInterface $logger): void
+    {
+        $this->logger = $logger;
+    }
+
+    protected function sendLog($level, $message, array $context = []): void
+    {
+        if (! empty($this->logger)) {
+            $this->logger->{$level}($message, $context);
+        }
+    }
+
     /**
      * @throws \SoapFault
      */
     public function test(): string
     {
         $connector = HotelsConnector::getInstance();
+        $result = $connector->ping('Привет, Броневичок!');
 
-        return $connector->ping('Привет, Броневичок!');
+        $this->sendLog('info', 'Method ping result: ' . $result );
+
+        return $result;
     }
 
     /**
@@ -46,7 +65,7 @@ class BronevikAdapter
     ): Hotels
     {
         $connector = HotelsConnector::getInstance();
-        return $connector->searchHotelOffers(
+        $result = $connector->searchHotelOffers(
             $arrivalDate,
             $departureDate,
             $currency,
@@ -56,6 +75,22 @@ class BronevikAdapter
             $skipElements,
             $geolocation,
         );
+
+        $this->sendLog('info', 'Method searchHotelOffers', [
+            'params' => [
+                $arrivalDate,
+                $departureDate,
+                $currency,
+                $cityId,
+                $searchCriteria,
+                $hotelIds,
+                $skipElements,
+                $geolocation,
+            ],
+            'result' => $result,
+        ]);
+
+        return $result;
     }
 
     /**
@@ -74,7 +109,23 @@ class BronevikAdapter
     {
         $connector = HotelsConnector::getInstance();
 
-        return $connector->searchHotelAvailability($checkInDate, $checkOutDate, $currencyCode, $cityId, $hotelIds, $geolocation, $addElements, $searchCriteria);
+        $result = $connector->searchHotelAvailability($checkInDate, $checkOutDate, $currencyCode, $cityId, $hotelIds, $geolocation, $addElements, $searchCriteria);
+
+        $this->sendLog('info', 'Method searchHotelAvailability', [
+            'params' => [
+                $checkInDate,
+                $checkOutDate,
+                $currencyCode,
+                $cityId,
+                $hotelIds,
+                $geolocation,
+                $addElements,
+                $searchCriteria,
+            ],
+            'result' => $result,
+        ]);
+
+        return $result;
     }
 
     /**
@@ -85,7 +136,14 @@ class BronevikAdapter
     {
         $connector = HotelsConnector::getInstance();
 
-        return $connector->getHotelInfo($ids);
+        $result = $connector->getHotelInfo($ids);
+
+        $this->sendLog('info', 'Method getHotelInfo', [
+            'params' => $ids,
+            'result' => $result,
+        ]);
+
+        return $result;
     }
 
     /**
@@ -116,7 +174,7 @@ class BronevikAdapter
     {
         $connector = HotelsConnector::getInstance();
 
-        return $connector->searchHotelOffers(
+        $result = $connector->searchHotelOffers(
             $arrivalDate,
             $departureDate,
             $currency,
@@ -126,6 +184,22 @@ class BronevikAdapter
             $skipElements,
             $geolocation,
         );
+
+        $this->sendLog('info', 'Method searchHotelOffers', [
+            'params' => [
+                $arrivalDate,
+                $departureDate,
+                $currency,
+                $cityId,
+                $searchCriteria,
+                $hotelIds,
+                $skipElements,
+                $geolocation,
+            ],
+            'result' => $result,
+        ]);
+
+        return $result;
     }
 
     public function getMeals()
@@ -137,6 +211,11 @@ class BronevikAdapter
         }
 
         $resMeals = $connector->getMeals()->meal;
+
+        $this->sendLog('info', 'Method getMeals', [
+            'result' => $resMeals,
+        ]);
+
         /** @var Meal $meal */
         foreach ($resMeals as $meal) {
             self::$meals[$meal->id] = $meal->name;
@@ -185,14 +264,28 @@ class BronevikAdapter
 
         $request->addServices($service);
 
-        return $connector->createOrder($request);
+        $result = $connector->createOrder($request);
+
+        $this->sendLog('info', 'Method createOrder', [
+            'params' => $request,
+            'result' => $result,
+        ]);
+
+        return $result;
     }
 
     public function CancelOrder(int $orderId): bool
     {
         $connector = HotelsConnector::getInstance();
 
-        return $connector->cancelOrder($orderId);
+        $result = $connector->cancelOrder($orderId);
+
+        $this->sendLog('info', 'Method cancelOrder', [
+            'params' => $orderId,
+            'result' => $result,
+        ]);
+
+        return $result;
     }
 
     /**
@@ -202,7 +295,14 @@ class BronevikAdapter
     {
         $connector = HotelsConnector::getInstance();
 
-        return $connector->getOrder($orderId);
+        $result = $connector->getOrder($orderId);
+
+        $this->sendLog('info', 'Method getOrder', [
+            'params' => $orderId,
+            'result' => $result,
+        ]);
+
+        return $result;
     }
 
     /**
@@ -217,6 +317,12 @@ class BronevikAdapter
             $criterionReferenceId,
         ];
         $orders = $connector->searchOrders($criteria);
+
+        $this->sendLog('info', 'Method searchOrders', [
+            'params' => $criteria,
+            'result' => $orders,
+        ]);
+
         if (count($orders->order)) {
             return $orders->order[0];
         }
@@ -233,7 +339,17 @@ class BronevikAdapter
         $services = [];
         $services[] = $serviceAccommodation;
 
-        return $connector->getHotelOfferPricing($services, CurrencyCodes::RUB);
+        $result = $connector->getHotelOfferPricing($services, CurrencyCodes::RUB);
+
+        $this->sendLog('info', 'Method getHotelOfferPricing', [
+            'params' => [
+                $services,
+                CurrencyCodes::RUB,
+            ],
+            'result' => $result,
+        ]);
+
+        return $result;
     }
 
     /**
@@ -243,6 +359,12 @@ class BronevikAdapter
     {
         $connector = HotelsConnector::getInstance();
 
-        return $connector->getLastResponse();
+        $result = $connector->getLastResponse();
+
+        $this->sendLog('info', 'Method getLastResponse', [
+            'result' => $result,
+        ]);
+
+        return $result;
     }
 }

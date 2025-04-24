@@ -551,7 +551,7 @@ if ($arResult['CHPY']['UF_CANONICAL']) {
                             "orderReverse" => $arResult['orderReverse'],
                             "page" => $arParams["REAL_PAGE"] ? $arParams["REAL_PAGE"] : $arResult['page'],
                             "pageCount" => $pageCount,
-                            "allCount" => count($arResult['SECTIONS']),
+                            "allCount" => $arResult['allCount'],
                             "countDeclension" => $arResult['countDeclension'],
                             "reviewsDeclension" => $arResult['reviewsDeclension'],
                             "arPageSections" => $arPageSections,

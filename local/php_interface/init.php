@@ -1,6 +1,7 @@
 <?php
 
 use Bitrix\Main\Loader;
+use Bitrix\Main\Application;
 
 //composer autoload
 if (file_exists($_SERVER['DOCUMENT_ROOT'] . '/local/php_interface/vendor/autoload.php')) {
@@ -53,6 +54,7 @@ Loader::registerAutoLoadClasses(null, array(
     'Naturalist\bronevik\HotelBronevik' => '/local/php_interface/classes/bronevik/HotelBronevik.php',
     'Naturalist\bronevik\enums\RateTypeNamesEnum' => '/local/php_interface/classes/bronevik/enums/RateTypeNamesEnum.php',
     'Naturalist\bronevik\enums\RoomTypeEnum' => '/local/php_interface/classes/bronevik/enums/RoomTypeEnum.php',
+    'Naturalist\bronevik\enums\RoomTypeFrontEnum' => '/local/php_interface/classes/bronevik/enums/RoomTypeFrontEnum.php',
     'Naturalist\bronevik\enums\PaymentRecipientEnum' => '/local/php_interface/classes/bronevik/enums/PaymentRecipientEnum.php',
     'Naturalist\bronevik\OrderCreateBronevik' => '/local/php_interface/classes/bronevik/OrderCreateBronevik.php',
     'Naturalist\bronevik\OrderCancelBronevik' => '/local/php_interface/classes/bronevik/OrderCancelBronevik.php',
@@ -75,6 +77,10 @@ Loader::registerAutoLoadClasses(null, array(
     'Naturalist\Handlers\OnAdminIBlockSectionEdit' => '/local/php_interface/classes/Handlers/OnAdminIBlockSectionEdit.php',
     'Naturalist\Telegram\Notifications\Error' => '/local/php_interface/classes/Telegram/Notifications/Error.php',
 ));
+
+$documentRoot = Application::getDocumentRoot();
+
+require_once($documentRoot . '/local/php_interface/lib/logger/init.php');
 
 // Константы
 require_once($_SERVER["DOCUMENT_ROOT"] . "/local/php_interface/init_constants.php");

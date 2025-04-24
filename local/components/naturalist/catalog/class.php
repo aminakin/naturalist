@@ -73,6 +73,7 @@ class NaturalistCatalog extends \CBitrixComponent
     private $arRegionIds = [];
     private $arSeoImpressions = [];
     private $arSort = [];
+    private $arNavParams = false;
     private $season = [];
     private $arExternalInfo = [];
     private $arExternalAvail = [];
@@ -455,30 +456,48 @@ class NaturalistCatalog extends \CBitrixComponent
 
     private function sectionsQuery()
     {
-        $rsSections = CIBlockSection::GetList($this->arSort, $this->arFilter, false, ["IBLOCK_ID", "ID", "NAME", "CODE", "SECTION_PAGE_URL", "UF_*"], false);
+        $rsSections = CIBlockSection::GetList(
+            $this->arSort,
+            $this->arFilter,
+            false,
+            ["IBLOCK_ID", "ID", "NAME", "CODE", "SECTION_PAGE_URL", "UF_*"],
+            $this->arNavParams);
         while ($arSection = $rsSections->GetNext()) {
             $this->arSections[$arSection['ID']] = $arSection;
         }
+
+        $totalElements = CIBlockSection::GetList(
+            $this->arSort,
+            $this->arFilter,
+            false,
+            ['ID'],
+            false);
+
+        $this->allCount = $totalElements->SelectedRowsCount();
     }
 
     private function fillSections()
     {
         //кеш каталог а временно выключен на переработку
-        //        if (!isset($this->arFilter['UF_EXTERNAL_ID'])) {
+        if (!isset($this->arFilter['UF_EXTERNAL_ID'])) {
 
-        //            $cache = Cache::createInstance();
-        //            $arFilterCacheKey = Utils::recursiveImplode($this->arFilter, '_');
-        //            $cacheKey = 'without_date_search_' . $arFilterCacheKey;
+//            $cache = Cache::createInstance();
+//            $arFilterCacheKey = Utils::recursiveImplode($this->arFilter, '_');
+//            $cacheKey = 'without_date_search_' . $arFilterCacheKey;
 
-        //            if ($cache->initCache(86400, $cacheKey)) {
-        //                $this->arSections = $cache->getVars();
-        //            } elseif ($cache->startDataCache()) {
-        //                $this->sectionsQuery();
-        //                $cache->endDataCache($this->arSections);
-        //            }
-        //        } else {
-        $this->sectionsQuery();
-        //        }
+//            if ($cache->initCache(86400, $cacheKey)) {
+//                $this->arSections = $cache->getVars();
+//            } elseif ($cache->startDataCache()) {
+                $this->arNavParams = [
+                    'nPageSize' => $this->arParams['ITEMS_COUNT'],
+                    'iNumPage' => $this->page
+                ];
+                $this->sectionsQuery();
+//                $cache->endDataCache($this->arSections);
+//            }
+        } else {
+            $this->sectionsQuery();
+        }
 
         $this->searchedRegionData = Regions::getRegionById($this->arRegionIds[0] ?? false);
         foreach ($this->arSections as &$arSection) {
@@ -957,6 +976,7 @@ class NaturalistCatalog extends \CBitrixComponent
         $this->arResult['searchedRegionData'] = $this->searchedRegionData;
         $this->arResult['searchName'] = $this->searchName;
         $this->arResult['search'] = $this->search;
+        $this->arResult['allCount'] = $this->allCount;
     }
 
     protected function prepareDetail()
@@ -1389,10 +1409,24 @@ class NaturalistCatalog extends \CBitrixComponent
             //    $this->arFilter["ID"] = false;
             //}
 
-            if ($this->arExternalInfo) {
-                $this->arExternalAvail["ID"] = array_keys($this->arExternalInfo);
-            } else {
-                $this->arExternalAvail["ID"] = false;
+            if ($this->arSections["UF_EXTERNAL_SERVICE"] == "bronevik") {
+                foreach ($this->arExternalInfo as $key => $value) {
+                    if($value[0]['OFFERS']){
+                        $avail[] = $key;
+                    }
+                }
+
+                if ($this->arExternalInfo) {
+                    $this->arExternalAvail["ID"] = $avail;
+                } else {
+                    $this->arExternalAvail["ID"] = false;
+                }
+            }else{
+                if ($this->arExternalInfo) {
+                    $this->arExternalAvail["ID"] = array_keys($this->arExternalInfo);
+                } else {
+                    $this->arExternalAvail["ID"] = false;
+                }
             }
         }
 
