@@ -6,6 +6,7 @@ use Bitrix\Main\Application;
 use Bitrix\Main\Diag\Debug;
 use Bitrix\Main\SystemException;
 use Exel\Loader\DocumentParser\DocumentParser;
+use Exel\Loader\HLLoader\Users\UsersLoader;
 use Exel\Loader\HLLoader\Yandexreview\YandexReviewLoader;
 
 class FormSave
@@ -52,11 +53,14 @@ class FormSave
             if (!empty($this->request->getFile('yandexreview')) && $this->request->getFile('yandexreview')['tmp_name'] != NULL) {
                 $this->handleSaveYandexRewiewLoader($this->request->getFile('yandexreview'));
             }
+            if (!empty($this->request->getFile('userloader')) && $this->request->getFile('userloader')['tmp_name'] != NULL) {
+                $this->handleSaveUsersLoader($this->request->getFile('userloader'));
+            }
         }
     }
 
     /**
-     * Сохранить HL ЖД контейнер 40 фут
+     * Сохранить документ яндекс отзыввов
      * @param $file
      */
     private function handleSaveYandexRewiewLoader($file)
@@ -64,6 +68,17 @@ class FormSave
         $parsedFile = DocumentParser::parseDocument($file);
 
         $this->responce = YandexReviewLoader::loadData($parsedFile);
+    }
+
+    /**
+     * Сохранить пользователея лидов
+     * @param $file
+     */
+    private function handleSaveUsersLoader($file)
+    {
+        $parsedFile = DocumentParser::parseDocument($file);
+
+        $this->responce = UsersLoader::loadData($parsedFile);
     }
 
 

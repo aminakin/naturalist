@@ -10,3 +10,4 @@ $MESS['EXEL_LOADER_MAIN_TAB_TITLE_SET'] = 'Загрузка данных из CS
 $MESS['EXEL_LOADER_LOAD_BTN'] = 'Загрузить';
 
 $MESS['EXEL_LOADER_YANDEX_REVIEW'] = 'Отзывы Яндекс';
+$MESS['EXEL_LOADER_USERS'] = 'Пользователи';

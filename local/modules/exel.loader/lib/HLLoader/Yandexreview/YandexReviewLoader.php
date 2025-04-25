@@ -62,7 +62,7 @@ class YandexReviewLoader extends HLLoaderAbstract
     }
 
     /**
-     * Поиск и загрзука данных по основной таблице ЖД Контейнер 40 фут
+     * Поиск и загрзука данных по основной таблице
      * @param $cityDepatureId
      * @param $cityArrivalId
      * @param $data
