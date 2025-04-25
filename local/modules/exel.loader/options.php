@@ -32,6 +32,11 @@ $tabControl = new CAdminTabControl('tabControl', [
         'TAB' => Loc::getMessage('EXEL_LOADER_YANDEX_REVIEW'),
         'TITLE' => Loc::getMessage('EXEL_LOADER_YANDEX_REVIEW'),
     ],
+    [
+        'DIV' => 'edit2',
+        'TAB' => Loc::getMessage('EXEL_LOADER_USERS'),
+        'TITLE' => Loc::getMessage('EXEL_LOADER_USERS'),
+    ],
 ]);
 
 ?>
@@ -42,6 +47,8 @@ $tabControl = new CAdminTabControl('tabControl', [
 $tabControl->Begin();
 $tabControl->BeginNextTab();
 include($_SERVER['DOCUMENT_ROOT'] . '/local/modules/' . $moduleId . '/optionsInclude/yandexreview.php');
+$tabControl->BeginNextTab();
+include($_SERVER['DOCUMENT_ROOT'] . '/local/modules/' . $moduleId . '/optionsInclude/userloader.php');
 
 
 $tabControl->Buttons();?>
