@@ -1170,31 +1170,14 @@ class NaturalistCatalog extends \CBitrixComponent
     private function getRooms()
     {   
         // Список номеров
-        $rsElements = CIBlockElement::GetList(
-            array("SORT" => "ASC"),
-            $this->arFilter,
-            false,
-            false,
-            array(
-                "IBLOCK_ID",
-                "ID",
-                "IBLOCK_SECTION_ID",
-                "NAME",
-                "DETAIL_TEXT",
-                "PROPERTY_PHOTOS",
-                "PROPERTY_FEATURES",
-                "PROPERTY_EXTERNAL_ID",
-                "PROPERTY_EXTERNAL_CATEGORY_ID",
-                "PROPERTY_SQUARE",
-                "PROPERTY_PARENT_ID",
-                'PROPERTY_ROOMS',
-                'PROPERTY_BEDS',
-                'PROPERTY_ROOMTOUR',
-                'PROPERTY_WITH_PETS',
-                'PROPERTY_QUANTITY_HUMEN',
-                'PROPERTY_QUANTITY_CHILD'
-            )
-        );
+        $rsElements = $this->getRoomsElements();
+
+        //если нет номеров внешних и нет галочек на избранное, возвращаем все номера
+        if (!$rsElements->fetch() && isset($this->arFilter['PROPERTY_IS_FAVORITE_VALUE'])) {
+            unset($this->arFilter['PROPERTY_IS_FAVORITE_VALUE']);
+            $rsElements = $this->getRoomsElements();
+        }
+
 
         $this->arElements = array();
         while ($arElement = $rsElements->Fetch()) {
@@ -1494,5 +1477,37 @@ class NaturalistCatalog extends \CBitrixComponent
         $this->fillBaseInfo();
         $this->prepareResultArray();
         $this->includeComponentTemplate($this->componentPage);
+    }
+
+    /**
+     * @return CIBlockResult|int
+     */
+    private function getRoomsElements(): CIBlockResult|int
+    {
+        return CIBlockElement::GetList(
+            array("SORT" => "ASC"),
+            $this->arFilter,
+            false,
+            false,
+            array(
+                "IBLOCK_ID",
+                "ID",
+                "IBLOCK_SECTION_ID",
+                "NAME",
+                "DETAIL_TEXT",
+                "PROPERTY_PHOTOS",
+                "PROPERTY_FEATURES",
+                "PROPERTY_EXTERNAL_ID",
+                "PROPERTY_EXTERNAL_CATEGORY_ID",
+                "PROPERTY_SQUARE",
+                "PROPERTY_PARENT_ID",
+                'PROPERTY_ROOMS',
+                'PROPERTY_BEDS',
+                'PROPERTY_ROOMTOUR',
+                'PROPERTY_WITH_PETS',
+                'PROPERTY_QUANTITY_HUMEN',
+                'PROPERTY_QUANTITY_CHILD'
+            )
+        );
     }
 }
