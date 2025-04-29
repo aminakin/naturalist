@@ -1172,57 +1172,24 @@ class NaturalistCatalog extends \CBitrixComponent
         // Список номеров
         $rsElements = $this->getRoomsElements();
 
+        // Попробуем получить первый элемент
+        $firstElement = $rsElements->Fetch();
         //если нет номеров внешних и нет галочек на избранное, возвращаем все номера
-        if (!$rsElements->fetch() && isset($this->arFilter['PROPERTY_IS_FAVORITE_VALUE'])) {
+        if (!$firstElement && isset($this->arFilter['PROPERTY_IS_FAVORITE_VALUE'])) {
             unset($this->arFilter['PROPERTY_IS_FAVORITE_VALUE']);
             $rsElements = $this->getRoomsElements();
         }
 
 
-        $this->arElements = array();
-        while ($arElement = $rsElements->Fetch()) {
-            
-            if ($arElement["PROPERTY_PHOTOS_VALUE"]) {
-                foreach ($arElement["PROPERTY_PHOTOS_VALUE"] as $photoId) {
-                    $arElement["PICTURES"][$photoId] = [
-                        'src' => CFile::ResizeImageGet($photoId, array('width' => 464, 'height' => 328), BX_RESIZE_IMAGE_EXACT, true)['src'],
-                        'big' => CFile::GetFileArray($photoId)["SRC"],
-                    ];
-                }
-            } else {
-                $arElement["PICTURES"][0]["src"] = SITE_TEMPLATE_PATH . "/img/no_photo.png";
+        $this->arElements = [];
+        if ($firstElement) {
+            $this->processAndAddElement($firstElement); // Обрабатываем первый элемент
+
+            while ($arElement = $rsElements->Fetch()) {
+                $this->processAndAddElement($arElement);
             }
-
-            //if (!empty($this->arExternalInfo)) {
-            //    $roomElement = current($this->arExternalInfo[$arElement["ID"]]);
-            //    $arElement["PRICE"] = $roomElement["price"];
-            //} else {
-            //    $arElement["PRICE"] = 0;
-            //}
-
-            if (!empty($this->arExternalInfo)) {
-                if (isset($this->arExternalInfo[$arElement["ID"]])) {
-                    $roomElement = $this->arExternalInfo[$arElement["ID"]];
-                    $arElement["PRICE"] = $roomElement[0]["price"];
-                }
-            } else {
-                $arElement["PRICE"] = 0;
-            }
-
-            $discountData = CCatalogProduct::GetOptimalPrice($arElement['ID'], 1, CurrentUser::get()->getUserGroups(), 'N');
-
-            if (is_array($discountData['DISCOUNT']) && count($discountData['DISCOUNT'])) {
-                $arElement['DISCOUNT_DATA']['VALUE'] = $discountData['DISCOUNT']['VALUE'];
-                $arElement['DISCOUNT_DATA']['VALUE_TYPE'] = $discountData['DISCOUNT']['VALUE_TYPE'];
-            }
-
-            $arElement['AVAILABLE_ID'] = false;
-            if (is_array($this->arExternalAvail['ID']) && in_array($arElement['ID'], $this->arExternalAvail['ID'])) {
-                $arElement['AVAILABLE_ID'] = true;
-            }
-
-            $this->arElements[$arElement['ID']] = $arElement; 
         }
+
 
         if ($this->arSections["UF_EXTERNAL_SERVICE"] == "bnovo") {
             foreach ($this->arElements as $key => $arElement) {
@@ -1389,14 +1356,14 @@ class NaturalistCatalog extends \CBitrixComponent
             //}
             
             if ($this->arSections["UF_EXTERNAL_SERVICE"] == "bronevik") {
-                foreach ($this->arExternalInfo as $key => $value) {
-                    if($value[0]['OFFERS']){
-                        $avail[] = $key;
+                foreach ($this->arExternalInfo as $elementID => $elementData) {
+                    if($elementData[0]['OFFERS']){
+                        $availOffers[] = $elementID;
                     }
                 }
 
                 if ($this->arExternalInfo) {
-                    $this->arExternalAvail["ID"] = $avail;
+                    $this->arExternalAvail["ID"] = $availOffers;
                 } else {
                     $this->arExternalAvail["ID"] = false;
                 }
@@ -1509,5 +1476,55 @@ class NaturalistCatalog extends \CBitrixComponent
                 'PROPERTY_QUANTITY_CHILD'
             )
         );
+    }
+
+    /**
+     * Обработка данных для детальной карточки
+     *
+     * @param array $arElement
+     * @return void
+     */
+    private function processAndAddElement(array $arElement): void
+    {
+        if ($arElement["PROPERTY_PHOTOS_VALUE"]) {
+            foreach ($arElement["PROPERTY_PHOTOS_VALUE"] as $photoId) {
+                $arElement["PICTURES"][$photoId] = [
+                    'src' => CFile::ResizeImageGet($photoId, array('width' => 464, 'height' => 328), BX_RESIZE_IMAGE_EXACT, true)['src'],
+                    'big' => CFile::GetFileArray($photoId)["SRC"],
+                ];
+            }
+        } else {
+            $arElement["PICTURES"][0]["src"] = SITE_TEMPLATE_PATH . "/img/no_photo.png";
+        }
+
+        //if (!empty($this->arExternalInfo)) {
+        //    $roomElement = current($this->arExternalInfo[$arElement["ID"]]);
+        //    $arElement["PRICE"] = $roomElement["price"];
+        //} else {
+        //    $arElement["PRICE"] = 0;
+        //}
+
+        if (!empty($this->arExternalInfo)) {
+            if (isset($this->arExternalInfo[$arElement["ID"]])) {
+                $roomElement = $this->arExternalInfo[$arElement["ID"]];
+                $arElement["PRICE"] = $roomElement[0]["price"];
+            }
+        } else {
+            $arElement["PRICE"] = 0;
+        }
+
+        $discountData = CCatalogProduct::GetOptimalPrice($arElement['ID'], 1, CurrentUser::get()->getUserGroups(), 'N');
+
+        if (is_array($discountData['DISCOUNT']) && count($discountData['DISCOUNT'])) {
+            $arElement['DISCOUNT_DATA']['VALUE'] = $discountData['DISCOUNT']['VALUE'];
+            $arElement['DISCOUNT_DATA']['VALUE_TYPE'] = $discountData['DISCOUNT']['VALUE_TYPE'];
+        }
+
+        $arElement['AVAILABLE_ID'] = false;
+        if (is_array($this->arExternalAvail['ID']) && in_array($arElement['ID'], $this->arExternalAvail['ID'])) {
+            $arElement['AVAILABLE_ID'] = true;
+        }
+
+        $this->arElements[$arElement['ID']] = $arElement;
     }
 }
