@@ -55,6 +55,13 @@ $aMenuLinks = Array(
 		Array(), 
 		Array(), 
 		"" 
+	),
+	Array(
+		"Акции",
+		SITE_DIR."/sales/",
+		Array(),
+		Array(),
+		""
 	)
 );
 ?>
