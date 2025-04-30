@@ -635,6 +635,7 @@ class NaturalistCatalog extends \CBitrixComponent
             }
 
             $yandexReviews = $this->getYandexReviews($arCampingIDs);
+
             foreach ($yandexReviews as $yandexReview) {
 
                 if (!isset($this->arSections[$yandexReview['UF_ID_OBJECT']]["RATING"]) || $this->arSections[$yandexReview['UF_ID_OBJECT']]["RATING"] == null) {
@@ -643,6 +644,14 @@ class NaturalistCatalog extends \CBitrixComponent
 
                 if (!isset($this->arReviewsAvg[$yandexReview['UF_ID_OBJECT']])) {
                     $this->arReviewsAvg[$yandexReview['UF_ID_OBJECT']]['avg'] = $yandexReview["average_rating"];
+                } else {
+                    $avgS = $this->arReviewsAvg[$yandexReview['UF_ID_OBJECT']]['avg'] * $this->arReviewsAvg[$yandexReview['UF_ID_OBJECT']]['count'];
+                    $avgY = $yandexReview["average_rating"] * $yandexReview["total_count"];
+                    if (($this->arReviewsAvg[$yandexReview['UF_ID_OBJECT']]['count'] + $yandexReview["total_count"]) > 0) {
+                        $this->arReviewsAvg[$yandexReview['UF_ID_OBJECT']]['avg'] = round(($avgS + $avgY) / ($this->arReviewsAvg[$yandexReview['UF_ID_OBJECT']]['count'] + $yandexReview["total_count"]), 1);
+                    } else {
+                        $this->arReviewsAvg[$yandexReview['UF_ID_OBJECT']]['avg'] = 0;
+                    }
                 }
 
                 if (isset($this->arReviewsAvg[$yandexReview['UF_ID_OBJECT']])) {
@@ -1451,11 +1460,17 @@ class NaturalistCatalog extends \CBitrixComponent
         $yandexReviews = $this->getYandexReviews([$this->arSections["ID"]]);
 
         if (isset($yandexReviews[0])) {
-            $this->reviewsCount =+ $yandexReviews[0]['total_count'];
 
-            if ($this->avgRating == 0) {
-                $this->avgRating = $yandexReviews[0]['average_rating'];
+            $this->avgRating *= $this->reviewsCount;
+            $yAvgRating = $yandexReviews[0]['average_rating'] * $yandexReviews[0]['total_count'];
+
+            if ($yandexReviews[0]['total_count'] + $this->reviewsCount > 0) {
+                $this->avgRating = round(($this->avgRating + $yAvgRating ) / ($yandexReviews[0]['total_count'] + $this->reviewsCount), 1);
+            } else {
+                $this->avgRating = 0;
             }
+
+            $this->reviewsCount += $yandexReviews[0]['total_count'];
 
             $commonYandexReviewsClass = HighloadBlockTable::compileEntity('YandexReviews')->getDataClass();
 
