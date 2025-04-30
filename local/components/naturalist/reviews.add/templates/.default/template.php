@@ -3,6 +3,8 @@
 if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) {
     die();
 }
+
+global $arUser, $userId;
 ?>
 
 <div class="modal modal_review" id="review">
@@ -22,8 +24,14 @@ if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) {
 
             <div class="form__item">
                 <div class="field">
-                    <span class="review-modal__label">Имя</span>
-                    <input class="field__input" type="text" name="name" placeholder="Введите ваше имя">
+
+
+                        <span class="review-modal__label">Имя</span>
+                        <input class="field__input" type="text" name="name" placeholder="Введите ваше имя" <? if($arUser['NAME']){ ?> readonly <? } ?>>
+                    <? if($arUser['NAME']): ?>
+                        <span class="name-field" style="display:none"><?=$arUser['NAME']?></span>
+                    <? endif ?>
+
                     <span class="field__error" style="display: none;">Ошибка ввода</span>
                 </div>
             </div>
