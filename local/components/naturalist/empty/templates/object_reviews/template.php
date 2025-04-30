@@ -94,7 +94,7 @@ global $arUser, $userId, $isAuthorized;
                             </div>
                             <div class="review__title">
                                 <div class="review__name">
-                                    <?= $arReviewsUsers[$arItem["PROPERTY_USER_ID_VALUE"]]["NAME"] ?>
+                                    <?= $arItem["NAME"] ?>
                                     <div class="review__rating">
                                         <img src="/local/templates/main/assets/img/star-score.svg" alt="">
                                         <?= number_format(floatval($arItem["PROPERTY_RATING_VALUE"]), 1, '.') ?>

@@ -27,7 +27,7 @@ global $arUser, $userId;
 
 
                         <span class="review-modal__label">Имя</span>
-                        <input class="field__input" type="text" name="name" placeholder="Введите ваше имя" <? if($arUser['NAME']){ ?> readonly <? } ?>>
+                        <input class="field__input" type="text" name="name" placeholder="Введите ваше имя" >
                     <? if($arUser['NAME']): ?>
                         <span class="name-field" style="display:none"><?=$arUser['NAME']?></span>
                     <? endif ?>
