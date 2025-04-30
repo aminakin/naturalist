@@ -133,7 +133,7 @@ global $arSettings, $currPage;
         <? endif; ?>
     </div>
 </footer>
-<? if ($APPLICATION->GetCurPage() == '/catalog/'): ?>
+<? if (strpos($APPLICATION->GetCurPage() , '/catalog')): ?>
     </div>
     <div class="catalog__map" data-map-overlay>
         <div class="catalog__map-sticky">
