@@ -40,6 +40,7 @@ $(function () {
     var campingId = $(this).data("camping-id");
     var orderId = $(this).data("order-id");
 
+    $('#review-form input[name="name"]').val($('.name-field') ? document.querySelector('.name-field').textContent : '');
     $('#review-form input[name="campingId"]').val(campingId);
     $('#review-form input[name="orderId"]').val(orderId);
   });
