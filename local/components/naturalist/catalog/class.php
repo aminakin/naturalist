@@ -15,6 +15,7 @@ use Bitrix\Iblock\Elements\ElementFeaturesdetailTable;
 use Bitrix\Main\Data\Cache;
 use Naturalist\Products;
 use Naturalist\Filters\Components;
+use Naturalist\SmartWidgetsController;
 use Naturalist\Users;
 use Naturalist\Regions;
 use Naturalist\Utils;
@@ -108,7 +109,42 @@ class NaturalistCatalog extends \CBitrixComponent
     private $currYear;
     private $nextYear;
     private $daysRange;
+    private $yandexReview = [];
 
+
+    /**
+     * @param $sectionId
+     * @return array
+     */
+    public function getYandexReviews($sectionIds): array
+    {
+        $commonYandexReviewsClass = HighloadBlockTable::compileEntity('YandexReviews')->getDataClass();
+        $commonYandexReviews = $commonYandexReviewsClass::query()
+            ->addSelect('*')
+            ->setOrder(['ID' => 'ASC'])
+            ->setFilter(['UF_ID_OBJECT' => $sectionIds])
+            ->setCacheTtl(36000000)
+            ?->fetchAll();
+
+        $arYandexIDs = array_column($commonYandexReviews, 'UF_ID_YANDEX', 'UF_ID_OBJECT');
+
+        if (is_array($commonYandexReviews) && !empty($commonYandexReviews)) {
+
+            $widgetData = SmartWidgetsController::getWidgetData($arYandexIDs);
+
+            foreach ($commonYandexReviews as &$item) {
+                $yandexId = $item['UF_ID_YANDEX'];
+                if (isset($widgetData['data'][$yandexId])) {
+                    $item = array_merge($item, $widgetData['data'][$yandexId]);
+                }
+            }
+            unset($item);
+
+            SmartWidgetsController::calculateReviewsSummary($commonYandexReviews);
+        }
+
+        return $commonYandexReviews;
+    }
 
     private function fillSectionVariables()
     {
@@ -593,9 +629,38 @@ class NaturalistCatalog extends \CBitrixComponent
 
         if (isset($arCampingIDs) && !empty($arCampingIDs)) {
             $this->arReviewsAvg = Reviews::getCampingRating($arCampingIDs);
+
             foreach ($this->arReviewsAvg as $id => $review) {
                 $this->arSections[$id]["RATING"] = $review["avg"];
             }
+
+            $yandexReviews = $this->getYandexReviews($arCampingIDs);
+
+            foreach ($yandexReviews as $yandexReview) {
+
+                if (!isset($this->arSections[$yandexReview['UF_ID_OBJECT']]["RATING"]) || $this->arSections[$yandexReview['UF_ID_OBJECT']]["RATING"] == null) {
+                    $this->arSections[$yandexReview['UF_ID_OBJECT']]["RATING"] = $yandexReview["average_rating"];
+                }
+
+                if (!isset($this->arReviewsAvg[$yandexReview['UF_ID_OBJECT']])) {
+                    $this->arReviewsAvg[$yandexReview['UF_ID_OBJECT']]['avg'] = $yandexReview["average_rating"];
+                } else {
+                    $avgS = $this->arReviewsAvg[$yandexReview['UF_ID_OBJECT']]['avg'] * $this->arReviewsAvg[$yandexReview['UF_ID_OBJECT']]['count'];
+                    $avgY = $yandexReview["average_rating"] * $yandexReview["total_count"];
+                    if (($this->arReviewsAvg[$yandexReview['UF_ID_OBJECT']]['count'] + $yandexReview["total_count"]) > 0) {
+                        $this->arReviewsAvg[$yandexReview['UF_ID_OBJECT']]['avg'] = round(($avgS + $avgY) / ($this->arReviewsAvg[$yandexReview['UF_ID_OBJECT']]['count'] + $yandexReview["total_count"]), 1);
+                    } else {
+                        $this->arReviewsAvg[$yandexReview['UF_ID_OBJECT']]['avg'] = 0;
+                    }
+                }
+
+                if (isset($this->arReviewsAvg[$yandexReview['UF_ID_OBJECT']])) {
+                    $this->arReviewsAvg[$yandexReview['UF_ID_OBJECT']]['count'] += $yandexReview["total_count"];
+                } else {
+                    $this->arReviewsAvg[$yandexReview['UF_ID_OBJECT']]['count'] = $yandexReview["total_count"];
+                }
+            }
+
         }
     }
 
@@ -1025,6 +1090,7 @@ class NaturalistCatalog extends \CBitrixComponent
         $this->arResult['arHLRoomFeatures'] = $this->arHLRoomFeatures;
         $this->arResult['arHouseTypes'] = $this->arHouseTypes;
         $this->arResult['arObjectComforts'] = $this->arObjectComforts;
+        $this->arResult['yandexReview'] = $this->yandexReview;
     }
 
     protected function fillDetailVariables()
@@ -1168,7 +1234,7 @@ class NaturalistCatalog extends \CBitrixComponent
     }
 
     private function getRooms()
-    {   
+    {
         // Список номеров
         $rsElements = $this->getRoomsElements();
 
@@ -1201,8 +1267,8 @@ class NaturalistCatalog extends \CBitrixComponent
                         $parentExternalIds[] = $arElement["PROPERTY_PARENT_ID_VALUE"];
                     }
                 }
-                
-                if($arElement["PRICE"] == NULL){
+
+                if ($arElement["PRICE"] == NULL) {
                     unset($key);
                 }
             }
@@ -1252,8 +1318,12 @@ class NaturalistCatalog extends \CBitrixComponent
     private function getDetailReviews()
     {
         /* Отзывы */
-        $this->reviewsSortType = (!empty($_GET['sort']) && isset($_GET['sort'])) ? strtolower($_GET['sort']) : "date";
+        $this->reviewsSortType = (!empty($_GET['sort']) && isset($_GET['sort'])) ? strtolower($_GET['sort']) : "sort";
         switch ($this->reviewsSortType) {
+            case 'sort':
+                $arReviewsSort = array("SORT" => "ASC");
+                break;
+
             case 'date':
                 $arReviewsSort = array("ACTIVE_FROM" => "DESC");
                 break;
@@ -1336,7 +1406,34 @@ class NaturalistCatalog extends \CBitrixComponent
                 $this->arReviews[$reviewId]["LIKES"] = $arLikes;
             }
         }
+
+        $yandexReviews = $this->getYandexReviews([$this->arSections["ID"]]);
+
+        if (isset($yandexReviews[0])) {
+
+            $this->avgRating *= $this->reviewsCount;
+            $yAvgRating = $yandexReviews[0]['average_rating'] * $yandexReviews[0]['total_count'];
+
+            if ($yandexReviews[0]['total_count'] + $this->reviewsCount > 0) {
+                $this->avgRating = round(($this->avgRating + $yAvgRating ) / ($yandexReviews[0]['total_count'] + $this->reviewsCount), 1);
+            } else {
+                $this->avgRating = 0;
+            }
+
+            $this->reviewsCount += $yandexReviews[0]['total_count'];
+
+            $commonYandexReviewsClass = HighloadBlockTable::compileEntity('YandexReviews')->getDataClass();
+
+            $this->yandexReview = $commonYandexReviewsClass::query()
+                ->addSelect('*')
+                ->setOrder(['ID' => 'ASC'])
+                ->setFilter(['UF_ID_OBJECT' => $this->arSections["ID"]])
+                ->setCacheTtl(36000000)
+                ?->fetchAll();
+        }
+
     }
+
 
     private function getDetailExternalInfo()
     {
@@ -1354,7 +1451,7 @@ class NaturalistCatalog extends \CBitrixComponent
             //} else {
             //    $this->arFilter["ID"] = false;
             //}
-            
+
             if ($this->arSections["UF_EXTERNAL_SERVICE"] == "bronevik") {
                 foreach ($this->arExternalInfo as $elementID => $elementData) {
                     if($elementData[0]['OFFERS']){
@@ -1387,7 +1484,12 @@ class NaturalistCatalog extends \CBitrixComponent
         $this->arFilter = array(
             "IBLOCK_ID" => CATALOG_IBLOCK_ID,
             "ACTIVE" => "Y",
-            "SECTION_ID" => $this->arSections["ID"]
+            "SECTION_ID" => $this->arSections["ID"],
+            [
+                "LOGIC" => "OR",
+                ["PROPERTY_PARENT_ID" => NULL],
+                ["PROPERTY_PARENT_ID" => 0]
+            ]
         );
 
         if ($this->arSections["UF_EXTERNAL_SERVICE"] == "bnovo") {

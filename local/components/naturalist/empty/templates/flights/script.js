@@ -90,9 +90,9 @@ $(function () {
 });
 
 
-  /*$(document).ready(function() {
-  var swiper = new Swiper(' .gg .swiper-container', {
-    loop: true,
+/*$(document).ready(function() {
+var swiper = new Swiper(' .gg .swiper-container', {
+  loop: true,
 
     navigation: {
       nextEl: '.swiper-button-next',
@@ -122,4 +122,4 @@ $(function () {
 });
 
 });
-*/
+

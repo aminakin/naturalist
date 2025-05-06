@@ -1,4 +1,10 @@
-<?
+<?php
+
+use Bitrix\Highloadblock\HighloadBlockTable;
+use Naturalist\SmartWidgetsController;
+
+/** @var  $arParams */
+
 $arResult = array(
     "avgRating" => $arParams['avgRating'],
     "reviewsDeclension" => $arParams['reviewsDeclension'],
@@ -12,4 +18,5 @@ $arResult = array(
     "reviewsPageCount" => $arParams['reviewsPageCount'],
     "sectionId" => $arParams['sectionId'],
     "isUserReview" => $arParams['isUserReview'],
+    "yandexReview" => $arParams['yandexReview'],
 );

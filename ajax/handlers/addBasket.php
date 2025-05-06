@@ -25,10 +25,14 @@ $people = $_REQUEST["people"];
 $title = $_REQUEST["title"];
 $photo = isset($_REQUEST["photo"]) ? $_REQUEST["photo"] : '';
 $bronevikOfferExternalId = isset($_REQUEST["bronevikOfferExternalId"]) ? $_REQUEST["bronevikOfferExternalId"] : '';
+$uhotelsTariffId = isset($_REQUEST["uhotelsTariffId"]) ? $_REQUEST["uhotelsTariffId"] : '';
 
 $externalService = $_REQUEST["externalService"];
-if ($externalService == 'bronevik') {
-
+if ($externalService == 'uhotels') {
+    $prices = $_REQUEST["prices"];
+    //
+} elseif ($externalService == 'bronevik') {
+    //
 } elseif ($externalService == "bnovo") {
 	$tariffId = $_REQUEST["tariffId"];
 	$categoryId = $_REQUEST["categoryId"];
@@ -118,7 +122,21 @@ $arProps = array(
 		'VALUE' => $photo,
 	]
 );
-if ($externalService == 'bronevik') {
+
+if ($externalService == 'uhotels') {
+    $arProps = array_merge($arProps, [
+        [
+            'CODE' => 'UHOTELS_TARIFF_ID',
+            'NAME' => 'Ид тарифа uhotels',
+            'VALUE' => $uhotelsTariffId,
+        ],
+        [
+            'CODE' => 'PRICES',
+            'VALUE' => $prices
+        ]
+    ]);
+    //
+} elseif ($externalService == 'bronevik') {
     $arProps = array_merge($arProps, [
         [
             'CODE' => 'BRONEVIK_OFFER_ID',
