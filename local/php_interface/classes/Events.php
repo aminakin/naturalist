@@ -47,6 +47,7 @@ class Events
         $event->addEventHandler('main', 'OnBeforeProlog', [self::class, "tgAuth"]);
         $event->addEventHandler('main', 'OnEndBufferContent', [self::class, "deleteKernelJs"]);
         $event->addEventHandler('main', 'OnEndBufferContent', [self::class, "deleteKernelCss"]);
+        $event->addEventHandler('main', 'OnEndBufferContent', [self::class, "bronevikcDeleteImg"]);
         $event->addEventHandler('sale', 'OnSaleOrderSaved', [self::class, "createB24Deal"]);
         $event->addEventHandler('sale', 'OnSaleOrderSaved', [self::class, "makeReservation"]);
         $event->addEventHandler('sale', 'OnSaleOrderSaved', [self::class, "makeOrderCert"]);
@@ -66,6 +67,187 @@ class Events
 
     }
 
+    public static function bronevikcDeleteImg(&$content)
+    {
+        global $APPLICATION;
+
+        $currentPage = $APPLICATION->GetCurPage();
+        if (strpos($currentPage, 'iblock_section_edit.php') === false) return;
+
+        // Стили и скрипты добавим в конец <body>
+        $injection = <<<HTML
+<style>
+.custom-image-controls {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    z-index: 1000;
+}
+.custom-image-checkbox {
+    width: 16px;
+    height: 16px;
+    background: white;
+    border: 2px solid red;
+}
+.custom-image-label {
+    position: absolute;
+    top: 0;
+    right: 20px;
+    background: rgba(255,255,255,0.8);
+    padding: 2px 5px;
+    font-size: 11px;
+    border-radius: 3px;
+    cursor: pointer;
+}
+.select-all-container {
+    margin: 10px 0;
+    padding: 10px;
+    background: #f5f5f5;
+    border: 1px solid #ddd;
+    font-weight: bold;
+}
+.delete-selected-btn {
+    margin-left: 10px;
+    padding: 5px 10px;
+    background: #ff4d4d;
+    color: white;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+}
+.delete-selected-btn:hover {
+    background: #ff3333;
+}
+</style>
+
+<script>
+(function() {
+    // Функция для добавления контролов к изображению
+    function enhanceImagePreviews() {
+        document.querySelectorAll('.adm-input-file-preview:not([data-enhanced="1"])').forEach(span => {
+            const img = span.querySelector('img');
+            if (!img) return;
+
+            span.setAttribute('data-enhanced', '1'); // Чтобы не обрабатывать повторно
+
+            const wrapper = document.createElement('div');
+            wrapper.style.position = 'relative';
+            wrapper.style.display = 'inline-block';
+
+            const controls = document.createElement('div');
+            controls.className = 'custom-image-controls';
+
+            const checkbox = document.createElement('input');
+            checkbox.type = 'checkbox';
+            checkbox.className = 'custom-image-checkbox';
+            checkbox.name = 'DELETE_IMAGE_PROPERTY[]';
+            checkbox.value = img.src;  // Устанавливаем value чекбокса равным src изображения
+
+            const label = document.createElement('label');
+            label.className = 'custom-image-label';
+            label.textContent = 'Удалить';
+
+            controls.appendChild(checkbox);
+            controls.appendChild(label);
+
+            // Переносим элементы и добавляем в DOM
+            while (span.firstChild) {
+                wrapper.appendChild(span.firstChild);
+            }
+
+            wrapper.appendChild(controls);
+            span.appendChild(wrapper);
+        });
+    }
+
+    // Функция для добавления панели управления для всех изображений
+    function insertControlPanel() {
+        const container = document.querySelector('.adm-input-file-exist-cont');
+        if (!container || document.querySelector('.select-all-container')) return;
+
+        const controlPanel = document.createElement('div');
+        controlPanel.className = 'select-all-container';
+        controlPanel.innerHTML = ` 
+            <input type="checkbox" id="select_all_images">
+            <label for="select_all_images" style="cursor:pointer">Выбрать все изображения</label>
+            <button type="button" class="delete-selected-btn">Удалить выбранное</button>
+        `;
+
+        container.parentNode.insertBefore(controlPanel, container);
+
+        // Обработчик "Выбрать все"
+        document.getElementById('select_all_images').addEventListener('change', function() {
+            document.querySelectorAll('.custom-image-checkbox').forEach(cb => cb.checked = this.checked);
+        });
+
+        // Обработчик для кнопки "Удалить выбранное"
+        document.querySelector('.delete-selected-btn').addEventListener('click', function() {
+            const selected = Array.from(document.querySelectorAll('.custom-image-checkbox:checked'));
+            if (selected.length === 0) {
+                alert('Выберите хотя бы одно изображение для удаления');
+                return;
+            }
+
+            if (!confirm('Удалить выбранные изображения?')) return;
+
+            selected.forEach(cb => {
+    const container = cb.closest('.adm-input-file-preview');
+    const imgSrc = cb.value; // Получаем src из value чекбокса
+
+    // Обесцвечиваем и делаем неактивным
+    container.style.opacity = '0.3';
+    container.style.pointerEvents = 'none';
+
+    // AJAX запрос
+    BX.ajax({
+        url: '/ajax/iblockDeleteImg.php',
+        method: 'POST',
+        dataType: 'json',
+        data: {
+            action: 'deleteFile',
+            fileSrc: imgSrc,
+            sessid: BX.bitrix_sessid()
+        },
+        onsuccess: function(response) {
+            console.log(response);
+            if (response && response.status === 'success') {
+                console.log('File deleted:', imgSrc);
+                container.remove(); // Удаляем элемент из DOM
+            } else {
+                alert('Ошибка удаления файла');
+                container.style.opacity = '1';
+                container.style.pointerEvents = 'auto';
+            }
+        },
+        onfailure: function() {
+            alert('Произошла ошибка при удалении');
+            container.style.opacity = '1';
+            container.style.pointerEvents = 'auto';
+        }
+    });
+});
+
+            document.getElementById('select_all_images').checked = false;
+        });
+    }
+
+    // Повторяем, пока элементы не появятся
+    const interval = setInterval(() => {
+        if (document.querySelector('.adm-input-file-preview')) {
+            enhanceImagePreviews();
+            insertControlPanel();
+        }
+    }, 500);
+
+    // Останавливаем через 10 секунд
+    setTimeout(() => clearInterval(interval), 10000);
+})();
+</script>
+HTML;
+
+        $content .= $injection;
+        return $content;
+    }
     public static function deleteKernelJs(&$content)
     {
         global $USER, $APPLICATION;
