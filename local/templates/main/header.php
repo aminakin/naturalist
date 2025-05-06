@@ -397,7 +397,7 @@ use Naturalist\Users;
                     </ul>
                 </div>
             </div>
-            <?
+            <?/*
             $APPLICATION->IncludeComponent(
                 "bitrix:menu",
                 "header_catalog",
@@ -415,6 +415,6 @@ use Naturalist\Users;
                 ),
                 false
             );
-            ?>
+            */?>
         </header>
         <!-- header-->
