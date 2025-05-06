@@ -1,5 +1,5 @@
 <picture>
-  <source srcset="/img/cert-back-mob.png" media="(max-width: 450px)">  
-  <source srcset="/img/cert-back.jpg">
-  <img src="/img/cert-back.jpg">
+  <source srcset="/img/newcert-back-mob.png" media="(max-width: 450px)">  
+  <source srcset="/img/newcert-back.png">
+  <img src="/img/newcert-back.png">
 </picture>

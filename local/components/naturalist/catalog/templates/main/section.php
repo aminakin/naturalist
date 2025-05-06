@@ -93,7 +93,10 @@ if ($arResult['CHPY']['UF_CANONICAL']) {
 <? if ($APPLICATION->GetCurPage() == '/catalog/'): ?>
     <div class="catalog__full">
         <div class="catalog-full__wrapper">
-        <? endif; ?>
+        <? else: ?>
+            <div class="catalog__products">
+            <div class="catalog-products__wrapper">
+        <?endif?>
         <main class="main main__on_map">
             <section class="section section_crumbs section_crumbs_catalog_new">
                 <div class="container">
