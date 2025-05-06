@@ -611,7 +611,7 @@ $(function () {
   });
 });
 
-const hoverableElement = document.getElementById('list__item_catalog');
-const catalog_menu = document.getElementById('catalog_menu');
-
-hoverableElement.append(catalog_menu);
+// const hoverableElement = document.getElementById('list__item_catalog');
+// const catalog_menu = document.getElementById('catalog_menu');
+//
+// hoverableElement.append(catalog_menu);
