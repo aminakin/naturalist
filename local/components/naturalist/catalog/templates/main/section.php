@@ -319,7 +319,7 @@ if ($arResult['CHPY']['UF_CANONICAL']) {
                                                 }
                                             ?>
                                                 <li class="swiper-slide">
-                                                    <a href="<?= $houseType['URL'] ?>">
+                                                    <a href="<?= $houseType['URL'] ?><?= ($_SERVER['QUERY_STRING'] !== '') ? '?' . $_SERVER['QUERY_STRING'] : ''; ?>">
                                                         <?= Utils::buildSVG(CFile::getPath($houseType['UF_IMG'])) ?>
                                                         <p class="house-type__text"><?= $houseType['UF_NAME'] ?></p>
                                                     </a>
