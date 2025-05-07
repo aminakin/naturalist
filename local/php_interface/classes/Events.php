@@ -14,6 +14,7 @@ use Bitrix\Main\Engine\CurrentUser;
 use CIBlockSection;
 use CIBlockElement;
 use CFile;
+use CModule;
 use Naturalist\Handlers\HigloadHandler;
 use Naturalist\Handlers\OnAdminIBlockSectionEdit;
 use Naturalist\Users;
@@ -70,9 +71,19 @@ class Events
     public static function bronevikcDeleteImg(&$content)
     {
         global $APPLICATION;
-
+        $request = Context::getCurrent()->getRequest();
         $currentPage = $APPLICATION->GetCurPage();
+
         if (strpos($currentPage, 'iblock_section_edit.php') === false) return;
+
+        $iblockId = $request->get('IBLOCK_ID');
+
+        if($iblockId != 1) return;
+
+        CModule::IncludeModule("iblock");
+        $isBronevick = CIBlockSection::GetList([],["IBLOCK_ID" => $iblockId, "ID" => $request->get('ID')], false, ["UF_EXTERNAL_SERVICE"])->Fetch()["UF_EXTERNAL_SERVICE"] == 6 ? true : false;
+
+        if(!$isBronevick) return;
 
         $injection = <<<HTML
             <style>
