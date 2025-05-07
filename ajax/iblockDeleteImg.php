@@ -21,7 +21,7 @@ function generatePhotoUrl(array $imgIds): array {
 $request = Context::getCurrent()->getRequest();
 
 if ($request->getPost('action') === 'deleteFile' && check_bitrix_sessid()) {
-    $fileSrc = $_POST['fileSrc'];
+    $fileSrc = $request->getPost('fileSrc');
     $iblockId = (int)$request->getPost('sectionID');
     $sectionID = (int)$request->getPost('iblockId');
     $relativePath = explode('/', str_replace([$_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'], '/resize_cache'], '', $fileSrc));
