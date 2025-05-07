@@ -78,10 +78,10 @@ class Events
 
         $iblockId = $request->get('IBLOCK_ID');
 
-        if($iblockId != 1) return;
+        if($iblockId != CATALOG_IBLOCK_ID) return;
 
         CModule::IncludeModule("iblock");
-        $isBronevick = CIBlockSection::GetList([],["IBLOCK_ID" => $iblockId, "ID" => $request->get('ID')], false, ["UF_EXTERNAL_SERVICE"])->Fetch()["UF_EXTERNAL_SERVICE"] == 6 ? true : false;
+        $isBronevick = CIBlockSection::GetList([],["IBLOCK_ID" => $iblockId, "ID" => $request->get('ID')], false, ["UF_EXTERNAL_SERVICE"])->Fetch()["UF_EXTERNAL_SERVICE"] == CATALOG_IBLOCK_SECTION_UF_EXTERNAL_SERVICE_ID ? true : false;
 
         if(!$isBronevick) return;
 
