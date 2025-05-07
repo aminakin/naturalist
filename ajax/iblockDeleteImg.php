@@ -1,6 +1,7 @@
 <?php
 require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_before.php");
 
+use Bitrix\Main\Context;
 function generatePhotoUrl(array $imgIds): array {
     $imgUrls = [];
 
@@ -17,10 +18,12 @@ function generatePhotoUrl(array $imgIds): array {
     return $imgUrls;
 }
 
-if ($_POST['action'] === 'deleteFile' && check_bitrix_sessid()) {
+$request = Context::getCurrent()->getRequest();
+
+if ($request->getPost('action') === 'deleteFile' && check_bitrix_sessid()) {
     $fileSrc = $_POST['fileSrc'];
-    $iblockId = (int)$_POST['sectionID'];
-    $sectionID = (int)$_POST['iblockId'];
+    $iblockId = (int)$request->getPost('sectionID');
+    $sectionID = (int)$request->getPost('iblockId');
     $relativePath = explode('/', str_replace([$_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'], '/resize_cache'], '', $fileSrc));
     unset($relativePath[5], $relativePath[6]);
     $relativePath = implode('/', $relativePath);
