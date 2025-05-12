@@ -132,6 +132,6 @@ foreach ($arResult["SECTIONS"] as &$arItem) {
             }
         }
     }
-    $arItem["FULL_GALLERY"] = implode(",", $arDataFullGallery);
+    $arItem["FULL_GALLERY"] = implode(",", (array)$arDataFullGallery);
     unset($arItem["UF_PHOTOS"]);
 }

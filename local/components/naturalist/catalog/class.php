@@ -1250,11 +1250,12 @@ class NaturalistCatalog extends \CBitrixComponent
         $this->arElements = [];
         if ($firstElement) {
             $this->processAndAddElement($firstElement); // Обрабатываем первый элемент
-
-            while ($arElement = $rsElements->Fetch()) {
-                $this->processAndAddElement($arElement);
-            }
         }
+
+        while ($arElement = $rsElements->Fetch()) {
+            $this->processAndAddElement($arElement);
+        }
+
 
 
         if ($this->arSections["UF_EXTERNAL_SERVICE"] == "bnovo") {
@@ -1488,7 +1489,8 @@ class NaturalistCatalog extends \CBitrixComponent
             [
                 "LOGIC" => "OR",
                 ["PROPERTY_PARENT_ID" => NULL],
-                ["PROPERTY_PARENT_ID" => 0]
+                ["PROPERTY_PARENT_ID" => 0],
+                ["PROPERTY_PARENT_ID" => false]
             ]
         );
 

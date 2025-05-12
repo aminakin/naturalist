@@ -1525,7 +1525,7 @@
 }
 
 .section_hero .container {
-  padding-top: 6.1rem;
+  /*padding-top: 6.1rem; */
 }
 
 .section_form {
@@ -1865,8 +1865,9 @@
 .hero__footnote {
   -webkit-box-pack: justify;
   -ms-flex-pack: justify;
-  border-top: 0.1rem solid #000;
-  border-top: 0.1rem solid var(--color-black);
+  /*border-top: 0.1rem solid #000;*/
+  /*border-top: 0.1rem solid var(--color-black);*/
+  border-bottom: 0.1rem solid var(--color-black);
   display: block;
   display: -webkit-box;
   display: -ms-flexbox;
@@ -1876,7 +1877,8 @@
   margin-top: 2.55rem;
   text-transform: uppercase;
   font-weight: 400;
-  padding-top: 15px;
+  padding-bottom: 20px;
+  /*padding-top: 15px;*/
 }
 
 .hero__footnote > * {
