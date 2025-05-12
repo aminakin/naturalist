@@ -150,10 +150,6 @@ foreach ($arResult as $key => $value) {
 
                     <div class="tag_wrapper">
 
-                        <div class="tag sale_tag">
-                            <?= $arSection["UF_SALE_LABEL"] != '' ? $arSection["UF_SALE_LABEL"] : Loc::GetMessage('CATALOG_DISCOUNT') ?> <?= $arSection["DISCOUNT_PERCENT"] ? $arSection["DISCOUNT_PERCENT"] . '%' : '' ?>
-                        </div>
-
                         <?php if ($arSection["IS_DISCOUNT"] == 'Y'): ?>
                             <div class="tag sale_tag">
                                 <?= $arSection["UF_SALE_LABEL"] != '' ? $arSection["UF_SALE_LABEL"] : Loc::GetMessage('CATALOG_DISCOUNT') ?> <?= $arSection["DISCOUNT_PERCENT"] ? $arSection["DISCOUNT_PERCENT"] . '%' : '' ?>
