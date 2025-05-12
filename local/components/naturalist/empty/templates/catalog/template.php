@@ -143,9 +143,9 @@ foreach ($arResult as $key => $value) {
 
 
 
-                    <?php if (!empty($arSection["UF_ACTION"])) : ?>
+                    <?/*php if (!empty($arSection["UF_ACTION"])) : ?>
                         <div class="tag"><?= $arSection["UF_ACTION"] ?></div>
-                    <?php endif; ?>
+                    <?php endif; */?>
 
 
                     <div class="tag_wrapper">
