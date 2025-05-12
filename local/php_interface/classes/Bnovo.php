@@ -207,11 +207,15 @@ class Bnovo
                     $arCategoriesIDs[] = $categoryId;
 
                     if (empty($arHotelsIDs[$categoryId][$arEntity['UF_HOTEL_ID']]) || $arEntity['UF_PRICE'] < intval($arHotelsIDs[$categoryId][$arEntity['UF_HOTEL_ID']])) {
-                        $arHotelsIDs[$categoryId][$arEntity['UF_HOTEL_ID']] = intval($arEntity['UF_PRICE']);
+                        $arHotelsIDs[$categoryId][$arEntity['UF_HOTEL_ID']] = [
+                            ...$arEntity,
+                            'PRICE' => intval($arEntity['UF_PRICE'])
+                        ];
                     }
                 }
             }
         }
+
 
         // Размещение номеров
         $rsOccupancies = CIBlockElement::GetList(
@@ -255,7 +259,7 @@ class Bnovo
                 }
             }
         }
-
+//
         if (empty($arCategoriesFilterredIDs)) {
             $guests += count($arChildrenAge);
             foreach ($backOccupancies as $arOccupancy) {
@@ -269,10 +273,10 @@ class Bnovo
 
         foreach ($arHotelsIDs as $categoryId => $arHotelData) {
             if (in_array($categoryId, $arCategoriesFilterredIDs)) {
-                $idHotel = array_key_first($arHotelData);
-                $price = array_shift($arHotelData);
-                if (!isset($arHotelsIDsOutput[$idHotel]) || $price < $arHotelsIDsOutput[$idHotel]) {
-                    $arHotelsIDsOutput[$idHotel] = $price;
+                foreach ($arHotelData as $idHotel => $arHotel) {
+                    if (!isset($arHotelsIDsOutput[$idHotel]) || $arHotelData['PRICE'] < $arHotelsIDsOutput[$idHotel]) {
+                        $arHotelsIDsOutput[$idHotel] = $arHotel;
+                    }
                 }
             }
         }

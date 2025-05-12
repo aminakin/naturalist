@@ -77,6 +77,7 @@ foreach ($arResult as $key => $value) {
                     continue;
                 }
 
+
                 $this->AddEditAction($arSection['ID'], $arSection['EDIT_LINK'], CIBlock::GetArrayByID($arSection["IBLOCK_ID"], "ELEMENT_EDIT"));
                 $this->AddDeleteAction($arSection['ID'], $arSection['DELETE_LINK'], CIBlock::GetArrayByID($arSection["IBLOCK_ID"], "ELEMENT_DELETE"), array("CONFIRM" => Loc::GetMessage('CT_BNL_ELEMENT_DELETE_CONFIRM')));
                 ?>
@@ -139,13 +140,38 @@ foreach ($arResult as $key => $value) {
                             </svg>
                         </button>
                     </div>
-                    <?php if ($arSection["IS_DISCOUNT"] == 'Y'): ?>
-                        <div class="tag"><?= $arSection["UF_SALE_LABEL"] != '' ? $arSection["UF_SALE_LABEL"] : Loc::GetMessage('CATALOG_DISCOUNT') ?> <?= $arSection["DISCOUNT_PERCENT"] ? $arSection["DISCOUNT_PERCENT"] . '%' : '' ?></div>
-                    <?php endif; ?>
+
+
 
                     <?php if (!empty($arSection["UF_ACTION"])) : ?>
                         <div class="tag"><?= $arSection["UF_ACTION"] ?></div>
                     <?php endif; ?>
+
+
+                    <div class="tag_wrapper">
+
+                        <div class="tag sale_tag">
+                            <?= $arSection["UF_SALE_LABEL"] != '' ? $arSection["UF_SALE_LABEL"] : Loc::GetMessage('CATALOG_DISCOUNT') ?> <?= $arSection["DISCOUNT_PERCENT"] ? $arSection["DISCOUNT_PERCENT"] . '%' : '' ?>
+                        </div>
+
+                        <?php if ($arSection["IS_DISCOUNT"] == 'Y'): ?>
+                            <div class="tag sale_tag">
+                                <?= $arSection["UF_SALE_LABEL"] != '' ? $arSection["UF_SALE_LABEL"] : Loc::GetMessage('CATALOG_DISCOUNT') ?> <?= $arSection["DISCOUNT_PERCENT"] ? $arSection["DISCOUNT_PERCENT"] . '%' : '' ?>
+                            </div>
+                        <?php endif; ?>
+
+                        <?php
+                        if ($arSection["EXTERNAL_DATA"] &&
+                            $arSection['EXTERNAL_DATA']['UF_MIN_STAY'] > 1 &&
+                            $daysCount == 1
+                        ): ?>
+                            <div class="tag stay_tag">
+                                <?=Loc::getMessage('MIN_STAY_TAG')?>
+                            </div>
+                        <?php endif; ?>
+                    </div>
+
+
                     <div class="object-row__content">
                         <div class="object-row__description">
                             <a class="object-row__title h3" target="_blank"
