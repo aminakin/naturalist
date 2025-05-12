@@ -2540,7 +2540,7 @@ span.flatpickr-weekday {
   -webkit-box-flex: 1;
   -ms-flex: 1 0 auto;
   flex: 1 0 auto;
-  padding-top: var(--header-height);
+  /*padding-top: var(--header-height);*/
   width: 100%;
 }
 
