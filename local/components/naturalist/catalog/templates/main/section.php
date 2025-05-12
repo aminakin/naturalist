@@ -569,6 +569,7 @@ if ($arResult['CHPY']['UF_CANONICAL']) {
                             "arFilterValues" => $arResult['SECTION_FILTER_VALUES'],
                             "dateFrom" => $arResult['arUriParams']['dateFrom'],
                             "dateTo" => $arResult['arUriParams']['dateTo'],
+                            "daysCount" => $arResult['arUriParams']['daysCount'],
                             "arDates" => $arResult['arDates'],
                             "currMonthName" => $arResult['currMonthName'],
                             "currYear" => $arResult['currYear'],

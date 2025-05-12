@@ -9,6 +9,7 @@ use Bitrix\Main\Context;
 
 /** @var  $arParams */
 
+
 $arResult = array(
     "sortBy" => $arParams['sortBy'],
     "orderReverse" => $arParams['orderReverse'],
@@ -29,6 +30,7 @@ $arResult = array(
     "arFilterValues" => $arParams['arFilterValues'],
     "dateFrom" => $arParams['dateFrom'],
     "dateTo" => $arParams['dateTo'],
+    "daysCount" => $arParams['daysCount'],
     "arDates" => $arParams['arDates'],
     "currMonthName" => $arParams['currMonthName'],
     "currYear" => $arParams['currYear'],
