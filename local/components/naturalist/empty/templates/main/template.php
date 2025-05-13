@@ -27,7 +27,7 @@ use Bitrix\Main\Localization\Loc;
                     "DISPLAY_PREVIEW_TEXT" => "Y",
                     "AJAX_MODE" => "N",
                     "IBLOCK_TYPE" => "",
-                    "IBLOCK_ID" => 43,
+                    "IBLOCK_ID" => HEADER_SLIDER_IBLOCK_ID,
                     "NEWS_COUNT" => "1000",
                     "SORT_BY1" => "SORT",
                     "SORT_ORDER1" => "ASC",
