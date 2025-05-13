@@ -269,7 +269,7 @@ if ($arResult['arSearchedRegions']) {
                 /* -- */
 
                 if ($arExternalInfo) {
-                    $sectionPrice = $arExternalInfo[$arSection["UF_EXTERNAL_ID"]];
+                    $sectionPrice = $arExternalInfo[$arSection["UF_EXTERNAL_ID"]]['PRICE'];
                     // Если это Traveline, то делим цену на кол-во дней
                     if ($arSection["UF_EXTERNAL_SERVICE"] == 1) {
                         $sectionPrice = round($sectionPrice / $daysCount);
