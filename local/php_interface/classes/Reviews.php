@@ -3,7 +3,6 @@
 namespace Naturalist;
 
 use Bitrix\Highloadblock\HighloadBlockTable;
-use Bitrix\Main\Diag\Debug;
 use Bitrix\Main\Loader;
 use CModule;
 use CIBlockElement;
