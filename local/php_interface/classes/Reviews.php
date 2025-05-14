@@ -3,6 +3,7 @@
 namespace Naturalist;
 
 use Bitrix\Highloadblock\HighloadBlockTable;
+use Bitrix\Main\Diag\Debug;
 use Bitrix\Main\Loader;
 use CModule;
 use CIBlockElement;
@@ -198,6 +199,50 @@ class Reviews
             if ($countRating != 0) {
                 $rating = round(array_sum($params["criterias"]) / $countRating, 1);
             }
+        }
+
+        $res = CIBlockElement::GetList(
+            [],
+            [
+                'IBLOCK_ID' => REVIEWS_IBLOCK_ID,
+                'NAME' => $params['name'],
+                'DETAIL_TEXT' => $params['text'],
+                'PROPERTY_CAMPING_ID_VALUE' => $params['campingId'],
+                'PROPERTY_USER_ID_VALUE' => $userId,
+                'PROPERTY_PHOTOS_VALUE' => $arPhotos,
+                'PROPERTY_CRITERION_1_VALUE' => $params['criterias'][1],
+                'PROPERTY_CRITERION_2_VALUE' => $params['criterias'][2],
+                'PROPERTY_CRITERION_3_VALUE' => $params['criterias'][3],
+                'PROPERTY_CRITERION_4_VALUE' => $params['criterias'][4],
+                'PROPERTY_CRITERION_5_VALUE' => $params['criterias'][5],
+                'PROPERTY_CRITERION_6_VALUE' => $params['criterias'][6],
+                'PROPERTY_CRITERION_7_VALUE' => $params['criterias'][7],
+                'PROPERTY_CRITERION_8_VALUE' => $params['criterias'][8],
+                'PROPERTY_RATING_VALUE' => $rating
+            ],
+            false,
+            [
+                'nPageSize' => 1
+            ],
+            [
+                'ID'
+            ]
+        );
+
+        $existReview = false;
+
+        while ($ob = $res->GetNextElement()) {
+            $arFields = $ob->GetFields();
+
+            if ($arFields && $arFields['ID']) {
+                $existReview = true;
+            }
+        }
+
+        if ($existReview) {
+            return json_encode([
+                'ERROR' => 'Вы отправили слишком много запросов.'
+            ]);
         }
 
         $arFields = array(
