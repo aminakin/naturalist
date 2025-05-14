@@ -603,8 +603,8 @@ use Bitrix\Main\Localization\Loc;
             "SHOW_HIDDEN" => "N",
             "USE_PERSONALIZATION" => "N",
             "COMPONENT_TEMPLATE" => "subscribe-footer",
-            "FORM_TITLE" => "Узнавайте первыми о горящих предложениях, новых маршрутах и эксклюзивных скидках",
-            "FORM_SUBTITLE" => "Станьте частью Натуралиста и вдохновляйтесь на путешествия вместе с нами",
+            "FORM_TITLE" => "Поможем сэкономить, получать скидки и наслаждаться отдыхом",
+            "FORM_SUBTITLE" => "Узнавайте первыми о горящих предложениях, новых маршрутах и эксклюзивных скидках",
             "FORM_POLITICS_LINK" => "/policy/"
         ),
         false
@@ -612,7 +612,7 @@ use Bitrix\Main\Localization\Loc;
     <?
     $APPLICATION->IncludeComponent(
         "bitrix:news.list",
-        "smi_us",
+        "smi_    us",
         array(
             "DISPLAY_DATE" => "Y",
             "DISPLAY_NAME" => "Y",
