@@ -146,7 +146,7 @@ if ($arFavourites) {
         }
 
         if ($arExternalInfo) {
-            $sectionPrice = $arExternalInfo[$arFavourite["UF_EXTERNAL_ID"]];
+            $sectionPrice = $arExternalInfo[$arFavourite["UF_EXTERNAL_ID"]]['PRICE'];;
             // Если это Traveline, то делим цену на кол-во дней
             if ($arFavourite["UF_EXTERNAL_SERVICE"] == 1) {
                 $sectionPrice = round($sectionPrice / $daysCount);

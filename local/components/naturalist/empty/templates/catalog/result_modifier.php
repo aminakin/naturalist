@@ -9,6 +9,7 @@ use Bitrix\Main\Context;
 
 /** @var  $arParams */
 
+
 $arResult = array(
     "sortBy" => $arParams['sortBy'],
     "orderReverse" => $arParams['orderReverse'],
@@ -29,6 +30,7 @@ $arResult = array(
     "arFilterValues" => $arParams['arFilterValues'],
     "dateFrom" => $arParams['dateFrom'],
     "dateTo" => $arParams['dateTo'],
+    "daysCount" => $arParams['daysCount'],
     "arDates" => $arParams['arDates'],
     "currMonthName" => $arParams['currMonthName'],
     "currYear" => $arParams['currYear'],
@@ -267,7 +269,7 @@ if ($arResult['arSearchedRegions']) {
                 /* -- */
 
                 if ($arExternalInfo) {
-                    $sectionPrice = $arExternalInfo[$arSection["UF_EXTERNAL_ID"]];
+                    $sectionPrice = $arExternalInfo[$arSection["UF_EXTERNAL_ID"]]['PRICE'];
                     // Если это Traveline, то делим цену на кол-во дней
                     if ($arSection["UF_EXTERNAL_SERVICE"] == 1) {
                         $sectionPrice = round($sectionPrice / $daysCount);

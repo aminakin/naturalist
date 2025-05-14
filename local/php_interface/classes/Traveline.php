@@ -95,7 +95,7 @@ class Traveline
         $arHotelsIDs = array();
         foreach ($arResponse["roomStays"] as $arItem) {
             if (empty($arHotelsIDs[$arItem["propertyId"]]) || $arItem["total"]["priceBeforeTax"] < $arHotelsIDs[$arItem["propertyId"]])
-                $arHotelsIDs[$arItem["propertyId"]] = $arItem["total"]["priceBeforeTax"];
+                $arHotelsIDs[$arItem["propertyId"]]['PRICE'] = $arItem["total"]["priceBeforeTax"];
         }
 
         return $arHotelsIDs;
