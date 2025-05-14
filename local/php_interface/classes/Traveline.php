@@ -1,18 +1,17 @@
-<?
+<?php
 
 namespace Naturalist;
 
 use Bitrix\Highloadblock\HighloadBlockTable;
 use Bitrix\Main\Application;
+use Bitrix\Main\Config\Option;
 use Bitrix\Main\Diag\Debug;
 use Bitrix\Main\Loader;
 use Bitrix\Sale\Order;
-use Bitrix\Main\Config\Option;
+use CFile;
 use CIBlockElement;
 use CIBlockSection;
-use CFile;
 use CUtil;
-use Naturalist\Products;
 use Naturalist\Telegram\Notifications\Error;
 
 Loader::includeModule("iblock");
@@ -23,7 +22,7 @@ defined("B_PROLOG_INCLUDED") && B_PROLOG_INCLUDED === true || die();
  * @global CUser $USER
  */
 
-class Traveline
+class Traveline implements SearchServiceInterface
 {
     private static $travelineApiURL = 'https://partner.tlintegration.com/api';
     private static $travelineApiKey = '5498c10a-4bfd-4728-8da2-e283ac52fda1';
@@ -44,14 +43,20 @@ class Traveline
     private static $campingFoodHLId = 12;
 
     /* Получение списка свободных объектов в выбранный промежуток */
-    public static function search($guests, $arChildrenAge, $dateFrom, $dateTo, $sectionIds = [])
+    public function search(
+        int $guests,
+        array $childrenAge,
+        string $dateFrom,
+        string $dateTo,
+        bool $groupResults = true,
+        array $sectionIds = [])
     {
         $rsSections = CIBlockSection::GetList(false, array("IBLOCK_ID" => CATALOG_IBLOCK_ID, "ID" => $sectionIds, "ACTIVE" => "Y", "!UF_EXTERNAL_ID" => false, "UF_EXTERNAL_SERVICE" => self::$travelineSectionPropEnumId), false, array("ID", "UF_EXTERNAL_ID", 'UF_MIN_CHIELD_AGE'), false);
         $arSectionExternalIDs = array();
         while ($arSection = $rsSections->Fetch()) {
             $noChield = false;
-            if (is_array($arChildrenAge) && count($arChildrenAge) && $arSection['UF_MIN_CHIELD_AGE'] != '') {
-                foreach ($arChildrenAge as $age) {
+            if (is_array($childrenAge) && count($childrenAge) && $arSection['UF_MIN_CHIELD_AGE'] != '') {
+                foreach ($childrenAge as $age) {
                     if ($age < $arSection['UF_MIN_CHIELD_AGE']) {
                         $noChield = true;
                     }
@@ -76,8 +81,8 @@ class Traveline
             "include" => ""
         );
 
-        if (count($arChildrenAge) > 0) {
-            $data["childAges"] = $arChildrenAge;
+        if (count($childrenAge) > 0) {
+            $data["childAges"] = $childrenAge;
         }
 
         $ch = curl_init();
@@ -102,13 +107,21 @@ class Traveline
     }
 
     /* Получение списка свободных номеров объекта в выбранный промежуток */
-    public static function searchRooms($sectionId, $externalId, $guests, $arChildrenAge, $dateFrom, $dateTo, $minChildAge = 0)
+    public function searchRooms(
+        int $sectionId,
+        string $externalId,
+        string $serviceType,
+        int $guests,
+        array $childrenAge,
+        string $dateFrom,
+        string $dateTo,
+        int $minChildAge = 0)
     {
         $error = '';
 
         // Проверка на минимально разрешённый возраст детей
-        if (is_array($arChildrenAge) && count($arChildrenAge) && $minChildAge != 0) {
-            foreach ($arChildrenAge as $age) {
+        if (is_array($childrenAge) && count($childrenAge) && $minChildAge != 0) {
+            foreach ($childrenAge as $age) {
                 if ($age < $minChildAge) {
                     $error = 'Заезд возможен только с детьми от ' . $minChildAge . ' лет';
                 }
@@ -142,8 +155,8 @@ class Traveline
             "arrivalDate" => date('Y-m-d', strtotime($dateFrom)),
             "departureDate" => date('Y-m-d', strtotime($dateTo)),
         );
-        if (count($arChildrenAge) > 0) {
-            $data["childAges"] = $arChildrenAge;
+        if (count($childrenAge) > 0) {
+            $data["childAges"] = $childrenAge;
         }
 
         $ch = curl_init();

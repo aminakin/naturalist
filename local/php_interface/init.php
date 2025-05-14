@@ -14,7 +14,7 @@ Loader::registerAutoLoadClasses(null, array(
     'Naturalist\Users' => '/local/php_interface/classes/Users.php',
     'Naturalist\Orders' => '/local/php_interface/classes/Order.php',
     'Naturalist\Baskets' => '/local/php_interface/classes/Basket.php',
-    'Naturalist\Products' => '/local/php_interface/classes/Product.php',
+    'Naturalist\Products' => '/local/php_interface/classes/Products.php',
     'Naturalist\Reviews' => '/local/php_interface/classes/Reviews.php',
     'Naturalist\Events' => '/local/php_interface/classes/Events.php',
     'Naturalist\Settings' => '/local/php_interface/classes/Settings.php',
@@ -68,6 +68,7 @@ Loader::registerAutoLoadClasses(null, array(
     'Naturalist\bronevik\OrderChangeBronevik' => '/local/php_interface/classes/bronevik/OrderChangeBronevik.php',
     'Naturalist\bronevik\enums\StatusOrderEnum' => '/local/php_interface/classes/bronevik/enums/StatusOrderEnum.php',
     'Naturalist\bronevik\enums\TarifEnum' => '/local/php_interface/classes/bronevik/enums/TarifEnum.php',
+    'Naturalist\bronevik\BronevikSearchService' => '/local/php_interface/classes/bronevik/BronevikSearchService.php',
     'Naturalist\Handlers\HigloadHandler' => '/local/php_interface/classes/Handlers/HigloadHandler.php',
     'Naturalist\Markdown' => '/local/php_interface/classes/Markdown.php',
     'Naturalist\Http\HttpFetchInterface' => '/local/php_interface/classes/Http/HttpFetchInterface.php',
@@ -77,6 +78,8 @@ Loader::registerAutoLoadClasses(null, array(
     'Naturalist\Handlers\OnAdminIBlockSectionEdit' => '/local/php_interface/classes/Handlers/OnAdminIBlockSectionEdit.php',
     'Naturalist\Telegram\Notifications\Error' => '/local/php_interface/classes/Telegram/Notifications/Error.php',
     'Naturalist\SmartWidgetsController' => '/local/php_interface/classes/SmartWidgetsController.php',
+    'Naturalist\SearchServiceFactory' => '/local/php_interface/classes/SearchServiceFactory.php',
+    'Naturalist\SearchServiceInterface' => '/local/php_interface/Interfaces/SearchServiceInterface.php',
 ));
 
 $documentRoot = Application::getDocumentRoot();
