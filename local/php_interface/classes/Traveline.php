@@ -196,7 +196,7 @@ class Traveline implements SearchServiceInterface
         }
 
         return [
-            'arItems' => $arRooms,
+            'arRooms' => $arRooms,
             'error' => $error,
         ];
     }

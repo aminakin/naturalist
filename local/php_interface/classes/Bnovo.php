@@ -556,7 +556,7 @@ class Bnovo implements SearchServiceInterface
                 if (!empty($children)) {
                     $childrenStatus = false;
                     foreach ($arOccupancy["PROPERTY_CHILDREN_AGES_VALUE"] as $key => $idAge) {
-                        foreach ($arChildrenAge as $age) {
+                        foreach ($childrenAge as $age) {
                             if ($arAges[$idAge]['UF_MIN_AGE'] <= $age && $arAges[$idAge]['UF_MAX_AGE'] >= $age && $arOccupancy["PROPERTY_CHILDREN_AGES_DESCRIPTION"][$key] == $children) {
                                 $childrenStatus = true;
                             }
@@ -653,7 +653,7 @@ class Bnovo implements SearchServiceInterface
                                 $seatDispence['extra'] = 0 - $extraSeats;
                             }
                             if ($childrenIsAdults) {
-                                $seatDispence['childrenIsAdults'] = count($arChildrenAge);
+                                $seatDispence['childrenIsAdults'] = count($childrenAge);
                             }
 
                             foreach ($filteredChildrenAgesId as $arAge => $value) {
@@ -824,7 +824,7 @@ class Bnovo implements SearchServiceInterface
 
 
         return [
-            'arItems' => $arItems,
+            'arRooms' => $arItems,
             'error' => $error,
         ];
     }

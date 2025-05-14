@@ -385,9 +385,9 @@ class NaturalistCatalog extends \CBitrixComponent
             $cache = Cache::createInstance();
             $cacheKey = $this->arUriParams['dateFrom'] . $this->arUriParams['dateTo'] . $this->arUriParams['guests'];
 
-            if ($cache->initCache(3600, $cacheKey)) {
-                $this->arExternalInfo = $cache->getVars();
-            } elseif ($cache->startDataCache()) {
+//            if ($cache->initCache(3600, $cacheKey)) {
+//                $this->arExternalInfo = $cache->getVars();
+//            } elseif ($cache->startDataCache()) {
                 // Запрос в апи на получение списка кемпингов со свободными местами в выбранный промежуток
 
                 $factory = new SearchServiceFactory();
@@ -398,10 +398,11 @@ class NaturalistCatalog extends \CBitrixComponent
                     $this->arUriParams['childrenAge'],
                     $this->arUriParams['dateFrom'],
                     $this->arUriParams['dateTo'],
-                    false);
+                    false
+                );
 
-                $cache->endDataCache($this->arExternalInfo);
-            }
+//                $cache->endDataCache($this->arExternalInfo);
+//            }
 
             $arExternalIDs = array_keys($this->arExternalInfo);
             if ($arExternalIDs) {
@@ -1480,11 +1481,11 @@ class NaturalistCatalog extends \CBitrixComponent
                 $this->arSections['ID'],
                 $this->arSections['UF_EXTERNAL_ID'],
                 $this->arSections['UF_EXTERNAL_SERVICE'],
-                $this->arUriParams['guests'],
-                $this->arUriParams['childrenAge'],
+                intval($this->arUriParams['guests']) ?? 0,
+                $this->arUriParams['childrenAge'] ?? [],
                 $this->arUriParams['dateFrom'],
                 $this->arUriParams['dateTo'],
-                $this->arSections['UF_MIN_CHIELD_AGE']
+                $this->arSections['UF_MIN_CHIELD_AGE'] ?? 0
             );
 
             $this->arExternalInfo = $arExternalResult['arRooms'];

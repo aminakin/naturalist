@@ -3,6 +3,8 @@
 namespace Naturalist\bronevik;
 
 use Bitrix\Highloadblock\HighloadBlockTable;
+use Bitrix\Main\Data\Cache;
+use Bitrix\Main\Diag\Debug;
 use Bronevik\HotelsConnector\Element\AvailableMeal;
 use Bronevik\HotelsConnector\Element\Child;
 use Bronevik\HotelsConnector\Element\HotelOffer;
@@ -19,7 +21,7 @@ use Bronevik\HotelsConnector\Enum\CurrencyCodes;
 use CIBlockElement;
 use Naturalist\bronevik\repository\Bronevik;
 
-class SearchRoomsBronevik
+class SearchHotelsBronevik
 {
     private Bronevik $bronevik;
 
@@ -37,70 +39,56 @@ class SearchRoomsBronevik
     }
 
     /**
-     * @param $sectionId - ид раздела в каталоге битрикса
-     * @param $externalId - внешний ИД отеля в бронивике
      * @param $guests - кол-во гостей
-     * @param $arChildrenAge - массив. [8,4] - возраст детей
+     * @param $childrenAge - возраст детей
      * @param $dateFrom - Дата от
      * @param $dateTo - Дата до
-     * @param $minChildAge - null - минимальный возраст ребенка? Идет из параметра отеля судя по всему UF_MIN_CHIELD_AGE
+     * @param $groupResults
+     * @param $sectionIds
      * @return array
-     * @throws \SoapFault
      */
-    public function __invoke($sectionId, $externalId, $guests, $arChildrenAge, $dateFrom, $dateTo, $minChildAge): array
+    public function __invoke($guests, $childrenAge, $dateFrom, $dateTo, $groupResults, $sectionIds): array
     {
-        $searchCriteria = [];
-        $criterionPaymentRecipient = new SearchOfferCriterionPaymentRecipient;
-        $criterionPaymentRecipient->addPaymentRecipient('agency');
-        $searchCriteria[] = $criterionPaymentRecipient;
 
-        if (count($arChildrenAge) || $guests > 0) {
-            $criterionNumberOfGuests = new SearchOfferCriterionNumberOfGuests();
-            $criterionNumberOfGuests->setAdults($guests);
+        $cache = Cache::createInstance();
+        $cacheKey = 'SearchHotelsBronevik' . $dateFrom . $dateTo . $guests;
 
-            if (count($arChildrenAge)) {
-                foreach ($arChildrenAge as $childAge) {
-                    $child = new Child();
-                    $child->setAge($childAge);
-                    $child->setCount(1);
-                    $criterionNumberOfGuests->addChild($child);
-                }
-            }
-
-            $searchCriteria[] = $criterionNumberOfGuests;
+        if (!$sectionIds) {
+//            if ($cache->initCache(3600, $cacheKey)) {
+//                $sectionIds = $cache->getVars();
+//            } elseif ($cache->startDataCache()) {
+                $rooms = $this->hotelBronevik->listFetch([], ['ID' => 'ASC'], ['UF_EXTERNAL_ID']);
+                $sectionIds = array_column($rooms, 'UF_EXTERNAL_ID');
+//                $cache->endDataCache($result);
+//            }
         }
 
-
-        $onlyOnline = new SearchOfferCriterionOnlyOnline();
-        $searchCriteria[] = $onlyOnline;
-
-        $skipElements = new SkipElements();
-        $skipElements->addElement('dailyPrices');
-
-        $result = $this->bronevik->searchHotelOffersResponse(
+        $result = $this->bronevik->getHotelAvailability(
             date('Y-m-d', strtotime($dateFrom)),
             date('Y-m-d', strtotime($dateTo)),
             CurrencyCodes::RUB,
             null,
-            $searchCriteria,
-            [$externalId],
-            $skipElements->getElement(),
+            [$sectionIds],
         );
 
-        $this->updateHotels($result);
+        Debug::writeToFile(var_export($result, true));
 
-        $offers = $this->saveOffers($result);
+        return [];
 
-        $hotelSectionService = $this->hotelBronevik->showByExternalId($externalId);
-
-        $rooms = $this->hotelRoomBronevi->list(['SECTION_ID' => $hotelSectionService['ID']]);
-
-        $rooms = $this->appendOfferInRooms($rooms, $offers);
-
-        return [
-            'arRooms' => $rooms,
-            'error' => ! count($offers) ? 'Не найдено номеров на выбранные даты' : '',
-        ];
+//        $this->updateHotels($result);
+//
+//        $offers = $this->saveOffers($result);
+//
+//        $hotelSectionService = $this->hotelBronevik->showListByExternalId($sectionIds);
+//
+//        $rooms = $this->hotelRoomBronevi->list(['SECTION_ID' => $hotelSectionService['ID']]);
+//
+//        $rooms = $this->appendOfferInRooms($rooms, $offers);
+//
+//        return [
+//            'arRooms' => $rooms,
+//            'error' => ! count($offers) ? 'Не найдено номеров на выбранные даты' : '',
+//        ];
     }
 
     private function appendOfferInRooms(array $rooms, array $offers): array

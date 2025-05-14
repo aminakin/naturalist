@@ -3,14 +3,18 @@
 namespace Naturalist\bronevik;
 
 use Naturalist\bronevik\SearchRoomsBronevik;
+use Naturalist\bronevik\SearchHotelsBronevik;
 use Naturalist\SearchServiceInterface;
 
 class BronevikSearchService implements SearchServiceInterface
 {
 
+    /**
+     * @throws \SoapFault
+     */
     public function search(int $guests, array $childrenAge, string $dateFrom, string $dateTo, bool $groupResults = true, array $sectionIds = [])
     {
-        return [];
+        return (new SearchHotelsBronevik())($guests, $childrenAge, $dateFrom, $dateTo, $groupResults, $sectionIds);
     }
 
     /**

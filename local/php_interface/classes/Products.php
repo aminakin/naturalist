@@ -175,6 +175,7 @@ class Products implements SearchServiceInterface
             return $service->searchRooms(
                 $sectionId,
                 $externalId,
+                $serviceType,
                 $guests,
                 $childrenAge,
                 $dateFrom,
