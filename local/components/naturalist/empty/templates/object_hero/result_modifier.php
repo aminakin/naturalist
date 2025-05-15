@@ -19,6 +19,7 @@ $arResult = array(
     "arChildrenAge" => $arParams['arChildrenAge'],
     "reviewsDeclension" => $arParams['reviewsDeclension'],
     "reviewsCount" => $arParams['reviewsCount'],
+    "yandexReviewsCount" => $arParams['yandexReviewsCount'],
     "avgRating" => $arParams['avgRating'],
     "arAvgCriterias" => $arParams['arAvgCriterias'],
     "arHLFeatures" => $arParams['arHLFeatures'],

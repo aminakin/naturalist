@@ -51,6 +51,7 @@ class NaturalistCatalog extends \CBitrixComponent
     private $minPrice = 0;
     private $maxPrice = 0;
     private $reviewsCount = 0;
+    private $yandexReviewsCount = 0;
     private $avgRating = 0;
     private $reviewsPage = 0;
     private $reviewsPageCount = 0;
@@ -1071,6 +1072,7 @@ class NaturalistCatalog extends \CBitrixComponent
         $this->arResult['reviewsPageCount'] = $this->reviewsPageCount;
         $this->arResult['arReviewsLikesData'] = $this->arReviewsLikesData;
         $this->arResult['reviewsCount'] = $this->reviewsCount;
+        $this->arResult['yandexReviewsCount'] = $this->yandexReviewsCount;
         $this->arResult['avgRating'] = $this->avgRating;
         $this->arResult['arAvgCriterias'] = $this->arAvgCriterias;
         $this->arResult['arElements'] = $this->arElements;
@@ -1416,6 +1418,7 @@ class NaturalistCatalog extends \CBitrixComponent
             }
 
             $this->reviewsCount += $yandexReviews[0]['total_count'];
+            $this->yandexReviewsCount += $yandexReviews[0]['total_count'];
 
             $commonYandexReviewsClass = HighloadBlockTable::compileEntity('YandexReviews')->getDataClass();
 

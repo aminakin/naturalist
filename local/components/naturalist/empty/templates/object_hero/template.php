@@ -573,7 +573,7 @@ if (!isset($arResult["arSection"]["ID"])) {
                             </div>
                         </div>
                     <? endif; ?>
-                    <? if ($reviewsCount > 0): ?>
+                    <? if ($reviewsCount > 0 && $reviewsCount > $yandexReviewsCount): ?>
                         <div class="reviews__scors mobile">
                             <div class="reviews__title">Что нравится гостям</div>
                             <ul class="list list_score">
@@ -773,75 +773,78 @@ if (!isset($arResult["arSection"]["ID"])) {
                                 </a>
                             </div>
                         </div>
-                        <div class="reviews__scors">
-                            <div class="reviews__title">Что нравится гостям</div>
-                            <ul class="list list_score">
-                                <li class="list__item">
-                                    <div class="list__item-label">Удобство расположения</div>
-                                    <div class="list__item-progress">
-                                        <div style="width: <?= $arAvgCriterias[1][1] ?? 0 ?>%"></div>
-                                    </div>
-                                    <img src="<?= SITE_TEMPLATE_PATH ?>/assets/img/star-score.svg" alt="">
-                                    <div class="list__item-number"><?= $arAvgCriterias[1][0] ?? "0.0" ?></div>
-                                </li>
-                                <li class="list__item">
-                                    <div class="list__item-label">Питание</div>
-                                    <div class="list__item-progress">
-                                        <div style="width: <?= $arAvgCriterias[2][1] ?? 0 ?>%"></div>
-                                    </div>
-                                    <img src="<?= SITE_TEMPLATE_PATH ?>/assets/img/star-score.svg" alt="">
-                                    <div class="list__item-number"><?= $arAvgCriterias[2][0] ?? "0.0" ?></div>
-                                </li>
-                                <li class="list__item">
-                                    <div class="list__item-label">Уют</div>
-                                    <div class="list__item-progress">
-                                        <div style="width: <?= $arAvgCriterias[3][1] ?? 0 ?>%"></div>
-                                    </div>
-                                    <img src="<?= SITE_TEMPLATE_PATH ?>/assets/img/star-score.svg" alt="">
-                                    <div class="list__item-number"><?= $arAvgCriterias[3][0] ?? "0.0" ?></div>
-                                </li>
-                                <li class="list__item">
-                                    <div class="list__item-label">Сервис</div>
-                                    <div class="list__item-progress">
-                                        <div style="width: <?= $arAvgCriterias[4][1] ?? 0 ?>%"></div>
-                                    </div>
-                                    <img src="<?= SITE_TEMPLATE_PATH ?>/assets/img/star-score.svg" alt="">
-                                    <div class="list__item-number"><?= $arAvgCriterias[4][0] ?? "0.0" ?></div>
-                                </li>
-                                <li class="list__item">
-                                    <div class="list__item-label">Чистота</div>
-                                    <div class="list__item-progress">
-                                        <div style="width: <?= $arAvgCriterias[5][1] ?? 0 ?>%"></div>
-                                    </div>
-                                    <img src="<?= SITE_TEMPLATE_PATH ?>/assets/img/star-score.svg" alt="">
-                                    <div class="list__item-number"><?= $arAvgCriterias[5][0] ?? "0.0" ?></div>
-                                </li>
-                                <li class="list__item">
-                                    <div class="list__item-label">Эстетика окружения</div>
-                                    <div class="list__item-progress">
-                                        <div style="width: <?= $arAvgCriterias[6][1] ?? 0 ?>%"></div>
-                                    </div>
-                                    <img src="<?= SITE_TEMPLATE_PATH ?>/assets/img/star-score.svg" alt="">
-                                    <div class="list__item-number"><?= $arAvgCriterias[6][0] ?? "0.0" ?></div>
-                                </li>
-                                <li class="list__item">
-                                    <div class="list__item-label">Разнообразие досуга</div>
-                                    <div class="list__item-progress">
-                                        <div style="width: <?= $arAvgCriterias[7][1] ?? 0 ?>%"></div>
-                                    </div>
-                                    <img src="<?= SITE_TEMPLATE_PATH ?>/assets/img/star-score.svg" alt="">
-                                    <div class="list__item-number"><?= $arAvgCriterias[7][0] ?? "0.0" ?></div>
-                                </li>
-                                <li class="list__item">
-                                    <div class="list__item-label">Цена/качество</div>
-                                    <div class="list__item-progress">
-                                        <div style="width: <?= $arAvgCriterias[8][1] ?? 0 ?>%"></div>
-                                    </div>
-                                    <img src="<?= SITE_TEMPLATE_PATH ?>/assets/img/star-score.svg" alt="">
-                                    <div class="list__item-number"><?= $arAvgCriterias[8][0] ?? "0.0" ?></div>
-                                </li>
-                            </ul>
-                        </div>
+
+                        <?php if ($reviewsCount > $yandexReviewsCount) : ?>
+                            <div class="reviews__scors">
+                                <div class="reviews__title">Что нравится гостям</div>
+                                <ul class="list list_score">
+                                    <li class="list__item">
+                                        <div class="list__item-label">Удобство расположения</div>
+                                        <div class="list__item-progress">
+                                            <div style="width: <?= $arAvgCriterias[1][1] ?? 0 ?>%"></div>
+                                        </div>
+                                        <img src="<?= SITE_TEMPLATE_PATH ?>/assets/img/star-score.svg" alt="">
+                                        <div class="list__item-number"><?= $arAvgCriterias[1][0] ?? "0.0" ?></div>
+                                    </li>
+                                    <li class="list__item">
+                                        <div class="list__item-label">Питание</div>
+                                        <div class="list__item-progress">
+                                            <div style="width: <?= $arAvgCriterias[2][1] ?? 0 ?>%"></div>
+                                        </div>
+                                        <img src="<?= SITE_TEMPLATE_PATH ?>/assets/img/star-score.svg" alt="">
+                                        <div class="list__item-number"><?= $arAvgCriterias[2][0] ?? "0.0" ?></div>
+                                    </li>
+                                    <li class="list__item">
+                                        <div class="list__item-label">Уют</div>
+                                        <div class="list__item-progress">
+                                            <div style="width: <?= $arAvgCriterias[3][1] ?? 0 ?>%"></div>
+                                        </div>
+                                        <img src="<?= SITE_TEMPLATE_PATH ?>/assets/img/star-score.svg" alt="">
+                                        <div class="list__item-number"><?= $arAvgCriterias[3][0] ?? "0.0" ?></div>
+                                    </li>
+                                    <li class="list__item">
+                                        <div class="list__item-label">Сервис</div>
+                                        <div class="list__item-progress">
+                                            <div style="width: <?= $arAvgCriterias[4][1] ?? 0 ?>%"></div>
+                                        </div>
+                                        <img src="<?= SITE_TEMPLATE_PATH ?>/assets/img/star-score.svg" alt="">
+                                        <div class="list__item-number"><?= $arAvgCriterias[4][0] ?? "0.0" ?></div>
+                                    </li>
+                                    <li class="list__item">
+                                        <div class="list__item-label">Чистота</div>
+                                        <div class="list__item-progress">
+                                            <div style="width: <?= $arAvgCriterias[5][1] ?? 0 ?>%"></div>
+                                        </div>
+                                        <img src="<?= SITE_TEMPLATE_PATH ?>/assets/img/star-score.svg" alt="">
+                                        <div class="list__item-number"><?= $arAvgCriterias[5][0] ?? "0.0" ?></div>
+                                    </li>
+                                    <li class="list__item">
+                                        <div class="list__item-label">Эстетика окружения</div>
+                                        <div class="list__item-progress">
+                                            <div style="width: <?= $arAvgCriterias[6][1] ?? 0 ?>%"></div>
+                                        </div>
+                                        <img src="<?= SITE_TEMPLATE_PATH ?>/assets/img/star-score.svg" alt="">
+                                        <div class="list__item-number"><?= $arAvgCriterias[6][0] ?? "0.0" ?></div>
+                                    </li>
+                                    <li class="list__item">
+                                        <div class="list__item-label">Разнообразие досуга</div>
+                                        <div class="list__item-progress">
+                                            <div style="width: <?= $arAvgCriterias[7][1] ?? 0 ?>%"></div>
+                                        </div>
+                                        <img src="<?= SITE_TEMPLATE_PATH ?>/assets/img/star-score.svg" alt="">
+                                        <div class="list__item-number"><?= $arAvgCriterias[7][0] ?? "0.0" ?></div>
+                                    </li>
+                                    <li class="list__item">
+                                        <div class="list__item-label">Цена/качество</div>
+                                        <div class="list__item-progress">
+                                            <div style="width: <?= $arAvgCriterias[8][1] ?? 0 ?>%"></div>
+                                        </div>
+                                        <img src="<?= SITE_TEMPLATE_PATH ?>/assets/img/star-score.svg" alt="">
+                                        <div class="list__item-number"><?= $arAvgCriterias[8][0] ?? "0.0" ?></div>
+                                    </li>
+                                </ul>
+                            </div>
+                        <?php endif; ?>
                     <? endif; ?>
                 </div>
             </div>
