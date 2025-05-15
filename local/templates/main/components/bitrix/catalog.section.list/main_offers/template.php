@@ -148,13 +148,12 @@ $reviewsDeclension = new Declension('отзыв', 'отзыва', 'отзыво�
                             <a target="_blank" href="<?= $arItem["SECTION_PAGE_URL"] ?>#reviews-anchor" class="score" data-score="[{&quot;label&quot;:&quot;Удобство расположения&quot;,&quot;value&quot;:<?= $arReviewsAvg[$arItem["ID"]]["criterials"][1][0] ?? '0.0' ?>},{&quot;label&quot;:&quot;Питание&quot;,&quot;value&quot;:<?= $arReviewsAvg[$arItem["ID"]]["criterials"][2][0] ?? '0.0' ?>},{&quot;label&quot;:&quot;Уют&quot;,&quot;value&quot;:<?= $arReviewsAvg[$arItem["ID"]]["criterials"][3][0] ?? '0.0' ?>},{&quot;label&quot;:&quot;Сервис&quot;,&quot;value&quot;:<?= $arReviewsAvg[$arItem["ID"]]["criterials"][4][0] ?? '0.0' ?>},{&quot;label&quot;:&quot;Чистота&quot;,&quot;value&quot;:<?= $arReviewsAvg[$arItem["ID"]]["criterials"][5][0] ?? '0.0' ?>},{&quot;label&quot;:&quot;Эстетика окружения&quot;,&quot;value&quot;:<?= $arReviewsAvg[$arItem["ID"]]["criterials"][6][0] ?? '0.0' ?>},{&quot;label&quot;:&quot;Разнообразие досуга&quot;,&quot;value&quot;:<?= $arReviewsAvg[$arItem["ID"]]["criterials"][7][0] ?? '0.0' ?>},{&quot;label&quot;:&quot;Соотношение цена/качество&quot;,&quot;value&quot;:<?= $arReviewsAvg[$arItem["ID"]]["criterials"][8][0] ?? '0.0' ?>}]">
                                 <img src="<?= SITE_TEMPLATE_PATH ?>/assets/img/star-score.svg" alt="Рейтинг">
                                 <?
-                                    $yandexReviewsCount = Reviews::getYandexReviews([$arItem['ID']])[0]['item']['review_yandex_map'][0]['count'];
+                                    $yandexReviewsCount = $arItem['yandexReviews']['count'];
                                     $allReviews = $yandexReviewsCount + $arReviewsAvg[$arItem["ID"]]["count"];
-                                    $yandexRatingAvg = Reviews::getYandexReviews([$arItem['ID']])[0]['item']['review_yandex_map'][0]['rating'];
-                                    $ratingAvg = $arReviewsAvg[$arItem["ID"]]["avg"] ?? $yandexRatingAvg;
+                                    $ratingAvg = $arReviewsAvg[$arItem["ID"]]["avg"] ?? $arItem['yandexReviews']['avg'];
                                 ?>
                                 <? if ($allReviews > 0) { ?>
-                                    <span><?= $ratingAvg ?? 0?></span>
+                                    <span><?=$ratingAvg?></span>
                                     <span class="dot"></span>
                                     <?= $arReviewsAvg[$arItem["ID"]]["count"] + $yandexReviewsCount ?? 0 ?>
                                     <?= $reviewsDeclension->get($arReviewsAvg[$arItem["ID"]]["count"]) ?>

@@ -10,6 +10,7 @@ if (file_exists($_SERVER['DOCUMENT_ROOT'] . '/local/php_interface/vendor/autoloa
 
 // Автозагрузка классов
 Loader::registerAutoLoadClasses(null, array(
+    'Naturalist\YandexReviews' => '/local/php_interface/classes/YandexReviews.php',
     'Naturalist\Telegram\Notifications' => '/local/php_interface/classes/Telegram/Notifications/Error.php',
     'Naturalist\Users' => '/local/php_interface/classes/Users.php',
     'Naturalist\Orders' => '/local/php_interface/classes/Order.php',

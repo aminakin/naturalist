@@ -76,36 +76,6 @@ class Reviews
         return $arReviews;
     }
 
-    public static function getYandexReviews(array $sectionIds):array
-    {
-        $commonYandexReviewsClass = HighloadBlockTable::compileEntity('YandexReviews')->getDataClass();
-        $commonYandexReviews = $commonYandexReviewsClass::query()
-            ->addSelect('*')
-            ->setOrder(['ID' => 'ASC'])
-            ->setFilter(['UF_ID_OBJECT' => $sectionIds])
-            ->setCacheTtl(36000000)
-            ?->fetchAll();
-
-        $arYandexIDs = array_column($commonYandexReviews, 'UF_ID_YANDEX', 'UF_ID_OBJECT');
-
-        if (is_array($commonYandexReviews) && !empty($commonYandexReviews)) {
-
-            $widgetData = SmartWidgetsController::getWidgetData($arYandexIDs);
-
-            foreach ($commonYandexReviews as &$item) {
-                $yandexId = $item['UF_ID_YANDEX'];
-                if (isset($widgetData['data'][$yandexId])) {
-                    $item = array_merge($item, $widgetData['data'][$yandexId]);
-                }
-            }
-            unset($item);
-
-            SmartWidgetsController::calculateReviewsSummary($commonYandexReviews);
-        }
-
-        return $commonYandexReviews;
-    }
-
     /* Получение рейтинга по Id кемпинга */
     public static function getCampingRating($arCampingIDs)
     {

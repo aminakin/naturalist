@@ -1,5 +1,4 @@
 <?php
-
 if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) {
     die();
 }
@@ -21,6 +20,7 @@ use Naturalist\Regions;
 use Naturalist\Utils;
 use Naturalist\Filters\UrlHandler;
 use Naturalist\Reviews;
+use Naturalist\YandexReviews;
 
 Loc::loadMessages(__FILE__);
 
@@ -118,32 +118,7 @@ class NaturalistCatalog extends \CBitrixComponent
      */
     public function getYandexReviews($sectionIds): array
     {
-        $commonYandexReviewsClass = HighloadBlockTable::compileEntity('YandexReviews')->getDataClass();
-        $commonYandexReviews = $commonYandexReviewsClass::query()
-            ->addSelect('*')
-            ->setOrder(['ID' => 'ASC'])
-            ->setFilter(['UF_ID_OBJECT' => $sectionIds])
-            ->setCacheTtl(36000000)
-            ?->fetchAll();
-
-        $arYandexIDs = array_column($commonYandexReviews, 'UF_ID_YANDEX', 'UF_ID_OBJECT');
-
-        if (is_array($commonYandexReviews) && !empty($commonYandexReviews)) {
-
-            $widgetData = SmartWidgetsController::getWidgetData($arYandexIDs);
-
-            foreach ($commonYandexReviews as &$item) {
-                $yandexId = $item['UF_ID_YANDEX'];
-                if (isset($widgetData['data'][$yandexId])) {
-                    $item = array_merge($item, $widgetData['data'][$yandexId]);
-                }
-            }
-            unset($item);
-
-            SmartWidgetsController::calculateReviewsSummary($commonYandexReviews);
-        }
-
-        return $commonYandexReviews;
+        return YandexReviews::getYandexReviews($sectionIds);
     }
 
     private function fillSectionVariables()

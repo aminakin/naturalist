@@ -2,7 +2,7 @@
 
 use Bitrix\Highloadblock\HighloadBlockTable;
 use Bitrix\Iblock\Elements\ElementGlampingsTable;
-
+use Naturalist\YandexReviews;
 // Избранное
 global $arFavourites;
 $arResult["FAVOURITES"] = $arFavourites;
@@ -134,4 +134,14 @@ foreach ($arResult["SECTIONS"] as &$arItem) {
     }
     $arItem["FULL_GALLERY"] = implode(",", $arDataFullGallery);
     unset($arItem["UF_PHOTOS"]);
+}
+
+/* добавление яндекс отзыввов */
+
+foreach ($arResult["SECTIONS"] as &$arItem) {
+    $yandexReviews = YandexReviews::getYandexReviews([$arItem["ID"]])[0]['item']['review_yandex_map'][0];
+    $arItem['yandexReviews'] = [
+        'count' => $yandexReviews['count'],
+        'avg' => $yandexReviews['rating']
+    ];
 }
