@@ -386,10 +386,9 @@ class NaturalistCatalog extends \CBitrixComponent
             $cache = Cache::createInstance();
             $cacheKey = $this->arUriParams['dateFrom'] . $this->arUriParams['dateTo'] . $this->arUriParams['guests'];
 
-//            if ($cache->initCache(3600, $cacheKey)) {
-//                $this->arExternalInfo = $cache->getVars();
-//            } elseif ($cache->startDataCache()) {
-                // Запрос в апи на получение списка кемпингов со свободными местами в выбранный промежуток
+            if ($cache->initCache(3600, $cacheKey)) {
+                $this->arExternalInfo = $cache->getVars();
+            } elseif ($cache->startDataCache()) {
 
                 $factory = new SearchServiceFactory();
                 $products = new Products($factory);
@@ -402,8 +401,8 @@ class NaturalistCatalog extends \CBitrixComponent
                     false
                 );
 
-//                $cache->endDataCache($this->arExternalInfo);
-//            }
+                $cache->endDataCache($this->arExternalInfo);
+            }
 
             $arExternalIDs = array_keys($this->arExternalInfo);
             if ($arExternalIDs) {
