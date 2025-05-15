@@ -31,8 +31,8 @@ foreach ($arExternalInfo as $idNumber => $arTariffs):
             $arElement = $arElementsParent[$arElement['PROPERTY_PARENT_ID_VALUE']];
             $arElement["ID"] = $arElementsTariffs[$idNumber]["ID"];
             $arElement["PROPERTY_EXTERNAL_ID_VALUE"] = $arElementsTariffs[$idNumber]["PROPERTY_EXTERNAL_ID_VALUE"];
-        }
-    ?>
+        } ?>
+
         <div class="room">
             <div class="room__top">
                 <?php if ($arElement["PICTURES"]): ?>
