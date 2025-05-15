@@ -22,7 +22,7 @@ if (!defined("MAIN_SLIDER_IBLOCK_ID")) define(("MAIN_SLIDER_IBLOCK_ID"), 28); //
 if (!defined("CATALOG_BRONEVIK_OFFERS_IBLOCK_ID")) define(("CATALOG_BRONEVIK_OFFERS_IBLOCK_ID"), 32); // ID ИБ предложений бронивека
 if (!defined("CATALOG_IBLOCK_SECTION_UF_EXTERNAL_SERVICE_ID")) define(("CATALOG_IBLOCK_SECTION_UF_EXTERNAL_SERVICE_ID"), 6); // ID ИБ предложений бронивека
 if (!defined("CATALOG_IBLOCK_ELEMENT_EXTERNAL_SERVICE_ID")) define(("CATALOG_IBLOCK_ELEMENT_EXTERNAL_SERVICE_ID"), 24); // ID ИБ предложений бронивека
-if(!defined("HEADER_SLIDER_IBLOCK_ID")) define(("HEADER_SLIDER_IBLOCK_ID"), 43);
+if(!defined("HEADER_SLIDER_IBLOCK_ID")) define(("HEADER_SLIDER_IBLOCK_ID"), 44);
 
 if (!defined("YANDEX_SPLIT_PAYSYSTEM_ID")) define(("YANDEX_SPLIT_PAYSYSTEM_ID"), 6); // ID системы оплаты яндекс сплит
 
