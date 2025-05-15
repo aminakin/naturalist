@@ -71,6 +71,7 @@ $APPLICATION->AddHeadString('<meta name="description" content="' . $arResult['de
             "arChildrenAge" => $arResult['arUriParams']['childrenAge'],
             "reviewsDeclension" => $arResult['reviewsDeclension'],
             "reviewsCount" => $arResult['reviewsCount'],
+            "yandexReviewsCount" => $arResult['yandexReviewsCount'],
             "avgRating" => $arResult['avgRating'],
             "arAvgCriterias" => $arResult['arAvgCriterias'],
             "h1SEO" => $arResult['h1SEO'],
