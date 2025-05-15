@@ -49,9 +49,9 @@ class Events
         $event->addEventHandler('main', 'OnEndBufferContent', [self::class, "deleteKernelJs"]);
         $event->addEventHandler('main', 'OnEndBufferContent', [self::class, "deleteKernelCss"]);
         $event->addEventHandler('main', 'OnEndBufferContent', [self::class, "bronevikcDeleteImg"]);
-        $event->addEventHandler('sale', 'OnSaleOrderSaved', [self::class, "createB24Deal"]);
-        $event->addEventHandler('sale', 'OnSaleOrderSaved', [self::class, "makeReservation"]);
-        $event->addEventHandler('sale', 'OnSaleOrderSaved', [self::class, "makeOrderCert"]);
+//        $event->addEventHandler('sale', 'OnSaleOrderSaved', [self::class, "createB24Deal"]);
+//        $event->addEventHandler('sale', 'OnSaleOrderSaved', [self::class, "makeReservation"]);
+//        $event->addEventHandler('sale', 'OnSaleOrderSaved', [self::class, "makeOrderCert"]);
         $event->addEventHandler('sale', 'OnSaleOrderSaved', [self::class, "cancelOrder"]);
         $event->addEventHandler('iblock', 'OnBeforeIBlockSectionDelete', [self::class, "OnBeforeIBlockSectionDeleteHandler"]);
         $event->addEventHandler('iblock', 'OnBeforeIBlockElementDelete', [self::class, "OnBeforeIBlockElementDeleteHandler"]);
@@ -495,11 +495,17 @@ class Events
 
     public static function cancelOrder($event)
     {
-        $order = $event->getParameter("ENTITY");
-        if ($order->getField('STATUS_ID') == 'C') {
-            $orderId = $order->getId();
-            $orders = new Orders();
-            $orders->cancel($orderId, 'Отмена заказа из админки');
+        $request = Context::getCurrent()->getRequest();
+        $isAdminSection = $request->get('admin_section') === '1'
+            || strpos($request->getRequestUri(), '/bitrix/admin/') !== false;
+
+        if ($isAdminSection) {
+            $order = $event->getParameter("ENTITY");
+            if ($order->getField('STATUS_ID') == 'C') {
+                $orderId = $order->getId();
+                $orders = new Orders();
+                $orders->cancel($orderId, 'Отмена заказа из админки');
+            }
         }
     }
 
