@@ -1508,17 +1508,20 @@ class NaturalistCatalog extends \CBitrixComponent
             "IBLOCK_ID" => CATALOG_IBLOCK_ID,
             "ACTIVE" => "Y",
             "SECTION_ID" => $this->arSections["ID"],
-            [
-                "LOGIC" => "OR",
-                ["PROPERTY_PARENT_ID" => NULL],
-                ["PROPERTY_PARENT_ID" => 0],
-                ["PROPERTY_PARENT_ID" => false]
-            ]
+//            [
+//                "LOGIC" => "OR",
+//                ["PROPERTY_PARENT_ID" => NULL],
+//                ["PROPERTY_PARENT_ID" => 0],
+//                ["PROPERTY_PARENT_ID" => false]
+//            ]
         );
 
-        if ($this->arSections["UF_EXTERNAL_SERVICE"] == "bnovo") {
-            $this->arFilter['PROPERTY_PARENT_ID'] = 0;
-        }  
+        if ($this->arSections["UF_EXTERNAL_SERVICE"] == "bronevik") {
+            $this->arFilter['PROPERTY_PARENT_ID'] = false;
+        }
+//        if ($this->arSections["UF_EXTERNAL_SERVICE"] == "bnovo") {
+//            $this->arFilter['PROPERTY_PARENT_ID'] = 0;
+//        }
     }
 
     private function fillDetailSeoParams()
