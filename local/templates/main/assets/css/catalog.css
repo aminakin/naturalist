@@ -216,10 +216,18 @@
   width: 100%;
 }
 
-.object-row .tag {
+.object-row .tag_wrapper{
+  position: absolute;
   left: 0px;
   top: 16px;
-  background: url(../img/tag.png) no-repeat center center;
+  z-index: 2;
+  display: flex;
+  gap: 1px;
+  flex-direction: column;
+}
+
+.object-row  .tag_wrapper .tag {
+  position: static;
   width: 135px;
   height: 42px;
   line-height: 22px;
@@ -230,6 +238,17 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.object-row  .tag_wrapper .tag.sale_tag{
+  background: url(../img/tag.png) no-repeat center center;
+}
+
+.object-row  .tag_wrapper .tag.stay_tag {
+  background: url(../img/tag_reservation_notion.png) no-repeat center center;
+  color: var(--black);
+  width: fit-content;
+  background-size: cover !important;
 }
 
 .object__heading {

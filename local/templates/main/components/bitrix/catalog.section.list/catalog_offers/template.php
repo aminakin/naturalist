@@ -108,7 +108,7 @@ Loc::loadMessages(__FILE__);
                                 </div>
                                 <?
                                 if (isset($arResult["SECTIONS_EXTERNAL"][$arItem["UF_EXTERNAL_ID"]]) && !empty($arResult["SECTIONS_EXTERNAL"][$arItem["UF_EXTERNAL_ID"]])) {
-                                    $sectionPrice = $arResult["SECTIONS_EXTERNAL"][$arItem["UF_EXTERNAL_ID"]];
+                                    $sectionPrice = $arResult["SECTIONS_EXTERNAL"][$arItem["UF_EXTERNAL_ID"]]['PRICE'];;
                                     // Если это Traveline, то делим цену на кол-во дней
                                     if ($arItem["UF_EXTERNAL_SERVICE"] == 1) {
                                         $sectionPrice = round($sectionPrice / $arResult["DAYS_COUNT"]);

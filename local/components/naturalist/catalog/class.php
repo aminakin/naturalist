@@ -51,6 +51,7 @@ class NaturalistCatalog extends \CBitrixComponent
     private $minPrice = 0;
     private $maxPrice = 0;
     private $reviewsCount = 0;
+    private $yandexReviewsCount = 0;
     private $avgRating = 0;
     private $reviewsPage = 0;
     private $reviewsPageCount = 0;
@@ -181,13 +182,28 @@ class NaturalistCatalog extends \CBitrixComponent
 
     private function fillUriParams()
     {
+
+        if ($this->request->get('dateFrom') && $this->request->get('dateTo')) {
+            $arDates = [];
+            $period = new DatePeriod(
+                new DateTime($this->request->get('dateFrom')),
+                new DateInterval('P1D'),
+                new DateTime(date('d.m.Y', strtotime($this->request->get('dateTo') . '+1 day')))
+            );
+            foreach ($period as $value) {
+                $arDates[] = $value->format('d.m.Y');
+            }
+            $daysCount = count($arDates) - 1;
+        }
+
+
         $this->arUriParams = [
             'dateFrom' => $this->request->get('dateFrom'),
             'dateTo' => $this->request->get('dateTo'),
             'guests' => $this->request->get('guests') ? $this->request->get('guests') : 2,
             'children' => $this->request->get('children') ? $this->request->get('children') : 0,
+            'daysCount' => $daysCount ?? 0,
         ];
-
 
         $this->arUriParams['childrenAge'] = [];
         if ($this->request->get('childrenAge')) {
@@ -374,7 +390,7 @@ class NaturalistCatalog extends \CBitrixComponent
             } elseif ($cache->startDataCache()) {
                 // Запрос в апи на получение списка кемпингов со свободными местами в выбранный промежуток
                 $this->arExternalInfo = Products::search($this->arUriParams['guests'], $this->arUriParams['childrenAge'], $this->arUriParams['dateFrom'], $this->arUriParams['dateTo'], false);
-                $cache->endDataCache($this->arExternalInfo);
+//                $cache->endDataCache($this->arExternalInfo);
             }
 
             $arExternalIDs = array_keys($this->arExternalInfo);
@@ -573,14 +589,18 @@ class NaturalistCatalog extends \CBitrixComponent
 
             /* -- */
             if ($this->arExternalInfo) {
-                $sectionPrice = $this->arExternalInfo[$arSection["UF_EXTERNAL_ID"]];
+                $arSection['EXTERNAL_DATA'] = $this->arExternalInfo[$arSection["UF_EXTERNAL_ID"]];
+
+                $sectionPrice = $this->arExternalInfo[$arSection["UF_EXTERNAL_ID"]]['PRICE'];
                 // Если это Traveline, то делим цену на кол-во дней
                 if ($arSection["UF_EXTERNAL_SERVICE"] == 1) {
                     $sectionPrice = round($sectionPrice / $this->daysCount);
                 }
+
             } else {
                 $sectionPrice = $arSection["UF_MIN_PRICE"];
             }
+
             $arSection["PRICE"] = $sectionPrice;
 
             $arUriParamsSort = array(
@@ -1077,6 +1097,7 @@ class NaturalistCatalog extends \CBitrixComponent
         $this->arResult['reviewsPageCount'] = $this->reviewsPageCount;
         $this->arResult['arReviewsLikesData'] = $this->arReviewsLikesData;
         $this->arResult['reviewsCount'] = $this->reviewsCount;
+        $this->arResult['yandexReviewsCount'] = $this->yandexReviewsCount;
         $this->arResult['avgRating'] = $this->avgRating;
         $this->arResult['arAvgCriterias'] = $this->arAvgCriterias;
         $this->arResult['arElements'] = $this->arElements;
@@ -1422,6 +1443,7 @@ class NaturalistCatalog extends \CBitrixComponent
             }
 
             $this->reviewsCount += $yandexReviews[0]['total_count'];
+            $this->yandexReviewsCount += $yandexReviews[0]['total_count'];
 
             $commonYandexReviewsClass = HighloadBlockTable::compileEntity('YandexReviews')->getDataClass();
 
