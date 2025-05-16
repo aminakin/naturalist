@@ -1,4 +1,4 @@
-<?
+<?php
 
 namespace Naturalist;
 
@@ -12,12 +12,9 @@ use CIBlockSection;
 use DateInterval;
 use DatePeriod;
 use DateTime;
-use Naturalist\Markdown;
 use Naturalist\Telegram\DebugBot;
-use Naturalist\Telegram\TelegramBot;
-use Bitrix\Iblock\SectionTable;
-use Bitrix\Iblock\PropertyTable;
 use Naturalist\Telegram\Notifications\Error;
+use Naturalist\Telegram\TelegramBot;
 
 Loader::IncludeModule("iblock");
 Loader::IncludeModule("catalog");
@@ -28,7 +25,7 @@ defined("B_PROLOG_INCLUDED") && B_PROLOG_INCLUDED === true || die();
  * @global CMain $APPLICATION
  * @global CUser $USER
  */
-class Bnovo
+class Bnovo implements SearchServiceInterface
 {
     private $hlDataMonthCount = 6;
     private $catalogIBlockID = CATALOG_IBLOCK_ID;
@@ -110,7 +107,13 @@ class Bnovo
     }
 
     /* Получение списка свободных объектов в выбранный промежуток */
-    public function search($guests, $arChildrenAge, $dateFrom, $dateTo, $sectionIds = [])
+    public function search(
+        int $guests,
+        array $childrenAge,
+        string $dateFrom,
+        string $dateTo,
+        bool $groupResults = true,
+        array $sectionIds = [])
     {
         $arDates = array();
         $period = new DatePeriod(
@@ -128,18 +131,18 @@ class Bnovo
 
         while ($hotelRes = $arHotel->Fetch()) {
             if (!empty($hotelRes['UF_MIN_AGE'])) {
-                $arChildrenAges = $arChildrenAge;
+                $arChildrenAges = $childrenAge;
                 foreach ($arChildrenAges as $key => $age) {
                     if ($age <= $hotelRes['UF_MIN_AGE']) {
-                        unset($arChildrenAge[$key]);
+                        unset($childrenAge[$key]);
                     }
                 }
             }
             if ($hotelRes['UF_NO_CHILDREN_PLACE'] == 1) {
-                $guests += count($arChildrenAge);
+                $guests += count($childrenAge);
                 $children = 0;
             } else {
-                $children = count($arChildrenAge);
+                $children = count($childrenAge);
             }
         }
 
@@ -240,7 +243,7 @@ class Bnovo
                 if (!empty($children)) {
                     $childrenStatus = false;
                     foreach ($arOccupancy["PROPERTY_CHILDREN_AGES_VALUE"] as $key => $idAge) {
-                        foreach ($arChildrenAge as $age) {
+                        foreach ($childrenAge as $age) {
                             if ($arAges[$idAge]['UF_MIN_AGE'] <= $age && $arAges[$idAge]['UF_MAX_AGE'] >= $age && $arOccupancy["PROPERTY_CHILDREN_AGES_DESCRIPTION"][$key] == $children) {
                                 $childrenStatus = true;
                             }
@@ -261,7 +264,7 @@ class Bnovo
         }
 //
         if (empty($arCategoriesFilterredIDs)) {
-            $guests += count($arChildrenAge);
+            $guests += count($childrenAge);
             foreach ($backOccupancies as $arOccupancy) {
                 if ($arOccupancy["PROPERTY_GUESTS_COUNT_VALUE"] >= $guests) {
                     $arCategoriesFilterredIDs[] = $arOccupancy["PROPERTY_CATEGORY_ID_VALUE"];
@@ -285,7 +288,15 @@ class Bnovo
     }
 
     /* Получение списка свободных номеров объекта в выбранный промежуток */
-    public function searchRooms($sectionId, $externalId, $guests, $arChildrenAge, $dateFrom, $dateTo)
+    public function searchRooms(
+        int $sectionId,
+        string $externalId,
+        string $serviceType,
+        int $guests,
+        array $childrenAge,
+        string $dateFrom,
+        string $dateTo,
+        int $minChildAge = 0)
     {
         // Приравниваются ли дети к взрослым
         $childrenIsAdults = false;
@@ -305,26 +316,26 @@ class Bnovo
         //Проверка на детей без мест и размещения без детей
         $arHotel = CIBlockSection::GetList(false, array("IBLOCK_ID" => CATALOG_IBLOCK_ID, "ID" => $sectionId), false, array("ID", "UF_EXTERNAL_ID", "UF_MIN_AGE", "UF_NO_CHILDREN_PLACE"), false)->Fetch();
         if (!empty($arHotel['UF_MIN_AGE'])) {
-            $arChildrenAges = $arChildrenAge;
+            $arChildrenAges = $childrenAge;
             foreach ($arChildrenAges as $key => $age) {
                 if ($age <= $arHotel['UF_MIN_AGE']) {
-                    unset($arChildrenAge[$key]);
+                    unset($childrenAge[$key]);
                 }
             }
         }
 
         if ($arHotel['UF_NO_CHILDREN_PLACE'] == 1) {
-            $guests += count($arChildrenAge);
+            $guests += count($childrenAge);
             $childrenIsAdults = true;
             $children = 0;
         } else {
-            $children = count($arChildrenAge);
+            $children = count($childrenAge);
         }
 
         if ($childrenIsAdults) {
             $totalPeople = $guests;
         } else {
-            $totalPeople = $guests + count($arChildrenAge);
+            $totalPeople = $guests + count($childrenAge);
         }
 
         // Запрос по выбранным датам в HL
@@ -504,7 +515,7 @@ class Bnovo
         // Вычисляем возрастные интервалы согласно возрасту детей из поискового запроса
         if (!empty($children)) {
             foreach ($arAges as $arAge) {
-                foreach ($arChildrenAge as $age) {
+                foreach ($childrenAge as $age) {
                     if ($arAge['UF_MIN_AGE'] <= $age && $arAge['UF_MAX_AGE'] >= $age) {
                         if (isset($filteredChildrenAgesId[$arAge['ID']]['COUNT'])) {
                             $filteredChildrenAgesId[$arAge['ID']]['COUNT'] += $filteredChildrenAgesId[$arAge['ID']]['COUNT'];
@@ -545,7 +556,7 @@ class Bnovo
                 if (!empty($children)) {
                     $childrenStatus = false;
                     foreach ($arOccupancy["PROPERTY_CHILDREN_AGES_VALUE"] as $key => $idAge) {
-                        foreach ($arChildrenAge as $age) {
+                        foreach ($childrenAge as $age) {
                             if ($arAges[$idAge]['UF_MIN_AGE'] <= $age && $arAges[$idAge]['UF_MAX_AGE'] >= $age && $arOccupancy["PROPERTY_CHILDREN_AGES_DESCRIPTION"][$key] == $children) {
                                 $childrenStatus = true;
                             }
@@ -642,7 +653,7 @@ class Bnovo
                                 $seatDispence['extra'] = 0 - $extraSeats;
                             }
                             if ($childrenIsAdults) {
-                                $seatDispence['childrenIsAdults'] = count($arChildrenAge);
+                                $seatDispence['childrenIsAdults'] = count($childrenAge);
                             }
 
                             foreach ($filteredChildrenAgesId as $arAge => $value) {
@@ -813,7 +824,7 @@ class Bnovo
 
 
         return [
-            'arItems' => $arItems,
+            'arRooms' => $arItems,
             'error' => $error,
         ];
     }

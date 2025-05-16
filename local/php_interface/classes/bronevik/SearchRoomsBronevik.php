@@ -98,7 +98,7 @@ class SearchRoomsBronevik
         $rooms = $this->appendOfferInRooms($rooms, $offers);
 
         return [
-            'arItems' => $rooms,
+            'arRooms' => $rooms,
             'error' => ! count($offers) ? 'Не найдено номеров на выбранные даты' : '',
         ];
     }
