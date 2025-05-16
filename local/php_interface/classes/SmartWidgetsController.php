@@ -85,7 +85,7 @@ class SmartWidgetsController
                 // Проходим по каждому источнику отзывов
                 foreach ($widgetData['item']['review_yandex_map'] as $source) {
                     if (isset($source['count'], $source['rating'])) {
-                        $totalCount += $source['count'];
+                        $totalCount += $source['reviews'];
                         $totalRating += $source['rating'];
                         $sourceCount++;
                     }
