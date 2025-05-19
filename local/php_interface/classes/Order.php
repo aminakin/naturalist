@@ -249,7 +249,9 @@ class Orders
         $totalPrice = 0;
         $totalCount = 0;
         $arItems = array();
-        $products = new Products();
+
+        $factory = new SearchServiceFactory();
+        $products = new Products($factory);
         foreach ($arBasketItems as $item) {
             $productId = $item->getProductId();
             $arProduct = $products->get($productId);
