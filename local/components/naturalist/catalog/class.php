@@ -15,6 +15,7 @@ use Bitrix\Iblock\Elements\ElementFeaturesdetailTable;
 use Bitrix\Main\Data\Cache;
 use Naturalist\Products;
 use Naturalist\Filters\Components;
+use Naturalist\SearchServiceFactory;
 use Naturalist\SmartWidgetsController;
 use Naturalist\Users;
 use Naturalist\Regions;
@@ -388,9 +389,19 @@ class NaturalistCatalog extends \CBitrixComponent
             if ($cache->initCache(3600, $cacheKey)) {
                 $this->arExternalInfo = $cache->getVars();
             } elseif ($cache->startDataCache()) {
-                // Запрос в апи на получение списка кемпингов со свободными местами в выбранный промежуток
-                $this->arExternalInfo = Products::search($this->arUriParams['guests'], $this->arUriParams['childrenAge'], $this->arUriParams['dateFrom'], $this->arUriParams['dateTo'], false);
-//                $cache->endDataCache($this->arExternalInfo);
+
+                $factory = new SearchServiceFactory();
+                $products = new Products($factory);
+
+                $this->arExternalInfo = $products->search(
+                    $this->arUriParams['guests'],
+                    $this->arUriParams['childrenAge'],
+                    $this->arUriParams['dateFrom'],
+                    $this->arUriParams['dateTo'],
+                    false
+                );
+
+                $cache->endDataCache($this->arExternalInfo);
             }
 
             $arExternalIDs = array_keys($this->arExternalInfo);
@@ -1465,7 +1476,20 @@ class NaturalistCatalog extends \CBitrixComponent
             $this->daysCount = abs(strtotime($this->arUriParams['dateTo']) - strtotime($this->arUriParams['dateFrom'])) / 86400;
 
             // Запрос в апи на получение списка кемпингов со свободными местами в выбранный промежуток
-            $arExternalResult = Products::searchRooms($this->arSections['ID'], $this->arSections['UF_EXTERNAL_ID'], $this->arSections['UF_EXTERNAL_SERVICE'], $this->arUriParams['guests'], $this->arUriParams['childrenAge'], $this->arUriParams['dateFrom'], $this->arUriParams['dateTo'], $this->arSections['UF_MIN_CHIELD_AGE']);
+
+            $factory = new SearchServiceFactory();
+            $products = new Products($factory);
+            $arExternalResult = $products->searchRooms(
+                $this->arSections['ID'],
+                $this->arSections['UF_EXTERNAL_ID'],
+                $this->arSections['UF_EXTERNAL_SERVICE'],
+                intval($this->arUriParams['guests']) ?? 0,
+                $this->arUriParams['childrenAge'] ?? [],
+                $this->arUriParams['dateFrom'],
+                $this->arUriParams['dateTo'],
+                $this->arSections['UF_MIN_CHIELD_AGE'] ?? 0
+            );
+
             $this->arExternalInfo = $arExternalResult['arRooms'];
             $this->searchError = $arExternalResult['error'];
 
