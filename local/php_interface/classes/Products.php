@@ -2,6 +2,7 @@
 
 namespace Naturalist;
 
+use _CIBElement;
 use Bitrix\Main\Loader;
 use Bitrix\Main\SystemException;
 use CCatalogDiscount;
@@ -243,7 +244,7 @@ class Products implements SearchServiceInterface
         }
     }
 
-    private function createProductFromElement(\CIBlockResult $element): array
+    private function createProductFromElement(_CIBElement $element): array
     {
         $product = $element->GetFields();
         $product['PROPERTIES'] = $element->GetProperties();
