@@ -57,7 +57,7 @@ class SmartWidgetsController
         }
 
         // Декодирование JSON-ответа
-        $data = json_decode($response, true);
+        $data = json_decode($response);
 
         // Проверка на успешное декодирование JSON
         if (json_last_error() !== JSON_ERROR_NONE) {

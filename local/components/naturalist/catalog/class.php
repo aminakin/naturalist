@@ -137,8 +137,9 @@ class NaturalistCatalog extends \CBitrixComponent
 
             foreach ($commonYandexReviews as &$item) {
                 $yandexId = $item['UF_ID_YANDEX'];
-                if (isset($widgetData['data'][$yandexId])) {
-                    $item = array_merge($item, $widgetData['data'][$yandexId]);
+                if (isset($widgetData->data->$yandexId)) {
+                    $widgetItem = json_decode(json_encode($widgetData->data->$yandexId), true);
+                    $item = array_merge($item, $widgetItem);
                 }
             }
             unset($item);
