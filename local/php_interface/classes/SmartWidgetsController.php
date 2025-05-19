@@ -2,6 +2,7 @@
 
 namespace Naturalist;
 
+use Bitrix\Main\Data\Cache;
 use Exception;
 
 class SmartWidgetsController
@@ -23,50 +24,66 @@ class SmartWidgetsController
      */
     public static function getWidgetData(array $widgetIds)
     {
-        ini_set('memory_limit', '256M');
+        $cache = Cache::createInstance();
+        $cacheKey = md5(serialize([self::CLIENT_KEY, $widgetIds]));;
 
-        $payload = [
-            'key' => self::CLIENT_KEY,
-            'widgets' => array_values($widgetIds)
-        ];
-
-        // Инициализация cURL
-        $ch = curl_init(self::API_URL);
-
-        // Настройка параметров cURL
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, self::HTTP_METHOD);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
-        curl_setopt($ch, CURLOPT_HTTPHEADER, [self::CONTENT_TYPE_HEADER]);
-
-        // Выполнение запроса
-        $response = curl_exec($ch);
-
-        // Проверка на ошибки cURL
-        if (curl_errno($ch)) {
-            throw new Exception('Ошибка cURL: ' . curl_error($ch));
+        if ($cache->initCache(86400, $cacheKey)) {
+            return $cache->getVars();
         }
 
-        // Получение HTTP-кода ответа
-        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $cache->startDataCache();
 
-        // Закрытие соединения
-        curl_close($ch);
+        try {
+            ini_set('memory_limit', '512M');
 
-        // Проверка статуса ответа
-        if ($httpCode !== self::SUCCESS_HTTP_CODE) {
-            throw new Exception("Ошибка HTTP: {$httpCode}. Ответ сервера: {$response}");
+            $payload = [
+                'key' => self::CLIENT_KEY,
+                'widgets' => array_values($widgetIds)
+            ];
+
+            // Инициализация cURL
+            $ch = curl_init(self::API_URL);
+
+            // Настройка параметров cURL
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, self::HTTP_METHOD);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
+            curl_setopt($ch, CURLOPT_HTTPHEADER, [self::CONTENT_TYPE_HEADER]);
+
+            // Выполнение запроса
+            $response = curl_exec($ch);
+
+            // Проверка на ошибки cURL
+            if (curl_errno($ch)) {
+                throw new Exception('Ошибка cURL: ' . curl_error($ch));
+            }
+
+            // Получение HTTP-кода ответа
+            $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+
+            // Закрытие соединения
+            curl_close($ch);
+
+            // Проверка статуса ответа
+            if ($httpCode !== self::SUCCESS_HTTP_CODE) {
+                throw new Exception("Ошибка HTTP: {$httpCode}. Ответ сервера: {$response}");
+            }
+
+            // Декодирование JSON-ответа
+            $data = json_decode($response);
+
+            // Проверка на успешное декодирование JSON
+            if (json_last_error() !== JSON_ERROR_NONE) {
+                throw new Exception('Ошибка при декодировании JSON: ' . json_last_error_msg());
+            }
+
+            $cache->endDataCache($data);
+            return $data;
+
+        } catch (Exception $e) {
+            $cache->abortDataCache();
+            throw $e;
         }
-
-        // Декодирование JSON-ответа
-        $data = json_decode($response);
-
-        // Проверка на успешное декодирование JSON
-        if (json_last_error() !== JSON_ERROR_NONE) {
-            throw new Exception('Ошибка при декодировании JSON: ' . json_last_error_msg());
-        }
-
-        return $data;
     }
 
 

@@ -133,6 +133,7 @@ class NaturalistCatalog extends \CBitrixComponent
 
         if (is_array($commonYandexReviews) && !empty($commonYandexReviews)) {
 
+
             $widgetData = SmartWidgetsController::getWidgetData($arYandexIDs);
 
             foreach ($commonYandexReviews as &$item) {
