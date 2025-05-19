@@ -23,6 +23,8 @@ class SmartWidgetsController
      */
     public static function getWidgetData(array $widgetIds)
     {
+        ini_set('memory_limit', '256M');
+
         $payload = [
             'key' => self::CLIENT_KEY,
             'widgets' => array_values($widgetIds)
