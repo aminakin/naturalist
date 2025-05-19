@@ -121,6 +121,9 @@ class NaturalistCatalog extends \CBitrixComponent
      */
     public function getYandexReviews($sectionIds): array
     {
+
+        ini_set('memory_limit', '512M');
+
         $commonYandexReviewsClass = HighloadBlockTable::compileEntity('YandexReviews')->getDataClass();
         $commonYandexReviews = $commonYandexReviewsClass::query()
             ->addSelect('*')
