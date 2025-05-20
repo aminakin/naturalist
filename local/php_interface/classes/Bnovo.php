@@ -282,12 +282,12 @@ class Bnovo implements SearchServiceInterface
                         $arHotelsIDsOutput[$idHotel] = $arHotel;
                     }
 
-                        if (isset($arHotelsIDsOutput[$idHotel]) && $arHotelData['PRICE'] < $arHotelsIDsOutput[$idHotel]) {
-                            $arHotelsIDsOutput[$idHotel]['PRICE'] = $arHotelData['PRICE'];
-                        }
-                        if (isset($arHotelsIDsOutput[$idHotel]) && $arHotelData['UF_MIN_STAY'] > $arHotelsIDsOutput[$idHotel]['UF_MIN_STAY']) {
-                            $arHotelsIDsOutput[$idHotel]['UF_MIN_STAY'] = $arHotelData['UF_MIN_STAY'];
-                        }
+                    if (isset($arHotelsIDsOutput[$idHotel]) && ($arHotelData['PRICE'] > 0) && $arHotelData['PRICE'] < $arHotelsIDsOutput[$idHotel]['PRICE']) {
+                        $arHotelsIDsOutput[$idHotel]['PRICE'] = $arHotelData['PRICE'];
+                    }
+                    if (isset($arHotelsIDsOutput[$idHotel]) && $arHotelData['UF_MIN_STAY'] > $arHotelsIDsOutput[$idHotel]['UF_MIN_STAY']) {
+                        $arHotelsIDsOutput[$idHotel]['UF_MIN_STAY'] = $arHotelData['UF_MIN_STAY'];
+                    }
                 }
             }
         }
