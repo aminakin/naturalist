@@ -34,6 +34,7 @@ class OrderHelper
         'city' => ORDER_PROP_CITY,
         'is_cert' => ORDER_PROP_IS_CERT,
         'cert_variant' => ORDER_PROP_FIZ_VARIANT,
+        'cert_variant_back' => ORDER_PROP_DOBRO_CERT,
         'cert_pocket' => ORDER_PROP_FIZ_POCKET,
         'gift_name' => ORDER_PROP_GIFT_NAME,
         'gift_email' => ORDER_PROP_GIFT_EMAIL,

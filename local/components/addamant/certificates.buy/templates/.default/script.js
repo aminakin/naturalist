@@ -40,6 +40,7 @@ class BuyCert {
     certElVariantsLabels = document.querySelectorAll(
         ".el-variant .form__el-variant label"
     );
+
     certElVariants = document.querySelectorAll('input[name="cert_el_variant"]');
     certPocketsLabels = document.querySelectorAll(
         ".pocket .form__el-variant label"
@@ -608,4 +609,22 @@ class BuyCert {
             maximumFractionDigits: 0,
         }).format(value);
     }
+}
+function updateHiddenImageField(selectedRadio) {
+
+    var hiddenField = document.getElementById('cert_variant_back');
+
+
+    var variantKey = selectedRadio.dataset.variantKey;
+    console.log(variantKey);
+
+
+    if (variantKey == "var_3") {
+        hiddenField.value = "Y";
+    } else {
+        hiddenField.value = "N";
+    }
+
+
+    document.getElementById('hidden_cert_image').value = selectedRadio.value;
 }
