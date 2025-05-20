@@ -3,7 +3,7 @@
         "andreyryabin/sprint.migration": "dev-master",
         "webonyx/graphql-php": "^15.13",
         "bronevik/hotels-connector": "^5.2",
-        "uhotels/api-client": "^1.1"
+        "uhotels/api-client": "*"
     },
     "autoload": {
         "psr-4": {"Local\\" : "lib/"}
