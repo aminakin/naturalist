@@ -277,9 +277,17 @@ class Bnovo implements SearchServiceInterface
         foreach ($arHotelsIDs as $categoryId => $arHotelData) {
             if (in_array($categoryId, $arCategoriesFilterredIDs)) {
                 foreach ($arHotelData as $idHotel => $arHotel) {
-                    if (!isset($arHotelsIDsOutput[$idHotel]) || $arHotelData['PRICE'] < $arHotelsIDsOutput[$idHotel]) {
+
+                    if (!isset($arHotelsIDsOutput[$idHotel])) {
                         $arHotelsIDsOutput[$idHotel] = $arHotel;
                     }
+
+                        if (isset($arHotelsIDsOutput[$idHotel]) && $arHotelData['PRICE'] < $arHotelsIDsOutput[$idHotel]) {
+                            $arHotelsIDsOutput[$idHotel]['PRICE'] = $arHotelData['PRICE'];
+                        }
+                        if (isset($arHotelsIDsOutput[$idHotel]) && $arHotelData['UF_MIN_STAY'] > $arHotelsIDsOutput[$idHotel]['UF_MIN_STAY']) {
+                            $arHotelsIDsOutput[$idHotel]['UF_MIN_STAY'] = $arHotelData['UF_MIN_STAY'];
+                        }
                 }
             }
         }
