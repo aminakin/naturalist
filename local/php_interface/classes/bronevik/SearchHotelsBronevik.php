@@ -65,18 +65,31 @@ class SearchHotelsBronevik
                     ],
                     ['ID' => 'ASC'],
                     ['UF_EXTERNAL_ID']);
+
                 $sectionIds = array_column($rooms, 'UF_EXTERNAL_ID');
                 $cache->endDataCache($sectionIds);
             }
         }
 
-        $hotels = $this->bronevik->getHotelAvailability(
-            date('Y-m-d', strtotime($dateFrom)),
-            date('Y-m-d', strtotime($dateTo)),
-            CurrencyCodes::RUB,
-            null,
-            $sectionIds,
-        );
+        //api броневика не принимает более 300 отелей в запросе
+        $chunks = array_chunk($sectionIds, 300, false);
+        $hotels = [];
+
+        foreach ($chunks as $chunk) {
+            $result = $this->bronevik->getHotelAvailability(
+                date('Y-m-d', strtotime($dateFrom)),
+                date('Y-m-d', strtotime($dateTo)),
+                CurrencyCodes::RUB,
+                null,
+                $chunk
+            );
+
+
+            if ($result) {
+                $hotels = array_merge($hotels, $result);
+            }
+        }
+
 
         return ($hotels) ? $this->getPriceByArrayHotels($hotels) : [];
     }
