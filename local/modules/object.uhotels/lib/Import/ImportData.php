@@ -13,6 +13,7 @@ use Exception;
 use Object\Uhotels\Settings\Settings;
 use UHotels\ApiClient\Dto\Hotel\HotelDto;
 use UHotels\ApiClient\Dto\Room\RoomDto;
+use UHotels\ApiClient\Dto\Shared\FieldsDto;
 
 class ImportData
 {
@@ -226,28 +227,37 @@ class ImportData
 
         $entityClass = $this->getEntityClass($this->roomsFeaturesHLId);
 
+        $newRoomFeatures = [];
+        /*  @var $roomFeature FieldsDto */
+        foreach ($roomData as $roomFeature) {
+            $newRoomFeatures[$roomFeature->code] = [
+                "CODE" => $roomFeature->code,
+                "VALUE" => $roomFeature->value,
+            ];
+        }
+
         // Получаем все существующие элементы за один запрос
         $existingItems = $entityClass::getList([
             'select' => ['UF_XML_ID'],
-            'filter' => ['UF_XML_ID' => $roomData],
+            'filter' => ['UF_XML_ID' => array_keys($newRoomFeatures)],
         ])->fetchAll();
 
         $existingXmlIds = array_column($existingItems, 'UF_XML_ID');
-        $newItems = array_diff($roomData, $existingXmlIds);
+        $newItems = array_diff(array_keys($newRoomFeatures), $existingXmlIds);
 
         // Массовое добавление новых элементов
         if (!empty($newItems)) {
             $addBatch = [];
-            foreach ($newItems as $item) {
+            foreach ($newItems as $itemCode) {
                 $addBatch[] = [
-                    'UF_NAME' => $item,
-                    'UF_XML_ID' => $item,
+                    'UF_NAME' => $newRoomFeatures[$itemCode]['VALUE'],
+                    'UF_XML_ID' => $newRoomFeatures[$itemCode]['CODE'],
                 ];
             }
             $entityClass::addMulti($addBatch);
         }
 
-        return array_unique(array_merge($existingXmlIds, $newItems));
+        return array_unique(array_merge($existingXmlIds, array_keys($newRoomFeatures)));
     }
 
     private function getEntityClass($hlId = 8)
