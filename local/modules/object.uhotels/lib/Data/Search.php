@@ -90,7 +90,7 @@ class Search
         }
 
         return [
-            'arItems' => $arItems,
+            'arRooms' => $arItems,
             'error' => !count($arItems) ? 'Не найдено номеров на выбранные даты' : '',
         ];
     }
