@@ -1,4 +1,5 @@
 <?php
+
 if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) {
     die();
 }
@@ -81,6 +82,7 @@ class NaturalistCatalog extends \CBitrixComponent
     private $arExternalInfo = [];
     private $arExternalAvail = [];
     private $arSections = [];
+    private $arMapSections = [];
     private $arHLTypes = [];
     private $houseTypeData = [];
     private $water = [];
@@ -358,12 +360,12 @@ class NaturalistCatalog extends \CBitrixComponent
         if (!empty($this->arUriParams['dateFrom']) && !empty($this->arUriParams['dateTo']) && !empty($this->arUriParams['guests'])) {
             $this->daysCount = abs(strtotime($this->arUriParams['dateTo']) - strtotime($this->arUriParams['dateFrom'])) / 86400;
 
-            $cache = Cache::createInstance();
-            $cacheKey = $this->arUriParams['dateFrom'] . $this->arUriParams['dateTo'] . $this->arUriParams['guests'];
+//            $cache = Cache::createInstance();
+//            $cacheKey = $this->arUriParams['dateFrom'] . $this->arUriParams['dateTo'] . $this->arUriParams['guests'];
 
-            if ($cache->initCache(3600, $cacheKey)) {
-                $this->arExternalInfo = $cache->getVars();
-            } elseif ($cache->startDataCache()) {
+//            if ($cache->initCache(3600, $cacheKey)) {
+//                $this->arExternalInfo = $cache->getVars();
+//            } elseif ($cache->startDataCache()) {
 
                 $factory = new SearchServiceFactory();
                 $products = new Products($factory);
@@ -376,8 +378,8 @@ class NaturalistCatalog extends \CBitrixComponent
                     false
                 );
 
-                $cache->endDataCache($this->arExternalInfo);
-            }
+//                $cache->endDataCache($this->arExternalInfo);
+//            }
 
             $arExternalIDs = array_keys($this->arExternalInfo);
             if ($arExternalIDs) {
@@ -519,20 +521,24 @@ class NaturalistCatalog extends \CBitrixComponent
         //кеш каталог а временно выключен на переработку
         if (!isset($this->arFilter['UF_EXTERNAL_ID'])) {
 
-//            $cache = Cache::createInstance();
-//            $arFilterCacheKey = Utils::recursiveImplode($this->arFilter, '_');
-//            $cacheKey = 'without_date_search_' . $arFilterCacheKey;
+            if ($this->arParams['MAP']) {
+                $cache = Cache::createInstance();
+                $cacheKey = 'mapSections';
 
-//            if ($cache->initCache(86400, $cacheKey)) {
-//                $this->arSections = $cache->getVars();
-//            } elseif ($cache->startDataCache()) {
+                // Попытка загрузить данные из кеша
+                if ($cache->initCache(86400, $cacheKey)) {
+                    $this->arSections = $cache->getVars();
+                } else if ($cache->startDataCache()) {
+                    $this->sectionsQuery();
+                    $cache->endDataCache($this->arSections);
+                }
+            } else {
                 $this->arNavParams = [
                     'nPageSize' => $this->arParams['ITEMS_COUNT'],
                     'iNumPage' => $this->page
                 ];
                 $this->sectionsQuery();
-//                $cache->endDataCache($this->arSections);
-//            }
+            }
         } else {
             $this->sectionsQuery();
         }
@@ -620,10 +626,28 @@ class NaturalistCatalog extends \CBitrixComponent
             }
         }
 
+
         if (!empty($arSectionsPrice)) {
             $this->minPrice = round(min($arSectionsPrice));
             $this->maxPrice = round(max($arSectionsPrice));
         }
+
+
+        $this->arMapSections = $this->arSections;
+
+        if (!isset($this->arFilter['UF_EXTERNAL_ID'])) {
+            $cache = Cache::createInstance();
+            $cacheKey = 'mapData';
+
+            // Попытка загрузить данные из кеша
+            if ($cache->initCache(86400, $cacheKey)) {
+                $this->arMapSections = $cache->getVars();
+            } else if ($this->arParams['MAP'] && $cache->startDataCache()) {
+                $cache->endDataCache($this->arSections);
+            }
+        }
+
+
     }
 
     private function fillRating()
@@ -1022,6 +1046,7 @@ class NaturalistCatalog extends \CBitrixComponent
         $this->arResult['sortOrder'] = $this->sortOrder;
         $this->arResult['orderReverse'] = $this->orderReverse;
         $this->arResult['SECTIONS'] = $this->arSections;
+        $this->arResult['MAP_DATA'] = $this->arMapSections;
         $this->arResult['arHLTypes'] = $this->arHLTypes;
         $this->arResult['arHLFood'] = $this->arHLFood;
         $this->arResult['houseTypeData'] = $this->houseTypeData;
@@ -1655,4 +1680,5 @@ class NaturalistCatalog extends \CBitrixComponent
 
         $this->arElements[$arElement['ID']] = $arElement;
     }
+
 }

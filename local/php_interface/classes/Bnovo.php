@@ -4,6 +4,7 @@ namespace Naturalist;
 
 use Bitrix\Highloadblock\HighloadBlockTable;
 use Bitrix\Main\Config\Option;
+use Bitrix\Main\Diag\Debug;
 use Bitrix\Main\Grid\Declension;
 use Bitrix\Main\Loader;
 use Bitrix\Sale\Order;
@@ -277,8 +278,17 @@ class Bnovo implements SearchServiceInterface
         foreach ($arHotelsIDs as $categoryId => $arHotelData) {
             if (in_array($categoryId, $arCategoriesFilterredIDs)) {
                 foreach ($arHotelData as $idHotel => $arHotel) {
-                    if (!isset($arHotelsIDsOutput[$idHotel]) || $arHotelData['PRICE'] < $arHotelsIDsOutput[$idHotel]) {
+
+                    if (!isset($arHotelsIDsOutput[$idHotel])) {
                         $arHotelsIDsOutput[$idHotel] = $arHotel;
+                    }
+
+                    if (isset($arHotelsIDsOutput[$idHotel]) && ($arHotel['PRICE'] > 0) && $arHotel['PRICE'] < $arHotelsIDsOutput[$idHotel]['PRICE']) {
+                        $arHotelsIDsOutput[$idHotel]['PRICE'] = $arHotel['PRICE'];
+                    }
+
+                    if (isset($arHotelsIDsOutput[$idHotel]) && $arHotel['UF_MIN_STAY'] > $arHotelsIDsOutput[$idHotel]['UF_MIN_STAY']) {
+                        $arHotelsIDsOutput[$idHotel]['UF_MIN_STAY'] = $arHotel['UF_MIN_STAY'];
                     }
                 }
             }

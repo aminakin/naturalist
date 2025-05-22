@@ -27,7 +27,8 @@ class Baskets
     public function get($userIdF = false)
     {
         global $arUser, $userId;
-        $products = new Products();
+        $factory = new SearchServiceFactory();
+        $products = new Products($factory);
 
         if(!empty($userIdF)) {
             $fUserId = CSaleUser::GetList(array("USER_ID" => (int)$userIdF))["ID"];
@@ -94,7 +95,8 @@ class Baskets
         global $arUser, $userId;        
         $fUserId = (intval($userId) > 0) ? CSaleUser::getFUserCode() : false;
         $fBasketUserId = Fuser::getId();
-        $products = new Products();
+        $factory = new SearchServiceFactory();
+        $products = new Products($factory);
         $arProduct = $products->get($productId);
         self::deleteAll();
         self::manageHL($fBasketUserId, $productId, $price);

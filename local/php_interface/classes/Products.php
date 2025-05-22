@@ -2,6 +2,8 @@
 
 namespace Naturalist;
 
+use _CIBElement;
+use Bitrix\Main\Diag\Debug;
 use Bitrix\Main\Loader;
 use Bitrix\Main\SystemException;
 use CCatalogDiscount;
@@ -146,7 +148,7 @@ class Products implements SearchServiceInterface
                     $sectionIds
                 );
             } catch (\Exception $e) {
-                // Логирование ошибки
+                Debug::writeToFile(var_export($e->getMessage(), TRUE));
                 continue;
             }
         }
@@ -243,7 +245,7 @@ class Products implements SearchServiceInterface
         }
     }
 
-    private function createProductFromElement(\CIBlockResult $element): array
+    private function createProductFromElement(_CIBElement $element): array
     {
         $product = $element->GetFields();
         $product['PROPERTIES'] = $element->GetProperties();
