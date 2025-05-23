@@ -32,34 +32,55 @@ class BnovoDataFilesHandler
      */
     public function handleFile(): void
     {
+        // 5 мин
+        $timeout = 300;
         $isBusy = Option::get("main", "bnovo_files_working");
+        $lockTime = Option::get("main", "bnovo_files_lock_time");
+
+        // Если флаг установлен и прошло больше таймаута — сбросьте его
+        if ($isBusy == 'Y' && time() - (int)$lockTime > $timeout) {
+            Option::set("main", "bnovo_files_working", 'N');
+            echo "Флаг принудительно сброшен из-за таймаута\r\n";
+        }
+
+
         if ($isBusy == 'Y') {
             echo "Процесс занят \r\n";
             return;
         }
 
-        $this->getLastFiles();
-
-        if (empty($this->arFiles)) {
-            return;
-        }
-
         Option::set("main", "bnovo_files_working", 'Y');
+        Option::set("main", "bnovo_files_lock_time", (string)time());
 
-        foreach ($this->arFiles as $file) {
-            $data = Json::decode(file_get_contents($file['UF_FILE_NAME']));
+        try {
+            $this->getLastFiles();
 
-            $result = $this->rest->updatePrices($data, $file['UF_FILE_NAME']);
-
-            if ($result['code'] == 200) {
-                $this->entity::update($file['ID'], ['UF_LOADED' => 1]);
+            if (empty($this->arFiles)) {
+                Option::set("main", "bnovo_files_working", 'N');
+                return;
             }
-            var_export($result);
+
+
+            foreach ($this->arFiles as $file) {
+                $data = Json::decode(file_get_contents($file['UF_FILE_NAME']));
+
+                $result = $this->rest->updatePrices($data, $file['UF_FILE_NAME']);
+
+                if ($result['code'] == 200) {
+                    $this->entity::update($file['ID'], ['UF_LOADED' => 1]);
+                }
+                var_export($result);
+            }
+
+            Option::set("main", "bnovo_files_working", 'N');
+
+            echo "Агент отработал \r\n";
+        } catch (\Exception $e) {
+            error_log("Ошибка в обработке файлов: " . $e->getMessage());
+            Option::set("main", "bnovo_files_working", 'N');
+            echo "Ошибка: " . $e->getMessage() . "\r\n";
         }
 
-        Option::set("main", "bnovo_files_working", 'N');
-
-        echo "Агент отработал \r\n";
     }
 
     /**

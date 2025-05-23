@@ -2,6 +2,7 @@
 
 use Naturalist\Reviews;
 use Naturalist\Products;
+use Naturalist\SearchServiceFactory;
 use Naturalist\Utils;
 use Naturalist\Regions;
 use Bitrix\Main\Web\Uri;
@@ -147,7 +148,9 @@ if (!empty($dateFrom) && !empty($dateTo) && !empty($_GET['guests'])) {
     $daysCount = abs(strtotime($dateTo) - strtotime($dateFrom)) / 86400;
 
     // Запрос в апи на получение списка кемпингов со свободными местами в выбранный промежуток
-    $arExternalInfo = Products::search($guests, $arChildrenAge, $dateFrom, $dateTo, false, $arSectionsIds);
+    $factory = new SearchServiceFactory();
+    $products = new Products($factory);
+    $arExternalInfo = $products->search($guests, $arChildrenAge, $dateFrom, $dateTo, false, $arSectionsIds);
 
     $arSortedSections = array_intersect_key($arSortedSections, $arExternalInfo);
 }

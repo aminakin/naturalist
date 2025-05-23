@@ -1,4 +1,4 @@
-<?
+<?php
 
 use Naturalist\Products;
 use Naturalist\Users;

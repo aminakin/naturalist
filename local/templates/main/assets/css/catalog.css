@@ -4449,7 +4449,8 @@
     width: auto;
   }
 
-  .catalog__full .catalog__map, .catalog__products .catalog__map {
+  .catalog__full .catalog__map:not(.catalog__on_map),
+  .catalog__products .catalog__map:not(.catalog__on_map) {
     display: none;
     bottom: 0;
     margin-top: 0;
