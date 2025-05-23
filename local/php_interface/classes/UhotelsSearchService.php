@@ -19,12 +19,18 @@ class UhotelsSearchService implements SearchServiceInterface
 
     /**
      * @throws LoaderException
+     * @throws \Exception
      */
     public function searchRooms(int $sectionId, string $externalId, string $serviceType, int $guests, array $childrenAge, string $dateFrom, string $dateTo, int $minChildAge = 0)
     {
         if (Loader::includeModule('object.uhotels')) {
             $UhotelsSearch = new Search($externalId);
-            $UhotelsSearch->searchHotels($sectionId, $externalId, $guests, $childrenAge, $dateFrom, $dateTo, $minChildAge);
+
+            return $UhotelsSearch->searchHotels($sectionId, $externalId, $guests, $childrenAge, $dateFrom, $dateTo, $minChildAge);
         }
+        return [
+            'arRooms' => [],
+            'error' => 'Не найдено номеров на выбранные даты',
+        ];
     }
 }

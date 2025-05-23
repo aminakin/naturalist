@@ -4,6 +4,8 @@ namespace Object\Uhotels\Import;
 
 use Bitrix\Highloadblock\HighloadBlockTable;
 use Bitrix\Main\Diag\Debug;
+use CCatalogProduct;
+use CPrice;
 use Object\Uhotels\Connector\UhotelsConnector;
 use Bitrix\Main\Loader;
 use CIBlockElement;
@@ -24,6 +26,10 @@ class ImportData
 
     public function __construct()
     {
+        if (!Loader::IncludeModule("catalog")) {
+            throw new Exception('Модуль "catalog" не подключен.');
+        }
+
         $this->catalogIBlockID = CATALOG_IBLOCK_ID;
 
         $this->roomsFeaturesHLId = Settings::RoomsFeaturesHLId;
@@ -195,6 +201,20 @@ class ImportData
         if (!$elementId) {
             throw new Exception("Ошибка создания номера: " . $elementId->LAST_ERROR);
         }
+
+        // Установка количества
+        $productData = new CCatalogProduct();
+        $productId = $productData->Add(['ID' => $elementId, 'QUANTITY' => 999]);
+        if (!$productId) {
+            throw new Exception("Ошибка установки количества для элемента: " . $productData->LAST_ERROR);
+        }
+
+        // Установка базовой цены
+        $priceResult = CPrice::SetBasePrice($elementId, 10000, "RUB");
+        if (!$priceResult) {
+            throw new Exception("Ошибка установки цены для элемента: " . var_export($priceResult, true));
+        }
+
 
         return ['ID' => $elementId, 'IS_NEW' => true];
     }

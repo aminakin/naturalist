@@ -4,7 +4,9 @@ namespace Object\Uhotels\Data;
 
 use Bitrix\Main\Diag\Debug;
 use CIBlockElement;
+use DateTime;
 use Exception;
+use GuzzleHttp\Exception\GuzzleException;
 use Object\Uhotels\Connector\UhotelsConnector;
 use Object\Uhotels\Enum\OccupancyEnum;
 use UHotels\ApiClient\Dto\Quota\QuotaDto;
@@ -128,10 +130,21 @@ class Search
      * @param $dateFrom
      * @param $dateTo
      * @return array
+     * @throws GuzzleException
      */
     private function processRoomData($roomId, $dateFrom, $dateTo, $guests, $arChildrenAge, $minChildAge)
     {
         $offers = [];
+
+        // Вычисляем количество ночей
+        $startDate = new DateTime($dateFrom);
+        $endDate = new DateTime($dateTo);
+        $interval = $startDate->diff($endDate);
+        $nights = $interval->days;
+
+        if ($nights <= 0) {
+            return [];
+        }
 
         /** @var \UHotels\ApiClient\Dto\Tariff\TariffDto $tariff */
         foreach ($this->tariffList as $tariff) {
@@ -141,17 +154,21 @@ class Search
             if (!empty($occupancyData)) {
                 foreach ($occupancyData as $occupancyCode => $occupancyPriceData) {
 
-                    Debug::writeToFile(var_export($occupancyPriceData, true), true);
-
                     if (OccupancyEnum::getValueByCode($occupancyCode) == (int)$guests) {
                         /** @var \UHotels\ApiClient\Dto\Occupancy\OccupancyDetailDto $occupancyPriceData */
 
+                        // Умножаем цену за ночь на количество ночей
+                        $totalPrice = $occupancyPriceData->amount * $nights;
+
                         $offers[$tariff->id] = [
-                            'price' => $occupancyPriceData->amount,
+                            'price' => $totalPrice,
+                            'price_per_night' => $occupancyPriceData->amount,
+                            'nights' => $nights,
                             'tariffData' => [
                                 'id' => $tariff->id,
                                 'name' => $tariff->name,
                                 'desc' => $tariff->desc,
+                                'penalty' => $this->connector->getPenaltyById($tariff->penalty)?->toArray() ?? null,
                             ],
                             'days_price' => $occupancyPriceData->toArray(),
                         ];
@@ -165,7 +182,7 @@ class Search
     }
 
     /**
-     * Получение цен на тарифы, тут жее возвращаются рамеры номеров (1,2,3 ...) но
+     * Получает и фильтрует данные о стоимости проживания (occupancy) для конкретного номера и тарифа в заданный период.
      *
      * @param $roomId
      * @param $dateFrom
@@ -179,12 +196,23 @@ class Search
         $occupancyData = [];
         $roomOccupancy = $this->connector->getOccupancy($dateFrom, $dateTo, $roomId, $tariffId);
 
-        if (isset($roomOccupancy[0]->occupancies[0]->occupancy)){
-
-            foreach ($roomOccupancy[0]->occupancies[0]->occupancy as $occupancy) {
-                /** @var \UHotels\ApiClient\Dto\Occupancy\OccupancyDetailDto $occupancy */
-                if ($occupancy->amount > 0) {
-                    $occupancyData[$occupancy->occupancy_code] = $occupancy;
+        // Проверяем, что данные получены и есть массив occupancies
+        if (!empty($roomOccupancy[0]->occupancies)) {
+            foreach ($roomOccupancy[0]->occupancies as $occupancyList) {
+                // Проверяем, что это нужный тариф
+                if ($occupancyList->tariff_id == $tariffId) {
+                    // Проверяем, что есть данные по занятости
+                    if (!empty($occupancyList->occupancy)) {
+                        foreach ($occupancyList->occupancy as $detail) {
+                            /**
+                             * @var \UHotels\ApiClient\Dto\Occupancy\OccupancyDetailDto $detail
+                             */
+                            // Добавляем только записи с положительной стоимостью
+                            if ($detail->amount > 0) {
+                                $occupancyData[$detail->occupancy_code] = $detail;
+                            }
+                        }
+                    }
                 }
             }
         }
