@@ -1,0 +1,2445 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<items iblockUid="main:settings" exchangeVersion="2" >
+<item>
+ <field name="ACTIVE">
+  <value>Y</value>
+ </field>
+ <field name="ACTIVE_FROM"/>
+ <field name="ACTIVE_TO"/>
+ <field name="SORT">
+  <value>500</value>
+ </field>
+ <field name="NAME">
+  <value>Координаты для метеоблока на главной странице</value>
+ </field>
+ <field name="PREVIEW_PICTURE"/>
+ <field name="PREVIEW_TEXT">
+  <value>55.753407,37.641038</value>
+ </field>
+ <field name="PREVIEW_TEXT_TYPE">
+  <value>text</value>
+ </field>
+ <field name="DETAIL_PICTURE"/>
+ <field name="DETAIL_TEXT"/>
+ <field name="DETAIL_TEXT_TYPE">
+  <value>text</value>
+ </field>
+ <field name="CODE">
+  <value>main_meteo_coords</value>
+ </field>
+ <field name="TAGS"/>
+ <field name="XML_ID">
+  <value>13</value>
+ </field>
+ <field name="IBLOCK_SECTION">
+  <value>Главная страница|1|main</value>
+ </field>
+ <field name="IPROPERTY_TEMPLATES"/>
+ <property name="FILE"/>
+ <property name="TIMER"/>
+</item>
+<item>
+ <field name="ACTIVE">
+  <value>Y</value>
+ </field>
+ <field name="ACTIVE_FROM"/>
+ <field name="ACTIVE_TO"/>
+ <field name="SORT">
+  <value>500</value>
+ </field>
+ <field name="NAME">
+  <value>main_hero_name</value>
+ </field>
+ <field name="PREVIEW_PICTURE"/>
+ <field name="PREVIEW_TEXT"/>
+ <field name="PREVIEW_TEXT_TYPE">
+  <value>text</value>
+ </field>
+ <field name="DETAIL_PICTURE"/>
+ <field name="DETAIL_TEXT"/>
+ <field name="DETAIL_TEXT_TYPE">
+  <value>text</value>
+ </field>
+ <field name="CODE">
+  <value>main_hero_name</value>
+ </field>
+ <field name="TAGS"/>
+ <field name="XML_ID">
+  <value>29</value>
+ </field>
+ <field name="IBLOCK_SECTION">
+  <value>Главная страница|1|main</value>
+ </field>
+ <field name="IPROPERTY_TEMPLATES"/>
+ <property name="FILE">
+  <value name="logo-text.svg" type="file">iblock/a1b/yp6wa960urh02aqkadh1j0yu0al1pmmm.svg</value>
+ </property>
+ <property name="TIMER"/>
+</item>
+<item>
+ <field name="ACTIVE">
+  <value>Y</value>
+ </field>
+ <field name="ACTIVE_FROM"/>
+ <field name="ACTIVE_TO"/>
+ <field name="SORT">
+  <value>500</value>
+ </field>
+ <field name="NAME">
+  <value>main_hero_footnote</value>
+ </field>
+ <field name="PREVIEW_PICTURE"/>
+ <field name="PREVIEW_TEXT">
+  <value><![CDATA[<span>Б</span><span>Р</span><span>О</span><span>Н</span><span>И</span><span>Р</span><span>О</span><span>В</span><span>А</span><span>Н</span><span>И</span><span>Е</span><span>&nbsp;</span><span>Г</span><span>Л</span><span>Э</span><span>М</span><span>П</span><span>И</span><span>Н</span><span>Г</span><span>О</span><span>В</span><span>&nbsp;</span><span>И</span><span>&nbsp;</span><span>Э</span><span>К</span><span>О</span><span>-</span><span>О</span><span>Т</span><span>Е</span><span>Л</span><span>Е</span><span>Й</span>
+]]></value>
+ </field>
+ <field name="PREVIEW_TEXT_TYPE">
+  <value>html</value>
+ </field>
+ <field name="DETAIL_PICTURE"/>
+ <field name="DETAIL_TEXT"/>
+ <field name="DETAIL_TEXT_TYPE">
+  <value>text</value>
+ </field>
+ <field name="CODE">
+  <value>main_hero_footnote</value>
+ </field>
+ <field name="TAGS"/>
+ <field name="XML_ID">
+  <value>30</value>
+ </field>
+ <field name="IBLOCK_SECTION">
+  <value>Главная страница|1|main</value>
+ </field>
+ <field name="IPROPERTY_TEMPLATES"/>
+ <property name="FILE"/>
+ <property name="TIMER"/>
+</item>
+<item>
+ <field name="ACTIVE">
+  <value>Y</value>
+ </field>
+ <field name="ACTIVE_FROM"/>
+ <field name="ACTIVE_TO"/>
+ <field name="SORT">
+  <value>500</value>
+ </field>
+ <field name="NAME">
+  <value>main_bg</value>
+ </field>
+ <field name="PREVIEW_PICTURE">
+  <value name="bg.jpg" type="file">iblock/515/eakph0d0uaz09r7t8fw9lc58t5k6e3mo.jpg</value>
+ </field>
+ <field name="PREVIEW_TEXT"/>
+ <field name="PREVIEW_TEXT_TYPE">
+  <value>text</value>
+ </field>
+ <field name="DETAIL_PICTURE"/>
+ <field name="DETAIL_TEXT"/>
+ <field name="DETAIL_TEXT_TYPE">
+  <value>text</value>
+ </field>
+ <field name="CODE">
+  <value>main_bg</value>
+ </field>
+ <field name="TAGS"/>
+ <field name="XML_ID">
+  <value>31</value>
+ </field>
+ <field name="IBLOCK_SECTION">
+  <value>Главная страница|1|main</value>
+ </field>
+ <field name="IPROPERTY_TEMPLATES"/>
+ <property name="FILE">
+  <value name="willian-justen-de-vasconcellos-T_Qe4QlMIvQ-unsplash.jpg" type="file">iblock/f18/0o3ht1yv21r3aaee67y86mynr13fyjy8/willian_justen_de_vasconcellos_T_Qe4QlMIvQ_unsplash.jpg</value>
+ </property>
+ <property name="TIMER">
+  <value>Y</value>
+ </property>
+</item>
+<item>
+ <field name="ACTIVE">
+  <value>Y</value>
+ </field>
+ <field name="ACTIVE_FROM"/>
+ <field name="ACTIVE_TO"/>
+ <field name="SORT">
+  <value>500</value>
+ </field>
+ <field name="NAME">
+  <value>header_logo</value>
+ </field>
+ <field name="PREVIEW_PICTURE"/>
+ <field name="PREVIEW_TEXT"/>
+ <field name="PREVIEW_TEXT_TYPE">
+  <value>text</value>
+ </field>
+ <field name="DETAIL_PICTURE"/>
+ <field name="DETAIL_TEXT"/>
+ <field name="DETAIL_TEXT_TYPE">
+  <value>text</value>
+ </field>
+ <field name="CODE">
+  <value>header_logo</value>
+ </field>
+ <field name="TAGS"/>
+ <field name="XML_ID">
+  <value>32</value>
+ </field>
+ <field name="IBLOCK_SECTION">
+  <value>Шапка|1|header</value>
+ </field>
+ <field name="IPROPERTY_TEMPLATES"/>
+ <property name="FILE">
+  <value name="logo.svg" type="file">iblock/fd8/c0452n74wiye5mhvda0oiyshpg5nbq3b.svg</value>
+ </property>
+ <property name="TIMER"/>
+</item>
+<item>
+ <field name="ACTIVE">
+  <value>Y</value>
+ </field>
+ <field name="ACTIVE_FROM"/>
+ <field name="ACTIVE_TO"/>
+ <field name="SORT">
+  <value>500</value>
+ </field>
+ <field name="NAME">
+  <value>header_logo_name</value>
+ </field>
+ <field name="PREVIEW_PICTURE"/>
+ <field name="PREVIEW_TEXT">
+  <value>Натуралист</value>
+ </field>
+ <field name="PREVIEW_TEXT_TYPE">
+  <value>text</value>
+ </field>
+ <field name="DETAIL_PICTURE"/>
+ <field name="DETAIL_TEXT"/>
+ <field name="DETAIL_TEXT_TYPE">
+  <value>text</value>
+ </field>
+ <field name="CODE">
+  <value>header_logo_name</value>
+ </field>
+ <field name="TAGS"/>
+ <field name="XML_ID">
+  <value>33</value>
+ </field>
+ <field name="IBLOCK_SECTION">
+  <value>Шапка|1|header</value>
+ </field>
+ <field name="IPROPERTY_TEMPLATES"/>
+ <property name="FILE"/>
+ <property name="TIMER"/>
+</item>
+<item>
+ <field name="ACTIVE">
+  <value>Y</value>
+ </field>
+ <field name="ACTIVE_FROM"/>
+ <field name="ACTIVE_TO"/>
+ <field name="SORT">
+  <value>500</value>
+ </field>
+ <field name="NAME">
+  <value>header_favourites_name</value>
+ </field>
+ <field name="PREVIEW_PICTURE"/>
+ <field name="PREVIEW_TEXT">
+  <value>Избранное</value>
+ </field>
+ <field name="PREVIEW_TEXT_TYPE">
+  <value>text</value>
+ </field>
+ <field name="DETAIL_PICTURE"/>
+ <field name="DETAIL_TEXT"/>
+ <field name="DETAIL_TEXT_TYPE">
+  <value>text</value>
+ </field>
+ <field name="CODE">
+  <value>header_favourites_name</value>
+ </field>
+ <field name="TAGS"/>
+ <field name="XML_ID">
+  <value>34</value>
+ </field>
+ <field name="IBLOCK_SECTION">
+  <value>Шапка|1|header</value>
+ </field>
+ <field name="IPROPERTY_TEMPLATES"/>
+ <property name="FILE"/>
+ <property name="TIMER"/>
+</item>
+<item>
+ <field name="ACTIVE">
+  <value>Y</value>
+ </field>
+ <field name="ACTIVE_FROM"/>
+ <field name="ACTIVE_TO"/>
+ <field name="SORT">
+  <value>500</value>
+ </field>
+ <field name="NAME">
+  <value>header_favourites_link</value>
+ </field>
+ <field name="PREVIEW_PICTURE"/>
+ <field name="PREVIEW_TEXT">
+  <value>/personal/favourites/</value>
+ </field>
+ <field name="PREVIEW_TEXT_TYPE">
+  <value>text</value>
+ </field>
+ <field name="DETAIL_PICTURE"/>
+ <field name="DETAIL_TEXT"/>
+ <field name="DETAIL_TEXT_TYPE">
+  <value>text</value>
+ </field>
+ <field name="CODE">
+  <value>header_favourites_link</value>
+ </field>
+ <field name="TAGS"/>
+ <field name="XML_ID">
+  <value>35</value>
+ </field>
+ <field name="IBLOCK_SECTION">
+  <value>Шапка|1|header</value>
+ </field>
+ <field name="IPROPERTY_TEMPLATES"/>
+ <property name="FILE"/>
+ <property name="TIMER"/>
+</item>
+<item>
+ <field name="ACTIVE">
+  <value>Y</value>
+ </field>
+ <field name="ACTIVE_FROM"/>
+ <field name="ACTIVE_TO"/>
+ <field name="SORT">
+  <value>500</value>
+ </field>
+ <field name="NAME">
+  <value>header_personal_name</value>
+ </field>
+ <field name="PREVIEW_PICTURE"/>
+ <field name="PREVIEW_TEXT">
+  <value>Личный кабинет</value>
+ </field>
+ <field name="PREVIEW_TEXT_TYPE">
+  <value>text</value>
+ </field>
+ <field name="DETAIL_PICTURE"/>
+ <field name="DETAIL_TEXT"/>
+ <field name="DETAIL_TEXT_TYPE">
+  <value>text</value>
+ </field>
+ <field name="CODE">
+  <value>header_personal_name</value>
+ </field>
+ <field name="TAGS"/>
+ <field name="XML_ID">
+  <value>36</value>
+ </field>
+ <field name="IBLOCK_SECTION">
+  <value>Шапка|1|header</value>
+ </field>
+ <field name="IPROPERTY_TEMPLATES"/>
+ <property name="FILE"/>
+ <property name="TIMER"/>
+</item>
+<item>
+ <field name="ACTIVE">
+  <value>Y</value>
+ </field>
+ <field name="ACTIVE_FROM"/>
+ <field name="ACTIVE_TO"/>
+ <field name="SORT">
+  <value>500</value>
+ </field>
+ <field name="NAME">
+  <value>header_personal_link</value>
+ </field>
+ <field name="PREVIEW_PICTURE"/>
+ <field name="PREVIEW_TEXT">
+  <value>/personal/index.php</value>
+ </field>
+ <field name="PREVIEW_TEXT_TYPE">
+  <value>text</value>
+ </field>
+ <field name="DETAIL_PICTURE"/>
+ <field name="DETAIL_TEXT"/>
+ <field name="DETAIL_TEXT_TYPE">
+  <value>text</value>
+ </field>
+ <field name="CODE">
+  <value>header_personal_link</value>
+ </field>
+ <field name="TAGS"/>
+ <field name="XML_ID">
+  <value>37</value>
+ </field>
+ <field name="IBLOCK_SECTION">
+  <value>Шапка|1|header</value>
+ </field>
+ <field name="IPROPERTY_TEMPLATES"/>
+ <property name="FILE"/>
+ <property name="TIMER"/>
+</item>
+<item>
+ <field name="ACTIVE">
+  <value>Y</value>
+ </field>
+ <field name="ACTIVE_FROM"/>
+ <field name="ACTIVE_TO"/>
+ <field name="SORT">
+  <value>500</value>
+ </field>
+ <field name="NAME">
+  <value>impressions_text</value>
+ </field>
+ <field name="PREVIEW_PICTURE"/>
+ <field name="PREVIEW_TEXT">
+  <value>	 Отправляясь в путешествие, вы везете с собой ожидание, а по итогу оставляете в своей памяти впечатления.&amp;nbsp;&#13;
+	 Для того, чтобы одно соответствовало другому, мы подготовили авторские подборки с учетом ваших возможных предпочтений.&amp;nbsp;&#13;
+	 Каждый раздел – впечатление, разложенное для удобства на слова-маяки, и поездка в миниатюре, вплоть до ощущений и запахов.&amp;nbsp;&#13;
+	 Попробуйте собрать все вместе и добиться чистоты и насыщенности момента.</value>
+ </field>
+ <field name="PREVIEW_TEXT_TYPE">
+  <value>text</value>
+ </field>
+ <field name="DETAIL_PICTURE"/>
+ <field name="DETAIL_TEXT"/>
+ <field name="DETAIL_TEXT_TYPE">
+  <value>text</value>
+ </field>
+ <field name="CODE">
+  <value>impressions_text</value>
+ </field>
+ <field name="TAGS"/>
+ <field name="XML_ID">
+  <value>42</value>
+ </field>
+ <field name="IBLOCK_SECTION">
+  <value>Впечатления|1|impressions</value>
+ </field>
+ <field name="IPROPERTY_TEMPLATES"/>
+ <property name="FILE"/>
+ <property name="TIMER"/>
+</item>
+<item>
+ <field name="ACTIVE">
+  <value>Y</value>
+ </field>
+ <field name="ACTIVE_FROM"/>
+ <field name="ACTIVE_TO"/>
+ <field name="SORT">
+  <value>500</value>
+ </field>
+ <field name="NAME">
+  <value>about_text</value>
+ </field>
+ <field name="PREVIEW_PICTURE"/>
+ <field name="PREVIEW_TEXT">
+  <value><![CDATA[<p>
+	 Naturalist.travel – это сервис по бронированию мест для комфортного отдыха на природе, который стирает привычные границы, отделяющие человека от природы, и дарит путешественнику больше свободы, воздуха и пространства для вдохновения и удивления.&nbsp;
+</p>
+<p>
+	 В нашем каталоге вы найдете уютные глэмпинги, базы отдыха и эко-отели, — все эти локации объединяет любовь к эстетике и уюту. Для удобства пользователей предусмотрены готовые подборки по видам впечатлений, а также система фильтров, учитывающая специфику природного туризма.&nbsp;
+</p>
+<p>
+	 Миссия проекта – сэкономить ваше время на бронирование и предоставить вам больше времени на впечатления. Другая миссия Натуралиста – помочь объектам размещения привлечь новых клиентов и расширить свой бизнес. Так мы способствуем развитию индустрии туризма в России.&nbsp;
+</p>
+<p>
+	 Naturalist.travel — это платформа, созданная людьми для людей. Мы любим путешествовать по России и хотим делиться с вами уникальными местами для отдыха на природе. В наших соцсетях и блогах вы найдете наши впечатления о поездках и авторские маршруты, а также узнаете больше об индустрии глэмпингов и феномене комфортного отдыха.&nbsp;
+</p>
+<p>
+</p>
+<p>
+	 Знакомьтесь с нашей командой и отправляйтесь на поиски впечатлений:
+</p>
+ <br>]]></value>
+ </field>
+ <field name="PREVIEW_TEXT_TYPE">
+  <value>html</value>
+ </field>
+ <field name="DETAIL_PICTURE"/>
+ <field name="DETAIL_TEXT"/>
+ <field name="DETAIL_TEXT_TYPE">
+  <value>text</value>
+ </field>
+ <field name="CODE">
+  <value>about_text</value>
+ </field>
+ <field name="TAGS"/>
+ <field name="XML_ID">
+  <value>43</value>
+ </field>
+ <field name="IBLOCK_SECTION">
+  <value>О проекте|1|about</value>
+ </field>
+ <field name="IPROPERTY_TEMPLATES"/>
+ <property name="FILE"/>
+ <property name="TIMER"/>
+</item>
+<item>
+ <field name="ACTIVE">
+  <value>Y</value>
+ </field>
+ <field name="ACTIVE_FROM"/>
+ <field name="ACTIVE_TO"/>
+ <field name="SORT">
+  <value>500</value>
+ </field>
+ <field name="NAME">
+  <value>about_bg</value>
+ </field>
+ <field name="PREVIEW_PICTURE"/>
+ <field name="PREVIEW_TEXT"/>
+ <field name="PREVIEW_TEXT_TYPE">
+  <value>text</value>
+ </field>
+ <field name="DETAIL_PICTURE"/>
+ <field name="DETAIL_TEXT"/>
+ <field name="DETAIL_TEXT_TYPE">
+  <value>text</value>
+ </field>
+ <field name="CODE">
+  <value>about_bg</value>
+ </field>
+ <field name="TAGS"/>
+ <field name="XML_ID">
+  <value>44</value>
+ </field>
+ <field name="IBLOCK_SECTION">
+  <value>О проекте|1|about</value>
+ </field>
+ <field name="IPROPERTY_TEMPLATES"/>
+ <property name="FILE">
+  <value name="hero.jpg" type="file">iblock/0e6/4g17r1s94drex9dxqf2hl0zoxdrgxosv.jpg</value>
+ </property>
+ <property name="TIMER"/>
+</item>
+<item>
+ <field name="ACTIVE">
+  <value>Y</value>
+ </field>
+ <field name="ACTIVE_FROM"/>
+ <field name="ACTIVE_TO"/>
+ <field name="SORT">
+  <value>500</value>
+ </field>
+ <field name="NAME">
+  <value>contacts_title</value>
+ </field>
+ <field name="PREVIEW_PICTURE"/>
+ <field name="PREVIEW_TEXT">
+  <value>Контакты</value>
+ </field>
+ <field name="PREVIEW_TEXT_TYPE">
+  <value>text</value>
+ </field>
+ <field name="DETAIL_PICTURE"/>
+ <field name="DETAIL_TEXT"/>
+ <field name="DETAIL_TEXT_TYPE">
+  <value>text</value>
+ </field>
+ <field name="CODE">
+  <value>contacts_title</value>
+ </field>
+ <field name="TAGS"/>
+ <field name="XML_ID">
+  <value>45</value>
+ </field>
+ <field name="IBLOCK_SECTION">
+  <value>Контакты|1|contacts</value>
+ </field>
+ <field name="IPROPERTY_TEMPLATES"/>
+ <property name="FILE"/>
+ <property name="TIMER"/>
+</item>
+<item>
+ <field name="ACTIVE">
+  <value>Y</value>
+ </field>
+ <field name="ACTIVE_FROM"/>
+ <field name="ACTIVE_TO"/>
+ <field name="SORT">
+  <value>500</value>
+ </field>
+ <field name="NAME">
+  <value>contacts_email_label</value>
+ </field>
+ <field name="PREVIEW_PICTURE"/>
+ <field name="PREVIEW_TEXT">
+  <value>Связаться с нами</value>
+ </field>
+ <field name="PREVIEW_TEXT_TYPE">
+  <value>text</value>
+ </field>
+ <field name="DETAIL_PICTURE"/>
+ <field name="DETAIL_TEXT"/>
+ <field name="DETAIL_TEXT_TYPE">
+  <value>text</value>
+ </field>
+ <field name="CODE">
+  <value>contacts_email_label</value>
+ </field>
+ <field name="TAGS"/>
+ <field name="XML_ID">
+  <value>46</value>
+ </field>
+ <field name="IBLOCK_SECTION">
+  <value>Контакты|1|contacts</value>
+ </field>
+ <field name="IPROPERTY_TEMPLATES"/>
+ <property name="FILE"/>
+ <property name="TIMER"/>
+</item>
+<item>
+ <field name="ACTIVE">
+  <value>Y</value>
+ </field>
+ <field name="ACTIVE_FROM"/>
+ <field name="ACTIVE_TO"/>
+ <field name="SORT">
+  <value>500</value>
+ </field>
+ <field name="NAME">
+  <value>contacts_email_content</value>
+ </field>
+ <field name="PREVIEW_PICTURE"/>
+ <field name="PREVIEW_TEXT">
+  <value><![CDATA[<a href="mailto:support@naturalist.travel">support@naturalist.travel</a> ]]></value>
+ </field>
+ <field name="PREVIEW_TEXT_TYPE">
+  <value>html</value>
+ </field>
+ <field name="DETAIL_PICTURE"/>
+ <field name="DETAIL_TEXT"/>
+ <field name="DETAIL_TEXT_TYPE">
+  <value>text</value>
+ </field>
+ <field name="CODE">
+  <value>contacts_email_content</value>
+ </field>
+ <field name="TAGS"/>
+ <field name="XML_ID">
+  <value>47</value>
+ </field>
+ <field name="IBLOCK_SECTION">
+  <value>Контакты|1|contacts</value>
+ </field>
+ <field name="IPROPERTY_TEMPLATES"/>
+ <property name="FILE"/>
+ <property name="TIMER"/>
+</item>
+<item>
+ <field name="ACTIVE">
+  <value>Y</value>
+ </field>
+ <field name="ACTIVE_FROM"/>
+ <field name="ACTIVE_TO"/>
+ <field name="SORT">
+  <value>500</value>
+ </field>
+ <field name="NAME">
+  <value>contacts_address_label</value>
+ </field>
+ <field name="PREVIEW_PICTURE"/>
+ <field name="PREVIEW_TEXT">
+  <value>Главный офис</value>
+ </field>
+ <field name="PREVIEW_TEXT_TYPE">
+  <value>text</value>
+ </field>
+ <field name="DETAIL_PICTURE"/>
+ <field name="DETAIL_TEXT"/>
+ <field name="DETAIL_TEXT_TYPE">
+  <value>text</value>
+ </field>
+ <field name="CODE">
+  <value>contacts_address_label</value>
+ </field>
+ <field name="TAGS"/>
+ <field name="XML_ID">
+  <value>48</value>
+ </field>
+ <field name="IBLOCK_SECTION">
+  <value>Контакты|1|contacts</value>
+ </field>
+ <field name="IPROPERTY_TEMPLATES"/>
+ <property name="FILE"/>
+ <property name="TIMER"/>
+</item>
+<item>
+ <field name="ACTIVE">
+  <value>Y</value>
+ </field>
+ <field name="ACTIVE_FROM"/>
+ <field name="ACTIVE_TO"/>
+ <field name="SORT">
+  <value>500</value>
+ </field>
+ <field name="NAME">
+  <value>contacts_address_content</value>
+ </field>
+ <field name="PREVIEW_PICTURE"/>
+ <field name="PREVIEW_TEXT">
+  <value>Россия, г. Москва, Олимпийский проспект, 7</value>
+ </field>
+ <field name="PREVIEW_TEXT_TYPE">
+  <value>text</value>
+ </field>
+ <field name="DETAIL_PICTURE"/>
+ <field name="DETAIL_TEXT"/>
+ <field name="DETAIL_TEXT_TYPE">
+  <value>text</value>
+ </field>
+ <field name="CODE">
+  <value>contacts_address_content</value>
+ </field>
+ <field name="TAGS"/>
+ <field name="XML_ID">
+  <value>49</value>
+ </field>
+ <field name="IBLOCK_SECTION">
+  <value>Контакты|1|contacts</value>
+ </field>
+ <field name="IPROPERTY_TEMPLATES"/>
+ <property name="FILE"/>
+ <property name="TIMER"/>
+</item>
+<item>
+ <field name="ACTIVE">
+  <value>Y</value>
+ </field>
+ <field name="ACTIVE_FROM"/>
+ <field name="ACTIVE_TO"/>
+ <field name="SORT">
+  <value>500</value>
+ </field>
+ <field name="NAME">
+  <value>contacts_phone_label</value>
+ </field>
+ <field name="PREVIEW_PICTURE"/>
+ <field name="PREVIEW_TEXT">
+  <value>Телефон</value>
+ </field>
+ <field name="PREVIEW_TEXT_TYPE">
+  <value>text</value>
+ </field>
+ <field name="DETAIL_PICTURE"/>
+ <field name="DETAIL_TEXT"/>
+ <field name="DETAIL_TEXT_TYPE">
+  <value>text</value>
+ </field>
+ <field name="CODE">
+  <value>contacts_phone_label</value>
+ </field>
+ <field name="TAGS"/>
+ <field name="XML_ID">
+  <value>50</value>
+ </field>
+ <field name="IBLOCK_SECTION">
+  <value>Контакты|1|contacts</value>
+ </field>
+ <field name="IPROPERTY_TEMPLATES"/>
+ <property name="FILE"/>
+ <property name="TIMER"/>
+</item>
+<item>
+ <field name="ACTIVE">
+  <value>Y</value>
+ </field>
+ <field name="ACTIVE_FROM"/>
+ <field name="ACTIVE_TO"/>
+ <field name="SORT">
+  <value>500</value>
+ </field>
+ <field name="NAME">
+  <value>contacts_phone_content</value>
+ </field>
+ <field name="PREVIEW_PICTURE"/>
+ <field name="PREVIEW_TEXT">
+  <value><![CDATA[<li class="list__item"><a href="tel:+74993227822">+7 (499) 322-78-22</a></li>
+<li class="list__item">Время работы: 10:00-20:00<br>
+ Без выходных</li>]]></value>
+ </field>
+ <field name="PREVIEW_TEXT_TYPE">
+  <value>html</value>
+ </field>
+ <field name="DETAIL_PICTURE"/>
+ <field name="DETAIL_TEXT"/>
+ <field name="DETAIL_TEXT_TYPE">
+  <value>text</value>
+ </field>
+ <field name="CODE">
+  <value>contacts_phone_content</value>
+ </field>
+ <field name="TAGS"/>
+ <field name="XML_ID">
+  <value>51</value>
+ </field>
+ <field name="IBLOCK_SECTION">
+  <value>Контакты|1|contacts</value>
+ </field>
+ <field name="IPROPERTY_TEMPLATES"/>
+ <property name="FILE"/>
+ <property name="TIMER"/>
+</item>
+
+<item>
+ <field name="ACTIVE">
+  <value>Y</value>
+ </field>
+ <field name="ACTIVE_FROM"/>
+ <field name="ACTIVE_TO"/>
+ <field name="SORT">
+  <value>500</value>
+ </field>
+ <field name="NAME">
+  <value>contacts_socials_label</value>
+ </field>
+ <field name="PREVIEW_PICTURE"/>
+ <field name="PREVIEW_TEXT">
+  <value>Связь в мессенджерах</value>
+ </field>
+ <field name="PREVIEW_TEXT_TYPE">
+  <value>text</value>
+ </field>
+ <field name="DETAIL_PICTURE"/>
+ <field name="DETAIL_TEXT"/>
+ <field name="DETAIL_TEXT_TYPE">
+  <value>text</value>
+ </field>
+ <field name="CODE">
+  <value>contacts_socials_label</value>
+ </field>
+ <field name="TAGS"/>
+ <field name="XML_ID">
+  <value>52</value>
+ </field>
+ <field name="IBLOCK_SECTION">
+  <value>Контакты|1|contacts</value>
+ </field>
+ <field name="IPROPERTY_TEMPLATES"/>
+ <property name="FILE"/>
+ <property name="TIMER"/>
+</item>
+<item>
+ <field name="ACTIVE">
+  <value>Y</value>
+ </field>
+ <field name="ACTIVE_FROM"/>
+ <field name="ACTIVE_TO"/>
+ <field name="SORT">
+  <value>500</value>
+ </field>
+ <field name="NAME">
+  <value>agreement_content</value>
+ </field>
+ <field name="PREVIEW_PICTURE"/>
+ <field name="PREVIEW_TEXT">
+  <value><![CDATA[<p>
+</p>
+ <b>1. ОБЩИЕ ПОЛОЖЕНИЯ&nbsp;<br>
+ </b> <br>
+ 1.1.Термины «Система», «Система бронирования», «Веб-сайт» и «Компания» и относятся к Обществу с ограниченной ответственностью «Натуралист», «Пользователем Системы» или «Пользователем» является физическое или юридическое лицо, находящееся на сайте naturalist.travel <br>
+ <br>
+ <b>2. ОПЛАТА<br>
+ </b><br>
+ 2.1. Бронирование объектов размещения и покупка подарочных сертификатов, осуществляется на условиях 100 (сто) % предоплаты, которую клиент проводит безналичным способом или с использованием сервиса Яндекс Пей, либо оплачивая частями с использованием сервиса Яндекс Сплит. <br>
+ 2.2. Заезд и выезд при бронировании осуществляется по времени местонахождения объекта размещения. <br>
+ <br>
+ <b>3. ОТВЕТСТВЕННОСТЬ СТОРОН&nbsp;</b> <br>
+ <br>
+ 3.1. Зарегистрировавшись в Системе, Пользователь обязуется хранить свои регистрационные данные от неправомерного использования их другими лицами. <br>
+ 3.2. Пользователь соглашается нести финансовую ответственность за любые действия, совершенные в системе под его регистрационными данными, если не докажет что регистрационные данные выбыли из его ведения вследствие неправомерных действий третьих лиц, включая, помимо прочего, проживающих с ним совместно совершеннолетних и несовершеннолетних членов семьи, и Пользователем были предприняты все возможные меры по своевременному уведомлению ООО «Натуралист» о таком выбытии. <br>
+ 3.3. Пользователь соглашается с тем, что бронирование&nbsp;услуг на настоящем веб-сайте должно использоваться только для оформления законного бронирования или заказа других услуг для себя или в пользу другого лица, юридически уполномочившего Пользователя для подобных операций. Пользователь понимает, что злоупотребление или неправильное использование бронирования услуг на настоящем веб-сайте может повлечь наложение запрета на его последующий доступ к подобным услугам. <br>
+ 3.4. Пользователь соглашается с тем, что вся информация, предоставленная им самим или лицами, проживающими вместе с ним, является верной и точной.&nbsp; <br>
+ Пользователь выражает согласие на обработку своих персональных данных Системой в целях бронирования услуг в системе, включая выполнение действий по хранению и уничтожению персональных данных, входящих в следующий перечень общедоступных сведений: <br>
+ a. Фамилия, имя. <br>
+ b. Номер контактного телефона и адрес электронной почты. <br>
+ c. Иные сведения, предоставленные Пользователем в целях бронирования услуг в Системе.&nbsp; <br>
+ 3.5. Пользователь обязуется выполнять правила или условия бронирования и заказа других услуг, определенные любым поставщиком, с которым совершается сделка, включая, помимо прочего, своевременную оплату всех оговоренных сумм и соблюдение правил и ограничений поставщика, касающихся наличия и использования услуг. <br>
+ 3.6. Используя настоящий сайт, Пользователь соглашается освобождать Компанию, ее партнеров и/или их соответствующих поставщиков, а также любых их работников и агентов от любых исков, оснований для возбуждения иска, требований, взысканий, убытков, ущербов, штрафов, санкций или иных затрат и издержек любого рода включая, но не ограничиваясь, разумными законными затратами и учетными платами, понесенными Пользователем или кем-либо от имени Пользователя свыше ответственности, описанной выше или третьей стороной в результате: <br>
+ а) Нарушения Пользователем настоящих Правил или документов, перечисленных здесь. <br>
+ б) Нарушения Пользователем любого закона или прав третьей стороны. <br>
+ 3.7. Пользователь несет ответственность за выполнение своих обязательств перед ООО «Натуралист», а также за нанесение ООО «Натуралист» как материального ущерба, так и ущерба его деловой репутации. <br>
+3.8. ООО "Натуралист" несет ответственность за предоставление оплаченных Пользователем услуг (бронирований) на сайте.<br>
+ 3.9. Стороны освобождаются от ответственности по своим обязательствам в случае наступления обстоятельств непреодолимой силы (форс-мажор), таких как землетрясения, наводнения, пожары, тайфуны, ураганы, снежные заносы, военные действия, массовые заболевания, забастовки, изменение визовых режимов стран СНГ и Балтии, а также ограничения перевозок, запреты торговых операций с отдельными странами вследствие применения международных санкций и других событий, не зависящих от воли сторон. При наступлении таких обстоятельств каждая из сторон обязана известить об этом другую сторону в максимально короткий срок. <br>
+ <br>
+ <b>4. ОГРАНИЧЕНИЕ ОТВЕТСТВЕННОСТИ&nbsp;<br>
+ </b> <br>
+ 4.1. Ничто из содержащегося в настоящих Правилах не должно трактоваться как ограничивающее или исключающее ответственность ООО «Натуралист» в случае совершения ею противоправных действий, повлекших тяжкие и особо тяжкие последствия. <br>
+ 5. РЕКВИЗИТЫ&nbsp; <br>
+ Полное наименование: Общество с ограниченной ответственностью «НАТУРАЛИСТ»&nbsp;<br>
+ Сокращенное наименование организации: ООО «НАТУРАЛИСТ»&nbsp;<br>
+ ОГРН/ОГРНИП: 1227700389509&nbsp;<br>
+ ИНН: 9727002303&nbsp;<br>
+ КПП: 772701001&nbsp;<br>
+ Дата регистрации организации: 04.07.2022 <br>
+ <br>
+ <br>]]></value>
+ </field>
+ <field name="PREVIEW_TEXT_TYPE">
+  <value>html</value>
+ </field>
+ <field name="DETAIL_PICTURE"/>
+ <field name="DETAIL_TEXT"/>
+ <field name="DETAIL_TEXT_TYPE">
+  <value>text</value>
+ </field>
+ <field name="CODE">
+  <value>agreement_content</value>
+ </field>
+ <field name="TAGS"/>
+ <field name="XML_ID">
+  <value>53</value>
+ </field>
+ <field name="IBLOCK_SECTION">
+  <value>Пользовательское соглашение|1|</value>
+ </field>
+ <field name="IPROPERTY_TEMPLATES"/>
+ <property name="FILE"/>
+ <property name="TIMER"/>
+</item>
+<item>
+ <field name="ACTIVE">
+  <value>Y</value>
+ </field>
+ <field name="ACTIVE_FROM"/>
+ <field name="ACTIVE_TO"/>
+ <field name="SORT">
+  <value>500</value>
+ </field>
+ <field name="NAME">
+  <value>cancel_content</value>
+ </field>
+ <field name="PREVIEW_PICTURE"/>
+ <field name="PREVIEW_TEXT">
+  <value><![CDATA[<p>
+	 Правила изменения и отмены бронирования устанавливаются объектом размещения и отображаются на Сайте.
+</p>
+<p>
+	 Отменить бронирование можно в «Личном кабинете» на сайте. Для этого воспользуйтесь своим логином и паролем, откройте вкладку «Мои бронирования» и нажмите на кнопку «Условия отмены бронирования».
+</p>
+<p>
+	 Откроется всплывающее окно с условиями отмены. Если вы с ними согласны, нажмите «Отменить бронирование».
+</p>
+<p>
+	 После этого на вашу электронную почту придёт письмо с подтверждением отмены.
+</p>
+<p>
+	 Средства поступают на банковские реквизиты, с которых была осуществлена оплата, либо&nbsp;с помощью сервиса Яндекс Пэй.
+</p>
+<p>
+	 Также отменить бронирование можно через службу поддержки по электронной почте <a href="mailto:support@naturalist.travel">support@naturalist.travel</a>, также через чат поддержки. <br>
+ <br>
+	 Вернуть сертификат можно&nbsp;можно через службу поддержки по электронной почте&nbsp;<a href="mailto:support@naturalist.travel">support@naturalist.travel</a>, также через чат поддержки. Вернуть сертификат может только его приобретатель (потребуются документы, подтверждающие покупку).
+</p>]]></value>
+ </field>
+ <field name="PREVIEW_TEXT_TYPE">
+  <value>html</value>
+ </field>
+ <field name="DETAIL_PICTURE"/>
+ <field name="DETAIL_TEXT"/>
+ <field name="DETAIL_TEXT_TYPE">
+  <value>text</value>
+ </field>
+ <field name="CODE">
+  <value>cancel_content</value>
+ </field>
+ <field name="TAGS"/>
+ <field name="XML_ID">
+  <value>54</value>
+ </field>
+ <field name="IBLOCK_SECTION">
+  <value>Отмена бронирования|1|</value>
+ </field>
+ <field name="IPROPERTY_TEMPLATES"/>
+ <property name="FILE"/>
+ <property name="TIMER"/>
+</item>
+<item>
+ <field name="ACTIVE">
+  <value>Y</value>
+ </field>
+ <field name="ACTIVE_FROM"/>
+ <field name="ACTIVE_TO"/>
+ <field name="SORT">
+  <value>500</value>
+ </field>
+ <field name="NAME">
+  <value>cookie_content</value>
+ </field>
+ <field name="PREVIEW_PICTURE"/>
+ <field name="PREVIEW_TEXT">
+  <value><![CDATA[<p>
+	 1. Оператор может использовать cookie-файлы и другие технологии отслеживания для поддержки работы Сервиса, анализа трафика или в рекламных целях. Файлы cookie, используемые на Сервисе, относятся к обезличенной информации и не позволяют идентифицировать Клиента и не относятся к персональным данным.
+</p>
+<p>
+	 Пользуясь Сервисом, Клиент подтверждает свое согласие на использование файлов cookie, описанных в настоящей Политике.
+</p>
+<p>
+	 2. Оператор использует следующие виды cookie-файлов:
+</p>
+<p>
+	 -&nbsp;Управление аккаунтом
+</p>
+<p>
+	 При заходе Клиента на Сайт происходит автоматическая генерация файлов cookie, что позволяют узнать, когда Клиент начал сессию на Сервисе и когда закончил. Сервис использует этот вид файлов cookie, чтобы определить, с какого аккаунта Клиент совершил вход, и какие опции ему доступны.
+</p>
+<p>
+	 - Настройки предпочтения региона
+</p>
+<p>
+	 Этот вид файлов cookie используется при выборе Клиентом предпочтительного региона и языка для удобного использования Сервиса.
+</p>
+<p>
+	 - Основные cookie
+</p>
+<p>
+	 Используются, чтобы Клиент имел возможность передвигаться по страницам Сервиса и эффективно использовать его возможности.
+</p>
+<p>
+	 - Аналитические cookie
+</p>
+<p>
+	 Эти файлы cookie устанавливаются системами аналитики, которые собирают информацию о том, как Клиент использует Сервис. Данный вид файлов cookie используется исключительно в статистических целях.&nbsp;
+</p>
+<p>
+	 - Рекламные cookie (включая файлы cookie третьих лиц)
+</p>
+<p>
+	 Данный вид файлов cookie используется для того, чтобы собирать информацию о веб-сайтах и отдельных страницах, которые посещают Клиенты. Данные файлы cookie используются для того, чтобы отображать наиболее соответствующую интересам Клиента рекламу и осуществлять маркетинговые коммуникации. На Сервисе могут быть размещены рекламные файлы cookie партнеров.
+</p>
+<p>
+	 3. Клиент может настроить все свои мобильные устройства на прием файлов cookie, уведомления о получении файлов cookie или отключение приема файлов cookie.
+</p>
+<p>
+	 Настройки изменения или отключения файлов cookie могут варьироваться в зависимости от вида браузера: Клиент должен воспользоваться такими вкладками, как “помощь”, “настройки” или “предпочтения” в его/ её меню браузера.
+</p>
+<p>
+	 4. Чтобы узнать больше о том, как работать с cookie-файлами или удалить их, Клиент может зайти на сайт&nbsp;<a href="https://roistat.com/rublog/cookies/">roistat.com</a>&nbsp;и в раздел «Справка»/«Помощь» своего браузера. Через настройки браузера (например, Internet Explorer, Safari, Firefox, Chrome) Клиент может выбрать, какие cookie-файлы принимать, а какие — отклонять. Расположение настроек зависит от того, какой браузер вы используете.&nbsp;
+</p>
+<p>
+	 Если Клиент решил отказаться от определенных технических и/или функциональных cookie-файлов, ему могут быть недоступны некоторые функции Сервиса.&nbsp;
+</p>]]></value>
+ </field>
+ <field name="PREVIEW_TEXT_TYPE">
+  <value>html</value>
+ </field>
+ <field name="DETAIL_PICTURE"/>
+ <field name="DETAIL_TEXT"/>
+ <field name="DETAIL_TEXT_TYPE">
+  <value>text</value>
+ </field>
+ <field name="CODE">
+  <value>cookie_content</value>
+ </field>
+ <field name="TAGS"/>
+ <field name="XML_ID">
+  <value>55</value>
+ </field>
+ <field name="IBLOCK_SECTION">
+  <value>Политика обработки cookie|1|</value>
+ </field>
+ <field name="IPROPERTY_TEMPLATES"/>
+ <property name="FILE"/>
+ <property name="TIMER"/>
+</item>
+<item>
+ <field name="ACTIVE">
+  <value>Y</value>
+ </field>
+ <field name="ACTIVE_FROM"/>
+ <field name="ACTIVE_TO"/>
+ <field name="SORT">
+  <value>500</value>
+ </field>
+ <field name="NAME">
+  <value>policy_content</value>
+ </field>
+ <field name="PREVIEW_PICTURE"/>
+ <field name="PREVIEW_TEXT">
+  <value><![CDATA[<h6>
+1. Общие положения </h6>
+<p>
+	 1.1. Политика о защите персональных данных сервиса бронирования отелей (далее «Политика») направлена на сохранение конфиденциальности персональных данных клиентов, пользующихся услугами сервиса бронирования отелей naturalist.travel (далее «Сервис») в целях бронирования номеров отелей (далее «Клиенты), защиту прав и свобод человека и гражданина при обработке его персональных данных, в том числе защиту прав на неприкосновенность частной жизни, личную и семейную тайну.
+</p>
+<p>
+	 1.2. Обработка персональных данных Клиентов осуществляется Оператором Сервиса ООО «НАТУРАЛИСТ» (ОГРН 1227700389509).&nbsp;
+</p>
+<p>
+	 1.3. Оператор обеспечивает защиту обрабатываемых персональных данных от несанкционированного доступа и разглашения, неправомерного использования или утраты в соответствии с требованиями Федерального закона от 27 июля 2006 г. № 152- ФЗ «О персональных данных» (далее «Закон о персональных данных») и Приказа ФСТЭК России от 18.02.2013 N 21 «Об утверждении Состава и содержания организационных и технических мер по обеспечению безопасности персональных данных при их обработке в информационных системах персональных данных».&nbsp;
+</p>
+<p>
+	 1.4. Настоящая Политика устанавливает перечень обрабатываемых персональных данных Клиентов, основные принципы, цели, способы, условия обработки персональных данных, функции и перечень действий Сервиса и его сотрудников, связанных с обработкой персональных данных Клиентов.
+</p>
+<p>
+	 1.5. Сервис может осуществлять обработку следующих персональных данных Клиентов: фамилия, имя, домашний/мобильный телефон, адрес личной электронной почты, год рождения, данные банковской карты, файлы cookie и иные персональные данные, указание которых необходимо для использования Сервиса.
+</p>
+<p>
+	 1.6. Оператор не осуществляет сбор и обработку персональных данных Клиента о его расовой, национальной принадлежности, политических взглядах, религиозных или философских убеждениях, частной жизни.
+</p>
+<p>
+	 1.7. Персональные данные Клиентов относятся к конфиденциальной информации ограниченного доступа.&nbsp;
+</p>
+<p>
+	 1.8. Обеспечение конфиденциальности персональных данных не требуется в случае их обезличивания, а также в отношении общедоступных персональных данных.
+</p>
+<p>
+	 1.9. Оператор имеет право вносить изменения в настоящую Политику. Новая редакция Политики вступает в силу с момента ее размещения на сайте, если иное не предусмотрено новой редакцией Политики. В случае существенного изменения условий настоящего Соглашения Оператор извещает об этом Клиентов путем размещения на Сайте соответствующего сообщения.
+</p>
+<p>
+	 1.10. Если вы не согласны с положениями настоящего документа о конфиденциальности, мы просим вас воздержаться от пользования нашими услугами. Продолжая использование Сервиса, Клиент даёт свое согласие Оператору в соответствии с Федеральным законом от 27.07.2006 № 152-ФЗ «О персональных данных» на осуществление следующих действий:
+</p>
+<p>
+	 обработка персональных данных&nbsp;(фамилия, имя, дата и место рождения, паспортные данные, адрес места регистрации и проживания, гражданство, данные банковской карты, контактная информация, домашний/мобильный телефон, адрес личной электронной почты, иные персональные данные, в т.ч. файлы cookie, сбор и использование которых ведется на Сервисе в соответствии с настоящей Политикой);
+</p>
+<p>
+	 передача, в том числе трансграничная, персональных данных третьим лицам, в том числе на территории иностранных государств, не обеспечивающих адекватной защиты прав субъектов персональных данных в соответствии с пп. 4 п. 4 ст. 12 Федерального закона от 27.07.2006 № 152-ФЗ «О персональных данных», в письменной либо электронной форме,
+</p>
+<p>
+	 для целей оказания следующих услуг:
+</p>
+ - бронирования номеров в отелях и любых иных средствах размещения;<br>
+ - оказания любых иных туристских услуг;<br>
+ - заключения и исполнения договоров в пользу Клиента;<br>
+ - направления денежных средств на оплату заказываемых услуг;<br>
+ - участия в бонусных программах и программах лояльности Оператора, а также его партнеров;<br>
+ - отправки сообщений (в том числе рекламных) посредством электронной почты;<br>
+ - в иных целях, связанных с оказанием Клиенту заказываемых услуг;<br>
+ - передача Оператором полномочий по обработке персональных данных иному лицу в соответствии с ч. 3 ст. 6 Закона о персональных данных.<br>
+<p>
+	 Настоящее согласие дается Клиентом до полного исполнения обязательств Оператором и/или до истечения срока хранения персональных данных, установленного законодательством РФ, и может быть отозвано путем подачи Оператору письменного заявления. Клиент также даёт согласие на передачу своих персональных данных третьим лицам с целью их дальнейшей обработки с соблюдением всех принципов и правил обработки персональных данных, предусмотренных Федеральным законом N 152-ФЗ «О персональных данных». Решение о предоставлении своих персональных данных и согласие на их обработку дано своей волей и в своем интересе. Отказ от предоставления своих персональных данных влечет невозможность для Оператора оказать услуги.
+</p>
+<h6>
+2.&nbsp;&nbsp; Термины и определения </h6>
+<p>
+	 2.1. Персональные данные - любая информация, относящаяся к прямо или косвенно определенному или определяемому физическому лицу (субъекту персональных данных);
+</p>
+<p>
+	 2.2. Оператор – компания ООО «НАТУРАЛИСТ» (РФ), организующая и осуществляющая обработку персональных данных, а также определяющая цели обработки персональных данных, состав персональных данных, подлежащих обработке, действия (операции), совершаемые с персональными данными;
+</p>
+<p>
+	 2.3. Обработка персональных данных - любое действие (операция) или совокупность действий (операций), совершаемых с персональными данными, включая сбор, запись, систематизацию, накопление, хранение, уточнение (обновление, изменение), извлечение, использование, передачу (распространение, предоставление, доступ), обезличивание, блокирование, удаление, уничтожение персональных данных.
+</p>
+<p>
+	 2.4. Автоматизированная обработка персональных данных – обработка персональных данных с помощью средств вычислительной техники.&nbsp;
+</p>
+<p>
+	 2.5. Информационная система персональных данных (ИСПД) – совокупность содержащихся в базах данных персональных данных и обеспечивающих их обработку информационных технологий и технических средств.
+</p>
+<p>
+	 2.6. Уничтожение персональных данных – действия, в результате которых становится невозможным восстановить содержание персональных данных в информационной системе персональных данных и (или) в результате которых уничтожаются материальные носители персональных данных.
+</p>
+<p>
+	 2.7. Иные термины и определения, встречающиеся в настоящей Политике, подлежат толкованию в соответствии с положениями Закона о персональных данных.
+</p>
+<h6>
+3.&nbsp;&nbsp; Цели обработки персональных данных Клиентов Сервиса </h6>
+<p>
+	 Сервис обрабатывает персональные данные Клиентов в следующих целях:
+</p>
+<p>
+	 а) Бронирования. Персональные данные используются для оформления и управления бронированиями номеров отелей, совершенных он-лайн и/или посредством использования клиентского сервиса naruralist.travel, в том числе для передачи данных о совершенных бронированиях в объекты размещения, а также заказа иных доступных на Сервисе туристских услуг.
+</p>
+<p>
+	 б) Поддержка Клиентов. В случае необходимости Сервис оказывает Клиентам необходимую помощь, включая выбор необходимого объекта размещения, оформления и завершения бронирования, решения проблемных ситуаций и ответов на иные вопросы. Записи телефонных разговоров хранятся в течение ограниченного периода времени и удаляются автоматически, если Оператор не посчитает нужным сохранить их на более длительный период (по обоснованной необходимости), в том числе в целях расследования случаев мошенничества.
+</p>
+<p>
+	 в) Улучшение качества услуг. Сервис ориентирован на постоянное улучшение качества предоставляемых услуг и разработку новых удобных инструментов для осуществления бронирований.
+</p>
+<p>
+	 г) Личное управление бронированиями. Создавая личный аккаунт на Сервисе, Клиенты приобретают возможность управлять своими бронированиями, использовать персональные предложения, участвовать в программах лояльности Сервиса, создавать закладки и сохранять необходимые параметры поиска.
+</p>
+<p>
+	 д) Маркетинг. Персональные данные Клиента могут быть использованы для рассылки новостей о продуктах и услугах для путешествий, индивидуальных предложений, информации по акциям и конкурсам, проводимым на Сервисе, предложения об участии в исследованиях. Клиенту предоставляется возможность отписаться от соответствующей рассылки в любое время.
+</p>
+<p>
+	 е) Надежность и безопасность услуг. Оператор может использовать данные в тестовых целях, для решения проблем и для улучшения функциональности и качества наших услуг в сфере онлайн-путешествий.
+</p>
+<p>
+	 ж) Юридические цели. Данные используются для обработки и разрешения правовых споров, для расследований по требованию государственных органов и соблюдения нормативно-правовых норм, а также для обеспечения соблюдения условий, на которых Сервис оказывает услуги по онлайн-бронированию.
+</p>
+<h6>
+4. Порядок и условия обработки персональных данных Клиентов </h6>
+<p>
+	 4.1. Персональные данные Клиентов Сервиса обрабатываются исключительно с использованием средств автоматизации.
+</p>
+<p>
+	 4.2. Обработка персональных данных осуществляется Сервисом с согласия Клиента как с момента совершения им бронирования, так и непосредственно после регистрации Клиента на Сервисе.
+</p>
+<p>
+	 4.3. Получение согласия Клиента на обработку его персональных данных является необходимым условием совершения Клиентом бронирования или регистрации на Сервисе. С содержанием документа «Согласие на обработку персональных данных» Клиент может ознакомиться в любой время, в том числе при оформлении бронирования.&nbsp;
+</p>
+<p>
+	 4.4. Все персональные данные следует получать от самого субъекта. Если персональные данные субъекта можно получить только у третьей стороны, то субъект должен быть уведомлен об этом и от него должно быть получено согласие, т.к. это является личной ответственностью Клиента.
+</p>
+<p>
+	 4.5. Некоторые данные могут собираться автоматически без участия Клиента, например, IP-адрес, дата и время, когда Клиент пользовался услугами Сервиса, информация об аппаратном и программном обеспечении, а также интернет-браузере, который Клиент использует.&nbsp;
+</p>
+<p>
+	 4.6. Персональные данные могут передавать следующим третьим лицам:
+</p>
+ - Объекту размещения, а также поставщику и исполнителю иных туристских услуг. Данные о совершенном бронировании, включая персональные данные Клиентов, передаются объекту размещения, в котором Клиентом осуществлено бронирование, в том числе за границу.&nbsp;Такая информация может включать имя, контактные данные, платежные реквизиты, имена гостей, путешествующих с Клиентом, и любые предпочтения, которые были указаны во время бронирования. В случае возникновения споров, связанных с бронированием, мы можем по необходимости предоставить администрации объекта размещения информацию о процессе бронирования. Такая информация может включать копию вашего подтверждения бронирования в качестве доказательства того факта, что бронирование было совершено.<br>
+ - Компетентным государственным органам. Сервис оставляет за собой право в случаях, предусмотренных законодательством Российской Федерации, раскрыть персональные данные Клиентов соответствующим уполномоченным органам государственной и муниципальной власти.<br>
+ - Иным лицам, в том числе организациям, которые в соответствии с заключенными договорами:&nbsp;осуществляют страхование имущественных интересов физических и юридических лиц, связанных с финансовыми обязательствами и обязательствами по предоставлению услуг;&nbsp;страховым организациям;&nbsp;осуществляют списание денежных средств с банковской карты;&nbsp;&nbsp;кредитным организациям (банкам); партнерам Сервиса, осуществляющим предпринимательскую деятельность, аффилированным лицам Оператора, а также иным третьим лицам в случаях и в порядке, предусмотренном соответствующими договорами и законодательством РФ.&nbsp;
+<p>
+	 При этом при передаче персональных данных вышеперечисленным лицам Сервис не несет дальнейшей ответственности за законность дальнейшей обработки персональных данных, осуществляемой этими лицами.
+</p>
+<p>
+	 4.7. Сервис осуществляет сбор, запись, систематизацию, накопление, хранение, уточнение (обновление, изменение), извлечение, использование, передачу, в том числе трансграничную (распространение, предоставление, доступ), обезличивание, блокирование, удаление и уничтожение персональных данных.
+</p>
+<p>
+	 4.8. Хранение данных в форме, позволяющей определить Клиента, осуществляется не дольше, чем этого требуют цели их обработки, и они подлежат уничтожению по достижении целей обработки или в случае утраты необходимости в их достижении.
+</p>
+<h6>
+5.&nbsp;&nbsp; Функции Сервиса при осуществлении обработки персональных данных&nbsp; </h6>
+<p>
+	 5.1. При осуществлении обработки персональных данных Оператор принимает следующие меры, необходимые для выполнения обязанностей оператора персональных данных, предусмотренных законодательством Российской Федерации:
+</p>
+ - назначение лица, ответственного за организацию обработки и обеспечения безопасности персональных данных;<br>
+ - принятие локальных нормативных актов в области обработки и защиты персональных данных, в т.ч. настоящей Политики;<br>
+ - получение согласий субъектов персональных данных на обработку их персональных данных, за исключением случаев, предусмотренных законодательством Российской Федерации;<br>
+ - обеспечение раздельного хранения персональных данных и их материальных носителей, обработка которых осуществляется в разных целях и которые содержат разные категории персональных данных;<br>
+ - хранение материальных носителей персональных данных с соблюдением условий, обеспечивающих сохранность персональных данных и исключающих несанкционированный доступ к ним;<br>
+ - организация режима обеспечения безопасности помещений, в которых размещена информационная система, препятствующего возможности неконтролируемого проникновения или пребывания в этих помещениях лиц, не имеющих права доступа в эти помещения;<br>
+ - обеспечение сохранности носителей персональных данных;<br>
+ - утверждение руководителем оператора документа, определяющего перечень лиц, доступ которых к персональным данным, обрабатываемым в информационной системе, необходим для выполнения ими служебных (трудовых) обязанностей;<br>
+ - обучение работников Оператора, непосредственно осуществляющих обработку персональных данных, положениям законодательства РФ о персональных данных, в том числе требованиям к защите персональных данных, документам, определяющим политику Оператора в отношении обработки персональных данных, локальным актам по вопросам обработки персональных данных<br>
+ использование сертифицированного антивирусного программного обеспечения с регулярно обновляемыми базами;<br>
+ - использование средств защиты информации, прошедших процедуру оценки соответствия требованиям законодательства Российской Федерации в области обеспечения безопасности информации, в случае, когда применение таких средств необходимо для нейтрализации актуальных угроз.<br>
+<p>
+	 5.2. В соответствии с требованиями нормативных документов Оператором создана система защиты персональных данных (СЗПД), состоящая из подсистем правовой, организационной и технической защиты.
+</p>
+<p>
+	 5.3. Подсистема правовой защиты представляет собой комплекс правовых, организационно-распорядительных и нормативных документов, обеспечивающих создание, функционирование и совершенствование СЗПД.&nbsp;
+</p>
+<p>
+	 5.4. Подсистема организационной защиты включает в себя организацию структуры управления СЗПД, разрешительной системы, защиты информации при работе с сотрудниками, партнерами и сторонними лицами.&nbsp;
+</p>
+<p>
+	 5.5. Подсистема технической защиты включает в себя комплекс технических, программных, программно-аппаратных средств, обеспечивающих защиту персональных данных.
+</p>
+<h6>
+6.&nbsp;&nbsp; Права субъектов персональных данных </h6>
+<p>
+	 6.1. Субъект персональных данных имеет право на получение информации, касающейся обработки его персональных данных, в том числе содержащей:
+</p>
+ - подтверждение факта обработки персональных данных оператором;<br>
+- правовые основания и цели обработки персональных данных;&nbsp;<br>
+- цели и применяемые оператором способы обработки персональных данных;&nbsp;<br>
+- наименование и место нахождения оператора, сведения о лицах (за исключением работников оператора), которые имеют доступ к персональным данным или которым могут быть раскрыты персональные данные на основании договора с оператором или на основании федерального закона;&nbsp;<br>
+- обрабатываемые персональные данные, относящиеся к соответствующему субъекту персональных данных, источник их получения, если иной порядок представления таких данных не предусмотрен федеральным законом;&nbsp;<br>
+- сроки обработки персональных данных, в том числе сроки их хранения;&nbsp;<br>
+- порядок осуществления субъектом персональных данных прав;<br>
+- информацию об осуществленной или о предполагаемой трансграничной передаче данных;&nbsp;<br>
+- наименование или фамилию, имя, отчество и адрес лица, осуществляющего обработку персональных данных по поручению оператора, если обработка поручена или будет поручена такому лицу;&nbsp;<br>
+иные сведения, предусмотренные законодательством РФ.<br>
+<p>
+	 6.2. Сведения, указанные в п. 7.1., предоставляются субъекту персональных данных при обращении по электронной почте <a href="mailto:info@naturalist.travel">info@naturalist.travel</a> Субъект персональных данных обязан предоставить Оператору доказательства принадлежности персональных данных, в отношении которых направляется запрос, именно данному субъекту. Такие сведения должны быть предоставлены субъекту персональных данных в доступной форме, и в них не должны содержаться персональные данные, относящиеся к другим субъектам персональных данных, за исключением случаев, если имеются законные основания для раскрытия таких персональных данных.&nbsp;
+</p>
+<p>
+	 6.3. Субъект персональных данных имеет право на отзыв своего согласия на обработку персональных данных, а также на их удаление. Для реализации данных прав субъект персональных данных должен направить соответствующее обращение по электронной почте <a href="mailto:info@naturalist.travel">info@naturalist.travel</a>. Субъект персональных данных обязан предоставить Оператору доказательства принадлежности персональных данных, в отношении которых направляется запрос, именно данному субъекту. Сервис рассматривает поступившее обращение и обеспечивает прекращение обработки персональных данных субъекта, а также удаляет персональные данные субъекта в течение 5 (пяти) рабочих дней с момента поступления обращения субъекта персональных данных.
+</p>
+<p>
+	 6.4. Уничтожение документов (носителей), содержащих персональные данные, производится путем сожжения, дробления (измельчения), химического разложения, превращения в бесформенную массу или порошок. Для уничтожения бумажных документов допускается применение шредера.&nbsp;
+</p>
+<p>
+	 6.5.&nbsp; Данные на электронных носителях уничтожаются путем стирания или форматирования носителя. Факт уничтожения персональных данных подтверждается документально актом об уничтожении носителей.
+</p>
+<h6>
+7.&nbsp;&nbsp; Контроль за соблюдением требований к защите персональных данных </h6>
+<p>
+	 7.1. Внутренний контроль за соблюдением структурными подразделениями Операторов законодательства Российской Федерации и локальных нормативных актов в области персональных данных осуществляется лицом, ответственным за организацию обработки и обеспечение безопасности персональных данных.
+</p>
+<p>
+	 7.2. Оператор оставляет за собой право исключения Клиента (удаление профиля Клиента на Сервисе) в случае нарушения Клиентом правил работы на Сервисе, а также некорректного поведения Клиента.
+</p>
+<p>
+	 7.3. Все сотрудники Оператора, осуществляющие обработку персональных данных, обязаны хранить тайну о сведениях, содержащих персональные данные, в соответствии с Политикой и требованиями законодательства РФ.
+</p>
+<p>
+	 7.4. Лица, виновные в нарушении требований настоящей Политики, несут предусмотренную законодательством РФ ответственность.
+</p>
+<p>
+	 &nbsp;
+</p>]]></value>
+ </field>
+ <field name="PREVIEW_TEXT_TYPE">
+  <value>html</value>
+ </field>
+ <field name="DETAIL_PICTURE"/>
+ <field name="DETAIL_TEXT"/>
+ <field name="DETAIL_TEXT_TYPE">
+  <value>text</value>
+ </field>
+ <field name="CODE">
+  <value>policy_content</value>
+ </field>
+ <field name="TAGS"/>
+ <field name="XML_ID">
+  <value>56</value>
+ </field>
+ <field name="IBLOCK_SECTION">
+  <value>Политика конфиденциальности|1|</value>
+ </field>
+ <field name="IPROPERTY_TEMPLATES"/>
+ <property name="FILE"/>
+ <property name="TIMER"/>
+</item>
+<item>
+ <field name="ACTIVE">
+  <value>Y</value>
+ </field>
+ <field name="ACTIVE_FROM"/>
+ <field name="ACTIVE_TO"/>
+ <field name="SORT">
+  <value>500</value>
+ </field>
+ <field name="NAME">
+  <value>agreement_title</value>
+ </field>
+ <field name="PREVIEW_PICTURE"/>
+ <field name="PREVIEW_TEXT">
+  <value>Пользовательское соглашение</value>
+ </field>
+ <field name="PREVIEW_TEXT_TYPE">
+  <value>text</value>
+ </field>
+ <field name="DETAIL_PICTURE"/>
+ <field name="DETAIL_TEXT"/>
+ <field name="DETAIL_TEXT_TYPE">
+  <value>text</value>
+ </field>
+ <field name="CODE">
+  <value>agreement_title</value>
+ </field>
+ <field name="TAGS"/>
+ <field name="XML_ID">
+  <value>57</value>
+ </field>
+ <field name="IBLOCK_SECTION">
+  <value>Пользовательское соглашение|1|</value>
+ </field>
+ <field name="IPROPERTY_TEMPLATES"/>
+ <property name="FILE"/>
+ <property name="TIMER"/>
+</item>
+<item>
+ <field name="ACTIVE">
+  <value>Y</value>
+ </field>
+ <field name="ACTIVE_FROM"/>
+ <field name="ACTIVE_TO"/>
+ <field name="SORT">
+  <value>500</value>
+ </field>
+ <field name="NAME">
+  <value>policy_title</value>
+ </field>
+ <field name="PREVIEW_PICTURE"/>
+ <field name="PREVIEW_TEXT">
+  <value>Политика конфиденциальности</value>
+ </field>
+ <field name="PREVIEW_TEXT_TYPE">
+  <value>text</value>
+ </field>
+ <field name="DETAIL_PICTURE"/>
+ <field name="DETAIL_TEXT"/>
+ <field name="DETAIL_TEXT_TYPE">
+  <value>text</value>
+ </field>
+ <field name="CODE">
+  <value>policy_title</value>
+ </field>
+ <field name="TAGS"/>
+ <field name="XML_ID">
+  <value>58</value>
+ </field>
+ <field name="IBLOCK_SECTION">
+  <value>Политика конфиденциальности|1|</value>
+ </field>
+ <field name="IPROPERTY_TEMPLATES"/>
+ <property name="FILE"/>
+ <property name="TIMER"/>
+</item>
+<item>
+ <field name="ACTIVE">
+  <value>Y</value>
+ </field>
+ <field name="ACTIVE_FROM"/>
+ <field name="ACTIVE_TO"/>
+ <field name="SORT">
+  <value>500</value>
+ </field>
+ <field name="NAME">
+  <value>cancel_title</value>
+ </field>
+ <field name="PREVIEW_PICTURE"/>
+ <field name="PREVIEW_TEXT">
+  <value>Политика отмены заказов</value>
+ </field>
+ <field name="PREVIEW_TEXT_TYPE">
+  <value>text</value>
+ </field>
+ <field name="DETAIL_PICTURE"/>
+ <field name="DETAIL_TEXT"/>
+ <field name="DETAIL_TEXT_TYPE">
+  <value>text</value>
+ </field>
+ <field name="CODE">
+  <value>cancel_title</value>
+ </field>
+ <field name="TAGS"/>
+ <field name="XML_ID">
+  <value>59</value>
+ </field>
+ <field name="IBLOCK_SECTION">
+  <value>Отмена бронирования|1|</value>
+ </field>
+ <field name="IPROPERTY_TEMPLATES"/>
+ <property name="FILE"/>
+ <property name="TIMER"/>
+</item>
+<item>
+ <field name="ACTIVE">
+  <value>Y</value>
+ </field>
+ <field name="ACTIVE_FROM"/>
+ <field name="ACTIVE_TO"/>
+ <field name="SORT">
+  <value>500</value>
+ </field>
+ <field name="NAME">
+  <value>cookie_title</value>
+ </field>
+ <field name="PREVIEW_PICTURE"/>
+ <field name="PREVIEW_TEXT">
+  <value>Политика использования cookie-файлов</value>
+ </field>
+ <field name="PREVIEW_TEXT_TYPE">
+  <value>text</value>
+ </field>
+ <field name="DETAIL_PICTURE"/>
+ <field name="DETAIL_TEXT"/>
+ <field name="DETAIL_TEXT_TYPE">
+  <value>text</value>
+ </field>
+ <field name="CODE">
+  <value>cookie_title</value>
+ </field>
+ <field name="TAGS"/>
+ <field name="XML_ID">
+  <value>60</value>
+ </field>
+ <field name="IBLOCK_SECTION">
+  <value>Политика обработки cookie|1|</value>
+ </field>
+ <field name="IPROPERTY_TEMPLATES"/>
+ <property name="FILE"/>
+ <property name="TIMER"/>
+</item>
+<item>
+ <field name="ACTIVE">
+  <value>Y</value>
+ </field>
+ <field name="ACTIVE_FROM"/>
+ <field name="ACTIVE_TO"/>
+ <field name="SORT">
+  <value>500</value>
+ </field>
+ <field name="NAME">
+  <value>main_h1</value>
+ </field>
+ <field name="PREVIEW_PICTURE"/>
+ <field name="PREVIEW_TEXT">
+  <value><![CDATA[<h4 style="text-align: center;"> <span style="font-size: 20pt;">ЗАБРОНИРОВАТЬ</span></h4>]]></value>
+ </field>
+ <field name="PREVIEW_TEXT_TYPE">
+  <value>html</value>
+ </field>
+ <field name="DETAIL_PICTURE"/>
+ <field name="DETAIL_TEXT"/>
+ <field name="DETAIL_TEXT_TYPE">
+  <value>text</value>
+ </field>
+ <field name="CODE">
+  <value>main_h1</value>
+ </field>
+ <field name="TAGS"/>
+ <field name="XML_ID">
+  <value>78</value>
+ </field>
+ <field name="IBLOCK_SECTION">
+  <value>Главная страница|1|main</value>
+ </field>
+ <field name="IPROPERTY_TEMPLATES"/>
+ <property name="FILE"/>
+ <property name="TIMER"/>
+</item>
+<item>
+ <field name="ACTIVE">
+  <value>Y</value>
+ </field>
+ <field name="ACTIVE_FROM"/>
+ <field name="ACTIVE_TO"/>
+ <field name="SORT">
+  <value>500</value>
+ </field>
+ <field name="NAME">
+  <value>main_search_form_name_placeholder</value>
+ </field>
+ <field name="PREVIEW_PICTURE"/>
+ <field name="PREVIEW_TEXT">
+  <value>Укажите регион</value>
+ </field>
+ <field name="PREVIEW_TEXT_TYPE">
+  <value>text</value>
+ </field>
+ <field name="DETAIL_PICTURE"/>
+ <field name="DETAIL_TEXT"/>
+ <field name="DETAIL_TEXT_TYPE">
+  <value>text</value>
+ </field>
+ <field name="CODE">
+  <value>main_search_form_name_placeholder</value>
+ </field>
+ <field name="TAGS"/>
+ <field name="XML_ID">
+  <value>79</value>
+ </field>
+ <field name="IBLOCK_SECTION">
+  <value>Главная страница|1|main</value>
+ </field>
+ <field name="IPROPERTY_TEMPLATES"/>
+ <property name="FILE"/>
+ <property name="TIMER"/>
+</item>
+<item>
+ <field name="ACTIVE">
+  <value>Y</value>
+ </field>
+ <field name="ACTIVE_FROM"/>
+ <field name="ACTIVE_TO"/>
+ <field name="SORT">
+  <value>500</value>
+ </field>
+ <field name="NAME">
+  <value>main_search_form_date_from_span</value>
+ </field>
+ <field name="PREVIEW_PICTURE"/>
+ <field name="PREVIEW_TEXT">
+  <value>Заезд</value>
+ </field>
+ <field name="PREVIEW_TEXT_TYPE">
+  <value>text</value>
+ </field>
+ <field name="DETAIL_PICTURE"/>
+ <field name="DETAIL_TEXT"/>
+ <field name="DETAIL_TEXT_TYPE">
+  <value>text</value>
+ </field>
+ <field name="CODE">
+  <value>main_search_form_date_from_span</value>
+ </field>
+ <field name="TAGS"/>
+ <field name="XML_ID">
+  <value>80</value>
+ </field>
+ <field name="IBLOCK_SECTION">
+  <value>Главная страница|1|main</value>
+ </field>
+ <field name="IPROPERTY_TEMPLATES"/>
+ <property name="FILE"/>
+ <property name="TIMER"/>
+</item>
+<item>
+ <field name="ACTIVE">
+  <value>Y</value>
+ </field>
+ <field name="ACTIVE_FROM"/>
+ <field name="ACTIVE_TO"/>
+ <field name="SORT">
+  <value>500</value>
+ </field>
+ <field name="NAME">
+  <value>main_search_form_date_to_span</value>
+ </field>
+ <field name="PREVIEW_PICTURE"/>
+ <field name="PREVIEW_TEXT">
+  <value>Выезд</value>
+ </field>
+ <field name="PREVIEW_TEXT_TYPE">
+  <value>text</value>
+ </field>
+ <field name="DETAIL_PICTURE"/>
+ <field name="DETAIL_TEXT"/>
+ <field name="DETAIL_TEXT_TYPE">
+  <value>text</value>
+ </field>
+ <field name="CODE">
+  <value>main_search_form_date_to_span</value>
+ </field>
+ <field name="TAGS"/>
+ <field name="XML_ID">
+  <value>81</value>
+ </field>
+ <field name="IBLOCK_SECTION">
+  <value>Главная страница|1|main</value>
+ </field>
+ <field name="IPROPERTY_TEMPLATES"/>
+ <property name="FILE"/>
+ <property name="TIMER"/>
+</item>
+<item>
+ <field name="ACTIVE">
+  <value>Y</value>
+ </field>
+ <field name="ACTIVE_FROM"/>
+ <field name="ACTIVE_TO"/>
+ <field name="SORT">
+  <value>500</value>
+ </field>
+ <field name="NAME">
+  <value>main_search_form_button</value>
+ </field>
+ <field name="PREVIEW_PICTURE"/>
+ <field name="PREVIEW_TEXT">
+  <value>Поиск</value>
+ </field>
+ <field name="PREVIEW_TEXT_TYPE">
+  <value>text</value>
+ </field>
+ <field name="DETAIL_PICTURE"/>
+ <field name="DETAIL_TEXT"/>
+ <field name="DETAIL_TEXT_TYPE">
+  <value>text</value>
+ </field>
+ <field name="CODE">
+  <value>main_search_form_button</value>
+ </field>
+ <field name="TAGS"/>
+ <field name="XML_ID">
+  <value>82</value>
+ </field>
+ <field name="IBLOCK_SECTION">
+  <value>Главная страница|1|main</value>
+ </field>
+ <field name="IPROPERTY_TEMPLATES"/>
+ <property name="FILE"/>
+ <property name="TIMER"/>
+</item>
+<item>
+ <field name="ACTIVE">
+  <value>Y</value>
+ </field>
+ <field name="ACTIVE_FROM"/>
+ <field name="ACTIVE_TO"/>
+ <field name="SORT">
+  <value>500</value>
+ </field>
+ <field name="NAME">
+  <value>main_news_title</value>
+ </field>
+ <field name="PREVIEW_PICTURE"/>
+ <field name="PREVIEW_TEXT">
+  <value>Вдохновляйтесь на путешествия</value>
+ </field>
+ <field name="PREVIEW_TEXT_TYPE">
+  <value>text</value>
+ </field>
+ <field name="DETAIL_PICTURE"/>
+ <field name="DETAIL_TEXT"/>
+ <field name="DETAIL_TEXT_TYPE">
+  <value>text</value>
+ </field>
+ <field name="CODE">
+  <value>main_news_title</value>
+ </field>
+ <field name="TAGS"/>
+ <field name="XML_ID">
+  <value>83</value>
+ </field>
+ <field name="IBLOCK_SECTION">
+  <value>Главная страница|1|main</value>
+ </field>
+ <field name="IPROPERTY_TEMPLATES"/>
+ <property name="FILE"/>
+ <property name="TIMER"/>
+</item>
+<item>
+ <field name="ACTIVE">
+  <value>Y</value>
+ </field>
+ <field name="ACTIVE_FROM"/>
+ <field name="ACTIVE_TO"/>
+ <field name="SORT">
+  <value>500</value>
+ </field>
+ <field name="NAME">
+  <value>main_news_button</value>
+ </field>
+ <field name="PREVIEW_PICTURE"/>
+ <field name="PREVIEW_TEXT">
+  <value>Читать в Telegram</value>
+ </field>
+ <field name="PREVIEW_TEXT_TYPE">
+  <value>text</value>
+ </field>
+ <field name="DETAIL_PICTURE"/>
+ <field name="DETAIL_TEXT"/>
+ <field name="DETAIL_TEXT_TYPE">
+  <value>text</value>
+ </field>
+ <field name="CODE">
+  <value>main_news_button</value>
+ </field>
+ <field name="TAGS"/>
+ <field name="XML_ID">
+  <value>84</value>
+ </field>
+ <field name="IBLOCK_SECTION">
+  <value>Главная страница|1|main</value>
+ </field>
+ <field name="IPROPERTY_TEMPLATES"/>
+ <property name="FILE"/>
+ <property name="TIMER"/>
+</item>
+<item>
+ <field name="ACTIVE">
+  <value>Y</value>
+ </field>
+ <field name="ACTIVE_FROM"/>
+ <field name="ACTIVE_TO"/>
+ <field name="SORT">
+  <value>500</value>
+ </field>
+ <field name="NAME">
+  <value>payment</value>
+ </field>
+ <field name="PREVIEW_PICTURE"/>
+ <field name="PREVIEW_TEXT">
+  <value><![CDATA[<p>
+	 Настоящее Соглашение определяет условия использования Пользователями материалов и сервисов сайта <a href="http://www.naturalist.ru">www.naturalist.ru</a> (далее — «Сайт»).
+</p>
+<h6>Общие условия</h6>
+<p>
+	 1.1. Использование материалов и сервисов Сайта регулируется нормами действующего законодательства Российской Федерации.<br>
+	 1.2. Настоящее Соглашение является публичной офертой. Получая доступ к материалам Сайта Пользователь считается присоединившимся к настоящему Соглашению.<br>
+	 1.3. Администрация Сайта вправе в любое время в одностороннем порядке изменять условия настоящего Соглашения. Такие изменения вступают в силу по истечении 3 (Трех) дней с момента размещения новой версии Соглашения на сайте. При несогласии Пользователя с внесенными изменениями он обязан отказаться от доступа к Сайту, прекратить использование материалов и сервисов Сайта.
+</p>
+<h6>2. Обязательства Пользователя</h6>
+<p>
+	 2.1. Пользователь соглашается не предпринимать действий, которые могут рассматриваться как нарушающие российское законодательство или нормы международного права, в том числе в сфере интеллектуальной собственности, авторских и/или смежных правах, а также любых действий, которые приводят или могут привести к нарушению нормальной работы Сайта и сервисов Сайта.<br>
+	 2.2. Использование материалов Сайта без согласия правообладателей не допускается (статья 1270 Г.К РФ). Для правомерного использования материалов Сайта необходимо заключение лицензионных договоров (получение лицензий) от Правообладателей.<br>
+	 2.3. При цитировании материалов Сайта, включая охраняемые авторские произведения, ссылка на Сайт обязательна (подпункт 1 пункта 1 статьи 1274 Г.К РФ).<br>
+	 2.4. Комментарии и иные записи Пользователя на Сайте не должны вступать в противоречие с требованиями законодательства Российской Федерации и общепринятых норм морали и нравственности.<br>
+	 2.5. Пользователь предупрежден о том, что Администрация Сайта не несет ответственности за посещение и использование им внешних ресурсов, ссылки на которые могут содержаться на сайте.<br>
+	 2.6. Пользователь согласен с тем, что Администрация Сайта не несет ответственности и не имеет прямых или косвенных обязательств перед Пользователем в связи с любыми возможными или возникшими потерями или убытками, связанными с любым содержанием Сайта, регистрацией авторских прав и сведениями о такой регистрации, товарами или услугами, доступными на или полученными через внешние сайты или ресурсы либо иные контакты Пользователя, в которые он вступил, используя размещенную на Сайте информацию или ссылки на внешние ресурсы.<br>
+	 2.7. Пользователь принимает положение о том, что все материалы и сервисы Сайта или любая их часть могут сопровождаться рекламой. Пользователь согласен с тем, что Администрация Сайта не несет какой-либо ответственности и не имеет каких-либо обязательств в связи с такой рекламой.
+</p>
+<h6>3. Прочие условия</h6>
+<p>
+	 3.1. Все возможные споры, вытекающие из настоящего Соглашения или связанные с ним, подлежат разрешению в соответствии с действующим законодательством Российской Федерации.<br>
+	 3.2. Ничто в Соглашении не может пониматься как установление между Пользователем и Администрации Сайта агентских отношений, отношений товарищества, отношений по совместной деятельности, отношений личного найма, либо каких-то иных отношений, прямо не предусмотренных Соглашением.<br>
+	 3.3. Признание судом какого-либо положения Соглашения недействительным или не подлежащим принудительному исполнению не влечет недействительности иных положений Соглашения.<br>
+	 3.4. Бездействие со стороны Администрации Сайта в случае нарушения кем-либо из Пользователей положений Соглашения не лишает Администрацию Сайта права предпринять позднее соответствующие действия в защиту своих интересов и защиту авторских прав на охраняемые в соответствии с законодательством материалы Сайта.
+</p>
+<p>
+ <strong>Пользователь подтверждает, что ознакомлен со всеми пунктами настоящего Соглашения и безусловно принимает их.</strong>
+</p>]]></value>
+ </field>
+ <field name="PREVIEW_TEXT_TYPE">
+  <value>html</value>
+ </field>
+ <field name="DETAIL_PICTURE"/>
+ <field name="DETAIL_TEXT"/>
+ <field name="DETAIL_TEXT_TYPE">
+  <value>text</value>
+ </field>
+ <field name="CODE">
+  <value>payment</value>
+ </field>
+ <field name="TAGS"/>
+ <field name="XML_ID">
+  <value>145</value>
+ </field>
+ <field name="IBLOCK_SECTION">
+  <value>Пользовательское соглашение|1|</value>
+ </field>
+ <field name="IPROPERTY_TEMPLATES"/>
+ <property name="FILE"/>
+ <property name="TIMER"/>
+</item>
+<item>
+ <field name="ACTIVE">
+  <value>Y</value>
+ </field>
+ <field name="ACTIVE_FROM"/>
+ <field name="ACTIVE_TO"/>
+ <field name="SORT">
+  <value>500</value>
+ </field>
+ <field name="NAME">
+  <value>payment_title</value>
+ </field>
+ <field name="PREVIEW_PICTURE"/>
+ <field name="PREVIEW_TEXT">
+  <value>Оплата и доставка</value>
+ </field>
+ <field name="PREVIEW_TEXT_TYPE">
+  <value>text</value>
+ </field>
+ <field name="DETAIL_PICTURE"/>
+ <field name="DETAIL_TEXT"/>
+ <field name="DETAIL_TEXT_TYPE">
+  <value>text</value>
+ </field>
+ <field name="CODE">
+  <value>payment_title</value>
+ </field>
+ <field name="TAGS"/>
+ <field name="XML_ID">
+  <value>146</value>
+ </field>
+ <field name="IBLOCK_SECTION">
+  <value>Пользовательское соглашение|1|</value>
+ </field>
+ <field name="IPROPERTY_TEMPLATES"/>
+ <property name="FILE"/>
+ <property name="TIMER"/>
+</item>
+<item>
+ <field name="ACTIVE">
+  <value>Y</value>
+ </field>
+ <field name="ACTIVE_FROM"/>
+ <field name="ACTIVE_TO"/>
+ <field name="SORT">
+  <value>500</value>
+ </field>
+ <field name="NAME">
+  <value>payment_content</value>
+ </field>
+ <field name="PREVIEW_PICTURE"/>
+ <field name="PREVIEW_TEXT">
+  <value><![CDATA[<p>
+	 Покупатель может оплатить заказ в безналичной форме, а также&nbsp;с помощью сервиса Яндекс Пэй.&nbsp;Способ оплаты выбирается при оформлении заказа.
+</p>
+<p>
+	 Для выбора оплаты с помощью банковской карты на соответствующей странице необходимо нажать кнопку&nbsp;Оплата заказа банковской картой. Оплата происходит через ПАО СБЕРБАНК.
+</p>
+<p>
+	 При выборе оплаты с помощью банковской карты Вы будете перенаправлены на платёжный шлюз ПАО СБЕРБАНК. Соединение с платёжным шлюзом и передача информации осуществляется в защищённом режиме с использованием протокола шифрования SSL. В случае если Ваш банк поддерживает технологию безопасного проведения интернет-платежей Verified By Visa, MasterCard SecureCode, MIR Accept, J-Secure, для проведения платежа также может потребоваться ввод специального пароля.<br>
+ <br>
+	 Настоящий сайт поддерживает 256-битное шифрование. Конфиденциальность сообщаемой персональной информации обеспечивается ПАО СБЕРБАНК. Введённая информация не будет предоставлена третьим лицам за исключением случаев, предусмотренных законодательством РФ. Проведение платежей по банковским картам осуществляется в строгом соответствии с требованиями платёжных систем МИР, Visa Int., MasterCard Europe Sprl, JCB.
+</p>
+<p>
+	 При выборе оплаты с помощью сервиса Яндекс Пэй вы будете перенаправлены на страницу совершает действия, предусмотренные Условиями использования Сервиса Yandex Pay <a href="https://yandex.ru/legal/yandexpay_b2c/" target="_blank">https://yandex.ru/legal/yandexpay_b2c</a>.
+</p>]]></value>
+ </field>
+ <field name="PREVIEW_TEXT_TYPE">
+  <value>html</value>
+ </field>
+ <field name="DETAIL_PICTURE"/>
+ <field name="DETAIL_TEXT"/>
+ <field name="DETAIL_TEXT_TYPE">
+  <value>text</value>
+ </field>
+ <field name="CODE">
+  <value>payment_content</value>
+ </field>
+ <field name="TAGS"/>
+ <field name="XML_ID">
+  <value>149</value>
+ </field>
+ <field name="IBLOCK_SECTION">
+  <value>Оплата бронирования|1|</value>
+ </field>
+ <field name="IPROPERTY_TEMPLATES"/>
+ <property name="FILE"/>
+ <property name="TIMER"/>
+</item>
+<item>
+ <field name="ACTIVE">
+  <value>Y</value>
+ </field>
+ <field name="ACTIVE_FROM"/>
+ <field name="ACTIVE_TO"/>
+ <field name="SORT">
+  <value>500</value>
+ </field>
+ <field name="NAME">
+  <value>payment_title</value>
+ </field>
+ <field name="PREVIEW_PICTURE"/>
+ <field name="PREVIEW_TEXT">
+  <value>Оплата</value>
+ </field>
+ <field name="PREVIEW_TEXT_TYPE">
+  <value>text</value>
+ </field>
+ <field name="DETAIL_PICTURE"/>
+ <field name="DETAIL_TEXT"/>
+ <field name="DETAIL_TEXT_TYPE">
+  <value>text</value>
+ </field>
+ <field name="CODE">
+  <value>payment_title</value>
+ </field>
+ <field name="TAGS"/>
+ <field name="XML_ID">
+  <value>150</value>
+ </field>
+ <field name="IBLOCK_SECTION">
+  <value>Оплата бронирования|1|</value>
+ </field>
+ <field name="IPROPERTY_TEMPLATES"/>
+ <property name="FILE"/>
+ <property name="TIMER"/>
+</item>
+
+<item>
+ <field name="ACTIVE">
+  <value>Y</value>
+ </field>
+ <field name="ACTIVE_FROM"/>
+ <field name="ACTIVE_TO"/>
+ <field name="SORT">
+  <value>500</value>
+ </field>
+ <field name="NAME">
+  <value>details_content</value>
+ </field>
+ <field name="PREVIEW_PICTURE"/>
+ <field name="PREVIEW_TEXT">
+  <value><![CDATA[<style>
+.hr-line {
+	margin: 20px 0;
+	padding: 0;
+	height: 0;
+	border: none;
+	border-top: 1px solid #333;
+}
+.table-rec {
+	width: 100%;
+	border: none;
+	margin-bottom: 20px;
+}
+.table-rec tbody td {
+	padding: 5px;
+	line-height: 15px;
+}
+</style>
+<h3 style="text-align: center;"><b>ООО «НАТУРАЛИСТ»</b></h3>
+<p style="text-align: center;">
+	 Общество с ограниченной ответственностью «НАТУРАЛИСТ»&nbsp;
+</p>
+<h3></h3>
+<h3 style="text-align: center;">«Naturalist» LLC</h3>
+<p style="text-align: center;">
+	 Limited Liability Company «Naturalist»
+</p>
+<hr class="hr-line">
+<table class="table-rec" cellpadding="1" cellspacing="1">
+<tbody>
+<tr>
+	<td>
+		 ОГРН&nbsp;
+	</td>
+	<td>
+		<p style="text-align: right;">
+			 1227700389509
+		</p>
+	</td>
+</tr>
+<tr>
+	<td colspan="1">
+		 ИНН
+	</td>
+	<td colspan="1">
+		<p style="text-align: right;">
+			 9727002303
+		</p>
+	</td>
+</tr>
+<tr>
+	<td colspan="1">
+		 КПП
+	</td>
+	<td colspan="1">
+		<p style="text-align: right;">
+			 772701001
+		</p>
+	</td>
+</tr>
+<tr>
+	<td colspan="1">
+		 Генеральный директор
+	</td>
+	<td colspan="1">
+		<p style="text-align: right;">
+			 Сергунин Николай Сергеевич
+		</p>
+	</td>
+</tr>
+</tbody>
+</table>
+<hr class="hr-line">
+<div>
+</div>
+<table cellpadding="1" cellspacing="1">
+<tbody>
+<tr>
+	<td>
+		 Главный офис
+	</td>
+	<td>
+		 129110, г. Москва, <br>
+		 вн.тер.г. муниципальный округ Мещанский, <br>
+		 пр-кт&nbsp;Олимпийский, д. 7
+	</td>
+</tr>
+<tr>
+	<td colspan="1">
+		 Почтовый адрес
+	</td>
+	<td colspan="1">
+		 129090 Москва г., <br>
+		 Гиляровского ул., д.1 с.1, а/я №4
+	</td>
+</tr>
+</tbody>
+</table>
+<hr class="hr-line">
+<table class="table-rec" cellpadding="1" cellspacing="1">
+<tbody>
+<tr>
+	<td>
+		 Электронная почта
+	</td>
+	<td>
+		<p style="text-align: right;">
+ <a href="mailto:support@naturalist.travel">support@naturalist.travel</a>
+		</p>
+	</td>
+</tr>
+<tr>
+	<td colspan="1">
+		 Контактный телефон
+	</td>
+	<td colspan="1">
+		<p style="text-align: right;">
+			 +7 (499) 322-78-22
+		</p>
+	</td>
+</tr>
+</tbody>
+</table>
+<hr class="hr-line">
+<table class="table-rec" cellpadding="1" cellspacing="1">
+<tbody>
+<tr>
+	<td>
+		 Банковские реквизиты
+	</td>
+	<td>
+		<p style="text-align: right;">
+			 р/с: 40702810138000126772
+		</p>
+	</td>
+</tr>
+<tr>
+	<td colspan="1">
+		 &nbsp;
+	</td>
+	<td colspan="1">
+		<p style="text-align: right;">
+			 к/с: 30101810400000000225
+		</p>
+	</td>
+</tr>
+<tr>
+	<td colspan="1">
+		 &nbsp;
+	</td>
+	<td colspan="1">
+		<p style="text-align: right;">
+			 БИК: 044525225
+		</p>
+	</td>
+</tr>
+<tr>
+	<td colspan="1">
+		 &nbsp;
+	</td>
+	<td colspan="1">
+		<p style="text-align: right;">
+			 Банк: ПАО СБЕРБАНК
+		</p>
+	</td>
+</tr>
+</tbody>
+</table>
+ <br>
+ <br>
+ <br>
+ <br>
+ <br>
+ <br>]]></value>
+ </field>
+ <field name="PREVIEW_TEXT_TYPE">
+  <value>html</value>
+ </field>
+ <field name="DETAIL_PICTURE"/>
+ <field name="DETAIL_TEXT"/>
+ <field name="DETAIL_TEXT_TYPE">
+  <value>text</value>
+ </field>
+ <field name="CODE">
+  <value>details_content</value>
+ </field>
+ <field name="TAGS"/>
+ <field name="XML_ID">
+  <value>1285</value>
+ </field>
+ <field name="IBLOCK_SECTION">
+  <value>Реквизиты|1|</value>
+ </field>
+ <field name="IPROPERTY_TEMPLATES"/>
+ <property name="FILE"/>
+ <property name="TIMER"/>
+</item>
+<item>
+ <field name="ACTIVE">
+  <value>Y</value>
+ </field>
+ <field name="ACTIVE_FROM"/>
+ <field name="ACTIVE_TO"/>
+ <field name="SORT">
+  <value>500</value>
+ </field>
+ <field name="NAME">
+  <value>details_title</value>
+ </field>
+ <field name="PREVIEW_PICTURE"/>
+ <field name="PREVIEW_TEXT">
+  <value>Реквизиты</value>
+ </field>
+ <field name="PREVIEW_TEXT_TYPE">
+  <value>text</value>
+ </field>
+ <field name="DETAIL_PICTURE"/>
+ <field name="DETAIL_TEXT"/>
+ <field name="DETAIL_TEXT_TYPE">
+  <value>text</value>
+ </field>
+ <field name="CODE">
+  <value>details_title</value>
+ </field>
+ <field name="TAGS"/>
+ <field name="XML_ID">
+  <value>1425</value>
+ </field>
+ <field name="IBLOCK_SECTION">
+  <value>Реквизиты|1|</value>
+ </field>
+ <field name="IPROPERTY_TEMPLATES"/>
+ <property name="FILE"/>
+ <property name="TIMER"/>
+</item>
+<item>
+ <field name="ACTIVE">
+  <value>Y</value>
+ </field>
+ <field name="ACTIVE_FROM"/>
+ <field name="ACTIVE_TO"/>
+ <field name="SORT">
+  <value>500</value>
+ </field>
+ <field name="NAME">
+  <value>header_balance_certification</value>
+ </field>
+ <field name="PREVIEW_PICTURE"/>
+ <field name="PREVIEW_TEXT">
+  <value>Ваш баланс:</value>
+ </field>
+ <field name="PREVIEW_TEXT_TYPE">
+  <value>text</value>
+ </field>
+ <field name="DETAIL_PICTURE"/>
+ <field name="DETAIL_TEXT"/>
+ <field name="DETAIL_TEXT_TYPE">
+  <value>text</value>
+ </field>
+ <field name="CODE">
+  <value>header_balance_certification</value>
+ </field>
+ <field name="TAGS"/>
+ <field name="XML_ID">
+  <value>15489</value>
+ </field>
+ <field name="IBLOCK_SECTION">
+  <value>Шапка|1|header</value>
+ </field>
+ <field name="IPROPERTY_TEMPLATES"/>
+ <property name="FILE"/>
+ <property name="TIMER"/>
+</item>
+<item>
+ <field name="ACTIVE">
+  <value>Y</value>
+ </field>
+ <field name="ACTIVE_FROM"/>
+ <field name="ACTIVE_TO"/>
+ <field name="SORT">
+  <value>500</value>
+ </field>
+ <field name="NAME">
+  <value>contacts_phone</value>
+ </field>
+ <field name="PREVIEW_PICTURE"/>
+ <field name="PREVIEW_TEXT">
+  <value>+7 (499) 322-78-22</value>
+ </field>
+ <field name="PREVIEW_TEXT_TYPE">
+  <value>html</value>
+ </field>
+ <field name="DETAIL_PICTURE"/>
+ <field name="DETAIL_TEXT"/>
+ <field name="DETAIL_TEXT_TYPE">
+  <value>text</value>
+ </field>
+ <field name="CODE">
+  <value>contacts_phone</value>
+ </field>
+ <field name="TAGS"/>
+ <field name="XML_ID">
+  <value>17560</value>
+ </field>
+ <field name="IBLOCK_SECTION">
+  <value>Контакты|1|contacts</value>
+ </field>
+ <field name="IPROPERTY_TEMPLATES"/>
+ <property name="FILE"/>
+ <property name="TIMER"/>
+</item>
+<item>
+ <field name="ACTIVE">
+  <value>Y</value>
+ </field>
+ <field name="ACTIVE_FROM"/>
+ <field name="ACTIVE_TO"/>
+ <field name="SORT">
+  <value>500</value>
+ </field>
+ <field name="NAME">
+  <value>rules_title</value>
+ </field>
+ <field name="PREVIEW_PICTURE"/>
+ <field name="PREVIEW_TEXT">
+  <value><![CDATA[Правила проведения розыгрыша призов "Колесо фортуны"]]></value>
+ </field>
+ <field name="PREVIEW_TEXT_TYPE">
+  <value>text</value>
+ </field>
+ <field name="DETAIL_PICTURE"/>
+ <field name="DETAIL_TEXT"/>
+ <field name="DETAIL_TEXT_TYPE">
+  <value>text</value>
+ </field>
+ <field name="CODE">
+  <value>rules_title</value>
+ </field>
+ <field name="TAGS"/>
+ <field name="XML_ID">
+  <value>18043</value>
+ </field>
+ <field name="IBLOCK_SECTION">
+  <value>Пользовательское соглашение|1|</value>
+ </field>
+ <field name="IPROPERTY_TEMPLATES"/>
+ <property name="FILE"/>
+ <property name="TIMER"/>
+</item>
+<item>
+ <field name="ACTIVE">
+  <value>Y</value>
+ </field>
+ <field name="ACTIVE_FROM"/>
+ <field name="ACTIVE_TO"/>
+ <field name="SORT">
+  <value>500</value>
+ </field>
+ <field name="NAME">
+  <value>rules_content</value>
+ </field>
+ <field name="PREVIEW_PICTURE"/>
+ <field name="PREVIEW_TEXT">
+  <value><![CDATA[<p>
+</p>
+ Условия участия:<br>
+ Участник взаимодействует с розыгрышем на сайте, заполняя необходимые поля формы.<br>
+ Для участия необходимо нажать кнопку «Вращать колесо». Результат в виде приза станет известен после остановки колеса.<br>
+ Каждый участник может участвовать в мероприятии только один раз в течение всей акции.<br>
+ Ограничения на получение призов:<br>
+ Сертификат на сумму 20,000 рублей может быть выигран одним участником не чаще одного раза каждые три месяца.<br>
+ Информация о призах:<br>
+ Скидки 10% и 30% на бронирование объектов на сайте <a href="https://naturalist.travel/" title="https://naturalist.travel/" target="_blank">naturalist.travel</a>, действительны до 31.07.24.<br>
+ Промокоды на сумму 1000 и 500 рублей, действительны до 31.07.24.<br>
+ Скидка 100% на бронирование первых суток при аренде от 3 дней.<br>
+ Сертификат на сумму 20,000 рублей действует в течение 1 года после его получения.<br>
+ Срок, место и порядок получения призов:<br>
+ После заполнения формы участник оставляет свой контактный номер телефона.<br>
+ В течение семи рабочих дней представитель организатора связывается с участником по указанному номеру для предоставления инструкций по получению приза.<br>
+ <br>
+ <br>
+<p>
+	 &nbsp;
+</p>
+<p>
+	 &nbsp;
+</p>
+ <br>]]></value>
+ </field>
+ <field name="PREVIEW_TEXT_TYPE">
+  <value>html</value>
+ </field>
+ <field name="DETAIL_PICTURE"/>
+ <field name="DETAIL_TEXT"/>
+ <field name="DETAIL_TEXT_TYPE">
+  <value>text</value>
+ </field>
+ <field name="CODE">
+  <value>rules_content</value>
+ </field>
+ <field name="TAGS"/>
+ <field name="XML_ID">
+  <value>18044</value>
+ </field>
+ <field name="IBLOCK_SECTION">
+  <value>Пользовательское соглашение|1|</value>
+ </field>
+ <field name="IPROPERTY_TEMPLATES"/>
+ <property name="FILE"/>
+ <property name="TIMER"/>
+</item>
+<item>
+ <field name="ACTIVE">
+  <value>Y</value>
+ </field>
+ <field name="ACTIVE_FROM"/>
+ <field name="ACTIVE_TO"/>
+ <field name="SORT">
+  <value>500</value>
+ </field>
+ <field name="NAME">
+  <value>sales_title</value>
+ </field>
+ <field name="PREVIEW_PICTURE"/>
+ <field name="PREVIEW_TEXT">
+  <value>Акции</value>
+ </field>
+ <field name="PREVIEW_TEXT_TYPE">
+  <value>text</value>
+ </field>
+ <field name="DETAIL_PICTURE"/>
+ <field name="DETAIL_TEXT"/>
+ <field name="DETAIL_TEXT_TYPE">
+  <value>text</value>
+ </field>
+ <field name="CODE">
+  <value>sales_title</value>
+ </field>
+ <field name="TAGS"/>
+ <field name="XML_ID">
+  <value>30672</value>
+ </field>
+ <field name="IBLOCK_SECTION">
+  <value>Акции|1|</value>
+ </field>
+ <field name="IPROPERTY_TEMPLATES"/>
+ <property name="FILE"/>
+ <property name="TIMER"/>
+</item>
+<item>
+ <field name="ACTIVE">
+  <value>Y</value>
+ </field>
+ <field name="ACTIVE_FROM"/>
+ <field name="ACTIVE_TO"/>
+ <field name="SORT">
+  <value>500</value>
+ </field>
+ <field name="NAME">
+  <value>sales_content</value>
+ </field>
+ <field name="PREVIEW_PICTURE"/>
+ <field name="PREVIEW_TEXT">
+  <value><![CDATA[<p>
+	 Условия акции «Скидка -50%
+</p>
+<p>
+	 1. Общие положения<br>
+	 &nbsp;<br>
+	 Акция «Скидка -50%» предоставляет покупателю возможность приобрести подарочный сертификат на услуги, предоставляемые на платформе, номиналом до 50 000 (пятидесяти тысяч) рублей включительно со скидкой 50%. &nbsp;
+</p>
+<p>
+	 2. Порядок зачисления и использования<br>
+	 &nbsp;<br>
+	 При приобретении подарочного сертификата в рамках акции, на внутренний баланс пользователя на платформе зачисляется сумма, равная полному номиналу приобретённого сертификата. Внутренний баланс предназначен исключительно для оплаты услуг, предоставляемых на платформе, и не подлежит выводу, передаче третьим лицам, либо обмену на денежные средства. Срок действия зачисленных средств составляет 12 месяцев с момента зачисления.<br>
+	 &nbsp;
+</p>
+<p>
+	 3. Сроки проведения акции и условия получения скидки
+</p>
+<p>
+	 - С 14:00 28 апреля 2025 года до 14:00 29 апреля 2025 года скидка предоставляется при применении промокода «SUN». &nbsp;<br>
+	 &nbsp;- С 14:00 29 апреля 2025 года до 14:00 30 апреля 2025 года скидка предоставляется при применении промокода «SUNNY». &nbsp;
+</p>
+<p>
+	 Скидка предоставляется только при корректном введении соответствующего промокода в указанный срок. Администрация платформы оставляет за собой право ограничить общее количество сертификатов, приобретаемых по акции.<br>
+	 &nbsp;
+</p>
+<p>
+	 4. Возврат сертификатов
+</p>
+<p>
+	 В случае возврата подарочного сертификата, приобретённого с использованием указанных промокодов в период действия акции, покупателю возвращается сумма фактически уплаченных денежных средств (т.е. сумма со скидкой). Возврат возможен в течение срока и на условиях, предусмотренных действующим законодательством Российской Федерации, в частности, Законом РФ от 07.02.1992 № 2300-1 «О защите прав потребителей».<br>
+	 &nbsp;
+</p>
+<p>
+	 5. Прочие условия
+</p>
+<p>
+	 Администрация платформы оставляет за собой право вносить изменения в условия акции, при этом все изменения подлежат опубликованию на сайте и вступают в силу с момента такой публикации. Участие в акции означает согласие пользователя с настоящими условиями.
+</p>]]></value>
+ </field>
+ <field name="PREVIEW_TEXT_TYPE">
+  <value>html</value>
+ </field>
+ <field name="DETAIL_PICTURE"/>
+ <field name="DETAIL_TEXT"/>
+ <field name="DETAIL_TEXT_TYPE">
+  <value>text</value>
+ </field>
+ <field name="CODE">
+  <value>sales_content</value>
+ </field>
+ <field name="TAGS"/>
+ <field name="XML_ID">
+  <value>30673</value>
+ </field>
+ <field name="IBLOCK_SECTION">
+  <value>Акции|1|</value>
+ </field>
+ <field name="IPROPERTY_TEMPLATES"/>
+ <property name="FILE"/>
+ <property name="TIMER"/>
+</item>
+
+</items>

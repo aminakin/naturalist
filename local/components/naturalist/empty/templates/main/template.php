@@ -612,7 +612,7 @@ use Bitrix\Main\Localization\Loc;
     <?
     $APPLICATION->IncludeComponent(
         "bitrix:news.list",
-        "smi_    us",
+        "smi_us",
         array(
             "DISPLAY_DATE" => "Y",
             "DISPLAY_NAME" => "Y",
