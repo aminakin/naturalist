@@ -41,7 +41,7 @@ global $arSettings;
                 </div>
 
                 <div class="container">
-                    <a href="#" class="show-more-seo" id="toggleButton">Раскрыть</a>
+                    <a href="#" class="show-more-seo" id="toggleButton"> <?= Loc::getMessage('MORE_REG') ?></a>
                 </div>
             </div>
             <div class="location__group" data-group="reservoirs">
