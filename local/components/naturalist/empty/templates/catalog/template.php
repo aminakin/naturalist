@@ -437,5 +437,14 @@ foreach ($arResult as $key => $value) {
                 <div class="catalog__map-more" data-map-more-wrapper></div>
             </div>
         </div>
+
+        <style>
+            #map ymaps{
+                width: 100% !important;
+            }
+            #map{
+                width: 100% !important;
+            }
+        </style>
     <?php endif; ?>
 </div>
