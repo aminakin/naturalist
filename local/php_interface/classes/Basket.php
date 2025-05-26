@@ -128,6 +128,8 @@ class Baskets
             ]);
 
         } else {
+
+
             return json_encode([
                 "ERROR" => "Произошла ошибка при добавлении товара в корзину."
             ]);

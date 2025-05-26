@@ -82,6 +82,7 @@ Loader::registerAutoLoadClasses(null, array(
     'Naturalist\SmartWidgetsController' => '/local/php_interface/classes/SmartWidgetsController.php',
     'Naturalist\SearchServiceFactory' => '/local/php_interface/classes/SearchServiceFactory.php',
     'Naturalist\SearchServiceInterface' => '/local/php_interface/Interfaces/SearchServiceInterface.php',
+    'Naturalist\UhotelsSearchService' => '/local/php_interface/classes/UhotelsSearchService.php',
 ));
 
 $documentRoot = Application::getDocumentRoot();

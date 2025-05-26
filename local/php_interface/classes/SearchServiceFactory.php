@@ -4,7 +4,6 @@ namespace Naturalist;
 
 use Exception;
 use Naturalist\bronevik\BronevikSearchService;
-use Object\Uhotels\Data\Search;
 
 class SearchServiceFactory
 {
@@ -14,7 +13,7 @@ class SearchServiceFactory
         'traveline' => Traveline::class,
         'bnovo' => Bnovo::class,
         'bronevik' => BronevikSearchService::class,
-        'uhotels' => Search::class,
+        'uhotels' => UhotelsSearchService::class,
     ];
 
     public function create(string $type): SearchServiceInterface

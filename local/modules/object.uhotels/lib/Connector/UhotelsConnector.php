@@ -6,12 +6,14 @@ use Exception;
 use GuzzleHttp\Exception\GuzzleException;
 use UHotels\ApiClient\Client;
 use UHotels\ApiClient\Dto\Booking\BookingDto;
+use UHotels\ApiClient\Dto\Penalty\PenaltyDto;
 use UHotels\ApiClient\Dto\Quota\QuotaDto;
 use UHotels\ApiClient\Dto\Room\RoomDto;
 use UHotels\ApiClient\Dto\Tariff\TariffDto;
 use UHotels\ApiClient\Service\BookingService;
 use UHotels\ApiClient\Service\HotelService;
 use UHotels\ApiClient\Service\OccupancyService;
+use UHotels\ApiClient\Service\PenaltyService;
 use UHotels\ApiClient\Service\QuotaService;
 use UHotels\ApiClient\Service\RoomService;
 use UHotels\ApiClient\Service\TariffService;
@@ -44,6 +46,7 @@ class UhotelsConnector
         $client = new Client('https://account2.uhotels.app/api/', $token);
 
         // Инициализация сервисов
+        $this->penaltyService = new PenaltyService($client);
         $this->hotelService = new HotelService($client);
         $this->roomService = new RoomService($client);
         $this->tariffService = new TariffService($client);
@@ -164,5 +167,18 @@ class UhotelsConnector
     public function getBookingList(): array
     {
         return $this->bookingService->getList();
+    }
+
+
+    /**
+     * Получение штрафа по ид
+     *
+     * @param $penaltyId
+     * @return PenaltyDto
+     * @throws GuzzleException
+     */
+    public function getPenaltyById($penaltyId): PenaltyDto
+    {
+        return $this->penaltyService->get($penaltyId);
     }
 }
