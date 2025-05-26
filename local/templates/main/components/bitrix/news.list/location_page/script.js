@@ -94,3 +94,14 @@ window.addEventListener("DOMContentLoaded", () => {
       .click();
   }
 });
+document.getElementById('toggleButton').addEventListener('click', function(event) {
+  event.preventDefault();
+  var items = document.querySelectorAll('.location-full__item');
+
+
+  items.forEach(function(item) {
+    item.classList.toggle('hidden');
+  });
+
+  this.innerText = this.innerText === 'Раскрыть' ? 'Скрыть' : 'Раскрыть';
+});

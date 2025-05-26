@@ -366,3 +366,24 @@
     line-height: 20px;
   }
 }
+.location-full__item {
+  display: block; /* Каждый элемент списка будет на новой строке */
+  margin: 5px 0; /* Отступы между элементами */
+  text-decoration: none; /* Убираем подчеркивание у ссылок */
+  color: #000; /* Цвет текста */
+}
+
+.location-full__item.hidden {
+  display: none;
+}
+
+.location-full__item:hover {
+  text-decoration: underline;
+}
+
+
+.show-more-seo {
+  display: inline-block !important;
+  margin-top: 10px !important;
+  cursor: pointer;
+}
