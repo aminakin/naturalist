@@ -221,4 +221,130 @@ class Search
     }
 
 
+    /**
+     * Выборка первого доступного
+     *
+     * @param $dateFrom
+     * @param $dateTo
+     * @param $guests
+     * @return array
+     * @throws \DateMalformedStringException
+     */
+    public function findFirstAvailableRoom($dateFrom, $dateTo, $guests): array
+    {
+
+        $startDate = date('Y-m-d', strtotime($dateFrom));
+        $endDate = date('Y-m-d', strtotime($dateTo));
+
+        $startDateTime = new DateTime($startDate);
+        $endDateTime = new DateTime($endDate);
+        $nights = $startDateTime->diff($endDateTime)->days;
+
+        try {
+            $quotaData = $this->connector->getQuota($startDate, $endDate);
+
+            if (empty($quotaData)) {
+                return [];
+            }
+
+            // Ищем первую доступную комнату
+            foreach ($quotaData as $quota) {
+                $availableRooms = $this->processQuota($quota);
+
+                if (!empty($availableRooms)) {
+                    // Проверяем каждую доступную комнату
+                    foreach ($availableRooms as $roomId) {
+                        $roomData = $this->checkRoomAvailability($roomId, $startDate, $endDate, $guests, $nights);
+
+                        if ($roomData['available']) {
+                            return [
+                                'success' => true,
+                                'error' => '',
+                                'room_id' => $roomId,
+                                'offers' => $roomData,
+                                'price' => $roomData['price'],
+                                'nights' => $nights,
+                                'dates' => [
+                                    'from' => $startDate,
+                                    'to' => $endDate
+                                ],
+                                'guests' => $guests
+                            ];
+                        }
+                    }
+                }
+            }
+
+            return [
+                'success' => false,
+                'error' => 'Не найдено доступных номеров на указанные даты и количество гостей',
+                'room' => null
+            ];
+
+        } catch (\Exception $e) {
+            return [
+                'success' => false,
+                'error' => 'Ошибка при поиске: ' . $e->getMessage(),
+                'room' => null
+            ];
+        }
+
+    }
+
+    /**
+     * Проверяет доступность конкретной комнаты и возвращает первый найденный тариф
+     *
+     * @param string $roomId
+     * @param string $startDate
+     * @param string $endDate
+     * @param int $guests
+     * @param int $nights
+     * @return array
+     */
+    private function checkRoomAvailability($roomId, $startDate, $endDate, $guests, $nights): array
+    {
+        try {
+            foreach ($this->tariffList as $tariff) {
+                $occupancyData = $this->processOccupancy($roomId, $startDate, $endDate, $tariff->id);
+
+                if (!empty($occupancyData)) {
+                    foreach ($occupancyData as $occupancyCode => $occupancyPriceData) {
+                        // Проверяем соответствие количества гостей
+                        if (OccupancyEnum::getValueByCode($occupancyCode) == $guests) {
+
+                            $totalPrice = $occupancyPriceData->amount * $nights;
+
+                            return [
+                                'available' => true,
+                                'price' => $totalPrice,
+                                'price_per_night' => $occupancyPriceData->amount,
+                                'nights' => $nights,
+                                'tariff' => [
+                                    'id' => $tariff->id,
+                                    'name' => $tariff->name,
+                                    'description' => $tariff->desc,
+                                    'penalty' => $this->connector->getPenaltyById($tariff->penalty)?->toArray() ?? null,
+                                ],
+                                'occupancy' => [
+                                    'code' => $occupancyCode,
+                                    'guests' => $guests,
+                                    'details' => $occupancyPriceData->toArray()
+                                ]
+                            ];
+                        }
+                    }
+                }
+            }
+
+        } catch (Exception $e) {
+            // Логируем ошибку, но продолжаем поиск
+            error_log("Error checking room $roomId availability: " . $e->getMessage());
+        }
+
+        return ['available' => false, 'offers' => []];
+    }
+
+
+
+
 }
