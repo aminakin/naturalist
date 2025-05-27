@@ -14,6 +14,9 @@ class SmartWidgetsController
     const SUCCESS_HTTP_CODE = 200;
     const CLIENT_KEY = 'b96dafa6f1217c0f867b42e0ad4d02cc';
 
+    const PARAMETERS = ['reviews' => false];
+
+
 
     /**
      * Отправляет POST-запрос для получения данных виджетов.
@@ -38,7 +41,8 @@ class SmartWidgetsController
 
             $payload = [
                 'key' => self::CLIENT_KEY,
-                'widgets' => array_values($widgetIds)
+                'widgets' => array_values($widgetIds),
+                'parameters' => self::PARAMETERS,
             ];
 
             // Инициализация cURL

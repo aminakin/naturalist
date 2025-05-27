@@ -228,11 +228,11 @@
 
 .object-row  .tag_wrapper .tag {
   position: static;
-  width: 135px;
-  height: 42px;
-  line-height: 22px;
+  width: 130px;
+  height: 30px;
+  line-height: 14px;
   font-weight: 400;
-  font-size: 16px;
+  font-size: 13px;
   text-transform: none;
   padding: 8px 16px 8px 12px;
   white-space: nowrap;
