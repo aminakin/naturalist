@@ -4,4 +4,5 @@ $MESS["NO_LOCATION"] = "На эту букву пока ничего нет, н�
 $MESS["LOCATION_TITLE"] = "Локации";
 $MESS["LOCATION_REGIONS"] = "Регионы";
 $MESS["LOCATION_RESERVOIR"] = "Водоемы";
+$MESS["MORE_REG"] = "Раскрыть";
 ?>
