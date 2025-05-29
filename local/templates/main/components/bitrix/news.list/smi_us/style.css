@@ -19,6 +19,19 @@
 
 .smi-us__wrapper .list__item {
   margin-right: 20px;
+  padding-right: 10.75px;
+  padding-left: 10.75px;
+   &:hover{
+     transition-duration: 0.5s;
+     background: #E39250;
+   }
+}
+
+.smi-us__wrapper .list__item img {
+  &:hover{
+    transition-duration: 0.5s;
+    filter: brightness(0) saturate(100%) invert(100%) hue-rotate(180deg);
+  }
 }
 
 .smi-us__wrapper .list__item:last-child {

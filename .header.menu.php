@@ -26,7 +26,7 @@ $aMenuLinks = Array(
 		"Подборки", 
 		SITE_DIR."/impressions/", 
 		Array(), 
-		Array(), 
+		Array(),
 		"" 
 	),
 	Array(
@@ -34,13 +34,6 @@ $aMenuLinks = Array(
 		SITE_DIR."/regions/", 
 		Array(), 
 		Array(), 
-		"" 
-	),
-	Array(
-		"Сертификат", 
-		SITE_DIR."/certificates/", 
-		Array(), 
-		Array("ALWAYS_ORANGE"=>"Y"), 
 		"" 
 	),
     Array(
@@ -51,19 +44,32 @@ $aMenuLinks = Array(
         ""
     ),
 	Array(
+		"Сертификат", 
+		SITE_DIR."/certificates/", 
+		Array(), 
+		Array("ALWAYS_ORANGE"=>"Y"), 
+		"" 
+	),
+
+	Array(
 		"О проекте", 
 		SITE_DIR."/about/", 
 		Array(), 
 		Array(), 
 		"" 
 	),
-	Array(
-		"Контакты", 
-		SITE_DIR."/contacts/", 
-		Array(), 
-		Array(), 
-		"" 
-	),
+
 
 );
+
+if(CSite::InDir('/catalog') || CSite::InDir('/map'))
+{
+    $aMenuLinks[] = Array(
+        "Контакты",
+        SITE_DIR."/contacts/",
+        Array(),
+        Array(),
+        ""
+    );
+}
 ?>
