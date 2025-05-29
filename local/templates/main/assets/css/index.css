@@ -1860,6 +1860,7 @@
 .hero__name {
   display: block;
   width: 100%;
+  margin-top: 64px;
 }
 
 .hero__footnote {
