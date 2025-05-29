@@ -1058,6 +1058,10 @@ textarea {
   right: 64px;
 }
 
+.swiper-button-next, .swiper-button-prev {
+  margin: 0 auto;
+}
+
 
 /*.swiper-button-next:after,
 .swiper-rtl .swiper-button-prev:after {
