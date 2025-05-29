@@ -109,7 +109,7 @@ if (!isset($arResult["arSection"]["ID"])) {
                         </a>
                         <? if (count($arSection["PICTURES"]) > 1) { ?>
                             <!-- <a href="#gallery" data-modal class="object__galery-item"> -->
-                            <a data-fancybox="gallery" href="<?= $arSection["PICTURES"][1]['src'] ?>" data-modal class="object__galery-item">
+                            <a data-fancybox="gallery" href="<?= $arSection["PICTURES"][1]['big'] ? $arSection["PICTURES"][1]['big'] : $arSection["PICTURES"][1]['src'] ?>" data-modal class="object__galery-item">
                                 <img src="<?= $arSection["PICTURES"][1]['src'] ?>" loading="lazy" alt="">
                             </a>
                             <a href="#gallery" data-modal class="object__galery-item">

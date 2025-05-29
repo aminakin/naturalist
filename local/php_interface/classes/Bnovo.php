@@ -2139,7 +2139,7 @@ class Bnovo implements SearchServiceInterface
             $arResData = $entityClass->getDataAll();
 
             if (empty($arResData)) {
-                Error::notFreeNums($hotelId, "Bnovo");
+//                Error::notFreeNums($hotelId, "Bnovo");
                 return 'Нет данных по объекту bnovoId: ' . $hotelId . ' bnovoCategoryId ' . $categoryId . ' на переданные в запросе даты';
             }
             foreach ($arResData as $key => $arEntity) {
