@@ -243,6 +243,7 @@ use Naturalist\Users;
     <?php }
     ?>
     <?php /*<script src="https://dmp.one/sync?stock_key=4dce2e8f5fdd1727a46278cb20b97261" async charset="UTF-8"></script>*/ ?>
+    <script src="https://dmp.one/sync?stock_key=053c9813114d39196816fb79fdfd54b7" async charset="UTF-8"></script>
 </head>
 
 <body class="<?php if (CSite::InDir('/map')) : ?>body__on_map<?php endif; ?>">
