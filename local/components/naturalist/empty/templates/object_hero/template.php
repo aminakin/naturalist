@@ -464,6 +464,7 @@ if (!isset($arResult["arSection"]["ID"])) {
                                     "VARS" => array(
                                         "arSection" => $arSection,
                                         "arElements" => $arElements,
+                                        "arDetailViewElements" =>$arParams['arDetailViewElements'] ,
                                         "daysRange" => $daysRange,
                                         "guests" => $guests,
                                         "children" => $children,
