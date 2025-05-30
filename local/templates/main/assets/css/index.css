@@ -1875,16 +1875,17 @@
   display: flex;
   font-family: Montserrat;
   justify-content: space-between;
-  margin-top: 2.55rem;
+  /*margin-top: 2.55rem;*/
   text-transform: uppercase;
   font-weight: 400;
-  padding-bottom: 20px;
+  /*padding-bottom: 20px;*/
   /*padding-top: 15px;*/
 }
 
 .hero__footnote > * {
   min-height: 1px;
   min-width: 1px;
+  font-family: 'Montserrat';
 }
 
 .news-preview__mobile {
@@ -2973,8 +2974,9 @@
   .hero__footnote {
     font-size: 13.48px;
     line-height: 17.97px;
-    margin-top: 12px;
-    padding-top: 8px;
+    /*margin-top: 12px;*/
+    padding-top: 5px;
+    padding-bottom: 5px;
   }
 
   .news-preview__mobile .h1 {
