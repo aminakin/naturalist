@@ -6,7 +6,14 @@
 
 use Naturalist\Users;
 
+
+$realElements = [];
 foreach ($arElements as $arElement):
+
+    if (isset($arElement['PROPERTY_PARENT_ID_VALUE']) && $arElement['PROPERTY_PARENT_ID_VALUE'] === '0') {
+        $realElements[] = $arElement;
+    }
+
     $arElementsTariffs[$arElement['ID']] = $arElement;
 endforeach;
 $arParentView = [];
@@ -374,22 +381,26 @@ foreach ($arExternalInfo as $idNumber => $arTariffs):
             <? endif; ?>
         </div>
     <? endforeach; ?>
-    <? endforeach;
 
-$printedEmpty = false;
-foreach ($arDetailViewElements as $key => $arElement):
+<? endforeach;
 
-    if ($arElement['AVAILABLE_ID'] == true):
-        continue;
-    endif;
+if (count($realElements) < 6) {
 
-    if (!$printedEmpty) { ?>
-        <div class="rooms__empty-list">
-            <div>Не осталось свободных мест</div>
-        </div>
-<? $printedEmpty = true;
-    }
+    $printedEmpty = false;
+    foreach ($arDetailViewElements as $key => $arElement):
 
-    require 'empty_rooms.php';
+        if ($arElement['AVAILABLE_ID'] == true):
+            continue;
+        endif;
 
-endforeach;
+        if (!$printedEmpty) { ?>
+            <div class="rooms__empty-list">
+                <div>Не осталось свободных мест</div>
+            </div>
+            <? $printedEmpty = true;
+        }
+
+        require 'empty_rooms.php';
+
+    endforeach;
+}
