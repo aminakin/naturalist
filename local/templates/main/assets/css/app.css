@@ -2604,7 +2604,7 @@ span.flatpickr-weekday {
   display: -ms-flexbox;
   display: flex;
   height: 100%;
-  padding-bottom: 0.1rem;
+  padding-bottom: 1rem;
   position: relative;
 }
 
@@ -4788,7 +4788,7 @@ img.lazy.loaded {
   }
 
   .header .container {
-    padding-bottom: 0;
+    padding-bottom: 1rem;
   }
 
   .header__logo {
