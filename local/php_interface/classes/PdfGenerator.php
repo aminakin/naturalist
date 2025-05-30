@@ -48,6 +48,11 @@ class PdfGenerator
     function __construct($size = [0,0,440,700])
     {
         $this->pdfOptions = new Options();
+        $this->pdfOptions->set('defaultFont', 'DejaVu Sans');
+        $this->pdfOptions->set('isRemoteEnabled', true);
+        $this->pdfOptions->set('isHtml5ParserEnabled', true);
+        $this->pdfOptions->set('defaultMediaType', 'print');
+
         $this->prepareDefaultParams($size);
 
         $this->pdfEntity = new Dompdf(
@@ -199,6 +204,7 @@ class PdfGenerator
      */
     function quickRender($html) : mixed
     {
+        $html = str_replace('font-family:', 'font-family: serif;', $html);
         $this->loadHtml($html);
         
         return $this->render();
