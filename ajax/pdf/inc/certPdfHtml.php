@@ -11,7 +11,7 @@ Loc::loadMessages(__FILE__);
     <table style="width: 100%; border-collapse: collapse; page-break-inside: avoid;">
         <tr>
             <td style="color:black;text-align: center; vertical-align: top; ">
-                <div class="order-pdf__logo" style="margin-bottom: 10px;">
+                <div class="order-pdf__logo" style="margin-bottom: 10px; margin-top: 50px;">
                     <img width="350" src="<?= HTTP_HOST ?>/ajax/pdf/inc/img/logo.png" alt="">
                 </div>
                 <table style="width: 100%; border-collapse: collapse;">
