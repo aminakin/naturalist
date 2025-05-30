@@ -1,5 +1,6 @@
 <?php
 
+/** @var  $arDetailViewElements */
 /** @var  $arElements */
 /** @var  $arExternalInfo */
 
@@ -9,6 +10,8 @@ foreach ($arElements as $arElement):
     $arElementsTariffs[$arElement['ID']] = $arElement;
 endforeach;
 $arParentView = [];
+
+
 
 foreach ($arExternalInfo as $idNumber => $arTariffs):
 ?>
@@ -374,7 +377,7 @@ foreach ($arExternalInfo as $idNumber => $arTariffs):
     <? endforeach;
 
 $printedEmpty = false;
-foreach ($arElements as $key => $arElement):
+foreach ($arDetailViewElements as $key => $arElement):
 
     if ($arElement['AVAILABLE_ID'] == true):
         continue;

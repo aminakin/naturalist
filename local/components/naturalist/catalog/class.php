@@ -99,6 +99,11 @@ class NaturalistCatalog extends \CBitrixComponent
     private $arReviewsUsers = [];
     private $arReviewsLikesData = [];
     private $arElements = [];
+
+    /**
+     * @var array - Поле для корректной пагинации в детальной карточке у четом особенностей шаблона бново, но надо по хорошему поправит шаблон
+     */
+    private $arDetailViewElements = [];
     private $arElementsParent = [];
     private $arHLRoomFeatures = [];
     private $arHouseTypes = [];
@@ -1141,6 +1146,7 @@ class NaturalistCatalog extends \CBitrixComponent
         $this->arResult['avgRating'] = $this->avgRating;
         $this->arResult['arAvgCriterias'] = $this->arAvgCriterias;
         $this->arResult['arElements'] = $this->arElements;
+        $this->arResult['arDetailViewElements'] = $this->arDetailViewElements;
         $this->arResult['arElementsParent'] = $this->arElementsParent;
         $this->arResult['allCount'] = $this->allCount;
         $this->arResult['page'] = $this->page;
@@ -1280,13 +1286,14 @@ class NaturalistCatalog extends \CBitrixComponent
     private function setPagination()
     {
         // Пагинация номеров
-        $this->allCount = count($this->arElements);
+        $this->allCount = count($this->arDetailViewElements);
+
         if ($this->allCount > 0) {
             $this->page = $_REQUEST['page'] ?? 1;
             $this->pageCount = ceil($this->allCount / $this->arParams["DETAIL_ITEMS_COUNT"]);
             if ($this->pageCount > 1) {
-                $this->arElements = array_slice(
-                    $this->arElements,
+                $this->arDetailViewElements = array_slice(
+                    $this->arDetailViewElements,
                     ($this->page - 1) * $this->arParams["DETAIL_ITEMS_COUNT"],
                     $this->arParams["DETAIL_ITEMS_COUNT"]
                 );
@@ -1365,6 +1372,17 @@ class NaturalistCatalog extends \CBitrixComponent
 
             return $b['AVAILABLE_ID'] <=> $a['AVAILABLE_ID'];
         });
+
+        /**
+         * Крректировки для шаблона
+         */
+        $this->arDetailViewElements = $this->arElements;
+
+        if ($this->arSections["UF_EXTERNAL_SERVICE"] == "bnovo") {
+            $this->arDetailViewElements = array_filter($this->arDetailViewElements, function($element) {
+                return isset($element['PROPERTY_PARENT_ID_VALUE']) && $element['PROPERTY_PARENT_ID_VALUE'] == 0;
+            });
+        }
     }
 
     private function getDetailServices()
@@ -1572,6 +1590,7 @@ class NaturalistCatalog extends \CBitrixComponent
         if ($this->arSections["UF_EXTERNAL_SERVICE"] == "bronevik") {
             $this->arFilter['PROPERTY_PARENT_ID'] = false;
         }
+//
 //        if ($this->arSections["UF_EXTERNAL_SERVICE"] == "bnovo") {
 //            $this->arFilter['PROPERTY_PARENT_ID'] = 0;
 //        }
