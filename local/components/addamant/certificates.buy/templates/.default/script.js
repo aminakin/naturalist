@@ -615,7 +615,7 @@ class BuyCert {
 }
 function updateHiddenImageField(selectedRadio) {
 
-    var hiddenField = document.getElementById('cert_variant_back');
+    var hiddenField = document.getElementById('cert_variant_fontdobro');
 
 
     var variantKey = selectedRadio.dataset.variantKey;

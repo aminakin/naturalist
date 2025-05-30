@@ -281,7 +281,7 @@ class Orders
         $propertyCollection = $order->getPropertyCollection();
         $arProps = array();
         foreach ($this->arPropsIDs as $key => $propId) {
-            $arProps[$key] = $propertyCollection->getItemByOrderPropertyId($propId)->getValue();
+            $arProps[$key] = $propertyCollection->getItemByOrderPropertyId($propId)?->getValue();
         }
         if ($arProps["GUEST_LIST"]) {
             $arProps["GUESTS_COUNT"] = count($arProps["GUEST_LIST"]);

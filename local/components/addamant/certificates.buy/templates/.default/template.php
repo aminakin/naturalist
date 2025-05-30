@@ -163,7 +163,7 @@ if ($arResult['ERROR']) {
                     </label>
                 <?php } ?>
             </div>
-            <input type="hidden" name="cert_variant_back" id="cert_variant_back" value="">
+            <input type="hidden" name="cert_variant_fontdobro" id="cert_variant_fontdobro" value="">
         </section>
         <section class="form__block pocket design" style="display: none">
             <div class="form__title-block">
