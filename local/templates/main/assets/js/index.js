@@ -13516,7 +13516,11 @@
         autoplay: {
           delay: mainSliderSpeed,
         },
-        loop: true,
+        navigation: {
+          nextEl: '.swiper-button-next',
+          prevEl: '.swiper-button-prev',
+        },
+        loop: false,
       });
     }
 

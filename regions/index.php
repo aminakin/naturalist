@@ -90,25 +90,6 @@ global $arSettings;
         )
     ); ?>
 
-<section class="cert-index__seo-text">
-    <div class="container">
-        <?php
-        $APPLICATION->IncludeComponent(
-            "bitrix:main.include",
-            "",
-            array(
-                "AREA_FILE_SHOW" => "file",
-                "PATH" => '/include/regions-seo-text.php',
-                "EDIT_TEMPLATE" => ""
-            )
-        );
-        ?>
-    </div>
-</section>
-<div class="container">
-    <a href="#" class="show-more-seo">Раскрыть</a>
-</div>
-
 </section>
 <?
 require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/footer.php");

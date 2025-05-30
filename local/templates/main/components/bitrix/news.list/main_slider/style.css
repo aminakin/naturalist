@@ -8,6 +8,10 @@
   position: relative;
   padding-top: 7.6rem;
 }
+.header-slider .main-slider{
+  padding-top: 2.6rem;
+}
+
 
 .main-slider ul li {
   width: 100%;
@@ -18,6 +22,9 @@
   background-position: center;
   background-size: cover;
   position: relative;
+}
+.header-slider__buttons{
+  width: 100%;
 }
 
 .main-slider ul li img {
@@ -42,8 +49,4 @@
     height: 242px;
     border-radius: 12px;
   }
-}
-.impressions-slider .swiper-slide
-{
-  width: 300px !important;
 }

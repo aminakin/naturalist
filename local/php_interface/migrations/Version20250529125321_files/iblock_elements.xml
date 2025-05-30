@@ -1,0 +1,368 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<items iblockUid="main:mainSlider" exchangeVersion="2" >
+<item>
+ <field name="ACTIVE">
+  <value>N</value>
+ </field>
+ <field name="ACTIVE_FROM"/>
+ <field name="ACTIVE_TO"/>
+ <field name="SORT">
+  <value>4</value>
+ </field>
+ <field name="NAME">
+  <value>Романтические выходные</value>
+ </field>
+ <field name="PREVIEW_PICTURE">
+  <value name="mobile_Banner_Card_&#x420;&#x43E;&#x43C;&#x430;&#x43D;&#x442;&#x438;&#x447;&#x435;&#x441;&#x43A;&#x438;&#x435;_&#x432;&#x44B;&#x445;&#x43E;&#x434;&#x43D;&#x44B;&#x435;_jpg.jpeg" type="file">iblock/5cd/7l9gpxgshht1y0onv65610vwkhbqdwlq/mobile_Banner_Card_Romanticheskie_vykhodnye_jpg.jpeg</value>
+ </field>
+ <field name="PREVIEW_TEXT"/>
+ <field name="PREVIEW_TEXT_TYPE">
+  <value>text</value>
+ </field>
+ <field name="DETAIL_PICTURE">
+  <value name="Banner-Card &#x420;&#x43E;&#x43C;&#x430;&#x43D;&#x442;&#x438;&#x447;&#x435;&#x441;&#x43A;&#x438;&#x435;_&#x432;&#x44B;&#x445;&#x43E;&#x434;&#x43D;&#x44B;&#x435;.png" type="file">iblock/0c5/17szedpeh51wztn42blzm98t6fsumv1y/Banner_Card-Romanticheskie_vykhodnye.png</value>
+ </field>
+ <field name="DETAIL_TEXT"/>
+ <field name="DETAIL_TEXT_TYPE">
+  <value>text</value>
+ </field>
+ <field name="CODE"/>
+ <field name="TAGS"/>
+ <field name="XML_ID">
+  <value>21297</value>
+ </field>
+ <field name="IBLOCK_SECTION"/>
+ <field name="IPROPERTY_TEMPLATES"/>
+ <property name="LINK"/>
+</item>
+<item>
+ <field name="ACTIVE">
+  <value>Y</value>
+ </field>
+ <field name="ACTIVE_FROM"/>
+ <field name="ACTIVE_TO"/>
+ <field name="SORT">
+  <value>30</value>
+ </field>
+ <field name="NAME">
+  <value>Плати потом</value>
+ </field>
+ <field name="PREVIEW_PICTURE">
+  <value name="mobile_Banner_Card_&#x411;&#x440;&#x43E;&#x43D;&#x438;&#x440;&#x443;&#x438;&#x306;_&#x441;&#x435;&#x438;&#x306;&#x447;&#x430;&#x441;,_&#x43F;&#x43B;&#x430;&#x442;&#x438;_&#x43F;&#x43E;&#x442;&#x43E;&#x43C;_jpg.jpeg" type="file">iblock/0a8/z9f5q4eh8q5mzlygtg7zqp4s6k8sfuyt/mobile_Banner_Card_Bronirui_sei_chas_plati_potom_jpg.jpeg</value>
+ </field>
+ <field name="PREVIEW_TEXT"/>
+ <field name="PREVIEW_TEXT_TYPE">
+  <value>text</value>
+ </field>
+ <field name="DETAIL_PICTURE">
+  <value name="Banner_Card_&#x411;&#x440;&#x43E;&#x43D;&#x438;&#x440;&#x443;&#x438;&#x306;_&#x441;&#x435;&#x438;&#x306;&#x447;&#x430;&#x441;,_&#x43F;&#x43B;&#x430;&#x442;&#x438;_&#x43F;&#x43E;&#x442;&#x43E;&#x43C;_png.png" type="file">iblock/2bd/m94ux61i3fzowlu8km1g677ygob6i4k9/Banner_Card_Bronirui_sei_chas_plati_potom_png.png</value>
+ </field>
+ <field name="DETAIL_TEXT"/>
+ <field name="DETAIL_TEXT_TYPE">
+  <value>text</value>
+ </field>
+ <field name="CODE"/>
+ <field name="TAGS"/>
+ <field name="XML_ID">
+  <value>21298</value>
+ </field>
+ <field name="IBLOCK_SECTION"/>
+ <field name="IPROPERTY_TEMPLATES"/>
+ <property name="LINK"/>
+</item>
+<item>
+ <field name="ACTIVE">
+  <value>N</value>
+ </field>
+ <field name="ACTIVE_FROM"/>
+ <field name="ACTIVE_TO"/>
+ <field name="SORT">
+  <value>2</value>
+ </field>
+ <field name="NAME">
+  <value>На деревьях</value>
+ </field>
+ <field name="PREVIEW_PICTURE">
+  <value name="mobile_Banner_Card_&#x414;&#x43E;&#x43C;&#x438;&#x43A;&#x438;_&#x43D;&#x430;_&#x434;&#x435;&#x440;&#x435;&#x432;&#x44C;&#x44F;&#x445;_&#x434;&#x43B;&#x44F;_&#x432;&#x441;&#x435;&#x438;&#x306;_&#x441;&#x435;&#x43C;&#x44C;&#x438;_jpg (1).jpeg" type="file">iblock/b39/2u39fc3msy9catx48ujtsmbhx1o5ifdu/mobile_Banner_Card_Domiki_na_derevyakh_dlya_vsei_semi_jpg-_1_.jpeg</value>
+ </field>
+ <field name="PREVIEW_TEXT"/>
+ <field name="PREVIEW_TEXT_TYPE">
+  <value>text</value>
+ </field>
+ <field name="DETAIL_PICTURE">
+  <value name="Banner_Card_&#x414;&#x43E;&#x43C;&#x438;&#x43A;&#x438;_&#x43D;&#x430;_&#x434;&#x435;&#x440;&#x435;&#x432;&#x44C;&#x44F;&#x445;_&#x434;&#x43B;&#x44F;_&#x432;&#x441;&#x435;&#x438;&#x306;_&#x441;&#x435;&#x43C;&#x44C;&#x438;_png.png" type="file">iblock/b06/f27kdemfd9ycb2x10e7wkjkz6nzddnc9/Banner_Card_Domiki_na_derevyakh_dlya_vsei_semi_png.png</value>
+ </field>
+ <field name="DETAIL_TEXT"/>
+ <field name="DETAIL_TEXT_TYPE">
+  <value>text</value>
+ </field>
+ <field name="CODE"/>
+ <field name="TAGS"/>
+ <field name="XML_ID">
+  <value>22406</value>
+ </field>
+ <field name="IBLOCK_SECTION"/>
+ <field name="IPROPERTY_TEMPLATES"/>
+ <property name="LINK">
+  <value>catalog/tip-dom-na-dereve/</value>
+ </property>
+</item>
+<item>
+ <field name="ACTIVE">
+  <value>N</value>
+ </field>
+ <field name="ACTIVE_FROM"/>
+ <field name="ACTIVE_TO"/>
+ <field name="SORT">
+  <value>1</value>
+ </field>
+ <field name="NAME">
+  <value>Сертификаты</value>
+ </field>
+ <field name="PREVIEW_PICTURE">
+  <value name="mobile_Banner_Card_&#x421;&#x435;&#x440;&#x442;&#x438;&#x444;&#x438;&#x43A;&#x430;&#x442;&#x44B;_&#x43D;&#x430;_&#x43E;&#x442;&#x434;&#x44B;&#x445;_&#x432;_&#x433;&#x43B;&#x44D;&#x43C;&#x43F;&#x438;&#x43D;&#x433;&#x435;_jpg (1).jpeg" type="file">iblock/8d4/knmc22uiamifi2cknorlniadnjfibo08/mobile_Banner_Card_Sertifikaty_na_otdykh_v_glempinge_jpg-_1_.jpeg</value>
+ </field>
+ <field name="PREVIEW_TEXT"/>
+ <field name="PREVIEW_TEXT_TYPE">
+  <value>text</value>
+ </field>
+ <field name="DETAIL_PICTURE">
+  <value name="Banner_Card_&#x421;&#x435;&#x440;&#x442;&#x438;&#x444;&#x438;&#x43A;&#x430;&#x442;&#x44B;_&#x43D;&#x430;_&#x43E;&#x442;&#x434;&#x44B;&#x445;_&#x432;_&#x433;&#x43B;&#x44D;&#x43C;&#x43F;&#x438;&#x43D;&#x433;&#x435;_png.png" type="file">iblock/4ad/1flnr2bve7tx05n2sxp9jngw1zme0ecq/Banner_Card_Sertifikaty_na_otdykh_v_glempinge_png.png</value>
+ </field>
+ <field name="DETAIL_TEXT"/>
+ <field name="DETAIL_TEXT_TYPE">
+  <value>text</value>
+ </field>
+ <field name="CODE"/>
+ <field name="TAGS"/>
+ <field name="XML_ID">
+  <value>22407</value>
+ </field>
+ <field name="IBLOCK_SECTION"/>
+ <field name="IPROPERTY_TEMPLATES"/>
+ <property name="LINK">
+  <value>/certificates/buy/</value>
+ </property>
+</item>
+<item>
+ <field name="ACTIVE">
+  <value>N</value>
+ </field>
+ <field name="ACTIVE_FROM"/>
+ <field name="ACTIVE_TO"/>
+ <field name="SORT">
+  <value>4</value>
+ </field>
+ <field name="NAME">
+  <value>Питомцы</value>
+ </field>
+ <field name="PREVIEW_PICTURE">
+  <value name="mobile_Banner_Card_&#x41E;&#x442;&#x434;&#x44B;&#x445;_&#x43D;&#x430;_&#x43F;&#x440;&#x438;&#x440;&#x43E;&#x434;&#x435;_&#x441;_&#x43F;&#x438;&#x442;&#x43E;&#x43C;&#x446;&#x430;&#x43C;&#x438;_2_jpg.jpeg" type="file">iblock/484/c22xhyop6c8ateiqnxqgh37cp73da1mw/mobile_Banner_Card_Otdykh_na_prirode_s_pitomtsami_2_jpg.jpeg</value>
+ </field>
+ <field name="PREVIEW_TEXT"/>
+ <field name="PREVIEW_TEXT_TYPE">
+  <value>text</value>
+ </field>
+ <field name="DETAIL_PICTURE">
+  <value name="Banner_Card_&#x41E;&#x442;&#x434;&#x44B;&#x445;_&#x43D;&#x430;_&#x43F;&#x440;&#x438;&#x440;&#x43E;&#x434;&#x435;_&#x441;_&#x43F;&#x438;&#x442;&#x43E;&#x43C;&#x446;&#x430;&#x43C;&#x438;_png.png" type="file">iblock/a58/4d4678yp32y8qid2fno99er9xvlj8zen/Banner_Card_Otdykh_na_prirode_s_pitomtsami_png.png</value>
+ </field>
+ <field name="DETAIL_TEXT"/>
+ <field name="DETAIL_TEXT_TYPE">
+  <value>text</value>
+ </field>
+ <field name="CODE"/>
+ <field name="TAGS"/>
+ <field name="XML_ID">
+  <value>22408</value>
+ </field>
+ <field name="IBLOCK_SECTION"/>
+ <field name="IPROPERTY_TEMPLATES"/>
+ <property name="LINK">
+  <value>catalog/vpechatleniya/pet-friendly/</value>
+ </property>
+</item>
+<item>
+ <field name="ACTIVE">
+  <value>Y</value>
+ </field>
+ <field name="ACTIVE_FROM"/>
+ <field name="ACTIVE_TO"/>
+ <field name="SORT">
+  <value>40</value>
+ </field>
+ <field name="NAME">
+  <value>Чан зима</value>
+ </field>
+ <field name="PREVIEW_PICTURE">
+  <value name="mobile_Banner_Card_&#x41E;&#x442;&#x434;&#x44B;&#x445;_&#x43D;&#x430;_&#x43F;&#x440;&#x438;&#x440;&#x43E;&#x434;&#x435;_&#x441;_&#x43F;&#x438;&#x442;&#x43E;&#x43C;&#x446;&#x430;&#x43C;&#x438;_4_jpg (1).jpeg" type="file">iblock/912/ag9yfmg2tr60270f1nnfnnjxama04zzq/mobile_Banner_Card_Otdykh_na_prirode_s_pitomtsami_4_jpg-_1_.jpeg</value>
+ </field>
+ <field name="PREVIEW_TEXT"/>
+ <field name="PREVIEW_TEXT_TYPE">
+  <value>text</value>
+ </field>
+ <field name="DETAIL_PICTURE">
+  <value name="Banner-Card &#x41E;&#x441;&#x435;&#x43D;&#x43D;&#x438;&#x438;&#x306; &#x440;&#x435;&#x43B;&#x430;&#x43A;&#x441;.jpg" type="file">iblock/b67/mw3v2kpzl7e6i0u9r48qaw50xu8gzt3i/Banner_Card-Osennii_-relaks.jpg</value>
+ </field>
+ <field name="DETAIL_TEXT"/>
+ <field name="DETAIL_TEXT_TYPE">
+  <value>text</value>
+ </field>
+ <field name="CODE"/>
+ <field name="TAGS"/>
+ <field name="XML_ID">
+  <value>24627</value>
+ </field>
+ <field name="IBLOCK_SECTION"/>
+ <field name="IPROPERTY_TEMPLATES"/>
+ <property name="LINK">
+  <value>catalog/?features=48</value>
+ </property>
+</item>
+<item>
+ <field name="ACTIVE">
+  <value>N</value>
+ </field>
+ <field name="ACTIVE_FROM"/>
+ <field name="ACTIVE_TO"/>
+ <field name="SORT">
+  <value>1</value>
+ </field>
+ <field name="NAME">
+  <value>Серт зимний</value>
+ </field>
+ <field name="PREVIEW_PICTURE">
+  <value name="&#x432;&#x435;&#x441;&#x43D;&#x430;-&#x43C;&#x43E;&#x431; (1).jpg" type="file">iblock/0cf/pkx5d6jf9ylmghygpr2pm944wfjnaj8e/vesna_mob-_1_.jpg</value>
+ </field>
+ <field name="PREVIEW_TEXT"/>
+ <field name="PREVIEW_TEXT_TYPE">
+  <value>text</value>
+ </field>
+ <field name="DETAIL_PICTURE">
+  <value name="1200-360.jpg" type="file">iblock/fb6/h4531ykbaoo61c82uy39syfgnvh1ggld/1200_360.jpg</value>
+ </field>
+ <field name="DETAIL_TEXT"/>
+ <field name="DETAIL_TEXT_TYPE">
+  <value>text</value>
+ </field>
+ <field name="CODE"/>
+ <field name="TAGS"/>
+ <field name="XML_ID">
+  <value>24728</value>
+ </field>
+ <field name="IBLOCK_SECTION"/>
+ <field name="IPROPERTY_TEMPLATES"/>
+ <property name="LINK">
+  <value>certificates/</value>
+ </property>
+</item>
+<item>
+ <field name="ACTIVE">
+  <value>N</value>
+ </field>
+ <field name="ACTIVE_FROM"/>
+ <field name="ACTIVE_TO"/>
+ <field name="SORT">
+  <value>2</value>
+ </field>
+ <field name="NAME">
+  <value>Бронирование нг праздники</value>
+ </field>
+ <field name="PREVIEW_PICTURE">
+  <value name="1234.jpg" type="file">iblock/df2/34o5ogp4qho74tjc78eomn4yu58x1og9/1234.jpg</value>
+ </field>
+ <field name="PREVIEW_TEXT"/>
+ <field name="PREVIEW_TEXT_TYPE">
+  <value>text</value>
+ </field>
+ <field name="DETAIL_PICTURE">
+  <value name="Banner-Card &#x421;&#x435;&#x440;&#x442;&#x438;&#x444;&#x438;&#x43A;&#x430;&#x442;&#x44B; &#x41D;&#x43E;&#x432;&#x44B;&#x438;&#x306; &#x433;&#x43E;&#x434;.jpg" type="file">iblock/c0c/0q1xz880credhz6396oqiftw9dguotp6/Banner_Card-Sertifikaty-Novyi_-god.jpg</value>
+ </field>
+ <field name="DETAIL_TEXT"/>
+ <field name="DETAIL_TEXT_TYPE">
+  <value>text</value>
+ </field>
+ <field name="CODE"/>
+ <field name="TAGS"/>
+ <field name="XML_ID">
+  <value>24729</value>
+ </field>
+ <field name="IBLOCK_SECTION"/>
+ <field name="IPROPERTY_TEMPLATES"/>
+ <property name="LINK">
+  <value>catalog/?dateFrom=07.01.2025&amp;dateTo=08.01.2025&amp;guests=2</value>
+ </property>
+</item>
+<item>
+ <field name="ACTIVE">
+  <value>N</value>
+ </field>
+ <field name="ACTIVE_FROM"/>
+ <field name="ACTIVE_TO"/>
+ <field name="SORT">
+  <value>20</value>
+ </field>
+ <field name="NAME">
+  <value>майский серт</value>
+ </field>
+ <field name="PREVIEW_PICTURE">
+  <value name="&#x441;&#x435;&#x437;&#x43E;&#x43D;&#x43F;&#x443;&#x442;&#x435;&#x448;&#x435;&#x441;&#x442;&#x432;&#x438;&#x438;&#x306;1.jpg" type="file">iblock/150/oceu3uobi8vhpz3xylf06xh7of2m9e1z/sezonputeshestvii_1.jpg</value>
+ </field>
+ <field name="PREVIEW_TEXT"/>
+ <field name="PREVIEW_TEXT_TYPE">
+  <value>text</value>
+ </field>
+ <field name="DETAIL_PICTURE">
+  <value name="&#x421;&#x435;&#x437;&#x43E;&#x43D;&#x43F;&#x443;&#x442;&#x435;&#x448;&#x435;&#x441;&#x442;&#x432;&#x438;&#x438;&#x306;.jpg" type="file">iblock/e02/ffnih53y7ggehltvm8flh1xq7qd4iaub/Sezonputeshestvii_.jpg</value>
+ </field>
+ <field name="DETAIL_TEXT"/>
+ <field name="DETAIL_TEXT_TYPE">
+  <value>text</value>
+ </field>
+ <field name="CODE"/>
+ <field name="TAGS"/>
+ <field name="XML_ID">
+  <value>28324</value>
+ </field>
+ <field name="IBLOCK_SECTION"/>
+ <field name="IPROPERTY_TEMPLATES"/>
+ <property name="LINK"/>
+</item>
+<item>
+ <field name="ACTIVE">
+  <value>N</value>
+ </field>
+ <field name="ACTIVE_FROM"/>
+ <field name="ACTIVE_TO"/>
+ <field name="SORT">
+  <value>10</value>
+ </field>
+ <field name="NAME">
+  <value>новый</value>
+ </field>
+ <field name="PREVIEW_PICTURE">
+  <value name="image 35.png" type="file">iblock/1be/ivyn159qs6jm0ifh4ezm048ba9g5hvai/image-35.png</value>
+ </field>
+ <field name="PREVIEW_TEXT"/>
+ <field name="PREVIEW_TEXT_TYPE">
+  <value>text</value>
+ </field>
+ <field name="DETAIL_PICTURE">
+  <value name="image 35.png" type="file">iblock/1be/ivyn159qs6jm0ifh4ezm048ba9g5hvai/image-35.png</value>
+ </field>
+ <field name="DETAIL_TEXT"/>
+ <field name="DETAIL_TEXT_TYPE">
+  <value>text</value>
+ </field>
+ <field name="CODE"/>
+ <field name="TAGS"/>
+ <field name="XML_ID">
+  <value>28542</value>
+ </field>
+ <field name="IBLOCK_SECTION"/>
+ <field name="IPROPERTY_TEMPLATES"/>
+ <property name="LINK">
+  <value>https://naturalist.travel/catalog/?dateFrom=01.05.2025&amp;dateTo=04.05.2025&amp;guests=2</value>
+ </property>
+</item>
+
+</items>

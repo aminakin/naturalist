@@ -1003,7 +1003,7 @@ textarea {
 .swiper-button-prev.swiper-button-disabled {
   cursor: auto;
   opacity: 0.35;
-  pointer-events: none;
+  /*pointer-events: none;*/
 }
 
 .swiper-button-next.swiper-button-hidden,
@@ -1035,6 +1035,8 @@ textarea {
   right: auto;
 }
 
+
+
 /*.swiper-button-prev:after,
 .swiper-rtl .swiper-button-next:after {
   content: "prev";
@@ -1045,6 +1047,21 @@ textarea {
   left: auto;
   right: 10px;
 }
+
+.main-slider .swiper-button-prev{
+  left: 64px;
+  right: auto;
+}
+
+.main-slider .swiper-button-next{
+  left: auto;
+  right: 64px;
+}
+
+.swiper-button-next, .swiper-button-prev {
+  margin: 0 auto;
+}
+
 
 /*.swiper-button-next:after,
 .swiper-rtl .swiper-button-prev:after {
@@ -2540,7 +2557,7 @@ span.flatpickr-weekday {
   -webkit-box-flex: 1;
   -ms-flex: 1 0 auto;
   flex: 1 0 auto;
-  padding-top: var(--header-height);
+  /*padding-top: var(--header-height);*/
   width: 100%;
 }
 
@@ -2559,7 +2576,7 @@ span.flatpickr-weekday {
   height: 5.3rem;
   height: var(--header-height);
   left: 0;
-  position: fixed;
+  /*position: fixed;*/
   top: 0;
   width: 100%;
   z-index: 1000;

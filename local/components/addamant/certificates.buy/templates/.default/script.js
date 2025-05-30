@@ -192,7 +192,10 @@ class BuyCert {
                 .trim();
 
             // костыль для купона
-            if (enteredCoupon == 'VESNA7' || enteredCoupon == 'vesna7') {
+            if (
+                enteredCoupon == 'VESNA7' || enteredCoupon == 'vesna7' ||
+                enteredCoupon == 'CR20' || enteredCoupon == 'cr20'
+            ) {
                 this.promoInfo.textContent =
                     "Данный промокод не действует на сертификаты";
                 this.promoInfo.style.display = "block";

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<items iblockUid="main:headerSliderHomePage" exchangeVersion="2" >
+<item>
+ <field name="ACTIVE">
+  <value>Y</value>
+ </field>
+ <field name="ACTIVE_FROM"/>
+ <field name="ACTIVE_TO"/>
+ <field name="SORT">
+  <value>500</value>
+ </field>
+ <field name="NAME">
+  <value>первый слайд</value>
+ </field>
+ <field name="PREVIEW_PICTURE">
+  <value name="telegram-cloud-document-2-5474568531859238564 2.png" type="file">iblock/38d/iqbht23xeyr8b8vd3cvm0mkoxhg3f1sc/telegram_cloud_document_2_5474568531859238564-2.png</value>
+ </field>
+ <field name="PREVIEW_TEXT"/>
+ <field name="PREVIEW_TEXT_TYPE">
+  <value>text</value>
+ </field>
+ <field name="DETAIL_PICTURE">
+  <value name="telegram-cloud-document-2-5474568531859238564 2.png" type="file">iblock/38d/iqbht23xeyr8b8vd3cvm0mkoxhg3f1sc/telegram_cloud_document_2_5474568531859238564-2.png</value>
+ </field>
+ <field name="DETAIL_TEXT"/>
+ <field name="DETAIL_TEXT_TYPE">
+  <value>text</value>
+ </field>
+ <field name="CODE">
+  <value>firstslide</value>
+ </field>
+ <field name="TAGS"/>
+ <field name="XML_ID">
+  <value>37946</value>
+ </field>
+ <field name="IBLOCK_SECTION"/>
+ <field name="IPROPERTY_TEMPLATES"/>
+</item>
+
+</items>

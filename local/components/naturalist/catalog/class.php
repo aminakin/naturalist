@@ -15,6 +15,7 @@ use Bitrix\Iblock\Elements\ElementFeaturesdetailTable;
 use Bitrix\Main\Data\Cache;
 use Naturalist\Products;
 use Naturalist\Filters\Components;
+use Naturalist\SearchServiceFactory;
 use Naturalist\SmartWidgetsController;
 use Naturalist\Users;
 use Naturalist\Regions;
@@ -51,6 +52,7 @@ class NaturalistCatalog extends \CBitrixComponent
     private $minPrice = 0;
     private $maxPrice = 0;
     private $reviewsCount = 0;
+    private $yandexReviewsCount = 0;
     private $avgRating = 0;
     private $reviewsPage = 0;
     private $reviewsPageCount = 0;
@@ -79,6 +81,7 @@ class NaturalistCatalog extends \CBitrixComponent
     private $arExternalInfo = [];
     private $arExternalAvail = [];
     private $arSections = [];
+    private $arMapSections = [];
     private $arHLTypes = [];
     private $houseTypeData = [];
     private $water = [];
@@ -118,6 +121,9 @@ class NaturalistCatalog extends \CBitrixComponent
      */
     public function getYandexReviews($sectionIds): array
     {
+
+        ini_set('memory_limit', '512M');
+
         $commonYandexReviewsClass = HighloadBlockTable::compileEntity('YandexReviews')->getDataClass();
         $commonYandexReviews = $commonYandexReviewsClass::query()
             ->addSelect('*')
@@ -130,12 +136,14 @@ class NaturalistCatalog extends \CBitrixComponent
 
         if (is_array($commonYandexReviews) && !empty($commonYandexReviews)) {
 
+
             $widgetData = SmartWidgetsController::getWidgetData($arYandexIDs);
 
             foreach ($commonYandexReviews as &$item) {
                 $yandexId = $item['UF_ID_YANDEX'];
-                if (isset($widgetData['data'][$yandexId])) {
-                    $item = array_merge($item, $widgetData['data'][$yandexId]);
+                if (isset($widgetData->data->$yandexId)) {
+                    $widgetItem = json_decode(json_encode($widgetData->data->$yandexId), true);
+                    $item = array_merge($item, $widgetItem);
                 }
             }
             unset($item);
@@ -381,16 +389,26 @@ class NaturalistCatalog extends \CBitrixComponent
         if (!empty($this->arUriParams['dateFrom']) && !empty($this->arUriParams['dateTo']) && !empty($this->arUriParams['guests'])) {
             $this->daysCount = abs(strtotime($this->arUriParams['dateTo']) - strtotime($this->arUriParams['dateFrom'])) / 86400;
 
-            $cache = Cache::createInstance();
-            $cacheKey = $this->arUriParams['dateFrom'] . $this->arUriParams['dateTo'] . $this->arUriParams['guests'];
+//            $cache = Cache::createInstance();
+//            $cacheKey = $this->arUriParams['dateFrom'] . $this->arUriParams['dateTo'] . $this->arUriParams['guests'];
 
-            if ($cache->initCache(3600, $cacheKey)) {
-                $this->arExternalInfo = $cache->getVars();
-            } elseif ($cache->startDataCache()) {
-                // Запрос в апи на получение списка кемпингов со свободными местами в выбранный промежуток
-                $this->arExternalInfo = Products::search($this->arUriParams['guests'], $this->arUriParams['childrenAge'], $this->arUriParams['dateFrom'], $this->arUriParams['dateTo'], false);
+//            if ($cache->initCache(3600, $cacheKey)) {
+//                $this->arExternalInfo = $cache->getVars();
+//            } elseif ($cache->startDataCache()) {
+
+                $factory = new SearchServiceFactory();
+                $products = new Products($factory);
+
+                $this->arExternalInfo = $products->search(
+                    $this->arUriParams['guests'],
+                    $this->arUriParams['childrenAge'],
+                    $this->arUriParams['dateFrom'],
+                    $this->arUriParams['dateTo'],
+                    false
+                );
+
 //                $cache->endDataCache($this->arExternalInfo);
-            }
+//            }
 
             $arExternalIDs = array_keys($this->arExternalInfo);
             if ($arExternalIDs) {
@@ -532,20 +550,24 @@ class NaturalistCatalog extends \CBitrixComponent
         //кеш каталог а временно выключен на переработку
         if (!isset($this->arFilter['UF_EXTERNAL_ID'])) {
 
-//            $cache = Cache::createInstance();
-//            $arFilterCacheKey = Utils::recursiveImplode($this->arFilter, '_');
-//            $cacheKey = 'without_date_search_' . $arFilterCacheKey;
+            if ($this->arParams['MAP']) {
+                $cache = Cache::createInstance();
+                $cacheKey = 'mapSections';
 
-//            if ($cache->initCache(86400, $cacheKey)) {
-//                $this->arSections = $cache->getVars();
-//            } elseif ($cache->startDataCache()) {
+                // Попытка загрузить данные из кеша
+                if ($cache->initCache(86400, $cacheKey)) {
+                    $this->arSections = $cache->getVars();
+                } else if ($cache->startDataCache()) {
+                    $this->sectionsQuery();
+                    $cache->endDataCache($this->arSections);
+                }
+            } else {
                 $this->arNavParams = [
                     'nPageSize' => $this->arParams['ITEMS_COUNT'],
                     'iNumPage' => $this->page
                 ];
                 $this->sectionsQuery();
-//                $cache->endDataCache($this->arSections);
-//            }
+            }
         } else {
             $this->sectionsQuery();
         }
@@ -633,10 +655,28 @@ class NaturalistCatalog extends \CBitrixComponent
             }
         }
 
+
         if (!empty($arSectionsPrice)) {
             $this->minPrice = round(min($arSectionsPrice));
             $this->maxPrice = round(max($arSectionsPrice));
         }
+
+
+        $this->arMapSections = $this->arSections;
+
+        if (!isset($this->arFilter['UF_EXTERNAL_ID'])) {
+            $cache = Cache::createInstance();
+            $cacheKey = 'mapData';
+
+            // Попытка загрузить данные из кеша
+            if ($cache->initCache(86400, $cacheKey)) {
+                $this->arMapSections = $cache->getVars();
+            } else if ($this->arParams['MAP'] && $cache->startDataCache()) {
+                $cache->endDataCache($this->arSections);
+            }
+        }
+
+
     }
 
     private function fillRating()
@@ -1035,6 +1075,7 @@ class NaturalistCatalog extends \CBitrixComponent
         $this->arResult['sortOrder'] = $this->sortOrder;
         $this->arResult['orderReverse'] = $this->orderReverse;
         $this->arResult['SECTIONS'] = $this->arSections;
+        $this->arResult['MAP_DATA'] = $this->arMapSections;
         $this->arResult['arHLTypes'] = $this->arHLTypes;
         $this->arResult['arHLFood'] = $this->arHLFood;
         $this->arResult['houseTypeData'] = $this->houseTypeData;
@@ -1096,6 +1137,7 @@ class NaturalistCatalog extends \CBitrixComponent
         $this->arResult['reviewsPageCount'] = $this->reviewsPageCount;
         $this->arResult['arReviewsLikesData'] = $this->arReviewsLikesData;
         $this->arResult['reviewsCount'] = $this->reviewsCount;
+        $this->arResult['yandexReviewsCount'] = $this->yandexReviewsCount;
         $this->arResult['avgRating'] = $this->avgRating;
         $this->arResult['arAvgCriterias'] = $this->arAvgCriterias;
         $this->arResult['arElements'] = $this->arElements;
@@ -1441,6 +1483,7 @@ class NaturalistCatalog extends \CBitrixComponent
             }
 
             $this->reviewsCount += $yandexReviews[0]['total_count'];
+            $this->yandexReviewsCount += $yandexReviews[0]['total_count'];
 
             $commonYandexReviewsClass = HighloadBlockTable::compileEntity('YandexReviews')->getDataClass();
 
@@ -1462,7 +1505,20 @@ class NaturalistCatalog extends \CBitrixComponent
             $this->daysCount = abs(strtotime($this->arUriParams['dateTo']) - strtotime($this->arUriParams['dateFrom'])) / 86400;
 
             // Запрос в апи на получение списка кемпингов со свободными местами в выбранный промежуток
-            $arExternalResult = Products::searchRooms($this->arSections['ID'], $this->arSections['UF_EXTERNAL_ID'], $this->arSections['UF_EXTERNAL_SERVICE'], $this->arUriParams['guests'], $this->arUriParams['childrenAge'], $this->arUriParams['dateFrom'], $this->arUriParams['dateTo'], $this->arSections['UF_MIN_CHIELD_AGE']);
+
+            $factory = new SearchServiceFactory();
+            $products = new Products($factory);
+            $arExternalResult = $products->searchRooms(
+                $this->arSections['ID'],
+                $this->arSections['UF_EXTERNAL_ID'],
+                $this->arSections['UF_EXTERNAL_SERVICE'],
+                intval($this->arUriParams['guests']) ?? 0,
+                $this->arUriParams['childrenAge'] ?? [],
+                $this->arUriParams['dateFrom'],
+                $this->arUriParams['dateTo'],
+                $this->arSections['UF_MIN_CHIELD_AGE'] ?? 0
+            );
+
             $this->arExternalInfo = $arExternalResult['arRooms'];
             $this->searchError = $arExternalResult['error'];
 
@@ -1505,17 +1561,20 @@ class NaturalistCatalog extends \CBitrixComponent
             "IBLOCK_ID" => CATALOG_IBLOCK_ID,
             "ACTIVE" => "Y",
             "SECTION_ID" => $this->arSections["ID"],
-            [
-                "LOGIC" => "OR",
-                ["PROPERTY_PARENT_ID" => NULL],
-                ["PROPERTY_PARENT_ID" => 0],
-                ["PROPERTY_PARENT_ID" => false]
-            ]
+//            [
+//                "LOGIC" => "OR",
+//                ["PROPERTY_PARENT_ID" => NULL],
+//                ["PROPERTY_PARENT_ID" => 0],
+//                ["PROPERTY_PARENT_ID" => false]
+//            ]
         );
 
-        if ($this->arSections["UF_EXTERNAL_SERVICE"] == "bnovo") {
-            $this->arFilter['PROPERTY_PARENT_ID'] = 0;
-        }  
+        if ($this->arSections["UF_EXTERNAL_SERVICE"] == "bronevik") {
+            $this->arFilter['PROPERTY_PARENT_ID'] = false;
+        }
+//        if ($this->arSections["UF_EXTERNAL_SERVICE"] == "bnovo") {
+//            $this->arFilter['PROPERTY_PARENT_ID'] = 0;
+//        }
     }
 
     private function fillDetailSeoParams()
@@ -1650,4 +1709,5 @@ class NaturalistCatalog extends \CBitrixComponent
 
         $this->arElements[$arElement['ID']] = $arElement;
     }
+
 }

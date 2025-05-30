@@ -53,17 +53,17 @@ global $arUser, $userId, $isAuthorized;
         <a class="anchor"></a>
             <div class="sort">
                 <ul class="list">
-                    <? if ($arReviews): ?>
+                    <?/* if ($arReviews): */?>
                     <li class="list__item reviews__item">
                         <div class="list__link<?= !empty($arReviews) ? ' active' : '' ?>" data-tab="naturalist_review"><?= Loc::getMessage('NATURALIST_REVIEWS'); ?></div>
                     </li>
-                    <? endif; ?>
+                    <?/* endif; */?>
 
-                    <? if ($arResult['yandexReview'][0]): ?>
+                    <?/* if ($arResult['yandexReview'][0]): */?>
                     <li class="list__item reviews__item">
                         <div class="list__link <?= (empty($arReviews) && isset($arResult['yandexReview'][0])) ? 'active' : '' ?>" data-tab="yandex_review"><?= Loc::getMessage('YANDEX_REVIEWS'); ?></div>
                     </li>
-                    <? endif; ?>
+                    <?/* endif; */?>
 
                 </ul>
             </div>

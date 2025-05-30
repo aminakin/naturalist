@@ -1,5 +1,6 @@
 <?
 
+use Naturalist\SearchServiceFactory;
 use Naturalist\Users;
 use Naturalist\Reviews;
 use Naturalist\Products;
@@ -54,7 +55,10 @@ if ($arFavourites) {
         $daysCount = abs(strtotime($dateTo) - strtotime($dateFrom)) / 86400;
 
         // Запрос в апи на получение списка кемпингов со свободными местами в выбранный промежуток
-        $arExternalInfo = Products::search($guests, $arChildrenAge, $dateFrom, $dateTo, false);
+        $factory = new SearchServiceFactory();
+        $products = new Products($factory);
+
+        $arExternalInfo = $products->search($guests, $arChildrenAge, $dateFrom, $dateTo, false);
         $arExternalIDs = array_keys($arExternalInfo);
         if ($arExternalIDs) {
             $arFilter["UF_EXTERNAL_ID"] = $arExternalIDs;
@@ -146,7 +150,7 @@ if ($arFavourites) {
         }
 
         if ($arExternalInfo) {
-            $sectionPrice = $arExternalInfo[$arFavourite["UF_EXTERNAL_ID"]];
+            $sectionPrice = $arExternalInfo[$arFavourite["UF_EXTERNAL_ID"]]['PRICE'];;
             // Если это Traveline, то делим цену на кол-во дней
             if ($arFavourite["UF_EXTERNAL_SERVICE"] == 1) {
                 $sectionPrice = round($sectionPrice / $daysCount);

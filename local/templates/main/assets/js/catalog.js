@@ -18360,6 +18360,7 @@
                 }
               }
 
+
               this.map = new ymaps.Map(
                 "map",
                 {

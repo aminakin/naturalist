@@ -655,7 +655,7 @@ if ($arResult['CHPY']['UF_CANONICAL']) {
             "naturalist:empty",
             "catalog_scripts",
             array(
-                "arSections" => $arResult['SECTIONS'],
+                "arSections" => $arResult['MAP_DATA'],
                 "arFavourites" => $arResult['FAVORITES'],
                 "arReviewsAvg" => $arResult['arReviewsAvg'],
                 "map" => $arParams["MAP"]
