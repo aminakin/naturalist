@@ -148,14 +148,22 @@ if ($arResult['ERROR']) {
             <div class="form__el-variant">
                 <?php foreach ($arResult['VARIANT'] as $variantKey => $variant) {?>
                     <label>
-                        <input type="radio" cost="<?=$arParams['VARIANT_COST']?>" name="cert_variant" value="<?=$arResult['LOCAL_HOST'].CFile::getPath($variant['UF_IMG_TO_CERT'])?>" class="visually-hidden" <?$variantKey == 0 ? 'required' : ''?>>
+                        <input type="radio"
+                               cost="<?=$arParams['VARIANT_COST']?>"
+                               name="cert_variant"
+                               value="<?=$arResult['LOCAL_HOST'].CFile::getPath($variant['UF_IMG_TO_CERT'])?>"
+                               class="visually-hidden"
+                            <?$variantKey == 0 ? 'required' : ''?>
+                               data-variant-key="<?=$variantKey?>"
+                        onclick="updateHiddenImageField(this)">
                         <span class="el-variant__title"><?=$variant['UF_NAME']?></span>
                         <div class="variant__img-wrap">
                             <img src="<?=CFile::ResizeImageGet($variant['UF_FILE'], array('width' => 600, 'height' => 763), BX_RESIZE_IMAGE_EXACT, true)['src']?>" alt="">
-                        </div>                                   
+                        </div>
                     </label>
-                <?php } ?>                
+                <?php } ?>
             </div>
+            <input type="hidden" name="cert_variant_fontdobro" id="cert_variant_fontdobro" value="">
         </section>
         <section class="form__block pocket design" style="display: none">
             <div class="form__title-block">
