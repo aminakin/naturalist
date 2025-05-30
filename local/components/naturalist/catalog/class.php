@@ -1286,14 +1286,14 @@ class NaturalistCatalog extends \CBitrixComponent
     private function setPagination()
     {
         // Пагинация номеров
-        $this->allCount = count($this->arDetailViewElements);
+        $this->allCount = count($this->arElements);
 
         if ($this->allCount > 0) {
             $this->page = $_REQUEST['page'] ?? 1;
             $this->pageCount = ceil($this->allCount / $this->arParams["DETAIL_ITEMS_COUNT"]);
             if ($this->pageCount > 1) {
-                $this->arDetailViewElements = array_slice(
-                    $this->arDetailViewElements,
+                $this->arElements = array_slice(
+                    $this->arElements,
                     ($this->page - 1) * $this->arParams["DETAIL_ITEMS_COUNT"],
                     $this->arParams["DETAIL_ITEMS_COUNT"]
                 );
