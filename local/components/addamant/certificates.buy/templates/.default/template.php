@@ -128,9 +128,13 @@ if ($arResult['ERROR']) {
                 <span class="form__dot"></span>
             </div>
             <div class="form__el-variant">
-                <?php foreach ($arResult['VARIANT_EL'] as $elVariant) {?>
+                <?php foreach ($arResult['VARIANT_EL'] as $variantKey => $elVariant) {?>
                     <label>
-                        <input type="radio" name="cert_el_variant" value="<?=$arResult['LOCAL_HOST'].CFile::getPath($elVariant['UF_FILE'])?>" class="visually-hidden" >
+                        <input type="radio"
+                               name="cert_el_variant"
+                               value="<?=$arResult['LOCAL_HOST'].CFile::getPath($elVariant['UF_FILE'])?>"
+                               data-variant-key="<?=$variantKey?>"
+                               class="visually-hidden" >
                         <span class="el-variant__title"><?=$elVariant['UF_NAME']?></span>
                         <div class="variant__img-wrap">
                             <img src="<?=CFile::ResizeImageGet($elVariant['UF_FILE'], array('width' => 600, 'height' => 849), BX_RESIZE_IMAGE_EXACT, true)['src']?>" alt="">
@@ -153,9 +157,8 @@ if ($arResult['ERROR']) {
                                name="cert_variant"
                                value="<?=$arResult['LOCAL_HOST'].CFile::getPath($variant['UF_IMG_TO_CERT'])?>"
                                class="visually-hidden"
-                            <?$variantKey == 0 ? 'required' : ''?>
-                               data-variant-key="<?=$variantKey?>"
-                        onclick="updateHiddenImageField(this)">
+                                <?$variantKey == 0 ? 'required' : ''?>
+                               data-variant-key="<?=$variantKey?>">
                         <span class="el-variant__title"><?=$variant['UF_NAME']?></span>
                         <div class="variant__img-wrap">
                             <img src="<?=CFile::ResizeImageGet($variant['UF_FILE'], array('width' => 600, 'height' => 763), BX_RESIZE_IMAGE_EXACT, true)['src']?>" alt="">
@@ -163,8 +166,10 @@ if ($arResult['ERROR']) {
                     </label>
                 <?php } ?>
             </div>
-            <input type="hidden" name="cert_variant_fontdobro" id="cert_variant_fontdobro" value="">
         </section>
+
+        <input type="hidden" name="cert_variant_fontdobro" id="cert_variant_fontdobro" value="">
+
         <section class="form__block pocket design" style="display: none">
             <div class="form__title-block">
                 <span class="form__number">4.</span>
