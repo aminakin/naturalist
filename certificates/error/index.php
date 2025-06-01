@@ -31,7 +31,7 @@ $APPLICATION->SetTitle("Ошибка");?>
                     </picture>
                     <div class="cert__message">
                         <p class="cert__message-title">При оформлении <br>сертификата произошла <br>ошибка!</p>
-                        <p class="cert__message-text">Попробуйте еще раз или обратитесь в <a href="/contacts/">службу заботы</a></p>
+<!--                        <p class="cert__message-text">Попробуйте еще раз или обратитесь в <a href="/contacts/">службу заботы</a></p>-->
                     </div>
                 </div>
                 <picture class="cert__geo">                    
