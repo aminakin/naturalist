@@ -2834,6 +2834,7 @@ span.flatpickr-weekday {
   height: 100%;
   letter-spacing: 0em;
   line-height: 20px;
+  font-family: "Lato", sans-serif !important;
 }
 
 .navigation>.list>.list__item>.list__link>* {
