@@ -71,7 +71,7 @@ $hasCustomCongrats = strlen($arResult['PROPS']['PROP_CONGRATS']) > 0;
                 </div>
 
                 <!-- Поздравления -->
-                <div class="pdf-spacer-50">
+                <?/*<div class="pdf-spacer-50">
                     <?php if (!$isDobroCert): ?>
                         <div class="pdf-font-18">
                             <?= Loc::getMessage('PDF_CONGRATS_TITLE'); ?>
@@ -81,7 +81,7 @@ $hasCustomCongrats = strlen($arResult['PROPS']['PROP_CONGRATS']) > 0;
                             <?= Loc::getMessage('PDF_CONGRATS'); ?>
                         </div>
                     <?php endif; ?>
-                </div>
+                </div> */?>
 
 
 
