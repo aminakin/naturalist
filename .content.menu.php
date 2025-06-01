@@ -35,13 +35,13 @@ $aMenuLinks = Array(
 		Array(), 
 		"" 
 	),
-	Array(
-		"Контакты НАТУРАЛИСТ", 
-		SITE_DIR."/contacts/", 
-		Array(), 
-		Array(), 
-		"" 
-	),
+//	Array(
+//		"Контакты НАТУРАЛИСТ",
+//		SITE_DIR."/contacts/",
+//		Array(),
+//		Array(),
+//		""
+//	),
 	Array(
 		"Реквизиты", 
 		SITE_DIR."/details/", 

@@ -39,7 +39,7 @@ if ($orderId) {
                     </picture>
                     <div class="cert__message">
                         <p class="cert__message-title">Ваш заказ успешно <br>оформлен!</p>
-                        <p class="cert__message-text">Если у вас возникли вопросы - обратитесь в <a href="/contacts/">службу заботы</a></p>
+<!--                        <p class="cert__message-text">Если у вас возникли вопросы - обратитесь в <a href="/contacts/">службу заботы</a></p>-->
                     </div>
                 </div>
                 <picture class="cert__geo">                    
