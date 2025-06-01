@@ -49,12 +49,12 @@ $aMenuLinks = Array(
 		Array(), 
 		"" 
 	),
-	Array(
-		"Контакты", 
-		SITE_DIR."/contacts/", 
-		Array(), 
-		Array(), 
-		"" 
-	)
+//	Array(
+//		"Контакты",
+//		SITE_DIR."/contacts/",
+//		Array(),
+//		Array(),
+//		""
+//	)
 );
 ?>

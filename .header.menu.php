@@ -62,14 +62,14 @@ $aMenuLinks = Array(
 
 );
 
-if(CSite::InDir('/catalog') || CSite::InDir('/map'))
-{
-    $aMenuLinks[] = Array(
-        "Контакты",
-        SITE_DIR."/contacts/",
-        Array(),
-        Array(),
-        ""
-    );
-}
+//if(CSite::InDir('/catalog') || CSite::InDir('/map'))
+//{
+//    $aMenuLinks[] = Array(
+//        "Контакты",
+//        SITE_DIR."/contacts/",
+//        Array(),
+//        Array(),
+//        ""
+//    );
+//}
 ?>

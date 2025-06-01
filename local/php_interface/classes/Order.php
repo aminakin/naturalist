@@ -74,6 +74,7 @@ class Orders
         'CERT_FORMAT' => ORDER_PROP_CERT_FORMAT,
         'IS_CERT' => ORDER_PROP_IS_CERT,
         'FIZ_VARIANT' => ORDER_PROP_FIZ_VARIANT,
+        'FIZ_VARIANT_DOBRO_CERT' => ORDER_PROP_DOBRO_CERT,
         'FIZ_POCKET' => ORDER_PROP_FIZ_POCKET,
         'CITY' => ORDER_PROP_CITY,
         'GIFT_NAME' => ORDER_PROP_GIFT_NAME,
@@ -280,7 +281,7 @@ class Orders
         $propertyCollection = $order->getPropertyCollection();
         $arProps = array();
         foreach ($this->arPropsIDs as $key => $propId) {
-            $arProps[$key] = $propertyCollection->getItemByOrderPropertyId($propId)->getValue();
+            $arProps[$key] = $propertyCollection->getItemByOrderPropertyId($propId)?->getValue();
         }
         if ($arProps["GUEST_LIST"]) {
             $arProps["GUESTS_COUNT"] = count($arProps["GUEST_LIST"]);
