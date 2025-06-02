@@ -46,7 +46,7 @@ $hasCustomCongrats = strlen($arResult['PROPS']['PROP_CONGRATS']) > 0;
         <tr>
             <td class="pdf-middle-height" style="height: 415px;position: relative;">
 
-                <div style="position: absolute; top: 40%; left: 50%; transform: translate(-50%, -50%); width: 80%; text-align: center;">
+                <div style="position: absolute; top: 35%; left: 50%; transform: translate(-50%, -50%); width: 80%; text-align: center;">
                     <div class="pdf-font-24" style="line-height: 1.2;">
                         <?php if ($hasCustomCongrats): ?>
                             <?= $arResult['PROPS']['PROP_CONGRATS'] ?>
@@ -99,11 +99,11 @@ $hasCustomCongrats = strlen($arResult['PROPS']['PROP_CONGRATS']) > 0;
                         <hr style="border: 0; border-top: 1px solid black; width: 80%; margin: 10px auto;">
 
                         <!-- Контактная информация -->
-                        <table class="pdf-contact-table" style="margin-bottom: 5px;">
+                        <table class="pdf-contact-table" style="margin-bottom: 20px;">
                             <tr>
                                 <td class="pdf-font-14" style="text-align: left; width: 50%; vertical-align: middle;">
                                     <img width="14" height="14" src="<?= HTTP_HOST ?>/ajax/pdf/inc/img/phone.png"
-                                         style="margin-top: 8px; margin-right: 5px; vertical-align: middle;" alt="">
+                                         style="margin-top: 5px; margin-right: 5px; vertical-align: middle;" alt="">
                                     <?= Loc::getMessage('PDF_PHONE'); ?>
                                 </td>
                                 <td class="pdf-font-14" style="text-align: right; width: 50%; vertical-align: middle;">
