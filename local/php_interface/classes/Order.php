@@ -9,6 +9,7 @@ use Bitrix\Main\ArgumentOutOfRangeException;
 use Bitrix\Main\ArgumentTypeException;
 use Bitrix\Main\Config\Option;
 use Bitrix\Main\Context;
+use Bitrix\Main\Diag\Debug;
 use Bitrix\Main\Grid\Declension;
 use Bitrix\Main\Loader;
 use Bitrix\Main\NotImplementedException;
@@ -957,7 +958,7 @@ class Orders
         /* Оплата */
 
         // Если баланс пользователя не равен 0, то часть или вся оплата будут с внутреннего счёта
-        if ($params['userbalance'] != 0) {
+        if ($params['userbalance'] > 0) {
 
             // Вычисляем разницу между суммой заказа и балансом счёта
             $difference = intval($order->getPrice()) - intval($params['userbalance']);
