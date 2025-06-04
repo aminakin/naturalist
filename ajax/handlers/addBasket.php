@@ -11,7 +11,7 @@ use Bitrix\Main\Application;
 use Bitrix\Highloadblock\HighloadBlockTable;
 
 if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) {
-	include_once $_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_before.php";
+    include_once $_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_before.php";
 }
 
 $productId  = $_REQUEST["productId"];
@@ -34,93 +34,93 @@ if ($externalService == 'uhotels') {
 } elseif ($externalService == 'bronevik') {
     //
 } elseif ($externalService == "bnovo") {
-	$tariffId = $_REQUEST["tariffId"];
-	$categoryId = $_REQUEST["categoryId"];
-	$prices = $_REQUEST["prices"];
+    $tariffId = $_REQUEST["tariffId"];
+    $categoryId = $_REQUEST["categoryId"];
+    $prices = $_REQUEST["prices"];
 } else {
-	$checksum = $_REQUEST["checksum"];
-	$session = Application::getInstance()->getSession();
-	$sessionId = $session->getId();
+    $checksum = $_REQUEST["checksum"];
+    $session = Application::getInstance()->getSession();
+    $sessionId = $session->getId();
 
-	$checksummDataClass = HighloadBlockTable::compileEntity(TRAVELINE_CHECKSUMM_HL_ENTITY)->getDataClass();
-	$query = $checksummDataClass::query()
-		->addSelect('ID')
-		->where('UF_SESSION_ID', $sessionId)
-		?->fetch();
+    $checksummDataClass = HighloadBlockTable::compileEntity(TRAVELINE_CHECKSUMM_HL_ENTITY)->getDataClass();
+    $query = $checksummDataClass::query()
+        ->addSelect('ID')
+        ->where('UF_SESSION_ID', $sessionId)
+        ?->fetch();
 
-	if (!empty($query)) {
-		$checksummDataClass::update($query['ID'], ['UF_CHECKSUMM' => $checksum]);
-	} else {
-		$checksummDataClass::add([
-			'UF_SESSION_ID' => $sessionId,
-			'UF_CHECKSUMM' => $checksum,
-		]);
-	}
+    if (!empty($query)) {
+        $checksummDataClass::update($query['ID'], ['UF_CHECKSUMM' => $checksum]);
+    } else {
+        $checksummDataClass::add([
+            'UF_SESSION_ID' => $sessionId,
+            'UF_CHECKSUMM' => $checksum,
+        ]);
+    }
 }
 
 $count = 1;
 $daysCount = (strtotime($dateTo) - strtotime($dateFrom)) / (60 * 60 * 24);
 $arProps = array(
-	[
-		'CODE' => 'DATE_FROM',
-		'NAME' => 'Дата заезда',
-		'VALUE' => $dateFrom
-	],
-	[
-		'CODE' => 'DATE_TO',
-		'NAME' => 'Дата выезда',
-		'VALUE' => $dateTo,
-	],
-	[
-		'CODE' => 'GUESTS_COUNT',
-		'NAME' => 'Количество гостей',
-		'VALUE' => $guests,
-	],
-	[
-		'CODE' => 'CHILDREN',
-		'NAME' => 'Возраст детей',
-		'VALUE' => $childrenAge,
-	],
-	[
-		'CODE' => 'DAYS_COUNT',
-		'NAME' => 'Количество дней',
-		'VALUE' => $daysCount,
-	],
-	[
-		'CODE' => 'EXTERNAL_ID',
-		'NAME' => 'Внешний ID',
-		'VALUE' => $externalId,
-	],
-	[
-		'CODE' => 'EXTERNAL_SERVICE',
-		'NAME' => 'Внешний сервис',
-		'VALUE' => $externalService,
-	],
-	[
-		'CODE' => 'REAL_PRICE',
-		'NAME' => 'Цена',
-		'VALUE' => $price,
-	],
-	[
-		'CODE' => 'PEOPLE',
-		'NAME' => 'Размещение гостей',
-		'VALUE' => $people,
-	],
-	[
-		'CODE' => 'SESSION_ID',
-		'NAME' => 'Сессия',
-		'VALUE' => $sessionId,
-	],
-	[
-		'CODE' => 'TITLE',
-		'NAME' => 'Название номера',
-		'VALUE' => $title,
-	],
-	[
-		'CODE' => 'PHOTO',
-		'NAME' => 'Фото номера',
-		'VALUE' => $photo,
-	]
+    [
+        'CODE' => 'DATE_FROM',
+        'NAME' => 'Дата заезда',
+        'VALUE' => $dateFrom
+    ],
+    [
+        'CODE' => 'DATE_TO',
+        'NAME' => 'Дата выезда',
+        'VALUE' => $dateTo,
+    ],
+    [
+        'CODE' => 'GUESTS_COUNT',
+        'NAME' => 'Количество гостей',
+        'VALUE' => $guests,
+    ],
+    [
+        'CODE' => 'CHILDREN',
+        'NAME' => 'Возраст детей',
+        'VALUE' => $childrenAge,
+    ],
+    [
+        'CODE' => 'DAYS_COUNT',
+        'NAME' => 'Количество дней',
+        'VALUE' => $daysCount,
+    ],
+    [
+        'CODE' => 'EXTERNAL_ID',
+        'NAME' => 'Внешний ID',
+        'VALUE' => $externalId,
+    ],
+    [
+        'CODE' => 'EXTERNAL_SERVICE',
+        'NAME' => 'Внешний сервис',
+        'VALUE' => $externalService,
+    ],
+    [
+        'CODE' => 'REAL_PRICE',
+        'NAME' => 'Цена',
+        'VALUE' => $price,
+    ],
+    [
+        'CODE' => 'PEOPLE',
+        'NAME' => 'Размещение гостей',
+        'VALUE' => $people,
+    ],
+    [
+        'CODE' => 'SESSION_ID',
+        'NAME' => 'Сессия',
+        'VALUE' => $sessionId,
+    ],
+    [
+        'CODE' => 'TITLE',
+        'NAME' => 'Название номера',
+        'VALUE' => $title,
+    ],
+    [
+        'CODE' => 'PHOTO',
+        'NAME' => 'Фото номера',
+        'VALUE' => $photo,
+    ]
 );
 
 if ($externalService == 'uhotels') {
@@ -148,29 +148,34 @@ if ($externalService == 'uhotels') {
 //        ]
     ]);
 } elseif ($externalService == 'bnovo') {
-	$arProps = array_merge($arProps, array(
-		[
-			'CODE' => 'TARIFF_ID',
-			'NAME' => 'ID тарифа Бново',
-			'VALUE' => $tariffId
-		],
-		[
-			'CODE' => 'CATEGORY_ID',
-			'NAME' => 'ID номера Бново',
-			'VALUE' => $categoryId
-		],
-		[
-			'CODE' => 'PRICES',
-			'VALUE' => $prices
-		]
-	));
+    $arProps = array_merge($arProps, array(
+        [
+            'CODE' => 'TARIFF_ID',
+            'NAME' => 'ID тарифа Бново',
+            'VALUE' => $tariffId
+        ],
+        [
+            'CODE' => 'CATEGORY_ID',
+            'NAME' => 'ID номера Бново',
+            'VALUE' => $categoryId
+        ],
+        [
+            'CODE' => 'PRICES',
+            'VALUE' => $prices
+        ]
+    ));
 } else {
-	// $arProps = array_merge($arProps, array(
-	// 	[
-	// 		'CODE' => 'CHECKSUM',
-	// 		'VALUE' => $checksum
-	// 	]
-	// ));
+    // $arProps = array_merge($arProps, array(
+    // 	[
+    // 		'CODE' => 'CHECKSUM',
+    // 		'VALUE' => $checksum
+    // 	]
+    // ));
+}
+
+if (empty($price) && !is_numeric($price) && floatval($price) < 0) {
+    echo json_encode(['error' => 'Некорректная цена товара']);
+    die();
 }
 
 $basket = new Baskets();

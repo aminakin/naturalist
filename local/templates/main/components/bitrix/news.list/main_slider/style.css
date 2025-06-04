@@ -29,6 +29,8 @@
 
 .main-slider ul li img {
   position: absolute;
+  height: 100%;
+  width: 100%;
   top: 0;
   left: 0;
 }
@@ -42,7 +44,7 @@
 
 @media (max-width: 768px) {
   .main-slider.container {
-    padding-top: 40px;
+    padding-top: 16px;
   }
 
   .main-slider ul li {

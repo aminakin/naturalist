@@ -40,6 +40,7 @@ class BuyCert {
     certElVariantsLabels = document.querySelectorAll(
         ".el-variant .form__el-variant label"
     );
+
     certElVariants = document.querySelectorAll('input[name="cert_el_variant"]');
     certPocketsLabels = document.querySelectorAll(
         ".pocket .form__el-variant label"
@@ -52,6 +53,8 @@ class BuyCert {
     promoInput = document.querySelector(".promo__item-input");
     promoWrap = document.querySelector(".promo__item-wrap");
     promoInfo = document.querySelector(".promo__info");
+
+    dobroFontChecker = document.getElementById('cert_variant_fontdobro');
 
     totalSumm = 0;
     prodSumm = 0;
@@ -293,7 +296,14 @@ class BuyCert {
         this.certVariants.forEach((element) => {
             element.addEventListener("change", function () {
                 _this.elementsClassListRemove(_this.certVariantsLabels, "selected");
+
                 if (this.checked) {
+
+                    if (element.dataset.variantKey)
+                    {
+                        _this.updateDobrofontSelector(element.dataset.variantKey)
+                    }
+
                     element.parentElement.classList.add("selected");
                     _this.variantSumm = +this.getAttribute("cost");
                     _this.calcSumm();
@@ -307,7 +317,15 @@ class BuyCert {
         this.certElVariants.forEach((element) => {
             element.addEventListener("change", function () {
                 _this.elementsClassListRemove(_this.certElVariantsLabels, "selected");
+
+
                 if (this.checked) {
+
+                    if (element.dataset.variantKey)
+                    {
+                        _this.updateDobrofontSelector(element.dataset.variantKey)
+                    }
+
                     element.parentElement.classList.add("selected");
                     _this.variantSumm = 0;
                     _this.pocketSumm = 0;
@@ -611,4 +629,18 @@ class BuyCert {
             maximumFractionDigits: 0,
         }).format(value);
     }
+
+    /**
+     * Обновляет свойство для заказа по доброшрифту
+     */
+    updateDobrofontSelector(variantKey) {
+        if (variantKey == "var_3" || variantKey == "el_3") {
+            this.dobroFontChecker.value = "Y";
+        } else {
+            this.dobroFontChecker.value = "N";
+        }
+
+    }
+
 }
+

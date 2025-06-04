@@ -29,20 +29,20 @@ $aMenuLinks = array(
 		array(),
 		""
 	),
-	array(
-		"Контакты",
-		SITE_DIR . "/contacts/",
-		array(),
-		array(),
-		""
-	),
-    array(
-        "FAQ",
-        SITE_DIR . "/certificates/",
-        array(),
-        array("ALWAYS_ORANGE" => "Y"),
-        ""
-    ),
+//	array(
+//		"Контакты",
+//		SITE_DIR . "/contacts/",
+//		array(),
+//		array(),
+//		""
+//	),
+//    array(
+//        "FAQ",
+//        SITE_DIR . "/certificates/",
+//        array(),
+//        array("ALWAYS_ORANGE" => "Y"),
+//        ""
+//    ),
 	array(
 		"Сертификат",
 		SITE_DIR . "/certificates/",
@@ -82,13 +82,14 @@ if(CSite::InDir('/catalog') || CSite::InDir('/map'))
             array(),
             ""
         ),
-        array(
-            "Локации",
-            SITE_DIR . "/regions/",
-            array(),
-            array(),
-            ""
-        ),];
+//        array(
+//            "Локации",
+//            SITE_DIR . "/regions/",
+//            array(),
+//            array(),
+//            ""
+//        ),
+    ];
 
     foreach ($oldElements as $oldElement){
         $aMenuLinks[] = $oldElement;

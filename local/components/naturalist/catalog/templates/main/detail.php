@@ -83,6 +83,7 @@ $APPLICATION->AddHeadString('<meta name="description" content="' . $arResult['de
             "arHLRoomFeatures" => $arResult['arHLRoomFeatures'],
             "arExternalInfo" => $arResult['arExternalInfo'],
             "arElements" => $arResult['arElements'],
+            "arDetailViewElements" => $arResult['arDetailViewElements'],
             "daysRange" => $arResult['daysRange'],
             "page" => $arResult['page'],
             "pageCount" => $arResult['pageCount'],
