@@ -69,26 +69,17 @@ Loc::loadMessages(__FILE__);
                                     </svg>
                                 </button>
 
-<!--                                --><?// if (!empty($arItem["UF_ACTION"])): ?>
-<!--                                    <div class="tag">--><?php //= $arItem["UF_ACTION"] ?><!--</div>-->
-<!--                                --><?// endif; ?>
+
                             </div>
 
-                            <?php if ($arItem["IS_DISCOUNT"] == 'Y'): ?>
-                                <div class="tag_wrapper">
+                            <div class="tag_wrapper">
+                                <?php if ($arItem["IS_DISCOUNT"] == 'Y'): ?>
                                     <div class="tag sale_tag">
                                         <?= $arItem["UF_SALE_LABEL"] != '' ? $arItem["UF_SALE_LABEL"] : Loc::GetMessage('CATALOG_DISCOUNT') ?> <?= $arItem["DISCOUNT_PERCENT"] ? $arItem["DISCOUNT_PERCENT"] . '%' : '' ?>
                                     </div>
-                                </div>
-                            <?php endif; ?>
+                                <?php endif; ?>
+                            </div>
 
-<!--                            --><?php //if (!empty($arItem["UF_ACTION"])) : ?>
-<!--                            <div class="tag_wrapper">-->
-<!--                                <div class="tag sale_tag">-->
-<!--                                    --><?php //= $arItem["UF_ACTION"] ?>
-<!--                                </div>-->
-<!--                            </div>-->
-<!--                            --><?php //endif; ?>
                             <div class="object-row__content">
                                 <div class="object-row__description">
                                     <a class="object-row__title" target="_blank"

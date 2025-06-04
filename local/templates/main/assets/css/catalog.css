@@ -228,13 +228,13 @@
 
 .object-row  .tag_wrapper .tag {
   position: static;
-  width: 130px;
-  height: 30px;
-  line-height: 14px;
+  width: 143px;
+  height: 39px;
+  line-height: 26px;
   font-weight: 400;
   font-size: 13px;
   text-transform: none;
-  padding: 8px 16px 8px 12px;
+  padding: 5px 14px 0px 7px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -242,6 +242,8 @@
 
 .object-row  .tag_wrapper .tag.sale_tag{
   background: url(../img/tag.png) no-repeat center center;
+  background-size: contain;
+  width: 100%;
 }
 
 .object-row  .tag_wrapper .tag.stay_tag {

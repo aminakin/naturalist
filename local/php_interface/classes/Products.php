@@ -28,7 +28,7 @@ class Products implements SearchServiceInterface
         'traveline' => 'traveline',
         'bnovo' => 'bnovo',
         'bronevik' => 'bronevik',
-//        'uhotels' => 'uhotels',
+        'uhotels' => 'uhotels',
     ];
 
     private const DEFAULT_SELECT = [
