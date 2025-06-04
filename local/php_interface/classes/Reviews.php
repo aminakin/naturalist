@@ -8,6 +8,7 @@ use CModule;
 use CIBlockElement;
 use CUser;
 use CFile;
+use NaturalistCatalog;
 
 Loader::IncludeModule("iblock");
 
@@ -107,6 +108,7 @@ class Reviews
             $arRatings[$arReview["PROPERTY_CAMPING_ID_VALUE"]]["RATING"][] = $arReview["PROPERTY_RATING_VALUE"];
             $arRatings[$arReview["PROPERTY_CAMPING_ID_VALUE"]]["REVIEW"][] = $arReview;
         }
+
 
         $arRatingsAvg = array();
         foreach ($arRatings as $campingId => $arRatingItem) {

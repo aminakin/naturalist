@@ -210,7 +210,7 @@ foreach ($arElements as $arElement): ?>
                                     </div>
                                 <? } ?>
 
-                                <? /*if (strlen($offer['PROPERTIES']['CANCELLATION_POLICIES']['VALUE'])) { ?>
+                                <? if (strlen($offer['tariffData']['penalty']['name'])) { ?>
                                     <div class="room__cancelation">
                                         <div class="room__cancelation-title">
                                             Условия отмены
@@ -230,7 +230,8 @@ foreach ($arElements as $arElement): ?>
                                             <div class="room__cancelation-tooltip-title">Условия отмены бронирования
                                             </div>
                                             <ul>
-                                                <li><?= $offer['PROPERTIES']['CANCELLATION_POLICIES']['VALUE'] ?></li>
+                                                <li><?= $offer['tariffData']['penalty']['name'] ?></li>
+                                                <li><?= $offer['tariffData']['penalty']['desc'] ?></li>
                                             </ul>
                                             <svg xmlns="http://www.w3.org/2000/svg" width="10" height="5"
                                                  viewBox="0 0 10 5" fill="none">
@@ -238,7 +239,7 @@ foreach ($arElements as $arElement): ?>
                                             </svg>
                                         </div>
                                     </div>
-                                <? } */?>
+                                <? } ?>
                             </div>
 
                             <div class="room__price">
