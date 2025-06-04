@@ -1246,7 +1246,9 @@
     display: flex;
     margin-bottom: 3.2rem;
     position: relative;
-    z-index: 4
+    z-index: 4;
+    flex-direction: column;
+    gap: 36px;
 }
 
 .profile__heading > * {
@@ -1265,7 +1267,7 @@
     -webkit-box-flex: 0;
     -ms-flex: none;
     flex: none;
-    padding-left: 3.2rem
+    padding: 0px
 }
 
 .profile__heading-controls .form_search {

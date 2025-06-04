@@ -36,13 +36,13 @@ $aMenuLinks = array(
 //		array(),
 //		""
 //	),
-    array(
-        "FAQ",
-        SITE_DIR . "/certificates/",
-        array(),
-        array("ALWAYS_ORANGE" => "Y"),
-        ""
-    ),
+//    array(
+//        "FAQ",
+//        SITE_DIR . "/certificates/",
+//        array(),
+//        array("ALWAYS_ORANGE" => "Y"),
+//        ""
+//    ),
 	array(
 		"Сертификат",
 		SITE_DIR . "/certificates/",
