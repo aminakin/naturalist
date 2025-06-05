@@ -562,7 +562,7 @@ class Bnovo implements SearchServiceInterface
                 $arOccupancy["PROPERTY_GUESTS_COUNT_VALUE"] += 1;
             }
             $backOccupancies[] = $arOccupancy;
-            if ($arOccupancy["PROPERTY_GUESTS_COUNT_VALUE"] == $totalPeople) {
+            if ($arOccupancy["PROPERTY_GUESTS_COUNT_VALUE"] >= $totalPeople) {
                 if (!empty($children)) {
                     $childrenStatus = false;
                     foreach ($arOccupancy["PROPERTY_CHILDREN_AGES_VALUE"] as $key => $idAge) {
@@ -589,7 +589,7 @@ class Bnovo implements SearchServiceInterface
 
         if (empty($arCategoriesFilterredIDs)) {
             foreach ($backOccupancies as $arOccupancy) {
-                if ($arOccupancy["PROPERTY_GUESTS_COUNT_VALUE"] == $totalPeople) {
+                if ($arOccupancy["PROPERTY_GUESTS_COUNT_VALUE"] >= $totalPeople) {
                     $arCategoriesFilterredIDs[] = $arOccupancy["PROPERTY_CATEGORY_ID_VALUE"];
                     $occupancySeatsSettings[$arOccupancy["PROPERTY_CATEGORY_ID_VALUE"]] = $arOccupancy;
                 }
