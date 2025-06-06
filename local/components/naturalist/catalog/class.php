@@ -557,10 +557,10 @@ class NaturalistCatalog extends \CBitrixComponent
 
             if ($this->arParams['MAP']) {
                 $cache = Cache::createInstance();
-                $cacheKey = 'mapSections';
+                $cacheKey = 'mapSections'. serialize($this->arFilter);
 
                 // Попытка загрузить данные из кеша
-                if ($cache->initCache(86400, $cacheKey)) {
+                if ($cache->initCache(36000, $cacheKey)) {
                     $this->arSections = $cache->getVars();
                 } else if ($cache->startDataCache()) {
                     $this->sectionsQuery();
@@ -665,23 +665,6 @@ class NaturalistCatalog extends \CBitrixComponent
             $this->minPrice = round(min($arSectionsPrice));
             $this->maxPrice = round(max($arSectionsPrice));
         }
-
-
-        $this->arMapSections = $this->arSections;
-
-        if (!isset($this->arFilter['UF_EXTERNAL_ID'])) {
-            $cache = Cache::createInstance();
-            $cacheKey = 'mapData';
-
-            // Попытка загрузить данные из кеша
-            if ($cache->initCache(86400, $cacheKey)) {
-                $this->arMapSections = $cache->getVars();
-            } else if ($this->arParams['MAP'] && $cache->startDataCache()) {
-                $cache->endDataCache($this->arSections);
-            }
-        }
-
-
     }
 
     private function fillRating()
