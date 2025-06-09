@@ -636,6 +636,9 @@ class NaturalistCatalog extends \CBitrixComponent
             $this->minPrice = round(min($arSectionsPrice));
             $this->maxPrice = round(max($arSectionsPrice));
         }
+
+        $this->arMapSections = $this->arSections;
+
     }
 
     private function fillRating()
