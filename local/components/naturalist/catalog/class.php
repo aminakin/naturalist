@@ -528,7 +528,7 @@ class NaturalistCatalog extends \CBitrixComponent
 
             if ($this->arParams['MAP']) {
                 $cache = Cache::createInstance();
-                $cacheKey = 'mapSections'. serialize($this->arFilter);
+                $cacheKey = 'mapSections' . serialize($this->arFilter);
 
                 // Попытка загрузить данные из кеша
                 if ($cache->initCache(36000, $cacheKey)) {
@@ -638,6 +638,18 @@ class NaturalistCatalog extends \CBitrixComponent
         }
 
         $this->arMapSections = $this->arSections;
+
+        if (!isset($this->arFilter['UF_EXTERNAL_ID'])) {
+            $cache = Cache::createInstance();
+            $cacheKey = 'mapData' . serialize($this->arFilter);
+
+            // Попытка загрузить данные из кеша
+            if ($cache->initCache(3600, $cacheKey)) {
+                $this->arMapSections = $cache->getVars();
+            } else if ($this->arParams['MAP'] && $cache->startDataCache()) {
+                $cache->endDataCache($this->arSections);
+            }
+        }
 
     }
 
