@@ -196,6 +196,8 @@ class BuyCert {
             // костыль для купона
             if (
                 enteredCoupon == 'VESNA7' || enteredCoupon == 'vesna7' ||
+                enteredCoupon == 'УЖЕЛЕТО' || enteredCoupon == 'ужелето' ||
+                enteredCoupon == 'BUHLOVO' || enteredCoupon == 'buhlovo' ||
                 enteredCoupon == 'CR20' || enteredCoupon == 'cr20'
             ) {
                 this.promoInfo.textContent =
