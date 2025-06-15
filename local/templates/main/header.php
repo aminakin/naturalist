@@ -1,6 +1,7 @@
 <?php
 
 use Bitrix\Main\Page\Asset;
+use Naturalist\CustomFunctions;
 
 if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) die();
 
@@ -250,6 +251,24 @@ use Naturalist\Users;
     <!-- Google Tag Manager (noscript) -->
     <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5762ML9" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <!-- End Google Tag Manager (noscript) -->
+
+    <?php
+        CustomFunctions::setSeoReferer();
+
+        $APPLICATION->IncludeComponent(
+            "viardaru:cookie.utm",
+            "",
+            Array(
+                "COMPOSITE_FRAME_MODE" => "A",
+                "COMPOSITE_FRAME_TYPE" => "AUTO",
+                "UTM_CAMPAIGN" => "utm_campaign",
+                "UTM_CONTENT" => "utm_content",
+                "UTM_MEDIUM" => "utm_medium",
+                "UTM_SOURCE" => "utm_source",
+                "UTM_TERM" => "utm_term"
+            )
+        );
+    ?>
 
 
     <div id="admin_panel"><?php $APPLICATION->ShowPanel(); ?></div>

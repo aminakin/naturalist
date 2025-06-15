@@ -1,4 +1,4 @@
-<?
+<?php
 
 namespace Naturalist;
 
@@ -569,6 +569,12 @@ class Events
                     'UF_CRM_1691496469' => $arProps['PHONE']['VALUE'][0],
                     'UF_CRM_1691496489' => $arProps['EMAIL']['VALUE'][0],
                     'UF_CRM_1712652449037' => $promocode ? $promocode : '',
+                    'UF_CRM_1747058844' => $_COOKIE['utm_source'] ?: '',
+                    'UF_CRM_1747058852' => $_COOKIE['utm_medium'] ?: '',
+                    'UF_CRM_1747058933' => $_COOKIE['utm_campaign'] ?: '',
+                    'UF_CRM_1747058891' => $_COOKIE['utm_term'] ?: '',
+                    'UF_CRM_1749987661' => $_COOKIE['utm_content'] ?: '',
+                    'UF_CRM_1749987678' => $_COOKIE['utm_referer'] ?: '',
                 ]
             ]
         );
