@@ -30,7 +30,7 @@ if (!$arResult['SECTION']) {
 
 $APPLICATION->SetTitle($arResult['SECTION']["NAME"]);
 $APPLICATION->SetTitle($arResult['titleSEO']);
-$APPLICATION->AddHeadString('<meta name="description" content="' . $arResult['descriptionSEO'] . '" />');
+$APPLICATION->SetPageProperty("description", $arResult['descriptionSEO']);
 /**/
 ?>
 
@@ -190,7 +190,8 @@ $APPLICATION->IncludeComponent(
         'OBJECT_COMFORTS' => $arResult['arObjectComforts'],
         'OBJECT_FUN' => $arResult['arHLFeatures'],
         'HOUSE_TYPES' => $arResult['arHouseTypes'],
-        'SECTION' => $arResult['SECTION']
+        'SECTION' => $arResult['SECTION'],
+        'HL_TYPES' => $arResult['arHLTypes'],
     )
 );
 ?>

@@ -21,7 +21,7 @@ global $arSettings;
     <section class="section section_crumbs">
         <div class="container">
             <div class="crumbs">
-                <ul class="list crumbs__list">
+                <ul class="list crumbs__list" itemscope itemtype="http://schema.org/BreadcrumbList">
                     <?
                     $APPLICATION->IncludeComponent(
                         "bitrix:breadcrumb",

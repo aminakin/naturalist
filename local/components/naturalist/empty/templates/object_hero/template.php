@@ -64,7 +64,7 @@ if (!isset($arResult["arSection"]["ID"])) {
                             <? foreach ($arSection["PICTURES"] as $arPhoto) : ?>
                                 <? if (count($arSection["PICTURES"]) > 1): ?>
                                     <?
-                                    $alt = $arHLTypes[$arSection["UF_TYPE"]]["UF_NAME"] . " " . $arSection["NAME"] . " " . $arSection["UF_REGION_NAME"] . " рис." . $keyPhoto;;
+                                    $alt = $arHLTypes[$arSection["UF_TYPE"]]["UF_NAME"] . " " . $arSection["NAME"] . " " . $arSection["UF_REGION_NAME"] . " рис." . $keyPhoto;
                                     $title = "Фото - " . $arSection["NAME"] . " рис." . $keyPhoto;
                                     ?>
                                 <? else: ?>
@@ -102,19 +102,23 @@ if (!isset($arResult["arSection"]["ID"])) {
                     </div>
                 <? } else { ?>
                     <div class="object__galery <?= count($arSection["PICTURES"]) == 1 ? 'alone' : '' ?>">
+                        <?php
+                        $alt = $arHLTypes[$arSection["UF_TYPE"]]["UF_NAME"] . " " . $arSection["NAME"];
+                        $title = "Фото - " . $arSection["NAME"];
+                        ?>
                         <!-- <a href="#gallery" data-modal class="object__galery-item first"> -->
                         <a data-fancybox="gallery" href="<?= $arSection["PICTURES"][0]['big'] ? $arSection["PICTURES"][0]['big'] : $arSection["PICTURES"][0]['src'] ?>" data-modal class="object__galery-item first">
                             <img src="<?= $arSection["PICTURES"][0]['big'] ? $arSection["PICTURES"][0]['big'] : $arSection["PICTURES"][0]['src'] ?>"
-                                loading="lazy" alt="">
+                                loading="lazy" alt="<?= $alt ?> рис.1" title="<?= $title ?> рис.1">
                         </a>
                         <? if (count($arSection["PICTURES"]) > 1) { ?>
                             <!-- <a href="#gallery" data-modal class="object__galery-item"> -->
                             <a data-fancybox="gallery" href="<?= $arSection["PICTURES"][1]['src'] ?>" data-modal class="object__galery-item">
-                                <img src="<?= $arSection["PICTURES"][1]['src'] ?>" loading="lazy" alt="">
+                                <img src="<?= $arSection["PICTURES"][1]['src'] ?>" loading="lazy" alt="<?= $alt ?> рис.2" title="<?= $title ?> рис.2">
                             </a>
                             <a href="#gallery" data-modal class="object__galery-item">
                                 <!-- <a data-fancybox="gallery" href="<?= $arSection["PICTURES"][2]['src'] ?>" data-modal class="object__galery-item"> -->
-                                <img src="<?= $arSection["PICTURES"][2]['src'] ?>" loading="lazy" alt="">
+                                <img src="<?= $arSection["PICTURES"][2]['src'] ?>" loading="lazy" alt="<?= $alt ?> рис.3" title="<?= $title ?> рис.3">
                                 <span>
                                     <svg xmlns="http://www.w3.org/2000/svg" width="21" height="20" viewBox="0 0 21 20"
                                         fill="none">

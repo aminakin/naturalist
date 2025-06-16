@@ -82,20 +82,20 @@ Loc::loadMessages(__FILE__);
                             <div class="object-row__content">
                                 <div class="object-row__description">
                                     <a class="object-row__title" target="_blank"
-                                        href="<?= $arItem["URL"] ?>"><?= $arItem["NAME"] ?></a>
+                                        href="<?= $arItem["SECTION_PAGE_URL"] ?>"><?= $arItem["NAME"] ?></a>
                                     <?php
                                     if (isset($arParams['arHLTypes'][$arItem["UF_TYPE"]])) : ?>
                                         <span><?= $arParams['arHLTypes'][$arItem["UF_TYPE"]]["UF_NAME"] ?></span><?php endif; ?>
 
                                     <div class="object-row__reviews">
-                                        <a target="_blank" href="<?= $arItem["URL"] ?>#reviews-anchor"
+                                        <a target="_blank" href="<?= $arItem["SECTION_PAGE_URL"] ?>#reviews-anchor"
                                             style="display: flex;font-size: 1.3rem;margin-left: 0;" class="score"
                                             data-score="[{&quot;label&quot;:&quot;Удобство расположения&quot;,&quot;value&quot;:<?= $arResult['arReviewsAvg'][$arItem["ID"]]["criterials"][1][0] ?? '0.0' ?>},{&quot;label&quot;:&quot;Питание&quot;,&quot;value&quot;:<?= $arResult['arReviewsAvg'][$arItem["ID"]]["criterials"][2][0] ?? '0.0' ?>},{&quot;label&quot;:&quot;Уют&quot;,&quot;value&quot;:<?= $arResult['arReviewsAvg'][$arItem["ID"]]["criterials"][3][0] ?? '0.0' ?>},{&quot;label&quot;:&quot;Сервис&quot;,&quot;value&quot;:<?= $arResult['arReviewsAvg'][$arItem["ID"]]["criterials"][4][0] ?? '0.0' ?>},{&quot;label&quot;:&quot;Чистота&quot;,&quot;value&quot;:<?= $arResult['arReviewsAvg'][$arItem["ID"]]["criterials"][5][0] ?? '0.0' ?>},{&quot;label&quot;:&quot;Эстетика окружения&quot;,&quot;value&quot;:<?= $arResult['arReviewsAvg'][$arItem["ID"]]["criterials"][6][0] ?? '0.0' ?>},{&quot;label&quot;:&quot;Разнообразие досуга&quot;,&quot;value&quot;:<?= $arResult['arReviewsAvg'][$arItem["ID"]]["criterials"][7][0] ?? '0.0' ?>},{&quot;label&quot;:&quot;Соотношение цена/качество&quot;,&quot;value&quot;:<?= $arResult['arReviewsAvg'][$arItem["ID"]]["criterials"][8][0] ?? '0.0' ?>}]">
                                             <img src="/local/templates/main/assets/img/star-score.svg" alt="Рейтинг">
                                             <span><?= number_format(floatval($arResult['arReviewsAvg'][$arItem["ID"]]["avg"]), 1, '.') ?? 0 ?></span>
                                         </a>
                                         <span class="dot"></span>
-                                        <a target="_blank" href="<?= $arItem["URL"] ?>#reviews-anchor"><?= $arResult['arReviewsAvg'][$arItem["ID"]]["count"] ?? 0 ?> <?= $reviewsDeclension->get($arResult['arReviewsAvg'][$arItem["ID"]]["count"]) ?></a>
+                                        <a target="_blank" href="<?= $arItem["SECTION_PAGE_URL"] ?>#reviews-anchor"><?= $arResult['arReviewsAvg'][$arItem["ID"]]["count"] ?? 0 ?> <?= $reviewsDeclension->get($arResult['arReviewsAvg'][$arItem["ID"]]["count"]) ?></a>
                                     </div>
 
                                     <div class="area-info">
@@ -127,7 +127,7 @@ Loc::loadMessages(__FILE__);
                             </div>
 
                             <a class="button button_transparent" onclick="VK.Goal('customize_product')" target="_blank"
-                                href="<?= $arItem["URL"] ?>"><?= Loc::getMessage('FILTER_CHOOSE') ?></a>
+                                href="<?= $arItem["SECTION_PAGE_URL"] ?>"><?= Loc::getMessage('FILTER_CHOOSE') ?></a>
                         </div>
                     </div>
                 <? endforeach; ?>
