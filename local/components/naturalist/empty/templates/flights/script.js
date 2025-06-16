@@ -121,5 +121,4 @@ var swiper = new Swiper(' .gg .swiper-container', {
     }
 });
 
-});
-
+})*/

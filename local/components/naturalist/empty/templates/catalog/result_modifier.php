@@ -4,10 +4,12 @@ use Bitrix\Main\Web\Uri;
 use Naturalist\Morpher;
 use Naturalist\Products;
 use Naturalist\Regions;
+use Naturalist\SearchServiceFactory;
 use Naturalist\Utils;
 use Bitrix\Main\Context;
 
 /** @var  $arParams */
+
 
 $arResult = array(
     "sortBy" => $arParams['sortBy'],
@@ -29,6 +31,7 @@ $arResult = array(
     "arFilterValues" => $arParams['arFilterValues'],
     "dateFrom" => $arParams['dateFrom'],
     "dateTo" => $arParams['dateTo'],
+    "daysCount" => $arParams['daysCount'],
     "arDates" => $arParams['arDates'],
     "currMonthName" => $arParams['currMonthName'],
     "currYear" => $arParams['currYear'],
@@ -103,7 +106,10 @@ if ($arResult['arSearchedRegions']) {
                 $daysCount = abs(strtotime($dateTo) - strtotime($dateFrom)) / 86400;
 
                 // Запрос в апи на получение списка кемпингов со свободными местами в выбранный промежуток
-                $arExternalInfo = Products::search($guests, $arChildrenAge, $dateFrom, $dateTo, false);
+                $factory = new SearchServiceFactory();
+                $products = new Products($factory);
+
+                $arExternalInfo = $products->search($guests, $arChildrenAge, $dateFrom, $dateTo, false);
                 $arExternalIDs = array_keys($arExternalInfo);
                 if ($arExternalIDs) {
                     $arFilter["UF_EXTERNAL_ID"] = $arExternalIDs;
@@ -267,7 +273,7 @@ if ($arResult['arSearchedRegions']) {
                 /* -- */
 
                 if ($arExternalInfo) {
-                    $sectionPrice = $arExternalInfo[$arSection["UF_EXTERNAL_ID"]];
+                    $sectionPrice = $arExternalInfo[$arSection["UF_EXTERNAL_ID"]]['PRICE'];
                     // Если это Traveline, то делим цену на кол-во дней
                     if ($arSection["UF_EXTERNAL_SERVICE"] == 1) {
                         $sectionPrice = round($sectionPrice / $daysCount);

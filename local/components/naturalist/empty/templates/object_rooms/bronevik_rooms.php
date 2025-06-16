@@ -5,7 +5,8 @@ use Naturalist\bronevik\enums\RoomTypeFrontEnum;
 use Naturalist\bronevik\enums\TarifEnum;
 use Naturalist\Users; 
 
-/** @var TYPE_NAME $arElements */
+/** @var array $arElements */
+
 
 foreach ($arElements as $arElement): 
     if ($arElement['AVAILABLE_ID'] == false):

@@ -39,6 +39,10 @@ global $arSettings;
                         <a href="<?= $region['URL'] ?>" class="location-full__item hidden"><?= $region['UF_NAME'] ?></a>
                     <? } ?>
                 </div>
+
+                <div class="container">
+                    <a href="#" class="show-more-seo" id="toggleButton"> <?= Loc::getMessage('MORE_REG') ?></a>
+                </div>
             </div>
             <div class="location__group" data-group="reservoirs">
                 <div class="location__group-wrap">

@@ -77,6 +77,7 @@ foreach ($arResult as $key => $value) {
                     continue;
                 }
 
+
                 $this->AddEditAction($arSection['ID'], $arSection['EDIT_LINK'], CIBlock::GetArrayByID($arSection["IBLOCK_ID"], "ELEMENT_EDIT"));
                 $this->AddDeleteAction($arSection['ID'], $arSection['DELETE_LINK'], CIBlock::GetArrayByID($arSection["IBLOCK_ID"], "ELEMENT_DELETE"), array("CONFIRM" => Loc::GetMessage('CT_BNL_ELEMENT_DELETE_CONFIRM')));
                 ?>
@@ -139,13 +140,34 @@ foreach ($arResult as $key => $value) {
                             </svg>
                         </button>
                     </div>
-                    <?php if ($arSection["IS_DISCOUNT"] == 'Y'): ?>
-                        <div class="tag"><?= $arSection["UF_SALE_LABEL"] != '' ? $arSection["UF_SALE_LABEL"] : Loc::GetMessage('CATALOG_DISCOUNT') ?> <?= $arSection["DISCOUNT_PERCENT"] ? $arSection["DISCOUNT_PERCENT"] . '%' : '' ?></div>
-                    <?php endif; ?>
 
-                    <?php if (!empty($arSection["UF_ACTION"])) : ?>
+
+
+                    <?/*php if (!empty($arSection["UF_ACTION"])) : ?>
                         <div class="tag"><?= $arSection["UF_ACTION"] ?></div>
-                    <?php endif; ?>
+                    <?php endif; */?>
+
+
+                    <div class="tag_wrapper">
+
+                        <?php if ($arSection["IS_DISCOUNT"] == 'Y'): ?>
+                            <div class="tag sale_tag">
+                                <?= $arSection["UF_SALE_LABEL"] != '' ? $arSection["UF_SALE_LABEL"] : Loc::GetMessage('CATALOG_DISCOUNT') ?> <?= $arSection["DISCOUNT_PERCENT"] ? $arSection["DISCOUNT_PERCENT"] . '%' : '' ?>
+                            </div>
+                        <?php endif; ?>
+
+                        <?php
+                        if ($arSection["EXTERNAL_DATA"] &&
+                            $arSection['EXTERNAL_DATA']['UF_MIN_STAY'] > 1 &&
+                            $daysCount == 1
+                        ): ?>
+                            <div class="tag stay_tag">
+                                <?=Loc::getMessage('MIN_STAY_TAG')?>
+                            </div>
+                        <?php endif; ?>
+                    </div>
+
+
                     <div class="object-row__content">
                         <div class="object-row__description">
                             <a class="object-row__title h3" target="_blank"
@@ -159,7 +181,10 @@ foreach ($arResult as $key => $value) {
                             <div class="object-row__reviews">
                                 <a target="_blank" href="<?= $arSection["SECTION_PAGE_URL"] ?>#reviews-anchor"
                                     style="display: flex;font-size: 1.3rem;margin-left: 0;" class="score"
-                                    data-score="[{&quot;label&quot;:&quot;Удобство расположения&quot;,&quot;value&quot;:<?= $arReviewsAvg[$arSection["ID"]]["criterials"][1][0] ?? '0.0' ?>},{&quot;label&quot;:&quot;Питание&quot;,&quot;value&quot;:<?= $arReviewsAvg[$arSection["ID"]]["criterials"][2][0] ?? '0.0' ?>},{&quot;label&quot;:&quot;Уют&quot;,&quot;value&quot;:<?= $arReviewsAvg[$arSection["ID"]]["criterials"][3][0] ?? '0.0' ?>},{&quot;label&quot;:&quot;Сервис&quot;,&quot;value&quot;:<?= $arReviewsAvg[$arSection["ID"]]["criterials"][4][0] ?? '0.0' ?>},{&quot;label&quot;:&quot;Чистота&quot;,&quot;value&quot;:<?= $arReviewsAvg[$arSection["ID"]]["criterials"][5][0] ?? '0.0' ?>},{&quot;label&quot;:&quot;Эстетика окружения&quot;,&quot;value&quot;:<?= $arReviewsAvg[$arSection["ID"]]["criterials"][6][0] ?? '0.0' ?>},{&quot;label&quot;:&quot;Разнообразие досуга&quot;,&quot;value&quot;:<?= $arReviewsAvg[$arSection["ID"]]["criterials"][7][0] ?? '0.0' ?>},{&quot;label&quot;:&quot;Соотношение цена/качество&quot;,&quot;value&quot;:<?= $arReviewsAvg[$arSection["ID"]]["criterials"][8][0] ?? '0.0' ?>}]">
+                                    <? if ($arReviewsAvg[$arSection["ID"]]["criterials"] != NULL) { ?>
+                                       data-score="[{&quot;label&quot;:&quot;Удобство расположения&quot;,&quot;value&quot;:<?= $arReviewsAvg[$arSection["ID"]]["criterials"][1][0] ?? '0.0' ?>},{&quot;label&quot;:&quot;Питание&quot;,&quot;value&quot;:<?= $arReviewsAvg[$arSection["ID"]]["criterials"][2][0] ?? '0.0' ?>},{&quot;label&quot;:&quot;Уют&quot;,&quot;value&quot;:<?= $arReviewsAvg[$arSection["ID"]]["criterials"][3][0] ?? '0.0' ?>},{&quot;label&quot;:&quot;Сервис&quot;,&quot;value&quot;:<?= $arReviewsAvg[$arSection["ID"]]["criterials"][4][0] ?? '0.0' ?>},{&quot;label&quot;:&quot;Чистота&quot;,&quot;value&quot;:<?= $arReviewsAvg[$arSection["ID"]]["criterials"][5][0] ?? '0.0' ?>},{&quot;label&quot;:&quot;Эстетика окружения&quot;,&quot;value&quot;:<?= $arReviewsAvg[$arSection["ID"]]["criterials"][6][0] ?? '0.0' ?>},{&quot;label&quot;:&quot;Разнообразие досуга&quot;,&quot;value&quot;:<?= $arReviewsAvg[$arSection["ID"]]["criterials"][7][0] ?? '0.0' ?>},{&quot;label&quot;:&quot;Соотношение цена/качество&quot;,&quot;value&quot;:<?= $arReviewsAvg[$arSection["ID"]]["criterials"][8][0] ?? '0.0' ?>}]"
+                                    <? } ?>
+                                    >
                                     <img src="/local/templates/main/assets/img/star-score.svg" alt="Рейтинг">
                                     <span><?= $arReviewsAvg[$arSection["ID"]]["avg"] ?? 0 ?></span>
                                 </a>
@@ -355,7 +380,10 @@ foreach ($arResult as $key => $value) {
                                     <div class="object-row__reviews">
                                         <a target="_blank" href="<?= $arSection["URL"] ?>#reviews-anchor"
                                             style="display: flex;font-size: 1.3rem;margin-left: 0;" class="score"
-                                            data-score="[{&quot;label&quot;:&quot;Удобство расположения&quot;,&quot;value&quot;:<?= $arReviewsAvg[$arSection["ID"]]["criterials"][1][0] ?? '0.0' ?>},{&quot;label&quot;:&quot;Питание&quot;,&quot;value&quot;:<?= $arReviewsAvg[$arSection["ID"]]["criterials"][2][0] ?? '0.0' ?>},{&quot;label&quot;:&quot;Уют&quot;,&quot;value&quot;:<?= $arReviewsAvg[$arSection["ID"]]["criterials"][3][0] ?? '0.0' ?>},{&quot;label&quot;:&quot;Сервис&quot;,&quot;value&quot;:<?= $arReviewsAvg[$arSection["ID"]]["criterials"][4][0] ?? '0.0' ?>},{&quot;label&quot;:&quot;Чистота&quot;,&quot;value&quot;:<?= $arReviewsAvg[$arSection["ID"]]["criterials"][5][0] ?? '0.0' ?>},{&quot;label&quot;:&quot;Эстетика окружения&quot;,&quot;value&quot;:<?= $arReviewsAvg[$arSection["ID"]]["criterials"][6][0] ?? '0.0' ?>},{&quot;label&quot;:&quot;Разнообразие досуга&quot;,&quot;value&quot;:<?= $arReviewsAvg[$arSection["ID"]]["criterials"][7][0] ?? '0.0' ?>},{&quot;label&quot;:&quot;Соотношение цена/качество&quot;,&quot;value&quot;:<?= $arReviewsAvg[$arSection["ID"]]["criterials"][8][0] ?? '0.0' ?>}]">
+                                            <? if ($arReviewsAvg[$arSection["ID"]]["criterials"] != NULL) { ?>
+                                           data-score="[{&quot;label&quot;:&quot;Удобство расположения&quot;,&quot;value&quot;:<?= $arReviewsAvg[$arSection["ID"]]["criterials"][1][0] ?? '0.0' ?>},{&quot;label&quot;:&quot;Питание&quot;,&quot;value&quot;:<?= $arReviewsAvg[$arSection["ID"]]["criterials"][2][0] ?? '0.0' ?>},{&quot;label&quot;:&quot;Уют&quot;,&quot;value&quot;:<?= $arReviewsAvg[$arSection["ID"]]["criterials"][3][0] ?? '0.0' ?>},{&quot;label&quot;:&quot;Сервис&quot;,&quot;value&quot;:<?= $arReviewsAvg[$arSection["ID"]]["criterials"][4][0] ?? '0.0' ?>},{&quot;label&quot;:&quot;Чистота&quot;,&quot;value&quot;:<?= $arReviewsAvg[$arSection["ID"]]["criterials"][5][0] ?? '0.0' ?>},{&quot;label&quot;:&quot;Эстетика окружения&quot;,&quot;value&quot;:<?= $arReviewsAvg[$arSection["ID"]]["criterials"][6][0] ?? '0.0' ?>},{&quot;label&quot;:&quot;Разнообразие досуга&quot;,&quot;value&quot;:<?= $arReviewsAvg[$arSection["ID"]]["criterials"][7][0] ?? '0.0' ?>},{&quot;label&quot;:&quot;Соотношение цена/качество&quot;,&quot;value&quot;:<?= $arReviewsAvg[$arSection["ID"]]["criterials"][8][0] ?? '0.0' ?>}]"
+                                            <? } ?>
+                                        >
                                             <img src="/local/templates/main/assets/img/star-score.svg" alt="Рейтинг">
                                             <span><?= $arSection["RATING"] ?? 0 ?></span>
                                         </a>

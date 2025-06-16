@@ -52,8 +52,13 @@ class CreateCertPdf {
      * @return string
      * 
      */
-    private function createHtml() {    
-         ob_start();
+    private function createHtml() {
+
+        mb_internal_encoding('UTF-8');
+        ini_set('default_charset', 'UTF-8');
+
+
+        ob_start();
 
          global $APPLICATION;
      
@@ -92,7 +97,7 @@ class CreateCertPdf {
         
         $this->getOrderData($orderId);
         $this->getCert();        
-        $this->createHtml();
+//        $this->createHtml();
     
         $this->pdfManager->quickRender($this->createHtml());
     

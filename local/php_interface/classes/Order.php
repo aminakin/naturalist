@@ -9,6 +9,7 @@ use Bitrix\Main\ArgumentOutOfRangeException;
 use Bitrix\Main\ArgumentTypeException;
 use Bitrix\Main\Config\Option;
 use Bitrix\Main\Context;
+use Bitrix\Main\Diag\Debug;
 use Bitrix\Main\Grid\Declension;
 use Bitrix\Main\Loader;
 use Bitrix\Main\NotImplementedException;
@@ -74,6 +75,7 @@ class Orders
         'CERT_FORMAT' => ORDER_PROP_CERT_FORMAT,
         'IS_CERT' => ORDER_PROP_IS_CERT,
         'FIZ_VARIANT' => ORDER_PROP_FIZ_VARIANT,
+        'FIZ_VARIANT_DOBRO_CERT' => ORDER_PROP_DOBRO_CERT,
         'FIZ_POCKET' => ORDER_PROP_FIZ_POCKET,
         'CITY' => ORDER_PROP_CITY,
         'GIFT_NAME' => ORDER_PROP_GIFT_NAME,
@@ -249,7 +251,9 @@ class Orders
         $totalPrice = 0;
         $totalCount = 0;
         $arItems = array();
-        $products = new Products();
+
+        $factory = new SearchServiceFactory();
+        $products = new Products($factory);
         foreach ($arBasketItems as $item) {
             $productId = $item->getProductId();
             $arProduct = $products->get($productId);
@@ -278,7 +282,7 @@ class Orders
         $propertyCollection = $order->getPropertyCollection();
         $arProps = array();
         foreach ($this->arPropsIDs as $key => $propId) {
-            $arProps[$key] = $propertyCollection->getItemByOrderPropertyId($propId)->getValue();
+            $arProps[$key] = $propertyCollection->getItemByOrderPropertyId($propId)?->getValue();
         }
         if ($arProps["GUEST_LIST"]) {
             $arProps["GUESTS_COUNT"] = count($arProps["GUEST_LIST"]);
@@ -954,7 +958,7 @@ class Orders
         /* Оплата */
 
         // Если баланс пользователя не равен 0, то часть или вся оплата будут с внутреннего счёта
-        if ($params['userbalance'] != 0) {
+        if ($params['userbalance'] > 0) {
 
             // Вычисляем разницу между суммой заказа и балансом счёта
             $difference = intval($order->getPrice()) - intval($params['userbalance']);

@@ -216,20 +216,41 @@
   width: 100%;
 }
 
-.object-row .tag {
+.object-row .tag_wrapper{
+  position: absolute;
   left: 0px;
   top: 16px;
-  background: url(../img/tag.png) no-repeat center center;
-  width: 135px;
-  height: 42px;
-  line-height: 22px;
+  z-index: 2;
+  display: flex;
+  gap: 1px;
+  flex-direction: column;
+}
+
+.object-row  .tag_wrapper .tag {
+  position: static;
+  width: 143px;
+  height: 39px;
+  line-height: 26px;
   font-weight: 400;
-  font-size: 16px;
+  font-size: 13px;
   text-transform: none;
-  padding: 8px 16px 8px 12px;
+  padding: 5px 14px 0px 7px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.object-row  .tag_wrapper .tag.sale_tag{
+  background: url(../img/tag.png) no-repeat center center;
+  background-size: contain;
+  width: 100%;
+}
+
+.object-row  .tag_wrapper .tag.stay_tag {
+  background: url(../img/tag_reservation_notion.png) no-repeat center center;
+  color: var(--black);
+  width: fit-content;
+  background-size: cover !important;
 }
 
 .object__heading {
@@ -4430,7 +4451,8 @@
     width: auto;
   }
 
-  .catalog__full .catalog__map, .catalog__products .catalog__map {
+  .catalog__full .catalog__map:not(.catalog__on_map),
+  .catalog__products .catalog__map:not(.catalog__on_map) {
     display: none;
     bottom: 0;
     margin-top: 0;

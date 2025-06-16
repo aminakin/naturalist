@@ -322,7 +322,7 @@ if ($arResult['CHPY']['UF_CANONICAL']) {
                                                 }
                                             ?>
                                                 <li class="swiper-slide">
-                                                    <a href="<?= $houseType['URL'] ?>">
+                                                    <a href="<?= $houseType['URL'] ?><?= ($_SERVER['QUERY_STRING'] !== '') ? '?' . $_SERVER['QUERY_STRING'] : ''; ?>">
                                                         <?= Utils::buildSVG(CFile::getPath($houseType['UF_IMG'])) ?>
                                                         <p class="house-type__text"><?= $houseType['UF_NAME'] ?></p>
                                                     </a>
@@ -572,6 +572,7 @@ if ($arResult['CHPY']['UF_CANONICAL']) {
                             "arFilterValues" => $arResult['SECTION_FILTER_VALUES'],
                             "dateFrom" => $arResult['arUriParams']['dateFrom'],
                             "dateTo" => $arResult['arUriParams']['dateTo'],
+                            "daysCount" => $arResult['arUriParams']['daysCount'],
                             "arDates" => $arResult['arDates'],
                             "currMonthName" => $arResult['currMonthName'],
                             "currYear" => $arResult['currYear'],
@@ -657,7 +658,7 @@ if ($arResult['CHPY']['UF_CANONICAL']) {
             "naturalist:empty",
             "catalog_scripts",
             array(
-                "arSections" => $arResult['SECTIONS'],
+                "arSections" => $arResult['MAP_DATA'],
                 "arFavourites" => $arResult['FAVORITES'],
                 "arReviewsAvg" => $arResult['arReviewsAvg'],
                 "map" => $arParams["MAP"]
