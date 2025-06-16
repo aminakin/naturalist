@@ -960,8 +960,13 @@ class Orders
         // Если баланс пользователя не равен 0, то часть или вся оплата будут с внутреннего счёта
         if ($params['userbalance'] > 0) {
 
+
+            Debug::writeToFile(var_export($params['userbalance'], true), 'userbalance', '_userbalance.log');
+
             // Вычисляем разницу между суммой заказа и балансом счёта
             $difference = intval($order->getPrice()) - intval($params['userbalance']);
+
+            Debug::writeToFile(var_export($difference, true), '$difference', '_userbalance.log');
 
             // Создаём оплату с внутреннего счёта. Если денег не достаточно, делаем скидку на сумму остатка на внутреннем счёте
             if ($difference <= 0) {
@@ -974,12 +979,16 @@ class Orders
                     'PRICE' => $difference,
                     'CUSTOM_PRICE' => 'Y',
                 ));
+
                 $basket->save();
                 $this->setOrderPayment($order, $params['paysystem'], $difference, false);
             }
         } else {
             $this->setOrderPayment($order, $params['paysystem'], $order->getPrice(), false);
         }
+
+
+        Debug::writeToFile(var_export($doublePayment, true), '$doublePayment', '_userbalance.log');
 
         /* Устанавливаем свойства заказа (пользовательские) */
         $propertyCollection = $order->getPropertyCollection();
