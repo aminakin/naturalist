@@ -26,6 +26,20 @@ class CustomFunctions
     private static $suitHlCode = 'SuitTypes';
 
     /**
+     * Массив
+     */
+    private const SEO_REFERERS = [
+        'yandex.ru',
+        'ya.ru',
+        'google.com',
+        'bing.com',
+        'duckduckgo.com',
+        'yahoo.com',
+        'mail.ru',
+        'rambler.ru'
+    ];
+
+    /**
      * Удаляет неиспользуемые файлы из папки /upload/uf/
      *     
      */
@@ -192,6 +206,22 @@ class CustomFunctions
                 "EMAIL" => $orderData['PROPS']['EMAIL'],
             ];
             Users::sendEmail("REVIEW_INVITE", "69", $fields);
+        }
+    }
+
+    /**
+     * Записывает referer из заголовка в куки
+     *
+     * @return void
+     */
+    public static function setSeoReferer(): void
+    {
+        $httpReferer = $_SERVER['HTTP_REFERER'];
+
+        foreach (self::SEO_REFERERS as $referer) {
+            if (str_contains($httpReferer, $referer)) {
+                setcookie('utm_referer', $httpReferer, time()+360000);
+            }
         }
     }
 }
