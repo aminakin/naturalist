@@ -35,13 +35,6 @@ $aMenuLinks = Array(
 		Array(), 
 		"" 
 	),
-//	Array(
-//		"Контакты НАТУРАЛИСТ",
-//		SITE_DIR."/contacts/",
-//		Array(),
-//		Array(),
-//		""
-//	),
 	Array(
 		"Реквизиты", 
 		SITE_DIR."/details/", 
@@ -62,6 +55,19 @@ $aMenuLinks = Array(
 		Array(),
 		Array(),
 		""
-	)
+	),
+    Array(
+        "Контакты",
+        SITE_DIR."/contacts/",
+        Array(),
+        Array(),
+        ""
+    ),Array(
+        "Карта",
+        SITE_DIR."/map/",
+        Array(),
+        Array(),
+        ""
+    )
 );
 ?>
