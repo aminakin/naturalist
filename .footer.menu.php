@@ -76,8 +76,8 @@ if(CSite::InDir('/catalog') || CSite::InDir('/map'))
         ""
     ),
         array(
-            "Реквизиты",
-            SITE_DIR . "/details/",
+            "Контакты",
+            SITE_DIR . "/contacts/",
             array(),
             array(),
             ""
