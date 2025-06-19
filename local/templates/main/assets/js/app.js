@@ -5222,7 +5222,7 @@
             },
             {
               PATTERN:
-                /^[-a-z0-9!#$%&'*+/=?^_`{|}~]+(?:.[-a-z0-9!#$%&'*+/=?^_`{|}~]+)*@(?:[a-z0-9]([-a-z0-9]{0,61}[a-z0-9])?.)*(?:aero|arpa|asia|biz|cat|com|coop|edu|gov|info|int|jobs|list|mil|mobi|museum|name|net|org|pro|tel|travel|ru|com)$/,
+                  /^[a-zA-Z0-9!#$%&'*+/=?^_`{|}~.-]+@[a-zA-Z0-9.-]+(?:\.[a-zA-Z]{2,})+$/
             }
           ),
           equality: function (
