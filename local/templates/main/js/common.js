@@ -292,13 +292,13 @@ $(function () {
       } else {
         var botId = "5700016629";
       }
+      var currentUrl = window.location.href;
       var url =
-        "https://oauth.telegram.org/auth?bot_id=" +
-        botId +
-        "&origin=https%3A%2F%2F" +
-        domain +
-        "&embed=1&request_access=write&return_to=https%3A%2F%2F" +
-        domain;
+          "https://oauth.telegram.org/auth?bot_id=" +
+          botId +
+          "&origin=https%3A%2F%2F" +
+          domain +
+          "&embed=1&request_access=write&return_to=" + encodeURIComponent(currentUrl);
       location.href = url;
     }
   });
