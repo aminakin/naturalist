@@ -5,8 +5,8 @@ require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/header.php");
 
 <?
 $APPLICATION->IncludeComponent(
-	"naturalist:map",
-	"main",
+	"naturalist:catalog",
+	"map",
 	array(
 		"IBLOCK_ID" => CATALOG_IBLOCK_ID,
 		"SET_STATUS_404" => "Y",

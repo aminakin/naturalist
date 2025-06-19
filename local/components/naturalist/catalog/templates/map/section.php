@@ -14,7 +14,6 @@ $this->setFrameMode(true);
 
 
 use Bitrix\Iblock\Elements\ElementGlampingsTable;
-use Naturalist\Utils;
 use Bitrix\Main\Localization\Loc;
 
 $isSeoText = false;
@@ -87,8 +86,6 @@ if (empty($arResult['CHPY'])) {
 if ($arResult['CHPY']['UF_CANONICAL']) {
     $APPLICATION->AddHeadString('<link rel="canonical" href="' . HTTP_HOST . $arResult['CHPY']['UF_CANONICAL'] . '">', true);
 } ?>
-
-
 
     <main class="main main__on_map">
         <section class="section section_crumbs section_crumbs_catalog_new">
