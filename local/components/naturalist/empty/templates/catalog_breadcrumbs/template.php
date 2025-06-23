@@ -1,6 +1,6 @@
 <?php
+
 use Bitrix\Highloadblock\HighloadBlockTable;
-use Bitrix\Main\Entity;
 
 $crumbs = [];
 $crumbs[] = ['Главная', '/'];
@@ -30,7 +30,7 @@ if (!empty($arParams["map"])) {
         array_shift($segments);
     }
 
-    $iblockId = 5;
+    $iblockId = IMPRESSIONS_IBLOCK_ID;
     $url = '/catalog/';
 
     foreach ($segments as $index => $segment) {
@@ -59,19 +59,15 @@ if (!empty($arParams["map"])) {
     }
 
     if (!empty($_GET['housetypes']) && \Bitrix\Main\Loader::includeModule('highloadblock')) {
-        $hlblock = HighloadBlockTable::getById(24)->fetch();
-        if ($hlblock) {
-            $entity = HighloadBlockTable::compileEntity($hlblock);
-            $entityDataClass = $entity->getDataClass();
+        $entityDataClass = HighloadBlockTable::compileEntity(SUIT_TYPES_HL_ENTITY)->getDataClass();
 
-            $item = $entityDataClass::getList([
-                'filter' => ['ID' => $_GET['housetypes']],
-                'select' => ['UF_NAME'],
-            ])->fetch();
+        $item = $entityDataClass::getList([
+            'filter' => ['ID' => $_GET['housetypes']],
+            'select' => ['UF_NAME'],
+        ])->fetch();
 
-            if ($item) {
-                $crumbs[] = [$item['UF_NAME'], null];
-            }
+        if ($item) {
+            $crumbs[] = [$item['UF_NAME'], null];
         }
     }
 }
