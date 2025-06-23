@@ -58,7 +58,7 @@ use Naturalist\Users;
     <title><?php $APPLICATION->ShowTitle() ?></title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="format-detection" content="telephone=no">
-    <?php if (!strripos($APPLICATION->GetCurPage(false),'catalog') && !strripos($APPLICATION->GetCurPage(false),'map/')) { ?>
+    <?php if (!strripos($APPLICATION->GetCurPage(false), 'catalog') && !strripos($APPLICATION->GetCurPage(false), 'map/')) { ?>
         <link rel="canonical" href="<?= HTTP_HOST . $APPLICATION->GetCurPage() ?>">
     <?php } ?>
 
@@ -244,6 +244,59 @@ use Naturalist\Users;
     <?php }
     ?>
     <?php /*<script src="https://dmp.one/sync?stock_key=4dce2e8f5fdd1727a46278cb20b97261" async charset="UTF-8"></script>*/ ?>
+
+    <!-- Schema.org Organization -->
+    <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "Organization",
+            "name": "ООО «НАТУРАЛИСТ»",
+            "url": "<?= "https://{$_SERVER['HTTP_HOST']}{$_SERVER['REQUEST_URI']}" ?>",
+            "logo": "https://<?= $_SERVER['HTTP_HOST'] ?>/img/logo.svg",
+            "telephone": "+7 (499) 322-78-22",
+            "email": "support@naturalist.travel",
+            "sameAs": [
+                "https://vk.com/naturalist_travel",
+                "https://wa.me/+79167904711",
+                "https://t.me/naturalist_travel",
+                "https://vc.ru/u/1694639-naturalist",
+                "https://dzen.ru/id/630fa80dd0c60d4cfe6c4f58"
+            ],
+            "address": {
+                "@type": "PostalAddress",
+                "addressCountry": "Россия",
+                "addressRegion": "Москва",
+                "addressLocality": "Москва",
+                "postalCode": "129090",
+                "streetAddress": "Олимпийский проспект, 7"
+            }
+        }
+    </script>
+    <!-- /Schema.org Organization -->
+
+
+    <!-- Open Graph -->
+    <?php
+    global $APPLICATION;
+
+    $ogUrl = "https://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
+    $ogImage = $APPLICATION->GetPageProperty('og_image');
+    if (!$ogImage) {
+        $ogImage = 'https://' . $_SERVER['HTTP_HOST'] . '/img/logo.svg';
+    }
+    ?>
+
+    <meta property="og:title" content="<?php $APPLICATION->ShowTitle() ?>" />
+    <meta property="og:description" content="<?php $APPLICATION->ShowProperty("description") ?>" />
+    <meta property="og:url" content="<?= htmlspecialchars($ogUrl) ?>" />
+    <meta property="og:image" content="<?= htmlspecialchars($ogImage) ?>" />
+    <meta property="og:site_name" content="Натуралист" />
+    <meta property="og:locale" content="ru_RU" />
+
+    <!-- /Open Graph -->
+
+
+
     <script src="https://dmp.one/sync?stock_key=053c9813114d39196816fb79fdfd54b7" async charset="UTF-8"></script>
 </head>
 
@@ -434,6 +487,6 @@ use Naturalist\Users;
                 ),
                 false
             );
-            */?>
+            */ ?>
         </header>
         <!-- header-->

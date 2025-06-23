@@ -49,4 +49,29 @@ if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) die();
 		$previousLevel = $arItem["DEPTH_LEVEL"];
 		?>
 	<?endforeach;?>
+
+
+    <?
+    $menuItems = [];
+
+    foreach ($arResult as $item) {
+        $menuItems[] = [
+            "@type" => "SiteNavigationElement",
+            "name" => $item["TEXT"],
+            "url" => $item["LINK"]
+        ];
+    }
+
+    $menuSchema = [
+        "@context" => "https://schema.org",
+        "@graph" => $menuItems
+    ];
+    ?>
+
+    <script type="application/ld+json">
+    <?= json_encode($menuSchema, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT); ?>
+    </script>
+
+
+    
 <?endif;?>

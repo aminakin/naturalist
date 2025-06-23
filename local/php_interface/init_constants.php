@@ -87,7 +87,7 @@ const CERT_REVIEWS_IBLOCK_ID = 26;
 // Фильтры и ЧПУ
 const TITLE_PATTERN = ' с ценами: адреса, отзывы | Натуралист';
 const DESCRIPTION_START_PATTERN = 'Забронируйте ';
-const DESCRIPTION_END_PATTERN = '. В каталоге Натуралист есть цены 2024, отзывы, фото, полный список услуг, координаты на карте.';
+const DESCRIPTION_END_PATTERN = '. В каталоге Натуралист есть цены 2025, отзывы, фото, полный список услуг, координаты на карте.';
 
 const PODBOR_H1_PATTERTN = 'Отдых на природе ';
 const PODBOR_TITLE_PATTERTN = ': цены, рейтинг, отзывы | Натуралист';

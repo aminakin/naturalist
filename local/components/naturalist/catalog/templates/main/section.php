@@ -105,8 +105,11 @@ if ($arResult['CHPY']['UF_CANONICAL']) {
                         "naturalist:empty",
                         "catalog_breadcrumbs",
                         array(
-                            "map" => $arParams["MAP"]
-                        )
+                            "PATH" => "",
+                            "SITE_ID" => "s1",
+                            "START_FROM" => "0",
+                            "map" => $arParams["MAP"],
+                        ),
                     );
                     ?>
                     <div class="wrapper_title_catalog_page">

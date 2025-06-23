@@ -88,6 +88,11 @@
     </div>
 </div>
 
+<?php
+$section = $arParams['SECTION'];
+$hlTypes = $arParams['HL_TYPES'];
+$altBase = $hlTypes[$section["UF_TYPE"]]["UF_NAME"] . " " . $section["NAME"];
+?>
 <div class="modal modal_semi-galery" id="gallery">
     <div class="modal__container">
         <button class="modal__close" data-modal-close>
@@ -95,18 +100,32 @@
                 <use xlink:href="#cross" />
             </svg>
         </button>
-        <div class="modal__title"><?= $arParams['TITLE'] ?></div>
+        <div class="modal__title"><?= htmlspecialchars($arParams['TITLE']) ?></div>
         <div class="modal__content">
-            <? if ($arParams['SECTION_IMGS']) { ?>
-                <? foreach ($arParams['SECTION_IMGS'] as $key => $img) { ?>
-                    <a class="modal__img" href="<?= $img['big'] ?>" data-fancybox="gallery" data-caption='<?= $arParams['TITLE'] ?>'>
-                        <img loading="lazy" src="<?= $img['src'] ?>" alt="">
-                    </a>
-                <? } ?>
-            <? } ?>
+            <?php if (!empty($arParams['SECTION_IMGS'])): ?>
+                <?php foreach ($arParams['SECTION_IMGS'] as $key => $img): 
+                    $imgIndex = $key + 1;
+                    $alt = $altBase . ' рис.' . $imgIndex;
+                    $title = 'Фото - ' . $section["NAME"] . ' рис.' . $imgIndex;
+                ?>
+                    <div itemscope itemtype="https://schema.org/ImageObject" class="modal__img-wrapper">
+                        <a class="modal__img" href="<?= $img['big'] ?>" data-fancybox="gallery" data-caption="<?= htmlspecialchars($title) ?>">
+                            <img loading="lazy"
+                                 src="<?= $img['src'] ?>"
+                                 alt="<?= htmlspecialchars($alt) ?>"
+                                 title="<?= htmlspecialchars($title) ?>"
+                                 itemprop="contentUrl">
+                        </a>
+                        <meta itemprop="name" content="<?= htmlspecialchars($alt) ?>">
+                        <meta itemprop="description" content="<?= htmlspecialchars($title) ?>">
+                    </div>
+                <?php endforeach; ?>
+            <?php endif; ?>
         </div>
     </div>
 </div>
+
+
 
 <div class="modal modal_detail-more houses" id="houses">
     <div class="modal__container">
