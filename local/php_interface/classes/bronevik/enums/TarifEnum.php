@@ -66,8 +66,8 @@ enum TarifEnum: string
     public static function getLocalizedValue(string $name): ?string
     {
         // Удаляем символ & из строки перед поиском
-        $cleanName = preg_replace('/&/', '', $name);
-        $case = self::tryFrom($cleanName);
+//        $cleanName = preg_replace('/&/', '', $name);
+        $case = self::tryFrom($name);
 
         return $case?->value();
     }
