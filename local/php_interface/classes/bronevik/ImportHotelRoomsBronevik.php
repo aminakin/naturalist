@@ -2,6 +2,7 @@
 
 namespace Naturalist\bronevik;
 
+use Bitrix\Main\Diag\Debug;
 use Bronevik\HotelsConnector\Element\HotelRoom;
 use CFile;
 use CUtil;
@@ -34,18 +35,18 @@ class ImportHotelRoomsBronevik
             false,
             ['ID']);
 
-        if (count($arExistElement) && intval(current($arExistElement)['ID']) > 0) {
-            $itemExistElement = current($arExistElement);
-            $itemId = $itemExistElement['ID'];
+        if (isset($arExistElement[0]) && intval($arExistElement[0]['ID']) > 0) {
+            $itemId = $arExistElement[0]['ID'];
+
             $this->hotelRoomBronevik->update($itemId, ['CODE' => $data['CODE']]);
 
-            CIBlockElement::SetPropertyValuesEx($arExistElement['ID'], CATALOG_IBLOCK_ID, [
+            CIBlockElement::SetPropertyValuesEx($itemId, CATALOG_IBLOCK_ID, [
                 'SQUARE' => $data['PROPERTY_VALUES']['SQUARE'],
                 'PHOTO_ARRAY' => $data['PROPERTY_VALUES']['PHOTO_ARRAY'],
                 'PHOTOS' => $data['PROPERTY_VALUES']['PHOTOS'],
             ]);
-            Products::setQuantity($arExistElement['ID']);
-            Products::setPrice($arExistElement['ID']);
+            Products::setQuantity($itemId);
+            Products::setPrice($itemId);
 
             return $itemId;
         } else {
