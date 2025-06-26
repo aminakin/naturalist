@@ -29,8 +29,12 @@ class ImportHotelRoomsBronevik
     {
         $id = $data['PROPERTY_VALUES']['EXTERNAL_ID'];
 
-        $arExistElement = $this->hotelRoomBronevik->list(array("IBLOCK_ID" => CATALOG_IBLOCK_ID, "PROPERTY_EXTERNAL_ID" => $id, "PROPERTY_EXTERNAL_SERVICE" => CATALOG_IBLOCK_ELEMENT_EXTERNAL_SERVICE_ID), false);
-        if (count($arExistElement)) {
+        $arExistElement = $this->hotelRoomBronevik->list(
+            ["IBLOCK_ID" => CATALOG_IBLOCK_ID, "PROPERTY_EXTERNAL_ID" => $id, "PROPERTY_EXTERNAL_SERVICE" => CATALOG_IBLOCK_ELEMENT_EXTERNAL_SERVICE_ID],
+            false,
+            ['ID']);
+
+        if (count($arExistElement) && intval(current($arExistElement)['ID']) > 0) {
             $itemExistElement = current($arExistElement);
             $itemId = $itemExistElement['ID'];
             $this->hotelRoomBronevik->update($itemId, ['CODE' => $data['CODE']]);

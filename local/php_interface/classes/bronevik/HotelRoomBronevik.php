@@ -5,7 +5,7 @@ namespace Naturalist\bronevik;
 use CIBlockElement;
 class HotelRoomBronevik
 {
-    public function list($filter = [], $order = ['ID' => 'ASC'], $select = ['*', 'PROPERTY_*'], string $type = ''): array
+    public function list($filter = [], $order = ['ID' => 'ASC'], $select = ['*', 'PROPERTY_*']): array
     {
         $result = [];
 
