@@ -1,6 +1,22 @@
 <?
+
+use Bitrix\Main\Application;
+
 require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/header.php");
 //$APPLICATION->SetTitle("Карта глэмпингов в России");
+
+$request = Application::getInstance()->getContext()->getRequest();
+$currentUri = $request->getRequestUri();
+
+if (strpos($currentUri, '?') === false && strpos($currentUri, 'map') !== false) {
+    $jsonData = '{"type":"area","item":"Московская область","title":"Московская область","footnote":""}';
+    ?>
+    <script>
+        window.location.href = '/map/?name=<?= $jsonData ?>';
+    </script>
+    <?php
+    exit;
+}
 ?>
 
 <?
