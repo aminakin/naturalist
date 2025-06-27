@@ -28,7 +28,7 @@
         <div data-room-more-content></div>
     </div>
 </div>
-
+    <div class='child_popap'>
 <div class="modal modal_detail-more" id="detail-more">
     <div class="modal__container">
         <button class="modal__close" data-modal-close>
@@ -39,7 +39,7 @@
         <div data-detail-more-content></div>
     </div>
 </div>
-
+    </div>
 <div class="modal modal_comfort-more" id="feature-more">
     <div class="modal__container">
         <button class="modal__close" data-modal-close>
@@ -53,7 +53,7 @@
                 <? foreach ($arParams['OBJECT_FUN'] as $feat) { ?>
                     <li>
                         <? if ($feat['ELEMENT']) { ?>
-                            <a href="#" class="getDetail" elementId="<?= $feat['ELEMENT'] ?>"><?= $feat['UF_NAME'] ?></a>
+                            <a href="#" class="getDetail" detailid="<?= $feat['ELEMENT'] ?>"><?= $feat['UF_NAME'] ?></a>
                         <? } else {
                             echo $feat['UF_NAME'];
                         } ?>
@@ -128,7 +128,7 @@ $altBase = $hlTypes[$section["UF_TYPE"]]["UF_NAME"] . " " . $section["NAME"];
 
 
 <div class="modal modal_detail-more houses" id="houses">
-    <div class="modal__container">
+    <div class="modal__container">6
         <button class="modal__close" data-modal-close>
             <svg class="icon icon_cross" viewbox="0 0 18 18" style="width: 1.8rem; height: 1.8rem;">
                 <use xlink:href="#cross" />
