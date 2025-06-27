@@ -4,7 +4,6 @@ namespace Naturalist;
 
 use Bitrix\Highloadblock\HighloadBlockTable;
 use Bitrix\Main\Config\Option;
-use Bitrix\Main\Diag\Debug;
 use Bitrix\Main\Grid\Declension;
 use Bitrix\Main\Loader;
 use Bitrix\Sale\Order;
@@ -86,7 +85,8 @@ class Bnovo implements SearchServiceInterface
         $this->debugBotTelegram = DebugBot::bot(DEBUG_TELEGRAM_BOT_TOKEN);
     }
 
-    private function sectionByHotelId($hotelId): array {
+    private function sectionByHotelId($hotelId): array
+    {
         $items = [];
 
         $data = CIBlockSection::GetList(
@@ -109,12 +109,12 @@ class Bnovo implements SearchServiceInterface
 
     /* Получение списка свободных объектов в выбранный промежуток */
     public function search(
-        int $guests,
-        array $childrenAge,
+        int    $guests,
+        array  $childrenAge,
         string $dateFrom,
         string $dateTo,
-        bool $groupResults = true,
-        array $sectionIds = [])
+        bool   $groupResults = true,
+        array  $sectionIds = [])
     {
         $arDates = array();
         $period = new DatePeriod(
@@ -146,7 +146,6 @@ class Bnovo implements SearchServiceInterface
                 $children = count($childrenAge);
             }
         }
-
 
 
         $entityClass = $this->getEntityClass();
@@ -299,14 +298,14 @@ class Bnovo implements SearchServiceInterface
 
     /* Получение списка свободных номеров объекта в выбранный промежуток */
     public function searchRooms(
-        int $sectionId,
+        int    $sectionId,
         string $externalId,
         string $serviceType,
-        int $guests,
-        array $childrenAge,
+        int    $guests,
+        array  $childrenAge,
         string $dateFrom,
         string $dateTo,
-        int $minChildAge = 0)
+        int    $minChildAge = 0)
     {
         // Приравниваются ли дети к взрослым
         $childrenIsAdults = false;
@@ -832,7 +831,6 @@ class Bnovo implements SearchServiceInterface
         //xprint($arItems);
 
 
-
         return [
             'arRooms' => $arItems,
             'error' => $error,
@@ -1276,7 +1274,7 @@ class Bnovo implements SearchServiceInterface
     {
         // HL Возрастные интервалы
         $childrenAgesId = array();
-        $childrenAgesEntityClass   = self::getEntityClass(self::$childrenAgesHLId);
+        $childrenAgesEntityClass = self::getEntityClass(self::$childrenAgesHLId);
         foreach ($arSection["children_ages"] as $arElement) {
             if (!empty($arElement)) {
                 $rsData = $childrenAgesEntityClass::getList([
@@ -1687,7 +1685,7 @@ class Bnovo implements SearchServiceInterface
 
             // Amenities
             $arAmenities = array();
-            $roomsFeaturesEntityClass   = self::getEntityClass(self::$roomsFeaturesHLId);
+            $roomsFeaturesEntityClass = self::getEntityClass(self::$roomsFeaturesHLId);
             foreach ($arRoom["amenities"] as $key => $arItem) {
                 if ($key == "1") {
                     continue;
@@ -1776,7 +1774,7 @@ class Bnovo implements SearchServiceInterface
             ));
         }
 
-        if (!$noCildren && !$isMarkup &&  is_array($realChildrenAgesIds) && !empty($realChildrenAgesIds)) {
+        if (!$noCildren && !$isMarkup && is_array($realChildrenAgesIds) && !empty($realChildrenAgesIds)) {
             $realChildrenAgesIds = array_unique($realChildrenAgesIds);
             foreach ($childrenAgesId as $ageKey => $ageValue) {
                 if (isset($realChildrenAgesIds[$ageKey])) {
@@ -1785,9 +1783,9 @@ class Bnovo implements SearchServiceInterface
                 $minChildInterval = $ageValue;
             }
             if (isset($minChildInterval)) {
-                $entity =  HighloadBlockTable::compileEntity('ChildrenAges')->getDataClass();
+                $entity = HighloadBlockTable::compileEntity('ChildrenAges')->getDataClass();
 
-                $query =  $entity::query()
+                $query = $entity::query()
                     ->addSelect('UF_MAX_AGE')
                     ->where('ID', $minChildInterval)
                     ?->fetch();
@@ -2408,7 +2406,7 @@ class Bnovo implements SearchServiceInterface
     private function sendMessage($arSend)
     {
         $this->debugBotTelegram->sendMessage(Markdown::arrayToMarkdown($arSend));
-       // \CEvent::Send($this->sendEventName, SITE_ID, $arSend);
+        // \CEvent::Send($this->sendEventName, SITE_ID, $arSend);
     }
 
     private function writeToFile($data, $function, $hotelId)
@@ -2572,7 +2570,12 @@ class Bnovo implements SearchServiceInterface
                 $rooms = $this->getRoomsFromApi($section['UF_EXTERNAL_ID']);
                 if (!empty($rooms)) {
                     foreach ($rooms as $room) {
-                        if (isset($room['extra_array']['people']) && count($room['extra_array']['people']) && isset($room['extra_array']['children_ages']) && count($room['extra_array']['children_ages'])) {
+                        if (
+                            isset($room['extra_array']['people'])
+                            && count($room['extra_array']['people'])
+                            && isset($room['extra_array']['children_ages'])
+                            && count($room['extra_array']['children_ages'])) {
+
                             $arRoomsRequest = \Bitrix\Iblock\Elements\ElementCategoriesTable::getList([
                                 'select' => ['ID', 'NAME', 'EXTERNAL_ID_' => 'EXTERNAL_ID'],
                                 'filter' => ['=EXTERNAL_ID.VALUE' => $room['id']],
@@ -2592,6 +2595,8 @@ class Bnovo implements SearchServiceInterface
                                     Тип запроса: roomtypes
                                     Сервис: Bnovo";
 
+                                    // Добавляем получение наценок и тарифов в случае если есть отличающиеся данные
+                                    $this->updatePublicObject($section['UF_EXTERNAL_UID']);
 //                                    $message .= "У объекта " . $section['NAME'] . " доступны наценки \r\n";
                                     break;
                                 }
