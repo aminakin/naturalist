@@ -2592,6 +2592,8 @@ class Bnovo implements SearchServiceInterface
                                     Тип запроса: roomtypes
                                     Сервис: Bnovo";
 
+                                    // Добавляем получение наценок и тарифов в случае если есть отличающиеся данные
+                                    $this->updatePublicObject($section['UF_EXTERNAL_UID']);
 //                                    $message .= "У объекта " . $section['NAME'] . " доступны наценки \r\n";
                                     break;
                                 }
