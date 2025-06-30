@@ -3486,7 +3486,9 @@ img.lazy.loaded {
   width: 100%;
   z-index: 1000;
 }
-
+.child_popap{
+  z-index: 100000;
+}
 .modal:before {
   content: "";
   height: 100%;
