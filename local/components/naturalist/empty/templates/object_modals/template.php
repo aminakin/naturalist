@@ -128,7 +128,7 @@ $altBase = $hlTypes[$section["UF_TYPE"]]["UF_NAME"] . " " . $section["NAME"];
 
 
 <div class="modal modal_detail-more houses" id="houses">
-    <div class="modal__container">6
+    <div class="modal__container">
         <button class="modal__close" data-modal-close>
             <svg class="icon icon_cross" viewbox="0 0 18 18" style="width: 1.8rem; height: 1.8rem;">
                 <use xlink:href="#cross" />
