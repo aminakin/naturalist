@@ -81,7 +81,7 @@ foreach ($arResult as $key => $value) {
                 $this->AddEditAction($arSection['ID'], $arSection['EDIT_LINK'], CIBlock::GetArrayByID($arSection["IBLOCK_ID"], "ELEMENT_EDIT"));
                 $this->AddDeleteAction($arSection['ID'], $arSection['DELETE_LINK'], CIBlock::GetArrayByID($arSection["IBLOCK_ID"], "ELEMENT_DELETE"), array("CONFIRM" => Loc::GetMessage('CT_BNL_ELEMENT_DELETE_CONFIRM')));
                 ?>
-                <div class="object-row" target="_blank" data-map-id="<?= $arSection["ID"] ?>" href="<?= $arSection["SECTION_PAGE_URL"] ?>"
+                <div class="object-row" target="_blank" data-map-id="<?= $arSection["ID"] ?>" href="<?= $arSection["SECTION_PAGE_URL"] ?><?= $_SERVER['QUERY_STRING'] ? '?' . $_SERVER['QUERY_STRING'] : '' ?>"
                     id="<?= $this->GetEditAreaId($arSection['ID']) ?>">
                     <div class="object-row__images">
                         <div class="swiper slider-gallery" data-slider-object="data-slider-object"
@@ -255,7 +255,7 @@ foreach ($arResult as $key => $value) {
 
                         </div>
                     </div>
-                    <a class="button button_primary" target="_blank" onclick="VK.Goal('customize_product');" href="<?= $arSection["SECTION_PAGE_URL"] ?>">Выбрать</a>
+                    <a class="button button_primary" target="_blank" onclick="VK.Goal('customize_product');" href="<?= $arSection["SECTION_PAGE_URL"] ?><?= $_SERVER['QUERY_STRING'] ? '?' . $_SERVER['QUERY_STRING'] : '' ?>">Выбрать</a>
                 </div>
             <?php endforeach; ?>
         </div>
@@ -304,7 +304,7 @@ foreach ($arResult as $key => $value) {
                         $this->AddDeleteAction($arItem['ID'], $arItem['DELETE_LINK'], CIBlock::GetArrayByID($arItem["IBLOCK_ID"], "ELEMENT_DELETE"), array("CONFIRM" => Loc::GetMessage('CT_BNL_ELEMENT_DELETE_CONFIRM')));
                         ?>
 
-                        <div class="object-row" data-map-id="<?= $arSection["ID"] ?>" href="<?= $arSection["URL"] ?>"
+                        <div class="object-row" data-map-id="<?= $arSection["ID"] ?>" href="<?= $arSection["URL"] ?><?= $_SERVER['QUERY_STRING'] ? '?' . $_SERVER['QUERY_STRING'] : '' ?>"
                             id="<?= $this->GetEditAreaId($arSection['ID']) ?>">
                             <div class="object-row__images">
                                 <div class="swiper slider-gallery" data-slider-object="data-slider-object"
@@ -427,7 +427,7 @@ foreach ($arResult as $key => $value) {
                                     </div>
                                 </div>
                             </div>
-                            <a class="button button_primary" target="_blank" onclick="VK.Goal('customize_product');" href="<?= $arSection["URL"] ?>">Выбрать</a>
+                            <a class="button button_primary" target="_blank" onclick="VK.Goal('customize_product');" href="<?= $arSection["URL"] ?><?= $_SERVER['QUERY_STRING'] ? '?' . $_SERVER['QUERY_STRING'] : '' ?>">Выбрать</a>
                         </div>
 
                     <?php endforeach; ?>
