@@ -255,7 +255,7 @@ foreach ($arResult as $key => $value) {
 
                         </div>
                     </div>
-                    <a class="button button_primary" target="_blank" onclick="VK.Goal('customize_product');" href="<?= $arSection["URL"] ?><?= $_SERVER['QUERY_STRING'] ? '?' . $_SERVER['QUERY_STRING'] : '' ?>">Выбрать</a>
+                    <a class="button button_primary" target="_blank" onclick="VK.Goal('customize_product');" href="<?= $arSection["URL"] ?>">Выбрать</a>
                 </div>
             <?php endforeach; ?>
         </div>
@@ -304,7 +304,7 @@ foreach ($arResult as $key => $value) {
                         $this->AddDeleteAction($arItem['ID'], $arItem['DELETE_LINK'], CIBlock::GetArrayByID($arItem["IBLOCK_ID"], "ELEMENT_DELETE"), array("CONFIRM" => Loc::GetMessage('CT_BNL_ELEMENT_DELETE_CONFIRM')));
                         ?>
 
-                        <div class="object-row" data-map-id="<?= $arSection["ID"] ?>" href="<?= $arSection["URL"] ?><?= $_SERVER['QUERY_STRING'] ? '?' . $_SERVER['QUERY_STRING'] : '' ?>"
+                        <div class="object-row" data-map-id="<?= $arSection["ID"] ?>" href="<?= $arSection["URL"] ?>"
                             id="<?= $this->GetEditAreaId($arSection['ID']) ?>">
                             <div class="object-row__images">
                                 <div class="swiper slider-gallery" data-slider-object="data-slider-object"
@@ -427,7 +427,7 @@ foreach ($arResult as $key => $value) {
                                     </div>
                                 </div>
                             </div>
-                            <a class="button button_primary" target="_blank" onclick="VK.Goal('customize_product');" href="<?= $arSection["URL"] ?><?= $_SERVER['QUERY_STRING'] ? '?' . $_SERVER['QUERY_STRING'] : '' ?>">Выбрать</a>
+                            <a class="button button_primary" target="_blank" onclick="VK.Goal('customize_product');" href="<?= $arSection["URL"] ?>">Выбрать</a>
                         </div>
 
                     <?php endforeach; ?>
