@@ -81,7 +81,7 @@ foreach ($arResult as $key => $value) {
                 $this->AddEditAction($arSection['ID'], $arSection['EDIT_LINK'], CIBlock::GetArrayByID($arSection["IBLOCK_ID"], "ELEMENT_EDIT"));
                 $this->AddDeleteAction($arSection['ID'], $arSection['DELETE_LINK'], CIBlock::GetArrayByID($arSection["IBLOCK_ID"], "ELEMENT_DELETE"), array("CONFIRM" => Loc::GetMessage('CT_BNL_ELEMENT_DELETE_CONFIRM')));
                 ?>
-                <div class="object-row" target="_blank" data-map-id="<?= $arSection["ID"] ?>" href="<?= $arSection["SECTION_PAGE_URL"] ?><?= $_SERVER['QUERY_STRING'] ? '?' . $_SERVER['QUERY_STRING'] : '' ?>"
+                <div class="object-row" target="_blank" data-map-id="<?= $arSection["ID"] ?>" href="<?= $arSection["URL"] ?>"
                     id="<?= $this->GetEditAreaId($arSection['ID']) ?>">
                     <div class="object-row__images">
                         <div class="swiper slider-gallery" data-slider-object="data-slider-object"
@@ -171,7 +171,7 @@ foreach ($arResult as $key => $value) {
                     <div class="object-row__content">
                         <div class="object-row__description">
                             <a class="object-row__title h3" target="_blank"
-                                href="<?= $arSection["SECTION_PAGE_URL"] ?>"><?= $arSection["NAME"] ?></a>
+                                href="<?= $arSection["URL"] ?>"><?= $arSection["NAME"] ?></a>
                             <?php
                             if ($filteredHouseType) { ?>
                                 <span><?= $filteredHouseType ?></span>
@@ -179,7 +179,7 @@ foreach ($arResult as $key => $value) {
                                 <span><?= $arHLTypes[$arSection["UF_TYPE"]]["UF_NAME"] ?></span><?php } ?>
 
                             <div class="object-row__reviews">
-                                <a target="_blank" href="<?= $arSection["SECTION_PAGE_URL"] ?>#reviews-anchor"
+                                <a target="_blank" href="<?= $arSection["URL"] ?>#reviews-anchor"
                                     style="display: flex;font-size: 1.3rem;margin-left: 0;" class="score"
                                     <? if ($arReviewsAvg[$arSection["ID"]]["criterials"] != NULL) { ?>
                                        data-score="[{&quot;label&quot;:&quot;Удобство расположения&quot;,&quot;value&quot;:<?= $arReviewsAvg[$arSection["ID"]]["criterials"][1][0] ?? '0.0' ?>},{&quot;label&quot;:&quot;Питание&quot;,&quot;value&quot;:<?= $arReviewsAvg[$arSection["ID"]]["criterials"][2][0] ?? '0.0' ?>},{&quot;label&quot;:&quot;Уют&quot;,&quot;value&quot;:<?= $arReviewsAvg[$arSection["ID"]]["criterials"][3][0] ?? '0.0' ?>},{&quot;label&quot;:&quot;Сервис&quot;,&quot;value&quot;:<?= $arReviewsAvg[$arSection["ID"]]["criterials"][4][0] ?? '0.0' ?>},{&quot;label&quot;:&quot;Чистота&quot;,&quot;value&quot;:<?= $arReviewsAvg[$arSection["ID"]]["criterials"][5][0] ?? '0.0' ?>},{&quot;label&quot;:&quot;Эстетика окружения&quot;,&quot;value&quot;:<?= $arReviewsAvg[$arSection["ID"]]["criterials"][6][0] ?? '0.0' ?>},{&quot;label&quot;:&quot;Разнообразие досуга&quot;,&quot;value&quot;:<?= $arReviewsAvg[$arSection["ID"]]["criterials"][7][0] ?? '0.0' ?>},{&quot;label&quot;:&quot;Соотношение цена/качество&quot;,&quot;value&quot;:<?= $arReviewsAvg[$arSection["ID"]]["criterials"][8][0] ?? '0.0' ?>}]"
@@ -189,7 +189,7 @@ foreach ($arResult as $key => $value) {
                                     <span><?= $arReviewsAvg[$arSection["ID"]]["avg"] ?? 0 ?></span>
                                 </a>
                                 <span class="dot"></span>
-                                <a target="_blank" href="<?= $arSection["SECTION_PAGE_URL"] ?>#reviews-anchor"><?= $arReviewsAvg[$arSection["ID"]]["count"] ?? 0 ?> <?= $reviewsDeclension->get($arReviewsAvg[$arSection["ID"]]["count"]) ?></a>
+                                <a target="_blank" href="<?= $arSection["URL"] ?>#reviews-anchor"><?= $arReviewsAvg[$arSection["ID"]]["count"] ?? 0 ?> <?= $reviewsDeclension->get($arReviewsAvg[$arSection["ID"]]["count"]) ?></a>
                             </div>
                             <div class="area-info">
                                 <img src="/local/templates/main/assets/img/location.svg" alt="Маркер">
@@ -255,7 +255,7 @@ foreach ($arResult as $key => $value) {
 
                         </div>
                     </div>
-                    <a class="button button_primary" target="_blank" onclick="VK.Goal('customize_product');" href="<?= $arSection["SECTION_PAGE_URL"] ?><?= $_SERVER['QUERY_STRING'] ? '?' . $_SERVER['QUERY_STRING'] : '' ?>">Выбрать</a>
+                    <a class="button button_primary" target="_blank" onclick="VK.Goal('customize_product');" href="<?= $arSection["URL"] ?><?= $_SERVER['QUERY_STRING'] ? '?' . $_SERVER['QUERY_STRING'] : '' ?>">Выбрать</a>
                 </div>
             <?php endforeach; ?>
         </div>
