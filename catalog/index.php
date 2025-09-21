@@ -5,7 +5,6 @@ $APPLICATION->AddHeadScript('https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist
 ?>
 <script src="https://pay.yandex.ru/sdk/v1/pay.js" onload="onYaPayLoad()" async></script>
 <?php
-initCatalog();
 
 $APPLICATION->IncludeComponent(
   "naturalist:catalog",
