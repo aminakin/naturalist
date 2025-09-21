@@ -1,9 +1,10 @@
 <?
+
 use Bitrix\Main\Localization\Loc;
 
 Loc::loadMessages(__FILE__);
 
-foreach($arResult as $key => $value) {
+foreach ($arResult as $key => $value) {
     ${$key} = $value;
 }
 ?>
@@ -36,11 +37,11 @@ foreach($arResult as $key => $value) {
             <div class="profile">
                 <div class="profile__sidebar">
                     <div class="profile-preview">
-                        <?if($arUser["PERSONAL_PHOTO"]):?>
+                        <? if ($arUser["PERSONAL_PHOTO"]): ?>
                             <div class="profile-preview__image">
                                 <img class="lazy" data-src="<?= $arUser["PERSONAL_PHOTO"]["src"] ?>" alt="<?= $arUser["NAME"] ?>">
                             </div>
-                        <?endif;?>
+                        <? endif; ?>
                         <div class="profile-preview__name"><?= $arUser["NAME"] ?></div>
                     </div>
 
@@ -75,11 +76,11 @@ foreach($arResult as $key => $value) {
                     <div class="profile__heading">
                         <h1>Активные заказы</h1>
 
-                        <?if($arOrders || $orderNum):?>
+                        <? if ($arOrders || $orderNum): ?>
                             <div class="profile__heading-controls">
                                 <form class="form form_search" id="form-order-search">
                                     <div class="field">
-                                        <input class="field__input" type="text" name="orderNum" value="<?=$orderNum?>" placeholder="Номер заказа">
+                                        <input class="field__input" type="text" name="orderNum" value="<?= $orderNum ?>" placeholder="Номер заказа">
                                         <button data-order-search>
                                             <svg class="icon icon_search" viewbox="0 0 16 17" style="width: 1.6rem; height: 1.7rem;">
                                                 <use xlink:href="#search" />
@@ -88,72 +89,72 @@ foreach($arResult as $key => $value) {
                                     </div>
                                 </form>
                             </div>
-                        <?endif;?>
+                        <? endif; ?>
                     </div>
 
-                    <?if($arOrders):?>
+                    <? if ($arOrders): ?>
                         <div class="sort">
                             <span>Сортировать по:</span>
                             <ul class="list">
                                 <li class="list__item">
-                                    <?if($sort == "date_create"):?>
+                                    <? if ($sort == "date_create"): ?>
                                         <span class="list__link">
-                                    <span>По</span> <span>Дате бронирования</span>
-                                </span>
-                                    <?else:?>
+                                            <span>По</span> <span>Дате бронирования</span>
+                                        </span>
+                                    <? else: ?>
                                         <a class="list__link" href="#" data-order-sort="date_create">
                                             <span>По</span> <span>Дате бронирования</span>
                                         </a>
-                                    <?endif;?>
+                                    <? endif; ?>
                                 </li>
                                 <li class="list__item">
-                                    <?if($sort == "date_from"):?>
+                                    <? if ($sort == "date_from"): ?>
                                         <span class="list__link">
-                                    <span>По</span> <span>Дате заезда</span>
-                                </span>
-                                    <?else:?>
+                                            <span>По</span> <span>Дате заезда</span>
+                                        </span>
+                                    <? else: ?>
                                         <a class="list__link" href="#" data-order-sort="date_from">
                                             <span>По</span> <span>Дате заезда</span>
                                         </a>
-                                    <?endif;?>
+                                    <? endif; ?>
                                 </li>
                             </ul>
                         </div>
-                    <?endif;?>
+                    <? endif; ?>
 
                     <div class="profile__content">
-                        <?if($arOrders):?>
-                            <?foreach($arOrders as $arOrder):?>
-                                <?                                
+                        <? if ($arOrders): ?>
+                            <? foreach ($arOrders as $arOrder): ?>
+                                <?
                                 $dateFrom = $arOrder["PROPS"]["DATE_FROM"];
                                 $dateTo = $arOrder["PROPS"]["DATE_TO"];
                                 $guests = $arOrder["ITEMS"][0]["ITEM_BAKET_PROPS"]["GUESTS_COUNT"]['VALUE'];
-                                $daysCount = $daysCount = (strtotime($dateTo) - strtotime($dateFrom)) / (60*60*24);
+                                $daysCount = $daysCount = (strtotime($dateTo) - strtotime($dateFrom)) / (60 * 60 * 24);
                                 $totalPrice = $arOrder["FIELDS"]["PRICE"];
 
                                 $arOrderItem = $arOrder["ITEMS"][0]["ITEM"];
                                 $arOrderSection = $arOrderItem["SECTION"];
-                                if(!empty($arOrderSection["UF_PHOTOS"][0])){
+                                if (!empty($arOrderSection["UF_PHOTOS"][0])) {
                                     $photo = CFile::ResizeImageGet($arOrderSection["UF_PHOTOS"][0], array('width' => 600, 'height' => 400), BX_RESIZE_IMAGE_EXACT, true)["src"];
                                 } else {
-                                    $photo = SITE_TEMPLATE_PATH."/img/no_photo.png";
+                                    $photo = SITE_TEMPLATE_PATH . "/img/no_photo.png";
                                 }
                                 $alt = $arHLTypes[$arOrderSection["UF_TYPE"]]["UF_NAME"] . " " . $arOrderSection["NAME"];
                                 $title = "Фото - " . $arOrderSection["NAME"];
                                 ?>
-                                <div class="object-row object-row_profile" data-id="<?=$arOrder["ID"]?>">
+                                <div class="object-row object-row_profile" data-id="<?= $arOrder["ID"] ?>">
                                     <div class="object-row__images">
-                                        <img class="lazy" alt="<?= $alt ?>" title="<?= $title ?>" data-src="<?=$photo?>">
+                                        <img class="lazy" alt="<?= $alt ?>" title="<?= $title ?>" data-src="<?= $photo ?>">
                                     </div>
 
                                     <div class="object-row__content">
                                         <div class="object-row__description">
-                                            <div class="object-row__headnote">Заказ №<?=$arOrder["FIELDS"]["ACCOUNT_NUMBER"]?></div>
+                                            <div class="object-row__headnote">Заказ №<?= $arOrder["FIELDS"]["ACCOUNT_NUMBER"] ?></div>
                                             <div class="object-row__heading">
-                                                <a class="object-row__title h3" href="<?=$arOrderSection["SECTION_PAGE_URL"]?>"><?=$arOrderSection["NAME"]?></a>
+                                                <a class="object-row__title h3" href="<?= $arOrderSection["SECTION_PAGE_URL"] ?>"><?= $arOrderSection["NAME"] ?></a>
                                                 <div class="score">
                                                     <img src="<?= SITE_TEMPLATE_PATH ?>/assets/img/score.svg" alt="Рейтинг">
-                                                    <span><?=(int)$arOrderSection["RATING"]["avg"]?></span>
+                                                    <span><?= (int)$arOrderSection["RATING"]["avg"] ?></span>
                                                 </div>
                                             </div>
                                             <div class="area-info">
@@ -164,8 +165,8 @@ foreach($arResult as $key => $value) {
                                                     <? if (!empty($arOrderSection["UF_ADDRESS"])) : ?><span><?= $arOrderSection["UF_ADDRESS"] ?></span><? endif; ?>
                                                 </div>
                                             </div>
-                                            <div class="object-row__text"><?=$arOrderItem["NAME"]?><?if($arOrderItem["PROPERTIES"]["SQUARE"]["VALUE"]):?>, <?=$arOrderItem["PROPERTIES"]["SQUARE"]["VALUE"]?> м²<?endif;?></div>
-                                            <div class="object-row__text"><?=FormatDate("d F", strtotime($dateFrom))?> - <?=FormatDate("d F", strtotime($dateTo))?>, <?= $daysCount ?> <?= $daysDeclension->get($daysCount) ?>, <?=$guests?> <?= $guestsDeclension->get($guests) ?> <span>заезд с <?=$arOrderSection["UF_TIME_FROM"]?>, выезд до <?=$arOrderSection["UF_TIME_TO"]?></span></div>
+                                            <div class="object-row__text"><?= $arOrderItem["NAME"] ?><? if ($arOrderItem["PROPERTIES"]["SQUARE"]["VALUE"]): ?>, <?= $arOrderItem["PROPERTIES"]["SQUARE"]["VALUE"] ?> м²<? endif; ?></div>
+                                            <div class="object-row__text"><?= FormatDate("d F", strtotime($dateFrom)) ?> - <?= FormatDate("d F", strtotime($dateTo)) ?>, <?= $daysCount ?> <?= $daysDeclension->get($daysCount) ?>, <?= $guests ?> <?= $guestsDeclension->get($guests) ?> <span>заезд с <?= $arOrderSection["UF_TIME_FROM"] ?>, выезд до <?= $arOrderSection["UF_TIME_TO"] ?></span></div>
                                         </div>
 
                                         <div class="object-row__order">
@@ -173,28 +174,28 @@ foreach($arResult as $key => $value) {
                                                 <div><?= number_format((float)$totalPrice, 0, '.', ' ') ?> ₽</div>
                                             </div>
                                             <div class="profile__status">
-                                                <div class="tag"><?=$arOrder["DATA"]["STATUS"]?></div>
-                                                <?if($arOrder["FIELDS"]["IS_PAYED"] == "Y"):?>
-                                                    <a class="profile__get-vaucher" href="#" data-id="<?=$arOrder["ID"]?>"><?=Loc::getMessage('GET_VAUCHER')?></a>
-                                                <?endif;?>
+                                                <div class="tag"><?= $arOrder["DATA"]["STATUS"] ?></div>
+                                                <? if ($arOrder["FIELDS"]["IS_PAYED"] == "Y"): ?>
+                                                    <a class="profile__get-vaucher" href="#" data-id="<?= $arOrder["ID"] ?>"><?= Loc::getMessage('GET_VAUCHER') ?></a>
+                                                <? endif; ?>
                                             </div>
-                                                
-                                            <?if($arOrder["FIELDS"]["IS_PAYED"] != "Y"):?>                                                
-                                                <a class="button button_transparent" href="#" data-payment data-id="<?=$arOrder["ID"]?>">Оплатить</a>
-                                            <?else:?>                                                
-                                                <a class="button button_transparent" href="#" data-order-cancel data-id="<?=$arOrder["ID"]?>">Отмена</a>
-                                            <?endif;?>
+
+                                            <? if ($arOrder["FIELDS"]["IS_PAYED"] != "Y"): ?>
+                                                <a class="button button_transparent" href="#" data-payment data-id="<?= $arOrder["ID"] ?>">Оплатить</a>
+                                            <? else: ?>
+                                                <a class="button button_transparent" href="#" data-order-cancel data-id="<?= $arOrder["ID"] ?>">Отмена</a>
+                                            <? endif; ?>
                                         </div>
                                     </div>
                                 </div>
-                            <?endforeach;?>
+                            <? endforeach; ?>
 
-                        <?else:?>
+                        <? else: ?>
                             <div class="profile__empty">
                                 <div class="profile__empty-title">Нет активных заказов</div>
                                 <div class="profile__empty-text">Начните планировать отдых с <a href="/catalog/">выбора глэмпинга</a> и забронируйте номер.</div>
                             </div>
-                        <?endif;?>
+                        <? endif; ?>
                     </div>
                 </div>
             </div>
@@ -251,6 +252,95 @@ foreach($arResult as $key => $value) {
 
         <div class="modal__content">
             <p>На вашу электронную почту отправлено письмо с деталями отмены</p>
+        </div>
+    </div>
+</div>
+
+<div class="modal modal_cancel">
+    <div class="modal__container">
+        <button class="modal__close" data-modal-close>
+            <span>Скрыть</span>
+            <svg class="icon icon_cross" viewbox="0 0 15 15" style="width: 15px; height: 15px;">
+                <use xlink:href="#cross" />
+            </svg>
+        </button>
+        <div class="modal__content">
+            <div class="modal__content-title">Вы уверены, что хотите отменить бронирование?</div>
+            <div class="modal__content-info">Бесплатная отмена до 26.10.2024 16:59 (Московское время). Далее штраф за отмену бронирования — 5760 ₽.</div>
+            <div class="modal__content-nochange">Это действие нельзя будет отменить.</div>
+            <div class="modal__content-btns">
+                <div class="modal__content-btn return button button_primary">
+                    Вернуться к заказу
+                </div>
+                <div class="modal__content-btn cancel button button_primary">
+                    Да отменить
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal modal_canceled">
+    <div class="modal__container">
+        <button class="modal__close" data-modal-close>
+            <span>Скрыть</span>
+            <svg class="icon icon_cross" viewbox="0 0 15 15" style="width: 15px; height: 15px;">
+                <use xlink:href="#cross" />
+            </svg>
+        </button>
+        <div class="modal__content">
+            <div class="modal__content-title">Бронь отменена</div>
+            <div class="modal__content-info">Нам важно ваше мнение. Почему передумали?</div>
+            <div class="modal__content-why">
+                <label for="nofound">
+                    <input type="radio" id="nofound" name="why" value="nofound">        
+                    <span>Нашёл другое место</span>
+                </label>
+                
+                <label for="change">
+                    <input type="radio" id="change" name="why" value="change">
+                    <span>Изменились планы</span>
+                </label>
+                
+                <label for="nosuit">
+                    <input type="radio" id="nosuit" name="why" value="nosuit">
+                    <span>Не устроили условия проживания</span>
+                </label>
+                
+                <label for="problem">
+                    <input type="radio" id="problem" name="why" value="problem">
+                    <span>Проблемы с сайтом или оплатой</span>
+                </label>
+                
+                <label for="ownoption">
+                    <input type="radio" id="ownoption" name="why" value="ownoption">
+                    <span>Свой вариант</span>
+                </label>
+
+                <div class="ownoption-input">
+                    <input type="text" id="ownoption-input" name="why" value="">
+                </div>
+            </div>
+            <div class="modal__content-btns">
+                <div class="modal__content-btn cancel button button_primary">
+                    Да отменить
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal modal_canceled finish">
+    <div class="modal__container">
+        <button class="modal__close" data-modal-close>
+            <span>Скрыть</span>
+            <svg class="icon icon_cross" viewbox="0 0 15 15" style="width: 15px; height: 15px;">
+                <use xlink:href="#cross" />
+            </svg>
+        </button>
+        <div class="modal__content">
+            <div class="modal__content-title">Спасибо!</div>
+            <div class="modal__content-info">Ваш ответ поможет нам стать лучше</div>
         </div>
     </div>
 </div>
