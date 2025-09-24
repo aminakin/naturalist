@@ -7,6 +7,10 @@
   font-family: "Lato", sans-serif;
 }
 
+.object__detail {
+    z-index: 10;
+}
+
 .object-hero .favorite {
   border: none;
   position: absolute;
