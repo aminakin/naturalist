@@ -4,6 +4,8 @@ use Bitrix\Main\Application;
 use Bitrix\Main\Grid\Declension;
 use Bitrix\Highloadblock\HighloadBlockTable;
 use Naturalist\Orders;
+use Naturalist\SearchServiceFactory;
+use Naturalist\Products;
 
 global $arUser, $isAuthorized;
 if (!$isAuthorized) {
@@ -57,6 +59,90 @@ while ($arEntity = $rsData->Fetch()) {
     $arHLTypes[$arEntity["ID"]] = $arEntity;
 }
 
+$factory = new SearchServiceFactory();
+$products = new Products($factory);
+
+foreach ($arOrders as $id => $order) {
+    $item = $order['ITEMS'][0];
+
+    $service = CUserFieldEnum::GetList(
+        [], 
+        ['ID' => $item['ITEM']['SECTION']['UF_EXTERNAL_SERVICE']]
+    )->Fetch();
+
+    $arExternalResult = $products->searchRooms(
+        $item['ITEM']['SECTION']['ID'],
+        $item['ITEM']['SECTION']['UF_EXTERNAL_ID'],
+        $service['XML_ID'],
+        0,
+        [],
+        $item['ITEM_BAKET_PROPS']['DATE_FROM']['VALUE'],
+        $item['ITEM_BAKET_PROPS']['DATE_TO']['VALUE'],
+        0
+    )['arRooms'] ?: [];
+
+    if (is_array($arExternalResult) && !empty($arExternalResult)) {
+        foreach ($arExternalResult as $idNumber => $arTariffs) {
+          
+            foreach ($arTariffs as $keyTariff => $arTariff) {
+                $cancelation = [];
+
+                if (!empty($arTariff['value']['PROPERTY_CANCELLATION_FINE_TYPE_VALUE']) && $arTariff['value']['PROPERTY_CANCELLATION_FINE_TYPE_VALUE'] == '2') {
+                    if (!empty($arTariff['value']['PROPERTY_CANCELLATION_RULES_VALUE'])) {
+                      array_push($cancelation, $arTariff['value']['PROPERTY_CANCELLATION_RULES_VALUE']);
+                    } else {
+                      array_push($cancelation, 'Штраф за отмену бронирования — ' . $arTariff['price'] * ($arTariff['value']['PROPERTY_CANCELLATION_FINE_AMOUNT_VALUE'] / 100) . ' ₽');
+                    }
+                } elseif (!empty($arTariff['value']['PROPERTY_CANCELLATION_FINE_TYPE_VALUE']) && $arTariff['value']['PROPERTY_CANCELLATION_FINE_TYPE_VALUE'] == '5') {
+                    if (!empty($arTariff['value']['PROPERTY_CANCELLATION_RULES_VALUE'])) {
+                      array_push($cancelation, $arTariff['value']['PROPERTY_CANCELLATION_RULES_VALUE']);
+                    }
+
+                    array_push($cancelation, 'Штраф за отмену бронирования — ' . $arTariff['price'] . ' ₽');
+                } elseif (!empty($arTariff['value']['PROPERTY_CANCELLATION_FINE_TYPE_VALUE']) && $arTariff['value']['PROPERTY_CANCELLATION_FINE_TYPE_VALUE'] == '4') {
+                    if (!empty($arTariff['value']['PROPERTY_CANCELLATION_RULES_VALUE'])) {
+                      array_push($cancelation, $arTariff['value']['PROPERTY_CANCELLATION_RULES_VALUE']);
+                    }
+
+                    array_push($cancelation, 'Штраф за отмену бронирования — ' . array_shift($arTariff['prices']) . ' ₽');
+                } elseif (!empty($arTariff['value']['PROPERTY_CANCELLATION_FINE_TYPE_VALUE'])) {
+                    if (!empty($arTariff['value']['PROPERTY_CANCELLATION_RULES_VALUE'])) {
+                      array_push($cancelation,  $arTariff['value']['PROPERTY_CANCELLATION_RULES_VALUE']);
+                    }
+
+                    array_push($cancelation,  'Штраф за отмену бронирования — ' . $arTariff['value']['PROPERTY_CANCELLATION_FINE_AMOUNT_VALUE'] . ' ₽');
+                } else {
+                    if (!empty($arTariff['value']['PROPERTY_CANCELLATION_RULES_VALUE'])) {
+                      array_push($cancelation, $arTariff['value']['PROPERTY_CANCELLATION_RULES_VALUE']);
+                    }
+
+                    array_push($cancelation, 'Бесплатная отмена бронирования');
+                }
+            }
+        }
+    }
+
+    $arOrders[$id]['CANCEL_INFO'] = $cancelation;
+}
+
+$propReasonEnum = CIBlockPropertyEnum::GetList(
+    ['ID' => 'ASC'],
+    [
+        'IBLOCK_ID' => REASONS_CANCEL_ORDER,
+        'CODE' => 'REASONS'
+    ]
+);
+
+$propReasonEnumValues = [];
+
+while ($field = $propReasonEnum->GetNext()) {
+    $propReasonEnumValues[] = [
+        'ID' => $field['ID'],
+        'VALUE' => $field['VALUE'],
+        'XML_ID' => $field['XML_ID']
+    ];
+}
+
 $arResult = array(
     "orderNum" => $orderNum,
     "sort" => $sort,
@@ -66,4 +152,5 @@ $arResult = array(
     "guestsDeclension" => $guestsDeclension,
     "reviewsDeclension" => $reviewsDeclension,
     "daysDeclension" => $daysDeclension,
+    "reasonCancel" => $propReasonEnumValues
 );

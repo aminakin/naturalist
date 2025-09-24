@@ -120,3 +120,6 @@ const TELEGRAM_USERS_HL_ENTITY = 'TelegramUsers';
 
 // Группа модераторов
 const MODERATOR_USER_GROUP = 14;
+
+// ИБ Причины отмены заказа
+const REASONS_CANCEL_ORDER = 36;
