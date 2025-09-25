@@ -18756,7 +18756,7 @@
                   type: $item.dataset.autocompleteType,
                   item: $item.dataset.autocompleteItem,
                   title: $title.textContent.replace("&", "%26"),
-                  footnote: $footnote ? $footnote.innerHTML : "",
+                  footnote: $footnote ? $footnote.innerHTML.replace(/&nbsp;/g, ' ') : "",
                 });
 
                 _this2.elements.$field.forEach(($item) => {
