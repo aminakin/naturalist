@@ -177,7 +177,7 @@ class NaturalistCatalog extends \CBitrixComponent
         }
 
         if (!$this->dateTo) {
-            $this->dateTo = (clone $today)->modify('+4 day')->format('d.m.Y');
+            $this->dateTo = (clone $today)->modify('+3 day')->format('d.m.Y');
         }
 
         if ($this->dateFrom && $this->dateTo) {

@@ -21,7 +21,7 @@ if (!$request->get('dateFrom')) {
 }
 
 if (!$request->get('dateFrom')) {
-    $dateTo = (clone $today)->modify('+4 day')->format('d.m.Y');
+    $dateTo = (clone $today)->modify('+3 day')->format('d.m.Y');
 }
 ?>
 
