@@ -119,6 +119,8 @@ class NaturalistCatalog extends \CBitrixComponent
     private $nextYear;
     private $daysRange;
     private $yandexReview = [];
+    private $dateFrom;
+    private $dateTo;
 
 
     /**
@@ -165,13 +167,25 @@ class NaturalistCatalog extends \CBitrixComponent
 
     private function fillUriParams()
     {
+        $this->dateFrom = $this->request->get('dateFrom');
+        $this->dateTo = $this->request->get('dateTo');
 
-        if ($this->request->get('dateFrom') && $this->request->get('dateTo')) {
+        $today = new DateTime();
+
+        if (!$this->dateFrom) {
+            $this->dateFrom = (clone $today)->modify('+1 day')->format('d.m.Y');
+        }
+
+        if (!$this->dateTo) {
+            $this->dateTo = (clone $today)->modify('+3 day')->format('d.m.Y');
+        }
+
+        if ($this->dateFrom && $this->dateTo) {
             $arDates = [];
             $period = new DatePeriod(
-                new DateTime($this->request->get('dateFrom')),
+                new DateTime($this->dateFrom),
                 new DateInterval('P1D'),
-                new DateTime(date('d.m.Y', strtotime($this->request->get('dateTo') . '+1 day')))
+                new DateTime(date('d.m.Y', strtotime($this->dateTo . '+1 day')))
             );
             foreach ($period as $value) {
                 $arDates[] = $value->format('d.m.Y');
@@ -181,8 +195,8 @@ class NaturalistCatalog extends \CBitrixComponent
 
 
         $this->arUriParams = [
-            'dateFrom' => $this->request->get('dateFrom'),
-            'dateTo' => $this->request->get('dateTo'),
+            'dateFrom' => $this->dateFrom,
+            'dateTo' => $this->dateTo,
             'guests' => $this->request->get('guests') ? $this->request->get('guests') : 2,
             'children' => $this->request->get('children') ? $this->request->get('children') : 0,
             'daysCount' => $daysCount ?? 0,

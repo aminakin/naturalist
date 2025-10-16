@@ -7,6 +7,22 @@ foreach ($arResult as $key => $value) {
 }
 
 use Bitrix\Main\Localization\Loc;
+use Bitrix\Main\Context;
+
+$request = Context::getCurrent()->getRequest();
+
+$today = new DateTime();
+
+$dateFrom = '';
+$dateTo = '';
+
+if (!$request->get('dateFrom')) {
+    $dateFrom = (clone $today)->modify('+1 day')->format('d.m.Y');
+}
+
+if (!$request->get('dateFrom')) {
+    $dateTo = (clone $today)->modify('+3 day')->format('d.m.Y');
+}
 ?>
 
 <main class="main">
@@ -135,15 +151,15 @@ use Bitrix\Main\Localization\Loc;
                     <div class="form__row calendar" data-calendar="data-calendar" data-calendar-min="today" data-calendar-max="365">
                         <div class="form__item">
                             <div class="field field_icon field_calendar">
-                                <label><?= $arSettings['main_search_form_date_from_span'] ?></label>
-                                <div class="field__input" data-calendar-label="data-calendar-label" data-date-from><span></span></div>
+                                <label style="<?= $dateFrom ? 'bottom: 30px;' : '' ?>"><?= $arSettings['main_search_form_date_from_span'] ?></label>
+                                <div class="field__input" data-calendar-label="data-calendar-label" data-date-from><?= $dateFrom ?: '<span></span>' ?></div>
                             </div>
                         </div>
 
                         <div class="form__item">
                             <div class="field field_icon field_calendar">
-                                <label><?= $arSettings['main_search_form_date_to_span'] ?></label>
-                                <div class="field__input" data-calendar-label="data-calendar-label" data-date-to><span></span></div>
+                                <label style="<?= $dateTo ? 'bottom: 30px;' : '' ?>"><?= $arSettings['main_search_form_date_to_span'] ?></label>
+                                <div class="field__input" data-calendar-label="data-calendar-label" data-date-to><?= $dateTo ?: '<span></span>' ?></div>
                             </div>
                         </div>
 
