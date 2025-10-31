@@ -33,6 +33,7 @@ use Object\Uhotels\Connector\UhotelsBookingData;
 use Sberbank\Payments\Gateway;
 use function NormalizePhone;
 use function randString;
+use Naturalist\Utils;
 
 defined("B_PROLOG_INCLUDED") && B_PROLOG_INCLUDED === true || die();
 
@@ -327,14 +328,19 @@ class Orders
         }
 
         $reservationId = $arOrder['PROPS']['RESERVATION_ID'];
-        if (!empty($reservationId)) {
+        if (!empty($reservationId) && Utils::isProd()) {
             $cancelReservation = $this->cancelReservation($arOrder);
             if ($cancelReservation["ERROR"]) {
                 return json_encode($cancelReservation);
             }
         }
 
-        $this->applyPenaltyCanceledOrder($orderId);
+        if (Utils::isProd()) {
+            $this->applyPenaltyCanceledOrder($orderId);
+        } else {
+            $cancelReservation = true;
+        }
+
         //$res = CSaleOrder::CancelOrder($orderId, "Y", $reason);
         if ($cancelReservation) {
             // Выставляем заказу статус "С" (Отменен)
@@ -376,13 +382,15 @@ class Orders
         $service = $arOrder['ITEMS'][0]['ITEM']['SECTION']['UF_EXTERNAL_SERVICE'];
         $reservationId = $arOrder['PROPS']['RESERVATION_ID'];
 
-        if ($service == $this->bronevikSectionPropEnumId) {
-            $res = (new OrderCancelBronevik())($arOrder['PROPS']['RESERVATION_ID']);
-        } elseif ($service == $this->bnovoSectionPropEnumId) {
-            $bnovo = new Bnovo();
-            $res = $bnovo->cancelReservation($arOrder);
-        } elseif ($service == $this->travelineSectionPropEnumId) {
-            $res = Traveline::cancelReservation($arOrder);
+        if (Utils::isProd()) {
+            if ($service == $this->bronevikSectionPropEnumId) {
+                $res = (new OrderCancelBronevik())($arOrder['PROPS']['RESERVATION_ID']);
+            } elseif ($service == $this->bnovoSectionPropEnumId) {
+                $bnovo = new Bnovo();
+                $res = $bnovo->cancelReservation($arOrder);
+            } elseif ($service == $this->travelineSectionPropEnumId) {
+                $res = Traveline::cancelReservation($arOrder);
+            }
         }
 
         if ($res) {

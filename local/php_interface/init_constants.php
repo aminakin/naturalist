@@ -123,3 +123,6 @@ const MODERATOR_USER_GROUP = 14;
 
 // ИБ Причины отмены заказа
 const REASONS_CANCEL_ORDER = 36;
+
+// Доменное имя прод сайта
+const PROD_DOMEN = 'naturalist.travel';

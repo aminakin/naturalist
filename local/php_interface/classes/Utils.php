@@ -4,7 +4,7 @@ namespace Naturalist;
 
 use Bitrix\Main\Diag\Debug;
 use Petrovich;
-
+use Bitrix\Main\Context;
 
 class Utils
 {
@@ -95,5 +95,21 @@ class Utils
         }
 
         return $string;
+    }
+
+    /**
+     * Метод проверяет по доменному имени
+     * прод сайт или нет
+    */
+    public static function isProd(): bool
+    {
+        $request = Context::getCurrent()->getRequest();
+        $domain = $request->getHttpHost();
+
+        if (defined(PROD_DOMEN) && $domain == PROD_DOMEN) {
+            return true;
+        }
+
+        return false;
     }
 }

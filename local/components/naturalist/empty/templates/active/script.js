@@ -31,11 +31,8 @@ var Order = function () {
       dataType: "json",
       success: function (a) {
         if (!a.ERROR) {
+          window.modal.close('cancel-step');
           window.modal.open('cancel-done');
-
-          setTimeout(function () {
-            location.reload();
-          }, 1500);
         } else {
           window.infoModal(ERROR_TITLE, a.ERROR);
         }
@@ -227,10 +224,15 @@ $(function () {
               }
           });
       }
-console.log('reasonText ' + reasonText);
 
       if (!emptyText) {
           order.addReason(orderId, checkedInputId, reasonText);
       }
+  });
+
+  $(document).on("click", "#cancel-finish .modal__close", function(e) {
+      setTimeout(function () {
+          location.reload();
+      }, 1500);
   });
 });
