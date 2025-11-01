@@ -2122,7 +2122,8 @@ class Bnovo implements SearchServiceInterface
                 [
                     "ID",
                     "UF_RESERVED",
-                    "UF_DATE",
+                    "UF_CLOSED",
+                    "UF_DATE"
                 ],
                 [
                     "ID" => "ASC"
@@ -2149,11 +2150,15 @@ class Bnovo implements SearchServiceInterface
                 $arFields = [];
                 if (isset($arResultRoomsId[$date])) {
                     $arFields = array(
-                        'UF_RESERVED' => !empty($isAvailable) ? '0' : '1'
+                        'UF_RESERVED' => !empty($isAvailable) ? '0' : '1',
+                        'UF_CLOSED' => !empty($isAvailable) ? '0' : '1'
                     );
 
                     foreach ($arResultRoomsId[$date] as $id) {
-                        if ($arFields["UF_RESERVED"] != $arResultRooms[$id]["UF_RESERVED"]) {
+                        $currentReserved = $arResultRooms[$id]["UF_RESERVED"];
+                        $currentClosed = $arResultRooms[$id]["UF_CLOSED"];
+
+                        if ($arFields["UF_RESERVED"] !== $currentReserved || $arFields["UF_CLOSED"] !== $currentClosed) {
                             if ($arFields["UF_RESERVED"] == '1') {
                                 $arReservedOne[] = $id;
                             } else {
@@ -2168,7 +2173,7 @@ class Bnovo implements SearchServiceInterface
         $connection = \Bitrix\Main\Application::getConnection();
 
         if (!empty($arReservedOne)) {
-            $query = 'UPDATE b_hlbd_room_offers SET UF_RESERVED=1 WHERE id IN (' . implode(',', $arReservedOne) . ')';
+            $query = 'UPDATE b_hlbd_room_offers SET UF_RESERVED=1, UF_CLOSED=1 WHERE id IN (' . implode(',', $arReservedOne) . ')';
 
             //Debug::writeToFile($query, 'BNOVO_UNRESERVED_' . $hotelId . date('Y-m-d H:i:s'), '__BNOVO_UNRESERVED_log.log');
 //            $this->debugBotTelegram->sendMessage(Markdown::arrayToMarkdown($query));
@@ -2177,7 +2182,7 @@ class Bnovo implements SearchServiceInterface
         }
 
         if (!empty($arReservedNull)) {
-            $query = 'UPDATE b_hlbd_room_offers SET UF_RESERVED=0 WHERE id IN (' . implode(',', $arReservedNull) . ')';
+            $query = 'UPDATE b_hlbd_room_offers SET UF_RESERVED=0, UF_CLOSED=0 WHERE id IN (' . implode(',', $arReservedNull) . ')';
 
             //Debug::writeToFile($query, 'BNOVO_RESERVED_' . $hotelId . date('Y-m-d H:i:s'), '__BNOVO_RESERVED__log.log');
 //            $this->debugBotTelegram->sendMessage(Markdown::arrayToMarkdown($query));
