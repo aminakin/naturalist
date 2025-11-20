@@ -1063,7 +1063,7 @@
 }
 
 .object-row_profile .object-row__order .button {
-    margin-top: auto
+    margin-top: 16px;
 }
 
 .sort {
@@ -1121,6 +1121,292 @@
 .sort .list a.list__link:hover {
     color: #696969;
     color: var(--color-dark-grey-2)
+}
+
+.room__cancelation-title {
+    padding: 9px 12px;
+    cursor: pointer;
+    border-radius: 4px;
+    display: inline-flex;
+    gap: 4px;
+    align-items: center;
+    font-size: 14px;
+    line-height: 20px;
+    background-color: var(--color-new-1);
+}
+
+.room__cancelation {
+    position: relative;
+    margin-top: auto;
+    padding: 0;
+}
+
+.room__cancelation-tooltip {
+    width: 298px;
+    position: absolute;
+    z-index: 9;
+    padding: 8px 12px;
+    border-radius: 8px;
+    background-color: var(--color-btn);
+    font-size: 13px;
+    line-height: 18px;
+    right: -38px;
+    bottom: 120%;
+    display: none;
+}
+
+.room__cancelation-tooltip ul {
+    list-style: none;
+    padding-left: 20px;
+    display: grid;
+    gap: 4px;
+    font-weight: 500;
+    margin: 4px 0 0 0;
+}
+
+.room__cancelation-tooltip li {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.room__cancelation-tooltip li::before {
+    content: "";
+    width: 7px;
+    height: 7px;
+    background-color: white;
+    border-radius: 50%;
+    position: absolute;
+    left: -15px;
+}
+
+.room__cancelation-tooltip svg {
+    position: absolute;
+    bottom: -5px;
+    left: 50%;
+}
+
+.room__cancelation-title:hover+.room__cancelation-tooltip {
+    display: block;
+}
+
+.room__cancelation-tooltip-title {
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 600;
+}
+
+.modal_cancel .modal__content-info ul {
+    list-style: none;
+}
+
+.modal_cancel .modal__content-info ul li:not(:last-child) {
+    margin-bottom: 6px;
+}
+
+.modal__content .reason-items {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.modal__content .reason-items .reason-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.modal__content .reason-items .reason-item label {
+    font-weight: 400;
+    font-size: 15px;
+    line-height: 20px;
+    letter-spacing: -0.24px;
+    vertical-align: middle;
+    color: #000000;
+}
+
+.reason-item.checkbox {
+  cursor: pointer;
+  display: inline-block;
+  position: relative;
+  vertical-align: top;
+}
+
+.reason-item.checkbox:hover label:before {
+  border-color: #e6c48e;
+  border-color: var(--color-beige);
+}
+
+.reason-item.checkbox input {
+  height: 0;
+  left: 0;
+  overflow: hidden;
+  position: absolute;
+  top: 0;
+  visibility: hidden;
+  width: 0;
+}
+
+.reason-item.checkbox input:disabled+label {
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+.reason-item.checkbox input:checked+label:before {
+  border-color: var(--color-orange);
+}
+
+.reason-item.checkbox input:checked+label:after {
+  content: "";
+  background-color: var(--color-beige-light);
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  position: absolute;
+  top: calc(50% - 5px);
+  left: 5px;
+  background: #E39250;
+}
+
+.reason-item.checkbox label {
+  display: block;
+  padding-left: 28px;
+  position: relative;
+  cursor: pointer;
+}
+
+.reason-item.checkbox label:before {
+  border: 1px solid #E0C695;
+  border-radius: 50%;
+  content: "";
+  display: block;
+  height: 20px;
+  left: 0;
+  position: absolute;
+  background-color: #F9EED8;
+  top: 0;
+  -webkit-transition: background-color 0.25s, border-color 0.25s;
+  transition: background-color 0.25s, border-color 0.25s;
+  width: 20px;
+}
+
+#cancel-done .h3 {
+    font-weight: 700;
+    font-size: 32px;
+    line-height: 40px;
+    letter-spacing: 0%;
+    margin: 0 0 20px 0;
+    text-align: left;
+    word-wrap: normal;
+    font-family: 'Title/32-40-Bold';
+}
+
+#cancel-done .modal__container {
+    max-width: 460px;
+    padding: 32px;
+}
+
+#cancel-done .modal__container .modal__close {
+    top: 44px;
+    right: 32px;
+}
+
+#cancel-done .modal__container .modal__close svg {
+    width: 16px !important;
+    height: 16px !important;
+}
+
+.text-input {
+    width: 100%;
+}
+
+.text-input input {
+    background-color: #F9EED8;
+    padding: 11px 12px;
+    border-radius: 12px;
+    outline: none;
+    border: none;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 22px;
+    letter-spacing: 0%;
+    color: #000;
+    width: 100%;
+    border: 1px solid #F9EED8;
+}
+
+.text-input input.empty-input {
+    border-color: #e63623;
+}
+
+.text-input input::placeholder {
+    opacity: 0.6;
+}
+
+#cancel-done .modal__content {
+    display: flex;
+    flex-direction: column;
+}
+
+#cancel-done .modal__container .modal__content-btn {
+    padding: 16px 24px;
+    width: fit-content;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 20px;
+    line-height: 24px;
+    letter-spacing: 0%;
+    margin: 20px auto 0;
+    max-width: unset;
+}
+
+#cancel-finish .modal__content-title {
+    font-weight: 600;
+    font-size: 18px;
+    line-height: 24px;
+    letter-spacing: 0%;
+    margin-bottom: 10px;
+}
+
+#cancel-finish .modal__content-info {
+    font-weight: 400;
+    font-size: 15px;
+    line-height: 24px;
+    letter-spacing: 0%;
+}
+
+#cancel-finish .modal__container {
+    padding: 20px;
+    max-width: 298px;
+}
+
+#cancel-finish .modal__close {
+    top: 22px;
+    right: 20px;
+}
+
+.room__cancelation.mobile {
+    display: none;
+}
+
+@media (max-width: 1139px) {
+    .room__cancelation:not(.mobile) {
+        display: none;
+    }
+
+    .room__cancelation.mobile {
+        display: block;
+        margin: 16px 0;
+    }
+
+    .room__cancelation.mobile .room__cancelation-tooltip {
+        display: block;
+        position: relative;
+        top: unset;
+        right: unset;
+        bottom: 10px;
+        left: unset;
+    }
 }
 
 @media (min-width: 1024px) {
@@ -1488,6 +1774,12 @@
     }
 }
 
+@media (max-width: 900px) {
+    .room__cancelation.mobile {
+        text-align: left;
+    }
+}
+
 @media (max-width: 767px) {
     .profile__login {
         border: none;
@@ -1661,6 +1953,13 @@
     .object-row_profile .object-row__title {
         font-size: 2.1rem;
         line-height: 1
+    }
+}
+
+@media (max-width: 900px) {
+    .room__cancelation {
+        text-align: right;
+        padding: 0;
     }
 }
 

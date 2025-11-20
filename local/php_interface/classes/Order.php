@@ -33,6 +33,7 @@ use Object\Uhotels\Connector\UhotelsBookingData;
 use Sberbank\Payments\Gateway;
 use function NormalizePhone;
 use function randString;
+use Naturalist\Utils;
 
 defined("B_PROLOG_INCLUDED") && B_PROLOG_INCLUDED === true || die();
 
@@ -327,14 +328,19 @@ class Orders
         }
 
         $reservationId = $arOrder['PROPS']['RESERVATION_ID'];
-        if (!empty($reservationId)) {
+        if (!empty($reservationId) && Utils::isProd()) {
             $cancelReservation = $this->cancelReservation($arOrder);
             if ($cancelReservation["ERROR"]) {
                 return json_encode($cancelReservation);
             }
         }
 
-        $this->applyPenaltyCanceledOrder($orderId);
+        if (Utils::isProd()) {
+            $this->applyPenaltyCanceledOrder($orderId);
+        } else {
+            $cancelReservation = true;
+        }
+
         //$res = CSaleOrder::CancelOrder($orderId, "Y", $reason);
         if ($cancelReservation) {
             // Выставляем заказу статус "С" (Отменен)
@@ -376,13 +382,15 @@ class Orders
         $service = $arOrder['ITEMS'][0]['ITEM']['SECTION']['UF_EXTERNAL_SERVICE'];
         $reservationId = $arOrder['PROPS']['RESERVATION_ID'];
 
-        if ($service == $this->bronevikSectionPropEnumId) {
-            $res = (new OrderCancelBronevik())($arOrder['PROPS']['RESERVATION_ID']);
-        } elseif ($service == $this->bnovoSectionPropEnumId) {
-            $bnovo = new Bnovo();
-            $res = $bnovo->cancelReservation($arOrder);
-        } elseif ($service == $this->travelineSectionPropEnumId) {
-            $res = Traveline::cancelReservation($arOrder);
+        if (Utils::isProd()) {
+            if ($service == $this->bronevikSectionPropEnumId) {
+                $res = (new OrderCancelBronevik())($arOrder['PROPS']['RESERVATION_ID']);
+            } elseif ($service == $this->bnovoSectionPropEnumId) {
+                $bnovo = new Bnovo();
+                $res = $bnovo->cancelReservation($arOrder);
+            } elseif ($service == $this->travelineSectionPropEnumId) {
+                $res = Traveline::cancelReservation($arOrder);
+            }
         }
 
         if ($res) {
@@ -606,6 +614,78 @@ class Orders
         $service = $arOrder['ITEMS'][0]['ITEM']['SECTION']['UF_EXTERNAL_SERVICE'];
         $reservationPropId = $this->arPropsIDs['RESERVATION_ID'];
 
+        $factory = new SearchServiceFactory();
+        $products = new Products($factory);
+
+        $item = $arOrder['ITEMS'][0];
+
+        $serviceId = \CUserFieldEnum::GetList(
+            [], 
+            ['ID' => $item['ITEM']['SECTION']['UF_EXTERNAL_SERVICE']]
+        )->Fetch();
+
+        $arExternalResult = $products->searchRooms(
+            $item['ITEM']['SECTION']['ID'],
+            $item['ITEM']['SECTION']['UF_EXTERNAL_ID'],
+            $serviceId['XML_ID'],
+            0,
+            [],
+            $item['ITEM_BAKET_PROPS']['DATE_FROM']['VALUE'],
+            $item['ITEM_BAKET_PROPS']['DATE_TO']['VALUE'],
+            0
+        )['arRooms'] ?: [];
+
+        if (is_array($arExternalResult) && !empty($arExternalResult)) {
+          foreach ($arExternalResult as $idNumber => $arTariffs) {
+            
+              foreach ($arTariffs as $keyTariff => $arTariff) {
+                  $cancelation = [];
+
+                  if (!empty($arTariff['value']['PROPERTY_CANCELLATION_FINE_TYPE_VALUE']) && $arTariff['value']['PROPERTY_CANCELLATION_FINE_TYPE_VALUE'] == '2') {
+                      if (!empty($arTariff['value']['PROPERTY_CANCELLATION_RULES_VALUE'])) {
+                        array_push($cancelation, $arTariff['value']['PROPERTY_CANCELLATION_RULES_VALUE']);
+                      } else {
+                        array_push($cancelation, 'Штраф за отмену бронирования — ' . $arTariff['price'] * ($arTariff['value']['PROPERTY_CANCELLATION_FINE_AMOUNT_VALUE'] / 100) . ' ₽');
+                      }
+                  } elseif (!empty($arTariff['value']['PROPERTY_CANCELLATION_FINE_TYPE_VALUE']) && $arTariff['value']['PROPERTY_CANCELLATION_FINE_TYPE_VALUE'] == '5') {
+                      if (!empty($arTariff['value']['PROPERTY_CANCELLATION_RULES_VALUE'])) {
+                        array_push($cancelation, $arTariff['value']['PROPERTY_CANCELLATION_RULES_VALUE']);
+                      }
+
+                      array_push($cancelation, 'Штраф за отмену бронирования — ' . $arTariff['price'] . ' ₽');
+                  } elseif (!empty($arTariff['value']['PROPERTY_CANCELLATION_FINE_TYPE_VALUE']) && $arTariff['value']['PROPERTY_CANCELLATION_FINE_TYPE_VALUE'] == '4') {
+                      if (!empty($arTariff['value']['PROPERTY_CANCELLATION_RULES_VALUE'])) {
+                        array_push($cancelation, $arTariff['value']['PROPERTY_CANCELLATION_RULES_VALUE']);
+                      }
+
+                      array_push($cancelation, 'Штраф за отмену бронирования — ' . array_shift($arTariff['prices']) . ' ₽');
+                  } elseif (!empty($arTariff['value']['PROPERTY_CANCELLATION_FINE_TYPE_VALUE'])) {
+                      if (!empty($arTariff['value']['PROPERTY_CANCELLATION_RULES_VALUE'])) {
+                        array_push($cancelation,  $arTariff['value']['PROPERTY_CANCELLATION_RULES_VALUE']);
+                      }
+
+                      array_push($cancelation,  'Штраф за отмену бронирования — ' . $arTariff['value']['PROPERTY_CANCELLATION_FINE_AMOUNT_VALUE'] . ' ₽');
+                  } else {
+                      if (!empty($arTariff['value']['PROPERTY_CANCELLATION_RULES_VALUE'])) {
+                        array_push($cancelation, $arTariff['value']['PROPERTY_CANCELLATION_RULES_VALUE']);
+                      }
+
+                      array_push($cancelation, 'Бесплатная отмена бронирования');
+                  }
+              }
+          }
+        }
+
+        $cancelInfo = '';
+
+        if (is_array($cancelation) && !empty($cancelation)) {
+            $cancelInfo .= '<ul>';
+            foreach ($cancelation as $item) {
+                $cancelInfo .= '<li>' . $item . '</li>';
+            }
+            $cancelInfo .= '</ul>';
+        }
+Debug::dumpToFile(var_export($cancelInfo, true), '$cancelInfo', '_log.txt');
         if ($service == $this->bronevikSectionPropEnumId) {
             $reservationRes = (new OrderCreateBronevik())($orderId, $arOrder, $arUser, $reservationPropId);
             $supportNotification = 'Бронь по объекту из Броневика';
@@ -656,6 +736,7 @@ class Orders
                     "RESERVATION_ID" => $reservationRes,
                     "LINK" => 'https://' . $_SERVER['SERVER_NAME'] . '/personal/active/',
                     "SUPPORT_NOTIFICATION" => "<br/>" . $supportNotification . "<br/>",
+                    "CANCELATION" => $cancelInfo
                 ), [$_SERVER["DOCUMENT_ROOT"] . $file]);
 
                 $sendMAnagerRes = Users::sendEmail("MANAGER_MAIL", "70", array(
