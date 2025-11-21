@@ -1223,6 +1223,7 @@
     letter-spacing: -0.24px;
     vertical-align: middle;
     color: #000000;
+    font-family: Lato;
 }
 
 .reason-item.checkbox {
@@ -1291,6 +1292,7 @@
 }
 
 #cancel-done .h3 {
+    font-family: Lato;
     font-weight: 700;
     font-size: 32px;
     line-height: 40px;
@@ -1299,6 +1301,15 @@
     text-align: left;
     word-wrap: normal;
     font-family: 'Title/32-40-Bold';
+}
+
+#cancel-done .modal__content > p {
+    margin-bottom: 12px;
+    font-family: Lato;
+}
+
+#cancel-done .modal__content .reason-items {
+    gap: 12px;
 }
 
 #cancel-done .modal__container {
