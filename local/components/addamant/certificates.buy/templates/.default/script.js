@@ -6,7 +6,6 @@ class BuyCert {
         this.discountType = discountType;
         this.bindEvents();
         this.setSectionNumbers();
-        this.showElectro();
     }
 
     certs = document.querySelectorAll(".form__certs label");
@@ -471,13 +470,8 @@ class BuyCert {
     }
 
     showElectro() {
-      if (this.fizSelect) {
         this.elementsClassListRemove(this.fizSelect.parentElement, "selected");
-      }
-
-      if (this.electroSelect) {
         this.electroSelect.parentElement.classList.add("selected");
-      }
         // показываем/скрываем нужные блоки
         this.sectionFizVariants.style.display = "none";
         this.sectionFizPockets.style.display = "none";
@@ -519,14 +513,8 @@ class BuyCert {
     }
 
     showFiz() {
-      if (this.electroSelect) {
-        this.elementsClassListRemove(this.fizSelect.parentElement, "selected");
-      }
-
-      if (this.fizSelect) {
+        this.elementsClassListRemove(this.electroSelect.parentElement, "selected");
         this.fizSelect.parentElement.classList.add("selected");
-      }
-
         // показываем/скрываем нужные блоки
         this.sectionFizVariants.style.display = "block";
         this.sectionFizPockets.style.display = "block";
@@ -547,15 +535,11 @@ class BuyCert {
     }
 
     electroSelectHandler() {
-      if (this.electroSelect) {
         this.electroSelect.addEventListener("change", () => this.showElectro());
-      }
     }
 
     fizSelectHandler() {
-      if (this.fizSelect) {
         this.fizSelect.addEventListener("change", () => this.showFiz());
-      }
     }
 
     setRequired(element) {
