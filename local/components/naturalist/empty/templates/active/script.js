@@ -120,9 +120,15 @@ $(function () {
       let modalCancelBtn = document.querySelector('#cancel-step [data-modal-cancel-order]');
       let modalCancelDoneBtn = document.querySelector('#cancel-done .modal__content-btn');
 
-      if (modalCancelTextBlock && cancelBlock && modalCancelBtn) {
+      if (modalCancelTextBlock && cancelBlock) {
           modalCancelTextBlock.innerHTML = cancelBlock.outerHTML;
+      }
+
+      if (modalCancelBtn) {
           modalCancelBtn.dataset.id = orderId;
+      }
+
+      if (modalCancelDoneBtn) {
           modalCancelDoneBtn.dataset.id = orderId;
       }
 
