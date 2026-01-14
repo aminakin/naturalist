@@ -122,7 +122,13 @@ $(function () {
 
       if (modalCancelTextBlock && cancelBlock && modalCancelBtn) {
           modalCancelTextBlock.innerHTML = cancelBlock.outerHTML;
+      }
+
+      if (modalCancelBtn) {
           modalCancelBtn.dataset.id = orderId;
+      }
+
+      if (modalCancelDoneBtn) {
           modalCancelDoneBtn.dataset.id = orderId;
       }
 
