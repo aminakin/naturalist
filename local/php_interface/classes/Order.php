@@ -335,12 +335,6 @@ class Orders
             }
         }
 
-        if (Utils::isProd()) {
-            $this->applyPenaltyCanceledOrder($orderId);
-        } else {
-            $cancelReservation = true;
-        }
-
         //$res = CSaleOrder::CancelOrder($orderId, "Y", $reason);
         if ($cancelReservation) {
             // Выставляем заказу статус "С" (Отменен)
@@ -385,6 +379,7 @@ class Orders
         if (Utils::isProd()) {
             if ($service == $this->bronevikSectionPropEnumId) {
                 $res = (new OrderCancelBronevik())($arOrder['PROPS']['RESERVATION_ID']);
+                $this->applyPenaltyCanceledOrder($orderId);
             } elseif ($service == $this->bnovoSectionPropEnumId) {
                 $bnovo = new Bnovo();
                 $res = $bnovo->cancelReservation($arOrder);
