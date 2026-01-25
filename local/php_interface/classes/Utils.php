@@ -106,7 +106,7 @@ class Utils
         $request = Context::getCurrent()->getRequest();
         $domain = $request->getHttpHost();
 
-        if (defined(PROD_DOMEN) && $domain == PROD_DOMEN) {
+        if (defined('PROD_DOMEN') && $domain == PROD_DOMEN) {
             return true;
         }
 
