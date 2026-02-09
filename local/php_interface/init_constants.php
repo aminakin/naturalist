@@ -33,7 +33,7 @@ if (!defined("SBR_PASSWORD")) define(("SBR_PASSWORD"), "RkLw8}vs"); // Password
 
 if (!defined("CERT_DELIVERY_PARENT_ID")) define(("CERT_DELIVERY_PARENT_ID"), 2); // Родительска доставка для сертификатов
 
-define('C_REST_WEB_HOOK_URL', 'https://naturalist.bitrix24.ru/rest/3788/5w9swq0spo5flmyn/'); //url on creat Webhook
+define('C_REST_WEB_HOOK_URL', 'https://naturalist.bitrix24.ru/rest/4780/qgnvak1rg9l717mu/'); //url on creat Webhook
 
 // Указать работы скрипта обновления таблицы цен Бново
 $GLOBALS['BNOVO_FILES_WORKING'] = false;

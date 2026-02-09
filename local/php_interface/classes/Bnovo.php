@@ -2071,7 +2071,7 @@ class Bnovo implements SearchServiceInterface
         $arData = json_decode($response, true);
 
 //        Debug::writeToFile($response, '', '_availability_responce_data.json');
-        //Debug::writeToFile($arData, 'BNOVO_RESPONSE_' . $hotelId . date('Y-m-d H:i:s'), '__BNOVO_RESPONSE.log');
+        //\Bitrix\Main\Diag\Debug::writeToFile($arData, 'BNOVO_RESPONSE_' . $hotelId . date('Y-m-d H:i:s'), '__BNOVO_RESPONSE.log');
 //        $this->debugBotTelegram->sendMessage(Markdown::arrayToMarkdown($response));
 
         if (empty($arData) || (isset($arData['code']) && $arData['code'] != 200)) {

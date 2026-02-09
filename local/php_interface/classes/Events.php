@@ -564,6 +564,7 @@ class Events
                     'UF_CRM_1711466190125' => $arProps['DATES_NIGHTS']['VALUE'][0],
                     'UF_CRM_1711466269179' => $arProps['GUESTS_LINE_UP']['VALUE'][0],
                     'UF_CRM_1711467509210' => $arProps['GUESTS_PLACE']['VALUE'][0],
+                    'UF_CRM_1769625630783' => $arProps['CERT_VALUE']['VALUE'][0],
                     'SOURCE_ID' => 'STORE',
                     'UF_CRM_1711467774213' => $arProps['GUEST_LIST']['VALUE'][0],
                     'UF_CRM_1691496469' => $arProps['PHONE']['VALUE'][0],
