@@ -2522,8 +2522,36 @@ class Bnovo implements SearchServiceInterface
 
         if (!empty($sections)) {
             foreach ($sections as $section) {
+                $this->deleteCurrentOffers((int) $section['UF_EXTERNAL_ID']);
                 $this->updateReservationData($section['UF_EXTERNAL_ID'], [], [], [$startDate, $endDate], false);
                 $this->updateAvailabilityData($section['UF_EXTERNAL_ID'], [], [$startDate, $endDate], false, false);
+            }
+        }
+
+        echo "Агент отработал \r\n";
+    }
+
+    private function deleteCurrentOffers(int $hotelId): void
+    {
+        $entityClass = new HighLoadBlockHelper(self::$pricesHlCode);
+
+        $entityClass->prepareParamsQuery(
+            [
+                "ID"
+            ],
+            [
+                "ID" => "ASC"
+            ],
+            [
+                "UF_HOTEL_ID" => $hotelId,
+            ],
+        );
+
+        $arResData = $entityClass->getDataAll();
+
+        if (!empty($arResData)) {
+            foreach ($arResData as $data) {
+                $entityClass->delete($data['ID']);
             }
         }
     }
