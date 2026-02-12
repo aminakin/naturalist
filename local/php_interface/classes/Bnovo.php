@@ -2533,6 +2533,8 @@ class Bnovo implements SearchServiceInterface
 
     private function deleteCurrentOffers(int $hotelId): void
     {
+        $future = new DateTime(date('Y-m-d', strtotime('+90 day')));
+        $endDate = FormatDate("d.m.Y", $future->getTimeStamp());
         $entityClass = new HighLoadBlockHelper(self::$pricesHlCode);
 
         $entityClass->prepareParamsQuery(
@@ -2543,7 +2545,8 @@ class Bnovo implements SearchServiceInterface
                 "ID" => "ASC"
             ],
             [
-                "UF_HOTEL_ID" => $hotelId,
+                "=UF_HOTEL_ID" => $hotelId,
+                "<=UF_DATE" => $endDate
             ],
         );
 
