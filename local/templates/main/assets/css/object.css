@@ -4846,3 +4846,12 @@
   background-color: #000000;
   width: 100%;
 }
+
+.modal__img {
+  display: flex;
+}
+@media (max-width: 500px) {
+  .modal_semi-galery {
+z-index: 1000
+}
+}

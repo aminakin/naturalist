@@ -38,13 +38,22 @@ class ImportHotelRoomsBronevik
         if (isset($arExistElement[0]) && intval($arExistElement[0]['ID']) > 0) {
             $itemId = $arExistElement[0]['ID'];
 
-            $this->hotelRoomBronevik->update($itemId, ['CODE' => $data['CODE']]);
+            $this->hotelRoomBronevik->update($itemId, ['CODE' => $data['CODE'], 'NAME' => $data['NAME']]);
+
+            $photoArray = [];
+
+            if (!empty($data['PROPERTY_VALUES']['PHOTOS'])) {
+                foreach ($data['PROPERTY_VALUES']['PHOTOS'] as $photoId) {
+                    $photoArray[] = CFile::MakeFileArray($photoId);
+                }
+            }
 
             CIBlockElement::SetPropertyValuesEx($itemId, CATALOG_IBLOCK_ID, [
                 'SQUARE' => $data['PROPERTY_VALUES']['SQUARE'],
                 'PHOTO_ARRAY' => $data['PROPERTY_VALUES']['PHOTO_ARRAY'],
-                'PHOTOS' => $data['PROPERTY_VALUES']['PHOTOS'],
+                'PHOTOS' => $photoArray,
             ]);
+
             Products::setQuantity($itemId);
             Products::setPrice($itemId);
 

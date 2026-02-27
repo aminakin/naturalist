@@ -36,13 +36,13 @@ $aMenuLinks = Array(
 		Array(), 
 		"" 
 	),
-    Array(
+	/*Array(
         "Авиабилеты",
         SITE_DIR."/flights/",
         Array(),
         Array(),
         ""
-    ),
+),*/
 	Array(
 		"Сертификат", 
 		SITE_DIR."/certificates/", 
