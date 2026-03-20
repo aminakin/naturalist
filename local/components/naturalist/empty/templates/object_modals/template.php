@@ -1,12 +1,6 @@
-<?/*<div class="modal modal_gallery" id="gallery">
-    <button class="modal__close" data-modal-close>
-        <svg class="icon icon_cross" viewbox="0 0 18 18" style="width: 1.8rem; height: 1.8rem;">
-            <use xlink:href="#cross" />
-        </svg>
-    </button>
-    <div class="modal__container" data-modal-gallery></div>
-</div>*/ ?>
-
+<?php
+global $isMobile;
+?>
 <div class="modal modal_map" id="modal-map">
     <button class="modal__close" data-modal-close>
         <svg class="icon icon_cross" viewbox="0 0 18 18" style="width: 1.8rem; height: 1.8rem;">
@@ -107,6 +101,9 @@ $altBase = $hlTypes[$section["UF_TYPE"]]["UF_NAME"] . " " . $section["NAME"];
                     $imgIndex = $key + 1;
                     $alt = $altBase . ' рис.' . $imgIndex;
                     $title = 'Фото - ' . $section["NAME"] . ' рис.' . $imgIndex;
+                    if ($key < 2 && !$isMobile) {
+                        continue;
+                    }
                 ?>
                     <div itemscope itemtype="https://schema.org/ImageObject" class="modal__img-wrapper">
                         <a class="modal__img" href="<?= $img['big'] ?>" data-fancybox="gallery" data-caption="<?= htmlspecialchars($title) ?>">

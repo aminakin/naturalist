@@ -243,7 +243,6 @@ use Naturalist\Users;
         <!-- /Yandex.Metrika counter -->
     <?php }
     ?>
-    <?php /*<script src="https://dmp.one/sync?stock_key=4dce2e8f5fdd1727a46278cb20b97261" async charset="UTF-8"></script>*/ ?>
 
     <!-- Schema.org Organization -->
     <script type="application/ld+json">
@@ -295,9 +294,14 @@ use Naturalist\Users;
 
     <!-- /Open Graph -->
 
-
-
     <script src="https://dmp.one/sync?stock_key=053c9813114d39196816fb79fdfd54b7" async charset="UTF-8"></script>
+
+    <?php
+    /**
+     * Ещё какая-то метрика
+     */
+    ?>
+    <script>(function () { var widget = document.createElement('script'); widget.defer = true; widget.dataset.pfId = '782122fc-ec95-405b-98d4-6836fe5dcb34'; widget.src = 'https://widget.yourgood.app/script/widget.js?id=782122fc-ec95-405b-98d4-6836fe5dcb34&now='+Date.now(); document.head.appendChild(widget); })()</script>
 </head>
 
 <body class="<?php if (CSite::InDir('/map')) : ?>body__on_map<?php endif; ?>">

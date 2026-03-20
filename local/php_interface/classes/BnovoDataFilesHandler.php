@@ -93,7 +93,7 @@ class BnovoDataFilesHandler
         $info = $this->entity::query()
             ->addSelect('*')
             ->where('UF_LOADED', 0)
-            ->setLimit(10)
+            ->setLimit(15)
             ?->fetchAll();
 
         if (empty($info)) {
