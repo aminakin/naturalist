@@ -21,7 +21,7 @@ use Naturalist\Users;
 <html lang="<?= LANGUAGE_ID ?>">
 
 <head>
-    <?php
+    <?php /*
     $gtagShow = true;
     if (
         stripos($currPage, 'catalog') !== false &&
@@ -50,7 +50,7 @@ use Naturalist\Users;
         </script>
         <!-- End Google Tag Manager -->
     <?php
-    }
+    } */
     ?>
 
     <meta charset="<?= LANG_CHARSET ?>">
@@ -166,20 +166,9 @@ use Naturalist\Users;
     <?php endif; ?>
 
     <?php $APPLICATION->ShowHead() ?>
-    <script type="text/javascript">
-        ! function() {
-            var t = document.createElement("script");
-            t.type = "text/javascript", t.async = !0, t.src = 'https://vk.com/js/api/openapi.js?169', t.onload = function() {
-                VK.Retargeting.Init("VK-RTRG-1591008-9HAMu"), VK.Retargeting.Hit()
-            }, document.head.appendChild(t)
-        }();
-    </script>
-    <noscript><img src="https://vk.com/rtrg?p=VK-RTRG-1591008-9HAMu" style="position:fixed; left:-999px;" alt="" />
-    </noscript>
-
 
     <!-- Top.Mail.Ru counter -->
-    <script type="text/javascript">
+   <script type="text/javascript">
         var _tmr = window._tmr || (window._tmr = []);
         _tmr.push({
             id: "3480625",
@@ -298,16 +287,16 @@ use Naturalist\Users;
 
     <?php
     /**
-     * Ещё какая-то метрика
+     * Подключение мессенджера Макс
      */
     ?>
     <script>(function () { var widget = document.createElement('script'); widget.defer = true; widget.dataset.pfId = '782122fc-ec95-405b-98d4-6836fe5dcb34'; widget.src = 'https://widget.yourgood.app/script/widget.js?id=782122fc-ec95-405b-98d4-6836fe5dcb34&now='+Date.now(); document.head.appendChild(widget); })()</script>
 </head>
 
 <body class="<?php if (CSite::InDir('/map')) : ?>body__on_map<?php endif; ?>">
-    <!-- Google Tag Manager (noscript) -->
+    <!-- Google Tag Manager (noscript)
     <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5762ML9" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-    <!-- End Google Tag Manager (noscript) -->
+    End Google Tag Manager (noscript) -->
 
     <?php
         CustomFunctions::setSeoReferer();

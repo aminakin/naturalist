@@ -1036,7 +1036,6 @@ Debug::dumpToFile(var_export($cancelInfo, true), '$cancelInfo', '_log.txt');
         // Если баланс пользователя не равен 0, то часть или вся оплата будут с внутреннего счёта
         if ($params['userbalance'] > 0) {
 
-
             Debug::writeToFile(var_export($params['userbalance'], true), 'userbalance', '_userbalance.log');
 
             // Вычисляем разницу между суммой заказа и балансом счёта
@@ -1046,6 +1045,15 @@ Debug::dumpToFile(var_export($cancelInfo, true), '$cancelInfo', '_log.txt');
 
             // Создаём оплату с внутреннего счёта. Если денег не достаточно, делаем скидку на сумму остатка на внутреннем счёте
             if ($difference <= 0) {
+                /**
+                 * Запрет на создание заказа с 0 ценой
+                 * Почему-то в этом месте иногда цена заказа обнуляется
+                 */
+                if ((int) $order->getPrice() <= 0) {
+                    return json_encode([
+                        "ERROR" => "Сумма заказа не может быть равна 0"
+                    ]);
+                }
                 $this->setOrderPayment($order, $this->innerPaymentTypeId, $order->getPrice(), true);
             } else {
                 $doublePayment = true;
