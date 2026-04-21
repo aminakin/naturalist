@@ -81,11 +81,23 @@ foreach ($arOrders as $id => $order) {
         0
     )['arRooms'] ?: [];
 
+    $bronevikCancelationInfo = [];
+
     if (is_array($arExternalResult) && !empty($arExternalResult)) {
         foreach ($arExternalResult as $idNumber => $arTariffs) {
           
             foreach ($arTariffs as $keyTariff => $arTariff) {
                 $cancelation = [];
+
+                if ($service['XML_ID'] === 'bronevik' && $arTariff['IBLOCK_ELEMENT_ID'] == $item['ID']) {
+                    foreach ($arTariff['OFFERS'] as $offer) {
+                        if ($item['ITEM_BAKET_PROPS']['BRONEVIK_OFFER_ID']['VALUE'] == $offer['PROPERTIES']['CODE']['VALUE']) {
+                            $bronevikCancelationInfo[] = $offer['PROPERTIES']['CANCELLATION_POLICIES']['~VALUE'];
+                            break;
+                        }
+                    }
+                    break;
+                }
 
                 if (!empty($arTariff['value']['PROPERTY_CANCELLATION_FINE_TYPE_VALUE']) && $arTariff['value']['PROPERTY_CANCELLATION_FINE_TYPE_VALUE'] == '2') {
                     if (!empty($arTariff['value']['PROPERTY_CANCELLATION_RULES_VALUE'])) {
@@ -115,12 +127,20 @@ foreach ($arOrders as $id => $order) {
                     if (!empty($arTariff['value']['PROPERTY_CANCELLATION_RULES_VALUE'])) {
                       array_push($cancelation, $arTariff['value']['PROPERTY_CANCELLATION_RULES_VALUE']);
                     }
-
-                    array_push($cancelation, 'Бесплатная отмена бронирования');
                 }
             }
         }
     }
+
+    if ($service['XML_ID'] === 'bronevik') {
+        $cancelation = $bronevikCancelationInfo;
+    }
+
+    if (empty($cancelation)) {
+        array_push($cancelation, 'Бесплатная отмена бронирования');
+    }
+
+    xprint($cancelation);
 
     $arOrders[$id]['CANCEL_INFO'] = $cancelation;
 }

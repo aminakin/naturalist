@@ -379,26 +379,16 @@ class NaturalistCatalog extends \CBitrixComponent
         if (!empty($this->arUriParams['dateFrom']) && !empty($this->arUriParams['dateTo']) && !empty($this->arUriParams['guests'])) {
             $this->daysCount = abs(strtotime($this->arUriParams['dateTo']) - strtotime($this->arUriParams['dateFrom'])) / 86400;
 
-//            $cache = Cache::createInstance();
-//            $cacheKey = $this->arUriParams['dateFrom'] . $this->arUriParams['dateTo'] . $this->arUriParams['guests'];
+            $factory = new SearchServiceFactory();
+            $products = new Products($factory);
 
-//            if ($cache->initCache(3600, $cacheKey)) {
-//                $this->arExternalInfo = $cache->getVars();
-//            } elseif ($cache->startDataCache()) {
-
-                $factory = new SearchServiceFactory();
-                $products = new Products($factory);
-
-                $this->arExternalInfo = $products->search(
-                    $this->arUriParams['guests'],
-                    $this->arUriParams['childrenAge'],
-                    $this->arUriParams['dateFrom'],
-                    $this->arUriParams['dateTo'],
-                    false
-                );
-
-//                $cache->endDataCache($this->arExternalInfo);
-//            }
+            $this->arExternalInfo = $products->search(
+                $this->arUriParams['guests'],
+                $this->arUriParams['childrenAge'],
+                $this->arUriParams['dateFrom'],
+                $this->arUriParams['dateTo'],
+                false
+            );
 
             $arExternalIDs = array_keys($this->arExternalInfo);
             if ($arExternalIDs) {

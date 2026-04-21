@@ -147,13 +147,15 @@ class Bnovo implements SearchServiceInterface
             }
         }
 
+        $searchDates = $arDates;
+        array_pop($searchDates);
 
         $entityClass = $this->getEntityClass();
         $rsData = $entityClass::getList([
             "select" => ["*"],
             "filter" => [
-                "UF_DATE" => $arDates,
-                "UF_RESERVED" => 0,
+                "=UF_DATE" => $searchDates,
+                "=UF_RESERVED" => 0,
                 "!UF_CLOSED" => "1",
 //                [
 //                    "LOGIC" => "OR",
@@ -202,6 +204,40 @@ class Bnovo implements SearchServiceInterface
                 unset($arDataGrouped[$key]);
             }
         }
+        unset($arItems);
+        unset($key);
+
+//        // Создаём новый массив дат для сравнения по дням с результатами выборки из таблицы цен
+//        // Отбрасываем последнюю дату, т.к. она не влияет на возможность заселения
+//        $arDatesToCompare = $arDates;
+//        array_pop($arDatesToCompare);
+//
+//        // Сравниваем дату каждого элемента сгруппированного массива с датой по индексу.
+//        // Если будет хотя бы одно несовпадение, удаляем весь массив
+//        foreach ($arDataGrouped as $key => $arItems) {
+//            if (count($arItems) < count($arDatesToCompare)) {
+//                unset($arDataGrouped[$key]);
+//                continue;
+//            }
+//            if (strpos($key, '_')) {
+//                unset($arDataGrouped[$key]);
+//            }
+//
+//            foreach ($arItems as $keyCurDate => $curDate) {
+//                if ($keyCurDate == count($arDatesToCompare)) {
+//                    break;
+//                }
+//                if ($curDate['UF_DATE']->format('d.m.Y') != $arDatesToCompare[$keyCurDate]) {
+//                    unset($arDataGrouped[$key]);
+//                    break;
+//                }
+//            }
+//        }
+//        unset($arItems);
+//        unset($key);
+//        unset($keyCurDate);
+//        unset($curDate);
+
 
         foreach ($arDataGrouped as $arData) {
             foreach ($arData as $arEntity) {
@@ -827,9 +863,6 @@ class Bnovo implements SearchServiceInterface
         if (empty($arItems) && $error == '') {
             $error = 'Не найдено номеров на выбранные даты';
         }
-
-        //xprint($arItems);
-
 
         return [
             'arRooms' => $arItems,

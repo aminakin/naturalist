@@ -50,7 +50,7 @@ class SearchHotelsBronevik
      */
     public function __invoke($guests, $childrenAge, $dateFrom, $dateTo, $groupResults, $sectionIds): array
     {
-
+        $searchCriteria = [];
         $cache = Cache::createInstance();
         $cacheKey = 'SearchHotelsBronevik' . $dateFrom . $dateTo . $guests;
 
@@ -71,6 +71,25 @@ class SearchHotelsBronevik
             }
         }
 
+        if (count($childrenAge) || $guests > 0) {
+            $criterionNumberOfGuests = new SearchOfferCriterionNumberOfGuests();
+            $criterionNumberOfGuests->setAdults($guests);
+
+            if (count($childrenAge)) {
+                foreach ($childrenAge as $childAge) {
+                    $child = new Child();
+                    $child->setAge($childAge);
+                    $child->setCount(1);
+                    $criterionNumberOfGuests->addChild($child);
+                }
+            }
+
+            $searchCriteria[] = $criterionNumberOfGuests;
+        }
+
+        $onlyOnline = new SearchOfferCriterionOnlyOnline();
+        $searchCriteria[] = $onlyOnline;
+
         //api броневика не принимает более 300 отелей в запросе
         $chunks = array_chunk($sectionIds, 300, false);
         $hotels = [];
@@ -81,15 +100,16 @@ class SearchHotelsBronevik
                 date('Y-m-d', strtotime($dateTo)),
                 CurrencyCodes::RUB,
                 null,
-                $chunk
+                $chunk,
+                null,
+                [],
+                $searchCriteria
             );
-
 
             if ($result) {
                 $hotels = array_merge($hotels, $result);
             }
         }
-
 
         return ($hotels) ? $this->getPriceByArrayHotels($hotels) : [];
     }

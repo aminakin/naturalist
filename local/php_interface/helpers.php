@@ -12,7 +12,7 @@ $isMobile = $detect->isMobile();
  * Форматированный вывод
  */
 function xprint($a) {
-    if (\Bitrix\Main\Engine\CurrentUser::get()->getId() == 3) {
+    if (\Bitrix\Main\Engine\CurrentUser::get()->getId() == 1) {
         echo '<pre>';
         print_r($a);
         echo '</pre>';
