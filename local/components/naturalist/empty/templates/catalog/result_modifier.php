@@ -93,7 +93,7 @@ if ($arResult['arSearchedRegions']) {
             $dateTo = $request->getQuery('dateTo');
             $guests = $request->getQuery('guests');
             $children = $request->getQuery('children');
-            $arChildrenAge = $request->getQuery('childrenAge');
+            $arChildrenAge = $request->getQuery('childrenAge') ? explode(',', $request->getQuery('childrenAge')) : [];
             $arUriParams = array(
                 'dateFrom' => $dateFrom,
                 'dateTo' => $dateTo,
@@ -293,7 +293,16 @@ if ($arResult['arSearchedRegions']) {
                 }
 
                 $uri = new Uri($arSection["SECTION_PAGE_URL"]);
-                $uri->addParams($arUriParams);
+
+                $sectionUriParams = $arUriParams;
+                if (!empty($sectionUriParams['childrenAge'])) {
+                    if (is_array($sectionUriParams['childrenAge'])) {
+                        $sectionUriParams['childrenAge'] = implode(',', $sectionUriParams['childrenAge']);
+                    }
+                }
+
+                $uri->addParams($sectionUriParams);
+
                 $sectionUrl = $uri->getUri();
                 $arSection["URL"] = $sectionUrl;
 

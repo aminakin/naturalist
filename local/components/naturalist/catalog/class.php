@@ -621,7 +621,7 @@ class NaturalistCatalog extends \CBitrixComponent
                     $sectionUriParams['childrenAge'] = implode(',', $sectionUriParams['childrenAge']);
                 }
             }
-            xprint($sectionUriParams);
+
             $uri->addParams($sectionUriParams);
             $sectionUrl = $uri->getUri();
             $arSection["URL"] = $sectionUrl;
