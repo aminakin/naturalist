@@ -93,7 +93,7 @@ if ($arResult['arSearchedRegions']) {
             $dateTo = $request->getQuery('dateTo');
             $guests = $request->getQuery('guests');
             $children = $request->getQuery('children');
-            $arChildrenAge = $request->getQuery('childrenAge') ? explode(',', $request->getQuery('childrenAge')) : [];
+            $arChildrenAge = $request->getQuery('childrenAge');
             $arUriParams = array(
                 'dateFrom' => $dateFrom,
                 'dateTo' => $dateTo,

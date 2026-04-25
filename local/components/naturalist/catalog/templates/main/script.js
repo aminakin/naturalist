@@ -274,7 +274,7 @@ $(function () {
 
       if (children.length > 0) {
         params["children"] = children.length;
-        params["childrenAge"] = children;
+        params["childrenAge"] = children.join(',');
       } else {
         deleteUrlParams(params, ["children", "childrenAge"]);
       }
@@ -293,13 +293,6 @@ $(function () {
       delete params["guests"];
     }
     console.log(params);
-
-    // else {
-    //   var error = "Вы забыли указать даты заезда и выезда";
-    //   window.infoModal("Ой…", error);
-    //   $("[data-filter-set]").removeAttr("disabled");
-    //   return false;
-    // }
 
     deleteUrlParams(params, ["page"]);
 
@@ -471,7 +464,7 @@ $(function () {
 
       if (children.length > 0) {
         params["children"] = children.length;
-        params["childrenAge"] = children;
+        params["childrenAge"] = children.join(',');
       } else {
         deleteUrlParams(params, ["children", "childrenAge"]);
       }

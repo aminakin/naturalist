@@ -76,7 +76,7 @@ $(function () {
 
       if (children.length > 0) {
         params["children"] = children.length;
-        params["childrenAge"] = children;
+        params["childrenAge"] = children.join(',');
       }
       var url = "/catalog/" + setUrlParams(params);
       location.href = url;

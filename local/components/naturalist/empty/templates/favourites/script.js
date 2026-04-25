@@ -26,7 +26,7 @@ $(function() {
 
             if(children.length > 0) {
                 params["children"] = children.length;
-                params["childrenAge"] = children;
+                params["childrenAge"] = children.join(',');
 
             } else {
                 deleteUrlParams(params, ['children', 'childrenAge']);
