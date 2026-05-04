@@ -81,7 +81,20 @@ foreach ($arOrders as $id => $order) {
         0
     )['arRooms'] ?: [];
 
-    $bronevikCancelationInfo = [];
+    if ($service['XML_ID'] === 'bronevik') {
+        $bronevikCancelationInfo = [];
+
+        $arSelect = ["ID", "NAME", "IBLOCK_ID", "PROPERTY_CANCELLATION_POLICIES"];
+        $arFilter = ["IBLOCK_ID"=>CATALOG_BRONEVIK_OFFERS_IBLOCK_ID, "PROPERTY_CODE" => $item['ITEM_BAKET_PROPS']['BRONEVIK_OFFER_ID']['VALUE']];
+        $res = CIBlockElement::GetList([], $arFilter, false, false, $arSelect);
+        $ob = $res->GetNextElement();
+        if ($ob) {
+            $fields = $ob->GetFields();
+            $bronevikCancelationInfo[] = $fields['~PROPERTY_CANCELLATION_POLICIES_VALUE'];
+        }
+    } else {
+        $bronevikCancelationInfo = [];
+    }
 
     if (is_array($arExternalResult) && !empty($arExternalResult)) {
         foreach ($arExternalResult as $idNumber => $arTariffs) {
@@ -137,10 +150,8 @@ foreach ($arOrders as $id => $order) {
     }
 
     if (empty($cancelation)) {
-        array_push($cancelation, 'Бесплатная отмена бронирования');
+        array_push($cancelation, 'Уточняйте у менеджера');
     }
-
-    xprint($cancelation);
 
     $arOrders[$id]['CANCEL_INFO'] = $cancelation;
 }
