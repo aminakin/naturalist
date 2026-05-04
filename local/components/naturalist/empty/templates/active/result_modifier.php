@@ -20,7 +20,7 @@ $daysDeclension = new Declension('ночь', 'ночи', 'ночей');
 
 /* Фильтрация */
 $arFilter = array(
-    "STATUS_ID" => ["P"]
+    //"STATUS_ID" => ["P"]
 );
 $orderNum = $_REQUEST['orderNum'] ?? '';
 if (isset($orderNum) && !empty($orderNum)) {
@@ -70,19 +70,14 @@ foreach ($arOrders as $id => $order) {
         ['ID' => $item['ITEM']['SECTION']['UF_EXTERNAL_SERVICE']]
     )->Fetch();
 
-    $arExternalResult = $products->searchRooms(
-        $item['ITEM']['SECTION']['ID'],
-        $item['ITEM']['SECTION']['UF_EXTERNAL_ID'],
-        $service['XML_ID'],
-        0,
-        [],
-        $item['ITEM_BAKET_PROPS']['DATE_FROM']['VALUE'],
-        $item['ITEM_BAKET_PROPS']['DATE_TO']['VALUE'],
-        0
-    )['arRooms'] ?: [];
+    $cancelation = [];
+    
+    if ($item['ITEM_BAKET_PROPS']['CANCELATION']['VALUE']) {
+        $cancelation[] = $item['ITEM_BAKET_PROPS']['CANCELATION']['VALUE'];
+    }   
 
-    if ($service['XML_ID'] === 'bronevik') {
-        $bronevikCancelationInfo = [];
+    if (empty($cancelation) && $service['XML_ID'] === 'bronevik') {
+        $cancelation = [];
 
         $arSelect = ["ID", "NAME", "IBLOCK_ID", "PROPERTY_CANCELLATION_POLICIES"];
         $arFilter = ["IBLOCK_ID"=>CATALOG_BRONEVIK_OFFERS_IBLOCK_ID, "PROPERTY_CODE" => $item['ITEM_BAKET_PROPS']['BRONEVIK_OFFER_ID']['VALUE']];
@@ -90,63 +85,60 @@ foreach ($arOrders as $id => $order) {
         $ob = $res->GetNextElement();
         if ($ob) {
             $fields = $ob->GetFields();
-            $bronevikCancelationInfo[] = $fields['~PROPERTY_CANCELLATION_POLICIES_VALUE'];
+            $cancelation[] = $fields['~PROPERTY_CANCELLATION_POLICIES_VALUE'];
         }
-    } else {
-        $bronevikCancelationInfo = [];
     }
+    
+    if (empty($cancelation)) {
+        $arExternalResult = $products->searchRooms(
+            $item['ITEM']['SECTION']['ID'],
+            $item['ITEM']['SECTION']['UF_EXTERNAL_ID'],
+            $service['XML_ID'],
+            0,
+            [],
+            $item['ITEM_BAKET_PROPS']['DATE_FROM']['VALUE'],
+            $item['ITEM_BAKET_PROPS']['DATE_TO']['VALUE'],
+            0
+        )['arRooms'] ?: [];
 
-    if (is_array($arExternalResult) && !empty($arExternalResult)) {
-        foreach ($arExternalResult as $idNumber => $arTariffs) {
-          
-            foreach ($arTariffs as $keyTariff => $arTariff) {
-                $cancelation = [];
+        if (is_array($arExternalResult) && !empty($arExternalResult)) {
+            foreach ($arExternalResult as $idNumber => $arTariffs) {
 
-                if ($service['XML_ID'] === 'bronevik' && $arTariff['IBLOCK_ELEMENT_ID'] == $item['ID']) {
-                    foreach ($arTariff['OFFERS'] as $offer) {
-                        if ($item['ITEM_BAKET_PROPS']['BRONEVIK_OFFER_ID']['VALUE'] == $offer['PROPERTIES']['CODE']['VALUE']) {
-                            $bronevikCancelationInfo[] = $offer['PROPERTIES']['CANCELLATION_POLICIES']['~VALUE'];
-                            break;
+                foreach ($arTariffs as $keyTariff => $arTariff) {
+                    $cancelation = [];
+
+                    if (!empty($arTariff['value']['PROPERTY_CANCELLATION_FINE_TYPE_VALUE']) && $arTariff['value']['PROPERTY_CANCELLATION_FINE_TYPE_VALUE'] == '2') {
+                        if (!empty($arTariff['value']['PROPERTY_CANCELLATION_RULES_VALUE'])) {
+                            array_push($cancelation, $arTariff['value']['PROPERTY_CANCELLATION_RULES_VALUE']);
+                        } else {
+                            array_push($cancelation, 'Штраф за отмену бронирования — ' . $arTariff['price'] * ($arTariff['value']['PROPERTY_CANCELLATION_FINE_AMOUNT_VALUE'] / 100) . ' ₽');
                         }
-                    }
-                    break;
-                }
+                    } elseif (!empty($arTariff['value']['PROPERTY_CANCELLATION_FINE_TYPE_VALUE']) && $arTariff['value']['PROPERTY_CANCELLATION_FINE_TYPE_VALUE'] == '5') {
+                        if (!empty($arTariff['value']['PROPERTY_CANCELLATION_RULES_VALUE'])) {
+                            array_push($cancelation, $arTariff['value']['PROPERTY_CANCELLATION_RULES_VALUE']);
+                        }
 
-                if (!empty($arTariff['value']['PROPERTY_CANCELLATION_FINE_TYPE_VALUE']) && $arTariff['value']['PROPERTY_CANCELLATION_FINE_TYPE_VALUE'] == '2') {
-                    if (!empty($arTariff['value']['PROPERTY_CANCELLATION_RULES_VALUE'])) {
-                      array_push($cancelation, $arTariff['value']['PROPERTY_CANCELLATION_RULES_VALUE']);
+                        array_push($cancelation, 'Штраф за отмену бронирования — ' . $arTariff['price'] . ' ₽');
+                    } elseif (!empty($arTariff['value']['PROPERTY_CANCELLATION_FINE_TYPE_VALUE']) && $arTariff['value']['PROPERTY_CANCELLATION_FINE_TYPE_VALUE'] == '4') {
+                        if (!empty($arTariff['value']['PROPERTY_CANCELLATION_RULES_VALUE'])) {
+                            array_push($cancelation, $arTariff['value']['PROPERTY_CANCELLATION_RULES_VALUE']);
+                        }
+
+                        array_push($cancelation, 'Штраф за отмену бронирования — ' . array_shift($arTariff['prices']) . ' ₽');
+                    } elseif (!empty($arTariff['value']['PROPERTY_CANCELLATION_FINE_TYPE_VALUE'])) {
+                        if (!empty($arTariff['value']['PROPERTY_CANCELLATION_RULES_VALUE'])) {
+                            array_push($cancelation,  $arTariff['value']['PROPERTY_CANCELLATION_RULES_VALUE']);
+                        }
+
+                        array_push($cancelation,  'Штраф за отмену бронирования — ' . $arTariff['value']['PROPERTY_CANCELLATION_FINE_AMOUNT_VALUE'] . ' ₽');
                     } else {
-                      array_push($cancelation, 'Штраф за отмену бронирования — ' . $arTariff['price'] * ($arTariff['value']['PROPERTY_CANCELLATION_FINE_AMOUNT_VALUE'] / 100) . ' ₽');
-                    }
-                } elseif (!empty($arTariff['value']['PROPERTY_CANCELLATION_FINE_TYPE_VALUE']) && $arTariff['value']['PROPERTY_CANCELLATION_FINE_TYPE_VALUE'] == '5') {
-                    if (!empty($arTariff['value']['PROPERTY_CANCELLATION_RULES_VALUE'])) {
-                      array_push($cancelation, $arTariff['value']['PROPERTY_CANCELLATION_RULES_VALUE']);
-                    }
-
-                    array_push($cancelation, 'Штраф за отмену бронирования — ' . $arTariff['price'] . ' ₽');
-                } elseif (!empty($arTariff['value']['PROPERTY_CANCELLATION_FINE_TYPE_VALUE']) && $arTariff['value']['PROPERTY_CANCELLATION_FINE_TYPE_VALUE'] == '4') {
-                    if (!empty($arTariff['value']['PROPERTY_CANCELLATION_RULES_VALUE'])) {
-                      array_push($cancelation, $arTariff['value']['PROPERTY_CANCELLATION_RULES_VALUE']);
-                    }
-
-                    array_push($cancelation, 'Штраф за отмену бронирования — ' . array_shift($arTariff['prices']) . ' ₽');
-                } elseif (!empty($arTariff['value']['PROPERTY_CANCELLATION_FINE_TYPE_VALUE'])) {
-                    if (!empty($arTariff['value']['PROPERTY_CANCELLATION_RULES_VALUE'])) {
-                      array_push($cancelation,  $arTariff['value']['PROPERTY_CANCELLATION_RULES_VALUE']);
-                    }
-
-                    array_push($cancelation,  'Штраф за отмену бронирования — ' . $arTariff['value']['PROPERTY_CANCELLATION_FINE_AMOUNT_VALUE'] . ' ₽');
-                } else {
-                    if (!empty($arTariff['value']['PROPERTY_CANCELLATION_RULES_VALUE'])) {
-                      array_push($cancelation, $arTariff['value']['PROPERTY_CANCELLATION_RULES_VALUE']);
+                        if (!empty($arTariff['value']['PROPERTY_CANCELLATION_RULES_VALUE'])) {
+                            array_push($cancelation, $arTariff['value']['PROPERTY_CANCELLATION_RULES_VALUE']);
+                        }
                     }
                 }
             }
-        }
-    }
-
-    if ($service['XML_ID'] === 'bronevik') {
-        $cancelation = $bronevikCancelationInfo;
+        }               
     }
 
     if (empty($cancelation)) {

@@ -322,7 +322,8 @@ var Order = function () {
     title,
     photo,
     bronevikOfferExternalId,
-    uhotelsTariffId
+    uhotelsTariffId,
+    cancelation
   ) {
     var data = {
       productId: productId,
@@ -342,6 +343,7 @@ var Order = function () {
       photo: photo,
       bronevikOfferExternalId: bronevikOfferExternalId,
       uhotelsTariffId: uhotelsTariffId,
+      cancelation: cancelation
     };
 
     jQuery.ajax({
@@ -388,6 +390,7 @@ $(function () {
     var sectionExternalId = $(this).data("section-external-id");
     var bronevikOfferExternalId = $(this).data("bronevik-offer-external-id");
     var uhotelsTariffId = $(this).data("uhotels-taariff");
+    var cancelation = $(this).data("cancelation");
 
     // dataLayer.push({
     //   ecommerce: {
@@ -424,7 +427,8 @@ $(function () {
       title,
       photo,
       bronevikOfferExternalId,
-      uhotelsTariffId
+      uhotelsTariffId,
+      cancelation
     );
   });
 });

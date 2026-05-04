@@ -23,6 +23,7 @@ $dateTo     = $_REQUEST["dateTo"];
 $externalId = $_REQUEST["externalId"];
 $people = $_REQUEST["people"];
 $title = $_REQUEST["title"];
+$cancelation = $_REQUEST['cancelation'];
 $photo = isset($_REQUEST["photo"]) ? $_REQUEST["photo"] : '';
 $bronevikOfferExternalId = isset($_REQUEST["bronevikOfferExternalId"]) ? $_REQUEST["bronevikOfferExternalId"] : '';
 $uhotelsTariffId = isset($_REQUEST["uhotelsTariffId"]) ? $_REQUEST["uhotelsTariffId"] : '';
@@ -120,6 +121,11 @@ $arProps = array(
         'CODE' => 'PHOTO',
         'NAME' => 'Фото номера',
         'VALUE' => $photo,
+    ],
+    [
+        'CODE' => 'CANCELATION',
+        'NAME' => 'Условия отмены',
+        'VALUE' => $cancelation,
     ]
 );
 

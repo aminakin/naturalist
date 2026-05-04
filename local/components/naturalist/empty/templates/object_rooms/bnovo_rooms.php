@@ -371,7 +371,7 @@ foreach ($arExternalInfo as $idNumber => $arTariffs):
                             data-tariff-id='<?= $arTariff['tariffId'] ?>'
                             data-category-id="<?= $arTariff['categoryId'] ?>"
                             data-prices='<?= serialize($arTariff['prices']) ?>'
-                            data-cancel-amount="<?= $arTariff['cancelAmount'] ?>"
+                            data-cancelation="<?= implode(', ', $cancelation) ?>"
                             data-people="<?= $text ?>"
                             data-room-title="<?= $arElement["NAME"] . ' ' . ($arTariff['value']['PROPERTY_NAME_DETAIL_VALUE'] ?? $arTariff['value']['NAME']) ?>"
                             data-room-photo="<?= $arElement["PICTURES"][array_key_first($arElement["PICTURES"])]['src'] ?>"

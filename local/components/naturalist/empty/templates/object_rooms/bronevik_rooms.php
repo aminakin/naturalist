@@ -316,7 +316,7 @@ foreach ($arElements as $arElement):
                                    data-external-service="<?= $arSection["UF_EXTERNAL_SERVICE"] ?>"
                                    data-bronevik-offer-external-id="<?= $offer["PROPERTIES"]['CODE']['VALUE'] ?>"
                                    data-category-id="<?= $arElement["PROPERTY_EXTERNAL_CATEGORY_ID_VALUE"] ?>"
-                                   data-cancel-amount="<?= $arExternalItem['cancelAmount'] ?>"
+                                   data-cancelation="<?= $offer['PROPERTIES']['CANCELLATION_POLICIES']['VALUE'] ?>"
                                    data-people="<?= $arExternalItem['fullPlacementsName'] ?>"
                                    data-room-title="<?= $arElement["NAME"] ?>"
                                    data-room-photo="<?= $arElement["PICTURES"][array_key_first($arElement["PICTURES"])]['src'] ?>"

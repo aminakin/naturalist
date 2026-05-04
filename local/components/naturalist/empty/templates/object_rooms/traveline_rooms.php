@@ -256,7 +256,7 @@ foreach ($arElements as $arElement): ?>
                                 data-external-service="<?= $arSection["UF_EXTERNAL_SERVICE"] ?>"
                                 data-category-id="<?= $arElement["PROPERTY_EXTERNAL_CATEGORY_ID_VALUE"] ?>"
                                 data-traveline-checksum="<?= $checksum ?>"
-                                data-cancel-amount="<?= $arExternalItem['cancelAmount'] ?>"
+                                data-cancelation="<?= implode(', ', $cancelation) ?>"
                                 data-people="<?= $arExternalItem['fullPlacementsName'] ?>"
                                 data-room-title="<?= $arElement["NAME"] ?>"
                                 data-room-photo="<?= $arElement["PICTURES"][array_key_first($arElement["PICTURES"])]['src'] ?>"
