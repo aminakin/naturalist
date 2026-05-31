@@ -191,7 +191,6 @@ var Auth = function () {
         if (!a.ERROR) {
           window.modal.close("code");
           ym(91071014, "reachGoal", "authorization");
-          VK.Goal("complete_registration");
           if (a.NO_RELOAD != "Y") {
             if (a.RELOAD) {
               location.reload();
@@ -235,9 +234,7 @@ var Auth = function () {
       dataType: "json",
       success: function (a) {
         if (!a.ERROR) {
-          //window.infoModal(SUCCESS_TITLE, a.MESSAGE);
           ym(91071014, "reachGoal", "authorization");
-          VK.Goal("complete_registration");
           if (a.RELOAD) {
             location.reload();
           }
