@@ -54,6 +54,27 @@ if(!empty($metaTags[$currentURLDir])) {
 </main>
 <!-- main-->
 
+<div class="modal modal_form modal_auth" id="attention">
+    <div class="modal__container">
+        <button class="modal__close" data-modal-close>
+            <svg class="icon icon_cross" viewbox="0 0 18 18" style="width: 1.8rem; height: 1.8rem;">
+                <use xlink:href="#cross" />
+            </svg>
+        </button>
+        <div class="h3">Временно не принимаем карты</div>
+
+        <p>
+            Прием банковских карт остановлен на время технических работ. Для срочных бронирований пока доступно только оформление через Сплит и оплата сертификатом.
+        </p>
+    </div>
+</div>
+
+<script>
+    $('document').ready(function(){
+        window.modal.open("attention");
+    });
+</script>
+
 <?
 require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/footer.php");
 ?>
