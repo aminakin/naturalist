@@ -20,7 +20,7 @@ $daysDeclension = new Declension('ночь', 'ночи', 'ночей');
 
 /* Фильтрация */
 $arFilter = array(
-    //"STATUS_ID" => ["P"]
+    '!STATUS_ID' => ['F', 'C']
 );
 $orderNum = $_REQUEST['orderNum'] ?? '';
 if (isset($orderNum) && !empty($orderNum)) {
@@ -32,6 +32,7 @@ $sort = $_REQUEST['sort'] ?? 'date_create';
 
 /* Список заказов */
 $order = new Orders();
+
 $arOrders = $order->getList($arFilter, ['ID' => 'DESC']);
 
 /* Кастомная сортировка по свойству DATE_FROM (старт заезда) по возрастанию */
@@ -89,7 +90,7 @@ foreach ($arOrders as $id => $order) {
         }
     }
     
-    if (empty($cancelation)) {
+    if (empty($cancelation) && $item['ITEM']['SECTION']['ID']) {
         $arExternalResult = $products->searchRooms(
             $item['ITEM']['SECTION']['ID'],
             $item['ITEM']['SECTION']['UF_EXTERNAL_ID'],
