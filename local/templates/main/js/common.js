@@ -566,11 +566,13 @@ $(function () {
         window.infoModal(ERROR_TITLE, "Введите телефон.");
         return;
       }
+      var sessid = $('#form-corporat input[name="sessid"]').val()
 
       var data = {
         name: name,
         email: email,
         phone: phone,
+        sessid: sessid
       };
 
       jQuery.ajax({

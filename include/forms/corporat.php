@@ -8,6 +8,7 @@
         <div class="modal__footnote"><span>Сертификат на загородный отдых</span> - идеальный подарок для коллег, партнеров и клиентов! Оставьте ваши контакты и мы молниеносно с вами свяжемся ;)</div>
 
         <form class="form form_validation" id="form-corporat">
+            <?=bitrix_sessid_post()?>
             <div class="form__item">
                 <span>Как к вам обращаться?</span>
                 <div class="field">

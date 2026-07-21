@@ -11,6 +11,13 @@ if (!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED !== true) {
     include_once $_SERVER["DOCUMENT_ROOT"] . "/bitrix/modules/main/include/prolog_before.php";
 }
 
+if(!check_bitrix_sessid()){
+    echo json_encode([
+        "ERROR" => "Доступ запрещён"
+    ]);
+    die();
+}
+
 CModule::IncludeModule("iblock");
 CModule::IncludeModule("form");
 
