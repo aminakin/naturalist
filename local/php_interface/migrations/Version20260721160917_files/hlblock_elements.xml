@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<items hlblockUid="LinkTypes" exchangeVersion="2" >
+<item>
+ <field name="UF_NAME">
+  <value>Внешняя ссылка</value>
+ </field>
+ <field name="UF_TYPE">
+  <value>external</value>
+ </field>
+</item>
+<item>
+ <field name="UF_NAME">
+  <value>Бронь на сайте</value>
+ </field>
+ <field name="UF_TYPE">
+  <value>booking</value>
+ </field>
+</item>
+<item>
+ <field name="UF_NAME">
+  <value>Оба варианта</value>
+ </field>
+ <field name="UF_TYPE">
+  <value>both</value>
+ </field>
+</item>
+
+</items>

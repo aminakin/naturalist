@@ -6,7 +6,7 @@ use Naturalist\bronevik\enums\TarifEnum;
 use Naturalist\Users; 
 
 /** @var array $arElements */
-
+/** @var array $arSection */
 
 foreach ($arElements as $arElement): 
     if ($arElement['AVAILABLE_ID'] == false):
@@ -276,6 +276,13 @@ foreach ($arElements as $arElement):
                                 </div>
                             </div>
                             <div class="room__button-wrap">
+                                <?php
+                                    $buttonType = $arSection['UF_BUTTON_TYPE'];
+                                    $objectLink = $arSection['UF_OBJECT_LINK'];
+                                ?>
+                                <?php if ($objectLink && in_array($buttonType, ['1', '3'])) {?>
+                                    <a target="_blank" class="object__page-link" href="<?=$objectLink?>">Перейти на сайт</a>
+                                <?php } ?>
                                 <?php $surchargePrice = number_format((float)$elementPrice - (float)Users::getInnerScore(), 0, '.', ' ') ?>
                                 <?php if (number_format((float)Users::getInnerScore(), 0, '.', ' ') > 0 && $surchargePrice > 0): ?>
                                     <div class="room__surcharge">
@@ -301,26 +308,30 @@ foreach ($arElements as $arElement):
                                         </span>
                                     </div>
                                 <?php endif; ?>
-                                <a class="button button_primary"
-                                   onclick="VK.Goal('customize_product')"
-                                   data-section-external-id="<?= $arSection['UF_EXTERNAL_ID'] ?>"
-                                   data-add-basket
-                                   data-object-title="<?= $arSection['NAME'] ?>"
-                                   data-id="<?= $arElement["ID"] ?>"
-                                   data-price="<?= $elementCurrentPrice ?>"
-                                   data-guests="<?= $guests ?>"
-                                   data-children-age="<?= $_GET['childrenAge'] ?>"
-                                   data-date-from="<?= $dateFrom ?>"
-                                   data-date-to="<?= $dateTo ?>"
-                                   data-external-id="<?= $arElement["PROPERTY_EXTERNAL_ID_VALUE"] ?>"
-                                   data-external-service="<?= $arSection["UF_EXTERNAL_SERVICE"] ?>"
-                                   data-bronevik-offer-external-id="<?= $offer["PROPERTIES"]['CODE']['VALUE'] ?>"
-                                   data-category-id="<?= $arElement["PROPERTY_EXTERNAL_CATEGORY_ID_VALUE"] ?>"
-                                   data-cancelation="<?= $offer['PROPERTIES']['CANCELLATION_POLICIES']['VALUE'] ?>"
-                                   data-people="<?= $arExternalItem['fullPlacementsName'] ?>"
-                                   data-room-title="<?= $arElement["NAME"] ?>"
-                                   data-room-photo="<?= $arElement["PICTURES"][array_key_first($arElement["PICTURES"])]['src'] ?>"
-                                   href="#">Забронировать</a>
+                                <?php if (!$buttonType || in_array($buttonType, ['2', '3'])) { ?>
+                                    <a class="button button_primary"
+                                       onclick="VK.Goal('customize_product')"
+                                       data-section-external-id="<?= $arSection['UF_EXTERNAL_ID'] ?>"
+                                       data-add-basket
+                                       data-object-title="<?= $arSection['NAME'] ?>"
+                                       data-id="<?= $arElement["ID"] ?>"
+                                       data-price="<?= $elementCurrentPrice ?>"
+                                       data-guests="<?= $guests ?>"
+                                       data-children-age="<?= $_GET['childrenAge'] ?>"
+                                       data-date-from="<?= $dateFrom ?>"
+                                       data-date-to="<?= $dateTo ?>"
+                                       data-external-id="<?= $arElement["PROPERTY_EXTERNAL_ID_VALUE"] ?>"
+                                       data-external-service="<?= $arSection["UF_EXTERNAL_SERVICE"] ?>"
+                                       data-bronevik-offer-external-id="<?= $offer["PROPERTIES"]['CODE']['VALUE'] ?>"
+                                       data-category-id="<?= $arElement["PROPERTY_EXTERNAL_CATEGORY_ID_VALUE"] ?>"
+                                       data-cancelation="<?= $offer['PROPERTIES']['CANCELLATION_POLICIES']['VALUE'] ?>"
+                                       data-people="<?= $arExternalItem['fullPlacementsName'] ?>"
+                                       data-room-title="<?= $arElement["NAME"] ?>"
+                                       data-room-photo="<?= $arElement["PICTURES"][array_key_first($arElement["PICTURES"])]['src'] ?>"
+                                       href="#">
+                                        Забронировать
+                                    </a>
+                                <?php } ?>
                             </div>
                         </div>
 

@@ -1958,6 +1958,7 @@
   border-radius: 8px;
   font-size: 14px;
   line-height: 20px;
+  text-align: center;
 }
 
 .fancybox__caption {
@@ -2436,8 +2437,7 @@
   padding: 8px;
   background-color: var(--color-beige-light);
   border-radius: 12px;
-  grid-template-columns: 30% 1fr 139px;
-  align-items: end;
+  grid-template-columns: 30% 1fr 147px;
   margin: 8px;
 }
 
@@ -2576,19 +2576,19 @@
   background-color: #f18d3f;
   background-color: var(--color-orange);
   content: "";
-  display: block;
   height: 0.1rem;
   left: 0;
   position: absolute;
   top: 50%;
   width: 100%;
+  display: grid;
 }
 
 .room__price {
   font-size: 1rem;
   font-weight: 500;
   line-height: 1.8;
-
+  display: grid;
   padding: 9px 16px;
   background-color: #F4E6CB;
   border-radius: 8px;
@@ -2645,12 +2645,17 @@
   font-weight: 400;
 }
 
+.room__button-wrap {
+  display: grid;
+  gap: 8px;
+  align-self: end;
+}
+
 .room__surcharge {
   display: flex;
   border-radius: 4px;
   padding: 2px 6px;
   background: #F4E6CB;
-  margin-bottom: 8px;
   position: relative;
   align-items: center;
   width: fit-content;

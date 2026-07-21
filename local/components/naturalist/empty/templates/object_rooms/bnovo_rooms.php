@@ -3,6 +3,7 @@
 /** @var  $arDetailViewElements */
 /** @var  $arElements */
 /** @var  $arExternalInfo */
+/** @var array $arSection */
 
 use Naturalist\Users;
 
@@ -336,6 +337,13 @@ foreach ($arExternalInfo as $idNumber => $arTariffs):
                         </div>
                     </div>
                     <div class="room__button-wrap">
+                        <?php
+                            $buttonType = $arSection['UF_BUTTON_TYPE'];
+                            $objectLink = $arSection['UF_OBJECT_LINK'];
+                        ?>
+                        <?php if ($objectLink && in_array($buttonType, ['1', '3'])) {?>
+                            <a target="_blank" class="object__page-link" href="<?=$objectLink?>">Перейти на сайт</a>
+                        <?php } ?>
                         <? $surchargePrice = number_format((float)$elementPrice - (float)Users::getInnerScore(), 0, '.', ' ') ?>
                         <? if (number_format((float)Users::getInnerScore(), 0, '.', ' ') > 0 && $surchargePrice > 0): ?>
                             <div class="room__surcharge">
@@ -355,27 +363,29 @@ foreach ($arExternalInfo as $idNumber => $arTariffs):
                                 </span>
                             </div>
                         <? endif; ?>
-                        <a class="button button_primary"
-                            onclick="VK.Goal('customize_product')"
-                            data-section-external-id="<?= $arSection['UF_EXTERNAL_ID'] ?>"
-                            data-add-basket
-                            data-object-title="<?= $arSection['NAME'] ?>"
-                            data-id="<?= $arElement["ID"] ?>"
-                            data-price="<?= $arTariff['price'] ?>"
-                            data-guests="<?= $guests ?>"
-                            data-children-age="<?= $_GET['childrenAge'] ?>"
-                            data-date-from="<?= $dateFrom ?>"
-                            data-date-to="<?= $dateTo ?>"
-                            data-external-id="<?= $arElement["PROPERTY_EXTERNAL_ID_VALUE"] ?>"
-                            data-external-service="<?= $arSection["UF_EXTERNAL_SERVICE"] ?>"
-                            data-tariff-id='<?= $arTariff['tariffId'] ?>'
-                            data-category-id="<?= $arTariff['categoryId'] ?>"
-                            data-prices='<?= serialize($arTariff['prices']) ?>'
-                            data-cancelation="<?= implode(', ', $cancelation) ?>"
-                            data-people="<?= $text ?>"
-                            data-room-title="<?= $arElement["NAME"] . ' ' . ($arTariff['value']['PROPERTY_NAME_DETAIL_VALUE'] ?? $arTariff['value']['NAME']) ?>"
-                            data-room-photo="<?= $arElement["PICTURES"][array_key_first($arElement["PICTURES"])]['src'] ?>"
-                            href="#">Забронировать</a>
+                        <?php if (!$buttonType || in_array($buttonType, ['2', '3'])) { ?>
+                            <a class="button button_primary"
+                                onclick="VK.Goal('customize_product')"
+                                data-section-external-id="<?= $arSection['UF_EXTERNAL_ID'] ?>"
+                                data-add-basket
+                                data-object-title="<?= $arSection['NAME'] ?>"
+                                data-id="<?= $arElement["ID"] ?>"
+                                data-price="<?= $arTariff['price'] ?>"
+                                data-guests="<?= $guests ?>"
+                                data-children-age="<?= $_GET['childrenAge'] ?>"
+                                data-date-from="<?= $dateFrom ?>"
+                                data-date-to="<?= $dateTo ?>"
+                                data-external-id="<?= $arElement["PROPERTY_EXTERNAL_ID_VALUE"] ?>"
+                                data-external-service="<?= $arSection["UF_EXTERNAL_SERVICE"] ?>"
+                                data-tariff-id='<?= $arTariff['tariffId'] ?>'
+                                data-category-id="<?= $arTariff['categoryId'] ?>"
+                                data-prices='<?= serialize($arTariff['prices']) ?>'
+                                data-cancelation="<?= implode(', ', $cancelation) ?>"
+                                data-people="<?= $text ?>"
+                                data-room-title="<?= $arElement["NAME"] . ' ' . ($arTariff['value']['PROPERTY_NAME_DETAIL_VALUE'] ?? $arTariff['value']['NAME']) ?>"
+                                data-room-photo="<?= $arElement["PICTURES"][array_key_first($arElement["PICTURES"])]['src'] ?>"
+                                href="#">Забронировать</a>
+                        <?php } ?>
                     </div>
                 </div>
             <? endif; ?>
