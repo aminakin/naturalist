@@ -281,7 +281,7 @@ foreach ($arElements as $arElement):
                                     $objectLink = $arSection['UF_OBJECT_LINK'];
                                 ?>
                                 <?php if ($objectLink && in_array($buttonType, ['1', '3'])) {?>
-                                    <a target="_blank" class="object__page-link" href="<?=$objectLink?>">Перейти на сайт</a>
+                                    <a target="_blank" class="object__page-link" onclick="ym(91071014,'reachGoal','object_selected', {object_name: '<?=$arSection['NAME']?>'})" href="<?=$objectLink?>">Перейти на сайт</a>
                                 <?php } ?>
                                 <?php $surchargePrice = number_format((float)$elementPrice - (float)Users::getInnerScore(), 0, '.', ' ') ?>
                                 <?php if (number_format((float)Users::getInnerScore(), 0, '.', ' ') > 0 && $surchargePrice > 0): ?>

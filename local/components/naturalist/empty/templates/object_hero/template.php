@@ -16,13 +16,15 @@ if (!isset($arResult["arSection"]["ID"])) {
         die();
     }
 }
+
+$objectTitle = htmlspecialcharsBack($arParams["h1SEO"]);
 ?>
 <section class="section section_object">
     <div class="container">
         <div class="object-hero">
             <div class="object__top">
                 <div class="object-hero__heading">
-                    <h1><?= htmlspecialcharsBack($arParams["h1SEO"]); ?></h1>
+                    <h1><?= $objectTitle; ?></h1>
                     <? if ($reviewsCount > 0): ?>
                         <div class="object-hero__reviews">
                             <img src="<?= SITE_TEMPLATE_PATH ?>/assets/img/star-score.svg" alt="">
