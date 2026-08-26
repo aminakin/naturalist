@@ -1959,6 +1959,15 @@
   font-size: 14px;
   line-height: 20px;
   text-align: center;
+  display: inline-block;
+}
+
+.object__page-link.mobile {
+  display: none;
+}
+
+.room__external-link {
+  margin-left: auto;
 }
 
 .fancybox__caption {
@@ -2648,7 +2657,7 @@
 .room__button-wrap {
   display: grid;
   gap: 8px;
-  align-self: end;
+  align-self: center;
 }
 
 .room__surcharge {
@@ -2716,6 +2725,14 @@
   .room__surcharge .room__surcharge-info {
     width: 226px;
     left: 16px;
+  }
+
+  .object__page-link.mobile {
+    display: inline-block;
+  }
+
+  .object__page-link.desktop {
+    display: none;
   }
 }
 

@@ -42,7 +42,11 @@ foreach ($arExternalInfo as $idNumber => $arTariffs):
             $arElement = $arElementsParent[$arElement['PROPERTY_PARENT_ID_VALUE']];
             $arElement["ID"] = $arElementsTariffs[$idNumber]["ID"];
             $arElement["PROPERTY_EXTERNAL_ID_VALUE"] = $arElementsTariffs[$idNumber]["PROPERTY_EXTERNAL_ID_VALUE"];
-        } ?>
+        }
+
+        $buttonType = $arSection['UF_BUTTON_TYPE'];
+        $objectLink = $arSection['UF_OBJECT_LINK'];
+    ?>
 
         <div class="room">
             <div class="room__top">
@@ -244,6 +248,11 @@ foreach ($arExternalInfo as $idNumber => $arTariffs):
                         <a class="room__features-more" elementId="<?= $arElement['ID'] ?>" href="#" data-room-more="<?= $arElement['ID'] . '-' . $arTariff['tariffId'] ?>">Подробнее о номере</a>
                     </div>
                 </div>
+                <?php if ($objectLink && in_array($buttonType, ['1', '3'])) {?>
+                    <div class="room__external-link">
+                        <a target="_blank" class="object__page-link desktop" onclick="ym(91071014,'reachGoal','object_selected', {object_name: '<?=$arSection['NAME']?>'})" href="<?=$objectLink?>">Перейти на сайт</a>
+                    </div>
+                <?php } ?>
             </div>
             <?php if ($arTariff['price']): ?>
                 <?php $elementOldPrice = 0; ?>
@@ -337,12 +346,8 @@ foreach ($arExternalInfo as $idNumber => $arTariffs):
                         </div>
                     </div>
                     <div class="room__button-wrap">
-                        <?php
-                            $buttonType = $arSection['UF_BUTTON_TYPE'];
-                            $objectLink = $arSection['UF_OBJECT_LINK'];
-                        ?>
                         <?php if ($objectLink && in_array($buttonType, ['1', '3'])) {?>
-                            <a target="_blank" class="object__page-link" onclick="ym(91071014,'reachGoal','object_selected', {object_name: '<?=$arSection['NAME']?>'})" href="<?=$objectLink?>">Перейти на сайт</a>
+                            <a target="_blank" class="object__page-link mobile" onclick="ym(91071014,'reachGoal','object_selected', {object_name: '<?=$arSection['NAME']?>'})" href="<?=$objectLink?>">Перейти на сайт</a>
                         <?php } ?>
                         <? $surchargePrice = number_format((float)$elementPrice - (float)Users::getInnerScore(), 0, '.', ' ') ?>
                         <? if (number_format((float)Users::getInnerScore(), 0, '.', ' ') > 0 && $surchargePrice > 0): ?>
