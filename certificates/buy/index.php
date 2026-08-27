@@ -43,5 +43,26 @@ $APPLICATION->SetTitle("Продажа сертификатов"); ?>
     ); ?>
 </main>
 
+    <div class="modal modal_form modal_auth" id="attention">
+        <div class="modal__container">
+            <button class="modal__close" data-modal-close>
+                <svg class="icon icon_cross" viewbox="0 0 18 18" style="width: 1.8rem; height: 1.8rem;">
+                    <use xlink:href="#cross" />
+                </svg>
+            </button>
+            <div class="h3">Ошибка!</div>
+
+            <p>
+                Ошибка оформления заказа!
+            </p>
+        </div>
+    </div>
+
+    <script>
+        $('document').ready(function(){
+            window.modal.open("attention");
+        });
+    </script>
+
 <?php
 require($_SERVER["DOCUMENT_ROOT"] . "/bitrix/footer.php"); ?>
