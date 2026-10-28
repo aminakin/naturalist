@@ -21,38 +21,6 @@ use Naturalist\Users;
 <html lang="<?= LANGUAGE_ID ?>">
 
 <head>
-    <?php /*
-    $gtagShow = true;
-    if (
-        stripos($currPage, 'catalog') !== false &&
-        count(preg_split('@/@', $currPage, -1, PREG_SPLIT_NO_EMPTY)) == 2
-    ) {
-        $gtagShow = false;
-    }
-    if ($gtagShow) {
-    ?>
-        <!-- Google Tag Manager -->
-        <script>
-            (function(w, d, s, l, i) {
-                w[l] = w[l] || [];
-                w[l].push({
-                    'gtm.start': new Date().getTime(),
-                    event: 'gtm.js'
-                });
-                var f = d.getElementsByTagName(s)[0],
-                    j = d.createElement(s),
-                    dl = l != 'dataLayer' ? '&l=' + l : '';
-                j.async = true;
-                j.src =
-                    'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
-                f.parentNode.insertBefore(j, f);
-            })(window, document, 'script', 'dataLayer', 'GTM-5762ML9');
-        </script>
-        <!-- End Google Tag Manager -->
-    <?php
-    } */
-    ?>
-
     <meta charset="<?= LANG_CHARSET ?>">
     <meta http-equiv="X-UA-Compatible" content="IE=Edge">
     <title><?php $APPLICATION->ShowTitle() ?></title>
@@ -285,12 +253,7 @@ use Naturalist\Users;
 
     <script src="https://dmp.one/sync?stock_key=053c9813114d39196816fb79fdfd54b7" async charset="UTF-8"></script>
 
-    <?php
-    /**
-     * Подключение мессенджера Макс
-     */
-    ?>
-    <script>(function () { var widget = document.createElement('script'); widget.defer = true; widget.dataset.pfId = '782122fc-ec95-405b-98d4-6836fe5dcb34'; widget.src = 'https://widget.yourgood.app/script/widget.js?id=782122fc-ec95-405b-98d4-6836fe5dcb34&now='+Date.now(); document.head.appendChild(widget); })()</script>
+   
 </head>
 
 <body class="<?php if (CSite::InDir('/map')) : ?>body__on_map<?php endif; ?>">
@@ -374,18 +337,13 @@ use Naturalist\Users;
                 <div class="header__controls">
                     <ul class="list">
                         <li class="list__item list__item_phone">
-                            <a href="tel:<?= $arSettings['contacts_phone'] ?>">
-                                <span><?= $arSettings['contacts_phone'] ?></span>
-                                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <g clip-path="url(#clip0_3293_4462)">
-                                        <path d="M3.14786 9.95205C2.35784 8.5745 1.97638 7.44965 1.74637 6.30943C1.40619 4.62306 2.18468 2.97575 3.47432 1.92464C4.01938 1.4804 4.6442 1.63218 4.96651 2.21041L5.69416 3.51584C6.27091 4.55055 6.55929 5.06791 6.50209 5.61641C6.44489 6.16491 6.05598 6.61163 5.27815 7.50509L3.14786 9.95205ZM3.14786 9.95205C4.74693 12.7403 7.25637 15.2511 10.0479 16.8521M10.0479 16.8521C11.4254 17.6421 12.5503 18.0235 13.6905 18.2536C15.3769 18.5937 17.0242 17.8152 18.0753 16.5256C18.5195 15.9805 18.3677 15.3557 17.7895 15.0334L16.4841 14.3058C15.4494 13.729 14.932 13.4406 14.3835 13.4978C13.835 13.555 13.3883 13.9439 12.4948 14.7218L10.0479 16.8521Z" stroke="black" stroke-width="1.5" stroke-linejoin="round" />
-                                    </g>
-                                    <defs>
-                                        <clipPath id="clip0_3293_4462">
-                                            <rect width="20" height="20" fill="white" />
-                                        </clipPath>
-                                    </defs>
-                                </svg>
+                            <a href="mailto:support@naturalist.travel">
+                                <span>support@naturalist.travel</span>
+                                
+<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none">
+<path d="M4 7.00005L10.2 11.65C11.2667 12.45 12.7333 12.45 13.8 11.65L20 7" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<rect x="3" y="5" width="18" height="14" rx="2" stroke="#000000" stroke-width="2" stroke-linecap="round"/>
+</svg>
                             </a>
                         </li>
                         <? if (number_format((float)Users::getInnerScore(), 0, '.', ' ') > 0): ?>

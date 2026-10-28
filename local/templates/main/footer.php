@@ -695,30 +695,6 @@ global $arSettings, $currPage;
     ]
 </script>
 
-<? /* if (!$isAuthorized) : ?>
-    <script type="text/javascript">
-        VK.init({
-            apiId: <?= ($_SERVER['SERVER_NAME'] == 'naturalistbx.idemcloud.ru') ? '51448972' : '51468432' ?>
-        });
-    </script>
-    <script async src="https://telegram.org/js/telegram-widget.js?21" data-telegram-login="web_auth_bot" data-size="large" data-auth-url="https://<?= $_SERVER['SERVER_NAME'] ?>/?auth=tg" data-request-access="write"></script>
-    <style>
-        #telegram-login-web_auth_bot {
-            display: none;
-        }
-    </style>
-<? endif; */?>
-
-<script>
-    (function(w, d, u) {
-        var s = d.createElement('script');
-        s.async = true;
-        s.src = u + '?' + (Date.now() / 60000 | 0);
-        var h = d.getElementsByTagName('script')[0];
-        h.parentNode.insertBefore(s, h);
-    })(window, document, 'https://cdn-ru.bitrix24.ru/b26312194/crm/site_button/loader_2_uianr0.js');
-</script>
-
 </body>
 
 </html>
