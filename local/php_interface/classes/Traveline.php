@@ -406,8 +406,6 @@ class Traveline implements SearchServiceInterface
 
                 if ($sectionId) {
                     echo "Добавлен раздел (" . $sectionId . ") \"" . $sectionName . "\"<br>\r\n";
-                } else {
-                    Error::errorDownloadObject($arSection["id"], $sectionName, $iS->LAST_ERROR);
                 }
             }
 
@@ -914,9 +912,6 @@ class Traveline implements SearchServiceInterface
                 if ($res->isSuccess()) {
                     return $reservationId;
                 } else {
-
-                    Error::saveOrder($orderId, "Traveline");
-//                    Debug::writeToFile('Не записался ID бронирования', 'TRAVELINE BOOKING ERROR ' . date('Y-m-d H:i:s'), '__bx_log.log');
                     return [
                         "ERROR" => "Ошибка сохранения ID бронирования."
                     ];
@@ -924,16 +919,12 @@ class Traveline implements SearchServiceInterface
             } else {
                 $errorText = $arResponse['warnings'][0]['code'] ?? $arResponse['errors'][0]['message'];
 
-                Error::validateOrder($orderId, "Traveline", $errorText);
-//                Debug::writeToFile("Ошибка запроса бронирования. " . $errorText, 'TRAVELINE BOOKING ERROR ' . date('Y-m-d H:i:s'), '__bx_log.log');
                 return [
                     "ERROR" => "Ошибка запроса бронирования. " . $errorText
                 ];
             }
         } else {
             $errorText = $arVerifyResponse['warnings'][0]['code'] ?? $arVerifyResponse['errors'][0]['message'];
-            Error::validateOrder($orderId, "Traveline");
-//            Debug::writeToFile('Что-то не так с верификацией', 'TRAVELINE BOOKING ERROR ' . date('Y-m-d H:i:s'), '__bx_log.log');
             return [
                 "ERROR" => "Ошибка верификации бронирования. " . $errorText
             ];

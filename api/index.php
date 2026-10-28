@@ -96,9 +96,6 @@ if ($method == 'POST' && $resource == 'auth') {
                             )->Fetch();
 
                             if (empty($arSectionHotel["ID"])) {
-                                $arSend['MESSAGE'] = 'Объект не найден';
-                                $api->sendError($arSend);
-
                                 $responseCode = 403;
                                 $arOutput = array('code' => 403, 'error' => 'Объект не найден');
                             } else {
@@ -106,15 +103,9 @@ if ($method == 'POST' && $resource == 'auth') {
                                 $arPrices = $params["data"]["prices"];
                                 if (!$arPrices && !$arRooms) {
                                     if (!$arPrices) {
-                                        $arSend['MESSAGE'] = 'Параметр prices не был передан.';
-                                        $api->sendError($arSend);
-
                                         $responseCode = 404;
                                         $arOutput = array('code' => 404, 'error' => 'Параметр prices не был передан.');
                                     } else {
-                                        $arSend['MESSAGE'] = 'Параметр rooms не был передан.';
-                                        $api->sendError($arSend);
-
                                         $responseCode = 404;
                                         $arOutput = array('code' => 404, 'error' => 'Параметр rooms не был передан.');
                                     }
@@ -134,21 +125,15 @@ if ($method == 'POST' && $resource == 'auth') {
             }
 
             if (!$isExist) {
-                $arSend['MESSAGE'] = 'Ресурс не найден.';
-                $api->sendError($arSend);
                 $arOutput     = array('code' => 404, 'error' => 'Ресурс не найден.');
                 $responseCode = 404;
             }
         } else {
-            $arSend['MESSAGE'] = 'Ошибка в запросе.';
-            $api->sendError($arSend);
             $arOutput     = array('code' => 400, 'error' => 'Ошибка в запросе.');
             $responseCode = 400;
         }
     } else {
         $arOutput = $validation;
-        //$arSend['MESSAGE'] = $arOutput;
-        //$api->sendError($arSend);
         $responseCode = 401;
     }
 }

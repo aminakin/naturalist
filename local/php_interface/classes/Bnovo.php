@@ -1791,12 +1791,6 @@ class Bnovo implements SearchServiceInterface
                     Products::setQuantity($elementId);
                     Products::setPrice($elementId);
                 }
-
-                if ($elementId && $onlyRooms) {
-                    $this->sendMessage([
-                        'MESSAGE' => "Добавлен номер (" . $elementId . ") \"" . $elementName . "\" в отель (" . $sectionId . ") \"" . $sectionName . "\"",
-                    ]);
-                }
             }
         }
 
@@ -1936,8 +1930,6 @@ class Bnovo implements SearchServiceInterface
             "roomtypes" => (array)$arCategories
         );
 
-//        $this->debugBotTelegram->sendMessage(Markdown::arrayToMarkdown($data),'send data updateReservationData ' . $hotelId);
-
         $ch = curl_init();
         curl_setopt_array($ch, array(
             CURLOPT_URL => $url . '?' . http_build_query($data),
@@ -1947,15 +1939,11 @@ class Bnovo implements SearchServiceInterface
         $response = curl_exec($ch);
         $arData = json_decode($response, true);
 
-//        $this->debugBotTelegram->sendMessage(Markdown::arrayToMarkdown($response));
-
         if (empty($arData) || (isset($arData['code']) && $arData['code'] != 200)) {
             if ($checkAvailability) {
                 if ($arData['code'] == 403) {
-                    Error::objectDisabled($hotelId, "Bnovo");
                     return 'Объект отключен от вашего канала продаж';
                 } else {
-                    Error::internal($hotelId, "Bnovo", 'Непредвиденная ошибка: ' . implode(";", $arData));
                     return 'Непредвиденная ошибка. Код ошибки - ' . $arData['code'] . '. Сообщение - ' . $arData['message'];
                 }
             } else {
@@ -1964,7 +1952,6 @@ class Bnovo implements SearchServiceInterface
         }
 
         if (!empty($arData) && empty($arData["plans_data"])) {
-            Error::notTariffs($hotelId, 'Bnovo');
             return 'Пустой массив. По объекту нет доступных тарифов';
         }
 
@@ -2090,10 +2077,6 @@ class Bnovo implements SearchServiceInterface
             "roomtypes" => $roomTypes
         );
 
-//        Debug::writeToFile($data, '', '_availability_data.log');
-        //Debug::writeToFile($data, 'BNOVO_REQUEST_' . $hotelId . date('Y-m-d H:i:s'), '__BNOVO_REQUEST.log');
-//        $this->debugBotTelegram->sendMessage(Markdown::arrayToMarkdown($data));
-
         $ch = curl_init();
         curl_setopt_array($ch, array(
             CURLOPT_URL => $url . '?' . http_build_query($data),
@@ -2103,17 +2086,11 @@ class Bnovo implements SearchServiceInterface
         $response = curl_exec($ch);
         $arData = json_decode($response, true);
 
-//        Debug::writeToFile($response, '', '_availability_responce_data.json');
-        //\Bitrix\Main\Diag\Debug::writeToFile($arData, 'BNOVO_RESPONSE_' . $hotelId . date('Y-m-d H:i:s'), '__BNOVO_RESPONSE.log');
-//        $this->debugBotTelegram->sendMessage(Markdown::arrayToMarkdown($response));
-
         if (empty($arData) || (isset($arData['code']) && $arData['code'] != 200)) {
             if ($checkAvailability) {
                 if ($arData['code'] == 403) {
-                    Error::objectDisabled($hotelId, "Bnovo");
                     return 'Объект отключен от вашего канала продаж';
                 } else {
-                    Error::internal($hotelId, "Bnovo", 'Непредвиденная ошибка: ' . implode(";", $arData));
                     return 'Непредвиденная ошибка. Код ошибки - ' . $arData['code'] . '. Сообщение - ' . $arData['message'];
                 }
             } else {
@@ -2122,7 +2099,6 @@ class Bnovo implements SearchServiceInterface
         }
 
         if (!empty($arData) && empty($arData["availability"])) {
-            Error::notTariffs($hotelId, "Bnovo");
             return 'Пустой массив. По объекту нет доступных тарифов';
         }
 
@@ -2207,19 +2183,11 @@ class Bnovo implements SearchServiceInterface
 
         if (!empty($arReservedOne)) {
             $query = 'UPDATE b_hlbd_room_offers SET UF_RESERVED=1, UF_CLOSED=1 WHERE id IN (' . implode(',', $arReservedOne) . ')';
-
-            //Debug::writeToFile($query, 'BNOVO_UNRESERVED_' . $hotelId . date('Y-m-d H:i:s'), '__BNOVO_UNRESERVED_log.log');
-//            $this->debugBotTelegram->sendMessage(Markdown::arrayToMarkdown($query));
-
             $result = $connection->queryExecute($query);
         }
 
         if (!empty($arReservedNull)) {
             $query = 'UPDATE b_hlbd_room_offers SET UF_RESERVED=0, UF_CLOSED=0 WHERE id IN (' . implode(',', $arReservedNull) . ')';
-
-            //Debug::writeToFile($query, 'BNOVO_RESERVED_' . $hotelId . date('Y-m-d H:i:s'), '__BNOVO_RESERVED__log.log');
-//            $this->debugBotTelegram->sendMessage(Markdown::arrayToMarkdown($query));
-
             $result = $connection->queryExecute($query);
         }
     }
@@ -2316,13 +2284,11 @@ class Bnovo implements SearchServiceInterface
             if ($res->isSuccess()) {
                 return $reservationId;
             } else {
-                Error::saveOrder($orderId, "Bnovo");
                 return [
                     "ERROR" => "Ошибка сохранения ID бронирования."
                 ];
             }
         } else {
-            Error::validateOrder($orderId, "Bnovo");
             return [
                 "ERROR" => "Ошибка запроса бронирования."
             ];
@@ -2400,7 +2366,6 @@ class Bnovo implements SearchServiceInterface
         if ($arResponse['canceled_bookings'][0]['ota_booking_id'] == $reservationId) {
             return true;
         } else {
-            Error::cancelOrder($arOrder['ID'], 'Bnovo');
             return false;
         }
     }
@@ -2439,12 +2404,6 @@ class Bnovo implements SearchServiceInterface
         $hlblock = HighloadBlockTable::getById($hlId)->fetch();
         $entity = HighloadBlockTable::compileEntity($hlblock);
         return $entity;
-    }
-
-    private function sendMessage($arSend)
-    {
-        $this->debugBotTelegram->sendMessage(Markdown::arrayToMarkdown($arSend));
-        // \CEvent::Send($this->sendEventName, SITE_ID, $arSend);
     }
 
     private function writeToFile($data, $function, $hotelId)
@@ -2612,12 +2571,6 @@ class Bnovo implements SearchServiceInterface
         if (!empty($sections)) {
             foreach ($sections as $section) {
                 $result = $this->updateAvailabilityData($section['UF_EXTERNAL_ID'], [], [$startDate, $endDate], true);
-//                if (!is_array($result)) {
-//
-//                    $message .= "Ошибка при проверке данных по объекту " . $section['NAME'] . "\r\n";
-//                    $message .= "Текст ошибки: " . $result . "\r\n\r\n";
-//                    $this->debugBotTelegram->sendMessage($message);
-//                }
             }
         }
 
@@ -2674,13 +2627,6 @@ class Bnovo implements SearchServiceInterface
                     }
                 }
             }
-        }
-
-        if ($message != '') {
-            Error::sendCompMessage($message);
-//            \CEvent::Send('BNOVO_MARKUP', 's1', [
-//                'MESSAGE' => $message,
-//            ]);
         }
 
         Option::set("main", "bnovo_last_download", 'N');

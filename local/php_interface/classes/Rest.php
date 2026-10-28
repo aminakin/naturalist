@@ -584,8 +584,6 @@ class Rest
         $bnovoCatalogSection = $this->getCatalogSection($hotelId);
 
         if (empty($bnovoCatalogSection["ID"])) {
-            $arSend['MESSAGE'] = 'Объект не найден';
-            $this->sendError($arSend);
             return array('code' => 404, 'error' => 'Объект не найден');
         }
 
@@ -598,8 +596,6 @@ class Rest
                     $res = $bnovo->updateReservationData($externalId, $tariffId, $categoryId, $arCategoryDates);
                 }
                 if (!empty($res)) {
-                    $arSend['MESSAGE'] = $res;
-                    $this->sendError($arSend);
                     break;
                 }
             }
@@ -610,8 +606,6 @@ class Rest
             foreach ($arRooms as $categoryId => $arCategoryDates) {
                 $res = $bnovo->updateAvailabilityData($externalId, $categoryId, $arCategoryDates, false);
                 if (!empty($res)) {
-                    $arSend['MESSAGE'] = $res;
-                    $this->sendError($arSend);
                     break;
                 }
             }
@@ -619,12 +613,8 @@ class Rest
 
         if (!$arPrices && !$arRooms) {
             if (!$arPrices) {
-                $arSend['MESSAGE'] = 'Параметр prices не был передан.';
-                $this->sendError($arSend);
                 return array('code' => 404, 'error' => 'Параметр prices не был передан.');
             } else {
-                $arSend['MESSAGE'] = 'Параметр rooms не был передан.';
-                $this->sendError($arSend);
                 return array('code' => 404, 'error' => 'Параметр rooms не был передан.');
             }
         } else {
@@ -651,12 +641,6 @@ class Rest
 
             return $importFilePath;
         }
-    }
-
-    public function sendError($arSend)
-    {
-        $this->debugBotTelegram->sendMessage(Markdown::arrayToMarkdown($arSend), 'Обработка пушей BNOVO. ');
-//        \CEvent::Send('ERROR_IMPORT', 's1', $arSend);
     }
 
     private function getEntityClass($hlId = 11)
